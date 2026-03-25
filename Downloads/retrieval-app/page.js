@@ -137,6 +137,10 @@ function localMark(qText, modelAnswer, studentAnswer, marks) {
 }
 
 async function aiMark(qText, model, student, marks) {
+  // Check for fake/spam answers first
+  const fake = detectFakeAnswer(student);
+  if (fake) return { correct: false, marks_awarded: 0, feedback: fake, flagged: true };
+
   // Try AI marking via Supabase Edge Function (proxies to Claude API)
   try {
     const r = await fetch(`${SUPA_URL}/functions/v1/mark-answer`, {
@@ -154,6 +158,37 @@ async function aiMark(qText, model, student, marks) {
   // Fallback to local fuzzy matching
   return localMark(qText, model, student, marks);
 }
+
+/* ─── Fake Answer Detection ─── */
+function detectFakeAnswer(answer) {
+  const trimmed = answer.trim();
+  // Single character or very short nonsense
+  if (trimmed.length <= 2) return "Answer too short — doesn't count towards target.";
+  // All same character repeated
+  if (/^(.)\1+$/.test(trimmed.replace(/\s/g, ''))) return "Repeated characters detected — doesn't count.";
+  // All same word repeated
+  const words = trimmed.toLowerCase().split(/\s+/);
+  if (words.length >= 3 && new Set(words).size === 1) return "Same word repeated — doesn't count.";
+  // Random keyboard mashing (all consonants, no vowels in 5+ chars)
+  if (trimmed.length >= 5 && !/[aeiouAEIOU]/.test(trimmed)) return "This doesn't look like a real answer — doesn't count.";
+  // Just numbers
+  if (/^\d+$/.test(trimmed) && trimmed.length < 4) return "Just a number — doesn't count.";
+  return null; // not fake
+}
+
+/* ─── Weekly Boundaries (Mon-Sun) ─── */
+function getWeekBounds(weeksAgo = 0) {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun
+  const mondayOffset = day === 0 ? -6 : 1 - day;
+  const thisMonday = new Date(now); thisMonday.setHours(0,0,0,0); thisMonday.setDate(now.getDate() + mondayOffset);
+  const targetMonday = new Date(thisMonday); targetMonday.setDate(thisMonday.getDate() - (weeksAgo * 7));
+  const targetSunday = new Date(targetMonday); targetSunday.setDate(targetMonday.getDate() + 7); targetSunday.setMilliseconds(-1);
+  return { start: targetMonday, end: targetSunday };
+}
+
+const WEEKLY_TARGET = 50;
+const STAR_INTERVAL = 25; // bonus star every 25 over target
 
 /* ─── Theme ─── */
 const C = {
@@ -246,6 +281,10 @@ function Student({ user }) {
   const [joinCode, setJoinCode] = useState("");
   const [joinErr, setJoinErr] = useState("");
   const [joining, setJoining] = useState(false);
+  const [weeklyValid, setWeeklyValid] = useState(0); // valid (non-flagged) answers this week
+  const [weeklyData, setWeeklyData] = useState([]); // past weeks: [{week, total, valid, correct, stars}]
+  const [showWeeks, setShowWeeks] = useState(false);
+  const [starPop, setStarPop] = useState(false); // star animation trigger
 
   useEffect(() => { load(); }, []);
 
@@ -286,7 +325,7 @@ function Student({ user }) {
       if (!ul.length) { setQs([]); return; }
       const tids = ul.map(t => t.topic_id);
       const questions = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, select: "*,topics(name)" } });
-      const resps = await sb.q("responses", { params: { student_id: `eq.${user.id}`, class_id: `eq.${c.id}`, select: "question_id,is_correct", order: "answered_at.desc" } });
+      const resps = await sb.q("responses", { params: { student_id: `eq.${user.id}`, class_id: `eq.${c.id}`, select: "question_id,is_correct,student_answer,answered_at", order: "answered_at.desc" } });
 
       const srMap = {};
       const byQ = {};
@@ -306,6 +345,39 @@ function Student({ user }) {
       });
       setQs(sorted); setQi(0); setAns(""); setRes(null);
       setStats({ t: resps.length, c: resps.filter(r => r.is_correct).length });
+
+      // Calculate weekly valid answers (excluding flagged/fake)
+      const thisWeek = getWeekBounds(0);
+      const thisWeekResps = resps.filter(r => {
+        const d = new Date(r.answered_at);
+        return d >= thisWeek.start && d <= thisWeek.end;
+      });
+      const validThisWeek = thisWeekResps.filter(r => !detectFakeAnswer(r.student_answer)).length;
+      setWeeklyValid(validThisWeek);
+
+      // Calculate past 8 weeks of data
+      const weeks = [];
+      for (let w = 0; w < 8; w++) {
+        const bounds = getWeekBounds(w);
+        const weekResps = resps.filter(r => {
+          const d = new Date(r.answered_at);
+          return d >= bounds.start && d <= bounds.end;
+        });
+        const valid = weekResps.filter(r => !detectFakeAnswer(r.student_answer)).length;
+        const correct = weekResps.filter(r => r.is_correct && !detectFakeAnswer(r.student_answer)).length;
+        const overTarget = Math.max(0, valid - WEEKLY_TARGET);
+        const stars = Math.floor(overTarget / STAR_INTERVAL);
+        weeks.push({
+          weekStart: bounds.start,
+          label: w === 0 ? "This week" : w === 1 ? "Last week" : `${w} weeks ago`,
+          total: weekResps.length,
+          valid,
+          correct,
+          stars,
+          metTarget: valid >= WEEKLY_TARGET,
+        });
+      }
+      setWeeklyData(weeks);
     } catch (e) { console.error(e); }
   };
 
@@ -319,8 +391,22 @@ function Student({ user }) {
     const nxt = nextSR(r.correct, prev);
     setSr(s => ({ ...s, [q.id]: nxt }));
     if (r.correct) setStreak(s => s + 1); else setStreak(0);
+
+    // Track weekly valid answers (non-flagged)
+    const isFlagged = r.flagged;
+    if (!isFlagged) {
+      const newValid = weeklyValid + 1;
+      setWeeklyValid(newValid);
+      // Check if hit a star milestone (every 25 over 50)
+      const overTarget = newValid - WEEKLY_TARGET;
+      if (overTarget > 0 && overTarget % STAR_INTERVAL === 0) {
+        setStarPop(true);
+        setTimeout(() => setStarPop(false), 2000);
+      }
+    }
+
     try {
-      await sb.q("responses", { method: "POST", body: { student_id: user.id, question_id: q.id, class_id: cls.id, student_answer: ans, is_correct: r.correct, ai_feedback: r.feedback, marks_awarded: r.marks_awarded } });
+      await sb.q("responses", { method: "POST", body: { student_id: user.id, question_id: q.id, class_id: cls.id, student_answer: ans, is_correct: r.correct, ai_feedback: r.flagged ? "FLAGGED: " + r.feedback : r.feedback, marks_awarded: r.marks_awarded } });
       setStats(s => ({ t: s.t + 1, c: s.c + (r.correct ? 1 : 0) }));
     } catch (e) { console.error(e); }
     setMarking(false);
@@ -378,16 +464,74 @@ function Student({ user }) {
   const q = qs[qi];
   const acc = stats.t > 0 ? Math.round(stats.c / stats.t * 100) : 0;
   const isDue = !sr[q?.id] || !sr[q?.id]?.due || new Date(sr[q?.id].due) <= new Date();
+  const weekPct = Math.min(100, Math.round((weeklyValid / WEEKLY_TARGET) * 100));
+  const overTarget = Math.max(0, weeklyValid - WEEKLY_TARGET);
+  const currentStars = Math.floor(overTarget / STAR_INTERVAL);
 
   return (
     <div style={{ padding: "12px 16px", maxWidth: 560, margin: "0 auto" }}>
+      {/* Star pop animation */}
+      {starPop && (
+        <div style={{ position: "fixed", top: 20, right: 20, zIndex: 999, animation: "starPop 2s ease forwards", fontSize: 48, pointerEvents: "none" }}>⭐</div>
+      )}
+
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
         <button onClick={() => setCls(null)} style={{ background: "none", border: "none", color: C.mid, fontSize: 14, cursor: "pointer", fontFamily: "inherit" }}>← Classes</button>
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
           {streak >= 3 && <Badge color={C.amb}>🔥 {streak}</Badge>}
+          {currentStars > 0 && <Badge color={C.amb}>⭐ {currentStars}</Badge>}
           <Badge color={C.pri}>{cls.name}</Badge>
         </div>
       </div>
+
+      {/* Weekly target progress */}
+      <Card style={{ padding: 14, marginBottom: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>Weekly target</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: weeklyValid >= WEEKLY_TARGET ? C.grn : weeklyValid >= WEEKLY_TARGET * 0.5 ? C.amb : C.red }}>{weeklyValid}/{WEEKLY_TARGET}</span>
+            <button onClick={() => setShowWeeks(!showWeeks)} style={{ background: "none", border: "none", color: C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", textDecoration: "underline" }}>
+              {showWeeks ? "Hide" : "History"}
+            </button>
+          </div>
+        </div>
+        {/* Progress bar */}
+        <div style={{ width: "100%", height: 10, background: C.bdr, borderRadius: 99, overflow: "hidden", position: "relative" }}>
+          <div style={{ width: `${weekPct}%`, height: "100%", background: weeklyValid >= WEEKLY_TARGET ? C.grn : weeklyValid >= WEEKLY_TARGET * 0.5 ? C.amb : C.red, borderRadius: 99, transition: "width .4s ease" }} />
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+          <span style={{ fontSize: 10, color: C.dim }}>{weeklyValid < WEEKLY_TARGET ? `${WEEKLY_TARGET - weeklyValid} to go` : "Target hit! 🎉"}</span>
+          {overTarget > 0 && <span style={{ fontSize: 10, color: C.amb }}>Next ⭐ in {STAR_INTERVAL - (overTarget % STAR_INTERVAL)} questions</span>}
+        </div>
+
+        {/* Star progress if over target */}
+        {currentStars > 0 && (
+          <div style={{ marginTop: 8, padding: "6px 10px", background: C.ambS, borderRadius: 8, display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ fontSize: 16 }}>{"⭐".repeat(Math.min(currentStars, 5))}{currentStars > 5 ? ` +${currentStars - 5}` : ""}</span>
+            <span style={{ fontSize: 11, color: C.amb, fontWeight: 600 }}>{currentStars} achievement point{currentStars !== 1 ? "s" : ""} this week!</span>
+          </div>
+        )}
+      </Card>
+
+      {/* Previous weeks */}
+      {showWeeks && (
+        <Card style={{ padding: 14, marginBottom: 12 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: C.txt, marginBottom: 10 }}>Previous weeks</div>
+          {weeklyData.filter((_, i) => i > 0).map((w, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 0", borderBottom: i < weeklyData.length - 2 ? `1px solid ${C.bdr}` : "none" }}>
+              <div style={{ flex: 1, fontSize: 12, color: C.mid }}>{w.label}</div>
+              <div style={{ width: 80 }}>
+                <div style={{ width: "100%", height: 4, background: C.bdr, borderRadius: 99 }}>
+                  <div style={{ width: `${Math.min(100, (w.valid / WEEKLY_TARGET) * 100)}%`, height: "100%", background: w.metTarget ? C.grn : C.red, borderRadius: 99 }} />
+                </div>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 600, color: w.metTarget ? C.grn : C.red, minWidth: 35, textAlign: "right" }}>{w.valid}/{WEEKLY_TARGET}</span>
+              {w.stars > 0 && <span style={{ fontSize: 12 }}>{"⭐".repeat(Math.min(w.stars, 3))}{w.stars > 3 ? `+${w.stars-3}` : ""}</span>}
+              {!w.metTarget && w.valid > 0 && <span style={{ fontSize: 10, color: C.red }}>⚠️</span>}
+            </div>
+          ))}
+        </Card>
+      )}
 
       <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
         <Stat label="Done" value={stats.t} color={C.acc} />
@@ -486,10 +630,22 @@ function Teacher({ user }) {
       setTopics(allT); setUnlocked(new Set(ul.map(t => t.topic_id)));
 
       const sm = {};
-      mems.forEach(m => { sm[m.student_id] = { name: m.profiles?.display_name || "?", t: 0, c: 0 }; });
+      mems.forEach(m => { sm[m.student_id] = { name: m.profiles?.display_name || "?", t: 0, c: 0, weekValid: 0, weekStars: 0, flagged: 0 }; });
       const mis = {}, tp = {};
+      const thisWeekBounds = getWeekBounds(0);
       resps.forEach(r => {
-        if (sm[r.student_id]) { sm[r.student_id].t++; if (r.is_correct) sm[r.student_id].c++; }
+        if (sm[r.student_id]) {
+          sm[r.student_id].t++;
+          if (r.is_correct) sm[r.student_id].c++;
+          // Check if flagged
+          const isFlagged = r.ai_feedback && r.ai_feedback.startsWith("FLAGGED:");
+          if (isFlagged) sm[r.student_id].flagged++;
+          // This week's valid answers
+          const d = new Date(r.answered_at);
+          if (d >= thisWeekBounds.start && d <= thisWeekBounds.end && !isFlagged) {
+            sm[r.student_id].weekValid++;
+          }
+        }
         if (!r.is_correct && r.questions) {
           const k = r.questions.question_text;
           if (!mis[k]) mis[k] = { q: k, topic: r.questions.topics?.name || "", n: 0, ans: [] };
@@ -515,7 +671,10 @@ function Teacher({ user }) {
         tR: resps.length, tC: resps.filter(r => r.is_correct).length,
         thisWeek: { total: thisWeekResps.length, correct: thisWeekResps.filter(r => r.is_correct).length },
         lastWeek: { total: lastWeekResps.length, correct: lastWeekResps.filter(r => r.is_correct).length },
-        students: Object.entries(sm).map(([id, d]) => ({ id, ...d })),
+        students: Object.entries(sm).map(([id, d]) => {
+          const over = Math.max(0, d.weekValid - WEEKLY_TARGET);
+          return { id, ...d, weekStars: Math.floor(over / STAR_INTERVAL) };
+        }),
         mis: Object.values(mis).sort((a, b) => b.n - a.n).slice(0, 10),
         tp: Object.entries(tp).map(([name, d]) => ({ name, ...d, pct: d.t ? Math.round(d.c / d.t * 100) : 0 })).sort((a, b) => a.pct - b.pct),
         mems: mems.length,
@@ -665,16 +824,30 @@ function Teacher({ user }) {
               </div>
 
               <Card style={{ padding: 14, marginBottom: 10 }}>
-                <div style={{ color: C.txt, fontWeight: 600, fontSize: 13, marginBottom: 10 }}>Students</div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Students — Weekly Target ({WEEKLY_TARGET})</div>
+                  <span style={{ fontSize: 11, color: C.dim }}>This week (Mon–Sun)</span>
+                </div>
                 {dash.students.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No students yet. Share the join code above.</div> :
-                  dash.students.sort((a, b) => b.t - a.t).map(s => {
+                  dash.students.sort((a, b) => b.weekValid - a.weekValid).map(s => {
                     const p = s.t > 0 ? Math.round(s.c / s.t * 100) : 0;
+                    const weekPct = Math.min(100, Math.round((s.weekValid / WEEKLY_TARGET) * 100));
+                    const metTarget = s.weekValid >= WEEKLY_TARGET;
+                    const belowTarget = s.weekValid < WEEKLY_TARGET;
                     return (
-                      <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 8px", borderRadius: 8, background: C.card2, marginBottom: 4 }}>
-                        <div style={{ flex: 1, color: C.txt, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.name}</div>
-                        <span style={{ fontSize: 11, color: C.dim }}>{s.t}</span>
-                        <div style={{ width: 50 }}><Bar pct={p} /></div>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: p >= 70 ? C.grn : p >= 50 ? C.amb : C.red, minWidth: 28, textAlign: "right" }}>{p}%</span>
+                      <div key={s.id} style={{ padding: "10px 10px", borderRadius: 8, background: C.card2, marginBottom: 4, borderLeft: `3px solid ${metTarget ? C.grn : belowTarget && s.weekValid < WEEKLY_TARGET * 0.5 ? C.red : C.amb}` }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                          <div style={{ flex: 1, color: C.txt, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 500 }}>{s.name}</div>
+                          {s.weekStars > 0 && <span style={{ fontSize: 12 }}>{"⭐".repeat(Math.min(s.weekStars, 3))}{s.weekStars > 3 ? `+${s.weekStars-3}` : ""}</span>}
+                          {s.flagged > 0 && <span style={{ fontSize: 10, color: C.red, fontWeight: 600 }}>🚩{s.flagged}</span>}
+                          <span style={{ fontSize: 11, fontWeight: 700, color: metTarget ? C.grn : C.red }}>{s.weekValid}/{WEEKLY_TARGET}</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <div style={{ flex: 1, height: 5, background: C.bdr, borderRadius: 99 }}>
+                            <div style={{ width: `${weekPct}%`, height: "100%", background: metTarget ? C.grn : weekPct >= 50 ? C.amb : C.red, borderRadius: 99, transition: "width .3s" }} />
+                          </div>
+                          <span style={{ fontSize: 10, color: C.dim, whiteSpace: "nowrap" }}>{p}% acc</span>
+                        </div>
                       </div>
                     );
                   })}
@@ -1276,6 +1449,7 @@ export default function App() {
         *{box-sizing:border-box;margin:0;padding:0}
         body{background:${C.bg};-webkit-font-smoothing:antialiased}
         @keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes starPop{0%{opacity:0;transform:scale(0) rotate(-30deg)}20%{opacity:1;transform:scale(1.5) rotate(10deg)}40%{transform:scale(1.2) rotate(-5deg)}60%{transform:scale(1.3) rotate(3deg)}100%{opacity:0;transform:scale(2) translateY(-40px) rotate(15deg)}}
         button:active{transform:scale(.98)}
         input:focus,textarea:focus,select:focus{border-color:${C.pri}!important;box-shadow:0 0 0 3px ${C.priGlow}}
         ::selection{background:${C.priGlow}}
