@@ -79,3 +79,4 @@ Define photosynthesis | The process by which plants use light energy to convert 
 - `responses` stores every student answer with AI feedback
 - Spaced repetition (SM-2) runs client-side based on response history
 - Row Level Security ensures students only see their own data
+
