@@ -750,12 +750,12 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
     setSelectedLastQs(new Set());
     setLastTopicQs([]);
     if (!topicId) return;
+    setLastTopicQs([{id:"loading"}]); // loading indicator
     try {
       const qs = await sb.q("questions", { params: { topic_id: `eq.${topicId}`, select: "*,topics(name)", order: "difficulty.asc" } });
       setLastTopicQs(qs);
-      // Auto-select all by default
       setSelectedLastQs(new Set(qs.map(q => q.id)));
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error("Failed to load questions:", e); setLastTopicQs([]); }
   };
 
   const toggleLastQ = (qId) => {
@@ -985,33 +985,39 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
         {/* Question picker for last lesson */}
         {lastTopic && lastTopicQs.length > 0 && (
           <div style={{ marginBottom: 16 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-              <div style={{ fontSize: 12, color: C.mid, fontWeight: 600 }}>Pick questions from this topic</div>
-              <button onClick={() => {
-                if (selectedLastQs.size === lastTopicQs.length) setSelectedLastQs(new Set());
-                else setSelectedLastQs(new Set(lastTopicQs.map(q => q.id)));
-              }} style={{ background: "none", border: "none", color: C.pri, fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-                {selectedLastQs.size === lastTopicQs.length ? "Deselect all" : "Select all"}
-              </button>
-            </div>
-            <div style={{ fontSize: 11, color: C.dim, marginBottom: 8 }}>{selectedLastQs.size} of {lastTopicQs.length} selected — up to {Math.ceil(numQs * 0.4)} will be used</div>
-            <div style={{ maxHeight: 220, overflowY: "auto", borderRadius: 10, border: `1px solid ${C.bdr}`, background: C.card }}>
-              {lastTopicQs.map(q => {
-                const sel = selectedLastQs.has(q.id);
-                const diffLabel = q.difficulty === 1 ? "Easy" : q.difficulty === 2 ? "Medium" : "Hard";
-                const diffColor = q.difficulty === 1 ? C.grn : q.difficulty === 2 ? C.amb : C.red;
-                return (
-                  <button key={q.id} onClick={() => toggleLastQ(q.id)} style={{
-                    display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 12px", width: "100%", textAlign: "left", fontFamily: "inherit", fontSize: 13, cursor: "pointer",
-                    background: sel ? C.priSoft : "transparent", border: "none", borderBottom: `1px solid ${C.bdr}`, color: sel ? C.txt : C.mid, transition: "all .1s",
-                  }}>
-                    <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${sel ? C.pri : C.dim}`, background: sel ? C.pri : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>{sel ? "✓" : ""}</div>
-                    <div style={{ flex: 1, lineHeight: 1.35 }}>{q.question_text}</div>
-                    <span style={{ fontSize: 10, color: diffColor, fontWeight: 600, flexShrink: 0 }}>{diffLabel}</span>
+            {lastTopicQs.length === 1 && lastTopicQs[0].id === "loading" ? (
+              <div style={{ padding: "16px", textAlign: "center", color: C.mid, fontSize: 13 }}>Loading questions...</div>
+            ) : (
+              <>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                  <div style={{ fontSize: 12, color: C.mid, fontWeight: 600 }}>Pick questions from this topic ({lastTopicQs.length} available)</div>
+                  <button onClick={() => {
+                    if (selectedLastQs.size === lastTopicQs.length) setSelectedLastQs(new Set());
+                    else setSelectedLastQs(new Set(lastTopicQs.map(q => q.id)));
+                  }} style={{ background: "none", border: "none", color: C.pri, fontSize: 11, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                    {selectedLastQs.size === lastTopicQs.length ? "Deselect all" : "Select all"}
                   </button>
-                );
-              })}
-            </div>
+                </div>
+                <div style={{ fontSize: 11, color: C.dim, marginBottom: 8 }}>{selectedLastQs.size} of {lastTopicQs.length} selected — up to {Math.ceil(numQs * 0.4)} will be used</div>
+                <div style={{ maxHeight: 400, overflowY: "auto", borderRadius: 10, border: `1px solid ${C.bdr}`, background: C.card }}>
+                  {lastTopicQs.map(q => {
+                    const sel = selectedLastQs.has(q.id);
+                    const diffLabel = q.difficulty === 1 ? "Easy" : q.difficulty === 2 ? "Medium" : "Hard";
+                    const diffColor = q.difficulty === 1 ? C.grn : q.difficulty === 2 ? C.amb : C.red;
+                    return (
+                      <button key={q.id} onClick={() => toggleLastQ(q.id)} style={{
+                        display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 12px", width: "100%", textAlign: "left", fontFamily: "inherit", fontSize: 13, cursor: "pointer",
+                        background: sel ? C.priSoft : "transparent", border: "none", borderBottom: `1px solid ${C.bdr}`, color: sel ? C.txt : C.mid, transition: "all .1s",
+                      }}>
+                        <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${sel ? C.pri : C.dim}`, background: sel ? C.pri : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>{sel ? "✓" : ""}</div>
+                        <div style={{ flex: 1, lineHeight: 1.35 }}>{q.question_text}</div>
+                        <span style={{ fontSize: 10, color: diffColor, fontWeight: 600, flexShrink: 0 }}>{diffLabel}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
         )}
 
