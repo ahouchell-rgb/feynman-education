@@ -826,31 +826,10 @@ function Teacher({ user }) {
               <Card style={{ padding: 14, marginBottom: 10 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Students — Weekly Target ({WEEKLY_TARGET})</div>
-                  <span style={{ fontSize: 11, color: C.dim }}>This week (Mon–Sun)</span>
+                  <span style={{ fontSize: 11, color: C.dim }}>Tap student to manage</span>
                 </div>
                 {dash.students.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No students yet. Share the join code above.</div> :
-                  dash.students.sort((a, b) => b.weekValid - a.weekValid).map(s => {
-                    const p = s.t > 0 ? Math.round(s.c / s.t * 100) : 0;
-                    const weekPct = Math.min(100, Math.round((s.weekValid / WEEKLY_TARGET) * 100));
-                    const metTarget = s.weekValid >= WEEKLY_TARGET;
-                    const belowTarget = s.weekValid < WEEKLY_TARGET;
-                    return (
-                      <div key={s.id} style={{ padding: "10px 10px", borderRadius: 8, background: C.card2, marginBottom: 4, borderLeft: `3px solid ${metTarget ? C.grn : belowTarget && s.weekValid < WEEKLY_TARGET * 0.5 ? C.red : C.amb}` }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                          <div style={{ flex: 1, color: C.txt, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 500 }}>{s.name}</div>
-                          {s.weekStars > 0 && <span style={{ fontSize: 12 }}>{"⭐".repeat(Math.min(s.weekStars, 3))}{s.weekStars > 3 ? `+${s.weekStars-3}` : ""}</span>}
-                          {s.flagged > 0 && <span style={{ fontSize: 10, color: C.red, fontWeight: 600 }}>🚩{s.flagged}</span>}
-                          <span style={{ fontSize: 11, fontWeight: 700, color: metTarget ? C.grn : C.red }}>{s.weekValid}/{WEEKLY_TARGET}</span>
-                        </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <div style={{ flex: 1, height: 5, background: C.bdr, borderRadius: 99 }}>
-                            <div style={{ width: `${weekPct}%`, height: "100%", background: metTarget ? C.grn : weekPct >= 50 ? C.amb : C.red, borderRadius: 99, transition: "width .3s" }} />
-                          </div>
-                          <span style={{ fontSize: 10, color: C.dim, whiteSpace: "nowrap" }}>{p}% acc</span>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  <StudentList students={dash.students} cls={cls} onRefresh={() => loadCls(cls)} />}
               </Card>
 
               <Card style={{ padding: 14, marginBottom: 10 }}>
@@ -894,6 +873,106 @@ function Teacher({ user }) {
           {tab === "questions" && <QMgr subjectId={cls.subject_id} userId={user.id} topics={topics} setTopics={setTopics} />}
         </>
       )}
+    </div>
+  );
+}
+
+/* ─── Student List with Management Actions ─── */
+function StudentList({ students, cls, onRefresh }) {
+  const [expanded, setExpanded] = useState(null);
+  const [newPw, setNewPw] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(null);
+
+  const callManage = async (action, studentId, extra = {}) => {
+    setBusy(true); setMsg("");
+    try {
+      const token = sb.auth.user()?.access_token;
+      // We need the token from the auth state — let's use the stored one
+      const r = await fetch(`${SUPA_URL}/functions/v1/manage-student`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
+        body: JSON.stringify({ action, student_id: studentId, class_id: cls.id, ...extra }),
+      });
+      const d = await r.json();
+      if (d.success) {
+        setMsg(d.message);
+        if (action === "delete_student" || action === "remove_from_class") {
+          setTimeout(() => { onRefresh(); setExpanded(null); setMsg(""); }, 1000);
+        }
+      } else {
+        setMsg("Error: " + (d.error || "Unknown error"));
+      }
+    } catch (e) { setMsg("Error: " + e.message); }
+    setBusy(false);
+  };
+
+  return (
+    <div>
+      {students.sort((a, b) => b.weekValid - a.weekValid).map(s => {
+        const p = s.t > 0 ? Math.round(s.c / s.t * 100) : 0;
+        const weekPct = Math.min(100, Math.round((s.weekValid / WEEKLY_TARGET) * 100));
+        const metTarget = s.weekValid >= WEEKLY_TARGET;
+        const isExpanded = expanded === s.id;
+
+        return (
+          <div key={s.id} style={{ marginBottom: 4 }}>
+            <button onClick={() => { setExpanded(isExpanded ? null : s.id); setNewPw(""); setMsg(""); setConfirmDelete(null); }} style={{
+              width: "100%", padding: "10px 10px", borderRadius: isExpanded ? "8px 8px 0 0" : 8, background: C.card2, border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left",
+              borderLeft: `3px solid ${metTarget ? C.grn : s.weekValid < WEEKLY_TARGET * 0.5 ? C.red : C.amb}`,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <div style={{ flex: 1, color: C.txt, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 500 }}>{s.name}</div>
+                {s.weekStars > 0 && <span style={{ fontSize: 12 }}>{"⭐".repeat(Math.min(s.weekStars, 3))}{s.weekStars > 3 ? `+${s.weekStars-3}` : ""}</span>}
+                {s.flagged > 0 && <span style={{ fontSize: 10, color: C.red, fontWeight: 600 }}>🚩{s.flagged}</span>}
+                <span style={{ fontSize: 11, fontWeight: 700, color: metTarget ? C.grn : C.red }}>{s.weekValid}/{WEEKLY_TARGET}</span>
+                <span style={{ color: C.dim, fontSize: 12, transition: "transform .2s", transform: isExpanded ? "rotate(180deg)" : "rotate(0)" }}>▾</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ flex: 1, height: 5, background: C.bdr, borderRadius: 99 }}>
+                  <div style={{ width: `${weekPct}%`, height: "100%", background: metTarget ? C.grn : weekPct >= 50 ? C.amb : C.red, borderRadius: 99, transition: "width .3s" }} />
+                </div>
+                <span style={{ fontSize: 10, color: C.dim, whiteSpace: "nowrap" }}>{p}% acc</span>
+              </div>
+            </button>
+
+            {/* Expanded management panel */}
+            {isExpanded && (
+              <div style={{ padding: 12, background: C.card, borderRadius: "0 0 8px 8px", borderLeft: `3px solid ${C.bdr}`, borderBottom: `1px solid ${C.bdr}`, borderRight: `1px solid ${C.bdr}` }}>
+                {msg && <div style={{ padding: "8px 10px", borderRadius: 6, marginBottom: 10, fontSize: 12, background: msg.startsWith("Error") ? C.redS : C.grnS, color: msg.startsWith("Error") ? C.red : C.grn }}>{msg}</div>}
+
+                {/* Reset password */}
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Reset password</div>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <Inp placeholder="New password (min 6)" type="text" value={newPw} onChange={e => setNewPw(e.target.value)} style={{ fontSize: 13, padding: "8px 10px" }} />
+                    <Btn onClick={() => callManage("reset_password", s.id, { new_password: newPw })} disabled={newPw.length < 6 || busy} style={{ whiteSpace: "nowrap", fontSize: 12, padding: "8px 14px" }}>
+                      {busy ? "..." : "Reset"}
+                    </Btn>
+                  </div>
+                </div>
+
+                {/* Remove + Delete */}
+                <div style={{ display: "flex", gap: 6 }}>
+                  <Btn v="ghost" onClick={() => callManage("remove_from_class", s.id)} disabled={busy} style={{ flex: 1, fontSize: 11, padding: "8px 10px" }}>
+                    Remove from class
+                  </Btn>
+                  {confirmDelete === s.id ? (
+                    <Btn v="ghost" onClick={() => callManage("delete_student", s.id)} disabled={busy} style={{ flex: 1, fontSize: 11, padding: "8px 10px", background: C.redS, color: C.red, borderColor: "rgba(239,68,68,.3)" }}>
+                      {busy ? "..." : "Confirm delete"}
+                    </Btn>
+                  ) : (
+                    <Btn v="ghost" onClick={() => setConfirmDelete(s.id)} style={{ flex: 1, fontSize: 11, padding: "8px 10px", color: C.red, borderColor: "rgba(239,68,68,.2)" }}>
+                      Delete account
+                    </Btn>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
