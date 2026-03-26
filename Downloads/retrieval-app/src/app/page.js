@@ -695,16 +695,32 @@ function Teacher({ user }) {
     } catch (e) { console.error(e); }
   };
 
-  const doSetup = async (step) => {
+  const doSetup = async () => {
+    if (!cf.n.trim()) return;
     try {
-      if (step === "school" && fv.trim()) { const [s] = await sb.q("schools", { method: "POST", body: { name: fv } }); setSchools(p => [...p, s]); setSId(s.id); setFv(""); setSetup("subject"); }
-      else if (step === "subject" && fv.trim()) { const [s] = await sb.q("subjects", { method: "POST", body: { name: fv, school_id: sId } }); setSubjects(p => [...p, s]); setSubId(s.id); setFv(""); setSetup("class"); }
-      else if (step === "class" && cf.n.trim()) {
-        const [c] = await sb.q("classes", { method: "POST", body: { name: cf.n, school_id: sId, teacher_id: user.id, subject_id: subId, year_group: parseInt(cf.y) || null } });
-        // Fetch with join_code populated
-        const full = await sb.q("classes", { params: { id: `eq.${c.id}`, select: "*,subjects(name)" }, single: true });
-        setClasses(p => [...p, full]); setCls(full); setSetup(null); setCf({ n: "", y: "" }); await loadCls(full);
+      // Use existing school and subject, or create if none exist
+      let schoolId = sId;
+      let subjectId = subId;
+
+      if (!schoolId && schools.length > 0) schoolId = schools[0].id;
+      if (!schoolId && fv.trim()) {
+        const [s] = await sb.q("schools", { method: "POST", body: { name: fv } });
+        setSchools(p => [...p, s]); schoolId = s.id;
       }
+      if (!schoolId) return;
+
+      if (!subjectId && subjects.length > 0) {
+        // Pick the subject with the most topics (the one with your question bank)
+        subjectId = subjects[0].id;
+      }
+      if (!subjectId) {
+        const [s] = await sb.q("subjects", { method: "POST", body: { name: "Science", school_id: schoolId } });
+        setSubjects(p => [...p, s]); subjectId = s.id;
+      }
+
+      const [c] = await sb.q("classes", { method: "POST", body: { name: cf.n, school_id: schoolId, teacher_id: user.id, subject_id: subjectId, year_group: parseInt(cf.y) || null } });
+      const full = await sb.q("classes", { params: { id: `eq.${c.id}`, select: "*,subjects(name)" }, single: true });
+      setClasses(p => [...p, full]); setCls(full); setSetup(null); setCf({ n: "", y: "" }); await loadCls(full);
     } catch (e) { console.error(e); }
   };
 
@@ -720,7 +736,7 @@ function Teacher({ user }) {
             <option value="">Select class...</option>
             {classes.map(c => <option key={c.id} value={c.id}>{c.name}{c.year_group ? ` (Y${c.year_group})` : ""}</option>)}
           </select>
-          <Btn v="ghost" onClick={() => setSetup("school")} style={{ padding: "10px 14px", fontSize: 13, whiteSpace: "nowrap" }}>+ New</Btn>
+          <Btn v="ghost" onClick={() => setSetup("class")} style={{ padding: "10px 14px", fontSize: 13, whiteSpace: "nowrap" }}>+ New</Btn>
         </div>
         <div style={{ display: "flex", gap: 6, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 2 }}>
           {["dashboard", "starter", "topics", "questions"].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)}>{t === "starter" ? "Lesson Starter" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
@@ -729,24 +745,40 @@ function Teacher({ user }) {
 
       {setup && (
         <Card style={{ padding: 20, marginBottom: 14 }}>
-          <div style={{ color: C.txt, fontWeight: 600, marginBottom: 10, fontSize: 14 }}>
-            {setup === "school" ? "1. School" : setup === "subject" ? "2. Subject" : "3. Class"}
-          </div>
-          {setup === "school" && schools.length > 0 && <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>{schools.map(s => <Pill key={s.id} onClick={() => { setSId(s.id); setSetup("subject"); }}>{s.name}</Pill>)}</div>}
-          {setup === "subject" && subjects.filter(s => s.school_id === sId).length > 0 && <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>{subjects.filter(s => s.school_id === sId).map(s => <Pill key={s.id} onClick={() => { setSubId(s.id); setSetup("class"); }}>{s.name}</Pill>)}</div>}
-          {setup !== "class" ? (
-            <div style={{ display: "flex", gap: 8 }}>
-              <Inp placeholder={`New ${setup}...`} value={fv} onChange={e => setFv(e.target.value)} onKeyDown={e => e.key === "Enter" && doSetup(setup)} />
-              <Btn onClick={() => doSetup(setup)} style={{ whiteSpace: "nowrap" }}>Create</Btn>
-            </div>
-          ) : (
-            <div style={{ display: "flex", gap: 8 }}>
-              <Inp placeholder="e.g. 10X1" value={cf.n} onChange={e => setCf(p => ({ ...p, n: e.target.value }))} style={{ flex: 2 }} />
-              <Inp placeholder="Year" type="number" value={cf.y} onChange={e => setCf(p => ({ ...p, y: e.target.value }))} style={{ flex: 1 }} />
-              <Btn onClick={() => doSetup("class")} style={{ whiteSpace: "nowrap" }}>Create</Btn>
+          <div style={{ color: C.txt, fontWeight: 600, marginBottom: 4, fontSize: 14 }}>Create new class</div>
+          <div style={{ color: C.dim, fontSize: 12, marginBottom: 14 }}>All 92 topics and 822 questions will be available — use the Topics tab to unlock them for students</div>
+
+          {schools.length === 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 12, color: C.mid, fontWeight: 600, marginBottom: 6 }}>School name</div>
+              <Inp placeholder="e.g. James Hornsby" value={fv} onChange={e => setFv(e.target.value)} />
             </div>
           )}
-          <button onClick={() => setSetup(null)} style={{ background: "none", border: "none", color: C.dim, fontSize: 12, marginTop: 8, cursor: "pointer", fontFamily: "inherit" }}>Cancel</button>
+
+          {subjects.length > 1 && (
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 12, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Subject</div>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {subjects.map(s => <Pill key={s.id} on={subId === s.id} onClick={() => setSubId(s.id)}>{s.name}</Pill>)}
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+            <div style={{ flex: 2 }}>
+              <div style={{ fontSize: 12, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Class name</div>
+              <Inp placeholder="e.g. 10X1" value={cf.n} onChange={e => setCf(p => ({ ...p, n: e.target.value }))} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 12, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Year</div>
+              <Inp placeholder="e.g. 10" type="number" value={cf.y} onChange={e => setCf(p => ({ ...p, y: e.target.value }))} />
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: 8 }}>
+            <Btn onClick={doSetup} disabled={!cf.n.trim()} style={{ flex: 1 }}>Create class</Btn>
+            <Btn v="ghost" onClick={() => setSetup(null)} style={{ fontSize: 12 }}>Cancel</Btn>
+          </div>
         </Card>
       )}
 
