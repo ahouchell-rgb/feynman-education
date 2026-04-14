@@ -1713,7 +1713,10 @@ function TopicSelector({ topics, unlocked, toggleT, setUnlocked, cls, userId }) 
 /* ─── Question Manager ─── */
 function QMgr({ subjectId, userId, topics, setTopics }) {
   const [nt, setNt] = useState(""); const [tid, setTid] = useState(""); const [qt, setQt] = useState(""); const [qa, setQa] = useState(""); const [mk, setMk] = useState(1);
-  const [added, setAdded] = useState(0); const [bulk, setBulk] = useState(false); const [bt, setBt] = useState(""); const [imp, setImp] = useState(false);
+  const [added, setAdded] = useState(0); const [mode, setMode] = useState("single"); const [bt, setBt] = useState(""); const [imp, setImp] = useState(false);
+  const [csvRows, setCsvRows] = useState(null); const [csvErr, setCsvErr] = useState(""); const [csvProgress, setCsvProgress] = useState(null);
+  const [dragOver, setDragOver] = useState(false);
+  const fileRef = useRef(null);
 
   const addT = async () => { if (!nt.trim()) return; const [t] = await sb.q("topics", { method: "POST", body: { subject_id: subjectId, name: nt, sort_order: topics.length } }); setTopics(p => [...p, t]); setNt(""); setTid(t.id); };
   const addQ = async () => { if (!qt.trim() || !qa.trim() || !tid) return; await sb.q("questions", { method: "POST", body: { topic_id: tid, question_text: qt, model_answer: qa, marks: mk, difficulty: 1, created_by: userId } }); setAdded(p => p + 1); setQt(""); setQa(""); };
@@ -1724,36 +1727,196 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
     setAdded(p => p + n); setBt(""); setImp(false);
   };
 
+  // ── CSV parsing ──
+  const parseCSVLine = (line) => {
+    const result = []; let cur = ""; let inQ = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { if (inQ && line[i + 1] === '"') { cur += '"'; i++; } else inQ = !inQ; }
+      else if (ch === ',' && !inQ) { result.push(cur.trim()); cur = ""; }
+      else cur += ch;
+    }
+    result.push(cur.trim()); return result;
+  };
+
+  const parseCSV = (text) => {
+    const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim().split('\n').filter(Boolean);
+    if (lines.length < 2) return { err: "CSV needs a header row and at least one data row." };
+    const header = parseCSVLine(lines[0]).map(h => h.toLowerCase().replace(/[^a-z]/g, ''));
+    const need = ['question', 'answer', 'topic'];
+    const missing = need.filter(k => !header.includes(k));
+    if (missing.length) return { err: `Missing required columns: ${missing.join(', ')}. Found: ${header.join(', ')}` };
+    const idx = { q: header.indexOf('question'), a: header.indexOf('answer'), t: header.indexOf('topic'), st: header.indexOf('subtopic') };
+    const rows = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = parseCSVLine(lines[i]);
+      const q = cols[idx.q] || ""; const a = cols[idx.a] || ""; const t = cols[idx.t] || "";
+      const st = idx.st >= 0 ? (cols[idx.st] || "") : "";
+      if (!q || !a || !t) continue;
+      rows.push({ question: q, answer: a, topic: t, subtopic: st });
+    }
+    if (!rows.length) return { err: "No valid rows found. Check your data has question, answer, and topic values." };
+    return { rows };
+  };
+
+  const handleFile = (file) => {
+    if (!file || !file.name.endsWith('.csv')) { setCsvErr("Please upload a .csv file."); return; }
+    setCsvErr(""); setCsvRows(null);
+    const reader = new FileReader();
+    reader.onload = (e) => { const { rows, err } = parseCSV(e.target.result); if (err) setCsvErr(err); else setCsvRows(rows); };
+    reader.readAsText(file);
+  };
+
+  const importCSV = async () => {
+    if (!csvRows || !subjectId) return;
+    setImp(true); setCsvProgress({ done: 0, total: csvRows.length });
+    // Build lookup map from existing topics (case-insensitive)
+    const tMap = {}; topics.forEach(t => { tMap[t.name.toLowerCase()] = t.id; });
+    let done = 0;
+    for (const row of csvRows) {
+      // Use subtopic as the topic name if present, otherwise use topic
+      const tName = (row.subtopic || row.topic).trim();
+      const key = tName.toLowerCase();
+      let topicId = tMap[key];
+      if (!topicId) {
+        try {
+          const [newT] = await sb.q("topics", { method: "POST", body: { subject_id: subjectId, name: tName, sort_order: Object.keys(tMap).length } });
+          topicId = newT.id; tMap[key] = topicId;
+          setTopics(p => [...p, newT]);
+        } catch { done++; setCsvProgress({ done, total: csvRows.length }); continue; }
+      }
+      try {
+        await sb.q("questions", { method: "POST", body: { topic_id: topicId, question_text: row.question, model_answer: row.answer, marks: 1, difficulty: 1, created_by: userId } });
+        setAdded(p => p + 1);
+      } catch {}
+      done++; setCsvProgress({ done, total: csvRows.length });
+    }
+    setImp(false); setCsvRows(null); setCsvProgress(null);
+  };
+
+  // Unique topics in the CSV preview
+  const csvTopicCount = csvRows ? new Set(csvRows.map(r => (r.subtopic || r.topic).toLowerCase())).size : 0;
+  const existingNames = new Set(topics.map(t => t.name.toLowerCase()));
+  const newTopics = csvRows ? [...new Set(csvRows.map(r => r.subtopic || r.topic))].filter(n => !existingNames.has(n.toLowerCase())) : [];
+
   return (
     <Card style={{ padding: 14 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
         <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Questions</div>
-        {added > 0 && <Badge color={C.grn}>+{added}</Badge>}
+        {added > 0 && <Badge color={C.grn}>+{added} added</Badge>}
       </div>
-      <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-        <Inp placeholder="New topic..." value={nt} onChange={e => setNt(e.target.value)} onKeyDown={e => e.key === "Enter" && addT()} />
-        <Btn onClick={addT} style={{ whiteSpace: "nowrap", fontSize: 13 }}>+ Topic</Btn>
+
+      {/* Topic creation — only for Single/Bulk */}
+      {mode !== "csv" && <>
+        <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+          <Inp placeholder="New topic..." value={nt} onChange={e => setNt(e.target.value)} onKeyDown={e => e.key === "Enter" && addT()} />
+          <Btn onClick={addT} style={{ whiteSpace: "nowrap", fontSize: 13 }}>+ Topic</Btn>
+        </div>
+        <select value={tid} onChange={e => setTid(e.target.value)} style={{ width: "100%", padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, color: C.txt, fontSize: 14, marginBottom: 12, outline: "none" }}>
+          <option value="">Select topic...</option>
+          {topics.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+        </select>
+      </>}
+
+      <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+        <Pill on={mode === "single"} onClick={() => setMode("single")}>Single</Pill>
+        <Pill on={mode === "bulk"} onClick={() => setMode("bulk")}>Bulk</Pill>
+        <Pill on={mode === "csv"} onClick={() => { setMode("csv"); setCsvRows(null); setCsvErr(""); }}>CSV import</Pill>
       </div>
-      <select value={tid} onChange={e => setTid(e.target.value)} style={{ width: "100%", padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, color: C.txt, fontSize: 14, marginBottom: 12, outline: "none" }}>
-        <option value="">Select topic...</option>
-        {topics.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-      </select>
-      <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
-        <Pill on={!bulk} onClick={() => setBulk(false)}>Single</Pill>
-        <Pill on={bulk} onClick={() => setBulk(true)}>Bulk import</Pill>
-      </div>
-      {!bulk ? (
+
+      {mode === "single" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <Inp placeholder="Question" value={qt} onChange={e => setQt(e.target.value)} />
           <Inp placeholder="Model answer" value={qa} onChange={e => setQa(e.target.value)} onKeyDown={e => e.key === "Enter" && addQ()} />
           <Inp type="number" min={1} max={6} value={mk} onChange={e => setMk(parseInt(e.target.value) || 1)} style={{ width: 80 }} />
           <Btn onClick={addQ} disabled={!qt || !qa || !tid}>Add question</Btn>
         </div>
-      ) : (
+      )}
+
+      {mode === "bulk" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <div style={{ fontSize: 12, color: C.dim }}>Format: <code style={{ background: C.card2, padding: "1px 6px", borderRadius: 4 }}>question | answer</code></div>
           <TA value={bt} onChange={e => setBt(e.target.value)} rows={8} placeholder="What is the powerhouse of the cell? | The mitochondria" style={{ fontSize: 13, fontFamily: "monospace" }} />
           <Btn onClick={bulkAdd} disabled={!bt.trim() || !tid || imp}>{imp ? "Importing..." : "Import all"}</Btn>
+        </div>
+      )}
+
+      {mode === "csv" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ fontSize: 12, color: C.dim, padding: "8px 12px", background: C.card2, borderRadius: 8, lineHeight: 1.7 }}>
+            Required columns: <code style={{ color: C.acc }}>question</code>, <code style={{ color: C.acc }}>answer</code>, <code style={{ color: C.acc }}>topic</code> · Optional: <code style={{ color: C.mid }}>subtopic</code><br />
+            Topics are matched by name — new ones are created automatically. If subtopic is present, it's used as the topic name.
+          </div>
+
+          {/* Drop zone */}
+          {!csvRows && !csvProgress && (
+            <div
+              onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={e => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files[0]); }}
+              onClick={() => fileRef.current?.click()}
+              style={{ border: `2px dashed ${dragOver ? C.pri : C.bdr}`, borderRadius: 10, padding: "32px 20px", textAlign: "center", cursor: "pointer", background: dragOver ? C.priSoft : "transparent", transition: "all .15s" }}
+            >
+              <div style={{ fontSize: 28, marginBottom: 8, opacity: 0.5 }}>📄</div>
+              <div style={{ fontSize: 13, color: C.mid, fontWeight: 600 }}>Drop CSV here or tap to browse</div>
+              <div style={{ fontSize: 11, color: C.dim, marginTop: 4 }}>question, answer, topic, subtopic</div>
+              <input ref={fileRef} type="file" accept=".csv" style={{ display: "none" }} onChange={e => handleFile(e.target.files[0])} />
+            </div>
+          )}
+
+          {csvErr && <div style={{ padding: "10px 14px", borderRadius: 8, background: C.redS, color: C.red, fontSize: 12, fontFamily: "monospace" }}>{csvErr}</div>}
+
+          {/* Preview */}
+          {csvRows && !csvProgress && (
+            <div>
+              <div style={{ display: "flex", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
+                <div style={{ padding: "8px 14px", borderRadius: 8, background: C.grnS, color: C.grn, fontSize: 12, fontWeight: 600 }}>{csvRows.length} questions</div>
+                <div style={{ padding: "8px 14px", borderRadius: 8, background: C.priSoft, color: C.pri, fontSize: 12, fontWeight: 600 }}>{csvTopicCount} topics</div>
+                {newTopics.length > 0 && <div style={{ padding: "8px 14px", borderRadius: 8, background: C.ambS, color: C.amb, fontSize: 12, fontWeight: 600 }}>{newTopics.length} new topic{newTopics.length !== 1 ? "s" : ""} will be created</div>}
+              </div>
+
+              {newTopics.length > 0 && (
+                <div style={{ marginBottom: 10, padding: "8px 12px", borderRadius: 8, background: C.card2, fontSize: 11, color: C.dim }}>
+                  New: {newTopics.slice(0, 5).join(', ')}{newTopics.length > 5 ? ` +${newTopics.length - 5} more` : ''}
+                </div>
+              )}
+
+              {/* Preview table */}
+              <div style={{ border: `1px solid ${C.bdr}`, borderRadius: 8, overflow: "hidden", marginBottom: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 100px", background: C.card2, padding: "7px 12px", fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>
+                  <span>Question</span><span>Answer</span><span>Topic</span>
+                </div>
+                {csvRows.slice(0, 5).map((r, i) => (
+                  <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 100px", padding: "8px 12px", fontSize: 12, borderTop: `1px solid ${C.bdr}`, color: C.mid, gap: 8 }}>
+                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.question}</span>
+                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.answer}</span>
+                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: C.acc }}>{r.subtopic || r.topic}</span>
+                  </div>
+                ))}
+                {csvRows.length > 5 && (
+                  <div style={{ padding: "6px 12px", fontSize: 11, color: C.dim, borderTop: `1px solid ${C.bdr}`, textAlign: "center" }}>+{csvRows.length - 5} more rows</div>
+                )}
+              </div>
+
+              <div style={{ display: "flex", gap: 8 }}>
+                <Btn onClick={importCSV} disabled={imp} style={{ flex: 1 }}>Import {csvRows.length} questions →</Btn>
+                <Btn v="ghost" onClick={() => { setCsvRows(null); setCsvErr(""); }} style={{ fontSize: 12 }}>Cancel</Btn>
+              </div>
+            </div>
+          )}
+
+          {/* Progress */}
+          {csvProgress && (
+            <div style={{ padding: 16, background: C.card2, borderRadius: 10 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 12, color: C.mid }}>
+                <span>Importing...</span>
+                <span style={{ fontFamily: "monospace" }}>{csvProgress.done}/{csvProgress.total}</span>
+              </div>
+              <div style={{ height: 6, background: C.bdr, borderRadius: 99, overflow: "hidden" }}>
+                <div style={{ height: "100%", background: C.pri, borderRadius: 99, width: `${(csvProgress.done / csvProgress.total) * 100}%`, transition: "width .2s" }} />
+              </div>
+            </div>
+          )}
         </div>
       )}
     </Card>
