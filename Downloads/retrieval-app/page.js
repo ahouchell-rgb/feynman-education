@@ -43,6 +43,7 @@ const sb = (() => {
     },
     out: () => { token = null; user = null; },
     user: () => user,
+    getToken: () => token,
   };
   return { q, del, auth };
 })();
@@ -604,6 +605,9 @@ function Teacher({ user }) {
   const [subId, setSubId] = useState(null);
   const [fv, setFv] = useState("");
   const [cf, setCf] = useState({ n: "", y: "" });
+  const [timePeriod, setTimePeriod] = useState("thisWeek");
+  const [targetDraft, setTargetDraft] = useState(null);
+  const [savingTarget, setSavingTarget] = useState(false);
 
   useEffect(() => { init(); }, []);
 
@@ -629,18 +633,23 @@ function Teacher({ user }) {
       ]);
       setTopics(allT); setUnlocked(new Set(ul.map(t => t.topic_id)));
 
+      const clsTarget = c.weekly_target ?? WEEKLY_TARGET;
       const sm = {};
-      mems.forEach(m => { sm[m.student_id] = { name: m.profiles?.display_name || "?", t: 0, c: 0, weekValid: 0, weekStars: 0, flagged: 0 }; });
+      mems.forEach(m => {
+        sm[m.student_id] = { name: m.profiles?.display_name || "?", t: 0, c: 0, weekValid: 0, weekStars: 0, flagged: 0, targetOverride: m.weekly_target_override ?? null };
+      });
       const mis = {}, tp = {};
       const thisWeekBounds = getWeekBounds(0);
+
+      // Pre-calculate 12 week boundaries for history
+      const weekBounds = Array.from({ length: 12 }, (_, i) => getWeekBounds(i));
+
       resps.forEach(r => {
         if (sm[r.student_id]) {
           sm[r.student_id].t++;
           if (r.is_correct) sm[r.student_id].c++;
-          // Check if flagged
           const isFlagged = r.ai_feedback && r.ai_feedback.startsWith("FLAGGED:");
           if (isFlagged) sm[r.student_id].flagged++;
-          // This week's valid answers
           const d = new Date(r.answered_at);
           if (d >= thisWeekBounds.start && d <= thisWeekBounds.end && !isFlagged) {
             sm[r.student_id].weekValid++;
@@ -656,23 +665,38 @@ function Teacher({ user }) {
           if (!tp[t]) tp[t] = { t: 0, c: 0 }; tp[t].t++; if (r.is_correct) tp[t].c++;
         }
       });
-      // Calculate week boundaries (Mon-Sun)
-      const now = new Date();
-      const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon...
-      const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-      const thisMonday = new Date(now); thisMonday.setHours(0,0,0,0); thisMonday.setDate(now.getDate() + mondayOffset);
-      const lastMonday = new Date(thisMonday); lastMonday.setDate(thisMonday.getDate() - 7);
-      const lastSunday = new Date(thisMonday); lastSunday.setMilliseconds(-1);
 
-      const thisWeekResps = resps.filter(r => new Date(r.answered_at) >= thisMonday);
-      const lastWeekResps = resps.filter(r => { const d = new Date(r.answered_at); return d >= lastMonday && d < thisMonday; });
+      // Build per-student 12-week history
+      Object.keys(sm).forEach(sid => {
+        const sResps = resps.filter(r => r.student_id === sid);
+        sm[sid].weeklyHistory = weekBounds.map((wb, i) => {
+          const wResps = sResps.filter(r => { const d = new Date(r.answered_at); return d >= wb.start && d <= wb.end; });
+          const valid = wResps.filter(r => !(r.ai_feedback && r.ai_feedback.startsWith("FLAGGED:"))).length;
+          const label = i === 0 ? "This wk" : i === 1 ? "Last wk" : `${i}w ago`;
+          return { valid, label, weeksAgo: i };
+        });
+      });
+
+      // Period stats
+      const periodResps = (weeksBack) => {
+        const cutoff = weeksBack === null ? new Date(0) : getWeekBounds(weeksBack - 1).start;
+        return resps.filter(r => new Date(r.answered_at) >= cutoff);
+      };
+      const mkPeriod = (rs) => ({ total: rs.length, correct: rs.filter(r => r.is_correct).length });
+
+      const thisMonday = thisWeekBounds.start;
+      const lastMonday = new Date(thisMonday); lastMonday.setDate(thisMonday.getDate() - 7);
 
       setDash({
         tR: resps.length, tC: resps.filter(r => r.is_correct).length,
-        thisWeek: { total: thisWeekResps.length, correct: thisWeekResps.filter(r => r.is_correct).length },
-        lastWeek: { total: lastWeekResps.length, correct: lastWeekResps.filter(r => r.is_correct).length },
+        clsTarget,
+        thisWeek: mkPeriod(resps.filter(r => new Date(r.answered_at) >= thisMonday)),
+        lastWeek: mkPeriod(resps.filter(r => { const d = new Date(r.answered_at); return d >= lastMonday && d < thisMonday; })),
+        last4Weeks: mkPeriod(periodResps(4)),
+        allTime: mkPeriod(resps),
         students: Object.entries(sm).map(([id, d]) => {
-          const over = Math.max(0, d.weekValid - WEEKLY_TARGET);
+          const target = d.targetOverride ?? clsTarget;
+          const over = Math.max(0, d.weekValid - target);
           return { id, ...d, weekStars: Math.floor(over / STAR_INTERVAL) };
         }),
         mis: Object.values(mis).sort((a, b) => b.n - a.n).slice(0, 10),
@@ -693,6 +717,19 @@ function Teacher({ user }) {
         setUnlocked(p => new Set(p).add(tid));
       }
     } catch (e) { console.error(e); }
+  };
+
+  const saveClsTarget = async (newTarget) => {
+    if (!cls || savingTarget) return;
+    setSavingTarget(true);
+    try {
+      await sb.q("classes", { method: "PATCH", params: { id: `eq.${cls.id}` }, body: { weekly_target: newTarget } });
+      const updated = { ...cls, weekly_target: newTarget };
+      setCls(updated);
+      setClasses(prev => prev.map(c => c.id === cls.id ? updated : c));
+      await loadCls(updated);
+    } catch (e) { console.error(e); }
+    setSavingTarget(false);
   };
 
   const doSetup = async () => {
@@ -802,48 +839,45 @@ function Teacher({ user }) {
                 </div>
               </Card>
 
-              {/* Weekly stats */}
+              {/* Period selector + stats */}
               <Card style={{ padding: 16, marginBottom: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 14 }}>Weekly Overview</div>
-                  <span style={{ fontSize: 11, color: C.dim }}>{dash.mems} student{dash.mems !== 1 ? 's' : ''} enrolled</span>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 14 }}>Class Activity</div>
+                  <span style={{ fontSize: 11, color: C.dim }}>{dash.mems} student{dash.mems !== 1 ? "s" : ""} enrolled</span>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                  {/* This week */}
-                  <div style={{ padding: 14, borderRadius: 10, background: C.priSoft, border: `1px solid rgba(99,102,241,0.2)` }}>
-                    <div style={{ fontSize: 11, color: C.pri, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>This week</div>
-                    <div style={{ fontSize: 28, fontWeight: 800, color: C.txt, letterSpacing: -1 }}>{dash.thisWeek?.total || 0}</div>
-                    <div style={{ fontSize: 11, color: C.mid, marginTop: 2 }}>questions answered</div>
-                    <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: 12, color: C.grn, fontWeight: 600 }}>{dash.thisWeek?.correct || 0} correct</span>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: dash.thisWeek?.total > 0 ? (Math.round((dash.thisWeek.correct / dash.thisWeek.total) * 100) >= 70 ? C.grn : C.amb) : C.dim }}>
-                        {dash.thisWeek?.total > 0 ? Math.round((dash.thisWeek.correct / dash.thisWeek.total) * 100) : 0}%
-                      </span>
-                    </div>
-                  </div>
-                  {/* Last week */}
-                  <div style={{ padding: 14, borderRadius: 10, background: C.card2, border: `1px solid ${C.bdr}` }}>
-                    <div style={{ fontSize: 11, color: C.mid, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Last week</div>
-                    <div style={{ fontSize: 28, fontWeight: 800, color: C.mid, letterSpacing: -1 }}>{dash.lastWeek?.total || 0}</div>
-                    <div style={{ fontSize: 11, color: C.dim, marginTop: 2 }}>questions answered</div>
-                    <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: 12, color: C.dim, fontWeight: 600 }}>{dash.lastWeek?.correct || 0} correct</span>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: dash.lastWeek?.total > 0 ? (Math.round((dash.lastWeek.correct / dash.lastWeek.total) * 100) >= 70 ? C.grn : C.amb) : C.dim }}>
-                        {dash.lastWeek?.total > 0 ? Math.round((dash.lastWeek.correct / dash.lastWeek.total) * 100) : 0}%
-                      </span>
-                    </div>
-                  </div>
+                {/* Time period pills */}
+                <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
+                  {[
+                    { k: "thisWeek", l: "This week" },
+                    { k: "lastWeek", l: "Last week" },
+                    { k: "last4Weeks", l: "Last 4 weeks" },
+                    { k: "allTime", l: "All time" },
+                  ].map(({ k, l }) => (
+                    <Pill key={k} on={timePeriod === k} onClick={() => setTimePeriod(k)} style={{ fontSize: 12, padding: "6px 12px" }}>{l}</Pill>
+                  ))}
                 </div>
-                {/* Week-on-week change */}
-                {dash.lastWeek?.total > 0 && (
+                {(() => {
+                  const pd = dash[timePeriod] || dash.thisWeek;
+                  const pct = pd.total > 0 ? Math.round(pd.correct / pd.total * 100) : 0;
+                  return (
+                    <div style={{ padding: 14, borderRadius: 10, background: C.card2, border: `1px solid ${C.bdr}` }}>
+                      <div style={{ fontSize: 30, fontWeight: 800, color: C.txt, letterSpacing: -1 }}>{pd.total}</div>
+                      <div style={{ fontSize: 11, color: C.mid, marginTop: 2, marginBottom: 10 }}>questions answered</div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 13, color: C.grn, fontWeight: 600 }}>{pd.correct} correct</span>
+                        <span style={{ fontSize: 14, fontWeight: 700, color: pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.dim }}>{pct}%</span>
+                      </div>
+                      <div style={{ marginTop: 8 }}><Bar pct={pct} /></div>
+                    </div>
+                  );
+                })()}
+                {/* Week-on-week change (only when showing thisWeek) */}
+                {timePeriod === "thisWeek" && dash.lastWeek?.total > 0 && (
                   <div style={{ marginTop: 10, padding: "8px 12px", borderRadius: 8, background: C.card2, display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
                     {(() => {
                       const diff = (dash.thisWeek?.total || 0) - dash.lastWeek.total;
-                      const up = diff > 0;
-                      const same = diff === 0;
-                      return <>
-                        <span style={{ color: same ? C.dim : up ? C.grn : C.red, fontWeight: 700 }}>{same ? "→" : up ? "↑" : "↓"} {same ? "Same as" : `${Math.abs(diff)} ${up ? "more" : "fewer"} than`} last week</span>
-                      </>;
+                      const up = diff > 0; const same = diff === 0;
+                      return <span style={{ color: same ? C.dim : up ? C.grn : C.red, fontWeight: 700 }}>{same ? "→" : up ? "↑" : "↓"} {same ? "Same as" : `${Math.abs(diff)} ${up ? "more" : "fewer"} than`} last week</span>;
                     })()}
                   </div>
                 )}
@@ -855,13 +889,33 @@ function Teacher({ user }) {
                 <Stat label="Accuracy" value={`${acc}%`} color={acc >= 70 ? C.grn : acc >= 50 ? C.amb : C.red} />
               </div>
 
+              {/* Class target slider */}
+              <Card style={{ padding: 14, marginBottom: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Weekly homework target</div>
+                  <span style={{ fontFamily: "monospace", fontWeight: 700, fontSize: 18, color: C.pri }}>{targetDraft ?? dash.clsTarget}</span>
+                </div>
+                <input type="range" min={5} max={100} step={5}
+                  value={targetDraft ?? dash.clsTarget}
+                  onChange={e => setTargetDraft(Number(e.target.value))}
+                  onMouseUp={e => { if (targetDraft !== null) saveClsTarget(targetDraft); setTargetDraft(null); }}
+                  onTouchEnd={e => { if (targetDraft !== null) saveClsTarget(targetDraft); setTargetDraft(null); }}
+                  style={{ width: "100%", accentColor: C.pri, cursor: "pointer" }}
+                />
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                  <span style={{ fontSize: 10, color: C.dim }}>5</span>
+                  <span style={{ fontSize: 10, color: C.dim }}>questions / week · applies to whole class · override per student below</span>
+                  <span style={{ fontSize: 10, color: C.dim }}>100</span>
+                </div>
+              </Card>
+
               <Card style={{ padding: 14, marginBottom: 10 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Students — Weekly Target ({WEEKLY_TARGET})</div>
-                  <span style={{ fontSize: 11, color: C.dim }}>Tap student to manage</span>
+                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Students</div>
+                  <span style={{ fontSize: 11, color: C.dim }}>Tap to manage · showing this week</span>
                 </div>
                 {dash.students.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No students yet. Share the join code above.</div> :
-                  <StudentList students={dash.students} cls={cls} onRefresh={() => loadCls(cls)} />}
+                  <StudentList students={dash.students} cls={cls} clsTarget={dash.clsTarget} onRefresh={() => loadCls(cls)} />}
               </Card>
 
               <Card style={{ padding: 14, marginBottom: 10 }}>
@@ -910,21 +964,21 @@ function Teacher({ user }) {
 }
 
 /* ─── Student List with Management Actions ─── */
-function StudentList({ students, cls, onRefresh }) {
+function StudentList({ students, cls, clsTarget, onRefresh }) {
   const [expanded, setExpanded] = useState(null);
   const [newPw, setNewPw] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [targetEdits, setTargetEdits] = useState({}); // studentId -> draft value
 
   const callManage = async (action, studentId, extra = {}) => {
     setBusy(true); setMsg("");
     try {
-      const token = sb.auth.user()?.access_token;
-      // We need the token from the auth state — let's use the stored one
+      const jwt = sb.auth.getToken();
       const r = await fetch(`${SUPA_URL}/functions/v1/manage-student`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
+        headers: { "Content-Type": "application/json", apikey: SUPA_KEY, Authorization: `Bearer ${jwt || SUPA_KEY}` },
         body: JSON.stringify({ action, student_id: studentId, class_id: cls.id, ...extra }),
       });
       const d = await r.json();
@@ -940,39 +994,124 @@ function StudentList({ students, cls, onRefresh }) {
     setBusy(false);
   };
 
+  const saveTargetOverride = async (studentId, value) => {
+    setBusy(true);
+    try {
+      const override = value === "" || value === null || value === undefined ? null : Number(value);
+      await sb.q("class_members", {
+        method: "PATCH",
+        params: { student_id: `eq.${studentId}`, class_id: `eq.${cls.id}` },
+        body: { weekly_target_override: override },
+      });
+      setTargetEdits(p => { const n = { ...p }; delete n[studentId]; return n; });
+      setTimeout(() => onRefresh(), 300);
+    } catch (e) { setMsg("Error: " + e.message); }
+    setBusy(false);
+  };
+
   return (
     <div>
       {students.sort((a, b) => b.weekValid - a.weekValid).map(s => {
+        const effectiveTarget = s.targetOverride ?? clsTarget;
         const p = s.t > 0 ? Math.round(s.c / s.t * 100) : 0;
-        const weekPct = Math.min(100, Math.round((s.weekValid / WEEKLY_TARGET) * 100));
-        const metTarget = s.weekValid >= WEEKLY_TARGET;
+        const weekPct = Math.min(100, Math.round((s.weekValid / effectiveTarget) * 100));
+        const metTarget = s.weekValid >= effectiveTarget;
         const isExpanded = expanded === s.id;
 
         return (
           <div key={s.id} style={{ marginBottom: 4 }}>
             <button onClick={() => { setExpanded(isExpanded ? null : s.id); setNewPw(""); setMsg(""); setConfirmDelete(null); }} style={{
               width: "100%", padding: "10px 10px", borderRadius: isExpanded ? "8px 8px 0 0" : 8, background: C.card2, border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left",
-              borderLeft: `3px solid ${metTarget ? C.grn : s.weekValid < WEEKLY_TARGET * 0.5 ? C.red : C.amb}`,
+              borderLeft: `3px solid ${metTarget ? C.grn : s.weekValid < effectiveTarget * 0.5 ? C.red : C.amb}`,
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                 <div style={{ flex: 1, color: C.txt, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 500 }}>{s.name}</div>
-                {s.weekStars > 0 && <span style={{ fontSize: 12 }}>{"⭐".repeat(Math.min(s.weekStars, 3))}{s.weekStars > 3 ? `+${s.weekStars-3}` : ""}</span>}
+                {s.targetOverride && <span style={{ fontSize: 9, color: C.acc, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5 }}>custom target</span>}
+                {s.weekStars > 0 && <span style={{ fontSize: 12 }}>{"⭐".repeat(Math.min(s.weekStars, 3))}{s.weekStars > 3 ? `+${s.weekStars - 3}` : ""}</span>}
                 {s.flagged > 0 && <span style={{ fontSize: 10, color: C.red, fontWeight: 600 }}>🚩{s.flagged}</span>}
-                <span style={{ fontSize: 11, fontWeight: 700, color: metTarget ? C.grn : C.red }}>{s.weekValid}/{WEEKLY_TARGET}</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: metTarget ? C.grn : C.red }}>{s.weekValid}/{effectiveTarget}</span>
                 <span style={{ color: C.dim, fontSize: 12, transition: "transform .2s", transform: isExpanded ? "rotate(180deg)" : "rotate(0)" }}>▾</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <div style={{ flex: 1, height: 5, background: C.bdr, borderRadius: 99 }}>
                   <div style={{ width: `${weekPct}%`, height: "100%", background: metTarget ? C.grn : weekPct >= 50 ? C.amb : C.red, borderRadius: 99, transition: "width .3s" }} />
                 </div>
-                <span style={{ fontSize: 10, color: C.dim, whiteSpace: "nowrap" }}>{p}% acc</span>
+                <span style={{ fontSize: 10, color: C.dim, whiteSpace: "nowrap" }}>{p}% acc all time</span>
               </div>
             </button>
 
-            {/* Expanded management panel */}
+            {/* Expanded panel */}
             {isExpanded && (
               <div style={{ padding: 12, background: C.card, borderRadius: "0 0 8px 8px", borderLeft: `3px solid ${C.bdr}`, borderBottom: `1px solid ${C.bdr}`, borderRight: `1px solid ${C.bdr}` }}>
                 {msg && <div style={{ padding: "8px 10px", borderRadius: 6, marginBottom: 10, fontSize: 12, background: msg.startsWith("Error") ? C.redS : C.grnS, color: msg.startsWith("Error") ? C.red : C.grn }}>{msg}</div>}
+
+                {/* All-time stats */}
+                <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+                  <div style={{ flex: 1, padding: "8px 10px", borderRadius: 8, background: C.card2, textAlign: "center" }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: C.acc }}>{s.t}</div>
+                    <div style={{ fontSize: 10, color: C.dim }}>All time</div>
+                  </div>
+                  <div style={{ flex: 1, padding: "8px 10px", borderRadius: 8, background: C.card2, textAlign: "center" }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: C.grn }}>{s.c}</div>
+                    <div style={{ fontSize: 10, color: C.dim }}>Correct</div>
+                  </div>
+                  <div style={{ flex: 1, padding: "8px 10px", borderRadius: 8, background: C.card2, textAlign: "center" }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: p >= 70 ? C.grn : p >= 50 ? C.amb : C.red }}>{p}%</div>
+                    <div style={{ fontSize: 10, color: C.dim }}>Accuracy</div>
+                  </div>
+                </div>
+
+                {/* 12-week history bars */}
+                {s.weeklyHistory && (
+                  <div style={{ marginBottom: 14 }}>
+                    <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 8 }}>Weekly homework history (12 weeks)</div>
+                    <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 72 }}>
+                      {[...s.weeklyHistory].reverse().map((w, i) => {
+                        const barH = effectiveTarget > 0 ? Math.min(100, (w.valid / effectiveTarget) * 100) : 0;
+                        const met = w.valid >= effectiveTarget;
+                        const isCurrent = w.weeksAgo === 0;
+                        return (
+                          <div key={i} title={`${w.label}: ${w.valid} questions`} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                            <div style={{ fontSize: 8, color: met ? C.grn : w.valid > 0 ? C.amb : C.dim, fontWeight: 600, lineHeight: 1 }}>
+                              {w.valid > 0 ? w.valid : ""}
+                            </div>
+                            <div style={{ width: "100%", height: 52, background: C.bdr, borderRadius: 3, display: "flex", flexDirection: "column", justifyContent: "flex-end", overflow: "hidden", outline: isCurrent ? `1px solid ${C.pri}` : "none" }}>
+                              <div style={{ width: "100%", height: `${Math.max(barH, w.valid > 0 ? 5 : 0)}%`, background: met ? C.grn : w.valid >= effectiveTarget * 0.5 ? C.amb : w.valid > 0 ? C.red : "transparent", borderRadius: 3, transition: "height .3s" }} />
+                            </div>
+                            <div style={{ fontSize: 7, color: isCurrent ? C.txt : C.dim, fontWeight: isCurrent ? 700 : 400, lineHeight: 1, textAlign: "center" }}>
+                              {isCurrent ? "now" : `${w.weeksAgo}w`}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Per-student target override */}
+                <div style={{ marginBottom: 12, padding: "10px 12px", borderRadius: 8, background: C.card2 }}>
+                  <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 6 }}>
+                    Individual target <span style={{ color: C.dim, fontWeight: 400 }}>(blank = use class default of {clsTarget})</span>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <input type="number" min={1} max={200}
+                      value={targetEdits[s.id] !== undefined ? targetEdits[s.id] : (s.targetOverride ?? "")}
+                      placeholder={`${clsTarget} (class default)`}
+                      onChange={e => setTargetEdits(p => ({ ...p, [s.id]: e.target.value }))}
+                      style={{ flex: 1, padding: "7px 10px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.txt, fontSize: 13, fontFamily: "inherit", outline: "none" }}
+                    />
+                    <Btn onClick={() => saveTargetOverride(s.id, targetEdits[s.id] !== undefined ? targetEdits[s.id] : (s.targetOverride ?? ""))}
+                      disabled={busy || targetEdits[s.id] === undefined}
+                      style={{ whiteSpace: "nowrap", fontSize: 12, padding: "8px 14px" }}>
+                      {busy ? "..." : "Save"}
+                    </Btn>
+                    {s.targetOverride && (
+                      <Btn v="ghost" onClick={() => saveTargetOverride(s.id, "")} disabled={busy} style={{ fontSize: 12, padding: "8px 10px" }}>
+                        Reset
+                      </Btn>
+                    )}
+                  </div>
+                </div>
 
                 {/* Reset password */}
                 <div style={{ marginBottom: 12 }}>
