@@ -322,7 +322,7 @@ function Student({ user }) {
   const [topicStats, setTopicStats] = useState([]); // [{name, t, c, notStarted}]
   const [showTopics, setShowTopics] = useState(false);
   const [statView, setStatView] = useState("allTime"); // "allTime" | "thisWeek"
-  const [sessionStats, setSessionStats] = useState({ t: 0, c: 0, topics: [] });
+  const [sessionStats, setSessionStats] = useState({ t: 0, c: 0, topics: [], struggles: [] });
   const [showSummary, setShowSummary] = useState(false);
   const [sessionHitTarget, setSessionHitTarget] = useState(false);
 
@@ -360,7 +360,7 @@ function Student({ user }) {
 
   const pickClass = async (c) => {
     setCls(c);
-    setSessionStats({ t: 0, c: 0, topics: [] });
+    setSessionStats({ t: 0, c: 0, topics: [], struggles: [] });
     setShowSummary(false);
     setSessionHitTarget(false);
     try {
@@ -444,6 +444,9 @@ function Student({ user }) {
         t: prev.t + 1,
         c: prev.c + (r.correct ? 1 : 0),
         topics: prev.topics.includes(topicName) ? prev.topics : [...prev.topics, topicName],
+        struggles: !r.correct && !r.flagged
+          ? [...prev.struggles, { question: q.question_text, studentAnswer: ans, modelAnswer: q.model_answer, topic: topicName }]
+          : prev.struggles,
       }));
       // Star milestone
       const overTarget = newValid - WEEKLY_TARGET;
@@ -689,11 +692,35 @@ function Student({ user }) {
 
           {/* Topics covered */}
           {sessionStats.topics.length > 0 && (
-            <div style={{ marginBottom: 20, padding: "12px 14px", borderRadius: 10, background: C.card2, textAlign: "left" }}>
+            <div style={{ marginBottom: 16, padding: "12px 14px", borderRadius: 10, background: C.card2, textAlign: "left" }}>
               <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 8 }}>Topics covered</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                 {sessionStats.topics.map((t, i) => (
                   <span key={i} style={{ fontSize: 12, padding: "3px 10px", borderRadius: 99, background: C.priSoft, color: C.pri, fontWeight: 500 }}>{t}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sessionStats.struggles.length > 0 && (
+            <div style={{ marginBottom: 20, textAlign: "left" }}>
+              <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 10 }}>
+                Questions to revisit ({sessionStats.struggles.length})
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {sessionStats.struggles.map((s, i) => (
+                  <div key={i} style={{ borderRadius: 10, border: `1px solid rgba(239,68,68,0.2)`, overflow: "hidden" }}>
+                    <div style={{ padding: "10px 12px", background: C.redS }}>
+                      <div style={{ fontSize: 11, color: C.dim, marginBottom: 3 }}>{s.topic}</div>
+                      <div style={{ fontSize: 13, color: C.txt, fontWeight: 500, lineHeight: 1.4 }}>{s.question}</div>
+                    </div>
+                    <div style={{ padding: "8px 12px", background: C.card2 }}>
+                      <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 3 }}>You wrote</div>
+                      <div style={{ fontSize: 12, color: C.mid, marginBottom: 8, fontStyle: "italic" }}>"{s.studentAnswer}"</div>
+                      <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 3 }}>Correct answer</div>
+                      <div style={{ fontSize: 12, color: C.grn, fontWeight: 500, lineHeight: 1.4 }}>{s.modelAnswer}</div>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
