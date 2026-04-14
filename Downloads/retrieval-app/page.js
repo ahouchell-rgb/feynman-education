@@ -163,18 +163,20 @@ async function aiMark(qText, model, student, marks) {
 /* ─── Fake Answer Detection ─── */
 function detectFakeAnswer(answer) {
   const trimmed = answer.trim();
-  // Single character or very short nonsense
+  // Too short
   if (trimmed.length <= 2) return "Answer too short — doesn't count towards target.";
   // All same character repeated
   if (/^(.)\1+$/.test(trimmed.replace(/\s/g, ''))) return "Repeated characters detected — doesn't count.";
   // All same word repeated
   const words = trimmed.toLowerCase().split(/\s+/);
   if (words.length >= 3 && new Set(words).size === 1) return "Same word repeated — doesn't count.";
-  // Random keyboard mashing (all consonants, no vowels in 5+ chars)
+  // No vowels — keyboard mashing
   if (trimmed.length >= 5 && !/[aeiouAEIOU]/.test(trimmed)) return "This doesn't look like a real answer — doesn't count.";
-  // Just numbers
-  if (/^\d+$/.test(trimmed) && trimmed.length < 4) return "Just a number — doesn't count.";
-  return null; // not fake
+  // "I don't know" and explicit non-attempt phrases
+  if (/^(i )?(don'?t|do not|dont) know\.?$/i.test(trimmed)) return "Please attempt the answer — doesn't count towards target.";
+  if (/^(idk|dunno|no idea|not sure|unsure|no clue|i have no idea|i dont know|idek)\.?$/i.test(trimmed)) return "Please attempt the answer — doesn't count towards target.";
+  if (/^\?+$/.test(trimmed)) return "Please attempt the answer — doesn't count towards target.";
+  return null;
 }
 
 /* ─── Weekly Boundaries (Mon-Sun) ─── */
