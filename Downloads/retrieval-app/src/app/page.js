@@ -852,6 +852,8 @@ function Teacher({ user }) {
   const [targetDraft, setTargetDraft] = useState(null);
   const [savingTarget, setSavingTarget] = useState(false);
   const [savingRecency, setSavingRecency] = useState(false);
+  const [deliveries, setDeliveries] = useState({}); // topicId → {taught_at, notes}
+  const [parentTokens, setParentTokens] = useState({}); // studentId → token UUID
 
   useEffect(() => { init(); }, []);
 
@@ -869,13 +871,19 @@ function Teacher({ user }) {
 
   const loadCls = async (c) => {
     try {
-      const [allT, ul, resps, mems] = await Promise.all([
+      const [allT, ul, resps, mems, dels, tokens] = await Promise.all([
         sb.q("topics", { params: { subject_id: `eq.${c.subject_id}`, select: "*", order: "sort_order.asc" } }),
         sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id,recency_rank" } }),
         sb.q("responses", { params: { class_id: `eq.${c.id}`, select: "*,questions(question_text,model_answer,topic_id,topics(name)),profiles(display_name)" } }),
         sb.q("class_members", { params: { class_id: `eq.${c.id}`, select: "*,profiles(display_name)" } }),
+        sb.q("lesson_deliveries", { params: { class_id: `eq.${c.id}`, select: "topic_id,taught_at,notes" } }),
+        sb.q("parent_tokens", { params: { class_id: `eq.${c.id}`, select: "student_id,token" } }),
       ]);
       setTopics(allT); setUnlocked(new Set(ul.map(t => t.topic_id)));
+      const delMap = {}; dels.forEach(d => { delMap[d.topic_id] = { taught_at: d.taught_at, notes: d.notes }; });
+      setDeliveries(delMap);
+      const tokMap = {}; tokens.forEach(t => { tokMap[t.student_id] = t.token; });
+      setParentTokens(tokMap);
 
       const clsTarget = c.weekly_target ?? WEEKLY_TARGET;
       const sm = {};
@@ -1009,6 +1017,42 @@ function Teacher({ user }) {
     try {
       await sb.q("class_topics", { method: "PATCH", params: { class_id: `eq.${cls.id}`, topic_id: `eq.${topicId}` }, body: { recency_rank: null } });
       await loadCls(cls);
+    } catch (e) { console.error(e); }
+  };
+
+  const markTaught = async (topicId) => {
+    if (!cls) return;
+    try {
+      if (deliveries[topicId]) {
+        // Already marked — unmark (delete)
+        await sb.del("lesson_deliveries", { class_id: `eq.${cls.id}`, topic_id: `eq.${topicId}` });
+        setDeliveries(p => { const n = { ...p }; delete n[topicId]; return n; });
+      } else {
+        // Mark as taught today
+        await sb.q("lesson_deliveries", { method: "POST", body: { class_id: cls.id, topic_id: topicId, teacher_id: user.id } });
+        setDeliveries(p => ({ ...p, [topicId]: { taught_at: new Date().toISOString(), notes: null } }));
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  const generateParentToken = async (studentId) => {
+    if (!cls) return null;
+    try {
+      if (parentTokens[studentId]) {
+        // Delete existing and regenerate
+        await sb.del("parent_tokens", { student_id: `eq.${studentId}`, class_id: `eq.${cls.id}` });
+      }
+      const [newToken] = await sb.q("parent_tokens", { method: "POST", body: { student_id: studentId, class_id: cls.id, created_by: user.id } });
+      setParentTokens(p => ({ ...p, [studentId]: newToken.token }));
+      return newToken.token;
+    } catch (e) { console.error(e); return null; }
+  };
+
+  const revokeParentToken = async (studentId) => {
+    if (!cls) return;
+    try {
+      await sb.del("parent_tokens", { student_id: `eq.${studentId}`, class_id: `eq.${cls.id}` });
+      setParentTokens(p => { const n = { ...p }; delete n[studentId]; return n; });
     } catch (e) { console.error(e); }
   };
 
@@ -1272,7 +1316,7 @@ function Teacher({ user }) {
                   <span style={{ fontSize: 11, color: C.dim }}>Tap to manage · showing this week</span>
                 </div>
                 {dash.students.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No students yet. Share the join code above.</div> :
-                  <StudentList students={dash.students} cls={cls} clsTarget={dash.clsTarget} onRefresh={() => loadCls(cls)} />}
+                  <StudentList students={dash.students} cls={cls} clsTarget={dash.clsTarget} onRefresh={() => loadCls(cls)} parentTokens={parentTokens} onGenerateToken={generateParentToken} onRevokeToken={revokeParentToken} />}
               </Card>
 
               <Card style={{ padding: 14, marginBottom: 10 }}>
@@ -1310,7 +1354,7 @@ function Teacher({ user }) {
           )}
 
           {tab === "topics" && (
-            <TopicSelector topics={topics} unlocked={unlocked} toggleT={toggleT} setUnlocked={setUnlocked} cls={cls} userId={user.id} />
+            <TopicSelector topics={topics} unlocked={unlocked} toggleT={toggleT} setUnlocked={setUnlocked} cls={cls} userId={user.id} deliveries={deliveries} onMarkTaught={markTaught} />
           )}
 
           {tab === "questions" && <QMgr subjectId={cls.subject_id} userId={user.id} topics={topics} setTopics={setTopics} />}
@@ -1321,7 +1365,7 @@ function Teacher({ user }) {
 }
 
 /* ─── Student List with Management Actions ─── */
-function StudentList({ students, cls, clsTarget, onRefresh }) {
+function StudentList({ students, cls, clsTarget, onRefresh, parentTokens = {}, onGenerateToken, onRevokeToken }) {
   const [expanded, setExpanded] = useState(null);
   const [newPw, setNewPw] = useState("");
   const [busy, setBusy] = useState(false);
@@ -1468,6 +1512,30 @@ function StudentList({ students, cls, clsTarget, onRefresh }) {
                       </Btn>
                     )}
                   </div>
+                </div>
+
+                {/* Parent access */}
+                <div style={{ marginBottom: 12, padding: "10px 12px", borderRadius: 8, background: C.card2 }}>
+                  <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 8 }}>Parent access link</div>
+                  {parentTokens[s.id] ? (
+                    <div>
+                      <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
+                        <input readOnly value={`${window.location.origin.replace('retrieval-app', 'parent-hub')}/view/${parentTokens[s.id]}`}
+                          style={{ flex: 1, padding: "6px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 6, color: C.dim, fontSize: 11, fontFamily: "monospace", outline: "none" }} />
+                        <button onClick={() => { navigator.clipboard.writeText(`${window.location.origin.replace('retrieval-app', 'parent-hub')}/view/${parentTokens[s.id]}`); setMsg("Link copied!"); setTimeout(() => setMsg(""), 2000); }}
+                          style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.pri, color: "#fff", fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+                          Copy
+                        </button>
+                      </div>
+                      <button onClick={() => onRevokeToken(s.id)} style={{ fontSize: 11, color: C.red, background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", textDecoration: "underline" }}>
+                        Revoke link
+                      </button>
+                    </div>
+                  ) : (
+                    <Btn onClick={async () => { const t = await onGenerateToken(s.id); if (t) setMsg("Link generated — copy it above"); }} disabled={busy} style={{ fontSize: 12, padding: "8px 14px" }}>
+                      Generate parent link
+                    </Btn>
+                  )}
                 </div>
 
                 {/* Reset password */}
@@ -1852,7 +1920,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
 }
 
 /* ─── Topic Selector (grouped by B/C/P with collapsible sections) ─── */
-function TopicSelector({ topics, unlocked, toggleT, setUnlocked, cls, userId }) {
+function TopicSelector({ topics, unlocked, toggleT, setUnlocked, cls, userId, deliveries = {}, onMarkTaught }) {
   const [expanded, setExpanded] = useState({});
   const [search, setSearch] = useState("");
 
@@ -1890,14 +1958,25 @@ function TopicSelector({ topics, unlocked, toggleT, setUnlocked, cls, userId }) 
 
   const renderTopic = (t) => {
     const on = unlocked.has(t.id);
+    const taught = deliveries[t.id];
+    const taughtDate = taught ? new Date(taught.taught_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : null;
     return (
-      <button key={t.id} onClick={() => toggleT(t.id)} style={{
-        display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, cursor: "pointer", width: "100%", textAlign: "left", fontFamily: "inherit", fontSize: 13, marginBottom: 3,
-        background: on ? C.priSoft : "transparent", border: `1px solid ${on ? "rgba(99,102,241,.2)" : "transparent"}`, color: on ? C.txt : C.mid, transition: "all .15s",
-      }}>
-        <div style={{ width: 20, height: 20, borderRadius: 5, border: `2px solid ${on ? C.pri : C.dim}`, background: on ? C.pri : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{on ? "✓" : ""}</div>
-        <span style={{ flex: 1 }}>{t.name}</span>
-      </button>
+      <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
+        <button onClick={() => toggleT(t.id)} style={{
+          flex: 1, display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, cursor: "pointer", textAlign: "left", fontFamily: "inherit", fontSize: 13,
+          background: on ? C.priSoft : "transparent", border: `1px solid ${on ? "rgba(99,102,241,.2)" : "transparent"}`, color: on ? C.txt : C.mid, transition: "all .15s",
+        }}>
+          <div style={{ width: 20, height: 20, borderRadius: 5, border: `2px solid ${on ? C.pri : C.dim}`, background: on ? C.pri : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{on ? "✓" : ""}</div>
+          <span style={{ flex: 1 }}>{t.name}</span>
+          {taughtDate && <span style={{ fontSize: 10, color: C.grn, fontWeight: 600, whiteSpace: "nowrap" }}>✓ Taught {taughtDate}</span>}
+        </button>
+        {on && onMarkTaught && (
+          <button onClick={() => onMarkTaught(t.id)} title={taught ? "Unmark as taught" : "Mark as taught"} style={{
+            padding: "6px 10px", borderRadius: 8, border: `1px solid ${taught ? C.grn : C.bdr}`, background: taught ? C.grnS : "transparent",
+            color: taught ? C.grn : C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontWeight: 600, whiteSpace: "nowrap",
+          }}>{taught ? "Taught ✓" : "Mark taught"}</button>
+        )}
+      </div>
     );
   };
 
