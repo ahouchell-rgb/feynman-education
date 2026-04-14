@@ -310,6 +310,7 @@ function Student({ user }) {
   const [starPop, setStarPop] = useState(false);
   const [topicStats, setTopicStats] = useState([]); // [{name, t, c, notStarted}]
   const [showTopics, setShowTopics] = useState(false);
+  const [statView, setStatView] = useState("allTime"); // "allTime" | "thisWeek"
 
   useEffect(() => { load(); }, []);
 
@@ -550,11 +551,26 @@ function Student({ user }) {
         </Card>
       )}
 
-      <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
-        <Stat label="Done" value={stats.t} color={C.acc} />
-        <Stat label="Correct" value={stats.c} color={C.grn} />
-        <Stat label="Accuracy" value={`${acc}%`} color={acc >= 70 ? C.grn : acc >= 50 ? C.amb : C.red} />
-      </div>
+      {(() => {
+        const tw = weeklyData[0];
+        const isWeek = statView === "thisWeek";
+        const t = isWeek ? (tw?.total || 0) : stats.t;
+        const c = isWeek ? (tw?.correct || 0) : stats.c;
+        const pct = t > 0 ? Math.round(c / t * 100) : 0;
+        return (
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ display: "flex", gap: 6, marginBottom: 8, justifyContent: "flex-end" }}>
+              <Pill on={statView === "allTime"} onClick={() => setStatView("allTime")} style={{ fontSize: 11, padding: "4px 10px" }}>All time</Pill>
+              <Pill on={statView === "thisWeek"} onClick={() => setStatView("thisWeek")} style={{ fontSize: 11, padding: "4px 10px" }}>This week</Pill>
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <Stat label="Done" value={t} color={C.acc} />
+              <Stat label="Correct" value={c} color={C.grn} />
+              <Stat label="Accuracy" value={`${pct}%`} color={pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red} />
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Topic strength */}
       {topicStats.length > 0 && (
@@ -706,6 +722,7 @@ function Teacher({ user }) {
       });
       const mis = {}, tp = {};
       const thisWeekBounds = getWeekBounds(0);
+      const twoWeeksAgo = new Date(); twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
 
       // Pre-calculate 12 week boundaries for history
       const weekBounds = Array.from({ length: 12 }, (_, i) => getWeekBounds(i));
@@ -721,7 +738,7 @@ function Teacher({ user }) {
             sm[r.student_id].weekValid++;
           }
         }
-        if (!r.is_correct && r.questions) {
+        if (!r.is_correct && r.questions && new Date(r.answered_at) >= twoWeeksAgo) {
           const k = r.questions.question_text;
           if (!mis[k]) mis[k] = { q: k, topic: r.questions.topics?.name || "", n: 0, ans: [] };
           mis[k].n++; if (mis[k].ans.length < 3) mis[k].ans.push(r.student_answer);
