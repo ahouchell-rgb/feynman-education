@@ -377,7 +377,7 @@ function Student({ user }) {
       ul.forEach(t => { if (t.recency_rank) recencyBoost[t.topic_id] = t.recency_rank; });
       setRecency(recencyBoost);
 
-      const questions = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, select: "*,topics(name)" } });
+      const questions = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "*,topics(name)" } });
       const resps = await sb.q("responses", { params: { student_id: `eq.${user.id}`, class_id: `eq.${c.id}`, select: "question_id,is_correct,student_answer,answered_at", order: "answered_at.desc" } });
 
       const srMap = {};
@@ -1553,7 +1553,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
     try {
       // Fetch all questions for unlocked topics
       const tids = [...unlocked];
-      const allQs = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, select: "*,topics(name)" } });
+      const allQs = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "*,topics(name)" } });
 
       // Get misconception question IDs from dash data
       const misconceptionQs = [];
@@ -1997,6 +1997,10 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
   const [csvRows, setCsvRows] = useState(null); const [csvErr, setCsvErr] = useState(""); const [csvProgress, setCsvProgress] = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef(null);
+  // Browse/edit state
+  const [ql, setQl] = useState([]); const [qlLoading, setQlLoading] = useState(false);
+  const [editId, setEditId] = useState(null); const [editQ, setEditQ] = useState(""); const [editA, setEditA] = useState(""); const [editMk, setEditMk] = useState(1);
+  const [saving, setSaving] = useState(false); const [confirmArchive, setConfirmArchive] = useState(null);
 
   const addT = async () => { if (!nt.trim()) return; const [t] = await sb.q("topics", { method: "POST", body: { subject_id: subjectId, name: nt, sort_order: topics.length } }); setTopics(p => [...p, t]); setNt(""); setTid(t.id); };
   const addQ = async () => { if (!qt.trim() || !qa.trim() || !tid) return; await sb.q("questions", { method: "POST", body: { topic_id: tid, question_text: qt, model_answer: qa, marks: mk, difficulty: 1, created_by: userId } }); setAdded(p => p + 1); setQt(""); setQa(""); };
@@ -2006,6 +2010,39 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
     for (const line of lines) { const [q, a] = line.split("|").map(s => s.trim()); if (q && a) { try { await sb.q("questions", { method: "POST", body: { topic_id: tid, question_text: q, model_answer: a, marks: 1, difficulty: 1, created_by: userId } }); n++; } catch {} } }
     setAdded(p => p + n); setBt(""); setImp(false);
   };
+
+  const loadQl = async (topicId) => {
+    if (!topicId) { setQl([]); return; }
+    setQlLoading(true); setEditId(null); setConfirmArchive(null);
+    try {
+      const qs = await sb.q("questions", { params: { topic_id: `eq.${topicId}`, archived: "eq.false", select: "*", order: "created_at.asc" } });
+      setQl(qs);
+    } catch { setQl([]); }
+    setQlLoading(false);
+  };
+
+  const startEdit = (q) => { setEditId(q.id); setEditQ(q.question_text); setEditA(q.model_answer); setEditMk(q.marks || 1); setConfirmArchive(null); };
+
+  const saveEdit = async (id) => {
+    if (!editQ.trim() || !editA.trim()) return;
+    setSaving(true);
+    try {
+      await sb.q("questions", { method: "PATCH", params: { id: `eq.${id}` }, body: { question_text: editQ.trim(), model_answer: editA.trim(), marks: editMk } });
+      setQl(prev => prev.map(q => q.id === id ? { ...q, question_text: editQ.trim(), model_answer: editA.trim(), marks: editMk } : q));
+      setEditId(null);
+    } catch (e) { console.error(e); }
+    setSaving(false);
+  };
+
+  const archiveQ = async (id) => {
+    try {
+      await sb.q("questions", { method: "PATCH", params: { id: `eq.${id}` }, body: { archived: true } });
+      setQl(prev => prev.filter(q => q.id !== id));
+      setConfirmArchive(null); setEditId(null);
+    } catch (e) { console.error(e); }
+  };
+
+  useEffect(() => { if (mode === "browse" && tid) loadQl(tid); }, [mode, tid]);
 
   // ── CSV parsing ──
   const parseCSVLine = (line) => {
@@ -2050,19 +2087,16 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
   const importCSV = async () => {
     if (!csvRows || !subjectId) return;
     setImp(true); setCsvProgress({ done: 0, total: csvRows.length });
-    // Build lookup map from existing topics (case-insensitive)
     const tMap = {}; topics.forEach(t => { tMap[t.name.toLowerCase()] = t.id; });
     let done = 0;
     for (const row of csvRows) {
-      // Use subtopic as the topic name if present, otherwise use topic
       const tName = (row.subtopic || row.topic).trim();
       const key = tName.toLowerCase();
       let topicId = tMap[key];
       if (!topicId) {
         try {
           const [newT] = await sb.q("topics", { method: "POST", body: { subject_id: subjectId, name: tName, sort_order: Object.keys(tMap).length } });
-          topicId = newT.id; tMap[key] = topicId;
-          setTopics(p => [...p, newT]);
+          topicId = newT.id; tMap[key] = topicId; setTopics(p => [...p, newT]);
         } catch { done++; setCsvProgress({ done, total: csvRows.length }); continue; }
       }
       try {
@@ -2074,7 +2108,6 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
     setImp(false); setCsvRows(null); setCsvProgress(null);
   };
 
-  // Unique topics in the CSV preview
   const csvTopicCount = csvRows ? new Set(csvRows.map(r => (r.subtopic || r.topic).toLowerCase())).size : 0;
   const existingNames = new Set(topics.map(t => t.name.toLowerCase()));
   const newTopics = csvRows ? [...new Set(csvRows.map(r => r.subtopic || r.topic))].filter(n => !existingNames.has(n.toLowerCase())) : [];
@@ -2086,7 +2119,7 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
         {added > 0 && <Badge color={C.grn}>+{added} added</Badge>}
       </div>
 
-      {/* Topic creation — only for Single/Bulk */}
+      {/* Topic selector */}
       {mode !== "csv" && <>
         <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
           <Inp placeholder="New topic..." value={nt} onChange={e => setNt(e.target.value)} onKeyDown={e => e.key === "Enter" && addT()} />
@@ -2098,10 +2131,11 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
         </select>
       </>}
 
-      <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
         <Pill on={mode === "single"} onClick={() => setMode("single")}>Single</Pill>
         <Pill on={mode === "bulk"} onClick={() => setMode("bulk")}>Bulk</Pill>
         <Pill on={mode === "csv"} onClick={() => { setMode("csv"); setCsvRows(null); setCsvErr(""); }}>CSV import</Pill>
+        <Pill on={mode === "browse"} onClick={() => setMode("browse")}>Browse & edit</Pill>
       </div>
 
       {mode === "single" && (
@@ -2121,32 +2155,86 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
         </div>
       )}
 
+      {mode === "browse" && (
+        <div>
+          {!tid ? (
+            <div style={{ padding: "24px 0", textAlign: "center", color: C.dim, fontSize: 13 }}>Select a topic above to browse its questions</div>
+          ) : qlLoading ? (
+            <div style={{ padding: "24px 0", textAlign: "center", color: C.dim, fontSize: 13 }}>Loading...</div>
+          ) : ql.length === 0 ? (
+            <div style={{ padding: "24px 0", textAlign: "center", color: C.dim, fontSize: 13 }}>No questions in this topic yet</div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <div style={{ fontSize: 11, color: C.dim, marginBottom: 4 }}>{ql.length} question{ql.length !== 1 ? "s" : ""}</div>
+              {ql.map((q, i) => (
+                <div key={q.id} style={{ borderRadius: 10, border: `1px solid ${editId === q.id ? C.pri : C.bdr}`, overflow: "hidden" }}>
+                  {editId === q.id ? (
+                    /* ── Inline editor ── */
+                    <div style={{ padding: 12, background: C.card2 }}>
+                      <div style={{ fontSize: 11, color: C.pri, fontWeight: 600, marginBottom: 8 }}>Editing question {i + 1}</div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                        <div>
+                          <div style={{ fontSize: 11, color: C.dim, marginBottom: 4 }}>Question</div>
+                          <TA value={editQ} onChange={e => setEditQ(e.target.value)} rows={2} style={{ fontSize: 13 }} />
+                        </div>
+                        <div>
+                          <div style={{ fontSize: 11, color: C.dim, marginBottom: 4 }}>Model answer</div>
+                          <TA value={editA} onChange={e => setEditA(e.target.value)} rows={2} style={{ fontSize: 13 }} />
+                        </div>
+                        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                          <div style={{ fontSize: 11, color: C.dim }}>Marks:</div>
+                          <Inp type="number" min={1} max={6} value={editMk} onChange={e => setEditMk(parseInt(e.target.value) || 1)} style={{ width: 70, fontSize: 13, padding: "6px 10px" }} />
+                        </div>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <Btn onClick={() => saveEdit(q.id)} disabled={saving || !editQ.trim() || !editA.trim()} style={{ flex: 1, padding: "10px 16px", fontSize: 13 }}>{saving ? "Saving..." : "Save changes"}</Btn>
+                          <Btn v="ghost" onClick={() => setEditId(null)} style={{ fontSize: 13, padding: "10px 14px" }}>Cancel</Btn>
+                          {confirmArchive === q.id ? (
+                            <Btn v="ghost" onClick={() => archiveQ(q.id)} style={{ fontSize: 12, padding: "10px 12px", color: C.red, borderColor: "rgba(239,68,68,.3)", background: C.redS }}>Confirm archive</Btn>
+                          ) : (
+                            <Btn v="ghost" onClick={() => setConfirmArchive(q.id)} style={{ fontSize: 12, padding: "10px 12px", color: C.red, borderColor: "rgba(239,68,68,.2)" }}>Archive</Btn>
+                          )}
+                        </div>
+                        {confirmArchive === q.id && <div style={{ fontSize: 11, color: C.red }}>Archiving hides this question from students but keeps all response history.</div>}
+                      </div>
+                    </div>
+                  ) : (
+                    /* ── Read view ── */
+                    <div style={{ padding: "10px 12px", display: "flex", gap: 10, alignItems: "flex-start" }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13, color: C.txt, lineHeight: 1.4, marginBottom: 4 }}>{q.question_text}</div>
+                        <div style={{ fontSize: 11, color: C.dim }}>{q.model_answer}</div>
+                      </div>
+                      <div style={{ display: "flex", gap: 6, flexShrink: 0, alignItems: "center" }}>
+                        <span style={{ fontSize: 10, color: C.dim, whiteSpace: "nowrap" }}>{q.marks}mk</span>
+                        <button onClick={() => startEdit(q)} style={{ background: C.priSoft, border: "none", borderRadius: 6, color: C.pri, fontSize: 12, cursor: "pointer", padding: "4px 10px", fontFamily: "inherit", fontWeight: 600 }}>Edit</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {mode === "csv" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <div style={{ fontSize: 12, color: C.dim, padding: "8px 12px", background: C.card2, borderRadius: 8, lineHeight: 1.7 }}>
             Required columns: <code style={{ color: C.acc }}>question</code>, <code style={{ color: C.acc }}>answer</code>, <code style={{ color: C.acc }}>topic</code> · Optional: <code style={{ color: C.mid }}>subtopic</code><br />
             Topics are matched by name — new ones are created automatically. If subtopic is present, it's used as the topic name.
           </div>
-
-          {/* Drop zone */}
           {!csvRows && !csvProgress && (
-            <div
-              onDragOver={e => { e.preventDefault(); setDragOver(true); }}
-              onDragLeave={() => setDragOver(false)}
+            <div onDragOver={e => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)}
               onDrop={e => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files[0]); }}
               onClick={() => fileRef.current?.click()}
-              style={{ border: `2px dashed ${dragOver ? C.pri : C.bdr}`, borderRadius: 10, padding: "32px 20px", textAlign: "center", cursor: "pointer", background: dragOver ? C.priSoft : "transparent", transition: "all .15s" }}
-            >
+              style={{ border: `2px dashed ${dragOver ? C.pri : C.bdr}`, borderRadius: 10, padding: "32px 20px", textAlign: "center", cursor: "pointer", background: dragOver ? C.priSoft : "transparent", transition: "all .15s" }}>
               <div style={{ fontSize: 28, marginBottom: 8, opacity: 0.5 }}>📄</div>
               <div style={{ fontSize: 13, color: C.mid, fontWeight: 600 }}>Drop CSV here or tap to browse</div>
               <div style={{ fontSize: 11, color: C.dim, marginTop: 4 }}>question, answer, topic, subtopic</div>
               <input ref={fileRef} type="file" accept=".csv" style={{ display: "none" }} onChange={e => handleFile(e.target.files[0])} />
             </div>
           )}
-
           {csvErr && <div style={{ padding: "10px 14px", borderRadius: 8, background: C.redS, color: C.red, fontSize: 12, fontFamily: "monospace" }}>{csvErr}</div>}
-
-          {/* Preview */}
           {csvRows && !csvProgress && (
             <div>
               <div style={{ display: "flex", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
@@ -2154,14 +2242,7 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
                 <div style={{ padding: "8px 14px", borderRadius: 8, background: C.priSoft, color: C.pri, fontSize: 12, fontWeight: 600 }}>{csvTopicCount} topics</div>
                 {newTopics.length > 0 && <div style={{ padding: "8px 14px", borderRadius: 8, background: C.ambS, color: C.amb, fontSize: 12, fontWeight: 600 }}>{newTopics.length} new topic{newTopics.length !== 1 ? "s" : ""} will be created</div>}
               </div>
-
-              {newTopics.length > 0 && (
-                <div style={{ marginBottom: 10, padding: "8px 12px", borderRadius: 8, background: C.card2, fontSize: 11, color: C.dim }}>
-                  New: {newTopics.slice(0, 5).join(', ')}{newTopics.length > 5 ? ` +${newTopics.length - 5} more` : ''}
-                </div>
-              )}
-
-              {/* Preview table */}
+              {newTopics.length > 0 && <div style={{ marginBottom: 10, padding: "8px 12px", borderRadius: 8, background: C.card2, fontSize: 11, color: C.dim }}>New: {newTopics.slice(0, 5).join(', ')}{newTopics.length > 5 ? ` +${newTopics.length - 5} more` : ''}</div>}
               <div style={{ border: `1px solid ${C.bdr}`, borderRadius: 8, overflow: "hidden", marginBottom: 12 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 100px", background: C.card2, padding: "7px 12px", fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>
                   <span>Question</span><span>Answer</span><span>Topic</span>
@@ -2173,19 +2254,14 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
                     <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: C.acc }}>{r.subtopic || r.topic}</span>
                   </div>
                 ))}
-                {csvRows.length > 5 && (
-                  <div style={{ padding: "6px 12px", fontSize: 11, color: C.dim, borderTop: `1px solid ${C.bdr}`, textAlign: "center" }}>+{csvRows.length - 5} more rows</div>
-                )}
+                {csvRows.length > 5 && <div style={{ padding: "6px 12px", fontSize: 11, color: C.dim, borderTop: `1px solid ${C.bdr}`, textAlign: "center" }}>+{csvRows.length - 5} more rows</div>}
               </div>
-
               <div style={{ display: "flex", gap: 8 }}>
                 <Btn onClick={importCSV} disabled={imp} style={{ flex: 1 }}>Import {csvRows.length} questions →</Btn>
                 <Btn v="ghost" onClick={() => { setCsvRows(null); setCsvErr(""); }} style={{ fontSize: 12 }}>Cancel</Btn>
               </div>
             </div>
           )}
-
-          {/* Progress */}
           {csvProgress && (
             <div style={{ padding: 16, background: C.card2, borderRadius: 10 }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 12, color: C.mid }}>
