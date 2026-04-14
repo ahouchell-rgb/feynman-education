@@ -306,6 +306,8 @@ function Student({ user }) {
   const [weeklyData, setWeeklyData] = useState([]);
   const [showWeeks, setShowWeeks] = useState(false);
   const [starPop, setStarPop] = useState(false);
+  const [topicStats, setTopicStats] = useState([]); // [{name, t, c, notStarted}]
+  const [showTopics, setShowTopics] = useState(false);
 
   useEffect(() => { load(); }, []);
 
@@ -363,6 +365,20 @@ function Student({ user }) {
         srMap[qid] = s;
       });
       setSr(srMap);
+
+      // Build per-topic accuracy from responses
+      const qMap = {}; questions.forEach(q => { qMap[q.id] = q; });
+      const tAcc = {}; // topicId → {name, t, c}
+      questions.forEach(q => {
+        if (!tAcc[q.topic_id]) tAcc[q.topic_id] = { name: q.topics?.name || "Unknown", t: 0, c: 0 };
+      });
+      resps.forEach(r => {
+        const q = qMap[r.question_id];
+        if (q && tAcc[q.topic_id]) { tAcc[q.topic_id].t++; if (r.is_correct) tAcc[q.topic_id].c++; }
+      });
+      const attempted = Object.values(tAcc).filter(t => t.t > 0).sort((a, b) => (a.c/a.t) - (b.c/b.t));
+      const notStarted = Object.values(tAcc).filter(t => t.t === 0).length;
+      setTopicStats([...attempted, ...(notStarted > 0 ? [{ name: `${notStarted} topic${notStarted !== 1 ? "s" : ""} not yet started`, t: 0, c: 0, isPlaceholder: true }] : [])]);
 
       setQs(sortQuestions(questions, srMap, recencyBoost));
       setQi(0); setAns(""); setRes(null);
@@ -537,6 +553,55 @@ function Student({ user }) {
         <Stat label="Correct" value={stats.c} color={C.grn} />
         <Stat label="Accuracy" value={`${acc}%`} color={acc >= 70 ? C.grn : acc >= 50 ? C.amb : C.red} />
       </div>
+
+      {/* Topic strength */}
+      {topicStats.length > 0 && (
+        <Card style={{ padding: 14, marginBottom: 14 }}>
+          <button onClick={() => setShowTopics(p => !p)} style={{ width: "100%", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>Topic strength</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              {!showTopics && (() => {
+                const attempted = topicStats.filter(t => !t.isPlaceholder);
+                const weak = attempted.filter(t => t.t > 0 && Math.round(t.c / t.t * 100) < 50);
+                return weak.length > 0
+                  ? <span style={{ fontSize: 11, color: C.red, fontWeight: 600 }}>{weak.length} weak area{weak.length !== 1 ? "s" : ""}</span>
+                  : <span style={{ fontSize: 11, color: C.grn, fontWeight: 600 }}>Looking good</span>;
+              })()}
+              <span style={{ color: C.dim, fontSize: 12, transition: "transform .2s", display: "inline-block", transform: showTopics ? "rotate(180deg)" : "rotate(0)" }}>▾</span>
+            </div>
+          </button>
+
+          {showTopics && (
+            <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 6 }}>
+              {topicStats.map((t, i) => {
+                if (t.isPlaceholder) return (
+                  <div key="placeholder" style={{ padding: "8px 10px", borderRadius: 8, background: C.card2, fontSize: 12, color: C.dim, textAlign: "center" }}>{t.name}</div>
+                );
+                const pct = t.t > 0 ? Math.round(t.c / t.t * 100) : 0;
+                const col = pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red;
+                const label = pct >= 70 ? "Strong" : pct >= 50 ? "Getting there" : "Needs work";
+                return (
+                  <div key={i} style={{ padding: "9px 10px", borderRadius: 8, background: C.card2, borderLeft: `3px solid ${col}` }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
+                      <span style={{ fontSize: 12, color: C.txt, fontWeight: 500, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginRight: 8 }}>{t.name}</span>
+                      <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
+                        <span style={{ fontSize: 10, color: C.dim }}>{t.t} answered</span>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: col }}>{pct}%</span>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{ flex: 1, height: 4, background: C.bdr, borderRadius: 99, overflow: "hidden" }}>
+                        <div style={{ width: `${pct}%`, height: "100%", background: col, borderRadius: 99, transition: "width .4s" }} />
+                      </div>
+                      <span style={{ fontSize: 10, color: col, fontWeight: 600, minWidth: 72, textAlign: "right" }}>{label}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </Card>
+      )}
 
       {qs.length === 0 ? (
         <Card style={{ padding: "48px 20px", textAlign: "center" }}>
