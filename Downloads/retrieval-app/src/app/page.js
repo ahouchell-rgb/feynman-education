@@ -288,6 +288,17 @@ function sortQuestions(questions, srMap, recencyBoost) {
   return [...questions].sort((a, b) => scores.get(a.id) - scores.get(b.id));
 }
 
+/* ─── SR status label ─── */
+function getSRInfo(srData, isDue) {
+  if (!srData || srData.reps === undefined) return { label: "New", color: C.acc, detail: "First time seeing this" };
+  if (!isDue) {
+    if (srData.reps >= 4) return { label: "Mastered", color: C.grn, detail: `Reviewing every ${srData.iv}d` };
+    return { label: "Reviewing", color: C.grn, detail: `${srData.reps} correct in a row` };
+  }
+  if (srData.reps === 0) return { label: "Needs work", color: C.red, detail: "You got this wrong — try again" };
+  return { label: "Due", color: C.amb, detail: `Due every ${srData.iv}d` };
+}
+
 function Student({ user }) {
   const [classes, setClasses] = useState([]);
   const [cls, setCls] = useState(null);
@@ -311,6 +322,9 @@ function Student({ user }) {
   const [topicStats, setTopicStats] = useState([]); // [{name, t, c, notStarted}]
   const [showTopics, setShowTopics] = useState(false);
   const [statView, setStatView] = useState("allTime"); // "allTime" | "thisWeek"
+  const [sessionStats, setSessionStats] = useState({ t: 0, c: 0, topics: [] });
+  const [showSummary, setShowSummary] = useState(false);
+  const [sessionHitTarget, setSessionHitTarget] = useState(false);
 
   useEffect(() => { load(); }, []);
 
@@ -346,6 +360,9 @@ function Student({ user }) {
 
   const pickClass = async (c) => {
     setCls(c);
+    setSessionStats({ t: 0, c: 0, topics: [] });
+    setShowSummary(false);
+    setSessionHitTarget(false);
     try {
       const ul = await sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id,recency_rank" } });
       if (!ul.length) { setQs([]); return; }
@@ -421,10 +438,23 @@ function Student({ user }) {
     if (!isFlagged) {
       const newValid = weeklyValid + 1;
       setWeeklyValid(newValid);
+      // Track session
+      const topicName = q.topics?.name || "Unknown";
+      setSessionStats(prev => ({
+        t: prev.t + 1,
+        c: prev.c + (r.correct ? 1 : 0),
+        topics: prev.topics.includes(topicName) ? prev.topics : [...prev.topics, topicName],
+      }));
+      // Star milestone
       const overTarget = newValid - WEEKLY_TARGET;
       if (overTarget > 0 && overTarget % STAR_INTERVAL === 0) {
         setStarPop(true);
         setTimeout(() => setStarPop(false), 2000);
+      }
+      // Show summary when target first hit this session
+      if (newValid === WEEKLY_TARGET && !sessionHitTarget) {
+        setSessionHitTarget(true);
+        setTimeout(() => setShowSummary(true), 600); // brief delay so student sees the correct/wrong result
       }
     }
 
@@ -498,6 +528,7 @@ function Student({ user }) {
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
           {streak >= 3 && <Badge color={C.amb}>🔥 {streak}</Badge>}
           {currentStars > 0 && <Badge color={C.amb}>⭐ {currentStars}</Badge>}
+          {sessionStats.t > 0 && <button onClick={() => setShowSummary(true)} style={{ background: "none", border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px" }}>📊 {sessionStats.t}</button>}
           <Badge color={C.pri}>{cls.name}</Badge>
         </div>
       </div>
@@ -627,15 +658,83 @@ function Student({ user }) {
           <div style={{ color: C.mid }}>No questions available yet</div>
           <div style={{ color: C.dim, fontSize: 13, marginTop: 4 }}>Your teacher hasn't unlocked any topics</div>
         </Card>
-      ) : (
-        <Card style={{ overflow: "hidden" }}>
-          <div style={{ padding: "10px 16px", borderBottom: `1px solid ${C.bdr}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Badge color={C.acc}>{q?.topics?.name}</Badge>
-            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-              {isDue ? <Badge color={C.amb}>Due</Badge> : <Badge color={C.grn}>Learned</Badge>}
-              <span style={{ fontSize: 12, color: C.dim }}>{q?.marks}mk</span>
+      ) : showSummary ? (
+        /* ── Session summary ── */
+        <Card style={{ padding: 24, textAlign: "center" }}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>{weeklyValid >= WEEKLY_TARGET ? "🎉" : "📊"}</div>
+          <div style={{ fontSize: 20, fontWeight: 800, color: C.txt, letterSpacing: -0.5, marginBottom: 4 }}>
+            {weeklyValid >= WEEKLY_TARGET ? "Target hit!" : "Session complete"}
+          </div>
+          <div style={{ fontSize: 13, color: C.dim, marginBottom: 24 }}>
+            {weeklyValid >= WEEKLY_TARGET ? `${weeklyValid}/${WEEKLY_TARGET} questions done this week` : `${weeklyValid}/${WEEKLY_TARGET} questions done this week — keep going!`}
+          </div>
+
+          {/* Session stats */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+            <div style={{ flex: 1, padding: "14px 10px", borderRadius: 12, background: C.card2 }}>
+              <div style={{ fontSize: 26, fontWeight: 800, color: C.acc }}>{sessionStats.t}</div>
+              <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.3, marginTop: 2 }}>This session</div>
+            </div>
+            <div style={{ flex: 1, padding: "14px 10px", borderRadius: 12, background: C.card2 }}>
+              <div style={{ fontSize: 26, fontWeight: 800, color: C.grn }}>{sessionStats.c}</div>
+              <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.3, marginTop: 2 }}>Correct</div>
+            </div>
+            <div style={{ flex: 1, padding: "14px 10px", borderRadius: 12, background: C.card2 }}>
+              {(() => { const p = sessionStats.t > 0 ? Math.round(sessionStats.c / sessionStats.t * 100) : 0; return <>
+                <div style={{ fontSize: 26, fontWeight: 800, color: p >= 70 ? C.grn : p >= 50 ? C.amb : C.red }}>{p}%</div>
+                <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.3, marginTop: 2 }}>Accuracy</div>
+              </>; })()}
             </div>
           </div>
+
+          {/* Topics covered */}
+          {sessionStats.topics.length > 0 && (
+            <div style={{ marginBottom: 20, padding: "12px 14px", borderRadius: 10, background: C.card2, textAlign: "left" }}>
+              <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 8 }}>Topics covered</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {sessionStats.topics.map((t, i) => (
+                  <span key={i} style={{ fontSize: 12, padding: "3px 10px", borderRadius: 99, background: C.priSoft, color: C.pri, fontWeight: 500 }}>{t}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {weeklyValid < WEEKLY_TARGET && (
+              <Btn onClick={() => setShowSummary(false)} style={{ width: "100%", padding: "14px 20px" }}>
+                Keep going →
+              </Btn>
+            )}
+            {weeklyValid >= WEEKLY_TARGET && (
+              <Btn onClick={() => setShowSummary(false)} style={{ width: "100%", padding: "14px 20px" }}>
+                Keep going — every extra question counts ⭐
+              </Btn>
+            )}
+            <Btn v="ghost" onClick={() => setCls(null)} style={{ width: "100%", fontSize: 13 }}>
+              Back to classes
+            </Btn>
+          </div>
+        </Card>
+      ) : (
+        <Card style={{ overflow: "hidden" }}>
+          {(() => {
+            const srData = sr[q?.id];
+            const srInfo = getSRInfo(srData, isDue);
+            return (
+              <div style={{ padding: "10px 16px", borderBottom: `1px solid ${C.bdr}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Badge color={C.acc}>{q?.topics?.name}</Badge>
+                <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, justifyContent: "flex-end" }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: srInfo.color, padding: "2px 8px", borderRadius: 99, background: `${srInfo.color}18` }}>{srInfo.label}</span>
+                    </div>
+                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>{srInfo.detail}</div>
+                  </div>
+                  <span style={{ fontSize: 12, color: C.dim }}>{q?.marks}mk</span>
+                </div>
+              </div>
+            );
+          })()}
           <div style={{ padding: "20px 16px" }}>
             <div style={{ fontSize: 16, color: C.txt, lineHeight: 1.55, marginBottom: 20, fontWeight: 500 }}>{q?.question_text}</div>
             {!res ? (
