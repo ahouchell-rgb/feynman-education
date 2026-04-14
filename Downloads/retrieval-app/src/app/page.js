@@ -325,6 +325,8 @@ function Student({ user }) {
   const [sessionStats, setSessionStats] = useState({ t: 0, c: 0, topics: [], struggles: [] });
   const [showSummary, setShowSummary] = useState(false);
   const [sessionHitTarget, setSessionHitTarget] = useState(false);
+  const [studyMode, setStudyMode] = useState(false);
+  const [studyTopicId, setStudyTopicId] = useState(null);
 
   useEffect(() => { load(); }, []);
 
@@ -363,6 +365,8 @@ function Student({ user }) {
     setSessionStats({ t: 0, c: 0, topics: [], struggles: [] });
     setShowSummary(false);
     setSessionHitTarget(false);
+    setStudyMode(false);
+    setStudyTopicId(null);
     try {
       const ul = await sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id,recency_rank" } });
       if (!ul.length) { setQs([]); return; }
@@ -426,7 +430,8 @@ function Student({ user }) {
   const submit = async () => {
     if (!ans.trim() || marking) return;
     setMarking(true);
-    const q = qs[qi];
+    const activeQs = studyMode && studyTopicId ? qs.filter(q => q.topic_id === studyTopicId) : qs;
+    const q = activeQs[qi];
     const r = await aiMark(q.question_text, q.model_answer, ans, q.marks);
     setRes(r);
     const prev = sr[q.id] || {};
@@ -512,12 +517,17 @@ function Student({ user }) {
   );
 
   /* ── Quiz ── */
-  const q = qs[qi];
+  const activeQs = studyMode && studyTopicId ? qs.filter(q => q.topic_id === studyTopicId) : qs;
+  const q = activeQs[qi];
   const acc = stats.t > 0 ? Math.round(stats.c / stats.t * 100) : 0;
   const isDue = !sr[q?.id] || !sr[q?.id]?.due || new Date(sr[q?.id].due) <= new Date();
   const weekPct = Math.min(100, Math.round((weeklyValid / WEEKLY_TARGET) * 100));
   const overTarget = Math.max(0, weeklyValid - WEEKLY_TARGET);
   const currentStars = Math.floor(overTarget / STAR_INTERVAL);
+  // Topics available for study mode (derived from all questions)
+  const studyTopics = [...new Map(qs.map(q => [q.topic_id, q.topics?.name || "Unknown"])).entries()]
+    .map(([id, name]) => ({ id, name, count: qs.filter(qq => qq.topic_id === id).length }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div style={{ padding: "12px 16px", maxWidth: 560, margin: "0 auto" }}>
@@ -532,9 +542,27 @@ function Student({ user }) {
           {streak >= 3 && <Badge color={C.amb}>🔥 {streak}</Badge>}
           {currentStars > 0 && <Badge color={C.amb}>⭐ {currentStars}</Badge>}
           {sessionStats.t > 0 && <button onClick={() => setShowSummary(true)} style={{ background: "none", border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px" }}>📊 {sessionStats.t}</button>}
+          <button onClick={() => { setStudyMode(p => !p); setStudyTopicId(null); setRes(null); setAns(""); }} style={{ background: studyMode ? C.priSoft : "none", border: `1px solid ${studyMode ? C.pri : C.bdr}`, borderRadius: 8, color: studyMode ? C.pri : C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px", fontWeight: studyMode ? 700 : 400 }}>📖 Study</button>
           <Badge color={C.pri}>{cls.name}</Badge>
         </div>
       </div>
+
+      {/* Study mode topic picker */}
+      {studyMode && (
+        <Card style={{ padding: 14, marginBottom: 12, borderColor: "rgba(99,102,241,0.3)", background: C.priSoft }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: C.pri, marginBottom: 10 }}>
+            📖 Study mode — pick a topic. Answers still count toward your weekly target.
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {studyTopics.map(t => (
+              <button key={t.id} onClick={() => { setStudyTopicId(t.id); setQi(0); setRes(null); setAns(""); }}
+                style={{ padding: "6px 12px", borderRadius: 99, border: `1px solid ${studyTopicId === t.id ? C.pri : C.bdr}`, background: studyTopicId === t.id ? C.pri : "transparent", color: studyTopicId === t.id ? "#fff" : C.mid, fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontWeight: studyTopicId === t.id ? 600 : 400 }}>
+                {t.name} <span style={{ opacity: 0.6 }}>({t.count})</span>
+              </button>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {/* Weekly target progress */}
       <Card style={{ padding: 14, marginBottom: 12 }}>
@@ -655,7 +683,15 @@ function Student({ user }) {
         </Card>
       )}
 
-      {qs.length === 0 ? (
+      {activeQs.length === 0 && studyMode ? (
+        <Card style={{ padding: "36px 20px", textAlign: "center" }}>
+          <div style={{ fontSize: 36, marginBottom: 8 }}>{studyTopicId ? "✅" : "👆"}</div>
+          <div style={{ color: C.mid, fontSize: 14, fontWeight: 600 }}>
+            {studyTopicId ? "All caught up on this topic" : "Pick a topic above to start studying"}
+          </div>
+          {studyTopicId && <div style={{ color: C.dim, fontSize: 13, marginTop: 4 }}>All questions in this topic are mastered or not yet due</div>}
+        </Card>
+      ) : qs.length === 0 ? (
         <Card style={{ padding: "48px 20px", textAlign: "center" }}>
           <div style={{ fontSize: 36, marginBottom: 8 }}>🎯</div>
           <div style={{ color: C.mid }}>No questions available yet</div>
@@ -1202,6 +1238,33 @@ function Teacher({ user }) {
                   })}
                 </div>
               </Card>
+
+              {/* At-risk alerts */}
+              {(() => {
+                const atRisk = dash.students.filter(s => {
+                  const h = s.weeklyHistory;
+                  return h && h.length >= 2 && h[0].valid === 0 && h[1].valid === 0;
+                });
+                if (atRisk.length === 0) return null;
+                return (
+                  <Card style={{ padding: 14, marginBottom: 12, borderColor: "rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.04)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                      <span style={{ fontSize: 16 }}>⚠️</span>
+                      <div style={{ color: C.red, fontWeight: 600, fontSize: 13 }}>Needs attention — {atRisk.length} student{atRisk.length !== 1 ? "s" : ""} inactive for 2+ weeks</div>
+                    </div>
+                    {atRisk.map((s, i) => {
+                      const lastActive = s.weeklyHistory?.findIndex(w => w.valid > 0);
+                      const weeksAgo = lastActive === -1 || lastActive === undefined ? "Never" : lastActive === 0 ? "This week" : `${lastActive}w ago`;
+                      return (
+                        <div key={s.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", borderRadius: 8, background: C.redS, marginBottom: i < atRisk.length - 1 ? 6 : 0 }}>
+                          <span style={{ fontSize: 13, color: C.txt, fontWeight: 500 }}>{s.name}</span>
+                          <span style={{ fontSize: 11, color: C.red, fontWeight: 600 }}>Last active: {weeksAgo}</span>
+                        </div>
+                      );
+                    })}
+                  </Card>
+                );
+              })()}
 
               <Card style={{ padding: 14, marginBottom: 10 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
