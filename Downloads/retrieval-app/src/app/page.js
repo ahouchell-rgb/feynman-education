@@ -267,6 +267,25 @@ function Auth({ onAuth }) {
 }
 
 /* ─── STUDENT ─── */
+/* ─── Question sort: SM-2 due date + teacher recency boost ─── */
+// Recency boost pulls recently-taught topic questions forward in the queue.
+// Rank 1 = most recently taught → 14-day boost (questions appear as if they were 14 days more overdue)
+// Rank 2 → 7-day boost, Rank 3 → 3-day boost
+// Never-seen questions are treated as due NOW (not always-first), so past-due wrong answers compete fairly.
+function sortQuestions(questions, srMap, recencyBoost) {
+  const boostMs = { 1: 14 * 86400000, 2: 7 * 86400000, 3: 3 * 86400000 };
+  const now = Date.now();
+  // Pre-compute score for each question to avoid Math.random() inside comparator
+  const scores = new Map(questions.map(q => {
+    const sr = srMap[q.id];
+    const dueMs = sr ? new Date(sr.due || 0).getTime() : now; // never-seen = due now
+    const boost = boostMs[recencyBoost[q.topic_id]] || 0;
+    const jitter = (Math.random() - 0.5) * 3600000; // ±30min to shuffle ties
+    return [q.id, dueMs - boost + jitter];
+  }));
+  return [...questions].sort((a, b) => scores.get(a.id) - scores.get(b.id));
+}
+
 function Student({ user }) {
   const [classes, setClasses] = useState([]);
   const [cls, setCls] = useState(null);
@@ -277,15 +296,16 @@ function Student({ user }) {
   const [marking, setMarking] = useState(false);
   const [stats, setStats] = useState({ t: 0, c: 0 });
   const [sr, setSr] = useState({});
+  const [recency, setRecency] = useState({}); // topicId → rank (1/2/3)
   const [streak, setStreak] = useState(0);
   const [loading, setLoading] = useState(true);
   const [joinCode, setJoinCode] = useState("");
   const [joinErr, setJoinErr] = useState("");
   const [joining, setJoining] = useState(false);
-  const [weeklyValid, setWeeklyValid] = useState(0); // valid (non-flagged) answers this week
-  const [weeklyData, setWeeklyData] = useState([]); // past weeks: [{week, total, valid, correct, stars}]
+  const [weeklyValid, setWeeklyValid] = useState(0);
+  const [weeklyData, setWeeklyData] = useState([]);
   const [showWeeks, setShowWeeks] = useState(false);
-  const [starPop, setStarPop] = useState(false); // star animation trigger
+  const [starPop, setStarPop] = useState(false);
 
   useEffect(() => { load(); }, []);
 
@@ -322,9 +342,15 @@ function Student({ user }) {
   const pickClass = async (c) => {
     setCls(c);
     try {
-      const ul = await sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id" } });
+      const ul = await sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id,recency_rank" } });
       if (!ul.length) { setQs([]); return; }
       const tids = ul.map(t => t.topic_id);
+
+      // Build recency boost map: topicId → rank (1=most recent, 2, 3)
+      const recencyBoost = {};
+      ul.forEach(t => { if (t.recency_rank) recencyBoost[t.topic_id] = t.recency_rank; });
+      setRecency(recencyBoost);
+
       const questions = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, select: "*,topics(name)" } });
       const resps = await sb.q("responses", { params: { student_id: `eq.${user.id}`, class_id: `eq.${c.id}`, select: "question_id,is_correct,student_answer,answered_at", order: "answered_at.desc" } });
 
@@ -338,45 +364,24 @@ function Student({ user }) {
       });
       setSr(srMap);
 
-      const sorted = [...questions].sort((a, b) => {
-        const sa = srMap[a.id], sB = srMap[b.id];
-        if (!sa && sB) return -1; if (sa && !sB) return 1;
-        if (!sa && !sB) return Math.random() - .5;
-        return new Date(sa.due || 0) - new Date(sB.due || 0);
-      });
-      setQs(sorted); setQi(0); setAns(""); setRes(null);
+      setQs(sortQuestions(questions, srMap, recencyBoost));
+      setQi(0); setAns(""); setRes(null);
       setStats({ t: resps.length, c: resps.filter(r => r.is_correct).length });
 
-      // Calculate weekly valid answers (excluding flagged/fake)
       const thisWeek = getWeekBounds(0);
-      const thisWeekResps = resps.filter(r => {
-        const d = new Date(r.answered_at);
-        return d >= thisWeek.start && d <= thisWeek.end;
-      });
+      const thisWeekResps = resps.filter(r => { const d = new Date(r.answered_at); return d >= thisWeek.start && d <= thisWeek.end; });
       const validThisWeek = thisWeekResps.filter(r => !detectFakeAnswer(r.student_answer)).length;
       setWeeklyValid(validThisWeek);
 
-      // Calculate past 8 weeks of data
       const weeks = [];
       for (let w = 0; w < 8; w++) {
         const bounds = getWeekBounds(w);
-        const weekResps = resps.filter(r => {
-          const d = new Date(r.answered_at);
-          return d >= bounds.start && d <= bounds.end;
-        });
+        const weekResps = resps.filter(r => { const d = new Date(r.answered_at); return d >= bounds.start && d <= bounds.end; });
         const valid = weekResps.filter(r => !detectFakeAnswer(r.student_answer)).length;
         const correct = weekResps.filter(r => r.is_correct && !detectFakeAnswer(r.student_answer)).length;
         const overTarget = Math.max(0, valid - WEEKLY_TARGET);
         const stars = Math.floor(overTarget / STAR_INTERVAL);
-        weeks.push({
-          weekStart: bounds.start,
-          label: w === 0 ? "This week" : w === 1 ? "Last week" : `${w} weeks ago`,
-          total: weekResps.length,
-          valid,
-          correct,
-          stars,
-          metTarget: valid >= WEEKLY_TARGET,
-        });
+        weeks.push({ weekStart: bounds.start, label: w === 0 ? "This week" : w === 1 ? "Last week" : `${w} weeks ago`, total: weekResps.length, valid, correct, stars, metTarget: valid >= WEEKLY_TARGET });
       }
       setWeeklyData(weeks);
     } catch (e) { console.error(e); }
@@ -393,12 +398,10 @@ function Student({ user }) {
     setSr(s => ({ ...s, [q.id]: nxt }));
     if (r.correct) setStreak(s => s + 1); else setStreak(0);
 
-    // Track weekly valid answers (non-flagged)
     const isFlagged = r.flagged;
     if (!isFlagged) {
       const newValid = weeklyValid + 1;
       setWeeklyValid(newValid);
-      // Check if hit a star milestone (every 25 over 50)
       const overTarget = newValid - WEEKLY_TARGET;
       if (overTarget > 0 && overTarget % STAR_INTERVAL === 0) {
         setStarPop(true);
@@ -414,13 +417,8 @@ function Student({ user }) {
   };
 
   const next = () => {
-    const all = [...qs].sort((a, b) => {
-      const sa = sr[a.id], sB = sr[b.id];
-      if (!sa && sB) return -1; if (sa && !sB) return 1;
-      if (!sa && !sB) return Math.random() - .5;
-      return new Date(sa.due || 0) - new Date(sB.due || 0);
-    });
-    setQs(all); setQi(0); setAns(""); setRes(null);
+    setQs(sortQuestions(qs, sr, recency));
+    setQi(0); setAns(""); setRes(null);
   };
 
   if (loading) return <div style={{ color: C.mid, padding: 40, textAlign: "center" }}>Loading...</div>;
@@ -608,6 +606,7 @@ function Teacher({ user }) {
   const [timePeriod, setTimePeriod] = useState("thisWeek");
   const [targetDraft, setTargetDraft] = useState(null);
   const [savingTarget, setSavingTarget] = useState(false);
+  const [savingRecency, setSavingRecency] = useState(false);
 
   useEffect(() => { init(); }, []);
 
@@ -627,7 +626,7 @@ function Teacher({ user }) {
     try {
       const [allT, ul, resps, mems] = await Promise.all([
         sb.q("topics", { params: { subject_id: `eq.${c.subject_id}`, select: "*", order: "sort_order.asc" } }),
-        sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id" } }),
+        sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id,recency_rank" } }),
         sb.q("responses", { params: { class_id: `eq.${c.id}`, select: "*,questions(question_text,model_answer,topic_id,topics(name)),profiles(display_name)" } }),
         sb.q("class_members", { params: { class_id: `eq.${c.id}`, select: "*,profiles(display_name)" } }),
       ]);
@@ -690,6 +689,7 @@ function Teacher({ user }) {
       setDash({
         tR: resps.length, tC: resps.filter(r => r.is_correct).length,
         clsTarget,
+        recency: ul.filter(t => t.recency_rank).map(t => ({ topicId: t.topic_id, rank: t.recency_rank })).sort((a, b) => a.rank - b.rank),
         thisWeek: mkPeriod(resps.filter(r => new Date(r.answered_at) >= thisMonday)),
         lastWeek: mkPeriod(resps.filter(r => { const d = new Date(r.answered_at); return d >= lastMonday && d < thisMonday; })),
         last4Weeks: mkPeriod(periodResps(4)),
@@ -730,6 +730,40 @@ function Teacher({ user }) {
       await loadCls(updated);
     } catch (e) { console.error(e); }
     setSavingTarget(false);
+  };
+
+  // Set a topic as recently taught (rank 1), cascading existing ranks down.
+  // Old rank 1 → 2, old rank 2 → 3, old rank 3 → cleared.
+  const setTopicRecency = async (topicId) => {
+    if (!cls || savingRecency) return;
+    setSavingRecency(true);
+    try {
+      const current = dash?.recency || []; // [{topicId, rank}]
+      // Build new rank assignments with cascade
+      const filtered = current.filter(r => r.topicId !== topicId); // remove topic if already ranked
+      const cascaded = filtered
+        .map(r => r.rank < 3 ? { ...r, rank: r.rank + 1 } : null)
+        .filter(Boolean);
+      const newState = [{ topicId, rank: 1 }, ...cascaded];
+      // Clear all current ranks first (unique constraint requires this)
+      await Promise.all(current.map(r =>
+        sb.q("class_topics", { method: "PATCH", params: { class_id: `eq.${cls.id}`, topic_id: `eq.${r.topicId}` }, body: { recency_rank: null } })
+      ));
+      // Apply new ranks sequentially
+      for (const r of newState) {
+        await sb.q("class_topics", { method: "PATCH", params: { class_id: `eq.${cls.id}`, topic_id: `eq.${r.topicId}` }, body: { recency_rank: r.rank } });
+      }
+      await loadCls(cls);
+    } catch (e) { console.error(e); }
+    setSavingRecency(false);
+  };
+
+  const clearTopicRecency = async (topicId) => {
+    if (!cls) return;
+    try {
+      await sb.q("class_topics", { method: "PATCH", params: { class_id: `eq.${cls.id}`, topic_id: `eq.${topicId}` }, body: { recency_rank: null } });
+      await loadCls(cls);
+    } catch (e) { console.error(e); }
   };
 
   const doSetup = async () => {
@@ -906,6 +940,56 @@ function Teacher({ user }) {
                   <span style={{ fontSize: 10, color: C.dim }}>5</span>
                   <span style={{ fontSize: 10, color: C.dim }}>questions / week · applies to whole class · override per student below</span>
                   <span style={{ fontSize: 10, color: C.dim }}>100</span>
+                </div>
+              </Card>
+
+              {/* Recently taught — drives question frequency via forgetting curve boost */}
+              <Card style={{ padding: 14, marginBottom: 12 }}>
+                <div style={{ marginBottom: 10 }}>
+                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13, marginBottom: 2 }}>Recently taught</div>
+                  <div style={{ fontSize: 11, color: C.dim }}>Questions from recent topics appear more frequently. Slot 1 gets the strongest boost — students will see it most.</div>
+                </div>
+                {/* "What did you just teach?" picker */}
+                <div style={{ display: "flex", gap: 8, marginBottom: 14, alignItems: "center" }}>
+                  <select
+                    defaultValue=""
+                    onChange={e => { if (e.target.value) setTopicRecency(e.target.value); e.target.value = ""; }}
+                    disabled={savingRecency}
+                    style={{ flex: 1, padding: "9px 10px", background: C.card2, border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.txt, fontSize: 13, fontFamily: "inherit", cursor: "pointer" }}
+                  >
+                    <option value="" disabled>{savingRecency ? "Saving..." : "What did you just teach? →"}</option>
+                    {topics.filter(t => unlocked.has(t.id)).map(t => (
+                      <option key={t.id} value={t.id}>{t.name}</option>
+                    ))}
+                  </select>
+                </div>
+                {/* Current slots */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {[1, 2, 3].map(rank => {
+                    const slot = dash.recency?.find(r => r.rank === rank);
+                    const topicName = slot ? topics.find(t => t.id === slot.topicId)?.name : null;
+                    const boostLabel = rank === 1 ? "strongest boost" : rank === 2 ? "medium boost" : "light boost";
+                    return (
+                      <div key={rank} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 8, background: C.card2, border: `1px solid ${slot ? "rgba(99,102,241,0.25)" : C.bdr}` }}>
+                        <div style={{ width: 22, height: 22, borderRadius: 6, background: slot ? C.priSoft : C.bdr, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <span style={{ fontSize: 11, fontWeight: 700, color: slot ? C.pri : C.dim }}>{rank}</span>
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          {slot ? (
+                            <>
+                              <div style={{ fontSize: 13, color: C.txt, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{topicName || "Unknown topic"}</div>
+                              <div style={{ fontSize: 10, color: C.dim }}>{boostLabel}</div>
+                            </>
+                          ) : (
+                            <div style={{ fontSize: 13, color: C.dim, fontStyle: "italic" }}>Not set</div>
+                          )}
+                        </div>
+                        {slot && (
+                          <button onClick={() => clearTopicRecency(slot.topicId)} style={{ background: "none", border: "none", color: C.dim, cursor: "pointer", fontSize: 16, padding: "0 2px", lineHeight: 1 }}>×</button>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </Card>
 
