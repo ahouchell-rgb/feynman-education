@@ -1578,20 +1578,19 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
       // Calculate split
       const nLast = Math.ceil(numQs * 0.4);
       const nRecent = Math.ceil(numQs * 0.3);
-      const nMiscon = numQs - nLast - nRecent;
+      const nMisconMax = numQs - nLast - nRecent; // reserve up to 30% for misconceptions
 
       // Shuffle helper
       const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 
-      // Pick questions
+      // Pick questions — misconceptions always appended last
       const picked = [];
       const usedIds = new Set();
 
-      // 1. Last lesson (40%) — from teacher's selected questions
-      const nLastMax = Math.ceil(numQs * 0.4);
+      // 1. Last lesson (40%) — teacher-selected questions
       const shuffledLast = shuffle(lastTopicSelected);
       for (const q of shuffledLast) {
-        if (picked.length >= nLastMax) break;
+        if (picked.length >= nLast) break;
         if (!usedIds.has(q.id)) { picked.push({ ...q, source: "last" }); usedIds.add(q.id); }
       }
 
@@ -1602,19 +1601,27 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
         if (!usedIds.has(q.id)) { picked.push({ ...q, source: "recent" }); usedIds.add(q.id); }
       }
 
-      // 3. Misconceptions (30%) — fill remaining
-      const remaining = numQs - picked.length;
-      const shuffledMis = shuffle(misconceptionQs);
-      let misAdded = 0;
-      for (const q of shuffledMis) {
-        if (misAdded >= remaining) break;
-        if (!usedIds.has(q.id)) { picked.push({ ...q, source: "misconception" }); usedIds.add(q.id); misAdded++; }
+      // 3. Filler — fill up to (numQs - nMisconMax) so misconceptions land at the end
+      const fillerTarget = numQs - Math.min(nMisconMax, misconceptionQs.filter(q => !usedIds.has(q.id)).length);
+      if (picked.length < fillerTarget) {
+        const filler = shuffle(allQs.filter(q => !usedIds.has(q.id) && !misconIds.has(q.id)));
+        for (const q of filler) {
+          if (picked.length >= fillerTarget) break;
+          picked.push({ ...q, source: "other" }); usedIds.add(q.id);
+        }
       }
 
-      // If we still need more (not enough misconceptions), fill from other unlocked topics
+      // 4. Misconceptions — always last
+      const shuffledMis = shuffle(misconceptionQs);
+      for (const q of shuffledMis) {
+        if (picked.length >= numQs) break;
+        if (!usedIds.has(q.id)) { picked.push({ ...q, source: "misconception" }); usedIds.add(q.id); }
+      }
+
+      // 5. Final top-up if still short (e.g. not enough misconceptions or filler)
       if (picked.length < numQs) {
-        const filler = shuffle(allQs.filter(q => !usedIds.has(q.id)));
-        for (const q of filler) {
+        const topUp = shuffle(allQs.filter(q => !usedIds.has(q.id)));
+        for (const q of topUp) {
           if (picked.length >= numQs) break;
           picked.push({ ...q, source: "other" }); usedIds.add(q.id);
         }
