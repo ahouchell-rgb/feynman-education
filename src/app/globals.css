@@ -1,0 +1,5 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: 'IBM Plex Sans', -apple-system, sans-serif; background: #f5f4f0; color: #1c1917; }
+[contenteditable]:focus { outline: none; }
+input, textarea, select, button { font-family: inherit; }
