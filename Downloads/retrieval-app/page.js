@@ -875,7 +875,7 @@ function Teacher({ user }) {
         sb.q("topics", { params: { subject_id: `eq.${c.subject_id}`, select: "*", order: "sort_order.asc" } }),
         sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id,recency_rank" } }),
         sb.q("responses", { params: { class_id: `eq.${c.id}`, select: "*,questions(question_text,model_answer,topic_id,topics(name)),profiles(display_name)" } }),
-        sb.q("class_members", { params: { class_id: `eq.${c.id}`, select: "*,profiles(display_name)" } }),
+        sb.q("class_members", { params: { class_id: `eq.${c.id}`, select: "*,profiles(display_name,email)" } }),
         sb.q("lesson_deliveries", { params: { class_id: `eq.${c.id}`, select: "topic_id,taught_at,notes" } }),
         sb.q("parent_tokens", { params: { class_id: `eq.${c.id}`, select: "student_id,token" } }),
       ]);
@@ -888,7 +888,7 @@ function Teacher({ user }) {
       const clsTarget = c.weekly_target ?? WEEKLY_TARGET;
       const sm = {};
       mems.forEach(m => {
-        sm[m.student_id] = { name: m.profiles?.display_name || "?", t: 0, c: 0, weekValid: 0, weekStars: 0, flagged: 0, targetOverride: m.weekly_target_override ?? null };
+        sm[m.student_id] = { name: m.profiles?.display_name || "?", email: m.profiles?.email || "", t: 0, c: 0, weekValid: 0, weekStars: 0, flagged: 0, targetOverride: m.weekly_target_override ?? null };
       });
       const mis = {}, tp = {};
       const thisWeekBounds = getWeekBounds(0);
@@ -1370,6 +1370,8 @@ function Teacher({ user }) {
 function StudentList({ students, cls, clsTarget, onRefresh, parentTokens = {}, onGenerateToken, onRevokeToken }) {
   const [expanded, setExpanded] = useState(null);
   const [newPw, setNewPw] = useState("");
+  const [renaming, setRenaming] = useState(null); // studentId being renamed
+  const [renameDraft, setRenameDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
@@ -1423,7 +1425,7 @@ function StudentList({ students, cls, clsTarget, onRefresh, parentTokens = {}, o
 
         return (
           <div key={s.id} style={{ marginBottom: 4 }}>
-            <button onClick={() => { setExpanded(isExpanded ? null : s.id); setNewPw(""); setMsg(""); setConfirmDelete(null); }} style={{
+            <button onClick={() => { setExpanded(isExpanded ? null : s.id); setNewPw(""); setMsg(""); setConfirmDelete(null); setRenaming(null); setRenameDraft(""); }} style={{
               width: "100%", padding: "10px 10px", borderRadius: isExpanded ? "8px 8px 0 0" : 8, background: C.card2, border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left",
               borderLeft: `3px solid ${metTarget ? C.grn : s.weekValid < effectiveTarget * 0.5 ? C.red : C.amb}`,
             }}>
@@ -1538,6 +1540,52 @@ function StudentList({ students, cls, clsTarget, onRefresh, parentTokens = {}, o
                       Generate parent link
                     </Btn>
                   )}
+                </div>
+
+                {/* Identity — email + rename */}
+                <div style={{ marginBottom: 12, padding: "10px 12px", borderRadius: 8, background: C.card2 }}>
+                  <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 8 }}>Identity</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                    <span style={{ fontSize: 10, color: C.dim, minWidth: 44, textTransform: "uppercase", letterSpacing: 0.5 }}>Email</span>
+                    <input readOnly value={s.email || "—"}
+                      style={{ flex: 1, padding: "6px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 6, color: C.dim, fontSize: 11, fontFamily: "monospace", outline: "none" }} />
+                    <button onClick={() => { if (s.email) { navigator.clipboard.writeText(s.email); setMsg("Email copied"); setTimeout(() => setMsg(""), 1500); } }}
+                      disabled={!s.email}
+                      style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.pri, color: "#fff", fontSize: 11, cursor: s.email ? "pointer" : "default", fontFamily: "inherit", fontWeight: 600, opacity: s.email ? 1 : 0.4 }}>
+                      Copy
+                    </button>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ fontSize: 10, color: C.dim, minWidth: 44, textTransform: "uppercase", letterSpacing: 0.5 }}>Name</span>
+                    {renaming === s.id ? (
+                      <>
+                        <Inp value={renameDraft} onChange={e => setRenameDraft(e.target.value)} autoFocus maxLength={80}
+                          onKeyDown={e => { if (e.key === "Escape") { setRenaming(null); setRenameDraft(""); } }}
+                          style={{ fontSize: 13, padding: "6px 8px" }} />
+                        <Btn onClick={async () => {
+                            const t = renameDraft.trim();
+                            if (!t || t === s.name) { setRenaming(null); setRenameDraft(""); return; }
+                            await callManage("rename_student", s.id, { new_name: t });
+                            setRenaming(null); setRenameDraft(""); onRefresh();
+                          }} disabled={busy || !renameDraft.trim() || renameDraft.trim() === s.name}
+                          style={{ whiteSpace: "nowrap", fontSize: 12, padding: "7px 12px" }}>
+                          {busy ? "..." : "Save"}
+                        </Btn>
+                        <Btn v="ghost" onClick={() => { setRenaming(null); setRenameDraft(""); }}
+                          style={{ fontSize: 12, padding: "7px 10px" }}>
+                          Cancel
+                        </Btn>
+                      </>
+                    ) : (
+                      <>
+                        <span style={{ flex: 1, fontSize: 13, color: C.txt, fontWeight: 500 }}>{s.name}</span>
+                        <Btn v="ghost" onClick={() => { setRenaming(s.id); setRenameDraft(s.name); }}
+                          style={{ fontSize: 12, padding: "6px 12px" }}>
+                          Rename
+                        </Btn>
+                      </>
+                    )}
+                  </div>
                 </div>
 
                 {/* Reset password */}
