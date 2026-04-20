@@ -274,16 +274,21 @@ function Auth({ onAuth }) {
 // Rank 1 = most recently taught → 14-day boost (questions appear as if they were 14 days more overdue)
 // Rank 2 → 7-day boost, Rank 3 → 3-day boost
 // Never-seen questions are treated as due NOW (not always-first), so past-due wrong answers compete fairly.
-function sortQuestions(questions, srMap, recencyBoost) {
+// cooldownSet: session-level Set of question ids that were just answered wrong and shouldn't
+// reappear for a few questions. They still return eventually — just not immediately.
+function sortQuestions(questions, srMap, recencyBoost, cooldownSet) {
   const boostMs = { 1: 14 * 86400000, 2: 7 * 86400000, 3: 3 * 86400000 };
   const now = Date.now();
+  // Massive penalty ensures cooldowned questions sink below everything else
+  const COOLDOWN_PENALTY = 365 * 86400000;
   // Pre-compute score for each question to avoid Math.random() inside comparator
   const scores = new Map(questions.map(q => {
     const sr = srMap[q.id];
     const dueMs = sr ? new Date(sr.due || 0).getTime() : now; // never-seen = due now
     const boost = boostMs[recencyBoost[q.topic_id]] || 0;
     const jitter = (Math.random() - 0.5) * 3600000; // ±30min to shuffle ties
-    return [q.id, dueMs - boost + jitter];
+    const cooldown = cooldownSet && cooldownSet.has(q.id) ? COOLDOWN_PENALTY : 0;
+    return [q.id, dueMs - boost + jitter + cooldown];
   }));
   return [...questions].sort((a, b) => scores.get(a.id) - scores.get(b.id));
 }
@@ -327,6 +332,10 @@ function Student({ user }) {
   const [sessionHitTarget, setSessionHitTarget] = useState(false);
   const [studyMode, setStudyMode] = useState(false);
   const [studyTopicId, setStudyTopicId] = useState(null);
+  // Session-level "wrong answer cooldown" — maps questionId -> how many MORE questions must be answered before this one can resurface.
+  // Prevents the same wrong question cycling back within seconds. Resets on reload (in-memory only).
+  const [cooldown, setCooldown] = useState(new Map());
+  const COOLDOWN_LENGTH = 6; // answer 6 other questions before a wrong one can return
 
   useEffect(() => { load(); }, []);
 
@@ -404,7 +413,7 @@ function Student({ user }) {
       const notStarted = Object.values(tAcc).filter(t => t.t === 0).length;
       setTopicStats([...attempted, ...(notStarted > 0 ? [{ name: `${notStarted} topic${notStarted !== 1 ? "s" : ""} not yet started`, t: 0, c: 0, isPlaceholder: true }] : [])]);
 
-      setQs(sortQuestions(questions, srMap, recencyBoost));
+      setQs(sortQuestions(questions, srMap, recencyBoost, new Set()));
       setQi(0); setAns(""); setRes(null);
       setStats({ t: resps.length, c: resps.filter(r => r.is_correct).length });
 
@@ -438,6 +447,10 @@ function Student({ user }) {
     const nxt = nextSR(r.correct, prev);
     setSr(s => ({ ...s, [q.id]: nxt }));
     if (r.correct) setStreak(s => s + 1); else setStreak(0);
+    // If wrong (and not a flagged low-effort attempt), put it on cooldown for the session
+    if (!r.correct && !r.flagged) {
+      setCooldown(prev => { const n = new Map(prev); n.set(q.id, COOLDOWN_LENGTH); return n; });
+    }
 
     const isFlagged = r.flagged;
     if (!isFlagged) {
@@ -474,7 +487,11 @@ function Student({ user }) {
   };
 
   const next = () => {
-    setQs(sortQuestions(qs, sr, recency));
+    // Tick down all cooldowns by 1; drop any that hit zero
+    const nextCooldown = new Map();
+    cooldown.forEach((remaining, qid) => { if (remaining > 1) nextCooldown.set(qid, remaining - 1); });
+    setCooldown(nextCooldown);
+    setQs(sortQuestions(qs, sr, recency, new Set(nextCooldown.keys())));
     setQi(0); setAns(""); setRes(null);
   };
 
