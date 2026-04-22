@@ -273,24 +273,35 @@ function Auth({ onAuth }) {
 // Recency boost pulls recently-taught topic questions forward in the queue.
 // Rank 1 = most recently taught → 14-day boost (questions appear as if they were 14 days more overdue)
 // Rank 2 → 7-day boost, Rank 3 → 3-day boost
-// Never-seen questions are treated as due NOW (not always-first), so past-due wrong answers compete fairly.
-// cooldownSet: session-level Set of question ids that were just answered wrong and shouldn't
-// reappear for a few questions. They still return eventually — just not immediately.
+// 50/50 interleave between recent topics (any rank in recencyBoost) and other topics.
+// Within each bucket, items are sorted by SM-2 due date (earliest first) with a small
+// ±30-min jitter to shuffle ties. A large cooldown penalty shoves questions recently
+// answered wrong to the bottom of their bucket for the rest of the session.
+// Never-seen questions are treated as due NOW so they compete fairly with past-due items.
+// recencyBoost: { topic_id: 1 | 2 | 3 } — rank now only decides bucket membership.
 function sortQuestions(questions, srMap, recencyBoost, cooldownSet) {
-  const boostMs = { 1: 14 * 86400000, 2: 7 * 86400000, 3: 3 * 86400000 };
   const now = Date.now();
-  // Massive penalty ensures cooldowned questions sink below everything else
   const COOLDOWN_PENALTY = 365 * 86400000;
-  // Pre-compute score for each question to avoid Math.random() inside comparator
-  const scores = new Map(questions.map(q => {
+  const JITTER = 3600000;
+  const score = (q) => {
     const sr = srMap[q.id];
-    const dueMs = sr ? new Date(sr.due || 0).getTime() : now; // never-seen = due now
-    const boost = boostMs[recencyBoost[q.topic_id]] || 0;
-    const jitter = (Math.random() - 0.5) * 3600000; // ±30min to shuffle ties
+    const dueMs = sr ? new Date(sr.due || 0).getTime() : now;
+    const jitter = (Math.random() - 0.5) * JITTER;
     const cooldown = cooldownSet && cooldownSet.has(q.id) ? COOLDOWN_PENALTY : 0;
-    return [q.id, dueMs - boost + jitter + cooldown];
-  }));
-  return [...questions].sort((a, b) => scores.get(a.id) - scores.get(b.id));
+    return dueMs + jitter + cooldown;
+  };
+  const scored = questions.map(q => ({ q, s: score(q), recent: !!recencyBoost[q.topic_id] }));
+  const recent = scored.filter(x => x.recent).sort((a, b) => a.s - b.s).map(x => x.q);
+  const other  = scored.filter(x => !x.recent).sort((a, b) => a.s - b.s).map(x => x.q);
+  if (recent.length === 0) return other;
+  if (other.length === 0) return recent;
+  const out = [];
+  const maxLen = Math.max(recent.length, other.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (i < recent.length) out.push(recent[i]);
+    if (i < other.length)  out.push(other[i]);
+  }
+  return out;
 }
 
 /* ─── SR status label ─── */
