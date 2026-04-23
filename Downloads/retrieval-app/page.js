@@ -1583,7 +1583,9 @@ function HodPanel({ user }) {
   });
   const weakTopics = Object.values(topicAgg).filter(t => t.t >= 5).map(t => ({ ...t, pct: Math.round((t.c/t.t)*100) })).sort((a, b) => a.pct - b.pct).slice(0, 8);
 
-  // At-risk students: active in last 7d AND accuracy <50%, OR no activity in 7d but >10 total answers
+  // Two at-risk lists, tracked separately:
+  //   lowAccuracyStudents — have 10+ answers and <50% accuracy
+  //   inactiveStudents    — have 5+ answers and haven't practised in 7+ days
   const studentAgg = {};
   classMembers.forEach(m => {
     if (!studentAgg[m.student_id]) {
@@ -1607,16 +1609,23 @@ function HodPanel({ user }) {
     if (!s.lastAnswered || d > s.lastAnswered) s.lastAnswered = d;
     if (d >= weekAgo) s.weekT++;
   });
-  const atRisk = Object.values(studentAgg).filter(s => {
-    const acc = s.t > 0 ? (s.c / s.t) * 100 : 0;
-    const daysSince = s.lastAnswered ? Math.floor((now - s.lastAnswered) / 86400000) : 999;
-    return (s.t >= 10 && acc < 50) || (s.t >= 5 && daysSince >= 7);
-  }).map(s => ({
+  const enrich = s => ({
     ...s,
     acc: s.t > 0 ? Math.round((s.c / s.t) * 100) : 0,
     daysSince: s.lastAnswered ? Math.floor((now - s.lastAnswered) / 86400000) : null,
     teacherName: teachers.find(t => t.id === s.teacherId)?.display_name || "—",
-  })).sort((a, b) => a.acc - b.acc);
+  });
+  const lowAccuracyStudents = Object.values(studentAgg)
+    .filter(s => s.t >= 10 && (s.c / s.t) * 100 < 50)
+    .map(enrich)
+    .sort((a, b) => a.acc - b.acc);
+  const inactiveStudents = Object.values(studentAgg)
+    .filter(s => {
+      const daysSince = s.lastAnswered ? Math.floor((now - s.lastAnswered) / 86400000) : 999;
+      return s.t >= 5 && daysSince >= 7;
+    })
+    .map(enrich)
+    .sort((a, b) => (b.daysSince ?? 9999) - (a.daysSince ?? 9999));
 
   // Topic × teacher heatmap (top 8 most-answered topics × teachers)
   const topicTotals = {};
@@ -1680,7 +1689,7 @@ function HodPanel({ user }) {
 
           {/* View tabs */}
           <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>
-            {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "Teachers" }, { k: "topics", l: "Weak topics" }, { k: "atrisk", l: `At-risk${atRisk.length > 0 ? ` (${atRisk.length})` : ""}` }].map(t => (
+            {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "Teachers" }, { k: "topics", l: "Weak topics" }, { k: "lowacc", l: `Low accuracy${lowAccuracyStudents.length > 0 ? ` (${lowAccuracyStudents.length})` : ""}` }, { k: "inactive", l: `Inactive${inactiveStudents.length > 0 ? ` (${inactiveStudents.length})` : ""}` }].map(t => (
               <Pill key={t.k} on={view === t.k} onClick={() => setView(t.k)} style={{ fontSize: 12, padding: "6px 12px" }}>{t.l}</Pill>
             ))}
           </div>
@@ -1823,19 +1832,19 @@ function HodPanel({ user }) {
             </>
           )}
 
-          {/* AT-RISK */}
-          {view === "atrisk" && (
+          {/* LOW ACCURACY */}
+          {view === "lowacc" && (
             <>
               <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>
-                Students with low accuracy ({"<"}50%) or inactive 7+ days
+                Students with 10+ answers and {"<"}50% accuracy
               </div>
-              {atRisk.length === 0 ? (
+              {lowAccuracyStudents.length === 0 ? (
                 <Card style={{ padding: 40, textAlign: "center" }}>
                   <div style={{ fontSize: 36, marginBottom: 10 }}>✅</div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: C.txt, marginBottom: 4 }}>No at-risk students</div>
-                  <div style={{ fontSize: 12, color: C.mid }}>Your department is doing well right now.</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: C.txt, marginBottom: 4 }}>No students flagged for accuracy</div>
+                  <div style={{ fontSize: 12, color: C.mid }}>Everyone with enough answers is above 50%.</div>
                 </Card>
-              ) : atRisk.map(s => (
+              ) : lowAccuracyStudents.map(s => (
                 <div key={s.id} style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.red}44`, borderRadius: 10, marginBottom: 6 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -1843,18 +1852,47 @@ function HodPanel({ user }) {
                       <div style={{ fontSize: 11, color: C.dim }}>{s.teacherName} · {s.className}</div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: s.acc < 50 ? C.red : C.amb }}>{s.t > 0 ? s.acc + "%" : "—"}</div>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: C.red }}>{s.acc}%</div>
                       <div style={{ fontSize: 10, color: C.dim }}>{s.t} answers</div>
                     </div>
-                    <div style={{ textAlign: "right", minWidth: 60 }}>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+
+          {/* INACTIVE */}
+          {view === "inactive" && (
+            <>
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>
+                Students with 5+ answers who haven't practised in 7+ days
+              </div>
+              {inactiveStudents.length === 0 ? (
+                <Card style={{ padding: 40, textAlign: "center" }}>
+                  <div style={{ fontSize: 36, marginBottom: 10 }}>✅</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: C.txt, marginBottom: 4 }}>Everyone's been active</div>
+                  <div style={{ fontSize: 12, color: C.mid }}>No students with a 7+ day gap in activity.</div>
+                </Card>
+              ) : inactiveStudents.map(s => (
+                <div key={s.id} style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.amb}55`, borderRadius: 10, marginBottom: 6 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{s.name}</div>
+                      <div style={{ fontSize: 11, color: C.dim }}>{s.teacherName} · {s.className}</div>
+                    </div>
+                    <div style={{ textAlign: "right", minWidth: 70 }}>
                       {s.daysSince !== null ? (
                         <>
-                          <div style={{ fontSize: 12, fontWeight: 700, color: s.daysSince >= 7 ? C.red : C.amb }}>{s.daysSince === 0 ? "today" : `${s.daysSince}d`}</div>
+                          <div style={{ fontSize: 15, fontWeight: 700, color: s.daysSince >= 14 ? C.red : C.amb }}>{s.daysSince}d</div>
                           <div style={{ fontSize: 10, color: C.dim }}>last seen</div>
                         </>
                       ) : (
-                        <div style={{ fontSize: 10, color: C.dim, fontStyle: "italic" }}>never</div>
+                        <div style={{ fontSize: 11, color: C.dim, fontStyle: "italic" }}>never</div>
                       )}
+                    </div>
+                    <div style={{ textAlign: "right", minWidth: 50 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: C.dim }}>{s.t}</div>
+                      <div style={{ fontSize: 10, color: C.dim }}>total</div>
                     </div>
                   </div>
                 </div>
