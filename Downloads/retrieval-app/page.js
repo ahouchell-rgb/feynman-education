@@ -1111,7 +1111,7 @@ function AdminPanel({ user }) {
         sb.q("classes", { params: { select: "*,profiles!classes_teacher_id_fkey(display_name,email)", order: "created_at.desc" } }),
         sb.q("class_members", { params: { select: "class_id,student_id" } }),
       ]);
-      setTeachers(profs.filter(p => p.role === "teacher" || p.role === "moderator"));
+      setTeachers(profs.filter(p => p.role === "teacher" || p.role === "moderator" || p.role === "hod"));
       setStudents(profs.filter(p => p.role === "student"));
       setClasses(clss);
       setClassMembers(mems);
@@ -1246,9 +1246,10 @@ function AdminPanel({ user }) {
               <div key={t.id} style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, marginBottom: 6 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>
-                      {t.display_name || "—"}
-                      {t.role === "moderator" && <Badge color={C.pri} style={{ marginLeft: 6, fontSize: 9 }}>MOD</Badge>}
+                    <div style={{ fontSize: 13, fontWeight: 600, color: C.txt, display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      <span>{t.display_name || "—"}</span>
+                      {t.role === "moderator" && <Badge color={C.pri} style={{ fontSize: 9 }}>MOD</Badge>}
+                      {t.role === "hod" && <Badge color={C.amb} style={{ fontSize: 9 }}>HoD</Badge>}
                     </div>
                     <div style={{ fontSize: 11, color: C.mid, fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.email}</div>
                   </div>
@@ -1274,11 +1275,20 @@ function AdminPanel({ user }) {
           <Inp placeholder="Search teachers by name or email" value={filter} onChange={e => setFilter(e.target.value)} style={{ marginBottom: 10 }} />
           {filteredTeachers.map(t => {
             const tClasses = classes.filter(c => c.teacher_id === t.id);
+            const isHoD = t.role === "hod";
+            const isMod = t.role === "moderator";
+            const teamCount = teachers.filter(x => x.hod_id === t.id).length;
+            const assignedHoD = t.hod_id ? teachers.find(h => h.id === t.hod_id) : null;
+            const hods = teachers.filter(x => x.role === "hod");
             return (
               <div key={t.id} style={{ padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, marginBottom: 4 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600 }}>{t.display_name || "—"} {t.role === "moderator" && <Badge color={C.pri} style={{ fontSize: 9 }}>MOD</Badge>}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      {t.display_name || "—"}
+                      {isMod && <Badge color={C.pri} style={{ fontSize: 9 }}>MOD</Badge>}
+                      {isHoD && <Badge color={C.amb} style={{ fontSize: 9 }}>HoD · {teamCount}</Badge>}
+                    </div>
                     <div style={{ fontSize: 11, color: C.mid, fontFamily: "monospace" }}>{t.email}</div>
                   </div>
                   <Btn v="ghost" onClick={() => { navigator.clipboard.writeText(t.email || ""); setMsg("Email copied"); setTimeout(() => setMsg(""), 1500); }} style={{ fontSize: 11, padding: "6px 10px" }}>Copy email</Btn>
@@ -1286,6 +1296,37 @@ function AdminPanel({ user }) {
                 {tClasses.length > 0 && (
                   <div style={{ fontSize: 11, color: C.mid, marginTop: 4 }}>
                     Classes: {tClasses.map(c => c.name).join(", ")}
+                  </div>
+                )}
+
+                {/* HoD controls (moderators only can't self-modify, handle on teacher and hod roles) */}
+                {!isMod && (
+                  <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px dashed ${C.bdr}`, display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                    {isHoD ? (
+                      <>
+                        <Btn v="ghost" onClick={() => { if (confirm(`Demote ${t.display_name} from HoD back to teacher?`)) callManage("set_hod", t.id, { target_id: t.id, promote: false }); }} disabled={busy} style={{ fontSize: 11, padding: "5px 10px", color: C.red, borderColor: "rgba(239,68,68,.3)" }}>
+                          Demote HoD
+                        </Btn>
+                        <span style={{ fontSize: 11, color: C.mid }}>{teamCount} teacher{teamCount === 1 ? "" : "s"} in dept</span>
+                      </>
+                    ) : (
+                      <>
+                        <Btn v="ghost" onClick={() => callManage("set_hod", t.id, { target_id: t.id, promote: true })} disabled={busy} style={{ fontSize: 11, padding: "5px 10px", color: C.amb, borderColor: "rgba(217,119,6,.3)" }}>
+                          Promote to HoD
+                        </Btn>
+                        {assignedHoD ? (
+                          <span style={{ fontSize: 11, color: C.mid, display: "flex", alignItems: "center", gap: 4 }}>
+                            → {assignedHoD.display_name}'s dept
+                            <Btn v="ghost" onClick={() => callManage("set_hod_link", t.id, { target_id: t.id, hod_id: null })} disabled={busy} style={{ fontSize: 10, padding: "3px 8px" }}>Remove</Btn>
+                          </span>
+                        ) : hods.length > 0 ? (
+                          <select onChange={e => { if (e.target.value) { callManage("set_hod_link", t.id, { target_id: t.id, hod_id: e.target.value }); e.target.value = ""; } }} defaultValue="" style={{ padding: "5px 8px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card, fontFamily: "inherit", cursor: "pointer" }}>
+                            <option value="">Assign to HoD…</option>
+                            {hods.map(h => <option key={h.id} value={h.id}>{h.display_name}</option>)}
+                          </select>
+                        ) : null}
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -1403,9 +1444,361 @@ const StatTile = ({ label, value, onClick, active, color }) => (
   </button>
 );
 
+/* ─── HoD PANEL ─── */
+function HodPanel({ user }) {
+  const [loading, setLoading] = useState(true);
+  const [teachers, setTeachers] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const [classMembers, setClassMembers] = useState([]);
+  const [responses, setResponses] = useState([]);
+  const [topics, setTopics] = useState({}); // id -> name
+  const [view, setView] = useState("overview"); // overview | teachers | topics | atrisk
+  const [error, setError] = useState("");
+
+  useEffect(() => { loadAll(); }, []);
+
+  const loadAll = async () => {
+    setLoading(true); setError("");
+    try {
+      const deptTeachers = await sb.q("profiles", { params: { hod_id: `eq.${user.id}`, select: "id,display_name,email,role", order: "display_name.asc" } });
+      setTeachers(deptTeachers);
+      if (deptTeachers.length === 0) { setClasses([]); setClassMembers([]); setResponses([]); setLoading(false); return; }
+      const teacherIds = deptTeachers.map(t => t.id);
+      const cls = await sb.q("classes", { params: { teacher_id: `in.(${teacherIds.join(",")})`, select: "id,name,teacher_id,subject_id" } });
+      setClasses(cls);
+      if (cls.length === 0) { setClassMembers([]); setResponses([]); setLoading(false); return; }
+      const classIds = cls.map(c => c.id);
+      const [mems, resps, tps] = await Promise.all([
+        sb.q("class_members", { params: { class_id: `in.(${classIds.join(",")})`, select: "class_id,student_id,profiles(display_name,email)" } }),
+        sb.q("responses", { params: { class_id: `in.(${classIds.join(",")})`, select: "question_id,student_id,class_id,is_correct,answered_at,student_answer,questions(topic_id,topics(name))", order: "answered_at.desc", limit: "5000" } }),
+        sb.q("topics", { params: { select: "id,name" } }),
+      ]);
+      setClassMembers(mems);
+      setResponses(resps);
+      const topicMap = {}; tps.forEach(t => { topicMap[t.id] = t.name; });
+      setTopics(topicMap);
+    } catch (e) { console.error(e); setError(e.message); }
+    setLoading(false);
+  };
+
+  // Analysis
+  const now = new Date();
+  const weekAgo = new Date(now.getTime() - 7*86400000);
+  const validResps = responses.filter(r => !detectFakeAnswer(r.student_answer));
+  const weekResps = validResps.filter(r => new Date(r.answered_at) >= weekAgo);
+
+  const perTeacher = teachers.map(t => {
+    const tClasses = classes.filter(c => c.teacher_id === t.id);
+    const tClassIds = new Set(tClasses.map(c => c.id));
+    const tMems = classMembers.filter(m => tClassIds.has(m.class_id));
+    const studentSet = new Set(tMems.map(m => m.student_id));
+    const tResps = validResps.filter(r => tClassIds.has(r.class_id));
+    const tWeekResps = weekResps.filter(r => tClassIds.has(r.class_id));
+    const activeThisWeek = new Set(tWeekResps.map(r => r.student_id)).size;
+    const correct = tResps.filter(r => r.is_correct).length;
+    const acc = tResps.length > 0 ? Math.round((correct / tResps.length) * 100) : 0;
+    return { teacher: t, classes: tClasses, studentCount: studentSet.size, activeThisWeek, totalAnswered: tResps.length, weekAnswered: tWeekResps.length, acc };
+  }).sort((a, b) => b.weekAnswered - a.weekAnswered);
+
+  // Department-wide weak topics
+  const topicAgg = {};
+  validResps.forEach(r => {
+    const tid = r.questions?.topic_id;
+    const tname = r.questions?.topics?.name;
+    if (!tid) return;
+    if (!topicAgg[tid]) topicAgg[tid] = { name: tname || "Unknown", t: 0, c: 0 };
+    topicAgg[tid].t++;
+    if (r.is_correct) topicAgg[tid].c++;
+  });
+  const weakTopics = Object.values(topicAgg).filter(t => t.t >= 5).map(t => ({ ...t, pct: Math.round((t.c/t.t)*100) })).sort((a, b) => a.pct - b.pct).slice(0, 8);
+
+  // At-risk students: active in last 7d AND accuracy <50%, OR no activity in 7d but >10 total answers
+  const studentAgg = {};
+  classMembers.forEach(m => {
+    if (!studentAgg[m.student_id]) {
+      const cls_ = classes.find(c => c.id === m.class_id);
+      studentAgg[m.student_id] = {
+        id: m.student_id,
+        name: m.profiles?.display_name || "?",
+        email: m.profiles?.email || "",
+        className: cls_?.name || "",
+        teacherId: cls_?.teacher_id,
+        t: 0, c: 0, weekT: 0, lastAnswered: null,
+      };
+    }
+  });
+  validResps.forEach(r => {
+    const s = studentAgg[r.student_id];
+    if (!s) return;
+    s.t++;
+    if (r.is_correct) s.c++;
+    const d = new Date(r.answered_at);
+    if (!s.lastAnswered || d > s.lastAnswered) s.lastAnswered = d;
+    if (d >= weekAgo) s.weekT++;
+  });
+  const atRisk = Object.values(studentAgg).filter(s => {
+    const acc = s.t > 0 ? (s.c / s.t) * 100 : 0;
+    const daysSince = s.lastAnswered ? Math.floor((now - s.lastAnswered) / 86400000) : 999;
+    return (s.t >= 10 && acc < 50) || (s.t >= 5 && daysSince >= 7);
+  }).map(s => ({
+    ...s,
+    acc: s.t > 0 ? Math.round((s.c / s.t) * 100) : 0,
+    daysSince: s.lastAnswered ? Math.floor((now - s.lastAnswered) / 86400000) : null,
+    teacherName: teachers.find(t => t.id === s.teacherId)?.display_name || "—",
+  })).sort((a, b) => a.acc - b.acc);
+
+  // Topic × teacher heatmap (top 8 most-answered topics × teachers)
+  const topicTotals = {};
+  validResps.forEach(r => { const tid = r.questions?.topic_id; if (tid) topicTotals[tid] = (topicTotals[tid] || 0) + 1; });
+  const topTopicIds = Object.entries(topicTotals).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([id]) => id);
+  const heatmap = topTopicIds.map(tid => {
+    const row = { tid, name: topics[tid] || "Unknown", cells: [] };
+    teachers.forEach(t => {
+      const tClassIds = new Set(classes.filter(c => c.teacher_id === t.id).map(c => c.id));
+      const cellResps = validResps.filter(r => r.questions?.topic_id === tid && tClassIds.has(r.class_id));
+      const c = cellResps.filter(r => r.is_correct).length;
+      const total = cellResps.length;
+      row.cells.push({ teacherId: t.id, total, correct: c, pct: total > 0 ? Math.round((c/total)*100) : null });
+    });
+    return row;
+  });
+
+  const totalStudents = Object.keys(studentAgg).length;
+  const totalActiveThisWeek = new Set(weekResps.map(r => r.student_id)).size;
+  const deptAccuracy = validResps.length > 0 ? Math.round((validResps.filter(r => r.is_correct).length / validResps.length) * 100) : 0;
+
+  if (loading) return <div style={{ maxWidth: 700, margin: "0 auto", padding: 40, textAlign: "center", color: C.mid }}>Loading department data…</div>;
+
+  return (
+    <div style={{ maxWidth: 700, margin: "0 auto", padding: "16px" }}>
+      {/* Header */}
+      <div style={{ marginBottom: 16, padding: "16px 20px", background: `linear-gradient(135deg, ${C.priSoft}, transparent)`, border: `1px solid ${C.pri}33`, borderRadius: 12 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: C.pri, marginBottom: 4 }}>🧭 Head of Department</div>
+        <div style={{ fontSize: 12, color: C.mid }}>Oversight of your department — {teachers.length} teacher{teachers.length === 1 ? "" : "s"}, {totalStudents} student{totalStudents === 1 ? "" : "s"}.</div>
+      </div>
+
+      {error && <div style={{ padding: "8px 12px", borderRadius: 8, background: C.redS, color: C.red, fontSize: 12, marginBottom: 12 }}>Error: {error}</div>}
+
+      {teachers.length === 0 ? (
+        <Card style={{ padding: 40, textAlign: "center" }}>
+          <div style={{ fontSize: 36, marginBottom: 12 }}>🗂</div>
+          <div style={{ fontSize: 15, fontWeight: 600, color: C.txt, marginBottom: 6 }}>No teachers in your department yet</div>
+          <div style={{ fontSize: 13, color: C.mid }}>Ask your admin to add teachers to your department.</div>
+        </Card>
+      ) : (
+        <>
+          {/* Stat tiles */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 16 }}>
+            <div style={{ padding: "12px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, textAlign: "center" }}>
+              <div style={{ fontSize: 20, fontWeight: 800, color: C.txt }}>{teachers.length}</div>
+              <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 4 }}>Teachers</div>
+            </div>
+            <div style={{ padding: "12px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, textAlign: "center" }}>
+              <div style={{ fontSize: 20, fontWeight: 800, color: C.txt }}>{totalStudents}</div>
+              <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 4 }}>Students</div>
+            </div>
+            <div style={{ padding: "12px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, textAlign: "center" }}>
+              <div style={{ fontSize: 20, fontWeight: 800, color: totalActiveThisWeek > 0 ? C.grn : C.dim }}>{totalActiveThisWeek}</div>
+              <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 4 }}>Active 7d</div>
+            </div>
+            <div style={{ padding: "12px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, textAlign: "center" }}>
+              <div style={{ fontSize: 20, fontWeight: 800, color: deptAccuracy >= 70 ? C.grn : deptAccuracy >= 50 ? C.amb : C.red }}>{deptAccuracy}%</div>
+              <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 4 }}>Accuracy</div>
+            </div>
+          </div>
+
+          {/* View tabs */}
+          <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>
+            {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "Teachers" }, { k: "topics", l: "Weak topics" }, { k: "atrisk", l: `At-risk${atRisk.length > 0 ? ` (${atRisk.length})` : ""}` }].map(t => (
+              <Pill key={t.k} on={view === t.k} onClick={() => setView(t.k)} style={{ fontSize: 12, padding: "6px 12px" }}>{t.l}</Pill>
+            ))}
+          </div>
+
+          {/* OVERVIEW: teacher summary + weak topics snapshot */}
+          {view === "overview" && (
+            <>
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Teachers this week</div>
+              {perTeacher.map(pt => (
+                <div key={pt.teacher.id} style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, marginBottom: 6, display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{pt.teacher.display_name || "—"}</div>
+                    <div style={{ fontSize: 11, color: C.dim }}>{pt.classes.length} class{pt.classes.length === 1 ? "" : "es"} · {pt.studentCount} student{pt.studentCount === 1 ? "" : "s"}</div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: pt.activeThisWeek > 0 ? C.grn : C.dim }}>{pt.activeThisWeek}/{pt.studentCount}</div>
+                    <div style={{ fontSize: 10, color: C.dim }}>active 7d</div>
+                  </div>
+                  <div style={{ textAlign: "right", minWidth: 48 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: pt.acc >= 70 ? C.grn : pt.acc >= 50 ? C.amb : pt.totalAnswered > 0 ? C.red : C.dim }}>{pt.totalAnswered > 0 ? pt.acc + "%" : "—"}</div>
+                    <div style={{ fontSize: 10, color: C.dim }}>accuracy</div>
+                  </div>
+                </div>
+              ))}
+
+              {weakTopics.length > 0 && (
+                <div style={{ marginTop: 20 }}>
+                  <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Weakest topics across department</div>
+                  {weakTopics.slice(0, 5).map(t => (
+                    <div key={t.name} style={{ padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, marginBottom: 4, display: "flex", alignItems: "center", gap: 10 }}>
+                      <div style={{ flex: 1, fontSize: 12, color: C.txt }}>{t.name}</div>
+                      <div style={{ width: 80, height: 4, background: C.bdr, borderRadius: 99, overflow: "hidden" }}>
+                        <div style={{ width: `${t.pct}%`, height: "100%", background: t.pct < 50 ? C.red : t.pct < 70 ? C.amb : C.grn }} />
+                      </div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: t.pct < 50 ? C.red : t.pct < 70 ? C.amb : C.grn, minWidth: 40, textAlign: "right" }}>{t.pct}%</div>
+                      <div style={{ fontSize: 10, color: C.dim, minWidth: 40, textAlign: "right" }}>{t.t} ans</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* TEACHERS: full table + topic x teacher heatmap */}
+          {view === "teachers" && (
+            <>
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Full breakdown</div>
+              {perTeacher.map(pt => (
+                <div key={pt.teacher.id} style={{ padding: "14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, marginBottom: 8 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600 }}>{pt.teacher.display_name || "—"}</div>
+                      <div style={{ fontSize: 11, color: C.dim, fontFamily: "monospace" }}>{pt.teacher.email}</div>
+                    </div>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6, marginBottom: 8 }}>
+                    <div style={{ padding: "8px", background: C.bg, borderRadius: 6, textAlign: "center" }}>
+                      <div style={{ fontSize: 15, fontWeight: 700 }}>{pt.classes.length}</div>
+                      <div style={{ fontSize: 9, color: C.dim, textTransform: "uppercase", letterSpacing: 0.3 }}>Classes</div>
+                    </div>
+                    <div style={{ padding: "8px", background: C.bg, borderRadius: 6, textAlign: "center" }}>
+                      <div style={{ fontSize: 15, fontWeight: 700 }}>{pt.studentCount}</div>
+                      <div style={{ fontSize: 9, color: C.dim, textTransform: "uppercase", letterSpacing: 0.3 }}>Students</div>
+                    </div>
+                    <div style={{ padding: "8px", background: C.bg, borderRadius: 6, textAlign: "center" }}>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: pt.weekAnswered > 0 ? C.grn : C.dim }}>{pt.weekAnswered}</div>
+                      <div style={{ fontSize: 9, color: C.dim, textTransform: "uppercase", letterSpacing: 0.3 }}>Answers 7d</div>
+                    </div>
+                    <div style={{ padding: "8px", background: C.bg, borderRadius: 6, textAlign: "center" }}>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: pt.acc >= 70 ? C.grn : pt.acc >= 50 ? C.amb : pt.totalAnswered > 0 ? C.red : C.dim }}>{pt.totalAnswered > 0 ? pt.acc + "%" : "—"}</div>
+                      <div style={{ fontSize: 9, color: C.dim, textTransform: "uppercase", letterSpacing: 0.3 }}>Accuracy</div>
+                    </div>
+                  </div>
+                  {pt.classes.length > 0 && (
+                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                      {pt.classes.map(c => <span key={c.id} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 99, background: C.priSoft, color: C.pri, fontFamily: "monospace" }}>{c.name}</span>)}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {heatmap.length > 0 && (
+                <div style={{ marginTop: 20 }}>
+                  <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Topic strength by teacher</div>
+                  <div style={{ overflowX: "auto", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, padding: 10 }}>
+                    <table style={{ fontSize: 11, borderCollapse: "collapse", width: "100%" }}>
+                      <thead>
+                        <tr><th style={{ textAlign: "left", padding: "6px 8px", color: C.dim, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.3, fontSize: 10 }}>Topic</th>
+                          {teachers.map(t => <th key={t.id} style={{ padding: "6px 4px", color: C.dim, fontWeight: 600, fontSize: 10, minWidth: 50, textAlign: "center" }}>{(t.display_name || "?").split(" ")[0].slice(0, 8)}</th>)}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {heatmap.map(row => (
+                          <tr key={row.tid}>
+                            <td style={{ padding: "5px 8px", color: C.txt, fontWeight: 500, maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.name}</td>
+                            {row.cells.map((cell, i) => {
+                              const bg = cell.pct === null ? C.bdr : cell.pct >= 70 ? C.grn : cell.pct >= 50 ? C.amb : C.red;
+                              const fg = cell.pct === null ? C.dim : "#fff";
+                              return (
+                                <td key={i} style={{ padding: 2 }}>
+                                  <div title={cell.total > 0 ? `${cell.correct}/${cell.total} correct` : "No data"} style={{ background: bg, color: fg, padding: "4px 6px", borderRadius: 4, textAlign: "center", fontSize: 10, fontWeight: 600, opacity: cell.pct === null ? 0.3 : 1 }}>
+                                    {cell.pct === null ? "—" : `${cell.pct}%`}
+                                  </div>
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* WEAK TOPICS */}
+          {view === "topics" && (
+            <>
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Department-wide (topics with 5+ answers)</div>
+              {weakTopics.length === 0 ? (
+                <Card style={{ padding: 40, textAlign: "center" }}>
+                  <div style={{ fontSize: 36, marginBottom: 10 }}>📊</div>
+                  <div style={{ fontSize: 13, color: C.mid }}>Not enough data yet. Topics appear here once they have 5+ answers.</div>
+                </Card>
+              ) : weakTopics.map(t => (
+                <div key={t.name} style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, marginBottom: 6 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                    <div style={{ flex: 1, fontSize: 13, fontWeight: 500 }}>{t.name}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: t.pct < 50 ? C.red : t.pct < 70 ? C.amb : C.grn }}>{t.pct}%</div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ flex: 1, height: 5, background: C.bdr, borderRadius: 99, overflow: "hidden" }}>
+                      <div style={{ width: `${t.pct}%`, height: "100%", background: t.pct < 50 ? C.red : t.pct < 70 ? C.amb : C.grn, borderRadius: 99 }} />
+                    </div>
+                    <div style={{ fontSize: 10, color: C.dim, minWidth: 80, textAlign: "right" }}>{t.c}/{t.t} correct</div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+
+          {/* AT-RISK */}
+          {view === "atrisk" && (
+            <>
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>
+                Students with low accuracy ({"<"}50%) or inactive 7+ days
+              </div>
+              {atRisk.length === 0 ? (
+                <Card style={{ padding: 40, textAlign: "center" }}>
+                  <div style={{ fontSize: 36, marginBottom: 10 }}>✅</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: C.txt, marginBottom: 4 }}>No at-risk students</div>
+                  <div style={{ fontSize: 12, color: C.mid }}>Your department is doing well right now.</div>
+                </Card>
+              ) : atRisk.map(s => (
+                <div key={s.id} style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.red}44`, borderRadius: 10, marginBottom: 6 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{s.name}</div>
+                      <div style={{ fontSize: 11, color: C.dim }}>{s.teacherName} · {s.className}</div>
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: s.acc < 50 ? C.red : C.amb }}>{s.t > 0 ? s.acc + "%" : "—"}</div>
+                      <div style={{ fontSize: 10, color: C.dim }}>{s.t} answers</div>
+                    </div>
+                    <div style={{ textAlign: "right", minWidth: 60 }}>
+                      {s.daysSince !== null ? (
+                        <>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: s.daysSince >= 7 ? C.red : C.amb }}>{s.daysSince === 0 ? "today" : `${s.daysSince}d`}</div>
+                          <div style={{ fontSize: 10, color: C.dim }}>last seen</div>
+                        </>
+                      ) : (
+                        <div style={{ fontSize: 10, color: C.dim, fontStyle: "italic" }}>never</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 /* ─── TEACHER ─── */
-function Teacher({ user, isMod }) {
-  const [tab, setTab] = useState("dashboard");
+function Teacher({ user, isMod, isHoD }) {
+  const [tab, setTab] = useState(isHoD ? "hod" : "dashboard");
   const [classes, setClasses] = useState([]);
   const [cls, setCls] = useState(null);
   const [topics, setTopics] = useState([]);
@@ -1671,7 +2064,7 @@ function Teacher({ user, isMod }) {
           <Btn v="ghost" onClick={() => setSetup("class")} style={{ padding: "10px 14px", fontSize: 13, whiteSpace: "nowrap" }}>+ New</Btn>
         </div>
         <div style={{ display: "flex", gap: 6, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 2 }}>
-          {[...["dashboard", "starter", "topics", "questions"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : undefined}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "⚙ Admin" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
+          {[...(isHoD ? ["hod"] : []), ...["dashboard", "starter", "topics", "questions"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : (t === "hod" ? { borderColor: C.amb, color: tab === t ? C.amb : C.amb } : undefined)}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "⚙ Admin" : t === "hod" ? "🧭 Department" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
         </div>
       </div>
 
@@ -1932,6 +2325,7 @@ function Teacher({ user, isMod }) {
 
           {tab === "questions" && <QMgr subjectId={cls.subject_id} userId={user.id} topics={topics} setTopics={setTopics} />}
           {tab === "admin" && isMod && <AdminPanel user={user} />}
+          {tab === "hod" && isHoD && <HodPanel user={user} />}
         </>
       )}
     </div>
@@ -3164,8 +3558,9 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
 export default function App() {
   const [user, setUser] = useState(null);
   if (!user) return <Auth onAuth={setUser} />;
-  const isT = user.profile?.role === "teacher" || user.profile?.role === "moderator" || user.user_metadata?.role === "teacher";
+  const isT = user.profile?.role === "teacher" || user.profile?.role === "moderator" || user.profile?.role === "hod" || user.user_metadata?.role === "teacher";
   const isMod = user.profile?.role === "moderator";
+  const isHoD = user.profile?.role === "hod" || user.profile?.role === "moderator";
 
   return (
     <div style={{ minHeight: "100dvh", background: C.bg, fontFamily: "'DM Sans',-apple-system,sans-serif", color: C.txt }}>
@@ -3173,12 +3568,12 @@ export default function App() {
         <div style={{ maxWidth: 700, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", height: 50 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.5 }}>retrieval<span style={{ color: C.pri }}>.</span></span>
-            <Badge color={isMod ? C.pri : (isT ? C.acc : C.pri)}>{isMod ? "Moderator" : (isT ? "Teacher" : "Student")}</Badge>
+            <Badge color={isMod ? C.pri : (user.profile?.role === "hod" ? C.amb : (isT ? C.acc : C.pri))}>{isMod ? "Moderator" : (user.profile?.role === "hod" ? "Head of Department" : (isT ? "Teacher" : "Student"))}</Badge>
           </div>
           <Btn v="ghost" onClick={() => { sb.auth.out(); setUser(null); }} style={{ padding: "6px 12px", fontSize: 12 }}>Log out</Btn>
         </div>
       </div>
-      <div style={{ paddingBottom: 60 }}>{isT ? <Teacher user={user} isMod={isMod} /> : <Student user={user} />}</div>
+      <div style={{ paddingBottom: 60 }}>{isT ? <Teacher user={user} isMod={isMod} isHoD={isHoD} /> : <Student user={user} />}</div>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
