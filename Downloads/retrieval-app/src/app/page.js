@@ -357,6 +357,13 @@ function Student({ user }) {
   const [flagBusy, setFlagBusy] = useState(false);
   const [flagMsg, setFlagMsg] = useState("");
   const [lastResponseId, setLastResponseId] = useState(null);
+  // 7-day habit visual: [{ date, label, count }]
+  const [habitDays, setHabitDays] = useState([]);
+  // Review mistakes mode: filters qs to those student has recently got wrong
+  const [reviewMode, setReviewMode] = useState(false);
+  const [mistakeQIds, setMistakeQIds] = useState(new Set()); // recent wrong qids for review mode
+  // Session-intro framing: show a "here's your session" card before first question
+  const [sessionStarted, setSessionStarted] = useState(false);
 
   useEffect(() => { load(); }, []);
 
@@ -459,13 +466,38 @@ function Student({ user }) {
         weeks.push({ weekStart: bounds.start, label: w === 0 ? "This week" : w === 1 ? "Last week" : `${w} weeks ago`, total: weekResps.length, valid, correct, stars, metTarget: valid >= WEEKLY_TARGET });
       }
       setWeeklyData(weeks);
+
+      // 7-day habit — count valid responses per day, today on right
+      const days = [];
+      const today = new Date();
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today); d.setDate(today.getDate() - i); d.setHours(0,0,0,0);
+        const end = new Date(d); end.setHours(23,59,59,999);
+        const dayResps = resps.filter(r => { const rd = new Date(r.answered_at); return rd >= d && rd <= end; });
+        const count = dayResps.filter(r => !detectFakeAnswer(r.student_answer)).length;
+        const label = i === 0 ? "Today" : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()];
+        days.push({ date: d.toISOString(), label, count });
+      }
+      setHabitDays(days);
+
+      // Identify recent mistakes for review mode — use most-recent response per question, keep the wrongs
+      const latestByQ = {};
+      resps.forEach(r => { if (!latestByQ[r.question_id]) latestByQ[r.question_id] = r; });
+      const mistakes = new Set(Object.values(latestByQ).filter(r => !r.is_correct && !detectFakeAnswer(r.student_answer)).map(r => r.question_id));
+      setMistakeQIds(mistakes);
+
+      // Session starts at intro screen
+      setSessionStarted(false);
+      setReviewMode(false);
     } catch (e) { console.error(e); }
   };
 
   const submit = async () => {
     if (!ans.trim() || marking) return;
     setMarking(true);
-    const activeQs = studyMode && studyTopicId ? qs.filter(q => q.topic_id === studyTopicId) : qs;
+    const activeQs = reviewMode
+      ? qs.filter(q => mistakeQIds.has(q.id))
+      : (studyMode && studyTopicId ? qs.filter(q => q.topic_id === studyTopicId) : qs);
     const q = activeQs[qi];
     const r = await aiMark(q.question_text, q.model_answer, ans, q.marks);
     setRes(r);
@@ -529,7 +561,9 @@ function Student({ user }) {
     if (!lastResponseId) return;
     setFlagBusy(true); setFlagMsg("");
     try {
-      const activeQs = studyMode && studyTopicId ? qs.filter(qq => qq.topic_id === studyTopicId) : qs;
+      const activeQs = reviewMode
+        ? qs.filter(qq => mistakeQIds.has(qq.id))
+        : (studyMode && studyTopicId ? qs.filter(qq => qq.topic_id === studyTopicId) : qs);
       const q = activeQs[qi];
       await sb.q("marking_flags", { method: "POST", body: {
         response_id: lastResponseId,
@@ -586,8 +620,21 @@ function Student({ user }) {
   );
 
   /* ── Quiz ── */
-  const activeQs = studyMode && studyTopicId ? qs.filter(q => q.topic_id === studyTopicId) : qs;
+  const activeQs = reviewMode
+    ? qs.filter(qq => mistakeQIds.has(qq.id))
+    : (studyMode && studyTopicId ? qs.filter(qq => qq.topic_id === studyTopicId) : qs);
   const q = activeQs[qi];
+  // Derived session breakdown for the intro screen
+  const introBreakdown = (() => {
+    const upcoming = activeQs.slice(0, sessionTarget);
+    let fresh = 0, review = 0;
+    upcoming.forEach(uq => {
+      const st = sr[uq.id];
+      if (!st || !st.reps) fresh++; else review++;
+    });
+    return { fresh, review, total: upcoming.length };
+  })();
+  const estimatedMinutes = Math.max(1, Math.round(introBreakdown.total * 0.7));
   const acc = stats.t > 0 ? Math.round(stats.c / stats.t * 100) : 0;
   const isDue = !sr[q?.id] || !sr[q?.id]?.due || new Date(sr[q?.id].due) <= new Date();
   const weekPct = Math.min(100, Math.round((weeklyValid / WEEKLY_TARGET) * 100));
@@ -611,7 +658,22 @@ function Student({ user }) {
           {streak >= 3 && <Badge color={C.amb}>🔥 {streak}</Badge>}
           {currentStars > 0 && <Badge color={C.amb}>⭐ {currentStars}</Badge>}
           {sessionStats.t > 0 && <button onClick={() => setShowSummary(true)} style={{ background: "none", border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px" }}>📊 {sessionStats.t}</button>}
-          <button onClick={() => { setStudyMode(p => !p); setStudyTopicId(null); setRes(null); setAns(""); }} style={{ background: studyMode ? C.priSoft : "none", border: `1px solid ${studyMode ? C.pri : C.bdr}`, borderRadius: 8, color: studyMode ? C.pri : C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px", fontWeight: studyMode ? 700 : 400 }}>📖 Study</button>
+          <button onClick={() => { setStudyMode(p => !p); setStudyTopicId(null); setReviewMode(false); setRes(null); setAns(""); }} style={{ background: studyMode ? C.priSoft : "none", border: `1px solid ${studyMode ? C.pri : C.bdr}`, borderRadius: 8, color: studyMode ? C.pri : C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px", fontWeight: studyMode ? 700 : 400 }}>📖 Study</button>
+          {mistakeQIds.size > 0 && (
+            <button onClick={() => {
+                const turningOn = !reviewMode;
+                setReviewMode(turningOn);
+                setStudyMode(false); setStudyTopicId(null);
+                setRes(null); setAns(""); setQi(0);
+                // In review mode the target matches the number of mistakes (capped at 10)
+                if (turningOn) setSessionTarget(Math.min(10, mistakeQIds.size));
+                else setSessionTarget(Math.max(5, Math.min(15, Math.max(0, WEEKLY_TARGET - weeklyValid) || 10)));
+                setSessionStarted(false); setSessionQCount(0);
+              }}
+              style={{ background: reviewMode ? C.redS : "none", border: `1px solid ${reviewMode ? C.red : C.bdr}`, borderRadius: 8, color: reviewMode ? C.red : C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px", fontWeight: reviewMode ? 700 : 400 }}>
+              🔁 Review ({mistakeQIds.size})
+            </button>
+          )}
           <Badge color={C.pri}>{cls.name}</Badge>
         </div>
       </div>
@@ -629,6 +691,33 @@ function Student({ user }) {
                 {t.name} <span style={{ opacity: 0.6 }}>({t.count})</span>
               </button>
             ))}
+          </div>
+        </Card>
+      )}
+
+      {/* 7-day habit strip */}
+      {habitDays.length > 0 && (
+        <Card style={{ padding: "10px 14px", marginBottom: 10 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+            <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600 }}>Last 7 days</div>
+            <div style={{ fontSize: 10, color: C.dim }}>{habitDays.filter(d => d.count > 0).length} of 7 active</div>
+          </div>
+          <div style={{ display: "flex", gap: 4 }}>
+            {habitDays.map((d, i) => {
+              const isToday = i === habitDays.length - 1;
+              let col = C.bdr;
+              if (d.count >= 10) col = C.grn;
+              else if (d.count >= 5) col = C.amb;
+              else if (d.count > 0) col = C.red;
+              return (
+                <div key={i} style={{ flex: 1, textAlign: "center" }}>
+                  <div title={`${d.label}: ${d.count} answered`} style={{ height: 22, background: col, borderRadius: 5, border: isToday ? `2px solid ${C.pri}` : "none", opacity: d.count === 0 && !isToday ? 0.4 : 1, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: d.count > 0 ? "#fff" : C.dim, fontWeight: 600 }}>
+                    {d.count > 0 ? d.count : ""}
+                  </div>
+                  <div style={{ fontSize: 9, color: isToday ? C.pri : C.dim, marginTop: 2, fontWeight: isToday ? 700 : 400 }}>{d.label.slice(0, 3)}</div>
+                </div>
+              );
+            })}
           </div>
         </Card>
       )}
@@ -851,6 +940,62 @@ function Student({ user }) {
               Back to classes
             </Btn>
           </div>
+        </Card>
+      ) : reviewMode && activeQs.length === 0 ? (
+        <Card style={{ padding: "40px 20px", textAlign: "center" }}>
+          <div style={{ fontSize: 40, marginBottom: 12 }}>✨</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: C.txt, marginBottom: 4 }}>No mistakes to review</div>
+          <div style={{ fontSize: 13, color: C.mid, marginBottom: 20 }}>You're up to date. Back to normal practice?</div>
+          <Btn onClick={() => { setReviewMode(false); setSessionStarted(false); }} style={{ width: "100%" }}>← Back to practice</Btn>
+        </Card>
+      ) : !sessionStarted ? (
+        /* ── Session intro ── */
+        <Card style={{ padding: "24px 20px", textAlign: "center" }}>
+          <div style={{ fontSize: 36, marginBottom: 10 }}>{reviewMode ? "🔁" : studyMode ? "📖" : "🧠"}</div>
+          <div style={{ fontSize: 18, fontWeight: 800, color: C.txt, letterSpacing: -0.3, marginBottom: 4 }}>
+            {reviewMode ? "Review your mistakes" : studyMode ? "Study mode" : "Ready to practise?"}
+          </div>
+          <div style={{ fontSize: 13, color: C.mid, marginBottom: 18 }}>
+            {reviewMode ? `${mistakeQIds.size} question${mistakeQIds.size === 1 ? "" : "s"} you recently got wrong` :
+             studyMode && !studyTopicId ? "Pick a topic above to begin" :
+             weeklyValid >= WEEKLY_TARGET ? `You've already hit this week's target — every extra question earns a ⭐` :
+             `${Math.max(0, WEEKLY_TARGET - weeklyValid)} to go this week`}
+          </div>
+
+          {activeQs.length > 0 && (!studyMode || studyTopicId) && (
+            <>
+              {/* Session breakdown */}
+              <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+                <div style={{ flex: 1, padding: "12px 10px", borderRadius: 10, background: C.card2 }}>
+                  <div style={{ fontSize: 22, fontWeight: 800, color: C.pri }}>{introBreakdown.total}</div>
+                  <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, marginTop: 2 }}>Questions</div>
+                </div>
+                {!reviewMode && (
+                  <>
+                    <div style={{ flex: 1, padding: "12px 10px", borderRadius: 10, background: C.card2 }}>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: C.acc }}>{introBreakdown.fresh}</div>
+                      <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, marginTop: 2 }}>New</div>
+                    </div>
+                    <div style={{ flex: 1, padding: "12px 10px", borderRadius: 10, background: C.card2 }}>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: C.amb }}>{introBreakdown.review}</div>
+                      <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, marginTop: 2 }}>Review</div>
+                    </div>
+                  </>
+                )}
+                <div style={{ flex: 1, padding: "12px 10px", borderRadius: 10, background: C.card2 }}>
+                  <div style={{ fontSize: 22, fontWeight: 800, color: C.mid }}>~{estimatedMinutes}</div>
+                  <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, marginTop: 2 }}>Min</div>
+                </div>
+              </div>
+
+              <Btn onClick={() => setSessionStarted(true)} style={{ width: "100%", padding: "14px 20px" }}>
+                {reviewMode ? "Start review →" : "Start session →"}
+              </Btn>
+              {!reviewMode && (
+                <div style={{ fontSize: 11, color: C.dim, marginTop: 10 }}>You can finish early whenever you want</div>
+              )}
+            </>
+          )}
         </Card>
       ) : (
         <Card style={{ overflow: "hidden" }}>
