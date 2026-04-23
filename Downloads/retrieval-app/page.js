@@ -347,6 +347,16 @@ function Student({ user }) {
   // Prevents the same wrong question cycling back within seconds. Resets on reload (in-memory only).
   const [cooldown, setCooldown] = useState(new Map());
   const COOLDOWN_LENGTH = 6; // answer 6 other questions before a wrong one can return
+  // Session progress counter (resets on class pick or Back)
+  const [sessionQCount, setSessionQCount] = useState(0);
+  // Per-session target that drives the progress bar — remainder of weekly target, min 5, max 15
+  const [sessionTarget, setSessionTarget] = useState(10);
+  // Report wrong marking
+  const [flagging, setFlagging] = useState(false);
+  const [flagReason, setFlagReason] = useState("");
+  const [flagBusy, setFlagBusy] = useState(false);
+  const [flagMsg, setFlagMsg] = useState("");
+  const [lastResponseId, setLastResponseId] = useState(null);
 
   useEffect(() => { load(); }, []);
 
@@ -387,6 +397,8 @@ function Student({ user }) {
     setSessionHitTarget(false);
     setStudyMode(false);
     setStudyTopicId(null);
+    setSessionQCount(0);
+    setFlagMsg("");
     try {
       const ul = await sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id,recency_rank" } });
       if (!ul.length) { setQs([]); return; }
@@ -432,6 +444,9 @@ function Student({ user }) {
       const thisWeekResps = resps.filter(r => { const d = new Date(r.answered_at); return d >= thisWeek.start && d <= thisWeek.end; });
       const validThisWeek = thisWeekResps.filter(r => !detectFakeAnswer(r.student_answer)).length;
       setWeeklyValid(validThisWeek);
+      // Session target: how many questions to aim for in this session — remainder of weekly target, clamped 5-15
+      const remaining = Math.max(0, WEEKLY_TARGET - validThisWeek);
+      setSessionTarget(Math.max(5, Math.min(15, remaining || 10)));
 
       const weeks = [];
       for (let w = 0; w < 8; w++) {
@@ -491,8 +506,10 @@ function Student({ user }) {
     }
 
     try {
-      await sb.q("responses", { method: "POST", body: { student_id: user.id, question_id: q.id, class_id: cls.id, student_answer: ans, is_correct: r.correct, ai_feedback: r.flagged ? "FLAGGED: " + r.feedback : r.feedback, marks_awarded: r.marks_awarded } });
+      const respRows = await sb.q("responses", { method: "POST", body: { student_id: user.id, question_id: q.id, class_id: cls.id, student_answer: ans, is_correct: r.correct, ai_feedback: r.flagged ? "FLAGGED: " + r.feedback : r.feedback, marks_awarded: r.marks_awarded } });
+      if (Array.isArray(respRows) && respRows[0]?.id) setLastResponseId(respRows[0].id);
       setStats(s => ({ t: s.t + 1, c: s.c + (r.correct ? 1 : 0) }));
+      setSessionQCount(n => n + 1);
     } catch (e) { console.error(e); }
     setMarking(false);
   };
@@ -504,6 +521,30 @@ function Student({ user }) {
     setCooldown(nextCooldown);
     setQs(sortQuestions(qs, sr, recency, new Set(nextCooldown.keys())));
     setQi(0); setAns(""); setRes(null);
+    setFlagging(false); setFlagReason(""); setFlagMsg(""); setLastResponseId(null);
+  };
+
+  // Submit a marking flag (student reports wrong AI mark)
+  const submitFlag = async () => {
+    if (!lastResponseId) return;
+    setFlagBusy(true); setFlagMsg("");
+    try {
+      const activeQs = studyMode && studyTopicId ? qs.filter(qq => qq.topic_id === studyTopicId) : qs;
+      const q = activeQs[qi];
+      await sb.q("marking_flags", { method: "POST", body: {
+        response_id: lastResponseId,
+        student_id: user.id,
+        class_id: cls.id,
+        question_id: q.id,
+        student_answer: ans,
+        ai_feedback: res?.feedback || "",
+        ai_correct: !!res?.correct,
+        student_reason: flagReason.trim() || null,
+      }});
+      setFlagMsg("Thanks — your teacher will review this.");
+      setFlagging(false); setFlagReason("");
+    } catch (e) { setFlagMsg("Error: " + e.message); }
+    setFlagBusy(false);
   };
 
   if (loading) return <div style={{ color: C.mid, padding: 40, textAlign: "center" }}>Loading...</div>;
@@ -611,6 +652,11 @@ function Student({ user }) {
           <span style={{ fontSize: 10, color: C.dim }}>{weeklyValid < WEEKLY_TARGET ? `${WEEKLY_TARGET - weeklyValid} to go` : "Target hit! 🎉"}</span>
           {overTarget > 0 && <span style={{ fontSize: 10, color: C.amb }}>Next ⭐ in {STAR_INTERVAL - (overTarget % STAR_INTERVAL)} questions</span>}
         </div>
+        {sessionQCount > 0 && (
+          <button onClick={() => setShowSummary(true)} style={{ marginTop: 10, width: "100%", padding: "8px 12px", borderRadius: 8, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontWeight: 500 }}>
+            Finish session — see summary ({sessionQCount} answered)
+          </button>
+        )}
 
         {/* Star progress if over target */}
         {currentStars > 0 && (
@@ -811,19 +857,34 @@ function Student({ user }) {
           {(() => {
             const srData = sr[q?.id];
             const srInfo = getSRInfo(srData, isDue);
+            const sessionPct = Math.min(100, Math.round((sessionQCount / sessionTarget) * 100));
             return (
-              <div style={{ padding: "10px 16px", borderBottom: `1px solid ${C.bdr}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Badge color={C.acc}>{q?.topics?.name}</Badge>
-                <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5, justifyContent: "flex-end" }}>
-                      <span style={{ fontSize: 11, fontWeight: 700, color: srInfo.color, padding: "2px 8px", borderRadius: 99, background: `${srInfo.color}18` }}>{srInfo.label}</span>
+              <>
+                <div style={{ padding: "10px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <Badge color={C.acc}>{q?.topics?.name}</Badge>
+                  <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 5, justifyContent: "flex-end" }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: srInfo.color, padding: "2px 8px", borderRadius: 99, background: `${srInfo.color}18` }}>{srInfo.label}</span>
+                      </div>
+                      <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>{srInfo.detail}</div>
                     </div>
-                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>{srInfo.detail}</div>
+                    <span style={{ fontSize: 12, color: C.dim }}>{q?.marks}mk</span>
                   </div>
-                  <span style={{ fontSize: 12, color: C.dim }}>{q?.marks}mk</span>
                 </div>
-              </div>
+                {/* Session progress */}
+                <div style={{ padding: "0 16px 10px", borderBottom: `1px solid ${C.bdr}` }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4 }}>
+                      Session · Q{Math.min(sessionQCount + 1, sessionTarget)} of {sessionTarget}
+                    </span>
+                    <span style={{ fontSize: 10, color: C.dim }}>{sessionPct}%</span>
+                  </div>
+                  <div style={{ width: "100%", height: 4, background: C.bdr, borderRadius: 99, overflow: "hidden" }}>
+                    <div style={{ width: `${sessionPct}%`, height: "100%", background: sessionPct >= 100 ? C.grn : C.pri, borderRadius: 99, transition: "width .3s ease" }} />
+                  </div>
+                </div>
+              </>
             );
           })()}
           <div style={{ padding: "20px 16px" }}>
@@ -851,6 +912,23 @@ function Student({ user }) {
                   <div style={{ color: C.txt, marginTop: 3 }}>{q.model_answer}</div>
                 </div>
                 <Btn onClick={next} style={{ width: "100%", padding: "14px 20px" }}>Next question →</Btn>
+                {flagMsg ? (
+                  <div style={{ marginTop: 10, padding: "8px 12px", borderRadius: 8, background: flagMsg.startsWith("Error") ? C.redS : C.grnS, color: flagMsg.startsWith("Error") ? C.red : C.grn, fontSize: 12, textAlign: "center" }}>{flagMsg}</div>
+                ) : !flagging ? (
+                  <button onClick={() => { setFlagging(true); setFlagReason(""); }} style={{ marginTop: 10, width: "100%", background: "transparent", border: "none", color: C.dim, fontSize: 12, cursor: "pointer", fontFamily: "inherit", textDecoration: "underline", padding: 4 }}>
+                    Something wrong with this mark? Tell your teacher
+                  </button>
+                ) : (
+                  <div style={{ marginTop: 10, padding: 12, borderRadius: 10, background: C.card2, border: `1px solid ${C.bdr}` }}>
+                    <div style={{ fontSize: 12, color: C.mid, marginBottom: 6, fontWeight: 600 }}>Report wrong marking</div>
+                    <div style={{ fontSize: 11, color: C.dim, marginBottom: 8 }}>Your teacher will review this. Your mark won't change automatically.</div>
+                    <TA value={flagReason} onChange={e => setFlagReason(e.target.value)} rows={2} maxLength={300} placeholder="What's wrong? (optional)" style={{ fontSize: 13 }} />
+                    <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+                      <Btn onClick={submitFlag} disabled={flagBusy} style={{ flex: 1, fontSize: 12, padding: "8px 12px" }}>{flagBusy ? "..." : "Send"}</Btn>
+                      <Btn v="ghost" onClick={() => { setFlagging(false); setFlagReason(""); }} disabled={flagBusy} style={{ fontSize: 12, padding: "8px 12px" }}>Cancel</Btn>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
