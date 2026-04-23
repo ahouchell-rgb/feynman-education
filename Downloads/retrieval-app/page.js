@@ -226,7 +226,9 @@ function Auth({ onAuth }) {
     setErr(""); setInfo(""); setBusy(true);
     try {
       if (mode === "signup") {
-        const res = await sb.auth.signUp(email, pw, { display_name: name, role });
+        // Teacher/HoD/moderator accounts can only be created by a moderator via the admin panel.
+        // Public signups always create students.
+        const res = await sb.auth.signUp(email, pw, { display_name: name, role: "student" });
         if (res?.needsConfirm) { setInfo("Check email to confirm, then log in. (Or disable email confirmation in Supabase → Auth → Settings)"); setMode("login"); setBusy(false); return; }
       } else { await sb.auth.signIn(email, pw); }
       const u = sb.auth.user();
@@ -254,7 +256,9 @@ function Auth({ onAuth }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {mode === "signup" && <>
               <Inp placeholder="Your name" value={name} onChange={e => setName(e.target.value)} />
-              <div style={{ display: "flex", gap: 6 }}>{["student", "teacher"].map(r => <Pill key={r} on={role === r} onClick={() => setRole(r)} style={{ flex: 1, textAlign: "center" }}>{r.charAt(0).toUpperCase() + r.slice(1)}</Pill>)}</div>
+              <div style={{ fontSize: 11, color: C.dim, padding: "8px 10px", background: C.card2, borderRadius: 8, lineHeight: 1.5 }}>
+                Signing up as a student. Teachers — please ask your admin for an account.
+              </div>
             </>}
             <Inp placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
             <Inp placeholder="Password (min 6)" type="password" value={pw} onChange={e => setPw(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} />
