@@ -364,8 +364,67 @@ function Student({ user }) {
   const [mistakeQIds, setMistakeQIds] = useState(new Set()); // recent wrong qids for review mode
   // Session-intro framing: show a "here's your session" card before first question
   const [sessionStarted, setSessionStarted] = useState(false);
+  // Voice input state (Web Speech API)
+  const [isRecording, setIsRecording] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
+  const [speechError, setSpeechError] = useState("");
+  const recognitionRef = useRef(null);
+  const ansBaseRef = useRef("");
 
   useEffect(() => { load(); }, []);
+
+  // Initialise Web Speech API once per mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+    setSpeechSupported(true);
+    const rec = new SR();
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.lang = "en-GB";
+    rec.onresult = (event) => {
+      let transcript = "";
+      for (let i = 0; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      const base = ansBaseRef.current;
+      setAns(((base && base.trim()) ? base.trim() + " " : "") + transcript.trim());
+    };
+    rec.onend = () => setIsRecording(false);
+    rec.onerror = (e) => {
+      const msg = e?.error === "not-allowed" ? "Mic access blocked — enable it in browser settings"
+                : e?.error === "no-speech" ? "Didn't hear anything — try again"
+                : e?.error === "network" ? "Network issue with speech recognition"
+                : "Couldn't transcribe — try typing";
+      setSpeechError(msg);
+      setIsRecording(false);
+      setTimeout(() => setSpeechError(""), 3500);
+    };
+    recognitionRef.current = rec;
+    return () => { try { rec.stop(); } catch { /* no-op */ } };
+  }, []);
+
+  const toggleMic = () => {
+    const rec = recognitionRef.current;
+    if (!rec) return;
+    if (isRecording) {
+      try { rec.stop(); } catch { /* no-op */ }
+      setIsRecording(false);
+    } else {
+      ansBaseRef.current = ans;
+      setSpeechError("");
+      try { rec.start(); setIsRecording(true); }
+      catch (e) { console.warn("speech start failed", e); }
+    }
+  };
+
+  const stopMicIfActive = () => {
+    if (isRecording && recognitionRef.current) {
+      try { recognitionRef.current.stop(); } catch { /* no-op */ }
+      setIsRecording(false);
+    }
+  };
 
   const load = async () => {
     try {
@@ -494,6 +553,7 @@ function Student({ user }) {
 
   const submit = async () => {
     if (!ans.trim() || marking) return;
+    stopMicIfActive();
     setMarking(true);
     const activeQs = reviewMode
       ? qs.filter(q => mistakeQIds.has(q.id))
@@ -547,6 +607,7 @@ function Student({ user }) {
   };
 
   const next = () => {
+    stopMicIfActive();
     // Tick down all cooldowns by 1; drop any that hit zero
     const nextCooldown = new Map();
     cooldown.forEach((remaining, qid) => { if (remaining > 1) nextCooldown.set(qid, remaining - 1); });
@@ -1036,7 +1097,17 @@ function Student({ user }) {
             <div style={{ fontSize: 16, color: C.txt, lineHeight: 1.55, marginBottom: 20, fontWeight: 500 }}>{q?.question_text}</div>
             {!res ? (
               <>
-                <TA value={ans} onChange={e => setAns(e.target.value)} placeholder="Type your answer..." rows={3} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); } }} />
+                <div style={{ position: "relative" }}>
+                  <TA value={ans} onChange={e => setAns(e.target.value)} placeholder={isRecording ? "Listening… speak naturally" : "Type your answer… or tap the mic"} rows={3} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); } }} style={{ paddingRight: speechSupported ? 52 : undefined }} />
+                  {speechSupported && (
+                    <button type="button" onClick={toggleMic} aria-label={isRecording ? "Stop recording" : "Start voice input"}
+                      style={{ position: "absolute", right: 10, bottom: 10, width: 36, height: 36, borderRadius: 99, border: `1px solid ${isRecording ? C.red : C.bdr}`, background: isRecording ? C.red : C.card, color: isRecording ? "#fff" : C.mid, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, padding: 0, boxShadow: isRecording ? `0 0 0 4px ${C.redS}` : "none", transition: "all .15s ease" }}>
+                      {isRecording ? "■" : "🎤"}
+                    </button>
+                  )}
+                </div>
+                {isRecording && <div style={{ fontSize: 11, color: C.red, marginTop: 6, textAlign: "center", fontWeight: 500 }}>● Recording — tap mic again to stop</div>}
+                {speechError && <div style={{ fontSize: 11, color: C.red, marginTop: 6, textAlign: "center" }}>{speechError}</div>}
                 <Btn onClick={submit} disabled={!ans.trim() || marking} style={{ width: "100%", marginTop: 12, padding: "14px 20px" }}>{marking ? "Marking..." : "Submit"}</Btn>
               </>
             ) : (
