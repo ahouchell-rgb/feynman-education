@@ -874,6 +874,9 @@ function AdminPanel({ user }) {
   const [expandedStudent, setExpandedStudent] = useState(null);
   const [renameDraft, setRenameDraft] = useState("");
   const [pwDraft, setPwDraft] = useState("");
+  const [addClassId, setAddClassId] = useState(""); // selected class in the student's "Add to class" dropdown
+  const [showCreateTeacher, setShowCreateTeacher] = useState(false);
+  const [newTeacher, setNewTeacher] = useState({ email: "", display_name: "", password: "" });
 
   useEffect(() => { loadAll(); }, []);
 
@@ -964,6 +967,50 @@ function AdminPanel({ user }) {
       </div>
 
       {msg && <div style={{ padding: "8px 12px", borderRadius: 8, background: msg.startsWith("Error") ? C.redS : C.priSoft, color: msg.startsWith("Error") ? C.red : C.pri, fontSize: 12, marginBottom: 12 }}>{msg}</div>}
+
+      {/* Create teacher */}
+      <div style={{ marginBottom: 16 }}>
+        {!showCreateTeacher ? (
+          <Btn v="ghost" onClick={() => { setShowCreateTeacher(true); setMsg(""); }} style={{ width: "100%", fontSize: 12, padding: "10px" }}>+ Create teacher account</Btn>
+        ) : (
+          <div style={{ padding: 14, background: C.card, border: `1px solid ${C.pri}33`, borderRadius: 10 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.pri, marginBottom: 10 }}>Create teacher account</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 10 }}>
+              <Inp placeholder="Full name" value={newTeacher.display_name} onChange={e => setNewTeacher(p => ({ ...p, display_name: e.target.value }))} style={{ fontSize: 13, padding: "8px 10px" }} />
+              <Inp placeholder="Email" type="email" value={newTeacher.email} onChange={e => setNewTeacher(p => ({ ...p, email: e.target.value }))} style={{ fontSize: 13, padding: "8px 10px" }} />
+              <Inp placeholder="Temporary password (min 6)" type="text" value={newTeacher.password} onChange={e => setNewTeacher(p => ({ ...p, password: e.target.value }))} style={{ fontSize: 13, padding: "8px 10px" }} />
+            </div>
+            <div style={{ fontSize: 11, color: C.mid, marginBottom: 10 }}>They can log in immediately and change the password in their own settings. Only tell them the password in person or through a trusted channel.</div>
+            <div style={{ display: "flex", gap: 6 }}>
+              <Btn onClick={async () => {
+                  const { email, display_name, password } = newTeacher;
+                  if (!email.trim() || !display_name.trim() || !password.trim()) { setMsg("Error: all fields required"); return; }
+                  if (password.length < 6) { setMsg("Error: password must be at least 6 characters"); return; }
+                  setBusy(true); setMsg("");
+                  try {
+                    const jwt = sb.auth.getToken();
+                    const r = await fetch(`${SUPA_URL}/functions/v1/manage-student`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json", apikey: SUPA_KEY, Authorization: `Bearer ${jwt || SUPA_KEY}` },
+                      body: JSON.stringify({ action: "create_teacher", new_email: email, new_display_name: display_name, new_password: password }),
+                    });
+                    const d = await r.json();
+                    if (d.success) {
+                      setMsg(`✓ Teacher account created. Tell ${display_name} to log in with ${email} and change password.`);
+                      setNewTeacher({ email: "", display_name: "", password: "" });
+                      setShowCreateTeacher(false);
+                      await loadAll();
+                    } else {
+                      setMsg("Error: " + (d.error || "Unknown"));
+                    }
+                  } catch (e) { setMsg("Error: " + e.message); }
+                  setBusy(false);
+                }} disabled={busy} style={{ flex: 1, fontSize: 12 }}>{busy ? "Creating..." : "Create account"}</Btn>
+              <Btn v="ghost" onClick={() => { setShowCreateTeacher(false); setMsg(""); }} disabled={busy} style={{ fontSize: 12 }}>Cancel</Btn>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Overview */}
       {view === "overview" && (
@@ -1073,6 +1120,42 @@ function AdminPanel({ user }) {
                         <Btn v="ghost" onClick={() => { navigator.clipboard.writeText(s.email || ""); setMsg("Email copied"); setTimeout(() => setMsg(""), 1500); }} style={{ fontSize: 11, padding: "8px 12px" }}>Copy</Btn>
                       </div>
                     </div>
+
+                    {/* Add to class */}
+                    <div style={{ marginBottom: 8 }}>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: C.mid, marginBottom: 4 }}>Add to class</div>
+                      <div style={{ display: "flex", gap: 6 }}>
+                        <select value={expandedStudent === s.id ? addClassId : ""} onChange={e => setAddClassId(e.target.value)} style={{ flex: 1, padding: "8px 10px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 6, fontSize: 13, fontFamily: "inherit", color: C.txt, cursor: "pointer" }}>
+                          <option value="">Select a class...</option>
+                          {classes.filter(c => !(studentClassMap[s.id] || []).includes(c.id)).map(c => (
+                            <option key={c.id} value={c.id}>{c.name}{c.profiles?.display_name ? ` (${c.profiles.display_name})` : ""}</option>
+                          ))}
+                        </select>
+                        <Btn onClick={() => { if (addClassId) { callManage("add_to_class", s.id, { class_id: addClassId }); setAddClassId(""); } }} disabled={!addClassId || busy} style={{ whiteSpace: "nowrap", fontSize: 12, padding: "8px 14px" }}>{busy ? "..." : "Add"}</Btn>
+                      </div>
+                      {classes.filter(c => !(studentClassMap[s.id] || []).includes(c.id)).length === 0 && (
+                        <div style={{ fontSize: 11, color: C.mid, marginTop: 4, fontStyle: "italic" }}>In all available classes already.</div>
+                      )}
+                    </div>
+
+                    {/* Remove from current classes */}
+                    {(studentClassMap[s.id] || []).length > 0 && (
+                      <div style={{ marginBottom: 8 }}>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: C.mid, marginBottom: 4 }}>Remove from class</div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                          {(studentClassMap[s.id] || []).map(cid => {
+                            const cl = classById[cid];
+                            if (!cl) return null;
+                            return (
+                              <div key={cid} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 10px", background: C.bg, border: `1px solid ${C.bdr}`, borderRadius: 6 }}>
+                                <span style={{ flex: 1, fontSize: 12 }}>{cl.name}</span>
+                                <Btn v="ghost" onClick={() => { if (confirm(`Remove ${s.display_name} from ${cl.name}?`)) callManage("remove_from_class", s.id, { class_id: cid }); }} disabled={busy} style={{ fontSize: 11, padding: "4px 10px", color: C.red, borderColor: "rgba(239,68,68,.3)" }}>Remove</Btn>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Delete */}
                     <div>
