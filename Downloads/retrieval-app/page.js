@@ -1098,6 +1098,11 @@ function Student({ user }) {
             );
           })()}
           <div style={{ padding: "20px 16px" }}>
+            {q?.image_url && (
+              <div style={{ marginBottom: 14, borderRadius: 8, overflow: "hidden", border: `1px solid ${C.bdr}`, background: "#fff" }}>
+                <img src={q.image_url} alt="question diagram" style={{ width: "100%", maxHeight: 360, objectFit: "contain", display: "block" }} />
+              </div>
+            )}
             <div style={{ fontSize: 16, color: C.txt, lineHeight: 1.55, marginBottom: 20, fontWeight: 500 }}>{q?.question_text}</div>
             {!res ? (
               <>
@@ -3389,9 +3394,57 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
   const [ql, setQl] = useState([]); const [qlLoading, setQlLoading] = useState(false);
   const [editId, setEditId] = useState(null); const [editQ, setEditQ] = useState(""); const [editA, setEditA] = useState(""); const [editMk, setEditMk] = useState(1);
   const [saving, setSaving] = useState(false); const [confirmArchive, setConfirmArchive] = useState(null);
+  // Image attached to the single-add question (before upload) and the stored URL (after upload)
+  const [qImageUrl, setQImageUrl] = useState("");
+  const [qImageBusy, setQImageBusy] = useState(false);
+  const [qImageErr, setQImageErr] = useState("");
+  // Image state for the inline editor
+  const [editImageUrl, setEditImageUrl] = useState("");
+  const [editImageBusy, setEditImageBusy] = useState(false);
+  const [editImageErr, setEditImageErr] = useState("");
+
+  // Upload a File to the question-images bucket and return its public URL.
+  // Caller is responsible for size/type validation.
+  const uploadQuestionImage = async (file) => {
+    const ext = (file.name.split(".").pop() || "png").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 5) || "png";
+    const safeName = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const jwt = sb.auth.getToken();
+    const r = await fetch(`${SUPA_URL}/storage/v1/object/question-images/${safeName}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": file.type || "image/png",
+        "Authorization": `Bearer ${jwt || SUPA_KEY}`,
+        "apikey": SUPA_KEY,
+        "x-upsert": "true",
+      },
+      body: file,
+    });
+    if (!r.ok) {
+      const t = await r.text().catch(() => "");
+      throw new Error(`Upload failed (${r.status}): ${t.slice(0, 200)}`);
+    }
+    return `${SUPA_URL}/storage/v1/object/public/question-images/${safeName}`;
+  };
+
+  const pickImageFor = async (file, setUrl, setBusy, setErr) => {
+    setErr("");
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { setErr("Must be an image file"); return; }
+    if (file.size > 5 * 1024 * 1024) { setErr("Image too large (5MB max)"); return; }
+    setBusy(true);
+    try { const url = await uploadQuestionImage(file); setUrl(url); }
+    catch (e) { setErr(String(e.message || e)); }
+    setBusy(false);
+  };
 
   const addT = async () => { if (!nt.trim()) return; const [t] = await sb.q("topics", { method: "POST", body: { subject_id: subjectId, name: nt, sort_order: topics.length } }); setTopics(p => [...p, t]); setNt(""); setTid(t.id); };
-  const addQ = async () => { if (!qt.trim() || !qa.trim() || !tid) return; await sb.q("questions", { method: "POST", body: { topic_id: tid, question_text: qt, model_answer: qa, marks: mk, difficulty: 1, created_by: userId } }); setAdded(p => p + 1); setQt(""); setQa(""); };
+  const addQ = async () => {
+    if (!qt.trim() || !qa.trim() || !tid) return;
+    const body = { topic_id: tid, question_text: qt, model_answer: qa, marks: mk, difficulty: 1, created_by: userId };
+    if (qImageUrl) body.image_url = qImageUrl;
+    await sb.q("questions", { method: "POST", body });
+    setAdded(p => p + 1); setQt(""); setQa(""); setQImageUrl(""); setQImageErr("");
+  };
   const bulkAdd = async () => {
     if (!bt.trim() || !tid) return; setImp(true);
     const lines = bt.split("\n").filter(l => l.includes("|")); let n = 0;
@@ -3409,14 +3462,15 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
     setQlLoading(false);
   };
 
-  const startEdit = (q) => { setEditId(q.id); setEditQ(q.question_text); setEditA(q.model_answer); setEditMk(q.marks || 1); setConfirmArchive(null); };
+  const startEdit = (q) => { setEditId(q.id); setEditQ(q.question_text); setEditA(q.model_answer); setEditMk(q.marks || 1); setEditImageUrl(q.image_url || ""); setEditImageErr(""); setConfirmArchive(null); };
 
   const saveEdit = async (id) => {
     if (!editQ.trim() || !editA.trim()) return;
     setSaving(true);
     try {
-      await sb.q("questions", { method: "PATCH", params: { id: `eq.${id}` }, body: { question_text: editQ.trim(), model_answer: editA.trim(), marks: editMk } });
-      setQl(prev => prev.map(q => q.id === id ? { ...q, question_text: editQ.trim(), model_answer: editA.trim(), marks: editMk } : q));
+      const patch = { question_text: editQ.trim(), model_answer: editA.trim(), marks: editMk, image_url: editImageUrl || null };
+      await sb.q("questions", { method: "PATCH", params: { id: `eq.${id}` }, body: patch });
+      setQl(prev => prev.map(q => q.id === id ? { ...q, question_text: editQ.trim(), model_answer: editA.trim(), marks: editMk, image_url: editImageUrl || null } : q));
       setEditId(null);
     } catch (e) { console.error(e); }
     setSaving(false);
@@ -3531,6 +3585,23 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
           <Inp placeholder="Question" value={qt} onChange={e => setQt(e.target.value)} />
           <Inp placeholder="Model answer" value={qa} onChange={e => setQa(e.target.value)} onKeyDown={e => e.key === "Enter" && addQ()} />
           <Inp type="number" min={1} max={6} value={mk} onChange={e => setMk(parseInt(e.target.value) || 1)} style={{ width: 80 }} />
+          {/* Optional image */}
+          <div style={{ padding: 10, border: `1px dashed ${C.bdr}`, borderRadius: 8, background: C.card2 }}>
+            <div style={{ fontSize: 11, color: C.dim, marginBottom: 6, fontWeight: 600 }}>Image (optional)</div>
+            {qImageUrl ? (
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                <img src={qImageUrl} alt="question" style={{ maxWidth: 140, maxHeight: 100, borderRadius: 6, border: `1px solid ${C.bdr}`, objectFit: "contain", background: "#fff" }} />
+                <Btn v="ghost" onClick={() => setQImageUrl("")} style={{ fontSize: 11, padding: "6px 10px", color: C.red, borderColor: "rgba(239,68,68,.3)" }}>Remove</Btn>
+              </div>
+            ) : (
+              <label style={{ display: "inline-block", padding: "8px 12px", borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card, fontSize: 12, cursor: qImageBusy ? "wait" : "pointer", fontWeight: 500 }}>
+                {qImageBusy ? "Uploading…" : "+ Add image"}
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" disabled={qImageBusy} onChange={e => pickImageFor(e.target.files?.[0], setQImageUrl, setQImageBusy, setQImageErr)} style={{ display: "none" }} />
+              </label>
+            )}
+            {qImageErr && <div style={{ fontSize: 11, color: C.red, marginTop: 6 }}>{qImageErr}</div>}
+            <div style={{ fontSize: 10, color: C.dim, marginTop: 6 }}>PNG / JPEG / WebP / GIF · max 5MB. Shown above the question text to students.</div>
+          </div>
           <Btn onClick={addQ} disabled={!qt || !qa || !tid}>Add question</Btn>
         </div>
       )}
@@ -3573,6 +3644,27 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
                           <div style={{ fontSize: 11, color: C.dim }}>Marks:</div>
                           <Inp type="number" min={1} max={6} value={editMk} onChange={e => setEditMk(parseInt(e.target.value) || 1)} style={{ width: 70, fontSize: 13, padding: "6px 10px" }} />
                         </div>
+                        <div>
+                          <div style={{ fontSize: 11, color: C.dim, marginBottom: 4 }}>Image</div>
+                          {editImageUrl ? (
+                            <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                              <img src={editImageUrl} alt="question" style={{ maxWidth: 120, maxHeight: 90, borderRadius: 6, border: `1px solid ${C.bdr}`, objectFit: "contain", background: "#fff" }} />
+                              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                                <label style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card, fontSize: 11, cursor: editImageBusy ? "wait" : "pointer", fontWeight: 500, textAlign: "center" }}>
+                                  {editImageBusy ? "Uploading…" : "Replace"}
+                                  <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" disabled={editImageBusy} onChange={e => pickImageFor(e.target.files?.[0], setEditImageUrl, setEditImageBusy, setEditImageErr)} style={{ display: "none" }} />
+                                </label>
+                                <Btn v="ghost" onClick={() => setEditImageUrl("")} style={{ fontSize: 11, padding: "6px 10px", color: C.red, borderColor: "rgba(239,68,68,.3)" }}>Remove</Btn>
+                              </div>
+                            </div>
+                          ) : (
+                            <label style={{ display: "inline-block", padding: "6px 12px", borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card, fontSize: 12, cursor: editImageBusy ? "wait" : "pointer", fontWeight: 500 }}>
+                              {editImageBusy ? "Uploading…" : "+ Add image"}
+                              <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" disabled={editImageBusy} onChange={e => pickImageFor(e.target.files?.[0], setEditImageUrl, setEditImageBusy, setEditImageErr)} style={{ display: "none" }} />
+                            </label>
+                          )}
+                          {editImageErr && <div style={{ fontSize: 11, color: C.red, marginTop: 4 }}>{editImageErr}</div>}
+                        </div>
                         <div style={{ display: "flex", gap: 8 }}>
                           <Btn onClick={() => saveEdit(q.id)} disabled={saving || !editQ.trim() || !editA.trim()} style={{ flex: 1, padding: "10px 16px", fontSize: 13 }}>{saving ? "Saving..." : "Save changes"}</Btn>
                           <Btn v="ghost" onClick={() => setEditId(null)} style={{ fontSize: 13, padding: "10px 14px" }}>Cancel</Btn>
@@ -3588,6 +3680,9 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
                   ) : (
                     /* ── Read view ── */
                     <div style={{ padding: "10px 12px", display: "flex", gap: 10, alignItems: "flex-start" }}>
+                      {q.image_url && (
+                        <img src={q.image_url} alt="" style={{ width: 44, height: 44, borderRadius: 6, objectFit: "cover", border: `1px solid ${C.bdr}`, flexShrink: 0, background: "#fff" }} />
+                      )}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 13, color: C.txt, lineHeight: 1.4, marginBottom: 4 }}>{q.question_text}</div>
                         <div style={{ fontSize: 11, color: C.dim }}>{q.model_answer}</div>
