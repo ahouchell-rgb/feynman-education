@@ -860,8 +860,245 @@ function Student({ user }) {
   );
 }
 
+/* ─── ADMIN PANEL (moderator only) ─── */
+function AdminPanel({ user }) {
+  const [loading, setLoading] = useState(true);
+  const [teachers, setTeachers] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const [classMembers, setClassMembers] = useState([]);
+  const [filter, setFilter] = useState("");
+  const [view, setView] = useState("overview"); // overview | teachers | students | unjoined
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [expandedStudent, setExpandedStudent] = useState(null);
+  const [renameDraft, setRenameDraft] = useState("");
+  const [pwDraft, setPwDraft] = useState("");
+
+  useEffect(() => { loadAll(); }, []);
+
+  const loadAll = async () => {
+    setLoading(true);
+    try {
+      const [profs, clss, mems] = await Promise.all([
+        sb.q("profiles", { params: { select: "*", order: "created_at.desc" } }),
+        sb.q("classes", { params: { select: "*,profiles!classes_teacher_id_fkey(display_name,email)", order: "created_at.desc" } }),
+        sb.q("class_members", { params: { select: "class_id,student_id" } }),
+      ]);
+      setTeachers(profs.filter(p => p.role === "teacher" || p.role === "moderator"));
+      setStudents(profs.filter(p => p.role === "student"));
+      setClasses(clss);
+      setClassMembers(mems);
+    } catch (e) { console.error(e); setMsg("Error loading: " + e.message); }
+    setLoading(false);
+  };
+
+  const callManage = async (action, studentId, extra = {}) => {
+    setBusy(true); setMsg("");
+    try {
+      const jwt = sb.auth.getToken();
+      const r = await fetch(`${SUPA_URL}/functions/v1/manage-student`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SUPA_KEY, Authorization: `Bearer ${jwt || SUPA_KEY}` },
+        body: JSON.stringify({ action, student_id: studentId, ...extra }),
+      });
+      const d = await r.json();
+      if (d.success) {
+        setMsg("✓ " + d.message);
+        await loadAll();
+        if (action === "delete_student") setExpandedStudent(null);
+      } else {
+        setMsg("Error: " + (d.error || "Unknown error"));
+      }
+    } catch (e) { setMsg("Error: " + e.message); }
+    setBusy(false);
+  };
+
+  const studentClassMap = {};
+  classMembers.forEach(m => {
+    if (!studentClassMap[m.student_id]) studentClassMap[m.student_id] = [];
+    studentClassMap[m.student_id].push(m.class_id);
+  });
+  const classById = Object.fromEntries(classes.map(c => [c.id, c]));
+  const unjoinedStudents = students.filter(s => !studentClassMap[s.id] || studentClassMap[s.id].length === 0);
+
+  const studentsForTeacher = (teacherId) => {
+    const tClassIds = new Set(classes.filter(c => c.teacher_id === teacherId).map(c => c.id));
+    return students.filter(s => (studentClassMap[s.id] || []).some(cid => tClassIds.has(cid)));
+  };
+
+  const filteredStudents = students.filter(s => {
+    if (!filter) return true;
+    const q = filter.toLowerCase();
+    return (s.display_name || "").toLowerCase().includes(q) || (s.email || "").toLowerCase().includes(q);
+  });
+  const filteredTeachers = teachers.filter(t => {
+    if (!filter) return true;
+    const q = filter.toLowerCase();
+    return (t.display_name || "").toLowerCase().includes(q) || (t.email || "").toLowerCase().includes(q);
+  });
+
+  if (loading) return <div style={{ maxWidth: 700, margin: "0 auto", padding: 40, textAlign: "center", color: C.mid }}>Loading...</div>;
+
+  return (
+    <div style={{ maxWidth: 700, margin: "0 auto", padding: "16px" }}>
+      {/* Header */}
+      <div style={{ marginBottom: 16, padding: "16px 20px", background: `linear-gradient(135deg, ${C.priSoft}, transparent)`, border: `1px solid ${C.pri}33`, borderRadius: 12 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: C.pri, marginBottom: 4 }}>⚙ Moderator panel</div>
+        <div style={{ fontSize: 12, color: C.mid }}>You can see every teacher and student across retrieval. Only ahouchell@gmail.com has this access.</div>
+      </div>
+
+      {/* Overview stats */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 16 }}>
+        <StatTile label="Teachers" value={teachers.length} onClick={() => setView("teachers")} active={view === "teachers"} />
+        <StatTile label="Students" value={students.length} onClick={() => setView("students")} active={view === "students"} />
+        <StatTile label="Classes" value={classes.length} />
+        <StatTile label="Unjoined" value={unjoinedStudents.length} onClick={() => setView("unjoined")} active={view === "unjoined"} color={unjoinedStudents.length > 0 ? C.red : C.mid} />
+      </div>
+
+      {/* View tabs */}
+      <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>
+        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }].map(t => (
+          <Pill key={t.k} on={view === t.k} onClick={() => setView(t.k)} style={{ fontSize: 12, padding: "6px 12px" }}>{t.l}</Pill>
+        ))}
+      </div>
+
+      {msg && <div style={{ padding: "8px 12px", borderRadius: 8, background: msg.startsWith("Error") ? C.redS : C.priSoft, color: msg.startsWith("Error") ? C.red : C.pri, fontSize: 12, marginBottom: 12 }}>{msg}</div>}
+
+      {/* Overview */}
+      {view === "overview" && (
+        <div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.mid, textTransform: "uppercase", letterSpacing: .5, marginBottom: 8 }}>Teachers at a glance</div>
+          {teachers.map(t => {
+            const tClasses = classes.filter(c => c.teacher_id === t.id);
+            const tStudents = studentsForTeacher(t.id);
+            return (
+              <div key={t.id} style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, marginBottom: 6 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>
+                      {t.display_name || "—"}
+                      {t.role === "moderator" && <Badge color={C.pri} style={{ marginLeft: 6, fontSize: 9 }}>MOD</Badge>}
+                    </div>
+                    <div style={{ fontSize: 11, color: C.mid, fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.email}</div>
+                  </div>
+                  <div style={{ textAlign: "right", fontSize: 11, color: C.mid }}>
+                    <div>{tClasses.length} class{tClasses.length === 1 ? "" : "es"}</div>
+                    <div>{tStudents.length} student{tStudents.length === 1 ? "" : "s"}</div>
+                  </div>
+                </div>
+                {tClasses.length > 0 && (
+                  <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 8 }}>
+                    {tClasses.map(c => <Badge key={c.id} color={C.mid} style={{ fontSize: 10 }}>{c.name}</Badge>)}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Teachers list with search */}
+      {view === "teachers" && (
+        <div>
+          <Inp placeholder="Search teachers by name or email" value={filter} onChange={e => setFilter(e.target.value)} style={{ marginBottom: 10 }} />
+          {filteredTeachers.map(t => {
+            const tClasses = classes.filter(c => c.teacher_id === t.id);
+            return (
+              <div key={t.id} style={{ padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, marginBottom: 4 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600 }}>{t.display_name || "—"} {t.role === "moderator" && <Badge color={C.pri} style={{ fontSize: 9 }}>MOD</Badge>}</div>
+                    <div style={{ fontSize: 11, color: C.mid, fontFamily: "monospace" }}>{t.email}</div>
+                  </div>
+                  <Btn v="ghost" onClick={() => { navigator.clipboard.writeText(t.email || ""); setMsg("Email copied"); setTimeout(() => setMsg(""), 1500); }} style={{ fontSize: 11, padding: "6px 10px" }}>Copy email</Btn>
+                </div>
+                {tClasses.length > 0 && (
+                  <div style={{ fontSize: 11, color: C.mid, marginTop: 4 }}>
+                    Classes: {tClasses.map(c => c.name).join(", ")}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {filteredTeachers.length === 0 && <div style={{ padding: 20, textAlign: "center", color: C.mid, fontSize: 12 }}>No teachers match.</div>}
+        </div>
+      )}
+
+      {/* Students list with search */}
+      {(view === "students" || view === "unjoined") && (
+        <div>
+          <Inp placeholder="Search students by name or email" value={filter} onChange={e => setFilter(e.target.value)} style={{ marginBottom: 10 }} />
+          {(view === "unjoined" ? unjoinedStudents.filter(s => !filter || (s.display_name || "").toLowerCase().includes(filter.toLowerCase()) || (s.email || "").toLowerCase().includes(filter.toLowerCase())) : filteredStudents).map(s => {
+            const isExpanded = expandedStudent === s.id;
+            const sClassIds = studentClassMap[s.id] || [];
+            const sClasses = sClassIds.map(id => classById[id]).filter(Boolean);
+            const unjoined = sClasses.length === 0;
+            return (
+              <div key={s.id} style={{ background: C.card, border: `1px solid ${unjoined ? C.red + "55" : C.bdr}`, borderRadius: 8, marginBottom: 4 }}>
+                <button onClick={() => { setExpandedStudent(isExpanded ? null : s.id); setRenameDraft(s.display_name || ""); setPwDraft(""); setMsg(""); }}
+                  style={{ width: "100%", padding: "10px 12px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 8, fontFamily: "inherit" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{s.display_name || "—"}</div>
+                    <div style={{ fontSize: 11, color: C.mid, fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.email || "no email"}</div>
+                  </div>
+                  {unjoined ? <Badge color={C.red}>No class</Badge> : <div style={{ fontSize: 11, color: C.mid }}>{sClasses.map(c => c.name).join(", ")}</div>}
+                  <span style={{ fontSize: 14, color: C.mid }}>{isExpanded ? "−" : "+"}</span>
+                </button>
+                {isExpanded && (
+                  <div style={{ padding: "10px 12px", borderTop: `1px solid ${C.bdr}`, background: C.cardSoft || C.bg }}>
+                    {/* Rename */}
+                    <div style={{ marginBottom: 8 }}>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: C.mid, marginBottom: 4 }}>Display name</div>
+                      <div style={{ display: "flex", gap: 6 }}>
+                        <Inp value={renameDraft} onChange={e => setRenameDraft(e.target.value)} maxLength={80} style={{ fontSize: 13, padding: "8px 10px" }} />
+                        <Btn onClick={() => { const t = renameDraft.trim(); if (t && t !== s.display_name) callManage("rename_student", s.id, { new_name: t }); }} disabled={busy || !renameDraft.trim() || renameDraft.trim() === s.display_name} style={{ whiteSpace: "nowrap", fontSize: 12, padding: "8px 14px" }}>{busy ? "..." : "Save"}</Btn>
+                      </div>
+                    </div>
+
+                    {/* Reset password */}
+                    <div style={{ marginBottom: 8 }}>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: C.mid, marginBottom: 4 }}>Reset password</div>
+                      <div style={{ display: "flex", gap: 6 }}>
+                        <Inp placeholder="New password (min 6)" type="text" value={pwDraft} onChange={e => setPwDraft(e.target.value)} style={{ fontSize: 13, padding: "8px 10px" }} />
+                        <Btn onClick={() => callManage("reset_password", s.id, { new_password: pwDraft })} disabled={pwDraft.length < 6 || busy} style={{ whiteSpace: "nowrap", fontSize: 12, padding: "8px 14px" }}>{busy ? "..." : "Reset"}</Btn>
+                      </div>
+                    </div>
+
+                    {/* Email */}
+                    <div style={{ marginBottom: 8 }}>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: C.mid, marginBottom: 4 }}>Login email</div>
+                      <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                        <div style={{ flex: 1, padding: "8px 10px", background: C.bg, border: `1px solid ${C.bdr}`, borderRadius: 6, fontSize: 12, fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.email || "no email"}</div>
+                        <Btn v="ghost" onClick={() => { navigator.clipboard.writeText(s.email || ""); setMsg("Email copied"); setTimeout(() => setMsg(""), 1500); }} style={{ fontSize: 11, padding: "8px 12px" }}>Copy</Btn>
+                      </div>
+                    </div>
+
+                    {/* Delete */}
+                    <div>
+                      <Btn v="ghost" onClick={() => { if (confirm(`Permanently delete ${s.display_name}? This removes the account entirely.`)) callManage("delete_student", s.id); }} disabled={busy} style={{ width: "100%", fontSize: 11, padding: "8px 10px", background: C.redS, color: C.red, borderColor: "rgba(239,68,68,.3)" }}>Delete student account</Btn>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {view === "unjoined" && unjoinedStudents.length === 0 && <div style={{ padding: 20, textAlign: "center", color: C.mid, fontSize: 12 }}>🎉 All students are in a class.</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const StatTile = ({ label, value, onClick, active, color }) => (
+  <button onClick={onClick} disabled={!onClick} style={{ padding: "10px 8px", background: active ? C.priSoft : C.card, border: `1px solid ${active ? C.pri : C.bdr}`, borderRadius: 8, cursor: onClick ? "pointer" : "default", fontFamily: "inherit", textAlign: "center" }}>
+    <div style={{ fontSize: 18, fontWeight: 700, color: color || (active ? C.pri : C.txt), lineHeight: 1 }}>{value}</div>
+    <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: .5, marginTop: 4 }}>{label}</div>
+  </button>
+);
+
 /* ─── TEACHER ─── */
-function Teacher({ user }) {
+function Teacher({ user, isMod }) {
   const [tab, setTab] = useState("dashboard");
   const [classes, setClasses] = useState([]);
   const [cls, setCls] = useState(null);
@@ -1128,7 +1365,7 @@ function Teacher({ user }) {
           <Btn v="ghost" onClick={() => setSetup("class")} style={{ padding: "10px 14px", fontSize: 13, whiteSpace: "nowrap" }}>+ New</Btn>
         </div>
         <div style={{ display: "flex", gap: 6, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 2 }}>
-          {["dashboard", "starter", "topics", "questions"].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)}>{t === "starter" ? "Lesson Starter" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
+          {[...["dashboard", "starter", "topics", "questions"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : undefined}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "⚙ Admin" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
         </div>
       </div>
 
@@ -1388,6 +1625,7 @@ function Teacher({ user }) {
           )}
 
           {tab === "questions" && <QMgr subjectId={cls.subject_id} userId={user.id} topics={topics} setTopics={setTopics} />}
+          {tab === "admin" && isMod && <AdminPanel user={user} />}
         </>
       )}
     </div>
@@ -2620,7 +2858,8 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
 export default function App() {
   const [user, setUser] = useState(null);
   if (!user) return <Auth onAuth={setUser} />;
-  const isT = user.profile?.role === "teacher" || user.user_metadata?.role === "teacher";
+  const isT = user.profile?.role === "teacher" || user.profile?.role === "moderator" || user.user_metadata?.role === "teacher";
+  const isMod = user.profile?.role === "moderator";
 
   return (
     <div style={{ minHeight: "100dvh", background: C.bg, fontFamily: "'DM Sans',-apple-system,sans-serif", color: C.txt }}>
@@ -2628,12 +2867,12 @@ export default function App() {
         <div style={{ maxWidth: 700, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", height: 50 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.5 }}>retrieval<span style={{ color: C.pri }}>.</span></span>
-            <Badge color={isT ? C.acc : C.pri}>{isT ? "Teacher" : "Student"}</Badge>
+            <Badge color={isMod ? C.pri : (isT ? C.acc : C.pri)}>{isMod ? "Moderator" : (isT ? "Teacher" : "Student")}</Badge>
           </div>
           <Btn v="ghost" onClick={() => { sb.auth.out(); setUser(null); }} style={{ padding: "6px 12px", fontSize: 12 }}>Log out</Btn>
         </div>
       </div>
-      <div style={{ paddingBottom: 60 }}>{isT ? <Teacher user={user} /> : <Student user={user} />}</div>
+      <div style={{ paddingBottom: 60 }}>{isT ? <Teacher user={user} isMod={isMod} /> : <Student user={user} />}</div>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
