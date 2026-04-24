@@ -1171,13 +1171,13 @@ function AdminPanel({ user }) {
   const [classes, setClasses] = useState([]);
   const [classMembers, setClassMembers] = useState([]);
   const [responses30d, setResponses30d] = useState([]);
-  // Cost estimate: ~150 input tokens + ~80 output tokens per AI mark at Sonnet 4 pricing
-  // ($3/1M in + $15/1M out) = ~$0.00165/answer. ~25% of answers skip the AI via the
-  // numerical exemption shortcut, so effective cost is ~$0.00124/answer.
-  // Converted to pence at ~0.79 GBP/USD ≈ 0.098p/answer.
-  const COST_PER_AI_MARK_PENCE = 0.165 * 0.79;      // ≈ 0.130p before exemptions
+  // Cost estimate: ~150 input tokens + ~80 output tokens per AI mark at Haiku 4.5 pricing
+  // ($1/1M in + $5/1M out) = ~$0.00055/answer. ~25% of answers skip the AI via the
+  // numerical exemption shortcut, so effective cost is ~$0.00041/answer.
+  // Converted to pence at ~0.79 GBP/USD ≈ 0.033p/answer.
+  const COST_PER_AI_MARK_PENCE = 0.055 * 0.79;      // ≈ 0.043p before exemptions
   const EXEMPTION_RATE = 0.25;                        // empirical: ~25% are pure-number answers
-  const EFFECTIVE_COST_PER_ANSWER_PENCE = COST_PER_AI_MARK_PENCE * (1 - EXEMPTION_RATE); // ≈ 0.098p
+  const EFFECTIVE_COST_PER_ANSWER_PENCE = COST_PER_AI_MARK_PENCE * (1 - EXEMPTION_RATE); // ≈ 0.033p
   const [filter, setFilter] = useState("");
   const [view, setView] = useState("overview"); // overview | teachers | students | unjoined
   const [busy, setBusy] = useState(false);
