@@ -343,6 +343,9 @@ function getSRInfo(srData, isDue) {
 function Student({ user }) {
   const [classes, setClasses] = useState([]);
   const [cls, setCls] = useState(null);
+  // Paper-taking state — when set, the page swaps to the paper attempt view
+  const [paperBeingTaken, setPaperBeingTaken] = useState(null); // { id, mode, topic_id }
+  const [assignedPapers, setAssignedPapers] = useState([]);     // papers attached to current class
   const [qs, setQs] = useState([]);
   const [qi, setQi] = useState(0);
   const [ans, setAns] = useState("");
@@ -625,6 +628,21 @@ function Student({ user }) {
       }
       setHabitDays(days);
 
+      // Load papers assigned to this class and any of the student's existing attempts on them
+      try {
+        const [pcas, pAttempts] = await Promise.all([
+          sb.q("paper_class_assignments", { params: { class_id: `eq.${c.id}`, select: "paper_id,papers(id,name,total_marks,exam_board,paper_year,paper_number,archived)" } }),
+          sb.q("paper_attempts", { params: { student_id: `eq.${user.id}`, class_id: `eq.${c.id}`, mode: `eq.full`, select: "id,paper_id,submitted_at,awarded_marks,total_marks" } }),
+        ]);
+        const attMap = {};
+        (pAttempts || []).forEach(a => { attMap[a.paper_id] = a; });
+        const ps = (pcas || [])
+          .map(a => a.papers)
+          .filter(p => p && !p.archived)
+          .map(p => ({ ...p, attempt: attMap[p.id] || null }));
+        setAssignedPapers(ps);
+      } catch (e) { console.error("paper load failed", e); }
+
       // Identify recent mistakes for review mode — use most-recent response per question, keep the wrongs
       const latestByQ = {};
       resps.forEach(r => { if (!latestByQ[r.question_id]) latestByQ[r.question_id] = r; });
@@ -798,6 +816,19 @@ function Student({ user }) {
     .map(([id, name]) => ({ id, name, count: qs.filter(qq => qq.topic_id === id).length }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
+  // ── Paper-taking flow: when the student has tapped a paper, swap the entire
+  // page to the paper attempt UI. The retrieval flow is paused; class context
+  // is preserved so the back button returns them to where they were.
+  if (paperBeingTaken && cls) {
+    return <StudentPaperAttempt user={user} cls={cls}
+      paperId={paperBeingTaken.id}
+      onExit={async () => {
+        setPaperBeingTaken(null);
+        // Refresh class data so the paper card shows updated submission status
+        if (cls) await pickClass(cls);
+      }} />;
+  }
+
   return (
     <div style={{ padding: "12px 16px", maxWidth: 560, margin: "0 auto" }}>
       {/* Star pop animation */}
@@ -844,6 +875,44 @@ function Student({ user }) {
                 {t.name} <span style={{ opacity: 0.6 }}>({t.count})</span>
               </button>
             ))}
+          </div>
+        </Card>
+      )}
+
+      {/* ── Assigned papers ──
+           Compact card listing exam-style papers the teacher has assigned to this class.
+           Tapping a paper enters paper-attempt mode (full take). Hidden if no papers. */}
+      {assignedPapers.length > 0 && (
+        <Card style={{ padding: 12, marginBottom: 10 }}>
+          <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600, marginBottom: 8 }}>📄 Papers from your teacher</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {assignedPapers.map(p => {
+              const submitted = !!p.attempt?.submitted_at;
+              const inProgress = p.attempt && !p.attempt.submitted_at;
+              const pct = submitted ? Math.round(((p.attempt.awarded_marks ?? 0) / Math.max(1, p.attempt.total_marks ?? p.total_marks)) * 100) : 0;
+              const meta = [p.exam_board, p.paper_year, p.paper_number].filter(Boolean).join(" · ");
+              return (
+                <div key={p.id} onClick={() => !submitted && setPaperBeingTaken({ id: p.id })}
+                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, background: submitted ? C.card2 : C.priSoft, border: `1px solid ${submitted ? C.bdr : C.pri + "40"}`, cursor: submitted ? "default" : "pointer", opacity: submitted ? 0.85 : 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{p.name}</div>
+                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>
+                      {[meta, `${p.total_marks} marks`].filter(Boolean).join(" · ")}
+                    </div>
+                  </div>
+                  {submitted ? (
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red }}>{p.attempt.awarded_marks}/{p.attempt.total_marks}</div>
+                      <div style={{ fontSize: 10, color: C.dim }}>Submitted</div>
+                    </div>
+                  ) : inProgress ? (
+                    <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.amb, color: "#fff", fontWeight: 600 }}>Resume →</div>
+                  ) : (
+                    <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.pri, color: "#fff", fontWeight: 600 }}>Start →</div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </Card>
       )}
@@ -2853,7 +2922,7 @@ function Teacher({ user, isMod, isHoD }) {
           <Btn v="ghost" onClick={() => setSetup("class")} style={{ padding: "10px 14px", fontSize: 13, whiteSpace: "nowrap" }}>+ New</Btn>
         </div>
         <div style={{ display: "flex", gap: 6, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 2 }}>
-          {[...(isHoD ? ["hod"] : []), ...["dashboard", "starter", "topics", "questions"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : (t === "hod" ? { borderColor: C.amb, color: tab === t ? C.amb : C.amb } : undefined)}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "⚙ Admin" : t === "hod" ? "🧭 Department" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
+          {[...(isHoD ? ["hod"] : []), ...["dashboard", "starter", "topics", "questions", "papers"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : (t === "hod" ? { borderColor: C.amb, color: tab === t ? C.amb : C.amb } : undefined)}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "⚙ Admin" : t === "hod" ? "🧭 Department" : t === "papers" ? "📄 Papers" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
         </div>
       </div>
 
@@ -3293,6 +3362,7 @@ function Teacher({ user, isMod, isHoD }) {
           )}
 
           {tab === "questions" && <QMgr subjectId={cls.subject_id} userId={user.id} topics={topics} setTopics={setTopics} />}
+          {tab === "papers" && <PaperManager user={user} cls={cls} classes={classes} topics={topics} subjectId={cls.subject_id} />}
           {tab === "admin" && isMod && <AdminPanel user={user} />}
           {tab === "hod" && isHoD && <HodPanel user={user} />}
         </>
@@ -3302,6 +3372,722 @@ function Teacher({ user, isMod, isHoD }) {
 }
 
 /* ─── Student List with Management Actions ─── */
+/* ─── StudentPaperAttempt — student takes a paper question by question ─── */
+function StudentPaperAttempt({ user, cls, paperId, onExit }) {
+  const [paper, setPaper] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [attempt, setAttempt] = useState(null);
+  const [responses, setResponses] = useState({}); // paper_question_id -> response row
+  const [qi, setQi] = useState(0);
+  const [ans, setAns] = useState("");
+  const [marking, setMarking] = useState(false);
+  const [lastResult, setLastResult] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showFinish, setShowFinish] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => { (async () => {
+    setLoading(true);
+    try {
+      const [p, qs] = await Promise.all([
+        sb.q("papers", { params: { id: `eq.${paperId}`, select: "*" } }),
+        sb.q("paper_questions", { params: { paper_id: `eq.${paperId}`, select: "*", order: "sort_order.asc" } }),
+      ]);
+      if (!p[0] || !qs?.length) { setLoading(false); return; }
+      setPaper(p[0]); setQuestions(qs);
+
+      // Find or create an attempt
+      const existing = await sb.q("paper_attempts", { params: {
+        paper_id: `eq.${paperId}`, student_id: `eq.${user.id}`, class_id: `eq.${cls.id}`,
+        mode: "eq.full",
+        select: "*", order: "started_at.desc", limit: "1"
+      }});
+      let att;
+      // If they have a submitted attempt, treat as fresh start (allow retake — V1 just reuses)
+      if (existing?.length && !existing[0].submitted_at) {
+        att = existing[0];
+      } else {
+        const [created] = await sb.q("paper_attempts", { method: "POST", body: {
+          paper_id: paperId, student_id: user.id, class_id: cls.id, mode: "full",
+          total_marks: p[0].total_marks,
+        }});
+        att = created;
+      }
+      setAttempt(att);
+
+      // Load any existing responses on this attempt
+      const rs = await sb.q("paper_responses", { params: { attempt_id: `eq.${att.id}`, select: "*" } });
+      const rmap = {};
+      (rs || []).forEach(r => { rmap[r.paper_question_id] = r; });
+      setResponses(rmap);
+      // Resume at first unanswered question
+      const firstUnanswered = qs.findIndex(q => !rmap[q.id]);
+      setQi(firstUnanswered === -1 ? qs.length - 1 : firstUnanswered);
+    } catch (e) { console.error("paper attempt load failed", e); }
+    setLoading(false);
+  })(); }, [paperId, cls.id, user.id]);
+
+  const currentQ = questions[qi];
+  const existingResp = currentQ ? responses[currentQ.id] : null;
+
+  const submitAnswer = async () => {
+    if (!ans.trim() || marking || !currentQ) return;
+    setMarking(true);
+    try {
+      const r = await fetch(`${SUPA_URL}/functions/v1/mark-paper-answer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SUPA_KEY },
+        body: JSON.stringify({
+          question: currentQ.question_text,
+          command_word: currentQ.command_word,
+          marks: currentQ.marks,
+          marking_points: currentQ.marking_points || [],
+          student_answer: ans,
+        }),
+      });
+      const d = await r.json();
+      // Persist the response
+      const body = {
+        attempt_id: attempt.id,
+        paper_question_id: currentQ.id,
+        student_answer: ans,
+        marks_awarded: d.marks_awarded ?? 0,
+        marks_max: currentQ.marks,
+        ai_feedback: d.feedback || null,
+        awarded_points: d.awarded_points || [],
+        flagged: !!d.flagged,
+      };
+      // Upsert: delete existing then insert (PostgREST upsert via UNIQUE constraint)
+      if (existingResp) {
+        await sb.q("paper_responses", { method: "PATCH", params: { id: `eq.${existingResp.id}` }, body });
+        setResponses(prev => ({ ...prev, [currentQ.id]: { ...existingResp, ...body } }));
+      } else {
+        const [created] = await sb.q("paper_responses", { method: "POST", body });
+        setResponses(prev => ({ ...prev, [currentQ.id]: created }));
+      }
+      setLastResult(d);
+    } catch (e) { console.error("mark failed", e); alert("Marking failed: " + e.message); }
+    setMarking(false);
+  };
+
+  const next = () => {
+    setLastResult(null);
+    setAns("");
+    if (qi >= questions.length - 1) {
+      // Last question — show finish screen
+      setShowFinish(true);
+    } else {
+      setQi(qi + 1);
+    }
+  };
+
+  const submitPaper = async () => {
+    setSubmitting(true);
+    try {
+      const total = questions.reduce((s, q) => s + (q.marks || 0), 0);
+      const awarded = Object.values(responses).reduce((s, r) => s + (r.marks_awarded || 0), 0);
+      await sb.q("paper_attempts", { method: "PATCH", params: { id: `eq.${attempt.id}` }, body: {
+        submitted_at: new Date().toISOString(),
+        total_marks: total,
+        awarded_marks: awarded,
+      }});
+      // Show final results inline (don't exit yet)
+      setAttempt(prev => ({ ...prev, submitted_at: new Date().toISOString(), total_marks: total, awarded_marks: awarded }));
+    } catch (e) { console.error("submit failed", e); alert("Submission failed: " + e.message); }
+    setSubmitting(false);
+  };
+
+  if (loading) return <div style={{ padding: 40, textAlign: "center", color: C.dim, fontSize: 13 }}>Loading paper…</div>;
+  if (!paper || questions.length === 0) {
+    return (
+      <div style={{ padding: 40, textAlign: "center" }}>
+        <div style={{ fontSize: 13, color: C.txt, marginBottom: 12 }}>This paper has no questions yet.</div>
+        <Btn onClick={onExit}>Back</Btn>
+      </div>
+    );
+  }
+
+  // ── Finish / submitted view ──
+  if (showFinish || attempt?.submitted_at) {
+    const submitted = !!attempt?.submitted_at;
+    const totalAwarded = Object.values(responses).reduce((s, r) => s + (r.marks_awarded || 0), 0);
+    const totalMax = questions.reduce((s, q) => s + (q.marks || 0), 0);
+    const pct = totalMax > 0 ? Math.round((totalAwarded / totalMax) * 100) : 0;
+    const tone = pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red;
+    const answeredCount = Object.keys(responses).length;
+    return (
+      <div style={{ padding: "16px 16px 32px", maxWidth: 560, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+          <button onClick={onExit} style={{ padding: "6px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: "pointer", fontFamily: "inherit" }}>← Done</button>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.txt }}>{paper.name}</div>
+        </div>
+
+        <Card style={{ padding: 20, marginBottom: 12, textAlign: "center", background: `linear-gradient(135deg, ${tone}15, transparent)`, borderColor: `${tone}40` }}>
+          <div style={{ fontSize: 11, color: C.dim, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>{submitted ? "Submitted" : "Ready to submit"}</div>
+          <div style={{ fontSize: 36, fontWeight: 800, color: tone, lineHeight: 1 }}>{totalAwarded}/{totalMax}</div>
+          <div style={{ fontSize: 14, color: C.txt, marginTop: 6, fontWeight: 600 }}>{pct}%</div>
+          <div style={{ fontSize: 11, color: C.dim, marginTop: 8 }}>{answeredCount} of {questions.length} questions answered</div>
+        </Card>
+
+        {!submitted && (
+          <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+            <Btn onClick={submitPaper} disabled={submitting} style={{ flex: 1 }}>{submitting ? "Submitting…" : "Submit paper"}</Btn>
+            <Btn v="ghost" onClick={() => setShowFinish(false)} style={{ fontSize: 12 }}>Review</Btn>
+          </div>
+        )}
+
+        {/* Per-question summary */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {questions.map((q, i) => {
+            const r = responses[q.id];
+            const qPct = r ? Math.round(((r.marks_awarded || 0) / Math.max(1, q.marks)) * 100) : 0;
+            const qTone = !r ? C.dim : qPct >= 70 ? C.grn : qPct >= 50 ? C.amb : C.red;
+            return (
+              <Card key={q.id} style={{ padding: "10px 12px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-start" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: C.txt }}>{q.question_label || `Q${i + 1}`}</div>
+                    <div style={{ fontSize: 11, color: C.dim, marginTop: 2, lineHeight: 1.4 }}>{q.question_text.slice(0, 100)}{q.question_text.length > 100 ? "…" : ""}</div>
+                  </div>
+                  <div style={{ textAlign: "right", flexShrink: 0 }}>
+                    {r ? (
+                      <span style={{ fontSize: 13, fontWeight: 700, color: qTone }}>{r.marks_awarded}/{q.marks}</span>
+                    ) : (
+                      <span style={{ fontSize: 11, color: C.dim, fontStyle: "italic" }}>Skipped</span>
+                    )}
+                  </div>
+                </div>
+                {r?.ai_feedback && submitted && (
+                  <div style={{ fontSize: 11, color: C.mid, marginTop: 8, padding: "8px 10px", background: C.card2, borderRadius: 6, borderLeft: `2px solid ${qTone}`, lineHeight: 1.5 }}>{r.ai_feedback}</div>
+                )}
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Question view ──
+  const answeredSoFar = Object.keys(responses).length;
+  const sessionPct = Math.round((answeredSoFar / questions.length) * 100);
+
+  return (
+    <div style={{ padding: "16px 16px 32px", maxWidth: 560, margin: "0 auto" }}>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+        <button onClick={() => { if (confirm("Save your progress and exit? You can resume this paper later.")) onExit(); }}
+          style={{ padding: "6px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: "pointer", fontFamily: "inherit" }}>← Save & exit</button>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.txt, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{paper.name}</div>
+        </div>
+        <button onClick={() => setShowFinish(true)} disabled={answeredSoFar === 0}
+          style={{ padding: "6px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card, color: C.mid, cursor: answeredSoFar === 0 ? "not-allowed" : "pointer", fontFamily: "inherit", opacity: answeredSoFar === 0 ? 0.5 : 1 }}>
+          Finish →
+        </button>
+      </div>
+
+      {/* Progress */}
+      <div style={{ marginBottom: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.dim, marginBottom: 4 }}>
+          <span>Question {qi + 1} of {questions.length}</span>
+          <span>{answeredSoFar} answered</span>
+        </div>
+        <div style={{ height: 4, background: C.bdr, borderRadius: 99, overflow: "hidden" }}>
+          <div style={{ width: `${sessionPct}%`, height: "100%", background: C.pri, borderRadius: 99, transition: "width 0.3s ease" }} />
+        </div>
+      </div>
+
+      {/* Question card */}
+      <Card style={{ padding: 16, marginBottom: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <span style={{ fontSize: 11, color: C.mid, fontWeight: 700, fontFamily: "monospace" }}>{currentQ.question_label || `Q${qi + 1}`}</span>
+          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+            {currentQ.command_word && <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 4, background: C.priSoft, color: C.pri, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>{currentQ.command_word}</span>}
+            <span style={{ fontSize: 11, color: C.dim, fontWeight: 600 }}>[{currentQ.marks} mark{currentQ.marks === 1 ? "" : "s"}]</span>
+          </div>
+        </div>
+        {currentQ.image_url && (
+          <div style={{ marginBottom: 12, borderRadius: 8, overflow: "hidden", border: `1px solid ${C.bdr}`, background: "#fff" }}>
+            <img src={currentQ.image_url} alt="" style={{ width: "100%", maxHeight: 320, objectFit: "contain", display: "block" }} />
+          </div>
+        )}
+        <div style={{ fontSize: 15, color: C.txt, lineHeight: 1.55, marginBottom: 16, fontWeight: 500 }}>{currentQ.question_text}</div>
+
+        {!lastResult && (
+          <>
+            <TA value={ans} onChange={e => setAns(e.target.value)} rows={Math.max(3, Math.min(8, currentQ.marks * 2))} placeholder="Write your answer here…" disabled={marking} style={{ fontSize: 14, lineHeight: 1.5 }} />
+            <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+              <Btn onClick={submitAnswer} disabled={!ans.trim() || marking} style={{ flex: 1 }}>{marking ? "Marking…" : "Submit answer"}</Btn>
+              {qi < questions.length - 1 && (
+                <Btn v="ghost" onClick={() => { setAns(""); setQi(qi + 1); }} style={{ fontSize: 12 }}>Skip →</Btn>
+              )}
+            </div>
+          </>
+        )}
+
+        {lastResult && (
+          <div style={{ marginTop: 4, animation: "slideUp .25s ease" }}>
+            <div style={{ padding: "12px 14px", background: lastResult.marks_awarded === currentQ.marks ? C.grnS : lastResult.marks_awarded > 0 ? C.ambS : C.redS, borderRadius: 8, borderLeft: `3px solid ${lastResult.marks_awarded === currentQ.marks ? C.grn : lastResult.marks_awarded > 0 ? C.amb : C.red}` }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                <span style={{ fontSize: 13, fontWeight: 700, color: C.txt }}>
+                  {lastResult.marks_awarded === currentQ.marks ? "Full marks" : lastResult.marks_awarded > 0 ? "Partial credit" : "No marks awarded"}
+                </span>
+                <span style={{ fontSize: 16, fontWeight: 800, color: C.txt }}>{lastResult.marks_awarded}/{currentQ.marks}</span>
+              </div>
+              <div style={{ fontSize: 12, color: C.txt, lineHeight: 1.5 }}>{lastResult.feedback}</div>
+            </div>
+            <div style={{ marginTop: 10, display: "flex", gap: 8 }}>
+              <Btn onClick={next} style={{ flex: 1 }}>{qi >= questions.length - 1 ? "Finish →" : "Next question →"}</Btn>
+            </div>
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+/* ─── PaperManager — past paper authoring, assignment, and results (V1) ─── */
+function PaperManager({ user, cls, classes, topics, subjectId }) {
+  const [papers, setPapers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [view, setView] = useState("list"); // 'list' | 'paper' | 'results'
+  const [selectedPaperId, setSelectedPaperId] = useState(null);
+  const [creating, setCreating] = useState(false);
+  const [draft, setDraft] = useState({ name: "", exam_board: "", paper_year: "", paper_number: "" });
+  const [busy, setBusy] = useState(false);
+
+  const loadPapers = async () => {
+    setLoading(true);
+    try {
+      const rows = await sb.q("papers", { params: {
+        teacher_id: `eq.${user.id}`, archived: "eq.false",
+        select: "*,paper_questions(count),paper_class_assignments(class_id)",
+        order: "updated_at.desc"
+      }});
+      setPapers(rows || []);
+    } catch (e) { console.error(e); }
+    setLoading(false);
+  };
+
+  useEffect(() => { loadPapers(); }, []);
+
+  const createPaper = async () => {
+    if (!draft.name.trim()) return;
+    setBusy(true);
+    try {
+      const body = {
+        teacher_id: user.id, subject_id: subjectId,
+        name: draft.name.trim(),
+        exam_board: draft.exam_board.trim() || null,
+        paper_year: draft.paper_year ? parseInt(draft.paper_year) : null,
+        paper_number: draft.paper_number.trim() || null,
+      };
+      const [p] = await sb.q("papers", { method: "POST", body });
+      setCreating(false);
+      setDraft({ name: "", exam_board: "", paper_year: "", paper_number: "" });
+      setSelectedPaperId(p.id);
+      setView("paper");
+      await loadPapers();
+    } catch (e) { console.error(e); alert("Could not create paper: " + e.message); }
+    setBusy(false);
+  };
+
+  const archivePaper = async (id) => {
+    if (!confirm("Archive this paper? Students will no longer see it. You can restore it from the database if needed.")) return;
+    await sb.q("papers", { method: "PATCH", params: { id: `eq.${id}` }, body: { archived: true } });
+    await loadPapers();
+  };
+
+  if (view === "paper" && selectedPaperId) {
+    return <PaperEditor user={user} paperId={selectedPaperId} classes={classes} topics={topics} onBack={() => { setView("list"); setSelectedPaperId(null); loadPapers(); }} onResults={() => setView("results")} />;
+  }
+  if (view === "results" && selectedPaperId) {
+    return <PaperResults paperId={selectedPaperId} cls={cls} onBack={() => setView("paper")} />;
+  }
+
+  // ── List view ──
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+        <div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.txt }}>Past papers & mocks</div>
+          <div style={{ fontSize: 11, color: C.dim, marginTop: 2 }}>Build exam-style assessments with mark schemes. Assign to classes. AI marks each answer.</div>
+        </div>
+        <Btn onClick={() => setCreating(true)} style={{ padding: "8px 14px", fontSize: 12 }}>+ New paper</Btn>
+      </div>
+
+      {creating && (
+        <Card style={{ padding: 16, marginBottom: 12 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: C.txt, marginBottom: 10 }}>Create a paper</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <Inp placeholder="Name (e.g. Y10 Autumn Mock — Biology Paper 1)" value={draft.name} onChange={e => setDraft(d => ({ ...d, name: e.target.value }))} />
+            <div style={{ display: "flex", gap: 8 }}>
+              <Inp placeholder="Exam board (e.g. AQA)" value={draft.exam_board} onChange={e => setDraft(d => ({ ...d, exam_board: e.target.value }))} style={{ flex: 1 }} />
+              <Inp type="number" placeholder="Year" value={draft.paper_year} onChange={e => setDraft(d => ({ ...d, paper_year: e.target.value }))} style={{ width: 90 }} />
+              <Inp placeholder="Paper #" value={draft.paper_number} onChange={e => setDraft(d => ({ ...d, paper_number: e.target.value }))} style={{ width: 110 }} />
+            </div>
+            <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+              <Btn onClick={createPaper} disabled={!draft.name.trim() || busy} style={{ flex: 1 }}>Create</Btn>
+              <Btn v="ghost" onClick={() => { setCreating(false); setDraft({ name: "", exam_board: "", paper_year: "", paper_number: "" }); }} style={{ fontSize: 12 }}>Cancel</Btn>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {loading ? <div style={{ padding: 20, color: C.dim, fontSize: 12, textAlign: "center" }}>Loading…</div>
+       : papers.length === 0 ? (
+        <Card style={{ padding: 24, textAlign: "center" }}>
+          <div style={{ fontSize: 32, marginBottom: 8, opacity: 0.4 }}>📄</div>
+          <div style={{ fontSize: 13, color: C.txt, fontWeight: 600, marginBottom: 4 }}>No papers yet</div>
+          <div style={{ fontSize: 11, color: C.dim, lineHeight: 1.5 }}>Build a mock paper or recreate a real exam paper. Add questions with mark schemes — the AI marks against them automatically.</div>
+        </Card>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {papers.map(p => {
+            const qCount = p.paper_questions?.[0]?.count ?? 0;
+            const classCount = p.paper_class_assignments?.length ?? 0;
+            const meta = [p.exam_board, p.paper_year, p.paper_number].filter(Boolean).join(" · ");
+            return (
+              <Card key={p.id} style={{ padding: "12px 14px", cursor: "pointer" }} onClick={() => { setSelectedPaperId(p.id); setView("paper"); }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "flex-start" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{p.name}</div>
+                    {meta && <div style={{ fontSize: 11, color: C.dim, marginTop: 2 }}>{meta}</div>}
+                    <div style={{ fontSize: 10, color: C.mid, marginTop: 4, display: "flex", gap: 8 }}>
+                      <span>{qCount} question{qCount === 1 ? "" : "s"}</span>
+                      <span>·</span>
+                      <span>{p.total_marks} marks</span>
+                      <span>·</span>
+                      <span>{classCount === 0 ? "Not assigned" : `${classCount} class${classCount === 1 ? "" : "es"}`}</span>
+                    </div>
+                  </div>
+                  <button onClick={(e) => { e.stopPropagation(); archivePaper(p.id); }}
+                    style={{ padding: "4px 8px", fontSize: 10, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.dim, cursor: "pointer", fontFamily: "inherit" }}>
+                    Archive
+                  </button>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── PaperEditor — manage a single paper: questions, assignments, results ─── */
+function PaperEditor({ user, paperId, classes, topics, onBack, onResults }) {
+  const [paper, setPaper] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [section, setSection] = useState("questions"); // 'questions' | 'assign'
+  const [loading, setLoading] = useState(true);
+  const [editingQ, setEditingQ] = useState(null); // null | 'new' | <id>
+  const [qDraft, setQDraft] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const [p, qs, ass] = await Promise.all([
+        sb.q("papers", { params: { id: `eq.${paperId}`, select: "*" } }),
+        sb.q("paper_questions", { params: { paper_id: `eq.${paperId}`, select: "*", order: "sort_order.asc" } }),
+        sb.q("paper_class_assignments", { params: { paper_id: `eq.${paperId}`, select: "*" } }),
+      ]);
+      setPaper(p[0]);
+      setQuestions(qs || []);
+      setAssignments(ass || []);
+    } catch (e) { console.error(e); }
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, [paperId]);
+
+  const startNewQuestion = () => {
+    setQDraft({
+      question_label: "", question_text: "", command_word: "Explain", marks: 2,
+      topic_id: "", image_url: "",
+      marking_points: [{ text: "", marks: 1 }, { text: "", marks: 1 }],
+    });
+    setEditingQ("new");
+  };
+
+  const startEditQuestion = (q) => {
+    setQDraft({
+      question_label: q.question_label || "",
+      question_text: q.question_text,
+      command_word: q.command_word || "Explain",
+      marks: q.marks || 1,
+      topic_id: q.topic_id || "",
+      image_url: q.image_url || "",
+      marking_points: Array.isArray(q.marking_points) && q.marking_points.length > 0 ? q.marking_points : [{ text: "", marks: 1 }],
+    });
+    setEditingQ(q.id);
+  };
+
+  const updateMarkingPointsForMarks = (n) => {
+    setQDraft(d => {
+      const cur = d.marking_points || [];
+      const next = [...cur];
+      while (next.length < n) next.push({ text: "", marks: 1 });
+      while (next.length > n) next.pop();
+      return { ...d, marks: n, marking_points: next };
+    });
+  };
+
+  const saveQuestion = async () => {
+    if (!qDraft.question_text.trim()) return;
+    // Filter out empty marking points; warn if all empty
+    const cleanPoints = (qDraft.marking_points || []).filter(p => p.text && p.text.trim()).map(p => ({ text: p.text.trim(), marks: p.marks || 1 }));
+    if (cleanPoints.length === 0) {
+      if (!confirm("This question has no marking points. The AI marker won't be able to score it. Save anyway?")) return;
+    }
+    setBusy(true);
+    try {
+      const body = {
+        question_label: qDraft.question_label.trim() || null,
+        question_text: qDraft.question_text.trim(),
+        command_word: qDraft.command_word || null,
+        marks: qDraft.marks || 1,
+        topic_id: qDraft.topic_id || null,
+        image_url: qDraft.image_url || null,
+        marking_points: cleanPoints,
+      };
+      if (editingQ === "new") {
+        body.paper_id = paperId;
+        body.sort_order = questions.length;
+        await sb.q("paper_questions", { method: "POST", body });
+      } else {
+        await sb.q("paper_questions", { method: "PATCH", params: { id: `eq.${editingQ}` }, body });
+      }
+      setEditingQ(null);
+      setQDraft(null);
+      await load();
+    } catch (e) { console.error(e); alert("Save failed: " + e.message); }
+    setBusy(false);
+  };
+
+  const deleteQuestion = async (id) => {
+    if (!confirm("Delete this question? Any responses students have already given to it will be removed.")) return;
+    await sb.q("paper_questions", { method: "DELETE", params: { id: `eq.${id}` } });
+    await load();
+  };
+
+  const toggleAssignment = async (classId) => {
+    const isAssigned = assignments.some(a => a.class_id === classId);
+    if (isAssigned) {
+      await sb.q("paper_class_assignments", { method: "DELETE", params: { paper_id: `eq.${paperId}`, class_id: `eq.${classId}` } });
+    } else {
+      await sb.q("paper_class_assignments", { method: "POST", body: { paper_id: paperId, class_id: classId } });
+    }
+    await load();
+  };
+
+  if (loading) return <div style={{ padding: 20, textAlign: "center", color: C.dim, fontSize: 12 }}>Loading…</div>;
+  if (!paper) return <div style={{ padding: 20, textAlign: "center", color: C.red }}>Paper not found.</div>;
+
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+        <button onClick={onBack} style={{ padding: "6px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: "pointer", fontFamily: "inherit" }}>
+          ← Papers
+        </button>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.txt, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{paper.name}</div>
+          <div style={{ fontSize: 11, color: C.dim }}>{questions.length} question{questions.length === 1 ? "" : "s"} · {paper.total_marks} marks</div>
+        </div>
+        <button onClick={onResults} style={{ padding: "6px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card, color: C.mid, cursor: "pointer", fontFamily: "inherit" }}>
+          📊 Results
+        </button>
+      </div>
+
+      <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
+        <Pill on={section === "questions"} onClick={() => setSection("questions")}>Questions</Pill>
+        <Pill on={section === "assign"} onClick={() => setSection("assign")}>Assign to classes ({assignments.length})</Pill>
+      </div>
+
+      {section === "questions" && (
+        <>
+          {editingQ ? (
+            <Card style={{ padding: 16, marginBottom: 12 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: C.txt, marginBottom: 10 }}>{editingQ === "new" ? "New question" : "Edit question"}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <Inp placeholder="Label e.g. 1(a)" value={qDraft.question_label} onChange={e => setQDraft(d => ({ ...d, question_label: e.target.value }))} style={{ width: 100 }} />
+                  <select value={qDraft.command_word} onChange={e => setQDraft(d => ({ ...d, command_word: e.target.value }))}
+                    style={{ padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.txt, fontSize: 13, flex: 1 }}>
+                    {["State","Define","Describe","Explain","Calculate","Suggest","Evaluate","Compare"].map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                  <Inp type="number" min={1} max={10} value={qDraft.marks} onChange={e => updateMarkingPointsForMarks(parseInt(e.target.value) || 1)} style={{ width: 70 }} />
+                </div>
+                <TA placeholder="Question text" value={qDraft.question_text} onChange={e => setQDraft(d => ({ ...d, question_text: e.target.value }))} rows={3} />
+                <select value={qDraft.topic_id} onChange={e => setQDraft(d => ({ ...d, topic_id: e.target.value }))}
+                  style={{ padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.txt, fontSize: 13 }}>
+                  <option value="">No topic (paper-only)</option>
+                  {topics.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </select>
+                <div style={{ marginTop: 4 }}>
+                  <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Marking points (one per mark — what earns each mark)</div>
+                  {qDraft.marking_points.map((p, i) => (
+                    <div key={i} style={{ display: "flex", gap: 6, marginBottom: 6, alignItems: "flex-start" }}>
+                      <div style={{ minWidth: 22, height: 22, marginTop: 8, borderRadius: 99, background: C.card2, color: C.mid, fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{i + 1}</div>
+                      <TA placeholder={`Marking point ${i + 1} — what earns this mark?`} value={p.text} rows={2}
+                        onChange={e => setQDraft(d => ({ ...d, marking_points: d.marking_points.map((mp, j) => j === i ? { ...mp, text: e.target.value } : mp) }))} />
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                  <Btn onClick={saveQuestion} disabled={!qDraft.question_text.trim() || busy} style={{ flex: 1 }}>{editingQ === "new" ? "Add question" : "Save"}</Btn>
+                  <Btn v="ghost" onClick={() => { setEditingQ(null); setQDraft(null); }} style={{ fontSize: 12 }}>Cancel</Btn>
+                </div>
+              </div>
+            </Card>
+          ) : (
+            <Btn onClick={startNewQuestion} style={{ marginBottom: 12, padding: "8px 14px", fontSize: 12 }}>+ Add question</Btn>
+          )}
+
+          {questions.length === 0 ? (
+            <Card style={{ padding: 24, textAlign: "center" }}>
+              <div style={{ fontSize: 12, color: C.dim }}>No questions yet. Add the first one above.</div>
+            </Card>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {questions.map((q, i) => (
+                <Card key={q.id} style={{ padding: "10px 12px" }}>
+                  <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                    <div style={{ minWidth: 28, fontSize: 11, color: C.mid, fontWeight: 700, marginTop: 2 }}>{q.question_label || `Q${i + 1}`}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 12, color: C.txt, lineHeight: 1.4 }}>{q.question_text}</div>
+                      <div style={{ fontSize: 10, color: C.dim, marginTop: 4, display: "flex", gap: 6, flexWrap: "wrap" }}>
+                        {q.command_word && <span>{q.command_word}</span>}
+                        <span>·</span>
+                        <span>{q.marks} mark{q.marks === 1 ? "" : "s"}</span>
+                        <span>·</span>
+                        <span>{(q.marking_points || []).length} marking point{(q.marking_points || []).length === 1 ? "" : "s"}</span>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      <button onClick={() => startEditQuestion(q)} style={{ padding: "4px 8px", fontSize: 10, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: "pointer", fontFamily: "inherit" }}>Edit</button>
+                      <button onClick={() => deleteQuestion(q.id)} style={{ padding: "4px 8px", fontSize: 10, borderRadius: 6, border: `1px solid ${C.red}55`, background: "transparent", color: C.red, cursor: "pointer", fontFamily: "inherit" }}>Delete</button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {section === "assign" && (
+        <Card style={{ padding: 14 }}>
+          <div style={{ fontSize: 12, color: C.dim, marginBottom: 10, lineHeight: 1.5 }}>Tick the classes that should see this paper. Students in those classes will be able to take it from their dashboard.</div>
+          {classes.length === 0 ? <div style={{ fontSize: 12, color: C.dim }}>You don't have any classes yet.</div> :
+            classes.map(c => {
+              const isAssigned = assignments.some(a => a.class_id === c.id);
+              return (
+                <div key={c.id} onClick={() => toggleAssignment(c.id)}
+                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, background: isAssigned ? C.priSoft : C.card2, border: `1px solid ${isAssigned ? C.pri + "55" : C.bdr}`, marginBottom: 6, cursor: "pointer" }}>
+                  <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${isAssigned ? C.pri : C.bdr}`, background: isAssigned ? C.pri : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 700 }}>{isAssigned ? "✓" : ""}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 13, color: C.txt, fontWeight: 500 }}>{c.name}{c.year_group ? ` (Y${c.year_group})` : ""}</div>
+                  </div>
+                </div>
+              );
+            })}
+        </Card>
+      )}
+    </div>
+  );
+}
+
+/* ─── PaperResults — per-student results table for a paper ─── */
+function PaperResults({ paperId, cls, onBack }) {
+  const [paper, setPaper] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [attempts, setAttempts] = useState([]);
+  const [responses, setResponses] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => { (async () => {
+    setLoading(true);
+    try {
+      const [p, qs, atts, mems] = await Promise.all([
+        sb.q("papers", { params: { id: `eq.${paperId}`, select: "*" } }),
+        sb.q("paper_questions", { params: { paper_id: `eq.${paperId}`, select: "id,sort_order,question_label,marks", order: "sort_order.asc" } }),
+        sb.q("paper_attempts", { params: { paper_id: `eq.${paperId}`, class_id: `eq.${cls.id}`, select: "*,profiles(display_name)" } }),
+        sb.q("class_members", { params: { class_id: `eq.${cls.id}`, select: "student_id,profiles(display_name)" } }),
+      ]);
+      setPaper(p[0]); setQuestions(qs || []); setAttempts(atts || []); setMembers(mems || []);
+      if ((atts || []).length > 0) {
+        const ids = atts.map(a => a.id);
+        const filterStr = ids.map(id => `attempt_id.eq.${id}`).join(",");
+        const rs = await sb.q("paper_responses", { params: { or: `(${filterStr})`, select: "*" } });
+        setResponses(rs || []);
+      }
+    } catch (e) { console.error(e); }
+    setLoading(false);
+  })(); }, [paperId, cls.id]);
+
+  if (loading) return <div style={{ padding: 20, textAlign: "center", color: C.dim, fontSize: 12 }}>Loading…</div>;
+  if (!paper) return <div style={{ padding: 20, textAlign: "center", color: C.red }}>Paper not found.</div>;
+
+  const studentRows = members.map(m => {
+    const att = attempts.find(a => a.student_id === m.student_id && a.submitted_at);
+    return {
+      id: m.student_id,
+      name: m.profiles?.display_name || "?",
+      attempt: att,
+      submitted: !!att,
+    };
+  });
+  const submittedRows = studentRows.filter(r => r.submitted);
+  const avgPct = submittedRows.length === 0 ? 0 :
+    Math.round(submittedRows.reduce((s, r) => s + ((r.attempt.awarded_marks ?? 0) / Math.max(1, r.attempt.total_marks ?? paper.total_marks)) * 100, 0) / submittedRows.length);
+
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+        <button onClick={onBack} style={{ padding: "6px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: "pointer", fontFamily: "inherit" }}>← Paper</button>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.txt }}>{paper.name} — Results</div>
+          <div style={{ fontSize: 11, color: C.dim }}>{cls.name} · {submittedRows.length}/{members.length} submitted · class average {avgPct}%</div>
+        </div>
+      </div>
+
+      {studentRows.length === 0 ? (
+        <Card style={{ padding: 24, textAlign: "center" }}><div style={{ fontSize: 12, color: C.dim }}>No students in this class yet.</div></Card>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {studentRows.map(r => {
+            const pct = r.submitted ? Math.round(((r.attempt.awarded_marks ?? 0) / Math.max(1, r.attempt.total_marks ?? paper.total_marks)) * 100) : 0;
+            const tone = pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red;
+            return (
+              <Card key={r.id} style={{ padding: "10px 12px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 13, color: C.txt, fontWeight: 500 }}>{r.name}</div>
+                    <div style={{ fontSize: 11, color: C.dim, marginTop: 2 }}>{r.submitted ? `Submitted ${new Date(r.attempt.submitted_at).toLocaleDateString()}` : "Not submitted"}</div>
+                  </div>
+                  {r.submitted ? (
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: tone }}>{r.attempt.awarded_marks ?? 0}/{r.attempt.total_marks ?? paper.total_marks}</div>
+                      <div style={{ fontSize: 11, color: C.dim }}>{pct}%</div>
+                    </div>
+                  ) : (
+                    <span style={{ fontSize: 11, color: C.dim, fontStyle: "italic" }}>—</span>
+                  )}
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function StudentList({ students, cls, clsTarget, onRefresh, parentTokens = {}, onGenerateToken, onRevokeToken }) {
   const [expanded, setExpanded] = useState(null);
   const [newPw, setNewPw] = useState("");
