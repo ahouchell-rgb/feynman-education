@@ -137,21 +137,28 @@ function localMark(qText, modelAnswer, studentAnswer, marks) {
   return { correct: false, marks_awarded: 0, feedback: `The answer needed: ${modelAnswer}` };
 }
 
-async function aiMark(qText, model, student, marks) {
+async function aiMark(qText, model, student, marks, question_id) {
   // Check for fake/spam answers first
   const fake = detectFakeAnswer(student);
   if (fake) return { correct: false, marks_awarded: 0, feedback: fake, flagged: true };
 
   // Try AI marking via Supabase Edge Function (proxies to Claude API)
+  // Sources we accept from the function (in v10): "ai", "ai_double_check_overturned",
+  // "ai_double_check_confirmed", "numerical_match", "cache", "fallback".
+  // If we don't recognise a source, fall through to local marking — defensive.
+  const VALID_SOURCES = new Set([
+    "ai", "ai_double_check_overturned", "ai_double_check_confirmed",
+    "numerical_match", "cache", "fallback"
+  ]);
   try {
     const r = await fetch(`${SUPA_URL}/functions/v1/mark-answer`, {
       method: "POST",
       headers: { "Content-Type": "application/json", apikey: SUPA_KEY },
-      body: JSON.stringify({ question: qText, model_answer: model, student_answer: student, marks }),
+      body: JSON.stringify({ question: qText, model_answer: model, student_answer: student, marks, question_id }),
     });
     if (r.ok) {
       const d = await r.json();
-      if (d.source === "ai" || d.source === "fallback") return d;
+      if (VALID_SOURCES.has(d.source)) return d;
     }
   } catch (e) {
     console.log("Edge function unavailable, using local marking:", e);
@@ -563,7 +570,7 @@ function Student({ user }) {
       ? qs.filter(q => mistakeQIds.has(q.id))
       : (studyMode && studyTopicId ? qs.filter(q => q.topic_id === studyTopicId) : qs);
     const q = activeQs[qi];
-    const r = await aiMark(q.question_text, q.model_answer, ans, q.marks);
+    const r = await aiMark(q.question_text, q.model_answer, ans, q.marks, q.id);
     setRes(r);
     const prev = sr[q.id] || {};
     const nxt = nextSR(r.correct, prev);
@@ -1175,6 +1182,10 @@ function AdminPanel({ user }) {
   const [aiUsage, setAiUsage] = useState(null); // null = not loaded, [] = loaded empty
   const [aiUsageLoading, setAiUsageLoading] = useState(false);
   const [aiUsageWindow, setAiUsageWindow] = useState(7); // days
+  // Cache health view
+  const [cacheRows, setCacheRows] = useState(null);
+  const [cacheLoading, setCacheLoading] = useState(false);
+  const [cachePurging, setCachePurging] = useState(null); // id being purged
   // Cost estimate: ~150 input tokens + ~80 output tokens per AI mark at Haiku 4.5 pricing
   // ($1/1M in + $5/1M out) = ~$0.00055/answer. ~25% of answers skip the AI via the
   // numerical exemption shortcut, so effective cost is ~$0.00041/answer.
@@ -1280,7 +1291,7 @@ function AdminPanel({ user }) {
 
       {/* View tabs */}
       <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>
-        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }, { k: "costs", l: "Costs" }, { k: "aiusage", l: "AI usage" }].map(t => (
+        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }, { k: "costs", l: "Costs" }, { k: "aiusage", l: "AI usage" }, { k: "cache", l: "Cache health" }].map(t => (
           <Pill key={t.k} on={view === t.k} onClick={() => setView(t.k)} style={{ fontSize: 12, padding: "6px 12px" }}>{t.l}</Pill>
         ))}
       </div>
@@ -1758,6 +1769,127 @@ function AdminPanel({ user }) {
 
                 <div style={{ marginTop: 16, padding: "10px 12px", background: C.card, border: `1px dashed ${C.bdr}`, borderRadius: 8, fontSize: 11, color: C.mid, lineHeight: 1.6 }}>
                   <strong style={{ color: C.txt }}>How this works.</strong> Every AI call to Haiku writes a row to <code style={{ background: C.bg, padding: "1px 4px", borderRadius: 3 }}>ai_usage</code> with token counts from Anthropic’s response. Cache hit rate = cache-read tokens ÷ (cache-read + cache-write tokens). Cache reads cost ~10% of fresh input. Once warm and busy, hit rate should sit at 80–95%. After a quiet period the cache expires (~5 min) and the next call writes a fresh entry.
+                </div>
+              </>
+            )}
+          </div>
+        );
+      })()}
+
+      {/* CACHE HEALTH — accepted-answer cache audit */}
+      {view === "cache" && (() => {
+        const loadCache = async () => {
+          setCacheLoading(true);
+          try {
+            const rows = await sb.q("accepted_answers", { params: {
+              select: "id,question_id,normalised_answer,marks_awarded,feedback,confirmation_count,hit_count,last_verified_at,created_at,questions(question_text,topic_id,topics(name))",
+              order: "hit_count.desc",
+              limit: "200"
+            }});
+            setCacheRows(rows || []);
+          } catch (e) {
+            console.error("cache load failed", e);
+            setCacheRows([]);
+          }
+          setCacheLoading(false);
+        };
+
+        if (cacheRows === null && !cacheLoading) loadCache();
+
+        const purgeOne = async (id) => {
+          if (!confirm("Delete this cached answer? Future students writing this exact phrasing will be re-checked by the AI.")) return;
+          setCachePurging(id);
+          try {
+            await sb.q("accepted_answers", { method: "DELETE", params: { id: `eq.${id}` } });
+            setCacheRows(prev => (prev || []).filter(r => r.id !== id));
+          } catch (e) { console.error(e); alert("Purge failed: " + e.message); }
+          setCachePurging(null);
+        };
+
+        const rows = cacheRows || [];
+        const total = rows.length;
+        const probationary = rows.filter(r => (r.confirmation_count ?? 0) < 3).length;
+        const authoritative = total - probationary;
+        const totalHits = rows.reduce((s, r) => s + (r.hit_count || 0), 0);
+        const suspicious = rows.filter(r => (r.hit_count || 0) > 10 && (r.confirmation_count ?? 0) === 3);
+
+        return (
+          <div>
+            <div style={{ display: "flex", gap: 6, marginBottom: 12, alignItems: "center" }}>
+              <span style={{ fontSize: 11, color: C.dim }}>Showing top {total} cached entries by hit count</span>
+              <button onClick={loadCache} disabled={cacheLoading}
+                style={{ marginLeft: "auto", padding: "4px 10px", fontSize: 11, borderRadius: 99, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: cacheLoading ? "wait" : "pointer", fontFamily: "inherit" }}>
+                {cacheLoading ? "Loading…" : "Refresh"}
+              </button>
+            </div>
+
+            {cacheLoading && rows.length === 0 ? (
+              <div style={{ padding: 30, textAlign: "center", color: C.mid, fontSize: 12, background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8 }}>Loading…</div>
+            ) : rows.length === 0 ? (
+              <div style={{ padding: 30, textAlign: "center", color: C.mid, fontSize: 12, background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8 }}>
+                No cached answers yet. The cache fills up as students write correct answers that the AI marks with high confidence.
+              </div>
+            ) : (
+              <>
+                {/* Stat tiles */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 12 }}>
+                  <div style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10 }}>
+                    <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>Authoritative</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: C.pri, marginTop: 4 }}>{authoritative}</div>
+                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>≥3 confirmations</div>
+                  </div>
+                  <div style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10 }}>
+                    <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>Probationary</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: C.amb, marginTop: 4 }}>{probationary}</div>
+                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>still verified by AI</div>
+                  </div>
+                  <div style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10 }}>
+                    <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>Total cache hits</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: C.txt, marginTop: 4 }}>{totalHits.toLocaleString()}</div>
+                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>AI calls saved</div>
+                  </div>
+                </div>
+
+                {suspicious.length > 0 && (
+                  <div style={{ padding: "10px 12px", background: C.amb + "22", border: `1px solid ${C.amb}55`, borderRadius: 8, marginBottom: 12, fontSize: 12, color: C.txt }}>
+                    ⚠ {suspicious.length} entr{suspicious.length === 1 ? "y has" : "ies have"} been hit 10+ times with only 3 confirmations — worth spot-checking these manually.
+                  </div>
+                )}
+
+                {/* Table */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {rows.map(r => {
+                    const auth = (r.confirmation_count ?? 0) >= 3;
+                    const topicName = r.questions?.topics?.name || "—";
+                    return (
+                      <div key={r.id} style={{ padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8 }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 12, color: C.dim, marginBottom: 4 }}>
+                              <span style={{ fontFamily: "monospace" }}>{topicName}</span>
+                              <span style={{ marginLeft: 8 }}>{r.questions?.question_text?.slice(0, 80) || "(deleted question)"}</span>
+                            </div>
+                            <div style={{ fontSize: 13, fontWeight: 500, color: C.txt, fontFamily: "monospace", wordBreak: "break-word" }}>
+                              "{r.normalised_answer}"
+                            </div>
+                            <div style={{ fontSize: 10, color: C.dim, marginTop: 4, display: "flex", gap: 12, flexWrap: "wrap" }}>
+                              <span>{r.marks_awarded} mark{r.marks_awarded === 1 ? "" : "s"}</span>
+                              <span style={{ color: auth ? C.pri : C.amb }}>{r.confirmation_count} confirmation{r.confirmation_count === 1 ? "" : "s"}</span>
+                              <span>{r.hit_count} hit{r.hit_count === 1 ? "" : "s"}</span>
+                            </div>
+                          </div>
+                          <button onClick={() => purgeOne(r.id)} disabled={cachePurging === r.id}
+                            style={{ padding: "4px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.red}55`, background: "transparent", color: C.red, cursor: "pointer", fontFamily: "inherit", opacity: cachePurging === r.id ? 0.5 : 1 }}>
+                            {cachePurging === r.id ? "…" : "Purge"}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{ marginTop: 16, padding: "10px 12px", background: C.card, border: `1px dashed ${C.bdr}`, borderRadius: 8, fontSize: 11, color: C.mid, lineHeight: 1.6 }}>
+                  <strong style={{ color: C.txt }}>How the cache works.</strong> Once an answer has been independently confirmed by the AI 3 times with high confidence, it becomes authoritative — future students writing the same phrasing skip the AI entirely. Entries expire after 90 days or 50 hits and re-verify. Editing a question's text or model answer wipes its cache. Purge removes a specific entry; the next student typing it will be re-marked by the AI.
                 </div>
               </>
             )}
