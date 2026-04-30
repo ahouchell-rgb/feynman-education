@@ -351,7 +351,11 @@ function Student({ user }) {
   const [stats, setStats] = useState({ t: 0, c: 0 });
   const [sr, setSr] = useState({});
   const [recency, setRecency] = useState({}); // topicId → rank (1/2/3)
-  const [streak, setStreak] = useState(0);
+  const [correctStreak, setCorrectStreak] = useState(0); // session-only: consecutive correct answers, resets on wrong
+  // Daily-practice streak — derived from habitDays in an effect once habit data loads
+  const [dailyStreak, setDailyStreak] = useState(0);
+  const [streakBumped, setStreakBumped] = useState(false); // brief animation state when streak goes up
+  const [milestone, setMilestone] = useState(null); // {n} when a streak milestone hit, drives celebration overlay
   const [loading, setLoading] = useState(true);
   const [joinCode, setJoinCode] = useState("");
   const [joinErr, setJoinErr] = useState("");
@@ -397,6 +401,63 @@ function Student({ user }) {
   const ansBaseRef = useRef("");
 
   useEffect(() => { load(); }, []);
+
+  // ── Daily streak ──────────────────────────────────────────────────────────
+  // Computed from habitDays. The streak is the count of consecutive days, ending
+  // either today (if the student has practised today) or yesterday (if today is
+  // still in progress). A "streak freeze" — stored per-user in localStorage —
+  // can save one missed day. We only auto-grant a freeze when the student earns
+  // a 7-day streak; freezes are capped at 1 active at any time so they don't
+  // trivialise the habit.
+  const STREAK_MILESTONES = [3, 7, 14, 30, 50, 100, 200, 365];
+  const freezeKey = `streak_freeze_${user.id}`;
+  const milestonesShownKey = `streak_milestones_shown_${user.id}`;
+
+  useEffect(() => {
+    if (habitDays.length === 0) return;
+    // habitDays is oldest -> today. Walk backwards.
+    let count = 0;
+    let usedFreeze = false;
+    let availableFreeze = false;
+    try { availableFreeze = window.localStorage.getItem(freezeKey) === "1"; } catch {}
+    const todayActive = habitDays[habitDays.length - 1].count > 0;
+    // Start point: today if active, else yesterday (so the streak doesn't look
+    // broken just because the student opens the app before practising).
+    const startIdx = todayActive ? habitDays.length - 1 : habitDays.length - 2;
+    for (let i = startIdx; i >= 0; i--) {
+      if (habitDays[i].count > 0) {
+        count++;
+      } else if (availableFreeze && !usedFreeze) {
+        // Burn the freeze on the first missed day, keep streak going.
+        usedFreeze = true;
+      } else {
+        break;
+      }
+    }
+    setDailyStreak(prev => {
+      if (count > prev && prev > 0) {
+        // Animate the bump
+        setStreakBumped(true);
+        setTimeout(() => setStreakBumped(false), 1200);
+      }
+      // Auto-grant a freeze when crossing the 7-day mark for the first time
+      // (and not already holding one). Only on transitions, not on every render.
+      if (count >= 7 && prev < 7 && !availableFreeze) {
+        try { window.localStorage.setItem(freezeKey, "1"); } catch {}
+      }
+      // Milestone celebration — only fire on transitions and only once per milestone.
+      const milestoneHit = STREAK_MILESTONES.find(m => count >= m && prev < m);
+      if (milestoneHit) {
+        let shown = [];
+        try { shown = JSON.parse(window.localStorage.getItem(milestonesShownKey) || "[]"); } catch {}
+        if (!shown.includes(milestoneHit)) {
+          setMilestone({ n: milestoneHit });
+          try { window.localStorage.setItem(milestonesShownKey, JSON.stringify([...shown, milestoneHit])); } catch {}
+        }
+      }
+      return count;
+    });
+  }, [habitDays]);
 
   // Initialise Web Speech API once per mount
   useEffect(() => {
@@ -589,7 +650,7 @@ function Student({ user }) {
     const prev = sr[q.id] || {};
     const nxt = nextSR(r.correct, prev);
     setSr(s => ({ ...s, [q.id]: nxt }));
-    if (r.correct) setStreak(s => s + 1); else setStreak(0);
+    if (r.correct) setCorrectStreak(s => s + 1); else setCorrectStreak(0);
     // If wrong (and not a flagged low-effort attempt), put it on cooldown for the session
     if (!r.correct && !r.flagged) {
       setCooldown(prev => { const n = new Map(prev); n.set(q.id, COOLDOWN_LENGTH); return n; });
@@ -747,7 +808,7 @@ function Student({ user }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
         <button onClick={() => setCls(null)} style={{ background: "none", border: "none", color: C.mid, fontSize: 14, cursor: "pointer", fontFamily: "inherit" }}>← Classes</button>
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-          {streak >= 3 && <Badge color={C.amb}>🔥 {streak}</Badge>}
+          {correctStreak >= 3 && <Badge color={C.amb}>🎯 {correctStreak} in a row</Badge>}
           {currentStars > 0 && <Badge color={C.amb}>⭐ {currentStars}</Badge>}
           {sessionStats.t > 0 && <button onClick={() => setShowSummary(true)} style={{ background: "none", border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px" }}>📊 {sessionStats.t}</button>}
           <button onClick={() => { setStudyMode(p => !p); setStudyTopicId(null); setReviewMode(false); setRes(null); setAns(""); }} style={{ background: studyMode ? C.priSoft : "none", border: `1px solid ${studyMode ? C.pri : C.bdr}`, borderRadius: 8, color: studyMode ? C.pri : C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px", fontWeight: studyMode ? 700 : 400 }}>📖 Study</button>
@@ -787,32 +848,121 @@ function Student({ user }) {
         </Card>
       )}
 
-      {/* 7-day habit strip */}
-      {habitDays.length > 0 && (
-        <Card style={{ padding: "10px 14px", marginBottom: 10 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-            <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600 }}>Last 7 days</div>
-            <div style={{ fontSize: 10, color: C.dim }}>{habitDays.filter(d => d.count > 0).length} of 7 active</div>
-          </div>
-          <div style={{ display: "flex", gap: 4 }}>
-            {habitDays.map((d, i) => {
-              const isToday = i === habitDays.length - 1;
-              let col = C.bdr;
-              if (d.count >= 10) col = C.grn;
-              else if (d.count >= 5) col = C.amb;
-              else if (d.count > 0) col = C.red;
-              return (
-                <div key={i} style={{ flex: 1, textAlign: "center" }}>
-                  <div title={`${d.label}: ${d.count} answered`} style={{ height: 22, background: col, borderRadius: 5, border: isToday ? `2px solid ${C.pri}` : "none", opacity: d.count === 0 && !isToday ? 0.4 : 1, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: d.count > 0 ? "#fff" : C.dim, fontWeight: 600 }}>
-                    {d.count > 0 ? d.count : ""}
+      {/* ── Streak + 7-day habit strip ────────────────────────────────────
+           Banner up top shows the daily-practice streak with a flame whose intensity
+           scales with streak length. The 7-day strip below shows the underlying
+           activity. A milestone overlay fires once on hitting 3/7/14/30/50/100. */}
+      {habitDays.length > 0 && (() => {
+        const todayActive = habitDays[habitDays.length - 1].count > 0;
+        let hasFreeze = false;
+        try { hasFreeze = typeof window !== "undefined" && window.localStorage.getItem(freezeKey) === "1"; } catch {}
+        // Determine what the next milestone is, for the "X days to go" hint
+        const nextMilestone = STREAK_MILESTONES.find(m => m > dailyStreak);
+        // Flame-intensity scales: 1-2 days dim; 3-6 small; 7-13 medium; 14-29 strong; 30+ large
+        const flame = dailyStreak >= 30 ? "🔥🔥🔥" : dailyStreak >= 14 ? "🔥🔥" : dailyStreak >= 3 ? "🔥" : "";
+        const streakColor = dailyStreak >= 30 ? "#f97316" : dailyStreak >= 7 ? "#fb923c" : dailyStreak >= 3 ? C.amb : C.dim;
+
+        return (
+          <>
+            {/* Streak banner */}
+            <Card style={{ padding: "12px 14px", marginBottom: 10, background: dailyStreak >= 3 ? `linear-gradient(135deg, rgba(251,146,60,0.12), rgba(251,146,60,0.04))` : C.card, borderColor: dailyStreak >= 3 ? "rgba(251,146,60,0.3)" : C.bdr }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{
+                  fontSize: 28, lineHeight: 1,
+                  filter: dailyStreak === 0 ? "grayscale(1)" : "none",
+                  opacity: dailyStreak === 0 ? 0.4 : 1,
+                  transform: streakBumped ? "scale(1.3)" : "scale(1)",
+                  transition: "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                }}>{flame || "🕯️"}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+                    <span style={{ fontSize: 22, fontWeight: 800, color: streakColor, lineHeight: 1 }}>
+                      {dailyStreak}
+                    </span>
+                    <span style={{ fontSize: 13, color: C.txt, fontWeight: 600 }}>day{dailyStreak === 1 ? "" : "s"} in a row</span>
                   </div>
-                  <div style={{ fontSize: 9, color: isToday ? C.pri : C.dim, marginTop: 2, fontWeight: isToday ? 700 : 400 }}>{d.label.slice(0, 3)}</div>
+                  <div style={{ fontSize: 11, color: C.dim, marginTop: 3 }}>
+                    {dailyStreak === 0 ? "Practise today to start a streak" :
+                     !todayActive ? "Practise today to keep it alive!" :
+                     nextMilestone ? `${nextMilestone - dailyStreak} more day${nextMilestone - dailyStreak === 1 ? "" : "s"} to ${nextMilestone}` :
+                     "Legendary streak. Keep going."}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-        </Card>
-      )}
+                {hasFreeze && (
+                  <div title="You have a streak freeze — one missed day won't break your streak." style={{ padding: "4px 8px", borderRadius: 6, background: "rgba(96, 165, 250, 0.15)", border: "1px solid rgba(96, 165, 250, 0.3)", color: "#60a5fa", fontWeight: 600, fontSize: 11, display: "flex", alignItems: "center", gap: 4 }}>
+                    ❄️ Freeze
+                  </div>
+                )}
+              </div>
+            </Card>
+
+            {/* 7-day habit strip */}
+            <Card style={{ padding: "10px 14px", marginBottom: 10 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600 }}>Last 7 days</div>
+                <div style={{ fontSize: 10, color: C.dim }}>{habitDays.filter(d => d.count > 0).length} of 7 active</div>
+              </div>
+              <div style={{ display: "flex", gap: 4 }}>
+                {habitDays.map((d, i) => {
+                  const isToday = i === habitDays.length - 1;
+                  let col = C.bdr;
+                  if (d.count >= 10) col = C.grn;
+                  else if (d.count >= 5) col = C.amb;
+                  else if (d.count > 0) col = C.red;
+                  const empty = d.count === 0;
+                  return (
+                    <div key={i} style={{ flex: 1, textAlign: "center" }}>
+                      <div title={`${d.label}: ${d.count} answered`} style={{
+                        height: 28, background: col, borderRadius: 6,
+                        border: isToday ? `2px solid ${C.pri}` : "none",
+                        opacity: empty && !isToday ? 0.35 : 1,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 11, color: d.count > 0 ? "#fff" : C.dim, fontWeight: 700,
+                        animation: isToday && empty ? "pulseToday 2s ease-in-out infinite" : "none",
+                      }}>
+                        {d.count > 0 ? d.count : (isToday ? "·" : "")}
+                      </div>
+                      <div style={{ fontSize: 9, color: isToday ? C.pri : C.dim, marginTop: 3, fontWeight: isToday ? 700 : 500 }}>{d.label.slice(0, 3)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+
+            {/* Milestone celebration overlay — fires once when you cross 3/7/14/30/50/100. */}
+            {milestone && (
+              <div onClick={() => setMilestone(null)}
+                style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, animation: "fadeIn 0.25s ease", cursor: "pointer" }}>
+                <div onClick={e => e.stopPropagation()} style={{
+                  background: C.card, border: `1px solid ${C.bdr}`,
+                  borderRadius: 16, padding: "32px 28px", maxWidth: 320, textAlign: "center",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
+                  animation: "milestonePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                }}>
+                  <div style={{ fontSize: 64, lineHeight: 1, marginBottom: 12 }}>
+                    {milestone.n >= 100 ? "🏆" : milestone.n >= 30 ? "💎" : milestone.n >= 14 ? "🌟" : milestone.n >= 7 ? "🔥" : "✨"}
+                  </div>
+                  <div style={{ fontSize: 26, fontWeight: 800, color: C.txt, marginBottom: 4 }}>
+                    {milestone.n}-day streak!
+                  </div>
+                  <div style={{ fontSize: 13, color: C.dim, marginBottom: 18, lineHeight: 1.5 }}>
+                    {milestone.n === 3 ? "You've started a habit. Keep it going." :
+                     milestone.n === 7 ? "A whole week. You've earned a streak freeze ❄️ — one missed day will be forgiven." :
+                     milestone.n === 14 ? "Two weeks straight. Properly impressive." :
+                     milestone.n === 30 ? "A whole month. You're in the top few percent." :
+                     milestone.n === 50 ? "50 days. Genuinely outstanding." :
+                     milestone.n === 100 ? "100 days. You're a legend." :
+                     `${milestone.n} days. Extraordinary.`}
+                  </div>
+                  <button onClick={() => setMilestone(null)} style={{ padding: "10px 24px", background: C.pri, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                    Keep going
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        );
+      })()}
 
       {/* Weekly target progress */}
       <Card style={{ padding: 14, marginBottom: 12 }}>
@@ -2341,6 +2491,7 @@ function Teacher({ user, isMod, isHoD }) {
   const [deliveries, setDeliveries] = useState({}); // topicId → {taught_at, notes}
   const [parentTokens, setParentTokens] = useState({}); // studentId → token UUID
   const [rawResps, setRawResps] = useState([]); // full response rows for the active class — used by CSV export
+  const [expandedQuestionStat, setExpandedQuestionStat] = useState(null); // question_id with wrong answers panel open
   // Onboarding panel: persists dismissal in localStorage so it never re-shows once closed.
   // Keyed per-user so a different teacher on the same browser sees their own state.
   const onboardingKey = `onboarding_dismissed_${user.id}`;
@@ -3022,6 +3173,100 @@ function Teacher({ user, isMod, isHoD }) {
                       {m.ans.length > 0 && <div style={{ marginTop: 5, display: "flex", gap: 4, flexWrap: "wrap" }}>{m.ans.map((a, j) => <span key={j} style={{ fontSize: 11, color: C.mid, background: C.redS, padding: "2px 7px", borderRadius: 6 }}>"{a}"</span>)}</div>}
                     </div>
                   ))}
+              </Card>
+
+              {/* Question stats — per-question accuracy with drill-down to actual wrong answers.
+                  Uses the same rawResps already in scope. Sorted by wrong-rate so the worst-performing
+                  questions surface first. Threshold of 3 attempts to avoid noise from one-off blips. */}
+              <Card style={{ padding: 14, marginBottom: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, gap: 8 }}>
+                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Question stats</div>
+                  <span style={{ fontSize: 11, color: C.dim }}>Hardest questions first · tap for wrong answers</span>
+                </div>
+                {(() => {
+                  // Group responses by question_id
+                  const qStats = {};
+                  rawResps.forEach(r => {
+                    if (!r.question_id) return;
+                    const isFlagged = r.ai_feedback && r.ai_feedback.startsWith("FLAGGED:");
+                    if (isFlagged) return; // exclude flagged spam from question stats
+                    if (!qStats[r.question_id]) {
+                      qStats[r.question_id] = {
+                        id: r.question_id,
+                        text: r.questions?.question_text || "(question deleted)",
+                        topic: r.questions?.topics?.name || "—",
+                        attempts: 0, correct: 0,
+                        wrongAnswers: [], // collected up to N for drill-down
+                        attemptedBy: new Set(),
+                      };
+                    }
+                    const s = qStats[r.question_id];
+                    s.attempts++;
+                    if (r.is_correct) s.correct++;
+                    else if (r.student_answer && s.wrongAnswers.length < 8) {
+                      // Dedupe and cap. Show "× n" if same wrong answer repeats.
+                      const existing = s.wrongAnswers.find(w => w.text.toLowerCase().trim() === r.student_answer.toLowerCase().trim());
+                      if (existing) existing.count++;
+                      else s.wrongAnswers.push({ text: r.student_answer, count: 1 });
+                    } else if (!r.is_correct) {
+                      // Above the cap — still bump the count if duplicate, ignore otherwise.
+                      const existing = s.wrongAnswers.find(w => w.text.toLowerCase().trim() === r.student_answer?.toLowerCase().trim());
+                      if (existing) existing.count++;
+                    }
+                    s.attemptedBy.add(r.student_id);
+                  });
+                  // Filter and sort: ≥3 attempts, sort by wrong-rate desc, then attempts desc.
+                  const qList = Object.values(qStats)
+                    .filter(s => s.attempts >= 3)
+                    .map(s => ({ ...s, wrongRate: 1 - s.correct / s.attempts, students: s.attemptedBy.size }))
+                    .sort((a, b) => b.wrongRate - a.wrongRate || b.attempts - a.attempts)
+                    .slice(0, 10);
+
+                  if (qList.length === 0) {
+                    return <div style={{ color: C.dim, fontSize: 13 }}>Not enough data yet — questions need at least 3 attempts before they show up here.</div>;
+                  }
+
+                  return qList.map((q, i) => {
+                    const pct = Math.round(q.wrongRate * 100);
+                    const expanded = expandedQuestionStat === q.id;
+                    const tone = pct >= 60 ? C.red : pct >= 35 ? C.amb : C.grn;
+                    const toneBg = pct >= 60 ? C.redS : pct >= 35 ? C.ambS : C.grnS;
+                    return (
+                      <div key={q.id} style={{ borderRadius: 10, background: C.card2, borderLeft: `3px solid ${tone}`, marginBottom: 6 }}>
+                        <div onClick={() => setExpandedQuestionStat(expanded ? null : q.id)}
+                          style={{ padding: "10px 12px", cursor: "pointer", userSelect: "none" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-start" }}>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontSize: 13, color: C.txt, fontWeight: 500, lineHeight: 1.3 }}>{q.text}</div>
+                              <div style={{ fontSize: 11, color: C.dim, marginTop: 3 }}>
+                                {q.topic} · {q.students} student{q.students === 1 ? "" : "s"} · {q.attempts} attempt{q.attempts === 1 ? "" : "s"}
+                              </div>
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, flexShrink: 0 }}>
+                              <span style={{ fontSize: 13, fontWeight: 700, color: tone, padding: "2px 8px", borderRadius: 6, background: toneBg }}>{pct}% wrong</span>
+                              <span style={{ fontSize: 10, color: C.dim }}>{expanded ? "▾" : "▸"} {q.wrongAnswers.length} wrong answer{q.wrongAnswers.length === 1 ? "" : "s"}</span>
+                            </div>
+                          </div>
+                        </div>
+                        {expanded && q.wrongAnswers.length > 0 && (
+                          <div style={{ padding: "0 12px 10px 14px" }}>
+                            <div style={{ fontSize: 10, color: C.dim, marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>What students wrote</div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                              {q.wrongAnswers
+                                .sort((a, b) => b.count - a.count)
+                                .map((w, j) => (
+                                  <div key={j} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
+                                    <span style={{ color: C.txt, background: C.bg, padding: "3px 8px", borderRadius: 6, flex: 1, fontFamily: "monospace", wordBreak: "break-word" }}>"{w.text}"</span>
+                                    {w.count > 1 && <span style={{ fontSize: 10, color: C.mid, fontWeight: 600 }}>× {w.count}</span>}
+                                  </div>
+                                ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  });
+                })()}
               </Card>
 
               <Card style={{ padding: 14 }}>
@@ -4394,6 +4639,9 @@ export default function App() {
         body{background:${C.bg};-webkit-font-smoothing:antialiased}
         @keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
         @keyframes starPop{0%{opacity:0;transform:scale(0) rotate(-30deg)}20%{opacity:1;transform:scale(1.5) rotate(10deg)}40%{transform:scale(1.2) rotate(-5deg)}60%{transform:scale(1.3) rotate(3deg)}100%{opacity:0;transform:scale(2) translateY(-40px) rotate(15deg)}}
+        @keyframes pulseToday{0%,100%{box-shadow:0 0 0 0 ${C.priGlow}}50%{box-shadow:0 0 0 6px transparent}}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes milestonePop{0%{opacity:0;transform:scale(0.5)}60%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
         button:active{transform:scale(.98)}
         input:focus,textarea:focus,select:focus{border-color:${C.pri}!important;box-shadow:0 0 0 3px ${C.priGlow}}
         ::selection{background:${C.priGlow}}
