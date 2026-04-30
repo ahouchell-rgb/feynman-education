@@ -2340,6 +2340,18 @@ function Teacher({ user, isMod, isHoD }) {
   const [savingRecency, setSavingRecency] = useState(false);
   const [deliveries, setDeliveries] = useState({}); // topicId → {taught_at, notes}
   const [parentTokens, setParentTokens] = useState({}); // studentId → token UUID
+  const [rawResps, setRawResps] = useState([]); // full response rows for the active class — used by CSV export
+  // Onboarding panel: persists dismissal in localStorage so it never re-shows once closed.
+  // Keyed per-user so a different teacher on the same browser sees their own state.
+  const onboardingKey = `onboarding_dismissed_${user.id}`;
+  const [onboardingDismissed, setOnboardingDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try { return window.localStorage.getItem(onboardingKey) === "1"; } catch { return false; }
+  });
+  const dismissOnboarding = () => {
+    setOnboardingDismissed(true);
+    try { window.localStorage.setItem(onboardingKey, "1"); } catch {}
+  };
 
   useEffect(() => { init(); }, []);
 
@@ -2366,6 +2378,7 @@ function Teacher({ user, isMod, isHoD }) {
         sb.q("parent_tokens", { params: { class_id: `eq.${c.id}`, select: "student_id,token" } }),
       ]);
       setTopics(allT); setUnlocked(new Set(ul.map(t => t.topic_id)));
+      setRawResps(resps || []);
       const delMap = {}; dels.forEach(d => { delMap[d.topic_id] = { taught_at: d.taught_at, notes: d.notes }; });
       setDeliveries(delMap);
       const tokMap = {}; tokens.forEach(t => { tokMap[t.student_id] = t.token; });
@@ -2574,6 +2587,109 @@ function Teacher({ user, isMod, isHoD }) {
   if (loading) return <div style={{ color: C.mid, padding: 40, textAlign: "center" }}>Loading...</div>;
   const acc = dash && dash.tR > 0 ? Math.round(dash.tC / dash.tR * 100) : 0;
 
+  // ── CSV export helpers ──────────────────────────────────────────────────
+  // Quote a value safely for CSV: wrap in quotes if it contains comma/quote/newline,
+  // and escape internal quotes by doubling them.
+  const csvEscape = (v) => {
+    if (v === null || v === undefined) return "";
+    const s = String(v);
+    if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+    return s;
+  };
+  const toCsv = (rows) => rows.map(r => r.map(csvEscape).join(",")).join("\n");
+  const downloadCsv = (filename, rows) => {
+    const blob = new Blob([toCsv(rows)], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename; document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  };
+  const safeFilename = (s) => (s || "class").replace(/[^a-z0-9_-]+/gi, "_").slice(0, 60);
+  const todayStr = () => new Date().toISOString().slice(0, 10);
+
+  const exportSummaryCsv = () => {
+    if (!dash || !cls) return;
+    // Build a per-student weakest-topic map from rawResps so we can include it.
+    const studentWeakest = {};
+    const sTopic = {};
+    rawResps.forEach(r => {
+      const sid = r.student_id;
+      const tname = r.questions?.topics?.name || "—";
+      if (!sTopic[sid]) sTopic[sid] = {};
+      if (!sTopic[sid][tname]) sTopic[sid][tname] = { t: 0, c: 0 };
+      sTopic[sid][tname].t++;
+      if (r.is_correct) sTopic[sid][tname].c++;
+    });
+    Object.keys(sTopic).forEach(sid => {
+      // Pick the topic with the lowest accuracy that has at least 3 attempts;
+      // otherwise fall back to the topic with the most attempts.
+      const entries = Object.entries(sTopic[sid]);
+      const eligible = entries.filter(([, d]) => d.t >= 3);
+      const sorted = (eligible.length > 0 ? eligible : entries)
+        .map(([name, d]) => ({ name, pct: d.t > 0 ? d.c / d.t : 0, t: d.t }))
+        .sort((a, b) => a.pct - b.pct || b.t - a.t);
+      studentWeakest[sid] = sorted[0]?.name || "—";
+    });
+    // Last-active map
+    const lastActive = {};
+    rawResps.forEach(r => {
+      const t = new Date(r.answered_at).getTime();
+      if (!lastActive[r.student_id] || t > lastActive[r.student_id]) lastActive[r.student_id] = t;
+    });
+
+    const header = [
+      "Student name", "Email", "Total answers", "Correct", "Accuracy %",
+      "This week valid", "Class weekly target", "Personal target",
+      "Flagged attempts", "Weakest topic", "Last active"
+    ];
+    const rows = [header];
+    dash.students
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach(s => {
+        const accPct = s.t > 0 ? Math.round((s.c / s.t) * 100) : 0;
+        const last = lastActive[s.id] ? new Date(lastActive[s.id]).toISOString().slice(0, 10) : "";
+        rows.push([
+          s.name, s.email, s.t, s.c, accPct,
+          s.weekValid, dash.clsTarget,
+          s.targetOverride ?? "",
+          s.flagged,
+          studentWeakest[s.id] || "—",
+          last,
+        ]);
+      });
+    downloadCsv(`${safeFilename(cls.name)}_summary_${todayStr()}.csv`, rows);
+  };
+
+  const exportDetailedCsv = () => {
+    if (!cls || !rawResps.length) return;
+    const header = [
+      "Answered at (ISO)", "Student name", "Email",
+      "Topic", "Question", "Student answer", "Correct", "Marks awarded", "AI feedback", "Flagged",
+    ];
+    const rows = [header];
+    // Sort by date so the export reads chronologically.
+    [...rawResps]
+      .sort((a, b) => new Date(a.answered_at) - new Date(b.answered_at))
+      .forEach(r => {
+        const flagged = r.ai_feedback && r.ai_feedback.startsWith("FLAGGED:");
+        const feedback = flagged ? r.ai_feedback.replace(/^FLAGGED:\s*/, "") : (r.ai_feedback || "");
+        rows.push([
+          new Date(r.answered_at).toISOString(),
+          r.profiles?.display_name || "",
+          "", // email isn't on the response join — left blank to keep file slim
+          r.questions?.topics?.name || "—",
+          r.questions?.question_text || "",
+          r.student_answer || "",
+          r.is_correct ? "yes" : "no",
+          r.marks_awarded ?? "",
+          feedback,
+          flagged ? "yes" : "no",
+        ]);
+      });
+    downloadCsv(`${safeFilename(cls.name)}_detailed_${todayStr()}.csv`, rows);
+  };
+
   return (
     <div style={{ maxWidth: 700, margin: "0 auto", padding: "12px 16px" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
@@ -2589,6 +2705,74 @@ function Teacher({ user, isMod, isHoD }) {
           {[...(isHoD ? ["hod"] : []), ...["dashboard", "starter", "topics", "questions"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : (t === "hod" ? { borderColor: C.amb, color: tab === t ? C.amb : C.amb } : undefined)}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "⚙ Admin" : t === "hod" ? "🧭 Department" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
         </div>
       </div>
+
+      {/* ── First-run onboarding ──
+          Shown only to teachers who have no classes yet, or whose only class has no students yet,
+          or whose class has students but no responses yet. Dismissible — the dismissal persists
+          across sessions via localStorage. New teachers get a 3-step nudge; existing teachers
+          who already have an active class never see this. */}
+      {!loading && !onboardingDismissed && tab === "dashboard" && (() => {
+        const hasClass = classes.length > 0;
+        const hasStudents = hasClass && dash && dash.students.length > 0;
+        const hasResponses = hasStudents && dash && dash.tR > 0;
+        // Three states. We only render if there is still something to do.
+        if (hasResponses) return null;
+
+        const Step = ({ n, title, body, action, done }) => (
+          <div style={{ display: "flex", gap: 12, padding: "12px 0", alignItems: "flex-start", borderTop: n === 1 ? "none" : `1px solid ${C.bdr}` }}>
+            <div style={{
+              minWidth: 24, height: 24, borderRadius: 99,
+              background: done ? C.grn : (action ? C.pri : C.card2),
+              color: done || action ? "#fff" : C.mid,
+              fontSize: 12, fontWeight: 700,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              flexShrink: 0, marginTop: 2,
+            }}>{done ? "✓" : n}</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: done ? C.mid : C.txt, textDecoration: done ? "line-through" : "none" }}>{title}</div>
+              <div style={{ fontSize: 12, color: C.dim, marginTop: 2, lineHeight: 1.5 }}>{body}</div>
+              {action && !done && <div style={{ marginTop: 8 }}>{action}</div>}
+            </div>
+          </div>
+        );
+
+        return (
+          <Card style={{ padding: 16, marginBottom: 14, background: C.priSoft, borderColor: "rgba(99,102,241,0.25)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4, gap: 8 }}>
+              <div>
+                <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>Welcome to retrieval. — let's get you set up</div>
+                <div style={{ color: C.dim, fontSize: 12, marginTop: 2 }}>Three quick steps. Takes about 5 minutes.</div>
+              </div>
+              <button onClick={dismissOnboarding}
+                style={{ padding: "4px 8px", fontSize: 11, borderRadius: 6, border: "none", background: "transparent", color: C.dim, cursor: "pointer", fontFamily: "inherit" }}>
+                Dismiss
+              </button>
+            </div>
+
+            <div style={{ marginTop: 8 }}>
+              <Step n={1} title="Create your first class"
+                body="Pick a year group and give it a name (e.g. 10X1). All 92 topics and 822 questions become available — you choose which to unlock for students later."
+                done={hasClass}
+                action={!hasClass ? <Btn onClick={() => setSetup("class")} style={{ padding: "8px 14px", fontSize: 12 }}>Create class</Btn> : null}
+              />
+              <Step n={2} title="Add students"
+                body={hasClass ? `Share the join code shown on the dashboard, or import a class list from CSV. Both options are below.` : "You'll be able to share a 6-character join code with students, or upload a CSV of names and emails."}
+                done={hasStudents}
+                action={hasClass && !hasStudents ? <span style={{ fontSize: 11, color: C.dim }}>Use the join code or CSV import below ↓</span> : null}
+              />
+              <Step n={3} title="Try the Lesson Starter"
+                body="Generates a 5-question retrieval starter based on what you just taught. Use it as the do-now next lesson — students answer on phones or laptops, you get a class accuracy reading in 3 minutes."
+                done={hasResponses}
+                action={hasStudents && !hasResponses ? <Btn v="ghost" onClick={() => setTab("starter")} style={{ padding: "8px 14px", fontSize: 12 }}>Open Lesson Starter</Btn> : null}
+              />
+            </div>
+
+            <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${C.bdr}`, fontSize: 11, color: C.dim, lineHeight: 1.5 }}>
+              You can dismiss this any time — once gone, it won't come back.
+            </div>
+          </Card>
+        );
+      })()}
 
       {setup && (
         <Card style={{ padding: 20, marginBottom: 14 }}>
@@ -2630,6 +2814,9 @@ function Teacher({ user, isMod, isHoD }) {
       )}
 
       {!cls ? (
+        // Suppress this generic empty state when onboarding is showing —
+        // the onboarding panel already gives clear next steps for new teachers.
+        (!loading && !onboardingDismissed && classes.length === 0 && tab === "dashboard") ? null :
         <Card style={{ padding: "48px 20px", textAlign: "center" }}><div style={{ color: C.mid }}>Select or create a class.</div></Card>
       ) : (
         <>
@@ -2797,9 +2984,24 @@ function Teacher({ user, isMod, isHoD }) {
               })()}
 
               <Card style={{ padding: 14, marginBottom: 10 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, gap: 8, flexWrap: "wrap" }}>
                   <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Students</div>
-                  <span style={{ fontSize: 11, color: C.dim }}>Tap to manage · showing this week</span>
+                  <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+                    <button
+                      onClick={exportSummaryCsv}
+                      disabled={!dash || dash.students.length === 0}
+                      title="One row per student — totals, accuracy, weakest topic, last active"
+                      style={{ padding: "5px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: (!dash || dash.students.length === 0) ? "not-allowed" : "pointer", fontFamily: "inherit", opacity: (!dash || dash.students.length === 0) ? 0.5 : 1 }}>
+                      ↓ Summary CSV
+                    </button>
+                    <button
+                      onClick={exportDetailedCsv}
+                      disabled={!rawResps.length}
+                      title="One row per response — every answer with the question, student answer, mark, and feedback"
+                      style={{ padding: "5px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: !rawResps.length ? "not-allowed" : "pointer", fontFamily: "inherit", opacity: !rawResps.length ? 0.5 : 1 }}>
+                      ↓ Detailed CSV
+                    </button>
+                  </div>
                 </div>
                 {dash.students.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No students yet. Share the join code above.</div> :
                   <StudentList students={dash.students} cls={cls} clsTarget={dash.clsTarget} onRefresh={() => loadCls(cls)} parentTokens={parentTokens} onGenerateToken={generateParentToken} onRevokeToken={revokeParentToken} />}
