@@ -371,7 +371,7 @@ function Student({ user }) {
   // Session-level "wrong answer cooldown" — maps questionId -> how many MORE questions must be answered before this one can resurface.
   // Prevents the same wrong question cycling back within seconds. Resets on reload (in-memory only).
   const [cooldown, setCooldown] = useState(new Map());
-  const COOLDOWN_LENGTH = 6; // answer 6 other questions before a wrong one can return
+  const COOLDOWN_LENGTH = 15; // answer 15 other questions before a wrong one can return — wrong answers should feel rare not punishing
   // Session progress counter (resets on class pick or Back)
   const [sessionQCount, setSessionQCount] = useState(0);
   // Per-session target that drives the progress bar — remainder of weekly target, min 5, max 15
