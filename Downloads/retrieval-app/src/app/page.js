@@ -1171,6 +1171,10 @@ function AdminPanel({ user }) {
   const [classes, setClasses] = useState([]);
   const [classMembers, setClassMembers] = useState([]);
   const [responses30d, setResponses30d] = useState([]);
+  // AI usage logging — populated lazily when the "AI usage" tab is opened
+  const [aiUsage, setAiUsage] = useState(null); // null = not loaded, [] = loaded empty
+  const [aiUsageLoading, setAiUsageLoading] = useState(false);
+  const [aiUsageWindow, setAiUsageWindow] = useState(7); // days
   // Cost estimate: ~150 input tokens + ~80 output tokens per AI mark at Haiku 4.5 pricing
   // ($1/1M in + $5/1M out) = ~$0.00055/answer. ~25% of answers skip the AI via the
   // numerical exemption shortcut, so effective cost is ~$0.00041/answer.
@@ -1276,7 +1280,7 @@ function AdminPanel({ user }) {
 
       {/* View tabs */}
       <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>
-        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }, { k: "costs", l: "Costs" }].map(t => (
+        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }, { k: "costs", l: "Costs" }, { k: "aiusage", l: "AI usage" }].map(t => (
           <Pill key={t.k} on={view === t.k} onClick={() => setView(t.k)} style={{ fontSize: 12, padding: "6px 12px" }}>{t.l}</Pill>
         ))}
       </div>
@@ -1625,6 +1629,138 @@ function AdminPanel({ user }) {
             <div style={{ marginTop: 16, padding: "10px 12px", background: C.card, border: `1px dashed ${C.bdr}`, borderRadius: 8, fontSize: 11, color: C.mid, lineHeight: 1.6 }}>
               <strong style={{ color: C.txt }}>How this is calculated.</strong> Estimated from response count × ~{EFFECTIVE_COST_PER_ANSWER_PENCE.toFixed(3)}p per AI-marked answer (Claude Sonnet 4 pricing, ~25% of answers auto-marked numerically so skip the AI). Department figures group teachers by their HoD link. Accurate to within a few pence per month. Doesn't include Supabase or Vercel (both ≈ free at current scale).
             </div>
+          </div>
+        );
+      })()}
+
+      {/* AI USAGE — real cache hit rate from logged Anthropic usage */}
+      {view === "aiusage" && (() => {
+        const loadAiUsage = async (days) => {
+          setAiUsageLoading(true);
+          try {
+            const cutoff = new Date(Date.now() - days * 86400000).toISOString();
+            const rows = await sb.q("ai_usage", { params: {
+              select: "ts,call_label,input_tokens,output_tokens,cache_creation_tokens,cache_read_tokens",
+              ts: `gte.${cutoff}`,
+              order: "ts.desc",
+              limit: "10000"
+            }});
+            setAiUsage(rows || []);
+          } catch (e) {
+            console.error("ai_usage load failed", e);
+            setAiUsage([]);
+          }
+          setAiUsageLoading(false);
+        };
+
+        // Auto-load on first render of this view
+        if (aiUsage === null && !aiUsageLoading) {
+          loadAiUsage(aiUsageWindow);
+        }
+
+        const rows = aiUsage || [];
+        const totalCalls = rows.length;
+        const totalInput = rows.reduce((s, r) => s + (r.input_tokens || 0), 0);
+        const totalOutput = rows.reduce((s, r) => s + (r.output_tokens || 0), 0);
+        const totalCacheRead = rows.reduce((s, r) => s + (r.cache_read_tokens || 0), 0);
+        const totalCacheWrite = rows.reduce((s, r) => s + (r.cache_creation_tokens || 0), 0);
+        // Hit rate = (cache reads) / (cache reads + cache writes). Fresh prompt tokens
+        // (input_tokens) are the small per-call user message and don't reflect cache state.
+        const cacheableTotal = totalCacheRead + totalCacheWrite;
+        const hitRate = cacheableTotal > 0 ? Math.round((totalCacheRead / cacheableTotal) * 100) : 0;
+        const callsPerHit = rows.filter(r => (r.cache_read_tokens || 0) > 0).length;
+        const callsPerWrite = rows.filter(r => (r.cache_creation_tokens || 0) > 0).length;
+
+        // Haiku 4.5 pricing in USD per million tokens
+        const PRICE_INPUT = 1.0;       // fresh prompt tokens
+        const PRICE_OUTPUT = 5.0;
+        const PRICE_CACHE_READ = 0.10;  // 10% of input
+        const PRICE_CACHE_WRITE = 1.25; // 125% of input (one-off write surcharge)
+        const usdActual = (totalInput * PRICE_INPUT + totalOutput * PRICE_OUTPUT + totalCacheRead * PRICE_CACHE_READ + totalCacheWrite * PRICE_CACHE_WRITE) / 1_000_000;
+        // Hypothetical: what we'd have paid if every cached token had been billed at full input rate
+        const usdNoCache = (totalInput * PRICE_INPUT + totalOutput * PRICE_OUTPUT + (totalCacheRead + totalCacheWrite) * PRICE_INPUT) / 1_000_000;
+        const usdSaved = Math.max(0, usdNoCache - usdActual);
+        const savedPct = usdNoCache > 0 ? Math.round((usdSaved / usdNoCache) * 100) : 0;
+        const gbp = (usd) => `£${(usd * 0.79).toFixed(2)}`;
+
+        const firstCalls = rows.filter(r => r.call_label === "first").length;
+        const secondCalls = rows.filter(r => r.call_label === "second").length;
+        const doubleCheckRate = firstCalls > 0 ? Math.round((secondCalls / firstCalls) * 100) : 0;
+
+        return (
+          <div>
+            {/* Window selector + refresh */}
+            <div style={{ display: "flex", gap: 6, marginBottom: 12, alignItems: "center", flexWrap: "wrap" }}>
+              <span style={{ fontSize: 11, color: C.dim, marginRight: 4 }}>Window:</span>
+              {[1, 7, 30].map(d => (
+                <button key={d} onClick={() => { setAiUsageWindow(d); loadAiUsage(d); }}
+                  style={{ padding: "4px 10px", fontSize: 11, borderRadius: 99, border: `1px solid ${aiUsageWindow === d ? C.pri : C.bdr}`, background: aiUsageWindow === d ? C.priSoft : "transparent", color: aiUsageWindow === d ? C.pri : C.mid, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+                  {d === 1 ? "24h" : `${d}d`}
+                </button>
+              ))}
+              <button onClick={() => loadAiUsage(aiUsageWindow)} disabled={aiUsageLoading}
+                style={{ marginLeft: "auto", padding: "4px 10px", fontSize: 11, borderRadius: 99, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: aiUsageLoading ? "wait" : "pointer", fontFamily: "inherit" }}>
+                {aiUsageLoading ? "Loading…" : "Refresh"}
+              </button>
+            </div>
+
+            {aiUsageLoading && rows.length === 0 ? (
+              <div style={{ padding: 30, textAlign: "center", color: C.mid, fontSize: 12, background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8 }}>Loading…</div>
+            ) : rows.length === 0 ? (
+              <div style={{ padding: 30, textAlign: "center", color: C.mid, fontSize: 12, background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8 }}>
+                No AI calls logged in this window yet. Have a student answer a question to start collecting data.
+              </div>
+            ) : (
+              <>
+                {/* Headline tiles */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
+                  <div style={{ padding: "16px 18px", background: `linear-gradient(135deg, ${C.priSoft}, transparent)`, border: `1px solid ${C.pri}33`, borderRadius: 12 }}>
+                    <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600, marginBottom: 4 }}>Cache hit rate</div>
+                    <div style={{ fontSize: 28, fontWeight: 800, color: C.pri, lineHeight: 1 }}>{hitRate}%</div>
+                    <div style={{ fontSize: 11, color: C.mid, marginTop: 4 }}>{callsPerHit.toLocaleString()} of {totalCalls.toLocaleString()} AI calls hit cache</div>
+                  </div>
+                  <div style={{ padding: "16px 18px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 12 }}>
+                    <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600, marginBottom: 4 }}>Saved by caching</div>
+                    <div style={{ fontSize: 28, fontWeight: 800, color: C.txt, lineHeight: 1 }}>{gbp(usdSaved)}</div>
+                    <div style={{ fontSize: 11, color: C.mid, marginTop: 4 }}>{savedPct}% off the no-cache cost</div>
+                  </div>
+                </div>
+
+                {/* Detail row */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 12 }}>
+                  <div style={{ padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8 }}>
+                    <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>AI calls</div>
+                    <div style={{ fontSize: 18, fontWeight: 700, marginTop: 4 }}>{totalCalls.toLocaleString()}</div>
+                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>{firstCalls.toLocaleString()} first, {secondCalls.toLocaleString()} double-check</div>
+                  </div>
+                  <div style={{ padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8 }}>
+                    <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>Actual spend</div>
+                    <div style={{ fontSize: 18, fontWeight: 700, marginTop: 4 }}>{gbp(usdActual)}</div>
+                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>vs. {gbp(usdNoCache)} without cache</div>
+                  </div>
+                  <div style={{ padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8 }}>
+                    <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>Double-check rate</div>
+                    <div style={{ fontSize: 18, fontWeight: 700, marginTop: 4 }}>{doubleCheckRate}%</div>
+                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>of first-pass calls re-run</div>
+                  </div>
+                </div>
+
+                {/* Token breakdown */}
+                <div style={{ marginTop: 12, padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8 }}>
+                  <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Token breakdown</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "4px 16px", fontSize: 12 }}>
+                    <div style={{ color: C.mid }}>Fresh input (per-call)</div><div style={{ fontFamily: "monospace", textAlign: "right" }}>{totalInput.toLocaleString()}</div>
+                    <div style={{ color: C.mid }}>Output</div><div style={{ fontFamily: "monospace", textAlign: "right" }}>{totalOutput.toLocaleString()}</div>
+                    <div style={{ color: C.grn || C.pri }}>Cache reads (cheap)</div><div style={{ fontFamily: "monospace", textAlign: "right", color: C.grn || C.pri }}>{totalCacheRead.toLocaleString()}</div>
+                    <div style={{ color: C.amb }}>Cache writes (one-off)</div><div style={{ fontFamily: "monospace", textAlign: "right", color: C.amb }}>{totalCacheWrite.toLocaleString()}</div>
+                  </div>
+                </div>
+
+                <div style={{ marginTop: 16, padding: "10px 12px", background: C.card, border: `1px dashed ${C.bdr}`, borderRadius: 8, fontSize: 11, color: C.mid, lineHeight: 1.6 }}>
+                  <strong style={{ color: C.txt }}>How this works.</strong> Every AI call to Haiku writes a row to <code style={{ background: C.bg, padding: "1px 4px", borderRadius: 3 }}>ai_usage</code> with token counts from Anthropic’s response. Cache hit rate = cache-read tokens ÷ (cache-read + cache-write tokens). Cache reads cost ~10% of fresh input. Once warm and busy, hit rate should sit at 80–95%. After a quiet period the cache expires (~5 min) and the next call writes a fresh entry.
+                </div>
+              </>
+            )}
           </div>
         );
       })()}
