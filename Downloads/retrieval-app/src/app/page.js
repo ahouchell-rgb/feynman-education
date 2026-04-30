@@ -170,10 +170,24 @@ async function aiMark(qText, model, student, marks, question_id) {
 /* ─── Fake Answer Detection ─── */
 function detectFakeAnswer(answer) {
   const trimmed = answer.trim();
-  // Too short
-  if (trimmed.length <= 2) return "Answer too short — doesn't count towards target.";
-  // All same character repeated
-  if (/^(.)\1+$/.test(trimmed.replace(/\s/g, ''))) return "Repeated characters detected — doesn't count.";
+  // Too short — but exempt legitimate short scientific answers:
+  //   - Pure numbers (e.g. "92", "46", "23 pairs", "9.81")
+  //   - Chemical symbols (e.g. "Fe", "Na", "H", "Mg", "CO2", "H2O", "O2")
+  //   - Single-letter axis labels or genotype letters (e.g. "Bb", "Ff")
+  // The edge function knows how to mark these correctly; don't kill them client-side.
+  if (trimmed.length <= 2) {
+    const containsDigit = /\d/.test(trimmed);
+    const isChemSymbol = /^[A-Z][a-z]?$/.test(trimmed);          // e.g. Fe, Na, H, Mg
+    const isGenotype = /^[A-Za-z]{1,2}$/.test(trimmed) && /[A-Z]/.test(trimmed); // e.g. Bb, FF, ff
+    if (!containsDigit && !isChemSymbol && !isGenotype) {
+      return "Answer too short — doesn't count towards target.";
+    }
+  }
+  // All same character repeated — but only fire on letters; numbers can legitimately repeat ("99", "1000")
+  const stripped = trimmed.replace(/\s/g, '');
+  if (/^(.)\1+$/.test(stripped) && /[a-zA-Z]/.test(stripped)) {
+    return "Repeated characters detected — doesn't count.";
+  }
   // All same word repeated
   const words = trimmed.toLowerCase().split(/\s+/);
   if (words.length >= 3 && new Set(words).size === 1) return "Same word repeated — doesn't count.";
