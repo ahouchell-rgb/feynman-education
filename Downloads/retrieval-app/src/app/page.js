@@ -371,7 +371,7 @@ function Student({ user }) {
   // Session-level "wrong answer cooldown" — maps questionId -> how many MORE questions must be answered before this one can resurface.
   // Prevents the same wrong question cycling back within seconds. Resets on reload (in-memory only).
   const [cooldown, setCooldown] = useState(new Map());
-  const COOLDOWN_LENGTH = 15; // answer 15 other questions before a wrong one can return — wrong answers should feel rare not punishing
+  const COOLDOWN_LENGTH = 12; // answer 12 other questions before a wrong one can return
   // Session progress counter (resets on class pick or Back)
   const [sessionQCount, setSessionQCount] = useState(0);
   // Per-session target that drives the progress bar — remainder of weekly target, min 5, max 15
@@ -633,11 +633,17 @@ function Student({ user }) {
 
   const next = () => {
     stopMicIfActive();
-    // Tick down all cooldowns by 1; drop any that hit zero
-    const nextCooldown = new Map();
-    cooldown.forEach((remaining, qid) => { if (remaining > 1) nextCooldown.set(qid, remaining - 1); });
-    setCooldown(nextCooldown);
-    setQs(sortQuestions(qs, sr, recency, new Set(nextCooldown.keys())));
+    // Use the functional setter so we read the FRESHEST cooldown map — the one
+    // that includes whatever the most recent submit() just added. Without this,
+    // the closure captures stale cooldown state and a wrong question can resurface
+    // immediately because it never made it into the cooldownSet passed to sortQuestions.
+    setCooldown(prevCooldown => {
+      const nextCooldown = new Map();
+      prevCooldown.forEach((remaining, qid) => { if (remaining > 1) nextCooldown.set(qid, remaining - 1); });
+      // Re-sort the queue using the fresh cooldown set.
+      setQs(prevQs => sortQuestions(prevQs, sr, recency, new Set(nextCooldown.keys())));
+      return nextCooldown;
+    });
     setQi(0); setAns(""); setRes(null);
     setFlagging(false); setFlagReason(""); setFlagMsg(""); setLastResponseId(null);
   };
