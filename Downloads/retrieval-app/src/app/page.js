@@ -628,18 +628,36 @@ function Student({ user }) {
       }
       setHabitDays(days);
 
-      // Load papers assigned to this class and any of the student's existing attempts on them
+      // Load papers assigned to this class and the student's attempts on each paper.
+      // Per-paper we keep:
+      //   latest: the most recent attempt (submitted or in-progress) — drives the home card
+      //   submittedCount: number of submitted attempts so far — for the "Retake →" UX
       try {
         const [pcas, pAttempts] = await Promise.all([
           sb.q("paper_class_assignments", { params: { class_id: `eq.${c.id}`, select: "paper_id,papers(id,name,total_marks,exam_board,paper_year,paper_number,archived)" } }),
-          sb.q("paper_attempts", { params: { student_id: `eq.${user.id}`, class_id: `eq.${c.id}`, mode: `eq.full`, select: "id,paper_id,submitted_at,awarded_marks,total_marks" } }),
+          sb.q("paper_attempts", { params: { student_id: `eq.${user.id}`, class_id: `eq.${c.id}`, mode: `eq.full`, select: "id,paper_id,submitted_at,awarded_marks,total_marks,started_at", order: "started_at.desc" } }),
         ]);
-        const attMap = {};
-        (pAttempts || []).forEach(a => { attMap[a.paper_id] = a; });
+        const byPaper = {};
+        (pAttempts || []).forEach(a => {
+          if (!byPaper[a.paper_id]) byPaper[a.paper_id] = { all: [], submitted: [], latest: null, latestSubmitted: null };
+          byPaper[a.paper_id].all.push(a);
+          if (a.submitted_at) byPaper[a.paper_id].submitted.push(a);
+        });
+        Object.values(byPaper).forEach(g => {
+          // ordered started_at desc, so [0] is newest
+          g.latest = g.all[0] || null;
+          // latest submitted attempt (could be the same as latest, or older if a retake is in progress)
+          g.latestSubmitted = g.submitted.length > 0
+            ? [...g.submitted].sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at))[0]
+            : null;
+        });
         const ps = (pcas || [])
           .map(a => a.papers)
           .filter(p => p && !p.archived)
-          .map(p => ({ ...p, attempt: attMap[p.id] || null }));
+          .map(p => {
+            const g = byPaper[p.id] || { all: [], submitted: [], latest: null, latestSubmitted: null };
+            return { ...p, latest: g.latest, latestSubmitted: g.latestSubmitted, submittedCount: g.submitted.length };
+          });
         setAssignedPapers(ps);
       } catch (e) { console.error("paper load failed", e); }
 
@@ -822,6 +840,7 @@ function Student({ user }) {
   if (paperBeingTaken && cls) {
     return <StudentPaperAttempt user={user} cls={cls}
       paperId={paperBeingTaken.id}
+      forceNewAttempt={!!paperBeingTaken.retake}
       onExit={async () => {
         setPaperBeingTaken(null);
         // Refresh class data so the paper card shows updated submission status
@@ -887,26 +906,38 @@ function Student({ user }) {
           <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600, marginBottom: 8 }}>📄 Papers from your teacher</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {assignedPapers.map(p => {
-              const submitted = !!p.attempt?.submitted_at;
-              const inProgress = p.attempt && !p.attempt.submitted_at;
-              const pct = submitted ? Math.round(((p.attempt.awarded_marks ?? 0) / Math.max(1, p.attempt.total_marks ?? p.total_marks)) * 100) : 0;
+              // Three meaningful states for retakes:
+              //   inProgress: the latest attempt is unsubmitted -> Resume
+              //   submitted (no in-progress): show last score + Retake button
+              //   never attempted: Start
+              const inProgress = p.latest && !p.latest.submitted_at;
+              const submitted = !inProgress && p.latestSubmitted;
+              const pct = submitted ? Math.round(((p.latestSubmitted.awarded_marks ?? 0) / Math.max(1, p.latestSubmitted.total_marks ?? p.total_marks)) * 100) : 0;
               const meta = [p.exam_board, p.paper_year, p.paper_number].filter(Boolean).join(" · ");
+              const onRowClick = () => {
+                if (inProgress) setPaperBeingTaken({ id: p.id });
+                else if (submitted) setPaperBeingTaken({ id: p.id, retake: true });
+                else setPaperBeingTaken({ id: p.id });
+              };
               return (
-                <div key={p.id} onClick={() => !submitted && setPaperBeingTaken({ id: p.id })}
-                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, background: submitted ? C.card2 : C.priSoft, border: `1px solid ${submitted ? C.bdr : C.pri + "40"}`, cursor: submitted ? "default" : "pointer", opacity: submitted ? 0.85 : 1 }}>
+                <div key={p.id} onClick={onRowClick}
+                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, background: submitted && !inProgress ? C.card2 : C.priSoft, border: `1px solid ${submitted && !inProgress ? C.bdr : C.pri + "40"}`, cursor: "pointer" }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{p.name}</div>
                     <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>
-                      {[meta, `${p.total_marks} marks`].filter(Boolean).join(" · ")}
+                      {[meta, `${p.total_marks} marks`, p.submittedCount > 1 ? `${p.submittedCount} attempts` : null].filter(Boolean).join(" · ")}
                     </div>
                   </div>
-                  {submitted ? (
+                  {submitted && !inProgress && (
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 14, fontWeight: 800, color: pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red }}>{p.attempt.awarded_marks}/{p.attempt.total_marks}</div>
-                      <div style={{ fontSize: 10, color: C.dim }}>Submitted</div>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red }}>{p.latestSubmitted.awarded_marks}/{p.latestSubmitted.total_marks}</div>
+                      <div style={{ fontSize: 10, color: C.dim }}>Last score</div>
                     </div>
-                  ) : inProgress ? (
+                  )}
+                  {inProgress ? (
                     <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.amb, color: "#fff", fontWeight: 600 }}>Resume →</div>
+                  ) : submitted ? (
+                    <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.pri, color: "#fff", fontWeight: 600 }}>Retake →</div>
                   ) : (
                     <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.pri, color: "#fff", fontWeight: 600 }}>Start →</div>
                   )}
@@ -3373,7 +3404,7 @@ function Teacher({ user, isMod, isHoD }) {
 
 /* ─── Student List with Management Actions ─── */
 /* ─── StudentPaperAttempt — student takes a paper question by question ─── */
-function StudentPaperAttempt({ user, cls, paperId, onExit }) {
+function StudentPaperAttempt({ user, cls, paperId, onExit, forceNewAttempt = false }) {
   const [paper, setPaper] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [attempt, setAttempt] = useState(null);
@@ -3396,15 +3427,19 @@ function StudentPaperAttempt({ user, cls, paperId, onExit }) {
       if (!p[0] || !qs?.length) { setLoading(false); return; }
       setPaper(p[0]); setQuestions(qs);
 
-      // Find or create an attempt
+      // Find or create an attempt.
+      // If forceNewAttempt is set (retake), always create fresh.
+      // Otherwise: resume the most recent attempt only if it's still in progress (no submitted_at).
+      // If the latest attempt is already submitted, create a new one — students who tap a submitted
+      // paper from the home card are explicitly retaking.
       const existing = await sb.q("paper_attempts", { params: {
         paper_id: `eq.${paperId}`, student_id: `eq.${user.id}`, class_id: `eq.${cls.id}`,
         mode: "eq.full",
         select: "*", order: "started_at.desc", limit: "1"
       }});
       let att;
-      // If they have a submitted attempt, treat as fresh start (allow retake — V1 just reuses)
-      if (existing?.length && !existing[0].submitted_at) {
+      const canResume = !forceNewAttempt && existing?.length && !existing[0].submitted_at;
+      if (canResume) {
         att = existing[0];
       } else {
         const [created] = await sb.q("paper_attempts", { method: "POST", body: {
@@ -4034,11 +4069,17 @@ function PaperResults({ paperId, cls, onBack }) {
   if (!paper) return <div style={{ padding: 20, textAlign: "center", color: C.red }}>Paper not found.</div>;
 
   const studentRows = members.map(m => {
-    const att = attempts.find(a => a.student_id === m.student_id && a.submitted_at);
+    // Pick the LATEST submitted attempt for the headline mark, but also count
+    // total submitted attempts so the teacher can see when a student has retaken.
+    const submittedAttempts = attempts
+      .filter(a => a.student_id === m.student_id && a.submitted_at)
+      .sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+    const att = submittedAttempts[0];
     return {
       id: m.student_id,
       name: m.profiles?.display_name || "?",
       attempt: att,
+      attemptCount: submittedAttempts.length,
       submitted: !!att,
     };
   });
@@ -4068,7 +4109,7 @@ function PaperResults({ paperId, cls, onBack }) {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 13, color: C.txt, fontWeight: 500 }}>{r.name}</div>
-                    <div style={{ fontSize: 11, color: C.dim, marginTop: 2 }}>{r.submitted ? `Submitted ${new Date(r.attempt.submitted_at).toLocaleDateString()}` : "Not submitted"}</div>
+                    <div style={{ fontSize: 11, color: C.dim, marginTop: 2 }}>{r.submitted ? `Submitted ${new Date(r.attempt.submitted_at).toLocaleDateString()}${r.attemptCount > 1 ? ` · ${r.attemptCount} attempts` : ""}` : "Not submitted"}</div>
                   </div>
                   {r.submitted ? (
                     <div style={{ textAlign: "right" }}>
