@@ -3685,7 +3685,7 @@ function StudentPaperAttempt({ user, cls, paperId, onExit, forceNewAttempt = fal
             <img src={currentQ.image_url} alt="" style={{ width: "100%", maxHeight: 320, objectFit: "contain", display: "block" }} />
           </div>
         )}
-        <div style={{ fontSize: 15, color: C.txt, lineHeight: 1.55, marginBottom: 16, fontWeight: 500 }}>{currentQ.question_text}</div>
+        <div style={{ fontSize: 15, color: C.txt, lineHeight: 1.7, marginBottom: 16, fontWeight: 500, whiteSpace: "pre-wrap" }}>{currentQ.question_text}</div>
 
         {!lastResult && (
           <>
