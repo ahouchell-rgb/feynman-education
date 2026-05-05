@@ -346,6 +346,7 @@ function Student({ user }) {
   // Paper-taking state — when set, the page swaps to the paper attempt view
   const [paperBeingTaken, setPaperBeingTaken] = useState(null); // { id, mode, topic_id }
   const [assignedPapers, setAssignedPapers] = useState([]);     // papers attached to current class
+  const [paperResponses, setPaperResponses] = useState([]);     // student's own paper answers (last 60 days)
   const [qs, setQs] = useState([]);
   const [qi, setQi] = useState(0);
   const [ans, setAns] = useState("");
@@ -598,20 +599,30 @@ function Student({ user }) {
       const thisWeek = getWeekBounds(0);
       const thisWeekResps = resps.filter(r => { const d = new Date(r.answered_at); return d >= thisWeek.start && d <= thisWeek.end; });
       const validThisWeek = thisWeekResps.filter(r => !detectFakeAnswer(r.student_answer)).length;
-      setWeeklyValid(validThisWeek);
+      // Add this week's non-flagged paper responses — each counts as 1 unit toward the weekly target.
+      const paperWeekCount = paperResps.filter(r => {
+        const d = new Date(r.answered_at);
+        return d >= thisWeek.start && d <= thisWeek.end;
+      }).length;
+      setWeeklyValid(validThisWeek + paperWeekCount);
       // Session target: how many questions to aim for in this session — remainder of weekly target, clamped 5-15
-      const remaining = Math.max(0, WEEKLY_TARGET - validThisWeek);
+      const remaining = Math.max(0, WEEKLY_TARGET - (validThisWeek + paperWeekCount));
       setSessionTarget(Math.max(5, Math.min(15, remaining || 10)));
 
       const weeks = [];
       for (let w = 0; w < 8; w++) {
         const bounds = getWeekBounds(w);
         const weekResps = resps.filter(r => { const d = new Date(r.answered_at); return d >= bounds.start && d <= bounds.end; });
-        const valid = weekResps.filter(r => !detectFakeAnswer(r.student_answer)).length;
-        const correct = weekResps.filter(r => r.is_correct && !detectFakeAnswer(r.student_answer)).length;
+        const validRetrieval = weekResps.filter(r => !detectFakeAnswer(r.student_answer)).length;
+        const correctRetrieval = weekResps.filter(r => r.is_correct && !detectFakeAnswer(r.student_answer)).length;
+        const weekPaper = paperResps.filter(r => { const d = new Date(r.answered_at); return d >= bounds.start && d <= bounds.end; });
+        const validPaper = weekPaper.length;
+        const correctPaper = weekPaper.filter(r => (r.marks_awarded || 0) > 0).length;
+        const valid = validRetrieval + validPaper;
+        const correct = correctRetrieval + correctPaper;
         const overTarget = Math.max(0, valid - WEEKLY_TARGET);
         const stars = Math.floor(overTarget / STAR_INTERVAL);
-        weeks.push({ weekStart: bounds.start, label: w === 0 ? "This week" : w === 1 ? "Last week" : `${w} weeks ago`, total: weekResps.length, valid, correct, stars, metTarget: valid >= WEEKLY_TARGET });
+        weeks.push({ weekStart: bounds.start, label: w === 0 ? "This week" : w === 1 ? "Last week" : `${w} weeks ago`, total: weekResps.length + weekPaper.length, valid, correct, stars, metTarget: valid >= WEEKLY_TARGET });
       }
       setWeeklyData(weeks);
 
@@ -622,7 +633,8 @@ function Student({ user }) {
         const d = new Date(today); d.setDate(today.getDate() - i); d.setHours(0,0,0,0);
         const end = new Date(d); end.setHours(23,59,59,999);
         const dayResps = resps.filter(r => { const rd = new Date(r.answered_at); return rd >= d && rd <= end; });
-        const count = dayResps.filter(r => !detectFakeAnswer(r.student_answer)).length;
+        const dayPaper = paperResps.filter(r => { const rd = new Date(r.answered_at); return rd >= d && rd <= end; });
+        const count = dayResps.filter(r => !detectFakeAnswer(r.student_answer)).length + dayPaper.length;
         const label = i === 0 ? "Today" : ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][d.getDay()];
         days.push({ date: d.toISOString(), label, count });
       }
@@ -632,11 +644,27 @@ function Student({ user }) {
       // Per-paper we keep:
       //   latest: the most recent attempt (submitted or in-progress) — drives the home card
       //   submittedCount: number of submitted attempts so far — for the "Retake →" UX
+      // ALSO load all of this student's paper_responses for the last 60 days — these count
+      // toward weeklyValid, the habit strip, and the 8-week history (papers reward students
+      // the same way retrieval does: 1 unit per non-flagged paper answer).
+      let paperResps = [];
       try {
         const [pcas, pAttempts] = await Promise.all([
           sb.q("paper_class_assignments", { params: { class_id: `eq.${c.id}`, select: "paper_id,papers(id,name,total_marks,exam_board,paper_year,paper_number,archived)" } }),
           sb.q("paper_attempts", { params: { student_id: `eq.${user.id}`, class_id: `eq.${c.id}`, mode: `eq.full`, select: "id,paper_id,submitted_at,awarded_marks,total_marks,started_at", order: "started_at.desc" } }),
         ]);
+        if (pAttempts && pAttempts.length > 0) {
+          const sixtyAgo = new Date(); sixtyAgo.setDate(sixtyAgo.getDate() - 60);
+          const attemptIds = pAttempts.map(a => a.id);
+          paperResps = await sb.q("paper_responses", {
+            params: {
+              attempt_id: `in.(${attemptIds.join(",")})`,
+              answered_at: `gte.${sixtyAgo.toISOString()}`,
+              flagged: "eq.false",
+              select: "id,attempt_id,answered_at,marks_awarded",
+            },
+          }) || [];
+        }
         const byPaper = {};
         (pAttempts || []).forEach(a => {
           if (!byPaper[a.paper_id]) byPaper[a.paper_id] = { all: [], submitted: [], latest: null, latestSubmitted: null };
@@ -659,7 +687,8 @@ function Student({ user }) {
             return { ...p, latest: g.latest, latestSubmitted: g.latestSubmitted, submittedCount: g.submitted.length };
           });
         setAssignedPapers(ps);
-      } catch (e) { console.error("paper load failed", e); }
+        setPaperResponses(paperResps);
+      } catch (e) { console.error("paper load failed", e); setPaperResponses([]); }
 
       // Identify recent mistakes for review mode — use most-recent response per question, keep the wrongs
       const latestByQ = {};
@@ -2689,6 +2718,19 @@ function Teacher({ user, isMod, isHoD }) {
 
       const thisMonday = thisWeekBounds.start;
       const lastMonday = new Date(thisMonday); lastMonday.setDate(thisMonday.getDate() - 7);
+
+      // Fold paper responses (this week, non-flagged) into each student's weekValid.
+      // Each paper answer counts as 1 unit toward the weekly target — same as a retrieval question.
+      classPaperResps.forEach(r => {
+        if (!sm[r.student_id]) return;
+        const d = new Date(r.answered_at);
+        if (d >= thisWeekBounds.start && d <= thisWeekBounds.end) {
+          sm[r.student_id].weekValid++;
+        }
+        // Also bump the all-time totals so the headline numbers reflect paper effort.
+        sm[r.student_id].t++;
+        if ((r.marks_awarded || 0) > 0) sm[r.student_id].c++;
+      });
 
       setDash({
         tR: resps.length, tC: resps.filter(r => r.is_correct).length,
