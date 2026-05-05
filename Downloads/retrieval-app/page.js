@@ -927,56 +927,6 @@ function Student({ user }) {
         </Card>
       )}
 
-      {/* ── Assigned papers ──
-           Compact card listing exam-style papers the teacher has assigned to this class.
-           Tapping a paper enters paper-attempt mode (full take). Hidden if no papers. */}
-      {assignedPapers.length > 0 && (
-        <Card style={{ padding: 12, marginBottom: 10 }}>
-          <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600, marginBottom: 8 }}>📄 Papers from your teacher</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {assignedPapers.map(p => {
-              // Three meaningful states for retakes:
-              //   inProgress: the latest attempt is unsubmitted -> Resume
-              //   submitted (no in-progress): show last score + Retake button
-              //   never attempted: Start
-              const inProgress = p.latest && !p.latest.submitted_at;
-              const submitted = !inProgress && p.latestSubmitted;
-              const pct = submitted ? Math.round(((p.latestSubmitted.awarded_marks ?? 0) / Math.max(1, p.latestSubmitted.total_marks ?? p.total_marks)) * 100) : 0;
-              const meta = [p.exam_board, p.paper_year, p.paper_number].filter(Boolean).join(" · ");
-              const onRowClick = () => {
-                if (inProgress) setPaperBeingTaken({ id: p.id });
-                else if (submitted) setPaperBeingTaken({ id: p.id, retake: true });
-                else setPaperBeingTaken({ id: p.id });
-              };
-              return (
-                <div key={p.id} onClick={onRowClick}
-                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, background: submitted && !inProgress ? C.card2 : C.priSoft, border: `1px solid ${submitted && !inProgress ? C.bdr : C.pri + "40"}`, cursor: "pointer" }}>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{p.name}</div>
-                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>
-                      {[meta, `${p.total_marks} marks`, p.submittedCount > 1 ? `${p.submittedCount} attempts` : null].filter(Boolean).join(" · ")}
-                    </div>
-                  </div>
-                  {submitted && !inProgress && (
-                    <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 14, fontWeight: 800, color: pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red }}>{p.latestSubmitted.awarded_marks}/{p.latestSubmitted.total_marks}</div>
-                      <div style={{ fontSize: 10, color: C.dim }}>Last score</div>
-                    </div>
-                  )}
-                  {inProgress ? (
-                    <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.amb, color: "#fff", fontWeight: 600 }}>Resume →</div>
-                  ) : submitted ? (
-                    <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.pri, color: "#fff", fontWeight: 600 }}>Retake →</div>
-                  ) : (
-                    <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.pri, color: "#fff", fontWeight: 600 }}>Start →</div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      )}
-
       {/* ── Streak + 7-day habit strip ────────────────────────────────────
            Banner up top shows the daily-practice streak with a flame whose intensity
            scales with streak length. The 7-day strip below shows the underlying
@@ -1144,6 +1094,52 @@ function Student({ user }) {
               {!w.metTarget && w.valid > 0 && <span style={{ fontSize: 10, color: C.red }}>⚠️</span>}
             </div>
           ))}
+        </Card>
+      )}
+
+      {/* ── Assigned papers ── (Option B: just below the weekly target, before stats)
+           Compact card listing exam-style papers the teacher has assigned to this class.
+           Tapping a paper enters paper-attempt mode (full take). Hidden if no papers. */}
+      {assignedPapers.length > 0 && (
+        <Card style={{ padding: 12, marginBottom: 12 }}>
+          <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600, marginBottom: 8 }}>📄 Papers from your teacher</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {assignedPapers.map(p => {
+              const inProgress = p.latest && !p.latest.submitted_at;
+              const submitted = !inProgress && p.latestSubmitted;
+              const pct = submitted ? Math.round(((p.latestSubmitted.awarded_marks ?? 0) / Math.max(1, p.latestSubmitted.total_marks ?? p.total_marks)) * 100) : 0;
+              const meta = [p.exam_board, p.paper_year, p.paper_number].filter(Boolean).join(" · ");
+              const onRowClick = () => {
+                if (inProgress) setPaperBeingTaken({ id: p.id });
+                else if (submitted) setPaperBeingTaken({ id: p.id, retake: true });
+                else setPaperBeingTaken({ id: p.id });
+              };
+              return (
+                <div key={p.id} onClick={onRowClick}
+                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, background: submitted && !inProgress ? C.card2 : C.priSoft, border: `1px solid ${submitted && !inProgress ? C.bdr : C.pri + "40"}`, cursor: "pointer" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{p.name}</div>
+                    <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>
+                      {[meta, `${p.total_marks} marks`, p.submittedCount > 1 ? `${p.submittedCount} attempts` : null].filter(Boolean).join(" · ")}
+                    </div>
+                  </div>
+                  {submitted && !inProgress && (
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red }}>{p.latestSubmitted.awarded_marks}/{p.latestSubmitted.total_marks}</div>
+                      <div style={{ fontSize: 10, color: C.dim }}>Last score</div>
+                    </div>
+                  )}
+                  {inProgress ? (
+                    <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.amb, color: "#fff", fontWeight: 600 }}>Resume →</div>
+                  ) : submitted ? (
+                    <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.pri, color: "#fff", fontWeight: 600 }}>Retake →</div>
+                  ) : (
+                    <div style={{ fontSize: 11, padding: "4px 10px", borderRadius: 99, background: C.pri, color: "#fff", fontWeight: 600 }}>Start →</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </Card>
       )}
 
