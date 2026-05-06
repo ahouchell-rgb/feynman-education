@@ -2644,6 +2644,9 @@ function Teacher({ user, isMod, isHoD }) {
   };
 
   const loadCls = async (c) => {
+    // Declared at function top so dashboard fold-in below always has it in scope, even if the
+    // paper-fetch block fails. Fixes ReferenceError that blanked the dashboard.
+    let classPaperResps = [];
     try {
       const [allT, ul, resps, mems, dels, tokens] = await Promise.all([
         sb.q("topics", { params: { subject_id: `eq.${c.subject_id}`, select: "*", order: "sort_order.asc" } }),
@@ -2714,6 +2717,35 @@ function Teacher({ user, isMod, isHoD }) {
 
       const thisMonday = thisWeekBounds.start;
       const lastMonday = new Date(thisMonday); lastMonday.setDate(thisMonday.getDate() - 7);
+
+      // Fetch paper responses from class members so we can fold them into each student's
+      // weekValid count — papers reward students the same as retrieval (1 unit per non-flagged answer).
+      // classPaperResps is declared at the top of loadCls, so it's already in scope here.
+      try {
+        const sixtyAgo = new Date(); sixtyAgo.setDate(sixtyAgo.getDate() - 60);
+        const classAttempts = await sb.q("paper_attempts", {
+          params: {
+            class_id: `eq.${c.id}`,
+            mode: `eq.full`,
+            select: "id,student_id",
+            started_at: `gte.${sixtyAgo.toISOString()}`,
+          },
+        }) || [];
+        if (classAttempts.length > 0) {
+          const attemptToStudent = {};
+          classAttempts.forEach(a => { attemptToStudent[a.id] = a.student_id; });
+          const ids = classAttempts.map(a => a.id);
+          const prs = await sb.q("paper_responses", {
+            params: {
+              attempt_id: `in.(${ids.join(",")})`,
+              answered_at: `gte.${sixtyAgo.toISOString()}`,
+              flagged: "eq.false",
+              select: "attempt_id,answered_at,marks_awarded",
+            },
+          }) || [];
+          classPaperResps = prs.map(r => ({ ...r, student_id: attemptToStudent[r.attempt_id] }));
+        }
+      } catch (e) { console.error("class paper resps load failed", e); }
 
       // Fold paper responses (this week, non-flagged) into each student's weekValid.
       // Each paper answer counts as 1 unit toward the weekly target — same as a retrieval question.
