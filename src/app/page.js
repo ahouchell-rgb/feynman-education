@@ -617,7 +617,7 @@ function LessonView({ lesson, unit, profile, onBack }) {
 }
 
 /* ─── Unit View ─── */
-function UnitView({ unit, profile, onSelectLesson }) {
+function UnitView({ unit, profile, onSelectLesson, onBack }) {
   const [lessons, setLessons] = useState([]);
   const [resources, setResources] = useState([]);
   const [viewingResource, setViewingResource] = useState(null);
@@ -669,6 +669,11 @@ function UnitView({ unit, profile, onSelectLesson }) {
 
       {/* Unit header */}
       <div style={{ marginBottom: 32, paddingBottom: 24, borderBottom: `1px solid ${C.border}` }}>
+        {onBack && (
+          <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: C.muted, fontFamily: C.mono, fontSize: 11, marginBottom: 16, padding: 0, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            ← Curriculum
+          </button>
+        )}
         <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: d.color, marginBottom: 12 }}>
           {d.label}{termLabel ? ` · ${termLabel}` : ""}{unit.year_group ? ` · ${unit.year_group}` : ""}{unit.hours ? ` · ${unit.hours}h` : ""}
         </div>
@@ -981,7 +986,7 @@ export default function App() {
         ) : selectedLesson ? (
           <LessonView lesson={selectedLesson} unit={selectedUnit} profile={profile} onBack={() => setSelectedLesson(null)} />
         ) : (
-          <UnitView unit={selectedUnit} profile={profile} onSelectLesson={l => setSelectedLesson(l)} />
+          <UnitView unit={selectedUnit} profile={profile} onSelectLesson={l => setSelectedLesson(l)} onBack={() => setSelectedUnit(null)} />
         )}
       </div>
     </div>
