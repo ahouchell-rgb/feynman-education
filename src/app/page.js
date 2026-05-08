@@ -72,6 +72,7 @@ const C = {
   blu: "#1e3a8a", bluS: "rgba(30,58,138,0.08)",
   mono: "'IBM Plex Mono', monospace",
   sans: "'IBM Plex Sans', -apple-system, sans-serif",
+  serif: "'Instrument Serif', Georgia, serif",
 };
 
 const DISC = {
@@ -176,8 +177,9 @@ function Auth({ onAuth }) {
     <div style={{ minHeight: "100dvh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <div style={{ width: "100%", maxWidth: 380 }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div style={{ fontFamily: C.mono, fontSize: 22, fontWeight: 600, letterSpacing: "0.06em", color: C.text }}>SCIENCEKIT</div>
-          <div style={{ fontSize: 12, color: C.dim, marginTop: 6, fontFamily: C.mono }}>Feynman Education — Curriculum Workspace</div>
+          <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.32em", textTransform: "uppercase", color: C.dim, marginBottom: 14 }}>Feynman Education</div>
+          <div style={{ fontFamily: C.serif, fontSize: 44, lineHeight: 1, letterSpacing: "-0.02em", color: C.text }}>Science<em style={{ fontStyle: "italic", color: C.grn }}>Kit</em></div>
+          <div style={{ fontSize: 12, color: C.muted, marginTop: 12, fontFamily: C.serif, fontStyle: "italic" }}>a shared base for every lesson</div>
         </div>
         <Card style={{ padding: "28px 24px" }}>
           <div style={{ display: "flex", gap: 6, marginBottom: 20 }}>
@@ -335,15 +337,17 @@ function ResourceItem({ resource, isAdmin, onDelete, onView }) {
   const isImg = ["jpg","jpeg","png","gif","webp"].includes(ext);
   const fileUrl = pubUrl(resource.file_path);
 
-  const icons = { pptx: "📊", ppt: "📊", docx: "📄", doc: "📄", pdf: "📋", jpg: "🖼", jpeg: "🖼", png: "🖼", gif: "🖼" };
-  const icon = icons[ext] || "📁";
+  const labels = { pptx: "PPT", ppt: "PPT", docx: "DOC", doc: "DOC", pdf: "PDF", xlsx: "XLS", xls: "XLS", jpg: "IMG", jpeg: "IMG", png: "IMG", gif: "IMG", webp: "IMG" };
+  const colors = { pptx: C.amb, ppt: C.amb, docx: C.blu, doc: C.blu, pdf: C.red, xlsx: C.grn, xls: C.grn, jpg: C.muted, jpeg: C.muted, png: C.muted, gif: C.muted, webp: C.muted };
+  const label = labels[ext] || "FILE";
+  const labelColor = colors[ext] || C.muted;
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 6, background: C.bg, border: `1px solid ${C.border}`, marginBottom: 6 }}>
-      <span style={{ fontSize: 18 }}>{icon}</span>
+    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 12px", borderRadius: 6, background: C.bg, border: `1px solid ${C.border}`, marginBottom: 6 }}>
+      <span style={{ fontFamily: C.mono, fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: labelColor, padding: "3px 7px", border: `1px solid ${labelColor}`, borderRadius: 3, minWidth: 36, textAlign: "center" }}>{label}</span>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 13, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{resource.title}</div>
-        <div style={{ fontSize: 11, color: C.dim, fontFamily: C.mono }}>{ext.toUpperCase()} · {resource.file_size ? `${Math.round(resource.file_size / 1024)}KB` : ""}</div>
+        <div style={{ fontSize: 10, color: C.dim, fontFamily: C.mono, letterSpacing: "0.04em" }}>{resource.file_size ? `${Math.round(resource.file_size / 1024)} KB` : ""}</div>
       </div>
       <div style={{ display: "flex", gap: 6 }}>
         {(isOffice || isPdf) && <Btn v="soft" style={{ fontSize: 11, padding: "5px 10px" }} onClick={() => onView(resource, fileUrl)}>Open</Btn>}
@@ -537,20 +541,18 @@ function LessonView({ lesson, unit, profile, onBack }) {
       {markingTaught && <MarkTaughtModal lesson={lesson} mapEntry={mapEntry} profile={profile} onClose={() => setMarkingTaught(false)} onSuccess={loadData} />}
 
       {/* Header */}
-      <div style={{ marginBottom: 24 }}>
-        <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: C.muted, fontFamily: C.mono, fontSize: 12, marginBottom: 16, padding: 0 }}>
+      <div style={{ marginBottom: 28, paddingBottom: 24, borderBottom: `1px solid ${C.border}` }}>
+        <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: C.muted, fontFamily: C.mono, fontSize: 11, marginBottom: 16, padding: 0, letterSpacing: "0.08em", textTransform: "uppercase" }}>
           ← {unit.title}
         </button>
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
           <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-              <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>L{lesson.lesson_number}</span>
-              <Badge color={d.color} bg={d.bg}>{d.label}</Badge>
-              {lesson.duration && <Badge color={C.muted} bg={C.bg}>{lesson.duration}</Badge>}
+            <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: d.color, marginBottom: 10 }}>
+              L{lesson.lesson_number} · {d.label}{lesson.duration ? ` · ${lesson.duration}` : ""}
             </div>
-            <h1 style={{ fontSize: 22, fontWeight: 600, letterSpacing: "-0.02em" }}>{lesson.title}</h1>
+            <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 38, lineHeight: 1.1, letterSpacing: "-0.015em", color: C.text }}>{lesson.title}</h1>
           </div>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", paddingTop: 8 }}>
             {mapEntry ? (
               <Btn onClick={() => setMarkingTaught(true)} style={{ background: C.grn, borderColor: C.grn, color: "#fff", fontSize: 12 }}>
                 ✓ Mark as taught
@@ -561,13 +563,13 @@ function LessonView({ lesson, unit, profile, onBack }) {
           </div>
         </div>
         {mapEntry && (
-          <div style={{ marginTop: 10, fontSize: 12, color: C.grn, fontFamily: C.mono }}>
-            ↻ Linked to retrieval. topic: {mapEntry.retrieval_topic_name}
+          <div style={{ marginTop: 14, fontSize: 12, color: C.grn, fontFamily: C.mono, letterSpacing: "0.04em" }}>
+            ↻ Linked to retrieval. topic: <span style={{ fontFamily: C.serif, fontStyle: "italic", fontSize: 14 }}>{mapEntry.retrieval_topic_name}</span>
           </div>
         )}
         {taughtLog.length > 0 && (
-          <div style={{ marginTop: 6, fontSize: 12, color: C.dim, fontFamily: C.mono }}>
-            Last taught: {new Date(taughtLog[0].taught_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+          <div style={{ marginTop: 8, fontSize: 11, color: C.dim, fontFamily: C.mono, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+            Last taught · {new Date(taughtLog[0].taught_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
           </div>
         )}
       </div>
@@ -665,14 +667,11 @@ function UnitView({ unit, profile, onSelectLesson }) {
       {viewingResource && <ResourceViewer resource={viewingResource.resource} fileUrl={viewingResource.url} onClose={() => setViewingResource(null)} />}
 
       {/* Unit header */}
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-          <Badge color={d.color} bg={d.bg}>{d.label}</Badge>
-          {termLabel && <Badge color={C.muted} bg={C.bg}>{termLabel}</Badge>}
-          {unit.hours && <Badge color={C.muted} bg={C.bg}>{unit.hours}h</Badge>}
-          {unit.year_group && <Badge color={C.muted} bg={C.bg}>{unit.year_group}</Badge>}
+      <div style={{ marginBottom: 32, paddingBottom: 24, borderBottom: `1px solid ${C.border}` }}>
+        <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: d.color, marginBottom: 12 }}>
+          {d.label}{termLabel ? ` · ${termLabel}` : ""}{unit.year_group ? ` · ${unit.year_group}` : ""}{unit.hours ? ` · ${unit.hours}h` : ""}
         </div>
-        <h1 style={{ fontSize: 24, fontWeight: 600, letterSpacing: "-0.02em" }}>{unit.title}</h1>
+        <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.05, letterSpacing: "-0.02em", color: C.text }}>{unit.title}</h1>
       </div>
 
       {/* Unit-level resources */}
@@ -813,9 +812,9 @@ export default function App() {
       {/* Sidebar */}
       <div style={{ width: 240, minWidth: 240, borderRight: `1px solid ${C.border}`, background: C.surface, display: "flex", flexDirection: "column", position: "sticky", top: 0, height: "100dvh", overflowY: "auto" }}>
         {/* Logo */}
-        <div style={{ padding: "18px 16px 14px", borderBottom: `1px solid ${C.border}` }}>
-          <div style={{ fontFamily: C.mono, fontWeight: 600, fontSize: 14, letterSpacing: "0.06em", color: C.text }}>SCIENCEKIT</div>
-          <div style={{ fontSize: 10, color: C.dim, fontFamily: C.mono, marginTop: 2 }}>Feynman Education</div>
+        <div style={{ padding: "20px 16px 16px", borderBottom: `1px solid ${C.border}` }}>
+          <div style={{ fontFamily: C.mono, fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 4 }}>Feynman ·</div>
+          <div style={{ fontFamily: C.serif, fontSize: 24, lineHeight: 1, letterSpacing: "-0.01em", color: C.text }}>Science<em style={{ fontStyle: "italic", color: C.grn }}>Kit</em></div>
         </div>
 
         {/* Curriculum tree */}
@@ -869,32 +868,58 @@ export default function App() {
 
         {!selectedUnit ? (
           <div>
-            <div style={{ fontFamily: C.mono, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: C.dim, marginBottom: 8 }}>Curriculum overview</div>
-            <h1 style={{ fontSize: 26, fontWeight: 600, letterSpacing: "-0.02em", marginBottom: 24 }}>All units</h1>
+            <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 14, display: "flex", alignItems: "center", gap: 12 }}>
+              <span style={{ width: 24, height: 1, background: C.dim }} />
+              <span>Curriculum overview</span>
+            </div>
+            <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 56, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
+              A shared <em style={{ fontStyle: "italic", color: C.grn }}>base</em> for every lesson.
+            </h1>
+            <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, maxWidth: "52ch", lineHeight: 1.55 }}>
+              Browse, copy, edit. Sequenced by year and term — your curriculum, in one place.
+            </p>
             {groups.map(g => {
               const groupUnits = units[g.id] || [];
+              // Group by term within each year
+              const byTerm = {};
+              groupUnits.forEach(u => {
+                const t = u.term || "untermed";
+                if (!byTerm[t]) byTerm[t] = [];
+                byTerm[t].push(u);
+              });
+              const termKeys = Object.keys(byTerm).sort((a, b) => (TERM_ORDER[a] ?? 99) - (TERM_ORDER[b] ?? 99));
               return (
-                <div key={g.id} style={{ marginBottom: 28 }}>
-                  <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, marginBottom: 10 }}>{g.label}</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 8 }}>
-                    {groupUnits.map(u => {
-                      const d = DISC[u.discipline] || DISC.combined;
-                      return (
-                        <button key={u.id} onClick={() => selectUnit(u)}
-                          style={{ padding: "12px 14px", borderRadius: 8, background: C.surface, border: `1px solid ${C.border}`, cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "all .12s" }}
-                          onMouseEnter={e => { e.currentTarget.style.borderColor = d.color; e.currentTarget.style.background = d.bg; }}
-                          onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.background = C.surface; }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                            <span style={{ width: 8, height: 8, borderRadius: "50%", background: d.color }} />
-                            <span style={{ fontSize: 10, fontFamily: C.mono, color: d.color, fontWeight: 600 }}>{d.label}</span>
-                            {u.hours && <span style={{ fontSize: 10, fontFamily: C.mono, color: C.dim, marginLeft: "auto" }}>{u.hours}h</span>}
-                          </div>
-                          <div style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.3 }}>{u.title}</div>
-                          {u.term && <div style={{ fontSize: 11, color: C.dim, marginTop: 4, textTransform: "capitalize" }}>{u.term}</div>}
-                        </button>
-                      );
-                    })}
+                <div key={g.id} style={{ marginBottom: 48 }}>
+                  <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", padding: "0 0 14px", borderBottom: `1px solid ${C.text}`, marginBottom: 20 }}>
+                    <h2 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 32, letterSpacing: "-0.015em", lineHeight: 1 }}>{g.label}</h2>
+                    <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, letterSpacing: "0.14em", textTransform: "uppercase" }}>{groupUnits.length} unit{groupUnits.length === 1 ? "" : "s"}</span>
                   </div>
+                  {termKeys.map(t => (
+                    <div key={t} style={{ marginBottom: 24 }}>
+                      <div style={{ fontFamily: C.mono, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase", color: C.dim, padding: "0 0 10px", display: "flex", alignItems: "baseline", gap: 12 }}>
+                        <span>{t === "untermed" ? "Sequence" : t}</span>
+                        <span style={{ flex: 1, height: 1, background: C.border }} />
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 1, background: C.border, border: `1px solid ${C.border}` }}>
+                        {byTerm[t].map(u => {
+                          const d = DISC[u.discipline] || DISC.combined;
+                          return (
+                            <button key={u.id} onClick={() => selectUnit(u)}
+                              style={{ padding: "18px 18px 16px", background: C.surface, border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "all .15s", position: "relative", minHeight: 130, display: "flex", flexDirection: "column" }}
+                              onMouseEnter={e => { e.currentTarget.style.background = d.bg; }}
+                              onMouseLeave={e => { e.currentTarget.style.background = C.surface; }}>
+                              <span style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: d.color }} />
+                              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "auto", paddingBottom: 24 }}>
+                                <span style={{ fontSize: 10, fontFamily: C.mono, color: d.color, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" }}>{d.label}</span>
+                                {u.hours && <span style={{ fontSize: 10, fontFamily: C.mono, color: C.dim, letterSpacing: "0.06em" }}>{u.hours}h</span>}
+                              </div>
+                              <div style={{ fontFamily: C.serif, fontSize: 22, lineHeight: 1.1, letterSpacing: "-0.005em", color: C.text }}>{u.title}</div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               );
             })}
