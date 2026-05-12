@@ -565,7 +565,11 @@ function Student({ user }) {
       ul.forEach(t => { if (t.recency_rank) recencyBoost[t.topic_id] = t.recency_rank; });
       setRecency(recencyBoost);
 
-      const questions = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "*,topics(name)" } });
+      // Tier filter: Foundation classes only see 'Both' (common) questions.
+      // Higher classes see Both + Higher. KS3 classes have tier=null and all questions are 'Both'.
+      const tierFilter = c.tier === 'Foundation' ? { tier: 'eq.Both' } : {};
+
+      const questions = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "*,topics(name)", ...tierFilter } });
       const resps = await sb.q("responses", { params: { student_id: `eq.${user.id}`, class_id: `eq.${c.id}`, select: "question_id,is_correct,student_answer,answered_at", order: "answered_at.desc" } });
 
       const srMap = {};
@@ -2608,7 +2612,7 @@ function Teacher({ user, isMod, isHoD }) {
   const [sId, setSId] = useState(null);
   const [subId, setSubId] = useState(null);
   const [fv, setFv] = useState("");
-  const [cf, setCf] = useState({ n: "", y: "" });
+  const [cf, setCf] = useState({ n: "", y: "", ks: "KS3", tier: null });
   const [timePeriod, setTimePeriod] = useState("thisWeek");
   const [targetDraft, setTargetDraft] = useState(null);
   const [savingTarget, setSavingTarget] = useState(false);
@@ -2649,7 +2653,7 @@ function Teacher({ user, isMod, isHoD }) {
     let classPaperResps = [];
     try {
       const [allT, ul, resps, mems, dels, tokens] = await Promise.all([
-        sb.q("topics", { params: { subject_id: `eq.${c.subject_id}`, select: "*", order: "sort_order.asc" } }),
+        sb.q("topics", { params: { subject_id: `eq.${c.subject_id}`, key_stage: `eq.${c.key_stage || 'KS3'}`, select: "*", order: "sort_order.asc" } }),
         sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id,recency_rank" } }),
         sb.q("responses", { params: { class_id: `eq.${c.id}`, select: "*,questions(question_text,model_answer,topic_id,topics(name)),profiles(display_name)" } }),
         sb.q("class_members", { params: { class_id: `eq.${c.id}`, select: "*,profiles(display_name,email)" } }),
@@ -2899,9 +2903,9 @@ function Teacher({ user, isMod, isHoD }) {
         setSubjects(p => [...p, s]); subjectId = s.id;
       }
 
-      const [c] = await sb.q("classes", { method: "POST", body: { name: cf.n, school_id: schoolId, teacher_id: user.id, subject_id: subjectId, year_group: parseInt(cf.y) || null } });
+      const [c] = await sb.q("classes", { method: "POST", body: { name: cf.n, school_id: schoolId, teacher_id: user.id, subject_id: subjectId, year_group: parseInt(cf.y) || null, key_stage: cf.ks || "KS3", tier: cf.ks === "KS4" ? cf.tier : null } });
       const full = await sb.q("classes", { params: { id: `eq.${c.id}`, select: "*,subjects(name)" }, single: true });
-      setClasses(p => [...p, full]); setCls(full); setSetup(null); setCf({ n: "", y: "" }); await loadCls(full);
+      setClasses(p => [...p, full]); setCls(full); setSetup(null); setCf({ n: "", y: "", ks: "KS3", tier: null }); await loadCls(full);
     } catch (e) { console.error(e); }
   };
 
@@ -3127,8 +3131,27 @@ function Teacher({ user, isMod, isHoD }) {
             </div>
           </div>
 
+          <div style={{ marginBottom: 12 }}>
+            <div style={{ fontSize: 12, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Key stage</div>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+              <Pill on={cf.ks === "KS3"} onClick={() => setCf(p => ({ ...p, ks: "KS3", tier: null }))}>KS3 (Y7–9)</Pill>
+              <Pill on={cf.ks === "KS4"} onClick={() => setCf(p => ({ ...p, ks: "KS4", tier: p.tier || "Foundation" }))}>KS4 (Y10–11)</Pill>
+            </div>
+          </div>
+
+          {cf.ks === "KS4" && (
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 12, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Tier</div>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                <Pill on={cf.tier === "Foundation"} onClick={() => setCf(p => ({ ...p, tier: "Foundation" }))}>Foundation</Pill>
+                <Pill on={cf.tier === "Higher"} onClick={() => setCf(p => ({ ...p, tier: "Higher" }))}>Higher</Pill>
+              </div>
+              <div style={{ fontSize: 11, color: C.dim, marginTop: 6 }}>Foundation students see only common questions. Higher students also see Higher-only content.</div>
+            </div>
+          )}
+
           <div style={{ display: "flex", gap: 8 }}>
-            <Btn onClick={doSetup} disabled={!cf.n.trim()} style={{ flex: 1 }}>Create class</Btn>
+            <Btn onClick={doSetup} disabled={!cf.n.trim() || (cf.ks === "KS4" && !cf.tier)} style={{ flex: 1 }}>Create class</Btn>
             <Btn v="ghost" onClick={() => setSetup(null)} style={{ fontSize: 12 }}>Cancel</Btn>
           </div>
         </Card>
@@ -4662,7 +4685,8 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
     if (!topicId) return;
     setLastTopicQs([{id:"loading"}]); // loading indicator
     try {
-      const qs = await sb.q("questions", { params: { topic_id: `eq.${topicId}`, select: "*,topics(name)", order: "difficulty.asc" } });
+      const tierFilter = cls?.tier === 'Foundation' ? { tier: 'eq.Both' } : {};
+      const qs = await sb.q("questions", { params: { topic_id: `eq.${topicId}`, select: "*,topics(name)", order: "difficulty.asc", ...tierFilter } });
       setLastTopicQs(qs);
       setSelectedLastQs(new Set(qs.map(q => q.id)));
     } catch (e) { console.error("Failed to load questions:", e); setLastTopicQs([]); }
@@ -4681,9 +4705,10 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
     setLoading(true);
 
     try {
-      // Fetch all questions for unlocked topics
+      // Fetch all questions for unlocked topics (apply tier filter for Foundation classes)
       const tids = [...unlocked];
-      const allQs = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "*,topics(name)" } });
+      const genTierFilter = cls?.tier === 'Foundation' ? { tier: 'eq.Both' } : {};
+      const allQs = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "*,topics(name)", ...genTierFilter } });
 
       // Get misconception question IDs from dash data
       const misconceptionQs = [];
