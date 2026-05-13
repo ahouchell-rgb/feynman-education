@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 /* ─── Config ─── */
 const SK_URL  = "https://uujbgdwnuspfnvfpdtvr.supabase.co";
@@ -37,6 +37,15 @@ const sk = (() => {
     if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || "Upload failed"); }
     return `${SK_URL}/storage/v1/object/public/resources/${path}`;
   };
+  const rpc = async (fn, body = {}) => {
+    const r = await fetch(`${SK_URL}/rest/v1/rpc/${fn}`, {
+      method: "POST",
+      headers: h(),
+      body: JSON.stringify(body),
+    });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || `RPC ${fn} failed`); }
+    return r.json();
+  };
   const auth = {
     signIn: async (email, pw) => {
       const r = await fetch(`${SK_URL}/auth/v1/token?grant_type=password`, { method: "POST", headers: { "Content-Type": "application/json", apikey: SK_KEY }, body: JSON.stringify({ email, password: pw }) });
@@ -55,8 +64,19 @@ const sk = (() => {
     user: () => user,
     getToken: () => token,
   };
-  return { q, del, upload, auth };
+  return { q, del, upload, auth, rpc };
 })();
+
+const ret = {
+  fetchClasses: async () => {
+    try {
+      const r = await fetch(`${RET_URL}/rest/v1/classes?select=id,name,join_code&order=name.asc`, {
+        headers: { apikey: RET_KEY, Authorization: `Bearer ${RET_KEY}` }
+      });
+      return r.ok ? r.json() : [];
+    } catch { return []; }
+  }
+};
 
 const pubUrl = (path) => `${SK_URL}/storage/v1/object/public/resources/${path}`;
 const officeUrl = (url) => `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
@@ -84,6 +104,17 @@ const DISC = {
 };
 
 const TERM_ORDER = { autumn: 0, spring: 1, summer: 2 };
+
+const DAYS = [
+  { num: 1, short: "Mon", full: "Monday" },
+  { num: 2, short: "Tue", full: "Tuesday" },
+  { num: 3, short: "Wed", full: "Wednesday" },
+  { num: 4, short: "Thu", full: "Thursday" },
+  { num: 5, short: "Fri", full: "Friday" },
+];
+const PERIODS = [1, 2, 3, 4, 5];
+
+const isoDate = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
 
 /* ─── UI primitives ─── */
 const Btn = ({ v = "pri", style, children, ...p }) => {
@@ -229,9 +260,7 @@ function MarkTaughtModal({ lesson, mapEntry, profile, onClose, onSuccess }) {
     if (!selected.size) return;
     setBusy(true); setMsg("");
     try {
-      // Save class selection to profile
       await sk.q("profiles", { method: "PATCH", params: { id: `eq.${profile.id}` }, body: { retrieval_class_ids: [...selected] } });
-      // Call set-recency edge function in retrieval.
       const r = await fetch(`${RET_URL}/functions/v1/set-recency`, {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: RET_KEY, "x-sciencekit-key": SK_API_KEY },
@@ -239,7 +268,6 @@ function MarkTaughtModal({ lesson, mapEntry, profile, onClose, onSuccess }) {
       });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || "Failed");
-      // Log to taught_log
       await sk.q("taught_log", { method: "POST", body: { teacher_id: profile.id, lesson_id: lesson.id, retrieval_class_ids: [...selected] } });
       setMsg("Marked as taught ✓ Retrieval queue updated");
       setTimeout(() => { onSuccess(); onClose(); }, 1500);
@@ -397,7 +425,7 @@ function ResourceViewer({ resource, fileUrl, onClose }) {
 /* ─── Lesson Section ─── */
 function LessonSection({ title, sysValue, teacherValue, fieldKey, isAdmin, isTeacher, profileId, lessonId, onSaveSystem, onSaveTeacher }) {
   const [editing, setEditing] = useState(false);
-  const [viewMode, setViewMode] = useState("system"); // "system" | "mine"
+  const [viewMode, setViewMode] = useState("system");
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -516,7 +544,6 @@ function LessonView({ lesson, unit, profile, onBack }) {
   const deleteResource = async (res) => {
     if (!confirm(`Delete "${res.title}"?`)) return;
     await sk.del("resources", { id: `eq.${res.id}` });
-    // Also delete from storage
     await fetch(`${SK_URL}/storage/v1/object/resources/${res.file_path}`, {
       method: "DELETE",
       headers: { apikey: SK_KEY, Authorization: `Bearer ${sk.auth.getToken() || SK_KEY}` },
@@ -541,7 +568,6 @@ function LessonView({ lesson, unit, profile, onBack }) {
       {viewingResource && <ResourceViewer resource={viewingResource.resource} fileUrl={viewingResource.url} onClose={() => setViewingResource(null)} />}
       {markingTaught && <MarkTaughtModal lesson={lesson} mapEntry={mapEntry} profile={profile} onClose={() => setMarkingTaught(false)} onSuccess={loadData} />}
 
-      {/* Header */}
       <div style={{ marginBottom: 28, paddingBottom: 24, borderBottom: `1px solid ${C.border}` }}>
         <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: C.muted, fontFamily: C.mono, fontSize: 11, marginBottom: 16, padding: 0, letterSpacing: "0.08em", textTransform: "uppercase" }}>
           ← {unit.title}
@@ -575,14 +601,12 @@ function LessonView({ lesson, unit, profile, onBack }) {
         )}
       </div>
 
-      {/* Keywords */}
       {lesson.keywords?.length > 0 && (
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
           {lesson.keywords.map((k, i) => <Badge key={i} color={d.color} bg={d.bg}>{k}</Badge>)}
         </div>
       )}
 
-      {/* Resources */}
       {(resources.length > 0 || isAdmin || isTeacher) && (
         <Card style={{ padding: 16, marginBottom: 24 }}>
           <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, marginBottom: 12 }}>Resources</div>
@@ -595,7 +619,6 @@ function LessonView({ lesson, unit, profile, onBack }) {
         </Card>
       )}
 
-      {/* Lesson sections */}
       <Card style={{ padding: 20 }}>
         {sectionFields.map(({ key, title }) => (
           <LessonSection key={key} title={title}
@@ -667,7 +690,6 @@ function UnitView({ unit, profile, onSelectLesson, onBack }) {
     <div>
       {viewingResource && <ResourceViewer resource={viewingResource.resource} fileUrl={viewingResource.url} onClose={() => setViewingResource(null)} />}
 
-      {/* Unit header */}
       <div style={{ marginBottom: 32, paddingBottom: 24, borderBottom: `1px solid ${C.border}` }}>
         {onBack && (
           <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: C.muted, fontFamily: C.mono, fontSize: 11, marginBottom: 16, padding: 0, letterSpacing: "0.08em", textTransform: "uppercase" }}>
@@ -680,7 +702,6 @@ function UnitView({ unit, profile, onSelectLesson, onBack }) {
         <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.05, letterSpacing: "-0.02em", color: C.text }}>{unit.title}</h1>
       </div>
 
-      {/* Unit-level resources */}
       {(resources.length > 0 || isAdmin) && (
         <Card style={{ padding: 16, marginBottom: 20 }}>
           <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, marginBottom: 12 }}>Unit resources</div>
@@ -693,7 +714,6 @@ function UnitView({ unit, profile, onSelectLesson, onBack }) {
         </Card>
       )}
 
-      {/* Scheme of work */}
       <Card style={{ padding: 20, marginBottom: 20 }}>
         <div style={{ display: "flex", alignItems: "center", marginBottom: 14 }}>
           <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, flex: 1 }}>Scheme of work</div>
@@ -714,7 +734,6 @@ function UnitView({ unit, profile, onSelectLesson, onBack }) {
         )}
       </Card>
 
-      {/* Lessons list */}
       <div style={{ display: "flex", alignItems: "center", marginBottom: 12 }}>
         <div style={{ fontFamily: C.mono, fontSize: 12, fontWeight: 600, color: C.muted, flex: 1 }}>LESSONS — {lessons.length} total</div>
         {isAdmin && <Btn v="ghost" onClick={addLesson} style={{ fontSize: 11, padding: "5px 12px" }}>+ Add lesson</Btn>}
@@ -764,7 +783,7 @@ function Settings({ profile, onClose, onUpdate }) {
         <div style={{ marginBottom: 16 }}>
           <div style={{ fontSize: 12, fontFamily: C.mono, color: C.muted, marginBottom: 4 }}>Your role</div>
           <div style={{ padding: "8px 12px", borderRadius: 6, background: C.bg, fontSize: 13, fontFamily: C.mono, color: C.text }}>{profile.role}</div>
-          {profile.role !== "admin" && <div style={{ fontSize: 11, color: C.dim, marginTop: 4 }}>To become admin, ask your admin to run: UPDATE profiles SET role='admin' WHERE id='{profile.id}'</div>}
+          {profile.role !== "admin" && <div style={{ fontSize: 11, color: C.dim, marginTop: 4 }}>To become admin, ask your admin to run: UPDATE profiles SET role=&apos;admin&apos; WHERE id=&apos;{profile.id}&apos;</div>}
         </div>
         {msg && <div style={{ padding: "8px 10px", borderRadius: 6, background: msg.startsWith("Error") ? C.redS : C.grnS, color: msg.startsWith("Error") ? C.red : C.grn, fontSize: 12, fontFamily: C.mono, marginBottom: 12 }}>{msg}</div>}
         <div style={{ display: "flex", gap: 8 }}>
@@ -776,12 +795,513 @@ function Settings({ profile, onClose, onUpdate }) {
   );
 }
 
+/* ─── Home view: This week ─── */
+function HomeView({ profile, onOpenUnit, onGoToSetup }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const result = await sk.rpc("get_teaching_week", {});
+        if (result?.error === "no_calendar_configured") { onGoToSetup(); return; }
+        setData(result);
+      } catch (e) { setErr(e.message); }
+      setLoading(false);
+    })();
+  }, []);
+
+  if (loading) return <div style={{ padding: 40, color: C.dim, fontFamily: C.mono, fontSize: 12, letterSpacing: "0.08em" }}>Loading this week...</div>;
+  if (err) return <div style={{ padding: 40, color: C.red, fontFamily: C.mono, fontSize: 12 }}>Error: {err}</div>;
+  if (!data || data.error) return null;
+
+  const todayStr = isoDate(new Date());
+  const weekStart = new Date(data.week_start + "T00:00:00");
+  const byDate = {};
+  (data.lessons || []).forEach(l => { (byDate[l.date] = byDate[l.date] || []).push(l); });
+
+  let nextLesson = null;
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(weekStart); d.setDate(weekStart.getDate() + i);
+    const ds = isoDate(d);
+    if (ds < todayStr) continue;
+    const candidate = (byDate[ds] || []).find(l => !l.already_taught);
+    if (candidate) { nextLesson = candidate; break; }
+  }
+
+  const days = [];
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(weekStart); d.setDate(weekStart.getDate() + i);
+    const ds = isoDate(d);
+    days.push({ date: ds, dow: DAYS[i], lessons: byDate[ds] || [], isToday: ds === todayStr });
+  }
+
+  return (
+    <div>
+      <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 14, display: "flex", alignItems: "center", gap: 12 }}>
+        <span style={{ width: 24, height: 1, background: C.dim }} />
+        <span>This week · {data.academic_year}</span>
+      </div>
+
+      {nextLesson ? (
+        <>
+          <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
+            Next: <em style={{ fontStyle: "italic", color: DISC[nextLesson.discipline]?.color || C.text }}>{nextLesson.unit_title || "Untitled"}</em>
+          </h1>
+          <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>
+            Tap to open the unit.
+          </p>
+          <NextLessonCard lesson={nextLesson} onClick={() => onOpenUnit(nextLesson.current_unit_id)} />
+        </>
+      ) : (
+        <>
+          <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
+            {(data.lessons || []).length === 0 ? "Nothing scheduled." : "All caught up."}
+          </h1>
+          <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>
+            {(data.lessons || []).length === 0 ? "Add classes and timetable slots to see your week here." : "Every lesson this week is marked taught."}
+          </p>
+          {(data.lessons || []).length === 0 && <Btn onClick={onGoToSetup}>Open setup →</Btn>}
+        </>
+      )}
+
+      <div style={{ marginTop: 48 }}>
+        <div style={{ fontFamily: C.mono, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase", color: C.dim, padding: "0 0 14px", display: "flex", alignItems: "baseline", gap: 12 }}>
+          <span style={{ width: 24, height: 1, background: C.ruleStrong, alignSelf: "center" }} />
+          <span>Week of {weekStart.toLocaleDateString("en-GB", { day: "numeric", month: "long" })}</span>
+          <span style={{ flex: 1, height: 1, background: C.rule, alignSelf: "center" }} />
+        </div>
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden", background: C.surface }}>
+          {days.map((day, i) => (
+            <div key={day.date} style={{ display: "grid", gridTemplateColumns: "100px 1fr", borderTop: i === 0 ? "none" : `1px solid ${C.rule}`, background: day.isToday ? C.bg : C.surface }}>
+              <div style={{ padding: "16px 14px", borderRight: `1px solid ${C.rule}` }}>
+                <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.18em", color: day.isToday ? C.text : C.dim, fontWeight: 600, textTransform: "uppercase" }}>{day.dow.short}</div>
+                <div style={{ fontFamily: C.serif, fontSize: 24, color: day.isToday ? C.text : C.muted, marginTop: 2 }}>{new Date(day.date + "T00:00:00").getDate()}</div>
+              </div>
+              <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 6 }}>
+                {day.lessons.length === 0
+                  ? <div style={{ fontSize: 12, color: C.faint, fontFamily: C.mono, fontStyle: "italic", padding: "4px 0" }}>—</div>
+                  : day.lessons.map((l, j) => <LessonRow key={j} lesson={l} onClick={() => onOpenUnit(l.current_unit_id)} />)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function NextLessonCard({ lesson, onClick }) {
+  const d = DISC[lesson.discipline] || DISC.combined;
+  return (
+    <button onClick={onClick} style={{ width: "100%", padding: "24px 28px", borderRadius: 8, background: C.surface, border: `1px solid ${C.border}`, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 20, transition: "all .12s", position: "relative" }}
+      onMouseEnter={e => e.currentTarget.style.borderColor = d.color}
+      onMouseLeave={e => e.currentTarget.style.borderColor = C.border}>
+      <span style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: d.color, borderRadius: "8px 0 0 8px" }} />
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.18em", color: d.color, fontWeight: 600, textTransform: "uppercase", marginBottom: 8 }}>
+          {new Date(lesson.date + "T00:00:00").toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short" })} · {lesson.period_label}{lesson.room ? ` · ${lesson.room}` : ""}
+        </div>
+        <div style={{ fontFamily: C.serif, fontSize: 28, lineHeight: 1.05, color: C.text, marginBottom: 6 }}>{lesson.class_name}</div>
+        <div style={{ fontSize: 13, color: C.muted }}>{lesson.lesson_title || lesson.unit_title || "—"}</div>
+      </div>
+      <span style={{ color: d.color, fontSize: 20 }}>→</span>
+    </button>
+  );
+}
+
+function LessonRow({ lesson, onClick }) {
+  const d = DISC[lesson.discipline] || DISC.combined;
+  return (
+    <button onClick={onClick} style={{ padding: "8px 12px", borderRadius: 4, background: lesson.already_taught ? "transparent" : d.bg, border: `1px solid ${lesson.already_taught ? C.border : "transparent"}`, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 10, opacity: lesson.already_taught ? 0.55 : 1, transition: "all .1s" }}>
+      <span style={{ fontFamily: C.mono, fontSize: 10, color: d.color, fontWeight: 600, minWidth: 24, letterSpacing: "0.06em" }}>{lesson.period_label}</span>
+      <span style={{ fontSize: 13, fontWeight: 500, color: C.text }}>{lesson.class_name}</span>
+      <span style={{ fontSize: 12, color: C.muted, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{lesson.lesson_title || lesson.unit_title || "—"}</span>
+      {lesson.room && <span style={{ fontSize: 11, color: C.dim, fontFamily: C.mono }}>{lesson.room}</span>}
+      {lesson.already_taught && <span style={{ fontSize: 11, color: C.grn, fontFamily: C.mono }}>✓ taught</span>}
+    </button>
+  );
+}
+
+/* ─── Setup wizard ─── */
+function SetupWizard({ profile, allUnits, onDone }) {
+  const [step, setStep] = useState(1);
+  const [academicYear, setAcademicYear] = useState("2026-27");
+  const [anchorDate, setAnchorDate] = useState("2026-09-07");
+  const [retClasses, setRetClasses] = useState(null);
+  const [classConfig, setClassConfig] = useState({});
+  const [skClasses, setSkClasses] = useState([]);
+  const [slots, setSlots] = useState({});
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  const saveCalendar = async () => {
+    setErr(""); setBusy(true);
+    try {
+      try {
+        await sk.q("timetable_calendar", { method: "POST", body: { teacher_id: profile.id, academic_year: academicYear, cycle_anchor_date: anchorDate } });
+      } catch (e) {
+        await sk.q("timetable_calendar", { method: "PATCH", params: { teacher_id: `eq.${profile.id}`, academic_year: `eq.${academicYear}` }, body: { cycle_anchor_date: anchorDate } });
+      }
+      const cls = await ret.fetchClasses();
+      setRetClasses(cls);
+      const cfg = {};
+      cls.forEach(c => { cfg[c.id] = { include: true, year_group: 10, discipline: "biology", current_unit_id: "" }; });
+      setClassConfig(cfg);
+      setStep(2);
+    } catch (e) { setErr(e.message); }
+    setBusy(false);
+  };
+
+  const saveClasses = async () => {
+    setErr(""); setBusy(true);
+    try {
+      const toCreate = Object.entries(classConfig).filter(([_, c]) => c.include);
+      const created = [];
+      for (const [retId, c] of toCreate) {
+        const retCls = retClasses.find(r => r.id === retId);
+        const key_stage = c.year_group < 10 ? "ks3" : "ks4";
+        const result = await sk.q("classes", { method: "POST", body: {
+          teacher_id: profile.id, name: retCls.name, year_group: c.year_group,
+          discipline: c.discipline, key_stage, tier: "none", pathway: null,
+          academic_year: academicYear, retrieval_class_ids: [retId],
+          current_unit_id: c.current_unit_id || null,
+        }});
+        const row = Array.isArray(result) ? result[0] : result;
+        if (row) {
+          created.push(row);
+          if (c.current_unit_id) {
+            await sk.q("class_progress", { method: "POST", body: { class_id: row.id, current_unit_id: c.current_unit_id } });
+          }
+        }
+      }
+      setSkClasses(created);
+      setStep(3);
+    } catch (e) { setErr(e.message); }
+    setBusy(false);
+  };
+
+  const saveTimetable = async () => {
+    setErr(""); setBusy(true);
+    try {
+      const rows = Object.entries(slots).filter(([_, v]) => v).map(([k, classId]) => {
+        const m = k.match(/w(\d+)-d(\d+)-p(\d+)/);
+        return { class_id: classId, week_in_cycle: Number(m[1]), day_of_week: Number(m[2]), period: Number(m[3]) };
+      });
+      if (rows.length) await sk.q("class_timetable_slots", { method: "POST", body: rows });
+      onDone();
+    } catch (e) { setErr(e.message); }
+    setBusy(false);
+  };
+
+  const unitsFor = (year_group, discipline) => allUnits.filter(u => {
+    if (u.discipline !== discipline) return false;
+    if (year_group >= 10) return u.group_id?.startsWith("gcse_");
+    if (year_group === 9) return u.group_id?.startsWith("gcse_") || u.group_id === "y9";
+    if (year_group === 8) return u.group_id === "y8";
+    if (year_group === 7) return u.group_id === "y7";
+    return true;
+  });
+
+  return (
+    <div>
+      <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 14, display: "flex", alignItems: "center", gap: 12 }}>
+        <span style={{ width: 24, height: 1, background: C.dim }} />
+        <span>Setup · Step {step} of 3</span>
+      </div>
+
+      {step === 1 && (
+        <>
+          <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
+            Your <em style={{ fontStyle: "italic", color: C.grn }}>academic year</em>.
+          </h1>
+          <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>
+            ScienceKit needs to know your school&apos;s 2-week cycle. Pick the Monday that is Week A of the year — typically the first day back in September.
+          </p>
+          <Card style={{ padding: 24, maxWidth: 480 }}>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 12, fontFamily: C.mono, color: C.muted, marginBottom: 6 }}>Academic year</div>
+              <Inp value={academicYear} onChange={e => setAcademicYear(e.target.value)} placeholder="2026-27" />
+            </div>
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 12, fontFamily: C.mono, color: C.muted, marginBottom: 6 }}>First Monday of Week A</div>
+              <Inp type="date" value={anchorDate} onChange={e => setAnchorDate(e.target.value)} />
+            </div>
+            {err && <div style={{ padding: "8px 10px", borderRadius: 6, background: C.redS, color: C.red, fontSize: 12, fontFamily: C.mono, marginBottom: 12 }}>{err}</div>}
+            <Btn onClick={saveCalendar} disabled={busy} style={{ width: "100%" }}>{busy ? "Saving..." : "Continue →"}</Btn>
+          </Card>
+        </>
+      )}
+
+      {step === 2 && (
+        <>
+          <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
+            Your <em style={{ fontStyle: "italic", color: C.grn }}>classes</em>.
+          </h1>
+          <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>
+            {retClasses?.length
+              ? "Pulled from retrieval. Tell ScienceKit what year, discipline, and starting unit each class is on."
+              : "No retrieval classes found. Set them up in retrieval first, then come back."}
+          </p>
+          {retClasses?.length === 0 ? (
+            <Btn v="ghost" onClick={onDone}>Skip for now</Btn>
+          ) : (
+            <>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+                {retClasses.map(rc => {
+                  const cfg = classConfig[rc.id] || {};
+                  const units = unitsFor(cfg.year_group, cfg.discipline);
+                  return (
+                    <Card key={rc.id} style={{ padding: 16, opacity: cfg.include ? 1 : 0.5 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: cfg.include ? 12 : 0 }}>
+                        <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+                          <input type="checkbox" checked={cfg.include} onChange={e => setClassConfig(p => ({ ...p, [rc.id]: { ...p[rc.id], include: e.target.checked } }))} style={{ accentColor: C.accent }} />
+                          <span style={{ fontFamily: C.serif, fontSize: 22 }}>{rc.name}</span>
+                          <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>{rc.join_code}</span>
+                        </label>
+                      </div>
+                      {cfg.include && (
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 2fr", gap: 10 }}>
+                          <div>
+                            <div style={{ fontSize: 11, fontFamily: C.mono, color: C.muted, marginBottom: 4 }}>Year group</div>
+                            <select value={cfg.year_group} onChange={e => setClassConfig(p => ({ ...p, [rc.id]: { ...p[rc.id], year_group: Number(e.target.value), current_unit_id: "" } }))}
+                              style={{ width: "100%", padding: "8px 10px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: C.surface }}>
+                              {[7,8,9,10,11,12,13].map(y => <option key={y} value={y}>Year {y}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <div style={{ fontSize: 11, fontFamily: C.mono, color: C.muted, marginBottom: 4 }}>Discipline</div>
+                            <select value={cfg.discipline} onChange={e => setClassConfig(p => ({ ...p, [rc.id]: { ...p[rc.id], discipline: e.target.value, current_unit_id: "" } }))}
+                              style={{ width: "100%", padding: "8px 10px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: C.surface }}>
+                              <option value="biology">Biology</option>
+                              <option value="chemistry">Chemistry</option>
+                              <option value="physics">Physics</option>
+                            </select>
+                          </div>
+                          <div>
+                            <div style={{ fontSize: 11, fontFamily: C.mono, color: C.muted, marginBottom: 4 }}>Starting unit</div>
+                            <select value={cfg.current_unit_id || ""} onChange={e => setClassConfig(p => ({ ...p, [rc.id]: { ...p[rc.id], current_unit_id: e.target.value } }))}
+                              style={{ width: "100%", padding: "8px 10px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: C.surface }}>
+                              <option value="">— select —</option>
+                              {units.map(u => <option key={u.id} value={u.id}>{u.title}</option>)}
+                            </select>
+                          </div>
+                        </div>
+                      )}
+                    </Card>
+                  );
+                })}
+              </div>
+              {err && <div style={{ padding: "8px 10px", borderRadius: 6, background: C.redS, color: C.red, fontSize: 12, fontFamily: C.mono, marginBottom: 12 }}>{err}</div>}
+              <div style={{ display: "flex", gap: 8 }}>
+                <Btn v="ghost" onClick={() => setStep(1)}>← Back</Btn>
+                <Btn onClick={saveClasses} disabled={busy}>{busy ? "Saving..." : "Continue →"}</Btn>
+              </div>
+            </>
+          )}
+        </>
+      )}
+
+      {step === 3 && (
+        <>
+          <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
+            Your <em style={{ fontStyle: "italic", color: C.grn }}>timetable</em>.
+          </h1>
+          <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>
+            Tap a slot to assign your next class. Tap again to cycle. Right-click to clear.
+          </p>
+          <TimetableGrid classes={skClasses} slots={slots} onChange={setSlots} />
+          {err && <div style={{ padding: "8px 10px", borderRadius: 6, background: C.redS, color: C.red, fontSize: 12, fontFamily: C.mono, marginBottom: 12, marginTop: 16 }}>{err}</div>}
+          <div style={{ display: "flex", gap: 8, marginTop: 20 }}>
+            <Btn v="ghost" onClick={() => setStep(2)}>← Back</Btn>
+            <Btn onClick={saveTimetable} disabled={busy}>{busy ? "Saving..." : "Finish setup →"}</Btn>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function TimetableGrid({ classes, slots, onChange }) {
+  const cycleThrough = (key) => {
+    const ids = classes.map(c => c.id);
+    if (!ids.length) return null;
+    const current = slots[key];
+    if (!current) return ids[0];
+    const idx = ids.indexOf(current);
+    return idx === ids.length - 1 ? null : ids[idx + 1];
+  };
+  const cls = (id) => classes.find(c => c.id === id);
+  const colorOf = (id) => DISC[cls(id)?.discipline]?.color || C.muted;
+
+  const renderWeek = (week) => (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ fontFamily: C.mono, fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim, marginBottom: 8 }}>
+        Week {week === 1 ? "A" : "B"}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "60px repeat(5, 1fr)", gap: 1, background: C.rule, border: `1px solid ${C.rule}`, borderRadius: 6, overflow: "hidden" }}>
+        <div style={{ background: C.surface }} />
+        {DAYS.map(d => (
+          <div key={d.num} style={{ padding: "8px 6px", background: C.surface, fontFamily: C.mono, fontSize: 10, fontWeight: 600, color: C.muted, textAlign: "center", letterSpacing: "0.1em", textTransform: "uppercase" }}>{d.short}</div>
+        ))}
+        {PERIODS.map(p => (
+          <React.Fragment key={p}>
+            <div style={{ padding: "10px 6px", background: C.surface, fontFamily: C.mono, fontSize: 11, color: C.muted, textAlign: "center" }}>P{p}</div>
+            {DAYS.map(d => {
+              const key = `w${week}-d${d.num}-p${p}`;
+              const id = slots[key];
+              const color = id ? colorOf(id) : null;
+              return (
+                <button key={key}
+                  onClick={() => onChange(s => ({ ...s, [key]: cycleThrough(key) }))}
+                  onContextMenu={e => { e.preventDefault(); onChange(s => { const n = { ...s }; delete n[key]; return n; }); }}
+                  style={{ padding: "12px 6px", background: id ? `${color}1a` : C.surface, border: "none", cursor: "pointer", fontFamily: C.mono, fontSize: 11, color: color || C.dim, fontWeight: 500, transition: "all .1s", minHeight: 50, borderLeft: id ? `3px solid ${color}` : "3px solid transparent", textAlign: "center" }}>
+                  {id ? cls(id)?.name : ""}
+                </button>
+              );
+            })}
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (classes.length === 0) return <div style={{ padding: 20, color: C.dim, fontFamily: C.mono, fontSize: 12 }}>No classes to schedule.</div>;
+
+  return (
+    <div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+        {classes.map(c => {
+          const color = DISC[c.discipline]?.color || C.muted;
+          return (
+            <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", borderRadius: 999, border: `1px solid ${color}33`, background: `${color}10`, fontSize: 11, fontFamily: C.mono, color }}>
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: color }} />
+              {c.name}
+            </div>
+          );
+        })}
+      </div>
+      {renderWeek(1)}
+      {renderWeek(2)}
+    </div>
+  );
+}
+
+/* ─── Curriculum Overview ─── */
+function CurriculumOverview({ groups, units, selectedYearId, setSelectedYearId, subjectFilter, setSubjectFilter, selectUnit }) {
+  return (
+    <div>
+      <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 14, display: "flex", alignItems: "center", gap: 12 }}>
+        <span style={{ width: 24, height: 1, background: C.dim }} />
+        <span>Curriculum overview</span>
+      </div>
+      <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 56, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
+        A shared <em style={{ fontStyle: "italic", color: C.grn }}>base</em> for every lesson.
+      </h1>
+      <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, maxWidth: "52ch", lineHeight: 1.55 }}>
+        Browse, copy, edit. Sequenced by year and term — your curriculum, in one place.
+      </p>
+
+      <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, marginBottom: 36, flexWrap: "wrap", borderBottom: `1px solid ${C.rule}` }}>
+        <div style={{ display: "flex", gap: 0, marginBottom: -1, flexWrap: "wrap" }}>
+          {groups.map(g => {
+            const isActive = selectedYearId === g.id;
+            return (
+              <button key={g.id} onClick={() => setSelectedYearId(g.id)}
+                style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 22px 14px", fontFamily: C.serif, fontSize: 24, letterSpacing: "-0.01em", color: isActive ? C.text : C.dim, borderBottom: `2px solid ${isActive ? C.text : "transparent"}`, transition: "color .15s" }}>
+                <span>{g.label}</span>
+                <span style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.1em", verticalAlign: "super", marginLeft: 4, color: C.dim }}>{g.key_stage?.toUpperCase()}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div style={{ display: "flex", gap: 8, paddingBottom: 12, flexWrap: "wrap" }}>
+          {[
+            { id: "all", label: "All", color: null },
+            { id: "biology", label: "Biology", color: DISC.biology.color },
+            { id: "chemistry", label: "Chemistry", color: DISC.chemistry.color },
+            { id: "physics", label: "Physics", color: DISC.physics.color },
+          ].map(s => {
+            const isActive = subjectFilter === s.id;
+            return (
+              <button key={s.id} onClick={() => setSubjectFilter(s.id)}
+                style={{ background: isActive ? C.accent : "transparent", color: isActive ? C.accentFg : C.dim, border: `1px solid ${isActive ? C.accent : C.rule}`, cursor: "pointer", padding: "6px 14px", fontFamily: C.mono, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", borderRadius: 999, display: "flex", alignItems: "center", gap: 6, transition: "all .15s" }}>
+                {s.color && <span style={{ width: 7, height: 7, borderRadius: "50%", background: s.color, display: "inline-block" }} />}
+                {s.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {(() => {
+        const year = groups.find(g => g.id === selectedYearId);
+        if (!year) return null;
+        const yearUnits = (units[year.id] || []).filter(u =>
+          subjectFilter === "all" || u.discipline === subjectFilter
+        );
+        const byTerm = {};
+        yearUnits.forEach(u => {
+          const t = u.term || "untermed";
+          if (!byTerm[t]) byTerm[t] = [];
+          byTerm[t].push(u);
+        });
+        const termKeys = Object.keys(byTerm).sort((a, b) => (TERM_ORDER[a] ?? 99) - (TERM_ORDER[b] ?? 99));
+
+        if (yearUnits.length === 0) {
+          return (
+            <div style={{ padding: "60px 0", textAlign: "center", color: C.dim, fontFamily: C.mono, fontSize: 12, letterSpacing: "0.06em" }}>
+              No {subjectFilter !== "all" ? DISC[subjectFilter]?.label.toLowerCase() + " " : ""}units for {year.label}.
+            </div>
+          );
+        }
+
+        return termKeys.map(t => (
+          <div key={t} style={{ marginBottom: 36 }}>
+            <div style={{ fontFamily: C.mono, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase", color: C.dim, padding: "0 0 14px", display: "flex", alignItems: "baseline", gap: 12 }}>
+              <span style={{ width: 24, height: 1, background: C.ruleStrong, alignSelf: "center" }} />
+              <span>{t === "untermed" ? "Sequence" : t}</span>
+              <span style={{ flex: 1, height: 1, background: C.rule, alignSelf: "center" }} />
+              <span style={{ color: C.faint }}>{byTerm[t].length}</span>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 1, background: C.rule, border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden" }}>
+              {byTerm[t].map(u => {
+                const d = DISC[u.discipline] || DISC.combined;
+                const termCap = u.term ? u.term.charAt(0).toUpperCase() + u.term.slice(1) : "";
+                return (
+                  <button key={u.id} onClick={() => selectUnit(u)}
+                    style={{ padding: "22px 22px 20px 26px", background: C.surface, border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "background .15s", position: "relative", minHeight: 158, display: "flex", flexDirection: "column", gap: 12 }}
+                    onMouseEnter={e => { e.currentTarget.style.background = d.bg; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = C.surface; }}>
+                    <span style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: d.color }} />
+                    <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.18em", color: d.color, fontWeight: 600, textTransform: "uppercase" }}>
+                      {d.label}{termCap ? ` · ${termCap}` : ""}
+                    </div>
+                    <div style={{ fontFamily: C.serif, fontSize: 26, lineHeight: 1.05, letterSpacing: "-0.01em", color: C.text }}>{u.title}</div>
+                    <div style={{ display: "flex", gap: 14, marginTop: "auto", paddingTop: 12, fontFamily: C.mono, fontSize: 10, color: C.dim, letterSpacing: "0.06em", borderTop: `1px dashed ${C.rule}` }}>
+                      {u.hours && <span><strong style={{ color: C.text, fontWeight: 500 }}>{u.hours}</strong> hrs</span>}
+                      {u.year_group && <span>{u.year_group}</span>}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ));
+      })()}
+    </div>
+  );
+}
+
 /* ─── Main App ─── */
 export default function App() {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [groups, setGroups] = useState([]);
-  const [units, setUnits] = useState({});       // groupId → units[]
+  const [units, setUnits] = useState({});
+  const [allUnitsFlat, setAllUnitsFlat] = useState([]);
   const [openGroups, setOpenGroups] = useState(new Set(["y7"]));
   const [selectedYearId, setSelectedYearId] = useState(null);
   const [subjectFilter, setSubjectFilter] = useState("all");
@@ -789,23 +1309,27 @@ export default function App() {
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [view, setView] = useState("home"); // "home" | "curriculum" | "setup"
 
   const handleAuth = async (u) => {
     setUser(u);
     setProfile(u.profile);
     await loadGroups();
+    try {
+      const cals = await sk.q("timetable_calendar", { params: { teacher_id: `eq.${u.id}`, limit: "1" } });
+      setView((cals && cals.length) ? "home" : "setup");
+    } catch { setView("home"); }
   };
 
   const loadGroups = async () => {
     setLoading(true);
     const gs = await sk.q("groups", { params: { order: "sort_order.asc" } });
     setGroups(gs);
-    // Pre-load all units
     const allUnits = await sk.q("units", { params: { select: "*", order: "sort_order.asc" } });
+    setAllUnitsFlat(allUnits);
     const byGroup = {};
     gs.forEach(g => { byGroup[g.id] = allUnits.filter(u => u.group_id === g.id); });
     setUnits(byGroup);
-    // default to first year (Y9 if present, else first group)
     if (gs.length && !selectedYearId) {
       const y9 = gs.find(g => /y9|year\s*9/i.test(g.label || g.id));
       setSelectedYearId(y9?.id || gs[0].id);
@@ -815,19 +1339,41 @@ export default function App() {
 
   const selectUnit = (unit) => { setSelectedUnit(unit); setSelectedLesson(null); };
 
-  if (!user) return <Auth onAuth={handleAuth} />;
+  const openUnitById = (id) => {
+    if (!id) return;
+    const u = allUnitsFlat.find(x => x.id === id);
+    if (u) selectUnit(u);
+  };
 
-  const disc = selectedUnit ? DISC[selectedUnit.discipline] || DISC.combined : null;
+  const goTo = (v) => { setView(v); setSelectedUnit(null); setSelectedLesson(null); };
+
+  if (!user) return <Auth onAuth={handleAuth} />;
 
   return (
     <div style={{ minHeight: "100dvh", display: "flex", background: C.bg }}>
 
       {/* Sidebar */}
       <div style={{ width: 240, minWidth: 240, borderRight: `1px solid ${C.border}`, background: C.surface, display: "flex", flexDirection: "column", position: "sticky", top: 0, height: "100dvh", overflowY: "auto" }}>
-        {/* Logo */}
         <div style={{ padding: "20px 16px 16px", borderBottom: `1px solid ${C.border}` }}>
           <div style={{ fontFamily: C.mono, fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 4 }}>Feynman ·</div>
           <div style={{ fontFamily: C.serif, fontSize: 24, lineHeight: 1, letterSpacing: "-0.01em", color: C.text }}>Science<em style={{ fontStyle: "italic", color: C.grn }}>Kit</em></div>
+        </div>
+
+        {/* Primary nav */}
+        <div style={{ padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
+          {[
+            { id: "home", label: "This week" },
+            { id: "curriculum", label: "Curriculum" },
+            { id: "setup", label: "Setup" },
+          ].map(item => {
+            const active = view === item.id && !selectedUnit;
+            return (
+              <button key={item.id} onClick={() => goTo(item.id)}
+                style={{ width: "100%", padding: "9px 16px", display: "flex", alignItems: "center", background: active ? C.bg : "none", border: "none", borderLeft: active ? `2px solid ${C.accent}` : "2px solid transparent", cursor: "pointer", textAlign: "left", fontFamily: C.mono, fontSize: 12, fontWeight: active ? 600 : 500, color: active ? C.text : C.muted, letterSpacing: "0.02em" }}>
+                {item.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Curriculum tree */}
@@ -879,114 +1425,16 @@ export default function App() {
       <div style={{ flex: 1, padding: "28px 32px", maxWidth: 900, minWidth: 0 }}>
         {showSettings && <Settings profile={profile} onClose={() => setShowSettings(false)} onUpdate={p => setProfile(p)} />}
 
-        {!selectedUnit ? (
-          <div>
-            <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 14, display: "flex", alignItems: "center", gap: 12 }}>
-              <span style={{ width: 24, height: 1, background: C.dim }} />
-              <span>Curriculum overview</span>
-            </div>
-            <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 56, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
-              A shared <em style={{ fontStyle: "italic", color: C.grn }}>base</em> for every lesson.
-            </h1>
-            <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, maxWidth: "52ch", lineHeight: 1.55 }}>
-              Browse, copy, edit. Sequenced by year and term — your curriculum, in one place.
-            </p>
-
-            {/* Year pills + Subject chips */}
-            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, marginBottom: 36, flexWrap: "wrap", borderBottom: `1px solid ${C.rule}` }}>
-              <div style={{ display: "flex", gap: 0, marginBottom: -1, flexWrap: "wrap" }}>
-                {groups.map(g => {
-                  const isActive = selectedYearId === g.id;
-                  return (
-                    <button key={g.id} onClick={() => setSelectedYearId(g.id)}
-                      style={{ background: "none", border: "none", cursor: "pointer", padding: "10px 22px 14px", fontFamily: C.serif, fontSize: 24, letterSpacing: "-0.01em", color: isActive ? C.text : C.dim, borderBottom: `2px solid ${isActive ? C.text : "transparent"}`, transition: "color .15s" }}>
-                      <span>{g.label}</span>
-                      <span style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.1em", verticalAlign: "super", marginLeft: 4, color: C.dim }}>{g.key_stage?.toUpperCase()}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div style={{ display: "flex", gap: 8, paddingBottom: 12, flexWrap: "wrap" }}>
-                {[
-                  { id: "all", label: "All", color: null },
-                  { id: "biology", label: "Biology", color: DISC.biology.color },
-                  { id: "chemistry", label: "Chemistry", color: DISC.chemistry.color },
-                  { id: "physics", label: "Physics", color: DISC.physics.color },
-                ].map(s => {
-                  const isActive = subjectFilter === s.id;
-                  return (
-                    <button key={s.id} onClick={() => setSubjectFilter(s.id)}
-                      style={{ background: isActive ? C.accent : "transparent", color: isActive ? C.accentFg : C.dim, border: `1px solid ${isActive ? C.accent : C.rule}`, cursor: "pointer", padding: "6px 14px", fontFamily: C.mono, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", borderRadius: 999, display: "flex", alignItems: "center", gap: 6, transition: "all .15s" }}>
-                      {s.color && <span style={{ width: 7, height: 7, borderRadius: "50%", background: s.color, display: "inline-block" }} />}
-                      {s.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Filtered units for selected year */}
-            {(() => {
-              const year = groups.find(g => g.id === selectedYearId);
-              if (!year) return null;
-              const yearUnits = (units[year.id] || []).filter(u =>
-                subjectFilter === "all" || u.discipline === subjectFilter
-              );
-              const byTerm = {};
-              yearUnits.forEach(u => {
-                const t = u.term || "untermed";
-                if (!byTerm[t]) byTerm[t] = [];
-                byTerm[t].push(u);
-              });
-              const termKeys = Object.keys(byTerm).sort((a, b) => (TERM_ORDER[a] ?? 99) - (TERM_ORDER[b] ?? 99));
-
-              if (yearUnits.length === 0) {
-                return (
-                  <div style={{ padding: "60px 0", textAlign: "center", color: C.dim, fontFamily: C.mono, fontSize: 12, letterSpacing: "0.06em" }}>
-                    No {subjectFilter !== "all" ? DISC[subjectFilter]?.label.toLowerCase() + " " : ""}units for {year.label}.
-                  </div>
-                );
-              }
-
-              return termKeys.map(t => (
-                <div key={t} style={{ marginBottom: 36 }}>
-                  <div style={{ fontFamily: C.mono, fontSize: 10, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase", color: C.dim, padding: "0 0 14px", display: "flex", alignItems: "baseline", gap: 12 }}>
-                    <span style={{ width: 24, height: 1, background: C.ruleStrong, alignSelf: "center" }} />
-                    <span>{t === "untermed" ? "Sequence" : t}</span>
-                    <span style={{ flex: 1, height: 1, background: C.rule, alignSelf: "center" }} />
-                    <span style={{ color: C.faint }}>{byTerm[t].length}</span>
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 1, background: C.rule, border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden" }}>
-                    {byTerm[t].map(u => {
-                      const d = DISC[u.discipline] || DISC.combined;
-                      const termCap = u.term ? u.term.charAt(0).toUpperCase() + u.term.slice(1) : "";
-                      return (
-                        <button key={u.id} onClick={() => selectUnit(u)}
-                          style={{ padding: "22px 22px 20px 26px", background: C.surface, border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "background .15s", position: "relative", minHeight: 158, display: "flex", flexDirection: "column", gap: 12 }}
-                          onMouseEnter={e => { e.currentTarget.style.background = d.bg; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = C.surface; }}>
-                          <span style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: d.color }} />
-                          <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.18em", color: d.color, fontWeight: 600, textTransform: "uppercase" }}>
-                            {d.label}{termCap ? ` · ${termCap}` : ""}
-                          </div>
-                          <div style={{ fontFamily: C.serif, fontSize: 26, lineHeight: 1.05, letterSpacing: "-0.01em", color: C.text }}>{u.title}</div>
-                          <div style={{ display: "flex", gap: 14, marginTop: "auto", paddingTop: 12, fontFamily: C.mono, fontSize: 10, color: C.dim, letterSpacing: "0.06em", borderTop: `1px dashed ${C.rule}` }}>
-                            {u.hours && <span><strong style={{ color: C.text, fontWeight: 500 }}>{u.hours}</strong> hrs</span>}
-                            {u.year_group && <span>{u.year_group}</span>}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ));
-            })()}
-          </div>
-        ) : selectedLesson ? (
+        {selectedLesson ? (
           <LessonView lesson={selectedLesson} unit={selectedUnit} profile={profile} onBack={() => setSelectedLesson(null)} />
-        ) : (
+        ) : selectedUnit ? (
           <UnitView unit={selectedUnit} profile={profile} onSelectLesson={l => setSelectedLesson(l)} onBack={() => setSelectedUnit(null)} />
+        ) : view === "setup" ? (
+          <SetupWizard profile={profile} allUnits={allUnitsFlat} onDone={() => setView("home")} />
+        ) : view === "home" ? (
+          <HomeView profile={profile} onOpenUnit={openUnitById} onGoToSetup={() => setView("setup")} />
+        ) : (
+          <CurriculumOverview groups={groups} units={units} selectedYearId={selectedYearId} setSelectedYearId={setSelectedYearId} subjectFilter={subjectFilter} setSubjectFilter={setSubjectFilter} selectUnit={selectUnit} />
         )}
       </div>
     </div>
