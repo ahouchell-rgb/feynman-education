@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useAuth, sk } from "@/lib/sk";
 import { C, DISC } from "@/lib/theme";
 import { Btn, Card, RichEditor } from "@/lib/primitives";
@@ -11,7 +11,9 @@ import { ResourceItem, ResourceViewer } from "@/components/Resources";
 function UnitContent() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const unitId = params.unitId;
+  const classId = searchParams.get("class"); // preserve class context through to lessons
   const { profile } = useAuth();
   const [unit, setUnit] = useState(null);
   const [lessons, setLessons] = useState([]);
@@ -64,6 +66,11 @@ function UnitContent() {
     loadData();
   };
 
+  const lessonHref = (lessonId) => {
+    const q = classId ? `?class=${classId}` : "";
+    return `/unit/${unitId}/lesson/${lessonId}${q}`;
+  };
+
   if (loading) return <div style={{ color: C.dim, fontFamily: C.mono, fontSize: 12, padding: 40 }}>Loading unit…</div>;
   if (notFound || !unit) return <div style={{ color: C.red, fontFamily: C.mono, fontSize: 12, padding: 40 }}>Unit not found.</div>;
 
@@ -75,8 +82,8 @@ function UnitContent() {
       {viewingResource && <ResourceViewer resource={viewingResource.resource} fileUrl={viewingResource.url} onClose={() => setViewingResource(null)} />}
 
       <div style={{ marginBottom: 32, paddingBottom: 24, borderBottom: `1px solid ${C.border}` }}>
-        <button onClick={() => router.push("/curriculum")} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: C.muted, fontFamily: C.mono, fontSize: 11, marginBottom: 16, padding: 0, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-          ← Curriculum
+        <button onClick={() => router.push(classId ? "/" : "/curriculum")} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", color: C.muted, fontFamily: C.mono, fontSize: 11, marginBottom: 16, padding: 0, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+          ← {classId ? "This week" : "Curriculum"}
         </button>
         <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: d.color, marginBottom: 12 }}>
           {d.label}{termLabel ? ` · ${termLabel}` : ""}{unit.year_group ? ` · ${unit.year_group}` : ""}{unit.hours ? ` · ${unit.hours}h` : ""}
@@ -123,7 +130,7 @@ function UnitContent() {
       {lessons.length === 0 ? <div style={{ fontSize: 13, color: C.dim, padding: "20px 0" }}>No lessons yet.</div> :
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           {lessons.map(l => (
-            <button key={l.id} onClick={() => router.push(`/unit/${unitId}/lesson/${l.id}`)}
+            <button key={l.id} onClick={() => router.push(lessonHref(l.id))}
               style={{ width: "100%", padding: "12px 16px", borderRadius: 6, background: C.surface, border: `1px solid ${C.border}`, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 12, transition: "all .12s" }}
               onMouseEnter={e => e.currentTarget.style.borderColor = C.borderStrong}
               onMouseLeave={e => e.currentTarget.style.borderColor = C.border}>

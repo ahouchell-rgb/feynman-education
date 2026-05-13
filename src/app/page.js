@@ -58,7 +58,16 @@ function HomeContent() {
     })();
   }, [router]);
 
-  const openUnit = (unitId) => unitId && router.push(`/unit/${unitId}`);
+  // Navigate to the lesson if there is one (with class context), else the unit
+  const openLessonOrUnit = (l) => {
+    if (!l?.current_unit_id) return;
+    const classParam = l.class_id ? `?class=${l.class_id}` : "";
+    if (l.current_lesson_id) {
+      router.push(`/unit/${l.current_unit_id}/lesson/${l.current_lesson_id}${classParam}`);
+    } else {
+      router.push(`/unit/${l.current_unit_id}${classParam}`);
+    }
+  };
 
   if (loading) return <div style={{ padding: 40, color: C.dim, fontFamily: C.mono, fontSize: 12, letterSpacing: "0.08em" }}>Loading this week...</div>;
   if (err) return <div style={{ padding: 40, color: C.red, fontFamily: C.mono, fontSize: 12 }}>Error: {err}</div>;
@@ -97,8 +106,8 @@ function HomeContent() {
           <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
             Next: <em style={{ fontStyle: "italic", color: DISC[nextLesson.discipline]?.color || C.text }}>{nextLesson.unit_title || "Untitled"}</em>
           </h1>
-          <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>Tap to open the unit.</p>
-          <NextLessonCard lesson={nextLesson} onClick={() => openUnit(nextLesson.current_unit_id)} />
+          <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>Tap to open.</p>
+          <NextLessonCard lesson={nextLesson} onClick={() => openLessonOrUnit(nextLesson)} />
         </>
       ) : (
         <>
@@ -128,7 +137,7 @@ function HomeContent() {
               <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 6 }}>
                 {day.lessons.length === 0
                   ? <div style={{ fontSize: 12, color: C.faint, fontFamily: C.mono, fontStyle: "italic", padding: "4px 0" }}>—</div>
-                  : day.lessons.map((l, j) => <LessonRow key={j} lesson={l} onClick={() => openUnit(l.current_unit_id)} />)}
+                  : day.lessons.map((l, j) => <LessonRow key={j} lesson={l} onClick={() => openLessonOrUnit(l)} />)}
               </div>
             </div>
           ))}
