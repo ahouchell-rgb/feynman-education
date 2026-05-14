@@ -11,6 +11,7 @@ import { LessonSection } from "@/components/LessonSection";
 import { MarkTaughtModal } from "@/components/MarkTaughtModal";
 import { WidgetBlock, WidgetFullscreen } from "@/components/WidgetBlock";
 import { WidgetEditor } from "@/components/WidgetEditor";
+import { ChatSidebar } from "@/components/ChatSidebar";
 
 const PIN_KEY = (lessonId) => `sk_pinned_resource_${lessonId}`;
 
@@ -151,6 +152,7 @@ function LessonContent() {
   const [editingWidget, setEditingWidget] = useState(null);
   const [widgetSaving, setWidgetSaving] = useState(false);
   const [fullscreenWidget, setFullscreenWidget] = useState(null);
+  const [chatOpen, setChatOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [showSticky, setShowSticky] = useState(false);
@@ -410,6 +412,12 @@ function LessonContent() {
     <div>
       {viewingResource && <ResourceViewer resource={viewingResource.resource} fileUrl={viewingResource.url} onClose={() => setViewingResource(null)} />}
       {fullscreenWidget && <WidgetFullscreen widget={fullscreenWidget} onClose={() => setFullscreenWidget(null)} />}
+      <ChatSidebar
+        open={chatOpen}
+        onClose={() => setChatOpen(false)}
+        lesson={lesson}
+        onWidgetCreated={() => loadLessonData(lessonId)}
+      />
       {widgetEditorOpen && (
         <WidgetEditor
           widget={editingWidget}
@@ -459,6 +467,11 @@ function LessonContent() {
             <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 38, lineHeight: 1.1, letterSpacing: "-0.015em", color: C.text }}>{lesson.title}</h1>
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", paddingTop: 8 }}>
+            {isTeacher && (
+              <Btn v="ghost" onClick={() => setChatOpen(true)} style={{ fontSize: 12 }} title="Chat with Claude about this lesson">
+                ✦ Chat
+              </Btn>
+            )}
             {mapEntry ? (
               <Btn onClick={() => setMarkingTaught(true)} style={{ background: C.grn, borderColor: C.grn, color: "#fff", fontSize: 12 }}>
                 ✓ Mark as taught
