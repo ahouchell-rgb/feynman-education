@@ -9,6 +9,8 @@ import { FileUpload } from "@/components/FileUpload";
 import { ResourceItem, ResourceViewer } from "@/components/Resources";
 import { LessonSection } from "@/components/LessonSection";
 import { MarkTaughtModal } from "@/components/MarkTaughtModal";
+import { WidgetBlock, WidgetFullscreen } from "@/components/WidgetBlock";
+import { WidgetEditor } from "@/components/WidgetEditor";
 
 const PIN_KEY = (lessonId) => `sk_pinned_resource_${lessonId}`;
 
@@ -144,6 +146,11 @@ function LessonContent() {
   const [markingTaught, setMarkingTaught] = useState(false);
   const [taughtLog, setTaughtLog] = useState([]);
   const [pinnedResource, setPinnedResource] = useState(null);
+  const [widgets, setWidgets] = useState([]);
+  const [widgetEditorOpen, setWidgetEditorOpen] = useState(false);
+  const [editingWidget, setEditingWidget] = useState(null);
+  const [widgetSaving, setWidgetSaving] = useState(false);
+  const [fullscreenWidget, setFullscreenWidget] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [showSticky, setShowSticky] = useState(false);
@@ -233,16 +240,18 @@ function LessonContent() {
   }, [lesson]);
 
   const loadLessonData = useCallback(async (lid) => {
-    const [res, tc, map, log] = await Promise.all([
+    const [res, tc, map, log, wgs] = await Promise.all([
       sk.q("resources", { params: { lesson_id: `eq.${lid}`, select: "*", order: "created_at.asc" } }).catch(() => []),
       sk.q("lesson_teacher_content", { params: { lesson_id: `eq.${lid}`, teacher_id: `eq.${profile.id}` }, single: true }).catch(() => null),
       sk.q("lesson_retrieval_map", { params: { lesson_id: `eq.${lid}` } }).catch(() => []),
       sk.q("taught_log", { params: { lesson_id: `eq.${lid}`, teacher_id: `eq.${profile.id}`, order: "taught_at.desc", limit: "5" } }).catch(() => []),
+      sk.q("lesson_widgets", { params: { lesson_id: `eq.${lid}`, teacher_id: `eq.${profile.id}`, select: "*", order: "position.asc,created_at.asc" } }).catch(() => []),
     ]);
     setResources(res || []);
     setTeacherContent(tc || {});
     setMapEntry(map?.[0] || null);
     setTaughtLog(log || []);
+    setWidgets(wgs || []);
   }, [profile]);
 
   /* ── Save helpers ── */
@@ -289,6 +298,93 @@ function LessonContent() {
     setPinnedResource(null);
   };
 
+  /* ── Widgets ── */
+  const openWidgetEditor = (widget = null) => {
+    setEditingWidget(widget);
+    setWidgetEditorOpen(true);
+  };
+  const closeWidgetEditor = () => {
+    setWidgetEditorOpen(false);
+    setEditingWidget(null);
+  };
+
+  const saveWidget = async ({ title, html, default_height }) => {
+    setWidgetSaving(true);
+    try {
+      if (editingWidget) {
+        await sk.q("lesson_widgets", {
+          method: "PATCH",
+          params: { id: `eq.${editingWidget.id}`, teacher_id: `eq.${profile.id}` },
+          body: { title, html, default_height, updated_at: new Date().toISOString() },
+        });
+      } else {
+        const nextPos = widgets.length
+          ? Math.max(...widgets.map(w => Number(w.position) || 0)) + 1
+          : 1;
+        await sk.q("lesson_widgets", {
+          method: "POST",
+          body: {
+            lesson_id: lessonId,
+            teacher_id: profile.id,
+            title, html, default_height,
+            position: nextPos,
+          },
+        });
+      }
+      await loadLessonData(lessonId);
+      closeWidgetEditor();
+    } catch (e) {
+      alert(`Couldn't save widget: ${e.message || "unknown error"}`);
+    } finally {
+      setWidgetSaving(false);
+    }
+  };
+
+  const deleteWidget = async (widget) => {
+    if (!confirm(`Delete widget "${widget.title || "Widget"}"?`)) return;
+    try {
+      await sk.del("lesson_widgets", { id: `eq.${widget.id}`, teacher_id: `eq.${profile.id}` });
+      await loadLessonData(lessonId);
+    } catch (e) {
+      alert(`Couldn't delete: ${e.message || "unknown error"}`);
+    }
+  };
+
+  // Reorder by swapping `position` with the neighbour. RLS scopes writes to owner.
+  const swapWidgetPositions = async (a, b) => {
+    try {
+      // Optimistic update so the UI feels instant.
+      setWidgets(prev => {
+        const next = [...prev];
+        const ia = next.findIndex(w => w.id === a.id);
+        const ib = next.findIndex(w => w.id === b.id);
+        if (ia < 0 || ib < 0) return prev;
+        next[ia] = { ...next[ia], position: b.position };
+        next[ib] = { ...next[ib], position: a.position };
+        return next.sort((x, y) => Number(x.position) - Number(y.position));
+      });
+      await Promise.all([
+        sk.q("lesson_widgets", { method: "PATCH", params: { id: `eq.${a.id}`, teacher_id: `eq.${profile.id}` }, body: { position: b.position } }),
+        sk.q("lesson_widgets", { method: "PATCH", params: { id: `eq.${b.id}`, teacher_id: `eq.${profile.id}` }, body: { position: a.position } }),
+      ]);
+    } catch (e) {
+      // Re-fetch on failure so we don't show a misleading order.
+      await loadLessonData(lessonId);
+      alert(`Couldn't reorder: ${e.message || "unknown error"}`);
+    }
+  };
+
+  const moveWidgetUp = (widget) => {
+    const i = widgets.findIndex(w => w.id === widget.id);
+    if (i <= 0) return;
+    swapWidgetPositions(widgets[i], widgets[i - 1]);
+  };
+  const moveWidgetDown = (widget) => {
+    const i = widgets.findIndex(w => w.id === widget.id);
+    if (i < 0 || i >= widgets.length - 1) return;
+    swapWidgetPositions(widgets[i], widgets[i + 1]);
+  };
+
   /* ── Prev / next ── */
   const idx = allLessons.findIndex(l => l.id === lessonId);
   const prev = idx > 0 ? allLessons[idx - 1] : null;
@@ -313,6 +409,15 @@ function LessonContent() {
   return (
     <div>
       {viewingResource && <ResourceViewer resource={viewingResource.resource} fileUrl={viewingResource.url} onClose={() => setViewingResource(null)} />}
+      {fullscreenWidget && <WidgetFullscreen widget={fullscreenWidget} onClose={() => setFullscreenWidget(null)} />}
+      {widgetEditorOpen && (
+        <WidgetEditor
+          widget={editingWidget}
+          saving={widgetSaving}
+          onClose={closeWidgetEditor}
+          onSave={saveWidget}
+        />
+      )}
       {markingTaught && (
         <MarkTaughtModal
           lesson={lesson} mapEntry={mapEntry} profile={profile}
@@ -411,6 +516,42 @@ function LessonContent() {
             );
           })}
           {(isAdmin || isTeacher) && <FileUpload unitId={unitId} lessonId={lessonId} onUploaded={() => loadLessonData(lessonId)} />}
+        </Card>
+      )}
+
+      {/* Widgets — pasted HTML blocks (Claude-built or hand-written), per-teacher */}
+      {(widgets.length > 0 || isTeacher) && (
+        <Card style={{ padding: 16, marginBottom: 24 }}>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: 12 }}>
+            <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, flex: 1 }}>
+              Widgets
+            </div>
+            {isTeacher && (
+              <Btn v="ghost" style={{ fontSize: 11, padding: "5px 10px" }} onClick={() => openWidgetEditor(null)}>
+                + Add widget
+              </Btn>
+            )}
+          </div>
+          {widgets.length === 0 ? (
+            <div style={{ fontFamily: C.mono, fontSize: 12, color: C.dim, padding: "8px 2px" }}>
+              No widgets yet. Paste an HTML widget Claude built for you.
+            </div>
+          ) : (
+            widgets.map((w, i) => (
+              <WidgetBlock
+                key={w.id}
+                widget={w}
+                isAdmin={isTeacher}
+                canMoveUp={i > 0}
+                canMoveDown={i < widgets.length - 1}
+                onEdit={openWidgetEditor}
+                onDelete={deleteWidget}
+                onMoveUp={moveWidgetUp}
+                onMoveDown={moveWidgetDown}
+                onFullscreen={(widget) => setFullscreenWidget(widget)}
+              />
+            ))
+          )}
         </Card>
       )}
 
