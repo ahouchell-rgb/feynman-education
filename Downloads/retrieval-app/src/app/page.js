@@ -565,11 +565,7 @@ function Student({ user }) {
       ul.forEach(t => { if (t.recency_rank) recencyBoost[t.topic_id] = t.recency_rank; });
       setRecency(recencyBoost);
 
-      // Tier filter: Foundation classes only see 'Both' (common) questions.
-      // Higher classes see Both + Higher. KS3 classes have tier=null and all questions are 'Both'.
-      const tierFilter = c.tier === 'Foundation' ? { tier: 'eq.Both' } : {};
-
-      const questions = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "*,topics(name)", ...tierFilter } });
+      const questions = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "*,topics(name)" } });
       const resps = await sb.q("responses", { params: { student_id: `eq.${user.id}`, class_id: `eq.${c.id}`, select: "question_id,is_correct,student_answer,answered_at", order: "answered_at.desc" } });
 
       const srMap = {};
@@ -2612,7 +2608,7 @@ function Teacher({ user, isMod, isHoD }) {
   const [sId, setSId] = useState(null);
   const [subId, setSubId] = useState(null);
   const [fv, setFv] = useState("");
-  const [cf, setCf] = useState({ n: "", y: "", ks: "KS3", tier: null });
+  const [cf, setCf] = useState({ n: "", y: "" });
   const [timePeriod, setTimePeriod] = useState("thisWeek");
   const [targetDraft, setTargetDraft] = useState(null);
   const [savingTarget, setSavingTarget] = useState(false);
@@ -2653,7 +2649,7 @@ function Teacher({ user, isMod, isHoD }) {
     let classPaperResps = [];
     try {
       const [allT, ul, resps, mems, dels, tokens] = await Promise.all([
-        sb.q("topics", { params: { subject_id: `eq.${c.subject_id}`, key_stage: `eq.${c.key_stage || 'KS3'}`, select: "*", order: "sort_order.asc" } }),
+        sb.q("topics", { params: { subject_id: `eq.${c.subject_id}`, select: "*", order: "sort_order.asc" } }),
         sb.q("class_topics", { params: { class_id: `eq.${c.id}`, select: "topic_id,recency_rank" } }),
         sb.q("responses", { params: { class_id: `eq.${c.id}`, select: "*,questions(question_text,model_answer,topic_id,topics(name)),profiles(display_name)" } }),
         sb.q("class_members", { params: { class_id: `eq.${c.id}`, select: "*,profiles(display_name,email)" } }),
@@ -2903,9 +2899,9 @@ function Teacher({ user, isMod, isHoD }) {
         setSubjects(p => [...p, s]); subjectId = s.id;
       }
 
-      const [c] = await sb.q("classes", { method: "POST", body: { name: cf.n, school_id: schoolId, teacher_id: user.id, subject_id: subjectId, year_group: parseInt(cf.y) || null, key_stage: cf.ks || "KS3", tier: cf.ks === "KS4" ? cf.tier : null } });
+      const [c] = await sb.q("classes", { method: "POST", body: { name: cf.n, school_id: schoolId, teacher_id: user.id, subject_id: subjectId, year_group: parseInt(cf.y) || null } });
       const full = await sb.q("classes", { params: { id: `eq.${c.id}`, select: "*,subjects(name)" }, single: true });
-      setClasses(p => [...p, full]); setCls(full); setSetup(null); setCf({ n: "", y: "", ks: "KS3", tier: null }); await loadCls(full);
+      setClasses(p => [...p, full]); setCls(full); setSetup(null); setCf({ n: "", y: "" }); await loadCls(full);
     } catch (e) { console.error(e); }
   };
 
@@ -3131,27 +3127,8 @@ function Teacher({ user, isMod, isHoD }) {
             </div>
           </div>
 
-          <div style={{ marginBottom: 12 }}>
-            <div style={{ fontSize: 12, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Key stage</div>
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-              <Pill on={cf.ks === "KS3"} onClick={() => setCf(p => ({ ...p, ks: "KS3", tier: null }))}>KS3 (Y7–9)</Pill>
-              <Pill on={cf.ks === "KS4"} onClick={() => setCf(p => ({ ...p, ks: "KS4", tier: p.tier || "Foundation" }))}>KS4 (Y10–11)</Pill>
-            </div>
-          </div>
-
-          {cf.ks === "KS4" && (
-            <div style={{ marginBottom: 12 }}>
-              <div style={{ fontSize: 12, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Tier</div>
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                <Pill on={cf.tier === "Foundation"} onClick={() => setCf(p => ({ ...p, tier: "Foundation" }))}>Foundation</Pill>
-                <Pill on={cf.tier === "Higher"} onClick={() => setCf(p => ({ ...p, tier: "Higher" }))}>Higher</Pill>
-              </div>
-              <div style={{ fontSize: 11, color: C.dim, marginTop: 6 }}>Foundation students see only common questions. Higher students also see Higher-only content.</div>
-            </div>
-          )}
-
           <div style={{ display: "flex", gap: 8 }}>
-            <Btn onClick={doSetup} disabled={!cf.n.trim() || (cf.ks === "KS4" && !cf.tier)} style={{ flex: 1 }}>Create class</Btn>
+            <Btn onClick={doSetup} disabled={!cf.n.trim()} style={{ flex: 1 }}>Create class</Btn>
             <Btn v="ghost" onClick={() => setSetup(null)} style={{ fontSize: 12 }}>Cancel</Btn>
           </div>
         </Card>
@@ -4685,8 +4662,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
     if (!topicId) return;
     setLastTopicQs([{id:"loading"}]); // loading indicator
     try {
-      const tierFilter = cls?.tier === 'Foundation' ? { tier: 'eq.Both' } : {};
-      const qs = await sb.q("questions", { params: { topic_id: `eq.${topicId}`, select: "*,topics(name)", order: "difficulty.asc", ...tierFilter } });
+      const qs = await sb.q("questions", { params: { topic_id: `eq.${topicId}`, select: "*,topics(name)", order: "difficulty.asc" } });
       setLastTopicQs(qs);
       setSelectedLastQs(new Set(qs.map(q => q.id)));
     } catch (e) { console.error("Failed to load questions:", e); setLastTopicQs([]); }
@@ -4705,10 +4681,9 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
     setLoading(true);
 
     try {
-      // Fetch all questions for unlocked topics (apply tier filter for Foundation classes)
+      // Fetch all questions for unlocked topics
       const tids = [...unlocked];
-      const genTierFilter = cls?.tier === 'Foundation' ? { tier: 'eq.Both' } : {};
-      const allQs = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "*,topics(name)", ...genTierFilter } });
+      const allQs = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "*,topics(name)" } });
 
       // Get misconception question IDs from dash data
       const misconceptionQs = [];
@@ -4792,6 +4767,117 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
     setLoading(false);
   };
 
+  // Download generated questions + answers as a printable PDF
+  const downloadPDF = async () => {
+    if (!generated || generated.length === 0) return;
+    try {
+      // Lazy-load jsPDF from CDN (no npm dependency needed)
+      if (!window.jspdf) {
+        await new Promise((res, rej) => {
+          const s = document.createElement("script");
+          s.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+          s.onload = res;
+          s.onerror = () => rej(new Error("Failed to load PDF library"));
+          document.head.appendChild(s);
+        });
+      }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      const m = 20;
+      const w = 210 - m * 2;
+      const bottom = 275;
+
+      const topicName = topics.find(t => t.id === lastTopic)?.name || "Retrieval";
+      const className = cls?.code || cls?.label || cls?.name || "";
+      const dateStr = new Date().toLocaleDateString("en-GB");
+
+      // === Page 1+: Questions with answer lines ===
+      let y = m;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text(`${topicName} — Retrieval`, m, y);
+      y += 7;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(120);
+      const sub = [className, dateStr].filter(Boolean).join(" · ");
+      doc.text(sub, m, y);
+      y += 10;
+
+      doc.setTextColor(0);
+      doc.text(`Name: ___________________________    Mark: ____ / ${generated.length}`, m, y);
+      y += 12;
+
+      doc.setFontSize(11);
+      generated.forEach((q, i) => {
+        const lines = doc.splitTextToSize(`${i + 1}. ${q.question_text}`, w);
+        const need = lines.length * 5 + 32;
+        if (y + need > bottom) { doc.addPage(); y = m; }
+
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(0);
+        doc.text(lines, m, y);
+        y += lines.length * 5 + 3;
+
+        doc.setDrawColor(210);
+        for (let j = 0; j < 4; j++) {
+          doc.line(m, y + 4, 210 - m, y + 4);
+          y += 7;
+        }
+        y += 4;
+      });
+
+      // === Answer key (separate page so teacher can withhold) ===
+      doc.addPage();
+      y = m;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.setTextColor(0);
+      doc.text("Answers", m, y);
+      y += 7;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10);
+      doc.setTextColor(120);
+      doc.text(`${topicName} — teacher / self-mark`, m, y);
+      y += 10;
+
+      doc.setFontSize(10);
+      generated.forEach((q, i) => {
+        const qL = doc.splitTextToSize(`${i + 1}. ${q.question_text}`, w);
+        const aL = doc.splitTextToSize(q.model_answer || "—", w - 5);
+        const need = (qL.length + aL.length) * 4 + 8;
+        if (y + need > bottom) { doc.addPage(); y = m; }
+
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0);
+        doc.text(qL, m, y);
+        y += qL.length * 4 + 1;
+
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(70);
+        doc.text(aL, m + 5, y);
+        y += aL.length * 4 + 6;
+      });
+
+      // Footer on every page
+      const pages = doc.getNumberOfPages();
+      for (let i = 1; i <= pages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(160);
+        doc.text(`retrieval. · ${topicName} · ${i} / ${pages}`, m, 290);
+      }
+
+      const safe = topicName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      doc.save(`retrieval-${safe}-${generated.length}q.pdf`);
+    } catch (e) {
+      console.error("PDF download failed:", e);
+      alert("Failed to generate PDF. Please try again.");
+    }
+  };
+
   // Slideshow mode — one question at a time for projecting
   if (mode === "slideshow" && generated) {
     const q = generated[currentQ];
@@ -4803,9 +4889,10 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
         {/* Controls bar */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
           <Btn v="ghost" onClick={() => { setMode("setup"); setGenerated(null); }} style={{ padding: "8px 14px", fontSize: 12 }}>← Back</Btn>
-          <div style={{ display: "flex", gap: 6 }}>
+          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
             <Pill on={mode === "slideshow"} onClick={() => setMode("slideshow")}>Slideshow</Pill>
             <Pill on={mode === "list"} onClick={() => setMode("list")}>All questions</Pill>
+            <Btn v="ghost" onClick={downloadPDF} style={{ padding: "8px 12px", fontSize: 12 }}>📄 PDF</Btn>
           </div>
         </div>
 
@@ -4863,9 +4950,10 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
           <Btn v="ghost" onClick={() => { setMode("setup"); setGenerated(null); }} style={{ padding: "8px 14px", fontSize: 12 }}>← Back</Btn>
-          <div style={{ display: "flex", gap: 6 }}>
+          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
             <Pill on={mode === "slideshow"} onClick={() => setMode("slideshow")}>Slideshow</Pill>
             <Pill on={mode === "list"} onClick={() => setMode("list")}>All questions</Pill>
+            <Btn v="ghost" onClick={downloadPDF} style={{ padding: "8px 12px", fontSize: 12 }}>📄 PDF</Btn>
           </div>
         </div>
 
@@ -4907,11 +4995,25 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
         {/* Number of questions */}
         <div style={{ marginBottom: 16 }}>
           <div style={{ fontSize: 12, color: C.mid, fontWeight: 600, marginBottom: 8 }}>Number of questions</div>
-          <div style={{ display: "flex", gap: 6 }}>
-            {[3, 5, 8, 10].map(n => (
-              <Pill key={n} on={numQs === n} onClick={() => setNumQs(n)} style={{ flex: 1, textAlign: "center" }}>{n}</Pill>
-            ))}
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <input
+              type="number"
+              min={1}
+              max={50}
+              value={numQs}
+              onChange={e => {
+                const n = parseInt(e.target.value) || 1;
+                setNumQs(Math.max(1, Math.min(50, n)));
+              }}
+              style={{ width: 80, padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, color: C.txt, fontSize: 14, outline: "none", fontFamily: "inherit", textAlign: "center", fontWeight: 600 }}
+            />
+            <div style={{ display: "flex", gap: 4, flex: 1 }}>
+              {[3, 5, 10, 20].map(n => (
+                <Pill key={n} on={numQs === n} onClick={() => setNumQs(n)} style={{ flex: 1, textAlign: "center", fontSize: 12 }}>{n}</Pill>
+              ))}
+            </div>
           </div>
+          <div style={{ fontSize: 11, color: C.dim, marginTop: 6 }}>Any number 1–50. Use the box for custom, or tap a quick preset.</div>
         </div>
 
         {/* Last lesson topic */}
