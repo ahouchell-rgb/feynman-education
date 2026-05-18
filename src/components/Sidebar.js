@@ -6,7 +6,7 @@ import { useAuth, sk } from "@/lib/sk";
 import { C, DISC } from "@/lib/theme";
 import { Settings } from "./Settings";
 
-export function Sidebar() {
+export function Sidebar({ onOpenVisualiser }) {
   const { profile, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -99,6 +99,7 @@ export function Sidebar() {
             <div style={{ fontSize: 12, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{profile?.full_name || "Teacher"}</div>
             <div style={{ fontSize: 10, color: C.dim, fontFamily: C.mono }}>{profile?.role}</div>
           </div>
+          <button onClick={() => onOpenVisualiser?.()} title="Visualiser (camera)" style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14, padding: 2 }}>📷</button>
           <button onClick={() => setShowSettings(true)} style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14, padding: 2 }}>⚙</button>
           <button onClick={() => { logout(); router.push("/login"); }} style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 12, fontFamily: C.mono, padding: 2 }}>↪</button>
         </div>
