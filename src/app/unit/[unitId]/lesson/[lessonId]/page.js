@@ -12,6 +12,7 @@ import { MarkTaughtModal } from "@/components/MarkTaughtModal";
 import { WidgetBlock, WidgetFullscreen } from "@/components/WidgetBlock";
 import { WidgetEditor } from "@/components/WidgetEditor";
 import { ChatSidebar } from "@/components/ChatSidebar";
+import { SetCurrentLessonModal } from "@/components/SetCurrentLessonModal";
 
 const PIN_KEY = (lessonId) => `sk_pinned_resource_${lessonId}`;
 
@@ -153,6 +154,7 @@ function LessonContent() {
   const [widgetSaving, setWidgetSaving] = useState(false);
   const [fullscreenWidget, setFullscreenWidget] = useState(null);
   const [chatOpen, setChatOpen] = useState(false);
+  const [setCurrentOpen, setSetCurrentOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [showSticky, setShowSticky] = useState(false);
@@ -435,6 +437,14 @@ function LessonContent() {
           confirmOnly={!!contextClass && (contextClass.retrieval_class_ids || []).length > 0}
         />
       )}
+      {setCurrentOpen && (
+        <SetCurrentLessonModal
+          lesson={lesson}
+          unitId={unitId}
+          profile={profile}
+          onClose={() => setSetCurrentOpen(false)}
+        />
+      )}
 
       <StickyHeader
         visible={showSticky}
@@ -470,6 +480,11 @@ function LessonContent() {
             {isTeacher && (
               <Btn v="ghost" onClick={() => setChatOpen(true)} style={{ fontSize: 12 }} title="Chat with Claude about this lesson">
                 ✦ Chat
+              </Btn>
+            )}
+            {isTeacher && (
+              <Btn v="ghost" onClick={() => setSetCurrentOpen(true)} style={{ fontSize: 12 }} title="Show this lesson on the homepage as a class's next lesson">
+                📍 Current for class…
               </Btn>
             )}
             {mapEntry ? (
