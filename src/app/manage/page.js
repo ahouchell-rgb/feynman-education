@@ -31,7 +31,7 @@ function ClassRow({ cls, allUnits, slotCount, onChange, onArchive, onRestore }) 
       const patch = {
         name: draft.name,
         year_group: draft.year_group,
-        discipline: draft.discipline,
+        discipline: draft.discipline || null,
         key_stage,
         tier: draft.tier,
         current_unit_id: draft.current_unit_id || null,
@@ -53,7 +53,8 @@ function ClassRow({ cls, allUnits, slotCount, onChange, onArchive, onRestore }) 
   };
 
   const unitsFor = (yg, disc) => allUnits.filter(u => {
-    if (u.discipline !== disc) return false;
+    // If a discipline is specified, filter by it. If empty/null, show all units in the year group.
+    if (disc && u.discipline !== disc) return false;
     if (yg >= 10) return u.group_id?.startsWith("gcse_");
     if (yg === 9) return u.group_id?.startsWith("gcse_") || u.group_id === "y9";
     if (yg === 8) return u.group_id === "y8";
@@ -87,7 +88,7 @@ function ClassRow({ cls, allUnits, slotCount, onChange, onArchive, onRestore }) 
             <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 4 }}>
               <span style={{ fontFamily: C.serif, fontSize: 22, lineHeight: 1.1, color: C.text }}>{cls.name}</span>
               <span style={{ fontFamily: C.mono, fontSize: 10, color: d.color, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                Y{cls.year_group} · {d.label}{cls.tier && cls.tier !== "none" ? ` · ${cls.tier}` : ""}
+                Y{cls.year_group}{cls.discipline ? ` · ${d.label}` : " · Science"}{cls.tier && cls.tier !== "none" ? ` · ${cls.tier}` : ""}
               </span>
             </div>
             <div style={{ fontSize: 12, color: C.muted, display: "flex", gap: 14, alignItems: "center" }}>
@@ -119,8 +120,9 @@ function ClassRow({ cls, allUnits, slotCount, onChange, onArchive, onRestore }) 
             </div>
             <div>
               <div style={{ fontSize: 10, fontFamily: C.mono, color: C.muted, marginBottom: 3 }}>Discipline</div>
-              <select value={draft.discipline} onChange={e => setDraft(p => ({ ...p, discipline: e.target.value, current_unit_id: "" }))}
+              <select value={draft.discipline || ""} onChange={e => setDraft(p => ({ ...p, discipline: e.target.value, current_unit_id: "" }))}
                 style={{ width: "100%", padding: "8px 10px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: C.surface }}>
+                <option value="">Science (any)</option>
                 <option value="biology">Biology</option>
                 <option value="chemistry">Chemistry</option>
                 <option value="physics">Physics</option>
@@ -156,7 +158,7 @@ function ClassRow({ cls, allUnits, slotCount, onChange, onArchive, onRestore }) 
 
 function AddClassRow({ profile, retClasses, allUnits, academicYear, onCreated }) {
   const [open, setOpen] = useState(false);
-  const [draft, setDraft] = useState({ retrieval_id: "", name: "", year_group: 10, discipline: "biology", tier: "none", current_unit_id: "" });
+  const [draft, setDraft] = useState({ retrieval_id: "", name: "", year_group: 10, discipline: "", tier: "none", current_unit_id: "" });
   const [busy, setBusy] = useState(false);
 
   const create = async () => {
@@ -166,7 +168,7 @@ function AddClassRow({ profile, retClasses, allUnits, academicYear, onCreated })
       const key_stage = draft.year_group < 10 ? "ks3" : "ks4";
       const result = await sk.q("classes", { method: "POST", body: {
         teacher_id: profile.id, name: draft.name.trim(),
-        year_group: draft.year_group, discipline: draft.discipline, key_stage,
+        year_group: draft.year_group, discipline: draft.discipline || null, key_stage,
         tier: draft.tier, pathway: null, academic_year: academicYear,
         retrieval_class_ids: draft.retrieval_id ? [draft.retrieval_id] : [],
         current_unit_id: draft.current_unit_id || null,
@@ -176,14 +178,15 @@ function AddClassRow({ profile, retClasses, allUnits, academicYear, onCreated })
         await sk.q("class_progress", { method: "POST", body: { class_id: row.id, current_unit_id: row.current_unit_id } });
       }
       setOpen(false);
-      setDraft({ retrieval_id: "", name: "", year_group: 10, discipline: "biology", tier: "none", current_unit_id: "" });
+      setDraft({ retrieval_id: "", name: "", year_group: 10, discipline: "", tier: "none", current_unit_id: "" });
       onCreated();
     } catch (e) { alert("Create failed: " + e.message); }
     setBusy(false);
   };
 
   const unitsFor = (yg, disc) => allUnits.filter(u => {
-    if (u.discipline !== disc) return false;
+    // If a discipline is specified, filter by it. If empty/null, show all units in the year group.
+    if (disc && u.discipline !== disc) return false;
     if (yg >= 10) return u.group_id?.startsWith("gcse_");
     if (yg === 9) return u.group_id?.startsWith("gcse_") || u.group_id === "y9";
     if (yg === 8) return u.group_id === "y8";
@@ -212,8 +215,9 @@ function AddClassRow({ profile, retClasses, allUnits, academicYear, onCreated })
         </div>
         <div>
           <div style={{ fontSize: 10, fontFamily: C.mono, color: C.muted, marginBottom: 3 }}>Discipline</div>
-          <select value={draft.discipline} onChange={e => setDraft(p => ({ ...p, discipline: e.target.value, current_unit_id: "" }))}
+          <select value={draft.discipline || ""} onChange={e => setDraft(p => ({ ...p, discipline: e.target.value, current_unit_id: "" }))}
             style={{ width: "100%", padding: "8px 10px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: C.surface }}>
+            <option value="">Science (any)</option>
             <option value="biology">Biology</option>
             <option value="chemistry">Chemistry</option>
             <option value="physics">Physics</option>

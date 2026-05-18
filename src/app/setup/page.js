@@ -105,7 +105,7 @@ function SetupContent() {
       const cls = await ret.fetchClasses();
       setRetClasses(cls);
       const cfg = {};
-      cls.forEach(c => { cfg[c.id] = { include: true, year_group: 10, discipline: "biology", current_unit_id: "" }; });
+      cls.forEach(c => { cfg[c.id] = { include: true, year_group: 10, discipline: "", current_unit_id: "" }; });
       setClassConfig(cfg);
       setStep(2);
     } catch (e) { setErr(e.message); }
@@ -122,7 +122,7 @@ function SetupContent() {
         const key_stage = c.year_group < 10 ? "ks3" : "ks4";
         const result = await sk.q("classes", { method: "POST", body: {
           teacher_id: profile.id, name: retCls.name, year_group: c.year_group,
-          discipline: c.discipline, key_stage, tier: "none", pathway: null,
+          discipline: c.discipline || null, key_stage, tier: "none", pathway: null,
           academic_year: academicYear, retrieval_class_ids: [retId],
           current_unit_id: c.current_unit_id || null,
         }});
@@ -154,7 +154,8 @@ function SetupContent() {
   };
 
   const unitsFor = (year_group, discipline) => allUnits.filter(u => {
-    if (u.discipline !== discipline) return false;
+    // If a discipline is specified, filter by it. If empty/null, show all units in the year group.
+    if (discipline && u.discipline !== discipline) return false;
     if (year_group >= 10) return u.group_id?.startsWith("gcse_");
     if (year_group === 9) return u.group_id?.startsWith("gcse_") || u.group_id === "y9";
     if (year_group === 8) return u.group_id === "y8";
@@ -230,8 +231,9 @@ function SetupContent() {
                           </div>
                           <div>
                             <div style={{ fontSize: 11, fontFamily: C.mono, color: C.muted, marginBottom: 4 }}>Discipline</div>
-                            <select value={cfg.discipline} onChange={e => setClassConfig(p => ({ ...p, [rc.id]: { ...p[rc.id], discipline: e.target.value, current_unit_id: "" } }))}
+                            <select value={cfg.discipline || ""} onChange={e => setClassConfig(p => ({ ...p, [rc.id]: { ...p[rc.id], discipline: e.target.value, current_unit_id: "" } }))}
                               style={{ width: "100%", padding: "8px 10px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: C.surface }}>
+                              <option value="">Science (any)</option>
                               <option value="biology">Biology</option>
                               <option value="chemistry">Chemistry</option>
                               <option value="physics">Physics</option>
