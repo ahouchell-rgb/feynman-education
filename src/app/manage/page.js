@@ -429,6 +429,9 @@ function CalendarSection({ profile, calendar, onChange }) {
   const [academicYear, setAcademicYear] = useState(calendar?.academic_year || "2026-27");
   const [anchorDate, setAnchorDate] = useState(calendar?.cycle_anchor_date || "2026-09-07");
   const [insetInput, setInsetInput] = useState("");
+  const [holStart, setHolStart] = useState("");
+  const [holEnd, setHolEnd] = useState("");
+  const [holLabel, setHolLabel] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
 
@@ -477,7 +480,40 @@ function CalendarSection({ profile, calendar, onChange }) {
     setBusy(false);
   };
 
+  const addHoliday = async () => {
+    if (!holStart || !holEnd) return;
+    if (holEnd < holStart) { setMsg("End date must be on or after start date."); return; }
+    setBusy(true); setMsg("");
+    try {
+      const current = calendar?.holiday_periods || [];
+      const entry = { start: holStart, end: holEnd };
+      if (holLabel.trim()) entry.label = holLabel.trim();
+      const updated = [...current, entry].sort((a, b) => a.start.localeCompare(b.start));
+      await sk.q("timetable_calendar", { method: "PATCH",
+        params: { teacher_id: `eq.${profile.id}`, academic_year: `eq.${calendar.academic_year}` },
+        body: { holiday_periods: updated } });
+      setHolStart(""); setHolEnd(""); setHolLabel("");
+      onChange();
+    } catch (e) { setMsg("Error: " + e.message); }
+    setBusy(false);
+  };
+
+  const removeHoliday = async (idx) => {
+    setBusy(true); setMsg("");
+    try {
+      const updated = (calendar?.holiday_periods || []).filter((_, i) => i !== idx);
+      await sk.q("timetable_calendar", { method: "PATCH",
+        params: { teacher_id: `eq.${profile.id}`, academic_year: `eq.${calendar.academic_year}` },
+        body: { holiday_periods: updated } });
+      onChange();
+    } catch (e) { setMsg("Error: " + e.message); }
+    setBusy(false);
+  };
+
+  const fmt = (d) => new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" });
+
   const insetDays = calendar?.inset_days || [];
+  const holidays = calendar?.holiday_periods || [];
 
   return (
     <div style={{ marginBottom: 40 }}>
@@ -519,8 +555,52 @@ function CalendarSection({ profile, calendar, onChange }) {
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                 {insetDays.map(d => (
                   <div key={d} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 4px 4px 10px", borderRadius: 999, background: C.bg, border: `1px solid ${C.border}`, fontSize: 11, fontFamily: C.mono }}>
-                    {new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}
+                    {fmt(d)}
                     <button onClick={() => removeInset(d)} style={{ width: 18, height: 18, borderRadius: "50%", border: "none", background: "transparent", color: C.dim, cursor: "pointer", fontSize: 12, lineHeight: 1 }}>×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={{ fontSize: 12, color: C.dim, fontStyle: "italic" }}>Save the academic year first.</div>
+        )}
+      </Card>
+
+      <Card style={{ padding: 18, marginTop: 14 }}>
+        <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, marginBottom: 10 }}>
+          Holiday weeks ({holidays.length})
+        </div>
+        <div style={{ fontSize: 11, color: C.dim, fontFamily: C.mono, lineHeight: 1.5, marginBottom: 12 }}>
+          Multi-day school closures (half-terms, end-of-term breaks). Any FULL Mon–Fri week inside a holiday pauses the Week A / Week B rotation, so the cycle resumes where it left off when school returns.
+        </div>
+        {calendar ? (
+          <>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1.4fr auto", gap: 8, marginBottom: 12, alignItems: "end" }}>
+              <div>
+                <div style={{ fontSize: 10, fontFamily: C.mono, color: C.muted, marginBottom: 3 }}>Start</div>
+                <Inp type="date" value={holStart} onChange={e => setHolStart(e.target.value)} />
+              </div>
+              <div>
+                <div style={{ fontSize: 10, fontFamily: C.mono, color: C.muted, marginBottom: 3 }}>End</div>
+                <Inp type="date" value={holEnd} onChange={e => setHolEnd(e.target.value)} />
+              </div>
+              <div>
+                <div style={{ fontSize: 10, fontFamily: C.mono, color: C.muted, marginBottom: 3 }}>Label (optional)</div>
+                <Inp value={holLabel} onChange={e => setHolLabel(e.target.value)} placeholder="e.g. May half-term" />
+              </div>
+              <Btn onClick={addHoliday} disabled={busy || !holStart || !holEnd} style={{ fontSize: 12 }}>Add</Btn>
+            </div>
+            {holidays.length === 0 ? (
+              <div style={{ fontSize: 12, color: C.dim, fontStyle: "italic" }}>No holiday weeks set.</div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {holidays.map((h, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px 8px 12px", borderRadius: 6, background: C.bg, border: `1px solid ${C.border}` }}>
+                    <span style={{ fontSize: 12, fontFamily: C.mono, color: C.text, fontWeight: 500 }}>{fmt(h.start)} → {fmt(h.end)}</span>
+                    {h.label && <span style={{ fontSize: 12, color: C.muted, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{h.label}</span>}
+                    {!h.label && <span style={{ flex: 1 }} />}
+                    <button onClick={() => removeHoliday(i)} style={{ width: 22, height: 22, borderRadius: "50%", border: "none", background: "transparent", color: C.dim, cursor: "pointer", fontSize: 14, lineHeight: 1 }}>×</button>
                   </div>
                 ))}
               </div>
