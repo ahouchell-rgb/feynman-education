@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth, sk } from "@/lib/sk";
+import { ms } from "@/lib/ms";
 import { C } from "@/lib/theme";
 import { Btn, Inp, Card } from "@/lib/primitives";
 
@@ -21,6 +22,8 @@ export function Settings({ onClose }) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
   const [usage, setUsage] = useState(null);
+  const [msStatus, setMsStatus] = useState(null); // null = loading, {connected:false} = not, {connected:true,...} = yes
+  const [msBusy, setMsBusy] = useState(false);
 
   useEffect(() => {
     if (!profile?.id) return;
@@ -38,6 +41,35 @@ export function Settings({ onClose }) {
     })();
     return () => { alive = false; };
   }, [profile?.id]);
+
+  // Microsoft 365 connection status
+  useEffect(() => {
+    if (!profile?.id) return;
+    let alive = true;
+    (async () => {
+      const s = await ms.getStatus(profile.id);
+      if (alive) setMsStatus(s || { connected: false });
+    })();
+    return () => { alive = false; };
+  }, [profile?.id]);
+
+  const connectMicrosoft = () => {
+    if (!profile?.id) return;
+    window.location.href = ms.startUrl(profile.id);
+  };
+
+  const disconnectMicrosoft = async () => {
+    if (!profile?.id) return;
+    if (!confirm("Disconnect your Microsoft account? Any PowerPoint files in OneDrive stay there, but you won't be able to edit them inside ScienceKit until you reconnect.")) return;
+    setMsBusy(true);
+    try {
+      await ms.disconnect(profile.id);
+      setMsStatus({ connected: false });
+    } catch (e) {
+      alert("Couldn't disconnect: " + (e.message || "unknown error"));
+    }
+    setMsBusy(false);
+  };
 
   const save = async () => {
     setBusy(true); setMsg("");
@@ -85,6 +117,38 @@ export function Settings({ onClose }) {
             <span>{usage?.output_tokens?.toLocaleString() ?? 0} output tok</span>
             <span>{usage?.request_count ?? 0} request{usage?.request_count === 1 ? "" : "s"}</span>
           </div>
+        </div>
+
+        {/* Microsoft 365 connection */}
+        <div style={{ marginBottom: 16, padding: 12, background: C.bg, borderRadius: 6, border: `1px solid ${C.border}` }}>
+          <div style={{ fontSize: 12, fontFamily: C.mono, color: C.muted, letterSpacing: "0.04em", marginBottom: 8 }}>
+            Microsoft 365 (for PowerPoint editing)
+          </div>
+          {msStatus === null ? (
+            <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim }}>Loading…</div>
+          ) : msStatus.connected ? (
+            <>
+              <div style={{ fontSize: 13, color: C.text, marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: C.grn }} />
+                {msStatus.name || "Connected"}
+              </div>
+              {msStatus.email && (
+                <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim, marginBottom: 10 }}>{msStatus.email}</div>
+              )}
+              <Btn v="ghost" disabled={msBusy} onClick={disconnectMicrosoft} style={{ fontSize: 11, padding: "4px 10px", color: C.red, borderColor: "rgba(185,90,60,0.25)" }}>
+                {msBusy ? "Disconnecting…" : "Disconnect"}
+              </Btn>
+            </>
+          ) : (
+            <>
+              <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim, lineHeight: 1.5, marginBottom: 10 }}>
+                Connect your school Microsoft account to edit PowerPoints directly inside ScienceKit. Files are stored in your own OneDrive.
+              </div>
+              <Btn v="ghost" onClick={connectMicrosoft} style={{ fontSize: 12, padding: "6px 12px" }}>
+                Connect Microsoft account →
+              </Btn>
+            </>
+          )}
         </div>
 
         {msg && <div style={{ padding: "8px 10px", borderRadius: 6, background: msg.startsWith("Error") ? C.redS : C.grnS, color: msg.startsWith("Error") ? C.red : C.grn, fontSize: 12, fontFamily: C.mono, marginBottom: 12 }}>{msg}</div>}
