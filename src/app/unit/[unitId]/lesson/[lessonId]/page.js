@@ -478,6 +478,11 @@ function LessonContent() {
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", paddingTop: 8 }}>
             {isTeacher && (
+              <Btn v="ghost" onClick={() => window.dispatchEvent(new CustomEvent("sk:open-visualiser"))} style={{ fontSize: 12 }} title="Open visualiser (camera) — Cmd/Ctrl+Shift+V">
+                📷 Visualiser
+              </Btn>
+            )}
+            {isTeacher && (
               <Btn v="ghost" onClick={() => setChatOpen(true)} style={{ fontSize: 12 }} title="Chat with Claude about this lesson">
                 ✦ Chat
               </Btn>

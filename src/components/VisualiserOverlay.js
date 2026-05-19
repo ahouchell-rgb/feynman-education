@@ -8,9 +8,7 @@ export function VisualiserOverlay({ onClose }) {
   const [devices, setDevices] = useState([]);
   const [error, setError] = useState(null);
   const [stream, setStream] = useState(null);
-  const [frozen, setFrozen] = useState(false);
   const videoRef = useRef(null);
-  const canvasRef = useRef(null);
 
   // On mount: request permission once to unlock device labels, then enumerate.
   useEffect(() => {
@@ -61,21 +59,14 @@ export function VisualiserOverlay({ onClose }) {
     };
   }, [stream]);
 
-  // ESC closes; SPACE toggles freeze when live.
+  // ESC closes.
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") { onClose(); return; }
-      if (step === "live" && (e.key === " " || e.code === "Space")) {
-        const tag = (e.target?.tagName || "").toLowerCase();
-        if (tag === "input" || tag === "textarea") return;
-        e.preventDefault();
-        toggleFreeze();
-      }
+      if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, frozen]);
+  }, [onClose]);
 
   const selectCamera = async (deviceId) => {
     try {
@@ -83,7 +74,6 @@ export function VisualiserOverlay({ onClose }) {
         video: { deviceId: { exact: deviceId } },
         audio: false,
       });
-      setFrozen(false);
       setStream(s);
       setStep("live");
     } catch (e) {
@@ -92,23 +82,7 @@ export function VisualiserOverlay({ onClose }) {
     }
   };
 
-  const toggleFreeze = () => {
-    if (!videoRef.current || !canvasRef.current) return;
-    if (!frozen) {
-      const v = videoRef.current;
-      const c = canvasRef.current;
-      if (!v.videoWidth || !v.videoHeight) return;
-      c.width = v.videoWidth;
-      c.height = v.videoHeight;
-      c.getContext("2d").drawImage(v, 0, 0, c.width, c.height);
-      setFrozen(true);
-    } else {
-      setFrozen(false);
-    }
-  };
-
   const changeCamera = () => {
-    setFrozen(false);
     setStream(null); // cleanup effect stops tracks
     setStep("picker");
   };
@@ -123,48 +97,27 @@ export function VisualiserOverlay({ onClose }) {
         <div style={{ flex: 1, color: "#fff", fontFamily: C.mono, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", opacity: 0.85 }}>
           {step === "init" && "Visualiser · requesting camera…"}
           {step === "picker" && "Visualiser · choose camera"}
-          {step === "live" && (frozen ? "Visualiser · frozen" : "Visualiser · live")}
+          {step === "live" && "Visualiser · live"}
           {step === "error" && "Visualiser · error"}
         </div>
         {step === "live" && (
-          <>
-            <button
-              onClick={toggleFreeze}
-              title="Freeze / resume (Space)"
-              style={{
-                background: frozen ? "#fff" : "transparent",
-                color: frozen ? "#000" : "#fff",
-                border: "1px solid rgba(255,255,255,0.45)",
-                padding: "7px 14px",
-                borderRadius: 4,
-                fontFamily: C.mono,
-                fontSize: 11,
-                fontWeight: 600,
-                cursor: "pointer",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}
-            >
-              {frozen ? "● Resume" : "❄ Freeze"}
-            </button>
-            <button
-              onClick={changeCamera}
-              style={{
-                background: "transparent",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,0.25)",
-                padding: "7px 14px",
-                borderRadius: 4,
-                fontFamily: C.mono,
-                fontSize: 11,
-                cursor: "pointer",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}
-            >
-              Change camera
-            </button>
-          </>
+          <button
+            onClick={changeCamera}
+            style={{
+              background: "transparent",
+              color: "#fff",
+              border: "1px solid rgba(255,255,255,0.25)",
+              padding: "7px 14px",
+              borderRadius: 4,
+              fontFamily: C.mono,
+              fontSize: 11,
+              cursor: "pointer",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+            }}
+          >
+            Change camera
+          </button>
         )}
       </div>
 
@@ -231,38 +184,25 @@ export function VisualiserOverlay({ onClose }) {
         )}
 
         {step === "live" && (
-          <>
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              muted
-              style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-                display: frozen ? "none" : "block",
-                objectFit: "contain",
-                background: "#000",
-              }}
-            />
-            <canvas
-              ref={canvasRef}
-              style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-                display: frozen ? "block" : "none",
-                objectFit: "contain",
-                background: "#000",
-              }}
-            />
-          </>
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            style={{
+              maxWidth: "100%",
+              maxHeight: "100%",
+              objectFit: "contain",
+              background: "#000",
+            }}
+          />
         )}
       </div>
 
       {/* Footer hint */}
       {step === "live" && (
         <div style={{ padding: "8px 20px", background: "rgba(0,0,0,0.85)", borderTop: "1px solid rgba(255,255,255,0.08)", fontFamily: C.mono, fontSize: 10, color: "rgba(255,255,255,0.45)", letterSpacing: "0.1em", textAlign: "center", textTransform: "uppercase", flexShrink: 0 }}>
-          Space to {frozen ? "resume" : "freeze"} · Esc to close
+          Esc to close
         </div>
       )}
     </div>
