@@ -216,22 +216,23 @@ const STAR_INTERVAL = 25; // bonus star every 25 over target
 
 /* ─── Theme ─── */
 const C = {
-  bg: "#07090e", card: "#0d1117", card2: "#131a25", bdr: "#1b2436",
-  pri: "#6366f1", priSoft: "rgba(99,102,241,0.12)", priGlow: "rgba(99,102,241,0.25)",
-  grn: "#22c55e", grnS: "rgba(34,197,94,0.12)",
-  red: "#ef4444", redS: "rgba(239,68,68,0.12)",
-  amb: "#f59e0b", ambS: "rgba(245,158,11,0.12)",
-  txt: "#e8ecf4", mid: "#8b95a8", dim: "#505b6e", acc: "#a78bfa",
+  // Feynman warm palette (v3 skin)
+  bg: "#F2EBDA", card: "#F2EBDA", card2: "#ECE4D0", bdr: "#D5CCBC",
+  pri: "#2A2723", priSoft: "rgba(42,39,35,0.06)", priGlow: "rgba(201,149,40,0.18)",
+  grn: "#5C7A4F", grnS: "rgba(92,122,79,0.12)",
+  red: "#A8412B", redS: "rgba(168,65,43,0.10)",
+  amb: "#B0822A", ambS: "rgba(176,130,42,0.12)",
+  txt: "#101314", mid: "#5F5747", dim: "#928B7A", acc: "#C99528",
 };
 
 /* ─── UI primitives ─── */
-const Inp = ({ style, ...p }) => <input {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", WebkitAppearance: "none", ...style }} />;
-const TA = ({ style, ...p }) => <textarea {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "inherit", resize: "vertical", ...style }} />;
+const Inp = ({ style, ...p }) => <input {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", WebkitAppearance: "none", ...style }} />;
+const TA = ({ style, ...p }) => <textarea {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "inherit", resize: "vertical", ...style }} />;
 const Btn = ({ v = "pri", style, children, ...p }) => {
-  const s = { pri: { background: C.pri, color: "#fff" }, ghost: { background: "transparent", color: C.mid, border: `1px solid ${C.bdr}` } };
-  return <button {...p} style={{ padding: "12px 20px", borderRadius: 10, border: "none", fontWeight: 600, fontSize: 15, cursor: "pointer", fontFamily: "inherit", transition: "all .15s", ...s[v], ...style, ...(p.disabled ? { opacity: .4, cursor: "default" } : {}) }}>{children}</button>;
+  const s = { pri: { background: C.pri, color: "#F2EBDA" }, ghost: { background: "transparent", color: C.mid, border: `1px solid ${C.bdr}` } };
+  return <button {...p} style={{ padding: "12px 20px", borderRadius: 3, border: "none", fontWeight: 600, fontSize: 15, cursor: "pointer", fontFamily: "inherit", transition: "all .15s", ...s[v], ...style, ...(p.disabled ? { opacity: .4, cursor: "default" } : {}) }}>{children}</button>;
 };
-const Card = ({ children, style, ...p }) => <div {...p} style={{ background: C.card, borderRadius: 14, border: `1px solid ${C.bdr}`, ...style }}>{children}</div>;
+const Card = ({ children, style, ...p }) => <div {...p} style={{ background: C.card, borderRadius: 3, border: `1px solid ${C.bdr}`, ...style }}>{children}</div>;
 const Badge = ({ children, color = C.pri, style }) => <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99, background: `${color}18`, color, textTransform: "uppercase", letterSpacing: .6, ...style }}>{children}</span>;
 const Pill = ({ on, children, onClick, style }) => <button onClick={onClick} style={{ padding: "8px 16px", borderRadius: 99, border: `1px solid ${on ? C.pri : C.bdr}`, background: on ? C.priSoft : "transparent", color: on ? C.pri : C.mid, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap", ...style }}>{children}</button>;
 const Stat = ({ label, value, color = C.pri }) => <Card style={{ padding: "14px 10px", textAlign: "center", flex: "1 1 0", minWidth: 0 }}><div style={{ fontSize: 22, fontWeight: 700, color, letterSpacing: -.5 }}>{value}</div><div style={{ fontSize: 10, color: C.dim, marginTop: 2, textTransform: "uppercase", letterSpacing: .3 }}>{label}</div></Card>;
@@ -264,10 +265,10 @@ function Auth({ onAuth }) {
   };
 
   return (
-    <div style={{ minHeight: "100dvh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: "'DM Sans',-apple-system,sans-serif" }}>
+    <div style={{ minHeight: "100dvh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: "var(--font-plex), -apple-system, sans-serif" }}>
       <div style={{ width: "100%", maxWidth: 380 }}>
         <div style={{ textAlign: "center", marginBottom: 36 }}>
-          <div style={{ fontSize: 32, fontWeight: 800, color: C.txt, letterSpacing: -1 }}>retrieval<span style={{ color: C.pri }}>.</span></div>
+          <div style={{ fontSize: 32, fontWeight: 800, color: C.txt, letterSpacing: -1 }}>retrieval<span style={{ color: C.acc }}>.</span></div>
           <div style={{ fontSize: 13, color: C.dim, marginTop: 6 }}>Science practice that sticks</div>
         </div>
         <Card style={{ padding: "28px 24px" }}>
@@ -5646,11 +5647,11 @@ export default function App() {
   const isHoD = user.profile?.role === "hod" || user.profile?.role === "moderator";
 
   return (
-    <div style={{ minHeight: "100dvh", background: C.bg, fontFamily: "'DM Sans',-apple-system,sans-serif", color: C.txt }}>
+    <div style={{ minHeight: "100dvh", background: C.bg, fontFamily: "var(--font-plex), -apple-system, sans-serif", color: C.txt }}>
       <div style={{ borderBottom: `1px solid ${C.bdr}`, background: C.card, padding: "0 16px", position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 700, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", height: 50 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.5 }}>retrieval<span style={{ color: C.pri }}>.</span></span>
+            <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.5 }}>retrieval<span style={{ color: C.acc }}>.</span></span>
             <Badge color={isMod ? C.pri : (user.profile?.role === "hod" ? C.amb : (isT ? C.acc : C.pri))}>{isMod ? "Moderator" : (user.profile?.role === "hod" ? "Head of Department" : (isT ? "Teacher" : "Student"))}</Badge>
           </div>
           <Btn v="ghost" onClick={() => { sb.auth.out(); setUser(null); }} style={{ padding: "6px 12px", fontSize: 12 }}>Log out</Btn>
