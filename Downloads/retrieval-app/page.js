@@ -216,23 +216,23 @@ const STAR_INTERVAL = 25; // bonus star every 25 over target
 
 /* ─── Theme ─── */
 const C = {
-  // Feynman warm palette (v3 skin)
-  bg: "#F2EBDA", card: "#F2EBDA", card2: "#ECE4D0", bdr: "#D5CCBC",
-  pri: "#2A2723", priSoft: "rgba(42,39,35,0.06)", priGlow: "rgba(201,149,40,0.18)",
-  grn: "#5C7A4F", grnS: "rgba(92,122,79,0.12)",
-  red: "#A8412B", redS: "rgba(168,65,43,0.10)",
-  amb: "#B0822A", ambS: "rgba(176,130,42,0.12)",
-  txt: "#101314", mid: "#5F5747", dim: "#928B7A", acc: "#C99528",
+  // Feynman hub palette (Phase 1) — matches feynmaneducation.com index.html
+  bg: "#F5EFE3", card: "#FFFFFF", card2: "#FBF7EC", bdr: "#D8CFB8",
+  pri: "#1a1d3a", priSoft: "rgba(26,29,58,0.06)", priGlow: "rgba(126,79,184,0.18)",
+  grn: "#2E7D4F", grnS: "rgba(46,125,79,0.12)",
+  red: "#A0463A", redS: "rgba(160,70,58,0.10)",
+  amb: "#C77A1E", ambS: "rgba(199,122,30,0.12)",
+  txt: "#1a1d3a", mid: "#6b7290", dim: "#8a91a8", acc: "#7E4FB8",
 };
 
 /* ─── UI primitives ─── */
-const Inp = ({ style, ...p }) => <input {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", WebkitAppearance: "none", ...style }} />;
-const TA = ({ style, ...p }) => <textarea {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "inherit", resize: "vertical", ...style }} />;
+const Inp = ({ style, ...p }) => <input {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 4, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", WebkitAppearance: "none", ...style }} />;
+const TA = ({ style, ...p }) => <textarea {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 4, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "inherit", resize: "vertical", ...style }} />;
 const Btn = ({ v = "pri", style, children, ...p }) => {
-  const s = { pri: { background: C.pri, color: "#F2EBDA" }, ghost: { background: "transparent", color: C.mid, border: `1px solid ${C.bdr}` } };
-  return <button {...p} style={{ padding: "12px 20px", borderRadius: 3, border: "none", fontWeight: 600, fontSize: 15, cursor: "pointer", fontFamily: "inherit", transition: "all .15s", ...s[v], ...style, ...(p.disabled ? { opacity: .4, cursor: "default" } : {}) }}>{children}</button>;
+  const s = { pri: { background: C.pri, color: "#FBF7EC" }, ghost: { background: "transparent", color: C.mid, border: `1px solid ${C.bdr}` } };
+  return <button {...p} style={{ padding: "12px 20px", borderRadius: 4, border: "none", fontWeight: 600, fontSize: 15, cursor: "pointer", fontFamily: "inherit", transition: "all .15s", ...s[v], ...style, ...(p.disabled ? { opacity: .4, cursor: "default" } : {}) }}>{children}</button>;
 };
-const Card = ({ children, style, ...p }) => <div {...p} style={{ background: C.card, borderRadius: 3, border: `1px solid ${C.bdr}`, ...style }}>{children}</div>;
+const Card = ({ children, style, ...p }) => <div {...p} style={{ background: C.card, borderRadius: 4, border: `1px solid ${C.bdr}`, ...style }}>{children}</div>;
 const Badge = ({ children, color = C.pri, style }) => <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99, background: `${color}18`, color, textTransform: "uppercase", letterSpacing: .6, ...style }}>{children}</span>;
 const Pill = ({ on, children, onClick, style }) => <button onClick={onClick} style={{ padding: "8px 16px", borderRadius: 99, border: `1px solid ${on ? C.pri : C.bdr}`, background: on ? C.priSoft : "transparent", color: on ? C.pri : C.mid, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap", ...style }}>{children}</button>;
 const Stat = ({ label, value, color = C.pri }) => <Card style={{ padding: "14px 10px", textAlign: "center", flex: "1 1 0", minWidth: 0 }}><div style={{ fontSize: 22, fontWeight: 700, color, letterSpacing: -.5 }}>{value}</div><div style={{ fontSize: 10, color: C.dim, marginTop: 2, textTransform: "uppercase", letterSpacing: .3 }}>{label}</div></Card>;
@@ -913,7 +913,7 @@ function Student({ user }) {
 
       {/* Study mode topic picker */}
       {studyMode && (
-        <Card style={{ padding: 14, marginBottom: 12, borderColor: "rgba(99,102,241,0.3)", background: C.priSoft }}>
+        <Card style={{ padding: 14, marginBottom: 12, borderColor: "rgba(126,79,184,0.3)", background: C.priSoft }}>
           <div style={{ fontSize: 12, fontWeight: 600, color: C.pri, marginBottom: 10 }}>
             📖 Study mode — pick a topic. Answers still count toward your weekly target.
           </div>
@@ -940,7 +940,7 @@ function Student({ user }) {
         const nextMilestone = STREAK_MILESTONES.find(m => m > dailyStreak);
         // Flame-intensity scales: 1-2 days dim; 3-6 small; 7-13 medium; 14-29 strong; 30+ large
         const flame = dailyStreak >= 30 ? "🔥🔥🔥" : dailyStreak >= 14 ? "🔥🔥" : dailyStreak >= 3 ? "🔥" : "";
-        const streakColor = dailyStreak >= 30 ? "#f97316" : dailyStreak >= 7 ? "#fb923c" : dailyStreak >= 3 ? C.amb : C.dim;
+        const streakColor = dailyStreak >= 30 ? C.acc : dailyStreak >= 7 ? C.amb : dailyStreak >= 3 ? C.amb : C.dim;
 
         return (
           <>
@@ -969,7 +969,7 @@ function Student({ user }) {
                   </div>
                 </div>
                 {hasFreeze && (
-                  <div title="You have a streak freeze — one missed day won't break your streak." style={{ padding: "4px 8px", borderRadius: 6, background: "rgba(96, 165, 250, 0.15)", border: "1px solid rgba(96, 165, 250, 0.3)", color: "#60a5fa", fontWeight: 600, fontSize: 11, display: "flex", alignItems: "center", gap: 4 }}>
+                  <div title="You have a streak freeze — one missed day won't break your streak." style={{ padding: "4px 8px", borderRadius: 4, background: "rgba(126,79,184,0.10)", border: "1px solid rgba(126,79,184,0.3)", color: C.acc, fontWeight: 600, fontSize: 11, display: "flex", alignItems: "center", gap: 4 }}>
                     ❄️ Freeze
                   </div>
                 )}
@@ -1012,11 +1012,11 @@ function Student({ user }) {
             {/* Milestone celebration overlay — fires once when you cross 3/7/14/30/50/100. */}
             {milestone && (
               <div onClick={() => setMilestone(null)}
-                style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, animation: "fadeIn 0.25s ease", cursor: "pointer" }}>
+                style={{ position: "fixed", inset: 0, background: "rgba(26,29,58,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, animation: "fadeIn 0.25s ease", cursor: "pointer" }}>
                 <div onClick={e => e.stopPropagation()} style={{
                   background: C.card, border: `1px solid ${C.bdr}`,
                   borderRadius: 16, padding: "32px 28px", maxWidth: 320, textAlign: "center",
-                  boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
+                  boxShadow: "0 20px 60px rgba(26,29,58,0.18)",
                   animation: "milestonePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
                 }}>
                   <div style={{ fontSize: 64, lineHeight: 1, marginBottom: 12 }}>
@@ -3059,7 +3059,7 @@ function Teacher({ user, isMod, isHoD }) {
         );
 
         return (
-          <Card style={{ padding: 16, marginBottom: 14, background: C.priSoft, borderColor: "rgba(99,102,241,0.25)" }}>
+          <Card style={{ padding: 16, marginBottom: 14, background: C.priSoft, borderColor: "rgba(126,79,184,0.25)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4, gap: 8 }}>
               <div>
                 <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>Welcome to retrieval. — let's get you set up</div>
@@ -3145,7 +3145,7 @@ function Teacher({ user, isMod, isHoD }) {
           {tab === "dashboard" && dash && (
             <div>
               {/* Join code banner */}
-              <Card style={{ padding: "14px 16px", marginBottom: 12, background: C.priSoft, borderColor: "rgba(99,102,241,0.2)" }}>
+              <Card style={{ padding: "14px 16px", marginBottom: 12, background: C.priSoft, borderColor: "rgba(126,79,184,0.2)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <div style={{ fontSize: 12, color: C.mid, marginBottom: 2 }}>Student join code</div>
@@ -3255,7 +3255,7 @@ function Teacher({ user, isMod, isHoD }) {
                     const topicName = slot ? topics.find(t => t.id === slot.topicId)?.name : null;
                     const boostLabel = rank === 1 ? "strongest boost" : rank === 2 ? "medium boost" : "light boost";
                     return (
-                      <div key={rank} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 8, background: C.card2, border: `1px solid ${slot ? "rgba(99,102,241,0.25)" : C.bdr}` }}>
+                      <div key={rank} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 8, background: C.card2, border: `1px solid ${slot ? "rgba(126,79,184,0.25)" : C.bdr}` }}>
                         <div style={{ width: 22, height: 22, borderRadius: 6, background: slot ? C.priSoft : C.bdr, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                           <span style={{ fontSize: 11, fontWeight: 700, color: slot ? C.pri : C.dim }}>{rank}</span>
                         </div>
@@ -5076,7 +5076,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
               return (
                 <button key={t.id} onClick={() => setRecentTopics(p => sel ? p.filter(x => x !== t.id) : [...p, t.id])} style={{
                   display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, cursor: "pointer", width: "100%", textAlign: "left", fontFamily: "inherit", fontSize: 13,
-                  background: sel ? C.priSoft : "transparent", border: `1px solid ${sel ? "rgba(99,102,241,.2)" : "transparent"}`, color: sel ? C.txt : C.mid,
+                  background: sel ? C.priSoft : "transparent", border: `1px solid ${sel ? "rgba(126,79,184,.2)" : "transparent"}`, color: sel ? C.txt : C.mid,
                 }}>
                   <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${sel ? C.pri : C.dim}`, background: sel ? C.pri : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10, fontWeight: 700, flexShrink: 0 }}>{sel ? "✓" : ""}</div>
                   {getPrefix(t.name)} {t.name}
@@ -5120,7 +5120,7 @@ function TopicSelector({ topics, unlocked, toggleT, setUnlocked, cls, userId, de
     const prefix = t.name.charAt(0);
     const label = prefix === 'B' ? 'Biology' : prefix === 'C' ? 'Chemistry' : prefix === 'P' ? 'Physics' : 'Other';
     const icon = prefix === 'B' ? '🧬' : prefix === 'C' ? '⚗️' : prefix === 'P' ? '⚡' : '📚';
-    const color = prefix === 'B' ? '#22c55e' : prefix === 'C' ? '#f59e0b' : prefix === 'P' ? '#6366f1' : '#8b95a8';
+    const color = prefix === 'B' ? C.grn : prefix === 'C' ? C.amb : prefix === 'P' ? C.acc : C.dim;
     if (!groups[label]) groups[label] = { label, icon, color, topics: [] };
     groups[label].topics.push(t);
   });
@@ -5154,7 +5154,7 @@ function TopicSelector({ topics, unlocked, toggleT, setUnlocked, cls, userId, de
       <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
         <button onClick={() => toggleT(t.id)} style={{
           flex: 1, display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, cursor: "pointer", textAlign: "left", fontFamily: "inherit", fontSize: 13,
-          background: on ? C.priSoft : "transparent", border: `1px solid ${on ? "rgba(99,102,241,.2)" : "transparent"}`, color: on ? C.txt : C.mid, transition: "all .15s",
+          background: on ? C.priSoft : "transparent", border: `1px solid ${on ? "rgba(126,79,184,.2)" : "transparent"}`, color: on ? C.txt : C.mid, transition: "all .15s",
         }}>
           <div style={{ width: 20, height: 20, borderRadius: 5, border: `2px solid ${on ? C.pri : C.dim}`, background: on ? C.pri : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{on ? "✓" : ""}</div>
           <span style={{ flex: 1 }}>{t.name}</span>
