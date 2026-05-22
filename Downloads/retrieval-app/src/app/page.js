@@ -2618,6 +2618,10 @@ function Teacher({ user, isMod, isHoD }) {
   const [parentTokens, setParentTokens] = useState({}); // studentId → token UUID
   const [rawResps, setRawResps] = useState([]); // full response rows for the active class — used by CSV export
   const [expandedQuestionStat, setExpandedQuestionStat] = useState(null); // question_id with wrong answers panel open
+  // Marking flag review state
+  const [expandedFlag, setExpandedFlag] = useState(null); // flag_id being reviewed
+  const [flagNote, setFlagNote] = useState(""); // teacher's optional note on the active review
+  const [flagBusy, setFlagBusy] = useState(null); // flag_id currently being saved
   // Onboarding panel: persists dismissal in localStorage so it never re-shows once closed.
   // Keyed per-user so a different teacher on the same browser sees their own state.
   const onboardingKey = `onboarding_dismissed_${user.id}`;
@@ -2628,6 +2632,44 @@ function Teacher({ user, isMod, isHoD }) {
   const dismissOnboarding = () => {
     setOnboardingDismissed(true);
     try { window.localStorage.setItem(onboardingKey, "1"); } catch {}
+  };
+
+  // Resolve a marking flag. If overturned, also updates the underlying response row.
+  const resolveFlag = async (flag, decision, note) => {
+    if (!cls || flagBusy) return;
+    setFlagBusy(flag.id);
+    try {
+      if (decision === "overturned" && flag.response_id) {
+        // Update the original response: mark it correct and award full marks.
+        // Prepend [OVERTURNED] to feedback so it's visible to the student.
+        const maxMarks = flag.questions?.marks ?? 1;
+        const prevFeedback = flag.ai_feedback || "";
+        const newFeedback = `[OVERTURNED by teacher] ${prevFeedback}`.slice(0, 2000);
+        await sb.q("responses", {
+          method: "PATCH",
+          params: { id: `eq.${flag.response_id}` },
+          body: { is_correct: true, marks_awarded: maxMarks, ai_feedback: newFeedback },
+        });
+      }
+      await sb.q("marking_flags", {
+        method: "PATCH",
+        params: { id: `eq.${flag.id}` },
+        body: {
+          resolved: true,
+          resolved_at: new Date().toISOString(),
+          resolved_by: user.id,
+          teacher_decision: decision,
+          teacher_notes: (note || "").trim() || null,
+        },
+      });
+      setExpandedFlag(null);
+      setFlagNote("");
+      if (cls) await loadCls(cls);
+    } catch (e) {
+      console.error("resolveFlag failed", e);
+      alert("Could not save: " + e.message);
+    }
+    setFlagBusy(null);
   };
 
   useEffect(() => { init(); }, []);
@@ -2761,6 +2803,19 @@ function Teacher({ user, isMod, isHoD }) {
         if ((r.marks_awarded || 0) > 0) sm[r.student_id].c++;
       });
 
+      // Fetch unresolved marking flags for this class.
+      let flags = [];
+      try {
+        flags = await sb.q("marking_flags", {
+          params: {
+            class_id: `eq.${c.id}`,
+            or: `(resolved.is.null,resolved.eq.false)`,
+            order: "created_at.desc",
+            select: "id,response_id,student_id,question_id,student_answer,ai_feedback,ai_correct,student_reason,created_at,questions(question_text,marks,model_answer),profiles!marking_flags_student_id_fkey(display_name)",
+          },
+        }) || [];
+      } catch (e) { console.error("flag fetch failed", e); }
+
       setDash({
         tR: resps.length, tC: resps.filter(r => r.is_correct).length,
         clsTarget,
@@ -2777,6 +2832,7 @@ function Teacher({ user, isMod, isHoD }) {
         mis: Object.values(mis).sort((a, b) => b.n - a.n).slice(0, 10),
         tp: Object.entries(tp).map(([name, d]) => ({ name, ...d, pct: d.t ? Math.round(d.c / d.t * 100) : 0 })).sort((a, b) => a.pct - b.pct),
         mems: mems.length,
+        flags,
       });
     } catch (e) { console.error(e); }
   };
@@ -3157,6 +3213,102 @@ function Teacher({ user, isMod, isHoD }) {
                   </div>
                 </div>
               </Card>
+
+              {/* Marking flags — student appeals awaiting review */}
+              {dash.flags && dash.flags.length > 0 && (
+                <Card style={{ padding: 16, marginBottom: 12, borderColor: C.amb, background: C.ambS }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 16 }}>🚩</span>
+                      <span style={{ color: C.txt, fontWeight: 600, fontSize: 14 }}>
+                        Marking flags · {dash.flags.length} awaiting review
+                      </span>
+                    </div>
+                    <span style={{ fontSize: 11, color: C.mid }}>
+                      Students who think the AI marked them wrong
+                    </span>
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {dash.flags.map(f => {
+                      const isOpen = expandedFlag === f.id;
+                      const busy = flagBusy === f.id;
+                      const studentName = f.profiles?.display_name || "?";
+                      const qText = f.questions?.question_text || "(question missing)";
+                      const maxMarks = f.questions?.marks ?? 1;
+                      return (
+                        <div key={f.id} style={{ background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 4 }}>
+                          {/* Row header — always visible */}
+                          <button
+                            onClick={() => { setExpandedFlag(isOpen ? null : f.id); setFlagNote(""); }}
+                            style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 12px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left", fontFamily: "inherit", color: C.txt }}
+                          >
+                            <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 0, flex: 1 }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{studentName}</div>
+                              <div style={{ fontSize: 11, color: C.mid, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                {qText}
+                              </div>
+                            </div>
+                            <span style={{ fontSize: 11, color: C.dim, marginLeft: 10, whiteSpace: "nowrap" }}>
+                              {isOpen ? "−" : "+"} {new Date(f.created_at).toLocaleDateString()}
+                            </span>
+                          </button>
+
+                          {/* Expanded review */}
+                          {isOpen && (
+                            <div style={{ padding: "0 12px 12px", borderTop: `1px solid ${C.bdr}` }}>
+                              <div style={{ marginTop: 12 }}>
+                                <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 4 }}>Question · {maxMarks} mark{maxMarks !== 1 ? "s" : ""}</div>
+                                <div style={{ fontSize: 13, color: C.txt, lineHeight: 1.5 }}>{qText}</div>
+                              </div>
+
+                              {f.questions?.model_answer && (
+                                <div style={{ marginTop: 10 }}>
+                                  <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 4 }}>Model answer</div>
+                                  <div style={{ fontSize: 12, color: C.mid, lineHeight: 1.5, padding: "8px 10px", background: C.card2, border: `1px solid ${C.bdr}`, borderRadius: 4 }}>{f.questions.model_answer}</div>
+                                </div>
+                              )}
+
+                              <div style={{ marginTop: 10 }}>
+                                <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 4 }}>Student's answer</div>
+                                <div style={{ fontSize: 13, color: C.txt, lineHeight: 1.5, padding: "8px 10px", background: C.card2, border: `1px solid ${C.bdr}`, borderRadius: 4 }}>{f.student_answer || "(blank)"}</div>
+                              </div>
+
+                              <div style={{ marginTop: 10 }}>
+                                <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 4 }}>
+                                  AI marked as · <span style={{ color: f.ai_correct ? C.grn : C.red, fontWeight: 700 }}>{f.ai_correct ? "correct" : "wrong"}</span>
+                                </div>
+                                <div style={{ fontSize: 12, color: C.mid, lineHeight: 1.5, padding: "8px 10px", background: C.card2, border: `1px solid ${C.bdr}`, borderRadius: 4 }}>{f.ai_feedback || "(no feedback)"}</div>
+                              </div>
+
+                              {f.student_reason && (
+                                <div style={{ marginTop: 10 }}>
+                                  <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 4 }}>Student's reason</div>
+                                  <div style={{ fontSize: 13, color: C.txt, lineHeight: 1.5, padding: "8px 10px", background: C.priSoft, border: `1px solid ${C.bdr}`, borderRadius: 4, fontStyle: "italic" }}>"{f.student_reason}"</div>
+                                </div>
+                              )}
+
+                              <div style={{ marginTop: 12 }}>
+                                <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 6 }}>Note to student (optional)</div>
+                                <TA value={flagNote} onChange={e => setFlagNote(e.target.value)} rows={2} maxLength={500} placeholder="e.g. You're right — your answer covers the key idea." style={{ fontSize: 13 }} disabled={busy} />
+                              </div>
+
+                              <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                                <Btn onClick={() => resolveFlag(f, "overturned", flagNote)} disabled={busy} style={{ flex: 1, background: C.grn, color: "#FBF7EC" }}>
+                                  {busy ? "Saving..." : `Overturn — award ${maxMarks} mark${maxMarks !== 1 ? "s" : ""}`}
+                                </Btn>
+                                <Btn v="ghost" onClick={() => resolveFlag(f, "upheld", flagNote)} disabled={busy} style={{ flex: 1 }}>
+                                  Uphold AI mark
+                                </Btn>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </Card>
+              )}
 
               {/* Period selector + stats */}
               <Card style={{ padding: 16, marginBottom: 12 }}>
