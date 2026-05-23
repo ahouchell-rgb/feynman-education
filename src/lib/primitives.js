@@ -29,10 +29,14 @@ export const Card = ({ children, style, ...p }) => (
 
 export function RichEditor({ value, onChange, readOnly, minHeight = 120, placeholder = "Add content..." }) {
   const ref = useRef(null);
-  const lastValue = useRef(value);
+  // Sentinel: uninitialised, so the first effect after mount populates innerHTML
+  // even when `value` matches itself (was a real bug — content existed but the
+  // editor mounted blank because the ref was seeded with `value`).
+  const lastValue = useRef();
 
   useEffect(() => {
-    if (ref.current && value !== lastValue.current) {
+    if (!ref.current) return;
+    if (value !== lastValue.current) {
       ref.current.innerHTML = value || "";
       lastValue.current = value;
     }

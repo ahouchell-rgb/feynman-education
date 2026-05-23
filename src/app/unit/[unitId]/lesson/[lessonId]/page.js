@@ -1,58 +1,21 @@
 "use client";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
-import { useAuth, sk, pubUrl, officeUrl, RET_URL, RET_KEY } from "@/lib/sk";
+import { useAuth, sk, RET_URL, RET_KEY } from "@/lib/sk";
 import { C, DISC } from "@/lib/theme";
 import { Btn, Badge, Card } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
 import { FileUpload } from "@/components/FileUpload";
 import { ResourceItem, ResourceViewer } from "@/components/Resources";
-import { LessonSection } from "@/components/LessonSection";
 import { MarkTaughtModal } from "@/components/MarkTaughtModal";
 import { WidgetBlock, WidgetFullscreen } from "@/components/WidgetBlock";
 import { WidgetEditor } from "@/components/WidgetEditor";
 import { ChatSidebar } from "@/components/ChatSidebar";
 import { SetCurrentLessonModal } from "@/components/SetCurrentLessonModal";
+import { SingleFileSlot } from "@/components/SingleFileSlot";
+import { RetrievalAppFrame } from "@/components/RetrievalAppFrame";
 
-const PIN_KEY = (lessonId) => `sk_pinned_resource_${lessonId}`;
-
-/* ─── Pinned resource inline viewer ─── */
-function PinnedResource({ resource, onUnpin, onOpenFullscreen }) {
-  if (!resource) return null;
-  const ext = resource.file_name?.split(".").pop()?.toLowerCase() || "";
-  const isOffice = ["pptx","ppt","docx","doc","xlsx","xls"].includes(ext);
-  const isPdf = ext === "pdf";
-  const isImg = ["jpg","jpeg","png","gif","webp"].includes(ext);
-  const fileUrl = pubUrl(resource.file_path);
-
-  return (
-    <Card style={{ padding: 0, marginBottom: 24, overflow: "hidden", border: `1px solid ${C.borderStrong}` }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderBottom: `1px solid ${C.border}`, background: C.bg }}>
-        <span style={{ fontFamily: C.mono, fontSize: 10, color: C.grn, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase" }}>📌 Pinned</span>
-        <span style={{ fontSize: 13, fontWeight: 500, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{resource.title}</span>
-        <Btn v="ghost" style={{ fontSize: 11, padding: "4px 10px" }} onClick={() => onOpenFullscreen(resource, fileUrl)}>Fullscreen</Btn>
-        <Btn v="ghost" style={{ fontSize: 11, padding: "4px 10px" }} onClick={onUnpin}>Unpin ×</Btn>
-      </div>
-      <div style={{ height: 480, background: "#fff" }}>
-        {isOffice ? (
-          <iframe src={officeUrl(fileUrl)} style={{ width: "100%", height: "100%", border: "none" }} title={resource.title} />
-        ) : isPdf ? (
-          <iframe src={fileUrl} style={{ width: "100%", height: "100%", border: "none" }} title={resource.title} />
-        ) : isImg ? (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", background: C.bg }}>
-            <img src={fileUrl} alt={resource.title} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
-          </div>
-        ) : (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: C.dim, fontFamily: C.mono, fontSize: 12 }}>
-            Cannot preview this file type — click Fullscreen or download.
-          </div>
-        )}
-      </div>
-    </Card>
-  );
-}
-
-/* ─── Sticky lesson header (appears on scroll) ─── */
+/* ─── Sticky lesson header (appears on scroll past title) ─── */
 function StickyHeader({ visible, lesson, contextClass, mapEntry, onMarkTaught, discColor }) {
   return (
     <div style={{
@@ -133,21 +96,21 @@ function LessonContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const { unitId, lessonId } = params;
-  const classId = searchParams.get("class"); // sk classes.id from homepage
+  const classId = searchParams.get("class");
   const { profile } = useAuth();
 
   const [unit, setUnit] = useState(null);
   const [lesson, setLesson] = useState(null);
-  const [allLessons, setAllLessons] = useState([]); // for prev/next
+  const [allLessons, setAllLessons] = useState([]);
   const [resources, setResources] = useState([]);
-  const [teacherContent, setTeacherContent] = useState({});
+  const [slidesRow, setSlidesRow] = useState(null);
+  const [sowRow, setSowRow] = useState(null);
   const [mapEntry, setMapEntry] = useState(null);
-  const [contextClass, setContextClass] = useState(null); // the sk class (if ?class=)
+  const [contextClass, setContextClass] = useState(null);
   const [retClassNameMap, setRetClassNameMap] = useState(new Map());
   const [viewingResource, setViewingResource] = useState(null);
   const [markingTaught, setMarkingTaught] = useState(false);
   const [taughtLog, setTaughtLog] = useState([]);
-  const [pinnedResource, setPinnedResource] = useState(null);
   const [widgets, setWidgets] = useState([]);
   const [widgetEditorOpen, setWidgetEditorOpen] = useState(false);
   const [editingWidget, setEditingWidget] = useState(null);
@@ -177,12 +140,10 @@ function LessonContent() {
         if (!u || !l) { setNotFound(true); setLoading(false); return; }
         setUnit(u); setLesson(l);
 
-        // siblings for prev/next
         const siblings = await sk.q("lessons", { params: { unit_id: `eq.${unitId}`, select: "id,title,lesson_number,sort_order", order: "sort_order.asc,lesson_number.asc" } }).catch(() => []);
         if (!alive) return;
         setAllLessons(siblings || []);
 
-        // lesson-scoped data
         await loadLessonData(l.id);
       } catch { setNotFound(true); }
       if (alive) setLoading(false);
@@ -191,7 +152,6 @@ function LessonContent() {
     /* eslint-disable-next-line */
   }, [lessonId, unitId]);
 
-  /* ── Load class context if ?class= ── */
   useEffect(() => {
     if (!classId) { setContextClass(null); return; }
     (async () => {
@@ -202,7 +162,6 @@ function LessonContent() {
     })();
   }, [classId]);
 
-  /* ── Load retrieval class names for taught-history display ── */
   useEffect(() => {
     if (!profile) return;
     (async () => {
@@ -220,18 +179,6 @@ function LessonContent() {
     })();
   }, [profile]);
 
-  /* ── Restore pin from localStorage when lesson loads ── */
-  useEffect(() => {
-    if (!lesson || !resources.length) return;
-    try {
-      const stored = localStorage.getItem(PIN_KEY(lesson.id));
-      if (!stored) { setPinnedResource(null); return; }
-      const r = resources.find(x => x.id === stored);
-      setPinnedResource(r || null);
-    } catch { setPinnedResource(null); }
-  }, [lesson, resources]);
-
-  /* ── Sticky header on scroll past title ── */
   useEffect(() => {
     const onScroll = () => {
       if (!titleRef.current) return;
@@ -244,36 +191,21 @@ function LessonContent() {
   }, [lesson]);
 
   const loadLessonData = useCallback(async (lid) => {
-    const [res, tc, map, log, wgs] = await Promise.all([
+    const [res, map, log, wgs, slides, sow] = await Promise.all([
       sk.q("resources", { params: { lesson_id: `eq.${lid}`, select: "*", order: "created_at.asc" } }).catch(() => []),
-      sk.q("lesson_teacher_content", { params: { lesson_id: `eq.${lid}`, teacher_id: `eq.${profile.id}` }, single: true }).catch(() => null),
       sk.q("lesson_retrieval_map", { params: { lesson_id: `eq.${lid}` } }).catch(() => []),
       sk.q("taught_log", { params: { lesson_id: `eq.${lid}`, teacher_id: `eq.${profile.id}`, order: "taught_at.desc", limit: "5" } }).catch(() => []),
       sk.q("lesson_widgets", { params: { lesson_id: `eq.${lid}`, teacher_id: `eq.${profile.id}`, select: "*", order: "position.asc,created_at.asc" } }).catch(() => []),
+      sk.q("lesson_slides", { params: { lesson_id: `eq.${lid}`, teacher_id: `eq.${profile.id}` }, single: true }).catch(() => null),
+      sk.q("lesson_sow",    { params: { lesson_id: `eq.${lid}`, teacher_id: `eq.${profile.id}` }, single: true }).catch(() => null),
     ]);
     setResources(res || []);
-    setTeacherContent(tc || {});
     setMapEntry(map?.[0] || null);
     setTaughtLog(log || []);
     setWidgets(wgs || []);
+    setSlidesRow(slides || null);
+    setSowRow(sow || null);
   }, [profile]);
-
-  /* ── Save helpers ── */
-  const saveSystem = async (field, value) => {
-    await sk.q(`lessons?id=eq.${lessonId}`, { method: "PATCH", body: { [field]: value } });
-    setLesson(p => ({ ...p, [field]: value }));
-  };
-
-  const saveTeacher = async (field, value) => {
-    if (teacherContent?.id) {
-      await sk.q("lesson_teacher_content", { method: "PATCH", params: { lesson_id: `eq.${lessonId}`, teacher_id: `eq.${profile.id}` }, body: { [field]: value, updated_at: new Date().toISOString() } });
-    } else {
-      const result = await sk.q("lesson_teacher_content", { method: "POST", body: { lesson_id: lessonId, teacher_id: profile.id, [field]: value } });
-      const row = Array.isArray(result) ? result[0] : result;
-      if (row) setTeacherContent(row);
-    }
-    setTeacherContent(p => ({ ...p, [field]: value }));
-  };
 
   const addRetLink = async () => {
     const topicId = prompt("Enter retrieval. topic ID:");
@@ -285,21 +217,9 @@ function LessonContent() {
 
   const deleteResource = async (res) => {
     if (!confirm(`Delete "${res.title}"?`)) return;
-    if (pinnedResource?.id === res.id) unpinResource();
     await sk.del("resources", { id: `eq.${res.id}` });
     await sk.storageDelete(res.file_path);
     loadLessonData(lessonId);
-  };
-
-  /* ── Pin / unpin ── */
-  const pinResource = (res) => {
-    try { localStorage.setItem(PIN_KEY(lessonId), res.id); } catch {}
-    setPinnedResource(res);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-  const unpinResource = () => {
-    try { localStorage.removeItem(PIN_KEY(lessonId)); } catch {}
-    setPinnedResource(null);
   };
 
   /* ── Widgets ── */
@@ -354,10 +274,8 @@ function LessonContent() {
     }
   };
 
-  // Reorder by swapping `position` with the neighbour. RLS scopes writes to owner.
   const swapWidgetPositions = async (a, b) => {
     try {
-      // Optimistic update so the UI feels instant.
       setWidgets(prev => {
         const next = [...prev];
         const ia = next.findIndex(w => w.id === a.id);
@@ -372,7 +290,6 @@ function LessonContent() {
         sk.q("lesson_widgets", { method: "PATCH", params: { id: `eq.${b.id}`, teacher_id: `eq.${profile.id}` }, body: { position: a.position } }),
       ]);
     } catch (e) {
-      // Re-fetch on failure so we don't show a misleading order.
       await loadLessonData(lessonId);
       alert(`Couldn't reorder: ${e.message || "unknown error"}`);
     }
@@ -399,16 +316,6 @@ function LessonContent() {
   if (notFound || !lesson || !unit) return <div style={{ color: C.red, fontFamily: C.mono, fontSize: 12, padding: 40 }}>Lesson not found.</div>;
 
   const d = DISC[unit.discipline] || DISC.combined;
-  const sectionFields = [
-    { key: "objectives", title: "Learning objectives" },
-    { key: "starter", title: "Starter activity" },
-    { key: "main_activities", title: "Main activities" },
-    { key: "afl_checkpoint", title: "AFL checkpoint" },
-    { key: "plenary", title: "Plenary" },
-    { key: "differentiation", title: "Differentiation" },
-    { key: "modelling_notes", title: "Modelling notes" },
-    { key: "misconception_alerts", title: "Misconception alerts" },
-  ];
 
   return (
     <div>
@@ -502,6 +409,12 @@ function LessonContent() {
           </div>
         </div>
 
+        {lesson.keywords?.length > 0 && (
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 14 }}>
+            {lesson.keywords.map((k, i) => <Badge key={i} color={d.color} bg={d.bg}>{k}</Badge>)}
+          </div>
+        )}
+
         {mapEntry && (
           <div style={{ marginTop: 14, fontSize: 12, color: C.grn, fontFamily: C.mono, letterSpacing: "0.04em" }}>
             ↻ Linked to retrieval. topic: <span style={{ fontFamily: C.serif, fontStyle: "italic", fontSize: 14 }}>{mapEntry.retrieval_topic_name}</span>
@@ -511,43 +424,60 @@ function LessonContent() {
         <TaughtHistory log={taughtLog} retrievalClassNameMap={retClassNameMap} />
       </div>
 
-      {lesson.keywords?.length > 0 && (
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
-          {lesson.keywords.map((k, i) => <Badge key={i} color={d.color} bg={d.bg}>{k}</Badge>)}
-        </div>
-      )}
-
-      <PinnedResource
-        resource={pinnedResource}
-        onUnpin={unpinResource}
-        onOpenFullscreen={(res, url) => setViewingResource({ resource: res, url })}
+      {/* Lesson slides — single-file slot, PPTX/Keynote/PDF */}
+      <SingleFileSlot
+        kind="slides"
+        table="lesson_slides"
+        label="Lesson slides"
+        emptyLabel="Upload the lesson PowerPoint (or PDF)"
+        accept=".pptx,.ppt,.pdf,.key"
+        height={520}
+        unitId={unitId}
+        lessonId={lessonId}
+        profile={profile}
+        record={slidesRow}
+        onChange={() => loadLessonData(lessonId)}
       />
 
+      {/* Scheme of work — single-file slot, DOCX/PDF */}
+      <SingleFileSlot
+        kind="sow"
+        table="lesson_sow"
+        label="Scheme of work"
+        emptyLabel="Upload the scheme-of-work document for this lesson"
+        accept=".docx,.doc,.pdf"
+        height={360}
+        unitId={unitId}
+        lessonId={lessonId}
+        profile={profile}
+        record={sowRow}
+        onChange={() => loadLessonData(lessonId)}
+      />
+
+      {/* Retrieval-app embed — only renders if the lesson is linked to a topic */}
+      <RetrievalAppFrame mapEntry={mapEntry} />
+
+      {/* Worksheets & print-outs — everything else uploaded against the lesson */}
       {(resources.length > 0 || isAdmin || isTeacher) && (
         <Card style={{ padding: 16, marginBottom: 24 }}>
-          <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, marginBottom: 12 }}>Resources</div>
-          {resources.map(r => {
-            const isPinned = pinnedResource?.id === r.id;
-            return (
-              <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <div style={{ flex: 1 }}>
-                  <ResourceItem
-                    resource={r}
-                    isAdmin={isAdmin || r.uploaded_by === profile.id}
-                    onView={(res, url) => setViewingResource({ resource: res, url })}
-                    onDelete={deleteResource}
-                  />
-                </div>
-                <div style={{ marginBottom: 6 }}>
-                  <Btn v={isPinned ? "soft" : "ghost"}
-                    onClick={() => isPinned ? unpinResource() : pinResource(r)}
-                    style={{ fontSize: 11, padding: "5px 10px", ...(isPinned ? { color: C.grn, borderColor: C.grn } : {}) }}>
-                    {isPinned ? "📌 Pinned" : "Pin"}
-                  </Btn>
-                </div>
-              </div>
-            );
-          })}
+          <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, marginBottom: 12 }}>
+            Worksheets &amp; print-outs
+          </div>
+          {resources.length === 0 ? (
+            <div style={{ fontFamily: C.mono, fontSize: 12, color: C.dim, padding: "4px 2px 12px" }}>
+              No worksheets yet.
+            </div>
+          ) : (
+            resources.map(r => (
+              <ResourceItem
+                key={r.id}
+                resource={r}
+                isAdmin={isAdmin || r.uploaded_by === profile.id}
+                onView={(res, url) => setViewingResource({ resource: res, url })}
+                onDelete={deleteResource}
+              />
+            ))
+          )}
           {(isAdmin || isTeacher) && <FileUpload unitId={unitId} lessonId={lessonId} onUploaded={() => loadLessonData(lessonId)} />}
         </Card>
       )}
@@ -587,21 +517,6 @@ function LessonContent() {
           )}
         </Card>
       )}
-
-      <Card style={{ padding: 20 }}>
-        {sectionFields.map(({ key, title }) => (
-          <LessonSection key={key} title={title}
-            sysValue={lesson[key]} teacherValue={teacherContent[key]}
-            fieldKey={key} isAdmin={isAdmin} isTeacher={isTeacher}
-            onSaveSystem={saveSystem} onSaveTeacher={saveTeacher} />
-        ))}
-        {(lesson.rich_content || isAdmin) && (
-          <LessonSection title="Extended notes" sysValue={lesson.rich_content}
-            teacherValue={teacherContent.notes} fieldKey={isAdmin ? "rich_content" : "notes"}
-            isAdmin={isAdmin} isTeacher={isTeacher}
-            onSaveSystem={saveSystem} onSaveTeacher={saveTeacher} />
-        )}
-      </Card>
 
       {/* Prev / next lesson nav */}
       {(prev || next) && (
