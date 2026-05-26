@@ -214,29 +214,48 @@ function getWeekBounds(weeksAgo = 0) {
 const WEEKLY_TARGET = 50;
 const STAR_INTERVAL = 25; // bonus star every 25 over target
 
-/* ─── Theme ─── */
+/* ─── Theme — D2 brighter (editorial register, vivid accents) ─── */
 const C = {
-  // Feynman hub palette (Phase 1) — matches feynmaneducation.com index.html
-  bg: "#F5EFE3", card: "#FFFFFF", card2: "#FBF7EC", bdr: "#D8CFB8",
-  pri: "#1a1d3a", priSoft: "rgba(26,29,58,0.06)", priGlow: "rgba(126,79,184,0.18)",
-  grn: "#2E7D4F", grnS: "rgba(46,125,79,0.12)",
-  red: "#A0463A", redS: "rgba(160,70,58,0.10)",
-  amb: "#C77A1E", ambS: "rgba(199,122,30,0.12)",
-  txt: "#1a1d3a", mid: "#6b7290", dim: "#8a91a8", acc: "#7E4FB8",
+  // Surfaces (warm cream, kept close to existing so muscle memory still works)
+  bg: "#faf7f0", card: "#FFFFFF", card2: "#f5f1e6",
+  // Rules / borders — two weights
+  bdr: "#d4cdb8", bdrSoft: "#e8e3d6",
+  // Primary — vivid book-red, brand accent
+  pri: "#c8362d", priDeep: "#a8281f", priSoft: "rgba(200,54,45,0.08)", priSoftBg: "#fae8e3",
+  // Status colours — pushed brighter than v1
+  grn: "#16a558", grnS: "rgba(22,165,88,0.10)", grnSoft: "#d6f0e0",
+  red: "#e54a26", redS: "rgba(229,74,38,0.10)", redSoft: "#fbe1d6",
+  amb: "#e88019", ambS: "rgba(232,128,25,0.10)", ambSoft: "#fbe9d2",
+  // Text shades — three steps
+  txt: "#1c1a14", mid: "#6f6a5c", dim: "#a8a294",
+  // Accent (used sparingly for variation — e.g. student "answered" stat)
+  acc: "#5246c4", accSoft: "#e3e0f5",
+  // Fonts
+  serif: "var(--font-serif), Georgia, serif",
+  sans:  "var(--font-plex), -apple-system, sans-serif",
+  // priGlow kept for backwards compat with anything referencing it
+  priGlow: "rgba(200,54,45,0.15)",
 };
 
 /* ─── UI primitives ─── */
-const Inp = ({ style, ...p }) => <input {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 4, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", WebkitAppearance: "none", ...style }} />;
-const TA = ({ style, ...p }) => <textarea {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 4, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "inherit", resize: "vertical", ...style }} />;
+const Inp = ({ style, ...p }) => <input {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", WebkitAppearance: "none", ...style }} />;
+const TA = ({ style, ...p }) => <textarea {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "inherit", resize: "vertical", ...style }} />;
 const Btn = ({ v = "pri", style, children, ...p }) => {
-  const s = { pri: { background: C.pri, color: "#FBF7EC" }, ghost: { background: "transparent", color: C.mid, border: `1px solid ${C.bdr}` } };
-  return <button {...p} style={{ padding: "12px 20px", borderRadius: 4, border: "none", fontWeight: 600, fontSize: 15, cursor: "pointer", fontFamily: "inherit", transition: "all .15s", ...s[v], ...style, ...(p.disabled ? { opacity: .4, cursor: "default" } : {}) }}>{children}</button>;
+  const s = { pri: { background: C.pri, color: C.bg }, ghost: { background: "transparent", color: C.mid, border: `1px solid ${C.bdr}` } };
+  return <button {...p} style={{ padding: "11px 18px", borderRadius: 3, border: "none", fontWeight: 600, fontSize: 12, cursor: "pointer", fontFamily: "inherit", transition: "all .15s", letterSpacing: ".06em", textTransform: "uppercase", ...s[v], ...style, ...(p.disabled ? { opacity: .4, cursor: "default" } : {}) }}>{children}</button>;
 };
-const Card = ({ children, style, ...p }) => <div {...p} style={{ background: C.card, borderRadius: 4, border: `1px solid ${C.bdr}`, ...style }}>{children}</div>;
-const Badge = ({ children, color = C.pri, style }) => <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99, background: `${color}18`, color, textTransform: "uppercase", letterSpacing: .6, ...style }}>{children}</span>;
-const Pill = ({ on, children, onClick, style }) => <button onClick={onClick} style={{ padding: "8px 16px", borderRadius: 99, border: `1px solid ${on ? C.pri : C.bdr}`, background: on ? C.priSoft : "transparent", color: on ? C.pri : C.mid, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap", ...style }}>{children}</button>;
-const Stat = ({ label, value, color = C.pri }) => <Card style={{ padding: "14px 10px", textAlign: "center", flex: "1 1 0", minWidth: 0 }}><div style={{ fontSize: 22, fontWeight: 700, color, letterSpacing: -.5 }}>{value}</div><div style={{ fontSize: 10, color: C.dim, marginTop: 2, textTransform: "uppercase", letterSpacing: .3 }}>{label}</div></Card>;
-const Bar = ({ pct }) => <div style={{ width: "100%", height: 5, background: C.bdr, borderRadius: 99, overflow: "hidden" }}><div style={{ width: `${Math.min(100, pct)}%`, height: "100%", background: pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red, borderRadius: 99, transition: "width .4s" }} /></div>;
+const Card = ({ children, style, ...p }) => <div {...p} style={{ background: C.card, borderRadius: 3, border: `1px solid ${C.bdr}`, ...style }}>{children}</div>;
+const Badge = ({ children, color = C.pri, style }) => <span style={{ fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 3, background: `${color}18`, color, textTransform: "uppercase", letterSpacing: ".12em", ...style }}>{children}</span>;
+const Pill = ({ on, children, onClick, style }) => <button onClick={onClick} style={{ padding: "7px 14px", borderRadius: 999, border: `1px solid ${on ? C.pri : C.bdr}`, background: on ? C.priSoftBg : "transparent", color: on ? C.pri : C.mid, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap", letterSpacing: ".02em", ...style }}>{children}</button>;
+const Stat = ({ label, value, color = C.txt }) => <Card style={{ padding: "14px 10px", textAlign: "center", flex: "1 1 0", minWidth: 0 }}><div style={{ fontFamily: C.serif, fontSize: 26, fontWeight: 500, color, letterSpacing: "-0.02em", lineHeight: 1 }}>{value}</div><div style={{ fontSize: 9, color: C.mid, marginTop: 6, textTransform: "uppercase", letterSpacing: ".14em", fontWeight: 600 }}>{label}</div></Card>;
+const Bar = ({ pct }) => <div style={{ width: "100%", height: 3, background: C.bdrSoft, borderRadius: 1.5, overflow: "hidden" }}><div style={{ width: `${Math.min(100, pct)}%`, height: "100%", background: pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red, borderRadius: 1.5, transition: "width .4s" }} /></div>;
+
+/* Editorial primitives — for D2 register */
+const Kicker = ({ children, color = C.pri, style }) => <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", color, marginBottom: 6, ...style }}>{children}</div>;
+const Headline = ({ children, size = 24, style }) => <div style={{ fontFamily: C.serif, fontSize: size, fontWeight: 600, letterSpacing: "-0.015em", lineHeight: 1.15, color: C.txt, ...style }}>{children}</div>;
+const Deck = ({ children, style }) => <div style={{ fontFamily: C.serif, fontSize: 14, fontStyle: "italic", lineHeight: 1.45, color: C.mid, ...style }}>{children}</div>;
+const SectionTitle = ({ children, style }) => <div style={{ fontFamily: C.serif, fontSize: 16, fontWeight: 600, letterSpacing: "-0.01em", color: C.txt, ...style }}>{children}</div>;
+const Dateline = ({ left, right, style }) => <div style={{ padding: "8px 0", borderBottom: `1px solid ${C.bdr}`, display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 10, letterSpacing: ".14em", textTransform: "uppercase", color: C.mid, fontWeight: 500, ...style }}><span style={{ color: C.pri, fontWeight: 600 }}>{left}</span><span>{right}</span></div>;
 
 /* ─── AUTH ─── */
 function Auth({ onAuth }) {
@@ -885,35 +904,45 @@ function Student({ user }) {
         <div style={{ position: "fixed", top: 20, right: 20, zIndex: 999, animation: "starPop 2s ease forwards", fontSize: 48, pointerEvents: "none" }}>⭐</div>
       )}
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-        <button onClick={() => setCls(null)} style={{ background: "none", border: "none", color: C.mid, fontSize: 14, cursor: "pointer", fontFamily: "inherit" }}>← Classes</button>
-        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-          {correctStreak >= 3 && <Badge color={C.amb}>🎯 {correctStreak} in a row</Badge>}
-          {currentStars > 0 && <Badge color={C.amb}>⭐ {currentStars}</Badge>}
-          {sessionStats.t > 0 && <button onClick={() => setShowSummary(true)} style={{ background: "none", border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px" }}>📊 {sessionStats.t}</button>}
-          <button onClick={() => { setStudyMode(p => !p); setStudyTopicId(null); setReviewMode(false); setRes(null); setAns(""); }} style={{ background: studyMode ? C.priSoft : "none", border: `1px solid ${studyMode ? C.pri : C.bdr}`, borderRadius: 8, color: studyMode ? C.pri : C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px", fontWeight: studyMode ? 700 : 400 }}>📖 Study</button>
+      {/* Dateline */}
+      <Dateline left="Practice Journal" right={new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })} style={{ marginBottom: 14 }} />
+
+      {/* Back nav + class chip */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, gap: 8 }}>
+        <button onClick={() => setCls(null)} style={{ background: "none", border: "none", color: C.mid, fontSize: 13, cursor: "pointer", fontFamily: "inherit", padding: 0 }}>← All classes</button>
+        <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
+          {correctStreak >= 3 && <Badge color={C.amb}>{correctStreak} in a row</Badge>}
+          {currentStars > 0 && <Badge color={C.amb}>★ {currentStars}</Badge>}
+          {sessionStats.t > 0 && <button onClick={() => setShowSummary(true)} style={{ background: "none", border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.mid, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px" }}>Session · {sessionStats.t}</button>}
+          <button onClick={() => { setStudyMode(p => !p); setStudyTopicId(null); setReviewMode(false); setRes(null); setAns(""); }} style={{ background: studyMode ? C.priSoftBg : "none", border: `1px solid ${studyMode ? C.pri : C.bdr}`, borderRadius: 3, color: studyMode ? C.pri : C.mid, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 10px", fontWeight: studyMode ? 600 : 500 }}>Study</button>
           {mistakeQIds.size > 0 && (
             <button onClick={() => {
                 const turningOn = !reviewMode;
                 setReviewMode(turningOn);
                 setStudyMode(false); setStudyTopicId(null);
                 setRes(null); setAns(""); setQi(0);
-                // In review mode the target matches the number of mistakes (capped at 10)
                 if (turningOn) setSessionTarget(Math.min(10, mistakeQIds.size));
                 else setSessionTarget(Math.max(5, Math.min(15, Math.max(0, WEEKLY_TARGET - weeklyValid) || 10)));
                 setSessionStarted(false); setSessionQCount(0);
               }}
-              style={{ background: reviewMode ? C.redS : "none", border: `1px solid ${reviewMode ? C.red : C.bdr}`, borderRadius: 8, color: reviewMode ? C.red : C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px", fontWeight: reviewMode ? 700 : 400 }}>
-              🔁 Review ({mistakeQIds.size})
+              style={{ background: reviewMode ? C.redSoft : "none", border: `1px solid ${reviewMode ? C.red : C.bdr}`, borderRadius: 3, color: reviewMode ? C.red : C.mid, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 10px", fontWeight: reviewMode ? 600 : 500 }}>
+              Review ({mistakeQIds.size})
             </button>
           )}
           <Badge color={C.pri}>{cls.name}</Badge>
         </div>
       </div>
 
+      {/* Editorial standfirst */}
+      <div style={{ marginBottom: 20, paddingBottom: 16, borderBottom: `1px solid ${C.bdr}` }}>
+        <Kicker>Today's session</Kicker>
+        <Headline size={22} style={{ marginBottom: 6 }}>Welcome back.</Headline>
+        <Deck>{weeklyValid >= WEEKLY_TARGET ? "You've hit this week's target. Anything more is gravy." : `${WEEKLY_TARGET - weeklyValid} question${WEEKLY_TARGET - weeklyValid === 1 ? "" : "s"} to reach this week's target of ${WEEKLY_TARGET}.`}</Deck>
+      </div>
+
       {/* Study mode topic picker */}
       {studyMode && (
-        <Card style={{ padding: 14, marginBottom: 12, borderColor: "rgba(126,79,184,0.3)", background: C.priSoft }}>
+        <Card style={{ padding: 14, marginBottom: 12, borderColor: "rgba(200,54,45,0.3)", background: C.priSoft }}>
           <div style={{ fontSize: 12, fontWeight: 600, color: C.pri, marginBottom: 10 }}>
             📖 Study mode — pick a topic. Answers still count toward your weekly target.
           </div>
@@ -969,7 +998,7 @@ function Student({ user }) {
                   </div>
                 </div>
                 {hasFreeze && (
-                  <div title="You have a streak freeze — one missed day won't break your streak." style={{ padding: "4px 8px", borderRadius: 4, background: "rgba(126,79,184,0.10)", border: "1px solid rgba(126,79,184,0.3)", color: C.acc, fontWeight: 600, fontSize: 11, display: "flex", alignItems: "center", gap: 4 }}>
+                  <div title="You have a streak freeze — one missed day won't break your streak." style={{ padding: "4px 8px", borderRadius: 4, background: "rgba(200,54,45,0.10)", border: "1px solid rgba(200,54,45,0.3)", color: C.acc, fontWeight: 600, fontSize: 11, display: "flex", alignItems: "center", gap: 4 }}>
                     ❄️ Freeze
                   </div>
                 )}
@@ -2340,13 +2369,16 @@ function HodPanel({ user }) {
 
   return (
     <div style={{ maxWidth: 700, margin: "0 auto", padding: "16px" }}>
-      {/* Header */}
-      <div style={{ marginBottom: 16, padding: "16px 20px", background: `linear-gradient(135deg, ${C.priSoft}, transparent)`, border: `1px solid ${C.pri}33`, borderRadius: 12 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: C.pri, marginBottom: 4 }}>🧭 Head of Department</div>
-        <div style={{ fontSize: 12, color: C.mid }}>Oversight of your department — {teachers.length} teacher{teachers.length === 1 ? "" : "s"}, {totalStudents} student{totalStudents === 1 ? "" : "s"}.</div>
+      {/* Dateline + editorial standfirst */}
+      <Dateline left="Department Report" right={new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })} style={{ marginBottom: 16 }} />
+
+      <div style={{ marginBottom: 20, paddingBottom: 16, borderBottom: `1px solid ${C.bdr}` }}>
+        <Kicker>Head of Department</Kicker>
+        <Headline size={22} style={{ marginBottom: 6 }}>Department overview</Headline>
+        <Deck>Oversight of your department — {teachers.length} teacher{teachers.length === 1 ? "" : "s"}, {totalStudents} student{totalStudents === 1 ? "" : "s"}.</Deck>
       </div>
 
-      {error && <div style={{ padding: "8px 12px", borderRadius: 8, background: C.redS, color: C.red, fontSize: 12, marginBottom: 12 }}>Error: {error}</div>}
+      {error && <div style={{ padding: "8px 12px", borderRadius: 3, background: C.redS, color: C.red, fontSize: 12, marginBottom: 12 }}>Error: {error}</div>}
 
       {teachers.length === 0 ? (
         <Card style={{ padding: 40, textAlign: "center" }}>
@@ -2356,23 +2388,23 @@ function HodPanel({ user }) {
         </Card>
       ) : (
         <>
-          {/* Stat tiles */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 16 }}>
-            <div style={{ padding: "12px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, textAlign: "center" }}>
-              <div style={{ fontSize: 20, fontWeight: 800, color: C.txt }}>{teachers.length}</div>
-              <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 4 }}>Teachers</div>
+          {/* Metric tiles — FT-style serif numbers, status colour only on numbers that have status */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", marginBottom: 20, borderTop: `1px solid ${C.bdr}` }}>
+            <div style={{ padding: "14px 14px 14px 0", borderBottom: `1px solid ${C.bdr}`, borderRight: `1px solid ${C.bdr}`, paddingRight: 16 }}>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.mid, marginBottom: 8 }}>Teachers</div>
+              <div style={{ fontFamily: C.serif, fontSize: 30, fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1, color: C.txt }}>{teachers.length}</div>
             </div>
-            <div style={{ padding: "12px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, textAlign: "center" }}>
-              <div style={{ fontSize: 20, fontWeight: 800, color: C.txt }}>{totalStudents}</div>
-              <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 4 }}>Students</div>
+            <div style={{ padding: "14px 0 14px 16px", borderBottom: `1px solid ${C.bdr}` }}>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.mid, marginBottom: 8 }}>Students</div>
+              <div style={{ fontFamily: C.serif, fontSize: 30, fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1, color: C.txt }}>{totalStudents}</div>
             </div>
-            <div style={{ padding: "12px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, textAlign: "center" }}>
-              <div style={{ fontSize: 20, fontWeight: 800, color: totalActiveThisWeek > 0 ? C.grn : C.dim }}>{totalActiveThisWeek}</div>
-              <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 4 }}>Active 7d</div>
+            <div style={{ padding: "14px 14px 14px 0", borderBottom: `1px solid ${C.bdr}`, borderRight: `1px solid ${C.bdr}`, paddingRight: 16 }}>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.mid, marginBottom: 8 }}>Active · 7 days</div>
+              <div style={{ fontFamily: C.serif, fontSize: 30, fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1, color: totalActiveThisWeek === 0 ? C.red : totalActiveThisWeek < totalStudents * 0.4 ? C.amb : C.grn }}>{totalActiveThisWeek}<span style={{ fontSize: 16, color: C.dim }}>/{totalStudents}</span></div>
             </div>
-            <div style={{ padding: "12px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, textAlign: "center" }}>
-              <div style={{ fontSize: 20, fontWeight: 800, color: deptAccuracy >= 70 ? C.grn : deptAccuracy >= 50 ? C.amb : C.red }}>{deptAccuracy}%</div>
-              <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 4 }}>Accuracy</div>
+            <div style={{ padding: "14px 0 14px 16px", borderBottom: `1px solid ${C.bdr}` }}>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.mid, marginBottom: 8 }}>Accuracy</div>
+              <div style={{ fontFamily: C.serif, fontSize: 30, fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1, color: deptAccuracy >= 70 ? C.grn : deptAccuracy >= 50 ? C.amb : C.red }}>{deptAccuracy}<span style={{ fontSize: 16, color: C.dim }}>%</span></div>
             </div>
           </div>
 
@@ -3115,7 +3147,7 @@ function Teacher({ user, isMod, isHoD }) {
         );
 
         return (
-          <Card style={{ padding: 16, marginBottom: 14, background: C.priSoft, borderColor: "rgba(126,79,184,0.25)" }}>
+          <Card style={{ padding: 16, marginBottom: 14, background: C.priSoft, borderColor: "rgba(200,54,45,0.25)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4, gap: 8 }}>
               <div>
                 <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>Welcome to retrieval. — let's get you set up</div>
@@ -3201,7 +3233,7 @@ function Teacher({ user, isMod, isHoD }) {
           {tab === "dashboard" && dash && (
             <div>
               {/* Join code banner */}
-              <Card style={{ padding: "14px 16px", marginBottom: 12, background: C.priSoft, borderColor: "rgba(126,79,184,0.2)" }}>
+              <Card style={{ padding: "14px 16px", marginBottom: 12, background: C.priSoft, borderColor: "rgba(200,54,45,0.2)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <div style={{ fontSize: 12, color: C.mid, marginBottom: 2 }}>Student join code</div>
@@ -3294,7 +3326,7 @@ function Teacher({ user, isMod, isHoD }) {
                               </div>
 
                               <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-                                <Btn onClick={() => resolveFlag(f, "overturned", flagNote)} disabled={busy} style={{ flex: 1, background: C.grn, color: "#FBF7EC" }}>
+                                <Btn onClick={() => resolveFlag(f, "overturned", flagNote)} disabled={busy} style={{ flex: 1, background: C.grn, color: C.bg }}>
                                   {busy ? "Saving..." : `Overturn — award ${maxMarks} mark${maxMarks !== 1 ? "s" : ""}`}
                                 </Btn>
                                 <Btn v="ghost" onClick={() => resolveFlag(f, "upheld", flagNote)} disabled={busy} style={{ flex: 1 }}>
@@ -3407,7 +3439,7 @@ function Teacher({ user, isMod, isHoD }) {
                     const topicName = slot ? topics.find(t => t.id === slot.topicId)?.name : null;
                     const boostLabel = rank === 1 ? "strongest boost" : rank === 2 ? "medium boost" : "light boost";
                     return (
-                      <div key={rank} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 8, background: C.card2, border: `1px solid ${slot ? "rgba(126,79,184,0.25)" : C.bdr}` }}>
+                      <div key={rank} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 8, background: C.card2, border: `1px solid ${slot ? "rgba(200,54,45,0.25)" : C.bdr}` }}>
                         <div style={{ width: 22, height: 22, borderRadius: 6, background: slot ? C.priSoft : C.bdr, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                           <span style={{ fontSize: 11, fontWeight: 700, color: slot ? C.pri : C.dim }}>{rank}</span>
                         </div>
@@ -3846,36 +3878,37 @@ function StudentPaperAttempt({ user, cls, paperId, onExit, forceNewAttempt = fal
       </div>
 
       {/* Progress */}
-      <div style={{ marginBottom: 12 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.dim, marginBottom: 4 }}>
-          <span>Question {qi + 1} of {questions.length}</span>
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.mid, marginBottom: 6 }}>
+          <span>Question <span style={{ color: C.pri }}>{String(qi + 1).padStart(2, "0")}</span> of {String(questions.length).padStart(2, "0")}</span>
           <span>{answeredSoFar} answered</span>
         </div>
-        <div style={{ height: 4, background: C.bdr, borderRadius: 99, overflow: "hidden" }}>
-          <div style={{ width: `${sessionPct}%`, height: "100%", background: C.pri, borderRadius: 99, transition: "width 0.3s ease" }} />
+        <div style={{ height: 3, background: C.bdrSoft, borderRadius: 1.5, overflow: "hidden" }}>
+          <div style={{ width: `${sessionPct}%`, height: "100%", background: C.pri, borderRadius: 1.5, transition: "width 0.3s ease" }} />
         </div>
       </div>
 
       {/* Question card */}
-      <Card style={{ padding: 16, marginBottom: 12 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <span style={{ fontSize: 11, color: C.mid, fontWeight: 700, fontFamily: "monospace" }}>{currentQ.question_label || `Q${qi + 1}`}</span>
-          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-            {currentQ.command_word && <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 4, background: C.priSoft, color: C.pri, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>{currentQ.command_word}</span>}
-            <span style={{ fontSize: 11, color: C.dim, fontWeight: 600 }}>[{currentQ.marks} mark{currentQ.marks === 1 ? "" : "s"}]</span>
+      <Card style={{ padding: 18, marginBottom: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, paddingBottom: 12, borderBottom: `1px solid ${C.bdrSoft}` }}>
+          <span style={{ fontSize: 10, color: C.pri, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase" }}>{currentQ.question_label || `Q${qi + 1}`}</span>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            {currentQ.command_word && <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 3, background: C.priSoftBg, color: C.pri, fontWeight: 600, textTransform: "uppercase", letterSpacing: ".12em" }}>{currentQ.command_word}</span>}
+            <span style={{ fontFamily: C.serif, fontSize: 13, color: C.mid, fontStyle: "italic" }}><span style={{ color: C.txt, fontWeight: 600, fontStyle: "normal" }}>{currentQ.marks}</span> mark{currentQ.marks === 1 ? "" : "s"}</span>
           </div>
         </div>
         {currentQ.image_url && (
-          <div style={{ marginBottom: 12, borderRadius: 8, overflow: "hidden", border: `1px solid ${C.bdr}`, background: "#fff" }}>
+          <div style={{ marginBottom: 14, borderRadius: 3, overflow: "hidden", border: `1px solid ${C.bdr}`, background: "#fff" }}>
             <img src={currentQ.image_url} alt="" style={{ width: "100%", maxHeight: 320, objectFit: "contain", display: "block" }} />
           </div>
         )}
-        <div style={{ fontSize: 15, color: C.txt, lineHeight: 1.7, marginBottom: 16, fontWeight: 500, whiteSpace: "pre-wrap" }}>{currentQ.question_text}</div>
+        <div style={{ fontFamily: C.serif, fontSize: 19, color: C.txt, lineHeight: 1.4, marginBottom: 18, fontWeight: 500, letterSpacing: "-0.005em", whiteSpace: "pre-wrap" }}>{currentQ.question_text}</div>
 
         {!lastResult && (
           <>
-            <TA value={ans} onChange={e => setAns(e.target.value)} rows={Math.max(3, Math.min(8, currentQ.marks * 2))} placeholder="Write your answer here…" disabled={marking} style={{ fontSize: 14, lineHeight: 1.5 }} />
-            <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+            <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.mid, marginBottom: 8 }}>Your answer</div>
+            <TA value={ans} onChange={e => setAns(e.target.value)} rows={Math.max(3, Math.min(8, currentQ.marks * 2))} placeholder="Write your answer here…" disabled={marking} style={{ fontFamily: C.serif, fontSize: 15, lineHeight: 1.5 }} />
+            <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
               <Btn onClick={submitAnswer} disabled={!ans.trim() || marking} style={{ flex: 1 }}>{marking ? "Marking…" : "Submit answer"}</Btn>
               {qi < questions.length - 1 && (
                 <Btn v="ghost" onClick={() => { setAns(""); setQi(qi + 1); }} style={{ fontSize: 12 }}>Skip →</Btn>
@@ -5228,7 +5261,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
               return (
                 <button key={t.id} onClick={() => setRecentTopics(p => sel ? p.filter(x => x !== t.id) : [...p, t.id])} style={{
                   display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, cursor: "pointer", width: "100%", textAlign: "left", fontFamily: "inherit", fontSize: 13,
-                  background: sel ? C.priSoft : "transparent", border: `1px solid ${sel ? "rgba(126,79,184,.2)" : "transparent"}`, color: sel ? C.txt : C.mid,
+                  background: sel ? C.priSoft : "transparent", border: `1px solid ${sel ? "rgba(200,54,45,.2)" : "transparent"}`, color: sel ? C.txt : C.mid,
                 }}>
                   <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${sel ? C.pri : C.dim}`, background: sel ? C.pri : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10, fontWeight: 700, flexShrink: 0 }}>{sel ? "✓" : ""}</div>
                   {getPrefix(t.name)} {t.name}
@@ -5306,7 +5339,7 @@ function TopicSelector({ topics, unlocked, toggleT, setUnlocked, cls, userId, de
       <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
         <button onClick={() => toggleT(t.id)} style={{
           flex: 1, display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, cursor: "pointer", textAlign: "left", fontFamily: "inherit", fontSize: 13,
-          background: on ? C.priSoft : "transparent", border: `1px solid ${on ? "rgba(126,79,184,.2)" : "transparent"}`, color: on ? C.txt : C.mid, transition: "all .15s",
+          background: on ? C.priSoft : "transparent", border: `1px solid ${on ? "rgba(200,54,45,.2)" : "transparent"}`, color: on ? C.txt : C.mid, transition: "all .15s",
         }}>
           <div style={{ width: 20, height: 20, borderRadius: 5, border: `2px solid ${on ? C.pri : C.dim}`, background: on ? C.pri : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{on ? "✓" : ""}</div>
           <span style={{ flex: 1 }}>{t.name}</span>
