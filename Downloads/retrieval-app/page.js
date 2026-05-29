@@ -2382,12 +2382,44 @@ function HodPanel({ user }) {
 
       {teachers.length === 0 ? (
         <Card style={{ padding: 40, textAlign: "center" }}>
-          <div style={{ fontSize: 36, marginBottom: 12 }}>🗂</div>
+          <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.dim} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></div>
           <div style={{ fontSize: 15, fontWeight: 600, color: C.txt, marginBottom: 6 }}>No teachers in your department yet</div>
           <div style={{ fontSize: 13, color: C.mid }}>Ask your admin to add teachers to your department.</div>
         </Card>
       ) : (
         <>
+          {/* ACTION HERO — the single most urgent action leads the view (v4 hierarchy) */}
+          {(() => {
+            const inact = inactiveStudents.length, low = lowAccuracyStudents.length;
+            const Triangle = (col) => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 9v4M12 17h.01" /><path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0Z" /></svg>;
+            const inkBtn = (label, onClick) => <button onClick={onClick} style={{ width: "100%", marginTop: 14, padding: "13px", background: C.txt, color: C.bg, border: "none", borderRadius: 4, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 700, letterSpacing: ".02em" }}>{label}</button>;
+            if (inact > 0) return (
+              <div style={{ background: C.redS, border: `1px solid ${C.red}33`, borderLeft: `4px solid ${C.red}`, borderRadius: "0 6px 6px 0", padding: "16px 18px", marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>{Triangle(C.red)}<span style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", color: C.red }}>Needs your attention</span></div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginTop: 10 }}>
+                  <span style={{ fontFamily: C.serif, fontSize: 44, fontWeight: 600, lineHeight: .9, color: C.red, fontVariantNumeric: "tabular-nums" }}>{inact}</span>
+                  <span style={{ fontFamily: C.serif, fontSize: 16, lineHeight: 1.25, color: C.txt }}>{inact === 1 ? "student hasn't" : "students haven't"} practised in 7+ days</span>
+                </div>
+                {inkBtn(`Review ${inact === 1 ? "student" : "students"} →`, () => setView("inactive"))}
+              </div>
+            );
+            if (low > 0) return (
+              <div style={{ background: C.ambS, border: `1px solid ${C.amb}33`, borderLeft: `4px solid ${C.amb}`, borderRadius: "0 6px 6px 0", padding: "16px 18px", marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>{Triangle(C.amb)}<span style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", color: C.amb }}>Needs your attention</span></div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginTop: 10 }}>
+                  <span style={{ fontFamily: C.serif, fontSize: 44, fontWeight: 600, lineHeight: .9, color: C.amb, fontVariantNumeric: "tabular-nums" }}>{low}</span>
+                  <span style={{ fontFamily: C.serif, fontSize: 16, lineHeight: 1.25, color: C.txt }}>{low === 1 ? "student is" : "students are"} below 50% accuracy</span>
+                </div>
+                {inkBtn(`Review ${low === 1 ? "student" : "students"} →`, () => setView("lowacc"))}
+              </div>
+            );
+            return (
+              <div style={{ background: C.grnS, border: `1px solid ${C.grn}33`, borderLeft: `4px solid ${C.grn}`, borderRadius: "0 6px 6px 0", padding: "16px 18px", marginBottom: 20, display: "flex", alignItems: "center", gap: 12 }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.grn} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                <div><div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", color: C.grn }}>All clear</div><div style={{ fontFamily: C.serif, fontSize: 16, color: C.txt, marginTop: 4 }}>No students need chasing this week</div></div>
+              </div>
+            );
+          })()}
           {/* Metric tiles — FT-style serif numbers, status colour only on numbers that have status */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", marginBottom: 20, borderTop: `1px solid ${C.bdr}` }}>
             <div style={{ padding: "14px 14px 14px 0", borderBottom: `1px solid ${C.bdr}`, borderRight: `1px solid ${C.bdr}`, paddingRight: 16 }}>
@@ -2533,7 +2565,7 @@ function HodPanel({ user }) {
               <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Department-wide (topics with 5+ answers)</div>
               {weakTopics.length === 0 ? (
                 <Card style={{ padding: 40, textAlign: "center" }}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>📊</div>
+                  <div style={{ marginBottom: 10, display: "flex", justifyContent: "center" }}><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.dim} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18" /><rect x="7" y="11" width="3" height="6" /><rect x="13" y="7" width="3" height="10" /></svg></div>
                   <div style={{ fontSize: 13, color: C.mid }}>Not enough data yet. Topics appear here once they have 5+ answers.</div>
                 </Card>
               ) : weakTopics.map(t => (
@@ -2561,7 +2593,7 @@ function HodPanel({ user }) {
               </div>
               {lowAccuracyStudents.length === 0 ? (
                 <Card style={{ padding: 40, textAlign: "center" }}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>✅</div>
+                  <div style={{ marginBottom: 10, display: "flex", justifyContent: "center" }}><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.grn} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="m9 11 3 3L22 4" /></svg></div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: C.txt, marginBottom: 4 }}>No students flagged for accuracy</div>
                   <div style={{ fontSize: 12, color: C.mid }}>Everyone with enough answers is above 50%.</div>
                 </Card>
@@ -2590,7 +2622,7 @@ function HodPanel({ user }) {
               </div>
               {inactiveStudents.length === 0 ? (
                 <Card style={{ padding: 40, textAlign: "center" }}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>✅</div>
+                  <div style={{ marginBottom: 10, display: "flex", justifyContent: "center" }}><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.grn} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="m9 11 3 3L22 4" /></svg></div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: C.txt, marginBottom: 4 }}>Everyone's been active</div>
                   <div style={{ fontSize: 12, color: C.mid }}>No students with a 7+ day gap in activity.</div>
                 </Card>
