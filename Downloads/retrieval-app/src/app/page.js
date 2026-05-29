@@ -848,7 +848,7 @@ function Student({ user }) {
 
       {classes.length === 0 ? (
         <Card style={{ padding: "32px 20px", textAlign: "center" }}>
-          <div style={{ fontSize: 28, marginBottom: 6 }}>📚</div>
+          <div style={{ marginBottom: 8, display: "flex", justifyContent: "center" }}><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.dim} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></svg></div>
           <div style={{ color: C.mid, fontSize: 14 }}>No classes yet</div>
           <div style={{ color: C.dim, fontSize: 13, marginTop: 4 }}>Use a join code from your teacher above</div>
         </Card>
@@ -1252,7 +1252,9 @@ function Student({ user }) {
 
       {activeQs.length === 0 && studyMode ? (
         <Card style={{ padding: "36px 20px", textAlign: "center" }}>
-          <div style={{ fontSize: 36, marginBottom: 8 }}>{studyTopicId ? "✅" : "👆"}</div>
+          <div style={{ marginBottom: 8, display: "flex", justifyContent: "center" }}>{studyTopicId
+            ? <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.grn} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="m9 11 3 3L22 4" /></svg>
+            : <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.dim} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 11V7a5 5 0 0 1 10 0v4" /><path d="m12 12 0 7M9 16l3 3 3-3" /></svg>}</div>
           <div style={{ color: C.mid, fontSize: 14, fontWeight: 600 }}>
             {studyTopicId ? "All caught up on this topic" : "Pick a topic above to start studying"}
           </div>
@@ -1260,14 +1262,16 @@ function Student({ user }) {
         </Card>
       ) : qs.length === 0 ? (
         <Card style={{ padding: "48px 20px", textAlign: "center" }}>
-          <div style={{ fontSize: 36, marginBottom: 8 }}>🎯</div>
+          <div style={{ marginBottom: 8, display: "flex", justifyContent: "center" }}><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.dim} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg></div>
           <div style={{ color: C.mid }}>No questions available yet</div>
           <div style={{ color: C.dim, fontSize: 13, marginTop: 4 }}>Your teacher hasn't unlocked any topics</div>
         </Card>
       ) : showSummary ? (
         /* ── Session summary ── */
         <Card style={{ padding: 24, textAlign: "center" }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>{weeklyValid >= WEEKLY_TARGET ? "🎉" : "📊"}</div>
+          <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}>{weeklyValid >= WEEKLY_TARGET
+            ? <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke={C.grn} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="m9 11 3 3L22 4" /></svg>
+            : <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke={C.acc} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18" /><rect x="7" y="11" width="3" height="6" /><rect x="13" y="7" width="3" height="10" /></svg>}</div>
           <div style={{ fontSize: 20, fontWeight: 800, color: C.txt, letterSpacing: -0.5, marginBottom: 4 }}>
             {weeklyValid >= WEEKLY_TARGET ? "Target hit!" : "Session complete"}
           </div>
@@ -1337,7 +1341,7 @@ function Student({ user }) {
             )}
             {weeklyValid >= WEEKLY_TARGET && (
               <Btn onClick={() => setShowSummary(false)} style={{ width: "100%", padding: "14px 20px" }}>
-                Keep going — every extra question counts ⭐
+                Keep going — every extra question counts
               </Btn>
             )}
             <Btn v="ghost" onClick={() => setCls(null)} style={{ width: "100%", fontSize: 13 }}>
@@ -1347,7 +1351,7 @@ function Student({ user }) {
         </Card>
       ) : reviewMode && activeQs.length === 0 ? (
         <Card style={{ padding: "40px 20px", textAlign: "center" }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>✨</div>
+          <div style={{ marginBottom: 12, display: "flex", justifyContent: "center" }}><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={C.grn} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="m9 11 3 3L22 4" /></svg></div>
           <div style={{ fontSize: 16, fontWeight: 700, color: C.txt, marginBottom: 4 }}>No mistakes to review</div>
           <div style={{ fontSize: 13, color: C.mid, marginBottom: 20 }}>You're up to date. Back to normal practice?</div>
           <Btn onClick={() => { setReviewMode(false); setSessionStarted(false); }} style={{ width: "100%" }}>← Back to practice</Btn>
@@ -1355,14 +1359,18 @@ function Student({ user }) {
       ) : !sessionStarted ? (
         /* ── Session intro ── */
         <Card style={{ padding: "24px 20px", textAlign: "center" }}>
-          <div style={{ fontSize: 36, marginBottom: 10 }}>{reviewMode ? "🔁" : studyMode ? "📖" : "🧠"}</div>
+          <div style={{ marginBottom: 10, display: "flex", justifyContent: "center" }}>{reviewMode
+            ? <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-15 6.7L3 16" /><path d="M3 21v-5h5" /></svg>
+            : studyMode
+            ? <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.pri} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>
+            : <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.pri} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18h6" /><path d="M10 22h4" /><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14" /></svg>}</div>
           <div style={{ fontSize: 18, fontWeight: 800, color: C.txt, letterSpacing: -0.3, marginBottom: 4 }}>
             {reviewMode ? "Review your mistakes" : studyMode ? "Study mode" : "Ready to practise?"}
           </div>
           <div style={{ fontSize: 13, color: C.mid, marginBottom: 18 }}>
             {reviewMode ? `${mistakeQIds.size} question${mistakeQIds.size === 1 ? "" : "s"} you recently got wrong` :
              studyMode && !studyTopicId ? "Pick a topic above to begin" :
-             weeklyValid >= WEEKLY_TARGET ? `You've already hit this week's target — every extra question earns a ⭐` :
+             weeklyValid >= WEEKLY_TARGET ? `You've already hit this week's target — anything more is a bonus` :
              `${Math.max(0, WEEKLY_TARGET - weeklyValid)} to go this week`}
           </div>
 
@@ -1450,7 +1458,9 @@ function Student({ user }) {
                   {speechSupported && (
                     <button type="button" onClick={toggleMic} aria-label={isRecording ? "Stop recording" : "Start voice input"}
                       style={{ position: "absolute", right: 10, bottom: 10, width: 36, height: 36, borderRadius: 99, border: `1px solid ${isRecording ? C.red : C.bdr}`, background: isRecording ? C.red : C.card, color: isRecording ? "#fff" : C.mid, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, padding: 0, boxShadow: isRecording ? `0 0 0 4px ${C.redS}` : "none", transition: "all .15s ease" }}>
-                      {isRecording ? "■" : "🎤"}
+                      {isRecording
+                        ? <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><rect x="5" y="5" width="14" height="14" rx="2" /></svg>
+                        : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.mid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0M12 19v3" /></svg>}
                     </button>
                   )}
                 </div>
@@ -1609,7 +1619,7 @@ function AdminPanel({ user }) {
     <div style={{ maxWidth: 700, margin: "0 auto", padding: "16px" }}>
       {/* Header */}
       <div style={{ marginBottom: 16, padding: "16px 20px", background: `linear-gradient(135deg, ${C.priSoft}, transparent)`, border: `1px solid ${C.pri}33`, borderRadius: 12 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: C.pri, marginBottom: 4 }}>⚙ Moderator panel</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: C.pri, marginBottom: 4 }}>Moderator panel</div>
         <div style={{ fontSize: 12, color: C.mid }}>You can see every teacher and student across retrieval. Only ahouchell@gmail.com has this access.</div>
       </div>
 
@@ -1869,7 +1879,7 @@ function AdminPanel({ user }) {
               </div>
             );
           })}
-          {view === "unjoined" && unjoinedStudents.length === 0 && <div style={{ padding: 20, textAlign: "center", color: C.mid, fontSize: 12 }}>🎉 All students are in a class.</div>}
+          {view === "unjoined" && unjoinedStudents.length === 0 && <div style={{ padding: 20, textAlign: "center", color: C.mid, fontSize: 12 }}>All students are in a class.</div>}
         </div>
       )}
 
@@ -4067,7 +4077,7 @@ function PaperManager({ user, cls, classes, topics, subjectId }) {
       {loading ? <div style={{ padding: 20, color: C.dim, fontSize: 12, textAlign: "center" }}>Loading…</div>
        : papers.length === 0 ? (
         <Card style={{ padding: 24, textAlign: "center" }}>
-          <div style={{ fontSize: 32, marginBottom: 8, opacity: 0.4 }}>📄</div>
+          <div style={{ marginBottom: 8, opacity: 0.4, display: "flex", justifyContent: "center" }}><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={C.dim} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /></svg></div>
           <div style={{ fontSize: 13, color: C.txt, fontWeight: 600, marginBottom: 4 }}>No papers yet</div>
           <div style={{ fontSize: 11, color: C.dim, lineHeight: 1.5 }}>Build a mock paper or recreate a real exam paper. Add questions with mark schemes — the AI marks against them automatically.</div>
         </Card>
@@ -4227,7 +4237,7 @@ function PaperEditor({ user, paperId, classes, topics, onBack, onResults }) {
           <div style={{ fontSize: 11, color: C.dim }}>{questions.length} question{questions.length === 1 ? "" : "s"} · {paper.total_marks} marks</div>
         </div>
         <button onClick={onResults} style={{ padding: "6px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card, color: C.mid, cursor: "pointer", fontFamily: "inherit" }}>
-          📊 Results
+          Results
         </button>
       </div>
 
@@ -4488,8 +4498,7 @@ function StudentList({ students, cls, clsTarget, onRefresh, parentTokens = {}, o
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                 <div style={{ flex: 1, color: C.txt, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 500 }}>{s.name}</div>
                 {s.targetOverride && <span style={{ fontSize: 9, color: C.acc, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5 }}>custom target</span>}
-                {s.weekStars > 0 && <span style={{ fontSize: 12 }}>{"⭐".repeat(Math.min(s.weekStars, 3))}{s.weekStars > 3 ? `+${s.weekStars - 3}` : ""}</span>}
-                {s.flagged > 0 && <span style={{ fontSize: 10, color: C.red, fontWeight: 600 }}>🚩{s.flagged}</span>}
+                {s.flagged > 0 && <span style={{ fontSize: 10, color: C.red, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 3 }}><svg width="9" height="9" viewBox="0 0 24 24" fill={C.red} stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" y1="22" x2="4" y2="15" stroke={C.red} fill="none" /></svg>{s.flagged}</span>}
                 <span style={{ fontSize: 11, fontWeight: 700, color: metTarget ? C.grn : C.red }}>{s.weekValid}/{effectiveTarget}</span>
                 <span style={{ color: C.dim, fontSize: 12, transition: "transform .2s", transform: isExpanded ? "rotate(180deg)" : "rotate(0)" }}>▾</span>
               </div>
@@ -4784,7 +4793,7 @@ function BulkUpload({ cls, onRefresh }) {
             onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) handleFile(f); }}
             onClick={() => document.getElementById("csv-file-input").click()}
             style={{ border: `1px dashed ${C.bdr}`, borderRadius: 8, padding: "20px 16px", textAlign: "center", cursor: "pointer", marginBottom: 10, background: C.card2 }}>
-            <div style={{ fontSize: 20, marginBottom: 6 }}>📂</div>
+            <div style={{ marginBottom: 6, display: "flex", justifyContent: "center" }}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.dim} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2z" /></svg></div>
             <div style={{ fontSize: 13, color: C.mid }}>Drop CSV here or click to browse</div>
             <input id="csv-file-input" type="file" accept=".csv,text/csv" style={{ display: "none" }} onChange={e => { if (e.target.files[0]) handleFile(e.target.files[0]); }} />
           </div>
@@ -4876,7 +4885,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
   const availableTopics = topics.filter(t => unlocked.has(t.id));
 
   // Group by prefix for nicer display
-  const getPrefix = (name) => { const m = name.match(/^([BCP])/); return m ? (m[1] === 'B' ? '🧬' : m[1] === 'C' ? '⚗️' : '⚡') : '📚'; };
+  const getPrefix = (name) => { const m = name.match(/^([BCP])/); return m ? m[1] : "•"; };
 
   // Load questions when teacher picks a "last lesson" topic
   const selectLastTopic = async (topicId) => {
@@ -5116,7 +5125,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
           <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
             <Pill on={mode === "slideshow"} onClick={() => setMode("slideshow")}>Slideshow</Pill>
             <Pill on={mode === "list"} onClick={() => setMode("list")}>All questions</Pill>
-            <Btn v="ghost" onClick={downloadPDF} style={{ padding: "8px 12px", fontSize: 12 }}>📄 PDF</Btn>
+            <Btn v="ghost" onClick={downloadPDF} style={{ padding: "8px 12px", fontSize: 12 }}>PDF</Btn>
           </div>
         </div>
 
@@ -5177,7 +5186,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
           <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
             <Pill on={mode === "slideshow"} onClick={() => setMode("slideshow")}>Slideshow</Pill>
             <Pill on={mode === "list"} onClick={() => setMode("list")}>All questions</Pill>
-            <Btn v="ghost" onClick={downloadPDF} style={{ padding: "8px 12px", fontSize: 12 }}>📄 PDF</Btn>
+            <Btn v="ghost" onClick={downloadPDF} style={{ padding: "8px 12px", fontSize: 12 }}>PDF</Btn>
           </div>
         </div>
 
@@ -5342,7 +5351,7 @@ function TopicSelector({ topics, unlocked, toggleT, setUnlocked, cls, userId, de
   topics.forEach(t => {
     const prefix = t.name.charAt(0);
     const label = prefix === 'B' ? 'Biology' : prefix === 'C' ? 'Chemistry' : prefix === 'P' ? 'Physics' : 'Other';
-    const icon = prefix === 'B' ? '🧬' : prefix === 'C' ? '⚗️' : prefix === 'P' ? '⚡' : '📚';
+    const icon = prefix === 'B' ? 'B' : prefix === 'C' ? 'C' : prefix === 'P' ? 'P' : '•';
     const color = prefix === 'B' ? C.grn : prefix === 'C' ? C.amb : prefix === 'P' ? C.acc : C.dim;
     if (!groups[label]) groups[label] = { label, icon, color, topics: [] };
     groups[label].topics.push(t);
@@ -5810,7 +5819,7 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
               onDrop={e => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files[0]); }}
               onClick={() => fileRef.current?.click()}
               style={{ border: `2px dashed ${dragOver ? C.pri : C.bdr}`, borderRadius: 10, padding: "32px 20px", textAlign: "center", cursor: "pointer", background: dragOver ? C.priSoft : "transparent", transition: "all .15s" }}>
-              <div style={{ fontSize: 28, marginBottom: 8, opacity: 0.5 }}>📄</div>
+              <div style={{ marginBottom: 8, opacity: 0.5, display: "flex", justifyContent: "center" }}><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={C.dim} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /></svg></div>
               <div style={{ fontSize: 13, color: C.mid, fontWeight: 600 }}>Drop CSV here or tap to browse</div>
               <div style={{ fontSize: 11, color: C.dim, marginTop: 4 }}>question, answer, topic, subtopic</div>
               <input ref={fileRef} type="file" accept=".csv" style={{ display: "none" }} onChange={e => handleFile(e.target.files[0])} />
