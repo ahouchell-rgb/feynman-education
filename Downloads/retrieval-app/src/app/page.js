@@ -3264,19 +3264,19 @@ function Teacher({ user, isMod, isHoD }) {
         <>
           {tab === "dashboard" && dash && (
             <div>
-              {/* Join code banner */}
-              <Card style={{ padding: "14px 16px", marginBottom: 12, background: C.priSoft, borderColor: "rgba(200,54,45,0.2)" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div>
-                    <div style={{ fontSize: 12, color: C.mid, marginBottom: 2 }}>Student join code</div>
-                    <div style={{ fontSize: 28, fontWeight: 800, color: C.pri, letterSpacing: 6, fontFamily: "monospace" }}>{cls.join_code || "..."}</div>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: 11, color: C.dim }}>Share this with students</div>
-                    <div style={{ fontSize: 11, color: C.dim }}>They enter it to join this class</div>
-                  </div>
+              {/* Editorial header — dateline + standfirst, matches the HoD panel */}
+              <Dateline left={cls.name || "Class"} right={new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })} style={{ marginBottom: 16 }} />
+              <div style={{ marginBottom: 20, paddingBottom: 16, borderBottom: `1px solid ${C.bdr}`, display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 16, flexWrap: "wrap" }}>
+                <div>
+                  <Kicker>Class dashboard</Kicker>
+                  <Headline size={22} style={{ marginBottom: 6 }}>{cls.name || "Your class"}</Headline>
+                  <Deck>{dash.mems} student{dash.mems !== 1 ? "s" : ""} enrolled.</Deck>
                 </div>
-              </Card>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.dim, marginBottom: 4 }}>Join code</div>
+                  <div style={{ fontSize: 22, fontWeight: 800, color: C.pri, letterSpacing: 4, fontFamily: "monospace", lineHeight: 1 }}>{cls.join_code || "..."}</div>
+                </div>
+              </div>
 
               {/* ACTION HERO — concerns lead the dashboard (v4 hierarchy) */}
               {(() => {
@@ -3403,14 +3403,12 @@ function Teacher({ user, isMod, isHoD }) {
                 </Card>
               )}
 
-              {/* Period selector + stats */}
-              <Card style={{ padding: 16, marginBottom: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 14 }}>Class Activity</div>
-                  <span style={{ fontSize: 11, color: C.dim }}>{dash.mems} student{dash.mems !== 1 ? "s" : ""} enrolled</span>
+              {/* Class activity — FT-style ruled metrics, no box */}
+              <div style={{ marginBottom: 22 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
+                  <Kicker tone={C.dim}>Class · activity</Kicker>
                 </div>
-                {/* Time period pills */}
-                <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }}>
                   {[
                     { k: "thisWeek", l: "This week" },
                     { k: "lastWeek", l: "Last week" },
@@ -3423,38 +3421,34 @@ function Teacher({ user, isMod, isHoD }) {
                 {(() => {
                   const pd = dash[timePeriod] || dash.thisWeek;
                   const pct = pd.total > 0 ? Math.round(pd.correct / pd.total * 100) : 0;
+                  const metrics = [
+                    { n: pd.total, l: "Answered", c: C.txt },
+                    { n: pd.correct, l: "Correct", c: C.grn },
+                    { n: `${pct}%`, l: "Accuracy", c: pct >= 70 ? C.grn : pct >= 50 ? C.amb : pd.total ? C.red : C.dim },
+                  ];
                   return (
-                    <div style={{ padding: 14, borderRadius: 10, background: C.card2, border: `1px solid ${C.bdr}` }}>
-                      <div style={{ fontSize: 30, fontWeight: 800, color: C.txt, letterSpacing: -1 }}>{pd.total}</div>
-                      <div style={{ fontSize: 11, color: C.mid, marginTop: 2, marginBottom: 10 }}>questions answered</div>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <span style={{ fontSize: 13, color: C.grn, fontWeight: 600 }}>{pd.correct} correct</span>
-                        <span style={{ fontSize: 14, fontWeight: 700, color: pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.dim }}>{pct}%</span>
+                    <>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderTop: `1px solid ${C.bdr}`, borderBottom: `1px solid ${C.bdr}` }}>
+                        {metrics.map((m, i) => (
+                          <div key={m.l} style={{ padding: "14px 0", paddingLeft: i ? 16 : 0, borderLeft: i ? `1px solid ${C.bdr}` : "none" }}>
+                            <div style={{ fontFamily: C.serif, fontSize: 32, fontWeight: 600, letterSpacing: "-0.02em", lineHeight: 1, color: m.c, fontVariantNumeric: "tabular-nums" }}>{m.n}</div>
+                            <div style={{ marginTop: 6, fontSize: 9.5, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.dim }}>{m.l}</div>
+                          </div>
+                        ))}
                       </div>
-                      <div style={{ marginTop: 8 }}><Bar pct={pct} /></div>
-                    </div>
+                      {timePeriod === "thisWeek" && dash.lastWeek?.total > 0 && (() => {
+                        const diff = (dash.thisWeek?.total || 0) - dash.lastWeek.total;
+                        const up = diff > 0, same = diff === 0;
+                        return <div style={{ marginTop: 10, fontSize: 12, fontWeight: 600, color: same ? C.dim : up ? C.grn : C.red }}>{same ? "→ Same as" : `${up ? "↑" : "↓"} ${Math.abs(diff)} ${up ? "more" : "fewer"} than`} last week</div>;
+                      })()}
+                      <div style={{ marginTop: 10, fontSize: 11, color: C.dim }}>All time · {dash.tR} answered · {dash.tC} correct · {acc}% accuracy</div>
+                    </>
                   );
                 })()}
-                {/* Week-on-week change (only when showing thisWeek) */}
-                {timePeriod === "thisWeek" && dash.lastWeek?.total > 0 && (
-                  <div style={{ marginTop: 10, padding: "8px 12px", borderRadius: 8, background: C.card2, display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
-                    {(() => {
-                      const diff = (dash.thisWeek?.total || 0) - dash.lastWeek.total;
-                      const up = diff > 0; const same = diff === 0;
-                      return <span style={{ color: same ? C.dim : up ? C.grn : C.red, fontWeight: 700 }}>{same ? "→" : up ? "↑" : "↓"} {same ? "Same as" : `${Math.abs(diff)} ${up ? "more" : "fewer"} than`} last week</span>;
-                    })()}
-                  </div>
-                )}
-              </Card>
-
-              <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-                <Stat label="All time" value={dash.tR} color={C.acc} />
-                <Stat label="Correct" value={dash.tC} color={C.grn} />
-                <Stat label="Accuracy" value={`${acc}%`} color={acc >= 70 ? C.grn : acc >= 50 ? C.amb : C.red} />
               </div>
 
               {/* Class target slider */}
-              <Card style={{ padding: 14, marginBottom: 12 }}>
+              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Weekly homework target</div>
                   <span style={{ fontFamily: "monospace", fontWeight: 700, fontSize: 18, color: C.pri }}>{targetDraft ?? dash.clsTarget}</span>
@@ -3474,7 +3468,7 @@ function Teacher({ user, isMod, isHoD }) {
               </Card>
 
               {/* Recently taught — drives question frequency via forgetting curve boost */}
-              <Card style={{ padding: 14, marginBottom: 12 }}>
+              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
                 <div style={{ marginBottom: 10 }}>
                   <div style={{ color: C.txt, fontWeight: 600, fontSize: 13, marginBottom: 2 }}>Recently taught</div>
                   <div style={{ fontSize: 11, color: C.dim }}>Questions from recent topics appear more frequently. Slot 1 gets the strongest boost — students will see it most.</div>
@@ -3526,7 +3520,7 @@ function Teacher({ user, isMod, isHoD }) {
               {/* (At-risk now surfaced in the action hero at the top of the dashboard) */}
 
 
-              <Card style={{ padding: 14, marginBottom: 10 }}>
+              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, gap: 8, flexWrap: "wrap" }}>
                   <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Students</div>
                   <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
@@ -3552,7 +3546,7 @@ function Teacher({ user, isMod, isHoD }) {
 
               <BulkUpload cls={cls} onRefresh={() => loadCls(cls)} />
 
-              <Card style={{ padding: 14, marginBottom: 10 }}>
+              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
                 <div style={{ color: C.txt, fontWeight: 600, fontSize: 13, marginBottom: 10 }}>Top Misconceptions</div>
                 {dash.mis.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No data yet.</div> :
                   dash.mis.map((m, i) => (
@@ -3570,7 +3564,7 @@ function Teacher({ user, isMod, isHoD }) {
               {/* Question stats — per-question accuracy with drill-down to actual wrong answers.
                   Uses the same rawResps already in scope. Sorted by wrong-rate so the worst-performing
                   questions surface first. Threshold of 3 attempts to avoid noise from one-off blips. */}
-              <Card style={{ padding: 14, marginBottom: 10 }}>
+              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, gap: 8 }}>
                   <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Question stats</div>
                   <span style={{ fontSize: 11, color: C.dim }}>Hardest questions first · tap for wrong answers</span>
@@ -3661,7 +3655,7 @@ function Teacher({ user, isMod, isHoD }) {
                 })()}
               </Card>
 
-              <Card style={{ padding: 14 }}>
+              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 8 }}>
                 <div style={{ color: C.txt, fontWeight: 600, fontSize: 13, marginBottom: 10 }}>Topic Performance</div>
                 {dash.tp.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No data yet.</div> :
                   dash.tp.map((t, i) => (
