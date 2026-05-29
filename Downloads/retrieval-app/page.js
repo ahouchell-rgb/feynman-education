@@ -3144,7 +3144,7 @@ function Teacher({ user, isMod, isHoD }) {
           <Btn v="ghost" onClick={() => setSetup("class")} style={{ padding: "10px 14px", fontSize: 13, whiteSpace: "nowrap" }}>+ New</Btn>
         </div>
         <div style={{ display: "flex", gap: 6, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 2 }}>
-          {[...(isHoD ? ["hod"] : []), ...["dashboard", "starter", "topics", "questions", "papers"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : (t === "hod" ? { borderColor: C.amb, color: tab === t ? C.amb : C.amb } : undefined)}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "⚙ Admin" : t === "hod" ? "🧭 Department" : t === "papers" ? "📄 Papers" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
+          {[...(isHoD ? ["hod"] : []), ...["dashboard", "starter", "topics", "questions", "papers"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : (t === "hod" ? { borderColor: C.amb, color: tab === t ? C.amb : C.amb } : undefined)}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "Admin" : t === "hod" ? "Department" : t === "papers" ? "Papers" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
         </div>
       </div>
 
@@ -3278,12 +3278,41 @@ function Teacher({ user, isMod, isHoD }) {
                 </div>
               </Card>
 
+              {/* ACTION HERO — concerns lead the dashboard (v4 hierarchy) */}
+              {(() => {
+                const atRisk = dash.students.filter(s => { const h = s.weeklyHistory; return h && h.length >= 2 && h[0].valid === 0 && h[1].valid === 0; });
+                if (atRisk.length === 0) return (
+                  <Card style={{ padding: "14px 16px", marginBottom: 12, borderColor: `${C.grn}55`, background: C.grnS, display: "flex", alignItems: "center", gap: 10 }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.grn} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                    <div><div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", color: C.grn }}>All clear</div><div style={{ fontFamily: C.serif, fontSize: 15, color: C.txt, marginTop: 3 }}>No students need chasing this week</div></div>
+                  </Card>
+                );
+                return (
+                  <Card style={{ padding: "16px 18px", marginBottom: 12, borderColor: `${C.red}55`, borderLeft: `4px solid ${C.red}`, background: C.redS }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 9v4M12 17h.01" /><path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0Z" /></svg>
+                      <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", color: C.red }}>Needs your attention</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginTop: 10, marginBottom: 12 }}>
+                      <span style={{ fontFamily: C.serif, fontSize: 40, fontWeight: 600, lineHeight: .9, color: C.red, fontVariantNumeric: "tabular-nums" }}>{atRisk.length}</span>
+                      <span style={{ fontFamily: C.serif, fontSize: 15, lineHeight: 1.25, color: C.txt }}>{atRisk.length === 1 ? "student hasn't" : "students haven't"} practised in 2+ weeks</span>
+                    </div>
+                    {atRisk.map((s, i) => { const lastActive = s.weeklyHistory?.findIndex(w => w.valid > 0); const weeksAgo = (lastActive === -1 || lastActive === undefined) ? "Never active" : lastActive === 0 ? "This week" : `${lastActive}w ago`; return (
+                      <div key={s.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0", borderTop: `1px solid ${C.red}22` }}>
+                        <span style={{ fontSize: 13, color: C.txt, fontWeight: 500 }}>{s.name}</span>
+                        <span style={{ fontSize: 11, color: C.red, fontWeight: 600 }}>Last active: {weeksAgo}</span>
+                      </div>
+                    ); })}
+                  </Card>
+                );
+              })()}
+
               {/* Marking flags — student appeals awaiting review */}
               {dash.flags && dash.flags.length > 0 && (
                 <Card style={{ padding: 16, marginBottom: 12, borderColor: C.amb, background: C.ambS }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 16 }}>🚩</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.amb} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" y1="22" x2="4" y2="15" /></svg>
                       <span style={{ color: C.txt, fontWeight: 600, fontSize: 14 }}>
                         Marking flags · {dash.flags.length} awaiting review
                       </span>
@@ -3494,32 +3523,8 @@ function Teacher({ user, isMod, isHoD }) {
                 </div>
               </Card>
 
-              {/* At-risk alerts */}
-              {(() => {
-                const atRisk = dash.students.filter(s => {
-                  const h = s.weeklyHistory;
-                  return h && h.length >= 2 && h[0].valid === 0 && h[1].valid === 0;
-                });
-                if (atRisk.length === 0) return null;
-                return (
-                  <Card style={{ padding: 14, marginBottom: 12, borderColor: "rgba(239,68,68,0.3)", background: "rgba(239,68,68,0.04)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                      <span style={{ fontSize: 16 }}>⚠️</span>
-                      <div style={{ color: C.red, fontWeight: 600, fontSize: 13 }}>Needs attention — {atRisk.length} student{atRisk.length !== 1 ? "s" : ""} inactive for 2+ weeks</div>
-                    </div>
-                    {atRisk.map((s, i) => {
-                      const lastActive = s.weeklyHistory?.findIndex(w => w.valid > 0);
-                      const weeksAgo = lastActive === -1 || lastActive === undefined ? "Never" : lastActive === 0 ? "This week" : `${lastActive}w ago`;
-                      return (
-                        <div key={s.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", borderRadius: 8, background: C.redS, marginBottom: i < atRisk.length - 1 ? 6 : 0 }}>
-                          <span style={{ fontSize: 13, color: C.txt, fontWeight: 500 }}>{s.name}</span>
-                          <span style={{ fontSize: 11, color: C.red, fontWeight: 600 }}>Last active: {weeksAgo}</span>
-                        </div>
-                      );
-                    })}
-                  </Card>
-                );
-              })()}
+              {/* (At-risk now surfaced in the action hero at the top of the dashboard) */}
+
 
               <Card style={{ padding: 14, marginBottom: 10 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, gap: 8, flexWrap: "wrap" }}>
