@@ -287,25 +287,27 @@ function Auth({ onAuth }) {
     <div style={{ minHeight: "100dvh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: "var(--font-plex), -apple-system, sans-serif" }}>
       <div style={{ width: "100%", maxWidth: 380 }}>
         <div style={{ textAlign: "center", marginBottom: 36 }}>
-          <div style={{ fontSize: 32, fontWeight: 800, color: C.txt, letterSpacing: -1 }}>retrieval<span style={{ color: C.acc }}>.</span></div>
-          <div style={{ fontSize: 13, color: C.dim, marginTop: 6 }}>Science practice that sticks</div>
+          <div style={{ fontSize: 32, fontWeight: 800, color: C.txt, letterSpacing: -1 }}>retrieval<span style={{ color: C.pri }}>.</span></div>
+          <div style={{ fontFamily: C.serif, fontStyle: "italic", fontSize: 14, color: C.dim, marginTop: 6 }}>Science practice that sticks</div>
         </div>
         <Card style={{ padding: "28px 24px" }}>
-          <div style={{ display: "flex", gap: 6, marginBottom: 22 }}>
-            {["login", "signup"].map(m => <Pill key={m} on={mode === m} onClick={() => { setMode(m); setErr(""); setInfo(""); }} style={{ flex: 1, textAlign: "center" }}>{m === "login" ? "Log in" : "Sign up"}</Pill>)}
+          <div style={{ display: "flex", gap: 24, marginBottom: 22, borderBottom: `1px solid ${C.bdrSoft}` }}>
+            {["login", "signup"].map(m => (
+              <button key={m} onClick={() => { setMode(m); setErr(""); setInfo(""); }} style={{ background: "none", border: "none", padding: "0 0 10px", cursor: "pointer", fontFamily: "inherit", fontSize: 15, fontWeight: mode === m ? 700 : 600, color: mode === m ? C.txt : C.dim, borderBottom: mode === m ? `2.5px solid ${C.pri}` : "2.5px solid transparent", marginBottom: -1 }}>{m === "login" ? "Log in" : "Sign up"}</button>
+            ))}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {mode === "signup" && <>
               <Inp placeholder="Your name" value={name} onChange={e => setName(e.target.value)} />
-              <div style={{ fontSize: 11, color: C.dim, padding: "8px 10px", background: C.card2, borderRadius: 8, lineHeight: 1.5 }}>
-                Signing up as a student. Teachers — please ask your admin for an account.
+              <div style={{ fontSize: 12, color: C.mid, padding: "10px 12px", background: C.card2, borderRadius: 3, borderLeft: `3px solid ${C.amb}`, lineHeight: 1.5 }}>
+                You're signing up as a <strong style={{ color: C.txt, fontWeight: 600 }}>student</strong>. Teachers — please ask your admin for an account.
               </div>
             </>}
             <Inp placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
             <Inp placeholder="Password (min 6)" type="password" value={pw} onChange={e => setPw(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} />
             {err && <div style={{ color: C.red, fontSize: 13, padding: "10px 12px", background: C.redS, borderRadius: 8, lineHeight: 1.5 }}>{err}</div>}
             {info && <div style={{ color: C.amb, fontSize: 13, padding: "10px 12px", background: C.ambS, borderRadius: 8, lineHeight: 1.5 }}>{info}</div>}
-            <Btn onClick={go} disabled={busy || !email || !pw} style={{ marginTop: 6, width: "100%" }}>{busy ? "Working..." : mode === "login" ? "Log in" : "Create account"}</Btn>
+            <Btn onClick={go} disabled={busy || !email || !pw} style={{ marginTop: 6, width: "100%", ...((busy || !email || !pw) ? { background: C.bg, color: C.dim, border: `1.5px solid ${C.bdr}`, opacity: 1 } : { background: C.txt, color: C.bg }) }}>{busy ? "Working..." : mode === "login" ? "Log in" : "Create account"}</Btn>
           </div>
         </Card>
       </div>
