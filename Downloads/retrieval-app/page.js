@@ -363,6 +363,11 @@ function getSRInfo(srData, isDue) {
 }
 
 function Student({ user }) {
+  // Gamification UI toggle. false = editorial "one focal point" student view
+  // (streak banner, 7-day strip, milestone overlay, star-pop, streak/star badges,
+  // and in-card star progress all hidden). Underlying streak/star/habit computation
+  // is left intact and dormant — flip to true to restore the full motivational UI.
+  const SHOW_GAMIFICATION = false;
   const [classes, setClasses] = useState([]);
   const [cls, setCls] = useState(null);
   // Paper-taking state — when set, the page swaps to the paper attempt view
@@ -902,7 +907,7 @@ function Student({ user }) {
   return (
     <div style={{ padding: "12px 16px", maxWidth: 560, margin: "0 auto" }}>
       {/* Star pop animation */}
-      {starPop && (
+      {SHOW_GAMIFICATION && starPop && (
         <div style={{ position: "fixed", top: 20, right: 20, zIndex: 999, animation: "starPop 2s ease forwards", fontSize: 48, pointerEvents: "none" }}>⭐</div>
       )}
 
@@ -913,8 +918,8 @@ function Student({ user }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, gap: 8 }}>
         <button onClick={() => setCls(null)} style={{ background: "none", border: "none", color: C.mid, fontSize: 13, cursor: "pointer", fontFamily: "inherit", padding: 0 }}>← All classes</button>
         <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", justifyContent: "flex-end" }}>
-          {correctStreak >= 3 && <Badge color={C.amb}>{correctStreak} in a row</Badge>}
-          {currentStars > 0 && <Badge color={C.amb}>★ {currentStars}</Badge>}
+          {SHOW_GAMIFICATION && correctStreak >= 3 && <Badge color={C.amb}>{correctStreak} in a row</Badge>}
+          {SHOW_GAMIFICATION && currentStars > 0 && <Badge color={C.amb}>★ {currentStars}</Badge>}
           {sessionStats.t > 0 && <button onClick={() => setShowSummary(true)} style={{ background: "none", border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.mid, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 8px" }}>Session · {sessionStats.t}</button>}
           <button onClick={() => { setStudyMode(p => !p); setStudyTopicId(null); setReviewMode(false); setRes(null); setAns(""); }} style={{ background: studyMode ? C.priSoftBg : "none", border: `1px solid ${studyMode ? C.pri : C.bdr}`, borderRadius: 3, color: studyMode ? C.pri : C.mid, fontSize: 11, cursor: "pointer", fontFamily: "inherit", padding: "4px 10px", fontWeight: studyMode ? 600 : 500 }}>Study</button>
           {mistakeQIds.size > 0 && (
@@ -946,7 +951,7 @@ function Student({ user }) {
       {studyMode && (
         <Card style={{ padding: 14, marginBottom: 12, borderColor: "rgba(200,54,45,0.3)", background: C.priSoft }}>
           <div style={{ fontSize: 12, fontWeight: 600, color: C.pri, marginBottom: 10 }}>
-            📖 Study mode — pick a topic. Answers still count toward your weekly target.
+            Study mode — pick a topic. Answers still count toward your weekly target.
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
             {studyTopics.map(t => (
@@ -963,7 +968,7 @@ function Student({ user }) {
            Banner up top shows the daily-practice streak with a flame whose intensity
            scales with streak length. The 7-day strip below shows the underlying
            activity. A milestone overlay fires once on hitting 3/7/14/30/50/100. */}
-      {habitDays.length > 0 && (() => {
+      {SHOW_GAMIFICATION && habitDays.length > 0 && (() => {
         const todayActive = habitDays[habitDays.length - 1].count > 0;
         let hasFreeze = false;
         try { hasFreeze = typeof window !== "undefined" && window.localStorage.getItem(freezeKey) === "1"; } catch {}
@@ -1091,8 +1096,8 @@ function Student({ user }) {
           <div style={{ width: `${weekPct}%`, height: "100%", background: weeklyValid >= WEEKLY_TARGET ? C.grn : weeklyValid >= WEEKLY_TARGET * 0.5 ? C.amb : C.red, borderRadius: 99, transition: "width .4s ease" }} />
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
-          <span style={{ fontSize: 10, color: C.dim }}>{weeklyValid < WEEKLY_TARGET ? `${WEEKLY_TARGET - weeklyValid} to go` : "Target hit! 🎉"}</span>
-          {overTarget > 0 && <span style={{ fontSize: 10, color: C.amb }}>Next ⭐ in {STAR_INTERVAL - (overTarget % STAR_INTERVAL)} questions</span>}
+          <span style={{ fontSize: 10, color: C.dim }}>{weeklyValid < WEEKLY_TARGET ? `${WEEKLY_TARGET - weeklyValid} to go` : "Target hit"}</span>
+          {SHOW_GAMIFICATION && overTarget > 0 && <span style={{ fontSize: 10, color: C.amb }}>Next ⭐ in {STAR_INTERVAL - (overTarget % STAR_INTERVAL)} questions</span>}
         </div>
         {sessionQCount > 0 && (
           <button onClick={() => setShowSummary(true)} style={{ marginTop: 10, width: "100%", padding: "8px 12px", borderRadius: 8, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontWeight: 500 }}>
@@ -1101,7 +1106,7 @@ function Student({ user }) {
         )}
 
         {/* Star progress if over target */}
-        {currentStars > 0 && (
+        {SHOW_GAMIFICATION && currentStars > 0 && (
           <div style={{ marginTop: 8, padding: "6px 10px", background: C.ambS, borderRadius: 8, display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{ fontSize: 16 }}>{"⭐".repeat(Math.min(currentStars, 5))}{currentStars > 5 ? ` +${currentStars - 5}` : ""}</span>
             <span style={{ fontSize: 11, color: C.amb, fontWeight: 600 }}>{currentStars} achievement point{currentStars !== 1 ? "s" : ""} this week!</span>
@@ -1122,8 +1127,8 @@ function Student({ user }) {
                 </div>
               </div>
               <span style={{ fontSize: 11, fontWeight: 600, color: w.metTarget ? C.grn : C.red, minWidth: 35, textAlign: "right" }}>{w.valid}/{WEEKLY_TARGET}</span>
-              {w.stars > 0 && <span style={{ fontSize: 12 }}>{"⭐".repeat(Math.min(w.stars, 3))}{w.stars > 3 ? `+${w.stars-3}` : ""}</span>}
-              {!w.metTarget && w.valid > 0 && <span style={{ fontSize: 10, color: C.red }}>⚠️</span>}
+              {SHOW_GAMIFICATION && w.stars > 0 && <span style={{ fontSize: 12 }}>{"⭐".repeat(Math.min(w.stars, 3))}{w.stars > 3 ? `+${w.stars-3}` : ""}</span>}
+              {!w.metTarget && w.valid > 0 && <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.red, display: "inline-block" }} />}
             </div>
           ))}
         </Card>
@@ -1134,7 +1139,7 @@ function Student({ user }) {
            Tapping a paper enters paper-attempt mode (full take). Hidden if no papers. */}
       {assignedPapers.length > 0 && (
         <Card style={{ padding: 12, marginBottom: 12 }}>
-          <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600, marginBottom: 8 }}>📄 Papers from your teacher</div>
+          <div style={{ fontSize: 11, color: C.dim, textTransform: "uppercase", letterSpacing: 0.4, fontWeight: 600, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.dim} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /></svg>Papers from your teacher</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             {assignedPapers.map(p => {
               const inProgress = p.latest && !p.latest.submitted_at;
