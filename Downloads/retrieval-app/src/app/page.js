@@ -1081,7 +1081,7 @@ function Student({ user }) {
       })()}
 
       {/* Weekly target progress */}
-      <Card style={{ padding: 14, marginBottom: 12 }}>
+      <div style={{ marginBottom: 18 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>Weekly target</div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -1112,7 +1112,7 @@ function Student({ user }) {
             <span style={{ fontSize: 11, color: C.amb, fontWeight: 600 }}>{currentStars} achievement point{currentStars !== 1 ? "s" : ""} this week!</span>
           </div>
         )}
-      </Card>
+      </div>
 
       {/* Previous weeks */}
       {showWeeks && (
@@ -1187,15 +1187,22 @@ function Student({ user }) {
         const c = isWeek ? (tw?.correct || 0) : stats.c;
         const pct = t > 0 ? Math.round(c / t * 100) : 0;
         return (
-          <div style={{ marginBottom: 14 }}>
-            <div style={{ display: "flex", gap: 6, marginBottom: 8, justifyContent: "flex-end" }}>
+          <div style={{ marginBottom: 18, paddingTop: 16, borderTop: `1px solid ${C.bdr}` }}>
+            <div style={{ display: "flex", gap: 6, marginBottom: 12, justifyContent: "flex-end" }}>
               <Pill on={statView === "allTime"} onClick={() => setStatView("allTime")} style={{ fontSize: 11, padding: "4px 10px" }}>All time</Pill>
               <Pill on={statView === "thisWeek"} onClick={() => setStatView("thisWeek")} style={{ fontSize: 11, padding: "4px 10px" }}>This week</Pill>
             </div>
-            <div style={{ display: "flex", gap: 8 }}>
-              <Stat label="Done" value={t} color={C.acc} />
-              <Stat label="Correct" value={c} color={C.grn} />
-              <Stat label="Accuracy" value={`${pct}%`} color={pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red} />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderTop: `1px solid ${C.bdr}`, borderBottom: `1px solid ${C.bdr}` }}>
+              {[
+                { n: t, l: "Done", col: C.txt },
+                { n: c, l: "Correct", col: C.grn },
+                { n: `${pct}%`, l: "Accuracy", col: t > 0 ? (pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red) : C.dim },
+              ].map((m, i) => (
+                <div key={m.l} style={{ padding: "14px 0", paddingLeft: i ? 16 : 0, borderLeft: i ? `1px solid ${C.bdr}` : "none" }}>
+                  <div style={{ fontFamily: C.serif, fontSize: 32, fontWeight: 600, letterSpacing: "-0.02em", lineHeight: 1, color: m.col, fontVariantNumeric: "tabular-nums" }}>{m.n}</div>
+                  <div style={{ marginTop: 6, fontSize: 9.5, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.dim }}>{m.l}</div>
+                </div>
+              ))}
             </div>
           </div>
         );
@@ -1203,8 +1210,8 @@ function Student({ user }) {
 
       {/* Topic strength */}
       {topicStats.length > 0 && (
-        <Card style={{ padding: 14, marginBottom: 14 }}>
-          <button onClick={() => setShowTopics(p => !p)} style={{ width: "100%", background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ marginBottom: 18, borderTop: `1px solid ${C.bdr}`, borderBottom: showTopics ? "none" : `1px solid ${C.bdr}` }}>
+          <button onClick={() => setShowTopics(p => !p)} style={{ width: "100%", background: "none", border: "none", outline: "none", cursor: "pointer", fontFamily: "inherit", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 0" }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>Topic strength</div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               {!showTopics && (() => {
@@ -1219,7 +1226,7 @@ function Student({ user }) {
           </button>
 
           {showTopics && (
-            <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ marginTop: 4, paddingBottom: 14, display: "flex", flexDirection: "column", gap: 6 }}>
               {topicStats.map((t, i) => {
                 if (t.isPlaceholder) return (
                   <div key="placeholder" style={{ padding: "8px 10px", borderRadius: 8, background: C.card2, fontSize: 12, color: C.dim, textAlign: "center" }}>{t.name}</div>
@@ -1247,7 +1254,7 @@ function Student({ user }) {
               })}
             </div>
           )}
-        </Card>
+        </div>
       )}
 
       {activeQs.length === 0 && studyMode ? (
