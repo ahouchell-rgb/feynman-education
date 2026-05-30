@@ -2886,6 +2886,12 @@ function Teacher({ user, isMod, isHoD }) {
         if (d >= thisWeekBounds.start && d <= thisWeekBounds.end) {
           sm[r.student_id].weekValid++;
         }
+        // Fold papers into the per-week history too, so the activity-period toggle counts
+        // papers consistently across weeks (otherwise prior weeks would undercount paper effort).
+        const wi = weekBounds.findIndex(wb => d >= wb.start && d <= wb.end);
+        if (wi >= 0 && sm[r.student_id].weeklyHistory && sm[r.student_id].weeklyHistory[wi]) {
+          sm[r.student_id].weeklyHistory[wi].valid++;
+        }
         // Also bump the all-time totals so the headline numbers reflect paper effort.
         sm[r.student_id].t++;
         if ((r.marks_awarded || 0) > 0) sm[r.student_id].c++;
@@ -3546,7 +3552,7 @@ function Teacher({ user, isMod, isHoD }) {
 
               <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, gap: 8, flexWrap: "wrap" }}>
-                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Students</div>
+                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Students <span style={{ color: C.dim, fontWeight: 500 }}>· {timePeriod === "thisWeek" ? "this week" : timePeriod === "lastWeek" ? "last week" : timePeriod === "last4Weeks" ? "last 4 weeks" : "all time"}</span></div>
                   <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
                     <button
                       onClick={exportSummaryCsv}
@@ -3565,7 +3571,7 @@ function Teacher({ user, isMod, isHoD }) {
                   </div>
                 </div>
                 {dash.students.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No students yet. Share the join code above.</div> :
-                  <StudentList students={dash.students} cls={cls} clsTarget={dash.clsTarget} onRefresh={() => loadCls(cls)} parentTokens={parentTokens} onGenerateToken={generateParentToken} onRevokeToken={revokeParentToken} />}
+                  <StudentList students={dash.students} cls={cls} clsTarget={dash.clsTarget} timePeriod={timePeriod} onRefresh={() => loadCls(cls)} parentTokens={parentTokens} onGenerateToken={generateParentToken} onRevokeToken={revokeParentToken} />}
               </Card>
 
               <BulkUpload cls={cls} onRefresh={() => loadCls(cls)} />
@@ -4440,7 +4446,7 @@ function PaperResults({ paperId, cls, onBack }) {
   );
 }
 
-function StudentList({ students, cls, clsTarget, onRefresh, parentTokens = {}, onGenerateToken, onRevokeToken }) {
+function StudentList({ students, cls, clsTarget, timePeriod = "thisWeek", onRefresh, parentTokens = {}, onGenerateToken, onRevokeToken }) {
   const [expanded, setExpanded] = useState(null);
   const [newPw, setNewPw] = useState("");
   const [renaming, setRenaming] = useState(null); // studentId being renamed
@@ -4487,32 +4493,48 @@ function StudentList({ students, cls, clsTarget, onRefresh, parentTokens = {}, o
     setBusy(false);
   };
 
+  // Per-student completion for the selected activity period (driven by the Class · activity toggle).
+  // This week = weekValid (includes papers, matches the headline). Other periods read the
+  // papers-folded 12-week history. All time shows a plain total — a weekly target is meaningless there.
+  const periodValidOf = (s) => {
+    const h = s.weeklyHistory || [];
+    if (timePeriod === "allTime") return s.t;
+    if (timePeriod === "last4Weeks") return (h[0]?.valid || 0) + (h[1]?.valid || 0) + (h[2]?.valid || 0) + (h[3]?.valid || 0);
+    if (timePeriod === "lastWeek") return h[1]?.valid || 0;
+    return s.weekValid;
+  };
+
   return (
     <div>
-      {students.sort((a, b) => b.weekValid - a.weekValid).map(s => {
+      {students.slice().sort((a, b) => periodValidOf(b) - periodValidOf(a)).map(s => {
         const effectiveTarget = s.targetOverride ?? clsTarget;
         const p = s.t > 0 ? Math.round(s.c / s.t * 100) : 0;
-        const weekPct = Math.min(100, Math.round((s.weekValid / effectiveTarget) * 100));
-        const metTarget = s.weekValid >= effectiveTarget;
+        const periodValid = periodValidOf(s);
+        const periodTarget = timePeriod === "allTime" ? null : timePeriod === "last4Weeks" ? effectiveTarget * 4 : effectiveTarget;
+        const hasTarget = periodTarget !== null;
+        const weekPct = hasTarget && periodTarget > 0 ? Math.min(100, Math.round((periodValid / periodTarget) * 100)) : 0;
+        const metTarget = hasTarget && periodValid >= periodTarget;
         const isExpanded = expanded === s.id;
 
         return (
           <div key={s.id} style={{ marginBottom: 4 }}>
             <button onClick={() => { setExpanded(isExpanded ? null : s.id); setNewPw(""); setMsg(""); setConfirmDelete(null); setRenaming(null); setRenameDraft(""); }} style={{
               width: "100%", padding: "10px 10px", borderRadius: isExpanded ? "8px 8px 0 0" : 8, background: C.card2, border: "none", cursor: "pointer", fontFamily: "inherit", textAlign: "left",
-              borderLeft: `3px solid ${metTarget ? C.grn : s.weekValid < effectiveTarget * 0.5 ? C.red : C.amb}`,
+              borderLeft: `3px solid ${!hasTarget ? C.bdr : metTarget ? C.grn : periodValid < periodTarget * 0.5 ? C.red : C.amb}`,
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                 <div style={{ flex: 1, color: C.txt, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 500 }}>{s.name}</div>
                 {s.targetOverride && <span style={{ fontSize: 9, color: C.acc, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5 }}>custom target</span>}
                 {s.flagged > 0 && <span style={{ fontSize: 10, color: C.red, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 3 }}><svg width="9" height="9" viewBox="0 0 24 24" fill={C.red} stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" y1="22" x2="4" y2="15" stroke={C.red} fill="none" /></svg>{s.flagged}</span>}
-                <span style={{ fontSize: 11, fontWeight: 700, color: metTarget ? C.grn : C.red }}>{s.weekValid}/{effectiveTarget}</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: !hasTarget ? C.txt : metTarget ? C.grn : C.red }}>{hasTarget ? `${periodValid}/${periodTarget}` : periodValid}</span>
                 <span style={{ color: C.dim, fontSize: 12, transition: "transform .2s", transform: isExpanded ? "rotate(180deg)" : "rotate(0)" }}>▾</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{ flex: 1, height: 5, background: C.bdr, borderRadius: 99 }}>
-                  <div style={{ width: `${weekPct}%`, height: "100%", background: metTarget ? C.grn : weekPct >= 50 ? C.amb : C.red, borderRadius: 99, transition: "width .3s" }} />
-                </div>
+                {hasTarget ? (
+                  <div style={{ flex: 1, height: 5, background: C.bdr, borderRadius: 99 }}>
+                    <div style={{ width: `${weekPct}%`, height: "100%", background: metTarget ? C.grn : weekPct >= 50 ? C.amb : C.red, borderRadius: 99, transition: "width .3s" }} />
+                  </div>
+                ) : <div style={{ flex: 1 }} />}
                 <span style={{ fontSize: 10, color: C.dim, whiteSpace: "nowrap" }}>{p}% acc all time</span>
               </div>
             </button>
