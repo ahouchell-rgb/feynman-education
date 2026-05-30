@@ -5228,9 +5228,10 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
   // Setup mode
   return (
     <div>
-      <Card style={{ padding: 16, marginBottom: 12 }}>
-        <div style={{ color: C.txt, fontWeight: 600, fontSize: 14, marginBottom: 4 }}>Generate Lesson Starter</div>
-        <div style={{ color: C.dim, fontSize: 12, marginBottom: 16 }}>Create a retrieval question set to project at the start of your lesson</div>
+      <div style={{ marginBottom: 12 }}>
+        <Kicker>Lesson starter</Kicker>
+        <Headline size={22} style={{ marginBottom: 4 }}>Generate a lesson starter</Headline>
+        <div style={{ color: C.mid, fontSize: 13, marginBottom: 20 }}>Create a retrieval question set to project at the start of your lesson.</div>
 
         {/* Number of questions */}
         <div style={{ marginBottom: 16 }}>
@@ -5245,7 +5246,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
                 const n = parseInt(e.target.value) || 1;
                 setNumQs(Math.max(1, Math.min(50, n)));
               }}
-              style={{ width: 80, padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, color: C.txt, fontSize: 14, outline: "none", fontFamily: "inherit", textAlign: "center", fontWeight: 600 }}
+              style={{ width: 80, padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 14, outline: "none", fontFamily: "inherit", textAlign: "center", fontWeight: 600 }}
             />
             <div style={{ display: "flex", gap: 4, flex: 1 }}>
               {[3, 5, 10, 20].map(n => (
@@ -5260,7 +5261,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
         <div style={{ marginBottom: 16 }}>
           <div style={{ fontSize: 12, color: C.mid, fontWeight: 600, marginBottom: 8 }}>What did you teach last lesson?</div>
           <select value={lastTopic} onChange={e => selectLastTopic(e.target.value)}
-            style={{ width: "100%", padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, color: C.txt, fontSize: 14, outline: "none" }}>
+            style={{ width: "100%", padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 14, outline: "none" }}>
             <option value="">Select topic...</option>
             {availableTopics.map(t => <option key={t.id} value={t.id}>{getPrefix(t.name)} {t.name}</option>)}
           </select>
@@ -5343,7 +5344,7 @@ function LessonStarter({ topics, unlocked, cls, dash }) {
           <span style={{ fontSize: 11, color: C.acc }}>● {Math.ceil(numQs * 0.3)} recent</span>
           <span style={{ fontSize: 11, color: C.red }}>● {numQs - Math.ceil(numQs * 0.4) - Math.ceil(numQs * 0.3)} misconceptions</span>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }
@@ -5392,8 +5393,8 @@ function TopicSelector({ topics, unlocked, toggleT, setUnlocked, cls, userId, de
     return (
       <div key={t.id} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
         <button onClick={() => toggleT(t.id)} style={{
-          flex: 1, display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 8, cursor: "pointer", textAlign: "left", fontFamily: "inherit", fontSize: 13,
-          background: on ? C.priSoft : "transparent", border: `1px solid ${on ? "rgba(200,54,45,.2)" : "transparent"}`, color: on ? C.txt : C.mid, transition: "all .15s",
+          flex: 1, display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 3, cursor: "pointer", textAlign: "left", fontFamily: "inherit", fontSize: 13,
+          background: "transparent", border: "none", borderLeft: `3px solid ${on ? C.pri : "transparent"}`, color: on ? C.txt : C.mid, transition: "all .15s",
         }}>
           <div style={{ width: 20, height: 20, borderRadius: 5, border: `2px solid ${on ? C.pri : C.dim}`, background: on ? C.pri : "transparent", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{on ? "✓" : ""}</div>
           <span style={{ flex: 1 }}>{t.name}</span>
@@ -5417,16 +5418,17 @@ function TopicSelector({ topics, unlocked, toggleT, setUnlocked, cls, userId, de
 
   return (
     <div>
-      <Card style={{ padding: 14, marginBottom: 10 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+      <div style={{ marginBottom: 16, paddingBottom: 16, borderBottom: `1px solid ${C.bdr}` }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
           <div>
-            <div style={{ color: C.txt, fontWeight: 600, fontSize: 14 }}>Unlock Topics</div>
-            <div style={{ color: C.dim, fontSize: 12, marginTop: 2 }}>Students only see questions from unlocked topics</div>
+            <Kicker>Topic access</Kicker>
+            <Headline size={22}>Unlock topics</Headline>
+            <div style={{ color: C.mid, fontSize: 13, marginTop: 4 }}>Students only see questions from unlocked topics.</div>
           </div>
           <Badge color={C.pri}>{unlocked.size}/{topics.length}</Badge>
         </div>
         <Inp placeholder="Search topics..." value={search} onChange={e => setSearch(e.target.value)} style={{ fontSize: 13, padding: "10px 12px" }} />
-      </Card>
+      </div>
 
       {/* Search results */}
       {filtered && (
@@ -5670,9 +5672,12 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
   const newTopics = csvRows ? [...new Set(csvRows.map(r => r.subtopic || r.topic))].filter(n => !existingNames.has(n.toLowerCase())) : [];
 
   return (
-    <Card style={{ padding: 14 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-        <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Questions</div>
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, paddingBottom: 14, borderBottom: `1px solid ${C.bdr}` }}>
+        <div>
+          <Kicker>Question bank</Kicker>
+          <Headline size={22}>Questions</Headline>
+        </div>
         {added > 0 && <Badge color={C.grn}>+{added} added</Badge>}
       </div>
 
@@ -5682,7 +5687,7 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
           <Inp placeholder="New topic..." value={nt} onChange={e => setNt(e.target.value)} onKeyDown={e => e.key === "Enter" && addT()} />
           <Btn onClick={addT} style={{ whiteSpace: "nowrap", fontSize: 13 }}>+ Topic</Btn>
         </div>
-        <select value={tid} onChange={e => setTid(e.target.value)} style={{ width: "100%", padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, color: C.txt, fontSize: 14, marginBottom: 12, outline: "none" }}>
+        <select value={tid} onChange={e => setTid(e.target.value)} style={{ width: "100%", padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 14, marginBottom: 12, outline: "none" }}>
           <option value="">Select topic...</option>
           {topics.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
@@ -5873,7 +5878,7 @@ function QMgr({ subjectId, userId, topics, setTopics }) {
           )}
         </div>
       )}
-    </Card>
+    </div>
   );
 }
 
