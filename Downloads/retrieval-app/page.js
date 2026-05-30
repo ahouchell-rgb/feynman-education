@@ -242,7 +242,7 @@ const Inp = ({ style, ...p }) => <input {...p} style={{ width: "100%", padding: 
 const TA = ({ style, ...p }) => <textarea {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "inherit", resize: "vertical", ...style }} />;
 const Btn = ({ v = "pri", style, children, ...p }) => {
   const s = { pri: { background: C.pri, color: C.bg }, ghost: { background: "transparent", color: C.mid, border: `1px solid ${C.bdr}` } };
-  return <button {...p} style={{ padding: "11px 18px", borderRadius: 3, border: "none", fontWeight: 600, fontSize: 12, cursor: "pointer", fontFamily: "inherit", transition: "all .15s", letterSpacing: ".06em", textTransform: "uppercase", ...s[v], ...style, ...(p.disabled ? { opacity: .4, cursor: "default" } : {}) }}>{children}</button>;
+  return <button {...p} style={{ padding: "11px 18px", borderRadius: 3, border: "none", fontWeight: 600, fontSize: 12, cursor: "pointer", fontFamily: "inherit", transition: "all .15s", letterSpacing: ".06em", textTransform: "uppercase", ...s[v], ...style, ...(p.disabled ? { background: C.bg, color: C.dim, border: `1.5px solid ${C.bdr}`, opacity: 1, cursor: "default" } : {}) }}>{children}</button>;
 };
 const Card = ({ children, style, ...p }) => <div {...p} style={{ background: C.card, borderRadius: 3, border: `1px solid ${C.bdr}`, ...style }}>{children}</div>;
 const Badge = ({ children, color = C.pri, style }) => <span style={{ fontSize: 10, fontWeight: 600, padding: "3px 10px", borderRadius: 3, background: `${color}18`, color, textTransform: "uppercase", letterSpacing: ".12em", ...style }}>{children}</span>;
@@ -5890,7 +5890,7 @@ export default function App() {
       <div style={{ borderBottom: `1px solid ${C.bdr}`, background: C.card, padding: "0 16px", position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 700, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", height: 50 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.5 }}>retrieval<span style={{ color: C.acc }}>.</span></span>
+            <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.5 }}>retrieval<span style={{ color: C.pri }}>.</span></span>
             <Badge color={isMod ? C.pri : (user.profile?.role === "hod" ? C.amb : (isT ? C.acc : C.pri))}>{isMod ? "Moderator" : (user.profile?.role === "hod" ? "Head of Department" : (isT ? "Teacher" : "Student"))}</Badge>
           </div>
           <Btn v="ghost" onClick={() => { sb.auth.out(); setUser(null); }} style={{ padding: "6px 12px", fontSize: 12 }}>Log out</Btn>
@@ -5898,7 +5898,6 @@ export default function App() {
       </div>
       <div style={{ paddingBottom: 60 }}>{isT ? <Teacher user={user} isMod={isMod} isHoD={isHoD} /> : <Student user={user} />}</div>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
         body{background:${C.bg};-webkit-font-smoothing:antialiased}
         @keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -5908,6 +5907,8 @@ export default function App() {
         @keyframes milestonePop{0%{opacity:0;transform:scale(0.5)}60%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
         button:active{transform:scale(.98)}
         input:focus,textarea:focus,select:focus{border-color:${C.pri}!important;box-shadow:0 0 0 3px ${C.priGlow}}
+        button:focus{outline:none}
+        button:focus-visible{outline:2px solid ${C.pri};outline-offset:2px}
         ::selection{background:${C.priGlow}}
         select option{background:${C.card};color:${C.txt}}
       `}</style>
