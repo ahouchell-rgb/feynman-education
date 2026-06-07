@@ -2706,6 +2706,8 @@ function Teacher({ user, isMod, isHoD }) {
   const [parentTokens, setParentTokens] = useState({}); // studentId → token UUID
   const [rawResps, setRawResps] = useState([]); // full response rows for the active class — used by CSV export
   const [expandedQuestionStat, setExpandedQuestionStat] = useState(null); // question_id with wrong answers panel open
+  const [topicBank, setTopicBank] = useState({}); // topic_id → count of non-archived questions (coverage denominator)
+  const [expandedSpread, setExpandedSpread] = useState(null); // topic_id with per-student spread panel open
   // Marking flag review state
   const [expandedFlag, setExpandedFlag] = useState(null); // flag_id being reviewed
   const [flagNote, setFlagNote] = useState(""); // teacher's optional note on the active review
@@ -2789,6 +2791,16 @@ function Teacher({ user, isMod, isHoD }) {
       ]);
       setTopics(allT); setUnlocked(new Set(ul.map(t => t.topic_id)));
       setRawResps(resps || []);
+      // Bank size per topic — count of non-archived questions (incl. never-attempted),
+      // used as the coverage denominator in the Question spread panel. One light query, runs on class load.
+      try {
+        const tids = allT.map(t => t.id);
+        if (tids.length) {
+          const bankQs = await sb.q("questions", { params: { topic_id: `in.(${tids.join(",")})`, archived: "eq.false", select: "id,topic_id" } });
+          const bank = {}; (bankQs || []).forEach(q => { bank[q.topic_id] = (bank[q.topic_id] || 0) + 1; });
+          setTopicBank(bank);
+        } else { setTopicBank({}); }
+      } catch (e) { console.error("bank size fetch failed", e); setTopicBank({}); }
       const delMap = {}; dels.forEach(d => { delMap[d.topic_id] = { taught_at: d.taught_at, notes: d.notes }; });
       setDeliveries(delMap);
       const tokMap = {}; tokens.forEach(t => { tokMap[t.student_id] = t.token; });
@@ -3696,6 +3708,97 @@ function Teacher({ user, isMod, isHoD }) {
                       <span style={{ fontSize: 11, fontWeight: 700, color: t.pct >= 70 ? C.grn : t.pct >= 50 ? C.amb : C.red, minWidth: 28, textAlign: "right" }}>{t.pct}%</span>
                     </div>
                   ))}
+              </Card>
+
+              {/* Question spread — completion volume + bank coverage per subtopic, classwide and per student.
+                  Pure counts only: NO accuracy, NO misconceptions on this panel by design.
+                  Fill meter = coverage (distinct questions practised ÷ questions in the topic's bank) — bounded,
+                  so a "full" box means the whole bank has been worked through. The raw attempt count (volume)
+                  sits alongside it. Subtopic == topic here (CSV subtopics are flattened to topics on import).
+                  rawResps + dash.students already in scope; topicBank holds non-archived bank sizes. */}
+              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginTop: 18, marginBottom: 8 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 8 }}>
+                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Question spread</div>
+                  <span style={{ fontSize: 11, color: C.dim }}>coverage of each subtopic · tap for students</span>
+                </div>
+                <div style={{ fontSize: 11, color: C.dim, marginBottom: 14, lineHeight: 1.4 }}>
+                  Bar fills as distinct questions get practised; figure after the dot is total attempts. Not accuracy.
+                </div>
+                {(() => {
+                  const students = dash?.students || [];
+                  // Single pass: per topic, total attempts + set of distinct question_ids, broken down by student.
+                  const agg = {};
+                  rawResps.forEach(r => {
+                    if (r.ai_feedback && r.ai_feedback.startsWith("FLAGGED:")) return; // exclude flagged spam, as the other panels do
+                    const tid = r.questions?.topic_id;
+                    if (!tid || !r.question_id) return;
+                    if (!agg[tid]) agg[tid] = { attempts: 0, distinct: new Set(), byStudent: {} };
+                    const a = agg[tid];
+                    a.attempts++; a.distinct.add(r.question_id);
+                    if (!a.byStudent[r.student_id]) a.byStudent[r.student_id] = { attempts: 0, distinct: new Set() };
+                    const s = a.byStudent[r.student_id];
+                    s.attempts++; s.distinct.add(r.question_id);
+                  });
+                  // Keep curriculum order (topics is sorted by sort_order). Skip phantom topics with no bank and no activity.
+                  const rows = topics
+                    .filter(t => (topicBank[t.id] || 0) > 0 || (agg[t.id]?.attempts || 0) > 0)
+                    .map(t => {
+                      const bank = topicBank[t.id] || 0;
+                      const a = agg[t.id] || { attempts: 0, distinct: new Set(), byStudent: {} };
+                      // distinct can exceed bank if archived questions were answered historically — cap for display.
+                      const covered = bank ? Math.min(a.distinct.size, bank) : a.distinct.size;
+                      const pct = bank ? Math.min(100, Math.round(a.distinct.size / bank * 100)) : 0;
+                      return { id: t.id, name: t.name, bank, attempts: a.attempts, covered, pct, byStudent: a.byStudent };
+                    });
+                  if (rows.length === 0) return <div style={{ color: C.dim, fontSize: 13 }}>No questions in any subtopic yet.</div>;
+                  return rows.map(row => {
+                    const expanded = expandedSpread === row.id;
+                    return (
+                      <div key={row.id} style={{ borderTop: `1px solid ${C.bdrSoft}`, padding: "11px 0" }}>
+                        <div onClick={() => setExpandedSpread(expanded ? null : row.id)} style={{ cursor: "pointer", userSelect: "none" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 7 }}>
+                            <div style={{ fontSize: 13, color: C.txt, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>
+                              <span style={{ color: C.dim, fontSize: 10, marginRight: 7 }}>{expanded ? "▾" : "▸"}</span>{row.name}
+                            </div>
+                            <div style={{ fontSize: 11, color: C.mid, flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>
+                              {row.bank ? `${row.covered}/${row.bank} covered` : "no bank"} · {row.attempts} attempt{row.attempts === 1 ? "" : "s"}
+                            </div>
+                          </div>
+                          {/* neutral fill meter — represents a quantity (coverage), deliberately not a status colour */}
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <div style={{ flex: 1, height: 8, background: C.bdrSoft, borderRadius: 2, overflow: "hidden" }}>
+                              <div style={{ width: `${row.pct}%`, height: "100%", background: C.txt, borderRadius: 2, transition: "width .4s" }} />
+                            </div>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: C.txt, minWidth: 34, textAlign: "right", fontVariantNumeric: "tabular-nums" }}>{row.bank ? `${row.pct}%` : "—"}</span>
+                          </div>
+                        </div>
+                        {expanded && (
+                          <div style={{ marginTop: 11, paddingLeft: 17, display: "flex", flexDirection: "column", gap: 8 }}>
+                            {students.length === 0 ? <div style={{ fontSize: 12, color: C.dim }}>No students in this class.</div> :
+                              [...students]
+                                .map(st => {
+                                  const sd = row.byStudent[st.id] || { attempts: 0, distinct: new Set() };
+                                  const sPct = row.bank ? Math.min(100, Math.round(sd.distinct.size / row.bank * 100)) : 0;
+                                  return { id: st.id, name: st.name, attempts: sd.attempts, covered: row.bank ? Math.min(sd.distinct.size, row.bank) : sd.distinct.size, pct: sPct };
+                                })
+                                .sort((x, y) => x.pct - y.pct || x.attempts - y.attempts) // least covered first → surfaces who's missed the subtopic
+                                .map(st => (
+                                  <div key={st.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                    <div style={{ width: 116, fontSize: 12, color: C.mid, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flexShrink: 0 }}>{st.name}</div>
+                                    <div style={{ flex: 1, height: 6, background: C.bdrSoft, borderRadius: 2, overflow: "hidden" }}>
+                                      <div style={{ width: `${st.pct}%`, height: "100%", background: C.mid, borderRadius: 2, transition: "width .4s" }} />
+                                    </div>
+                                    <span style={{ fontSize: 10, color: C.mid, minWidth: 70, textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
+                                      {row.bank ? `${st.covered}/${row.bank}` : "—"} · {st.attempts}
+                                    </span>
+                                  </div>
+                                ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  });
+                })()}
               </Card>
             </div>
           )}
