@@ -3739,9 +3739,9 @@ function Teacher({ user, isMod, isHoD }) {
                     const s = a.byStudent[r.student_id];
                     s.attempts++; s.distinct.add(r.question_id);
                   });
-                  // Keep curriculum order (topics is sorted by sort_order). Skip phantom topics with no bank and no activity.
+                  // Only subtopics selected (unlocked) for this class — the ones actually in play.
                   const rows = topics
-                    .filter(t => (topicBank[t.id] || 0) > 0 || (agg[t.id]?.attempts || 0) > 0)
+                    .filter(t => unlocked.has(t.id))
                     .map(t => {
                       const bank = topicBank[t.id] || 0;
                       const a = agg[t.id] || { attempts: 0, distinct: new Set(), byStudent: {} };
@@ -3750,7 +3750,7 @@ function Teacher({ user, isMod, isHoD }) {
                       const pct = bank ? Math.min(100, Math.round(a.distinct.size / bank * 100)) : 0;
                       return { id: t.id, name: t.name, bank, attempts: a.attempts, covered, pct, byStudent: a.byStudent };
                     });
-                  if (rows.length === 0) return <div style={{ color: C.dim, fontSize: 13 }}>No questions in any subtopic yet.</div>;
+                  if (rows.length === 0) return <div style={{ color: C.dim, fontSize: 13 }}>No subtopics selected for this class yet.</div>;
                   return rows.map(row => {
                     const expanded = expandedSpread === row.id;
                     return (
