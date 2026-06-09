@@ -14,7 +14,7 @@ function UnitContent() {
   const searchParams = useSearchParams();
   const unitId = params.unitId;
   const classId = searchParams.get("class"); // preserve class context through to lessons
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
   const [unit, setUnit] = useState(null);
   const [lessons, setLessons] = useState([]);
   const [resources, setResources] = useState([]);
@@ -25,6 +25,7 @@ function UnitContent() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const isAdmin = profile?.role === "admin";
+  const author = isAdmin || !!profile?.is_lead;
 
   useEffect(() => { loadData(); /* eslint-disable-next-line */ }, [unitId]);
 
@@ -37,7 +38,7 @@ function UnitContent() {
       const [ls, rs, dk] = await Promise.all([
         sk.q("lessons", { params: { unit_id: `eq.${unitId}`, select: "*", order: "sort_order.asc,lesson_number.asc" } }).catch(() => []),
         sk.q("resources", { params: { unit_id: `eq.${unitId}`, lesson_id: "is.null", select: "*", order: "created_at.asc" } }).catch(() => []),
-        sk.q("decks", { params: { unit_id: `eq.${unitId}`, select: "id,title,slides,lesson_id,updated_at", order: "updated_at.desc" } }).catch(() => []),
+        sk.q("decks", { params: { unit_id: `eq.${unitId}`, select: "id,title,slides,lesson_id,owner,is_master,shared,updated_at", order: "updated_at.desc" } }).catch(() => []),
       ]);
       setLessons(ls || []);
       setResources(rs || []);
@@ -76,6 +77,20 @@ function UnitContent() {
     } catch (e) { alert("Couldn't create slides: " + e.message); }
   };
 
+  const newOfficial = async () => {
+    try {
+      const [d] = await sk.q("decks", { method: "POST", body: { title: `${unit.title} — official`, slides: [{ id: "s" + Date.now(), elements: [] }], unit_id: unitId, is_master: true } });
+      router.push(`/slides?deck=${d.id}`);
+    } catch (e) { alert("Couldn't create official deck: " + e.message); }
+  };
+
+  const copyDeckTo = async (dk) => {
+    try {
+      const [c] = await sk.q("decks", { method: "POST", body: { title: `${dk.title} (my copy)`, slides: dk.slides || [], unit_id: unitId } });
+      router.push(`/slides?deck=${c.id}`);
+    } catch (e) { alert("Couldn't copy: " + e.message); }
+  };
+
   const lessonHref = (lessonId) => {
     const q = classId ? `?class=${classId}` : "";
     return `/unit/${unitId}/lesson/${lessonId}${q}`;
@@ -86,6 +101,33 @@ function UnitContent() {
 
   const d = DISC[unit.discipline] || DISC.combined;
   const termLabel = unit.term ? unit.term.charAt(0).toUpperCase() + unit.term.slice(1) : "";
+
+  // Split decks into the three tiers.
+  const masters = decks.filter((dk) => dk.is_master);
+  const mineDecks = decks.filter((dk) => !dk.is_master && dk.owner === user?.id);
+  const deptDecks = decks.filter((dk) => !dk.is_master && dk.shared && dk.owner !== user?.id);
+  const subhead = { fontFamily: C.mono, fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: C.dim, marginBottom: 8 };
+  const listCol = { display: "flex", flexDirection: "column", gap: 4 };
+
+  const renderDeck = (dk, kind) => {
+    const n = dk.slides?.length || 0;
+    const editable = kind === "mine" || (kind === "master" && author);
+    return (
+      <div key={dk.id} style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: C.surface, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: 10 }}>
+        <span style={{ fontSize: 14 }}>{kind === "master" ? "★" : "🖥"}</span>
+        <span style={{ flex: 1, fontSize: 14, fontWeight: 500, color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{dk.title}</span>
+        {kind === "mine" && dk.shared && <span style={{ fontSize: 10, fontFamily: C.mono, color: C.grn, border: `1px solid ${C.grn}55`, borderRadius: 3, padding: "1px 5px" }}>shared</span>}
+        <span style={{ fontSize: 11, color: C.dim, fontFamily: C.mono }}>{n} slide{n === 1 ? "" : "s"}</span>
+        {editable && <Btn v="ghost" style={{ fontSize: 11, padding: "4px 10px" }} onClick={() => router.push(`/slides?deck=${dk.id}`)}>{kind === "master" ? "Edit" : "Open"}</Btn>}
+        {kind !== "mine" && (
+          <>
+            <Btn v="ghost" style={{ fontSize: 11, padding: "4px 10px" }} onClick={() => router.push(`/slides/${dk.id}/present`)}>View</Btn>
+            <Btn v="soft" style={{ fontSize: 11, padding: "4px 10px" }} onClick={() => copyDeckTo(dk)}>Copy</Btn>
+          </>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -114,25 +156,30 @@ function UnitContent() {
       )}
 
       <Card style={{ padding: 16, marginBottom: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: decks.length ? 12 : 0 }}>
-          <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, flex: 1 }}>Your slides</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
+          <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, flex: 1 }}>Slides</div>
+          {author && <Btn v="ghost" onClick={newOfficial} style={{ fontSize: 11, padding: "4px 10px" }}>+ New official</Btn>}
           <Btn v="ghost" onClick={newSlides} style={{ fontSize: 11, padding: "4px 10px" }}>+ New slides</Btn>
         </div>
-        {decks.length === 0 ? (
-          <div style={{ fontSize: 13, color: C.dim, fontStyle: "italic" }}>No slides for this unit yet — click “New slides” to build a deck. It saves here automatically.</div>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {decks.map((dk) => (
-              <button key={dk.id} onClick={() => router.push(`/slides?deck=${dk.id}`)}
-                style={{ width: "100%", padding: "10px 14px", borderRadius: 6, background: C.surface, border: `1px solid ${C.border}`, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 12 }}
-                onMouseEnter={e => e.currentTarget.style.borderColor = C.borderStrong}
-                onMouseLeave={e => e.currentTarget.style.borderColor = C.border}>
-                <span style={{ fontSize: 14 }}>🖥</span>
-                <span style={{ flex: 1, fontSize: 14, fontWeight: 500, color: C.text }}>{dk.title}</span>
-                <span style={{ fontSize: 11, color: C.dim, fontFamily: C.mono }}>{dk.slides?.length || 0} slide{(dk.slides?.length || 0) === 1 ? "" : "s"}</span>
-                <span style={{ color: C.dim, fontSize: 14 }}>→</span>
-              </button>
-            ))}
+
+        {masters.length > 0 && (
+          <div style={{ marginBottom: 16 }}>
+            <div style={subhead}>★ Official</div>
+            <div style={listCol}>{masters.map((dk) => renderDeck(dk, "master"))}</div>
+          </div>
+        )}
+
+        <div style={{ marginBottom: deptDecks.length ? 16 : 0 }}>
+          <div style={subhead}>Your slides</div>
+          {mineDecks.length === 0
+            ? <div style={{ fontSize: 13, color: C.dim, fontStyle: "italic" }}>None yet — “New slides” to start your own, or copy an official / colleague version.</div>
+            : <div style={listCol}>{mineDecks.map((dk) => renderDeck(dk, "mine"))}</div>}
+        </div>
+
+        {deptDecks.length > 0 && (
+          <div>
+            <div style={subhead}>Department <span style={{ color: C.faint, fontWeight: 400 }}>· shared by colleagues</span></div>
+            <div style={listCol}>{deptDecks.map((dk) => renderDeck(dk, "dept"))}</div>
           </div>
         )}
       </Card>

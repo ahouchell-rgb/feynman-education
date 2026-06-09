@@ -15,7 +15,7 @@ const gridStyle = { display: "grid", gridTemplateColumns: "repeat(auto-fill, min
 
 /* Data layer: Supabase when signed in, localStorage when a guest. Same shape
    either way so the UI below doesn't care which is active. */
-function makeStore(guest) {
+function makeStore(guest, userId) {
   if (guest) {
     return {
       list: async () => guestRead().slice().sort((a, b) => (b.updated_at || "").localeCompare(a.updated_at || "")),
@@ -35,7 +35,9 @@ function makeStore(guest) {
     };
   }
   return {
-    list: async () => sk.q("decks", { params: { select: "*", order: "updated_at.desc" } }),
+    // Only my own decks here — Masters and colleagues' shared decks are browsed
+    // from each unit page, not the personal list.
+    list: async () => sk.q("decks", { params: { owner: `eq.${userId}`, select: "*", order: "updated_at.desc" } }),
     create: async (deck) => (await sk.q("decks", { method: "POST", body: deck }))[0],
     update: async (id, patch) => sk.q("decks", { method: "PATCH", params: { id: `eq.${id}` }, body: patch }),
     remove: async (id) => sk.del("decks", { id: `eq.${id}` }),
@@ -67,9 +69,10 @@ function Shell({ guest, children }) {
 }
 
 function SlidesContent() {
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const guest = !loading && !user;
-  const store = useMemo(() => makeStore(guest), [guest]);
+  const author = profile?.role === "admin" || !!profile?.is_lead;
+  const store = useMemo(() => makeStore(guest, user?.id), [guest, user?.id]);
 
   const [decks, setDecks] = useState(null);     // null = loading
   const [active, setActive] = useState(null);   // deck currently being edited
@@ -120,6 +123,15 @@ function SlidesContent() {
     try { await store.update(active.id, patch); } catch (e) { setErr(e.message); }
   };
 
+  // Fork any deck (a Master or a colleague's) into my own editable copy.
+  const copyDeck = async (d) => {
+    try {
+      const created = await store.create({ title: `${d.title} (my copy)`, slides: d.slides || [], unit_id: d.unit_id || null, lesson_id: d.lesson_id || null });
+      setActive(created); setSave("saved");
+      router.replace(`/slides?deck=${created.id}`);
+    } catch (e) { setErr(e.message); }
+  };
+
   const createDeck = async () => {
     try { setActive(await store.create({ title: "Untitled deck", slides: [newSlide()] })); setSave("saved"); }
     catch (e) { setErr(e.message); }
@@ -162,6 +174,32 @@ function SlidesContent() {
 
   /* ── Editing a single deck ── */
   if (active) {
+    const owned = guest || active.owner === user?.id;
+    const canEdit = owned || (active.is_master && author);
+
+    // Viewing a deck I can't edit (a colleague's, or a Master and I'm not an author)
+    if (!canEdit) {
+      return (
+        <Shell guest={guest}>
+          <div style={{ maxWidth: 760, margin: "0 auto" }}>
+            <Btn v="ghost" onClick={closeDeck}>← Decks</Btn>
+            <div style={{ marginTop: 20, padding: 24, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10 }}>
+              <div style={{ fontFamily: C.serif, fontSize: 26, color: C.text, marginBottom: 6 }}>
+                {active.is_master ? "★ " : ""}{active.title}
+              </div>
+              <div style={{ fontSize: 13, color: C.muted, marginBottom: 18 }}>
+                {active.is_master ? "This is an official department deck — view-only." : "This is a colleague's deck — view-only."} Make your own copy to edit and teach from it.
+              </div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <Btn onClick={() => router.push(`/slides/${active.id}/present`)}>▶ View slides</Btn>
+                <Btn v="soft" onClick={() => copyDeck(active)}>Make a copy</Btn>
+              </div>
+            </div>
+          </div>
+        </Shell>
+      );
+    }
+
     return (
       <Shell guest={guest}>
         <div style={{ display: "flex", flexDirection: "column", height: "calc(100dvh - 116px)", gap: 14 }}>
@@ -187,6 +225,18 @@ function SlidesContent() {
                       <option key={l.id} value={l.id}>L{l.lesson_number} · {l.title}</option>
                     ))}
                   </select>
+                )}
+                {!active.is_master && (
+                  <Btn v={active.shared ? "pri" : "ghost"} title="Let other teachers view and copy this deck"
+                    onClick={() => fileDeck({ shared: !active.shared })}>
+                    {active.shared ? "✓ Shared" : "Share with dept"}
+                  </Btn>
+                )}
+                {author && (
+                  <Btn v={active.is_master ? "pri" : "ghost"} title="Mark as the official department version (locked for others)"
+                    onClick={() => fileDeck({ is_master: !active.is_master, shared: active.is_master ? active.shared : false })}>
+                    {active.is_master ? "★ Official" : "Make official"}
+                  </Btn>
                 )}
               </>
             )}
