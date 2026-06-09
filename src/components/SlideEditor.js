@@ -211,10 +211,13 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
   const stageRef = useRef(null);
   const fileRef = useRef(null);
   const editorApi = useRef(null); // set by the active inline TextEditor
-  const [scale, setScale] = useState(1);
+  const [fitScale, setFitScale] = useState(1);
+  const [zoom, setZoom] = useState(1);
+  const scale = fitScale * zoom;
+  const zoomBy = (d) => setZoom((z) => Math.min(4, Math.max(0.25, +(z + d).toFixed(2))));
 
   useLayoutEffect(() => {
-    const fit = () => setScale(Math.min(1, (wrapRef.current?.clientWidth || VW) / VW));
+    const fit = () => setFitScale(Math.min(1, ((wrapRef.current?.clientWidth || VW) - 32) / VW));
     fit();
     const ro = new ResizeObserver(fit);
     if (wrapRef.current) ro.observe(wrapRef.current);
@@ -552,6 +555,9 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
         if (k === "c") { copyEl(); return; }
         if (k === "v") { e.preventDefault(); pasteEl(); return; }
         if (k === "a") { e.preventDefault(); setSelIds(slide.elements.map((el) => el.id)); return; }
+        if (k === "=" || k === "+") { e.preventDefault(); zoomBy(0.1); return; }
+        if (k === "-" || k === "_") { e.preventDefault(); zoomBy(-0.1); return; }
+        if (k === "0") { e.preventDefault(); setZoom(1); return; }
       }
       if (e.key === "Delete" || e.key === "Backspace") {
         e.preventDefault();
@@ -707,6 +713,11 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
           <Btn v="ghost" onClick={sendSelBack} disabled={!selIds.length} title="Send to back">Back</Btn>
           <Btn v={selEl?.reveal ? "pri" : "ghost"} onClick={() => sel && patchH(sel, { reveal: !selEl.reveal })} disabled={!sel} title="Hidden until clicked in Present">Reveal</Btn>
           <Btn v="ghost" onClick={delSelection} disabled={!selIds.length}>Delete</Btn>
+          <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
+          <Btn v="ghost" onClick={() => zoomBy(-0.1)} title="Zoom out (⌘−)">−</Btn>
+          <button onClick={() => setZoom(1)} title="Reset to fit (⌘0)"
+            style={{ minWidth: 48, height: 28, borderRadius: 6, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.mono, fontSize: 12, cursor: "pointer" }}>{Math.round(scale * 100)}%</button>
+          <Btn v="ghost" onClick={() => zoomBy(0.1)} title="Zoom in (⌘+)">+</Btn>
           <span style={{ flex: 1 }} />
           <Btn v={themeOpen ? "pri" : "soft"} onClick={() => setThemeOpen((o) => !o)}>🎨 Theme</Btn>
           <Btn v={aiOpen ? "pri" : "soft"} onClick={() => setAiOpen((o) => !o)}>✦ Ask Claude</Btn>
@@ -792,9 +803,8 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
         )}
 
         {/* stage */}
-        <div ref={wrapRef} style={{ flex: 1, display: "flex", alignItems: "flex-start", justifyContent: "center",
-                                    background: C.bg, borderRadius: 8, padding: 16, overflow: "hidden" }}>
-          <div style={{ width: VW * scale, height: VH * scale, position: "relative" }}>
+        <div ref={wrapRef} style={{ flex: 1, overflow: "auto", background: C.bg, borderRadius: 8, padding: 16 }}>
+          <div style={{ width: VW * scale, height: VH * scale, position: "relative", margin: "auto" }}>
             <div ref={stageRef} onMouseDown={startMarquee}
               style={{ width: VW, height: VH, position: "absolute", top: 0, left: 0,
                        transform: `scale(${scale})`, transformOrigin: "top left",
