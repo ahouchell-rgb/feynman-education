@@ -306,6 +306,19 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
   const bringFront = () => { if (!sel) return; snapshot(false); mapSlide(s => { const el = s.elements.find(e => e.id === sel); return { ...s, elements: [...s.elements.filter(e => e.id !== sel), el] }; }); };
   const sendBack = () => { if (!sel) return; snapshot(false); mapSlide(s => { const el = s.elements.find(e => e.id === sel); return { ...s, elements: [el, ...s.elements.filter(e => e.id !== sel)] }; }); };
 
+  // Lock, centre-on-slide, and format painter.
+  const STYLE_KEYS = ["color", "font", "fontFace", "bold", "italic", "align", "bg", "fill", "stroke", "strokeW", "dashed", "radius", "shape", "fontSize", "shadow", "opacity"];
+  const styleClip = useRef(null);
+  const copyStyle = () => { if (!selEl) return; const s = {}; STYLE_KEYS.forEach((k) => { if (selEl[k] !== undefined) s[k] = selEl[k]; }); styleClip.current = s; forceTick((t) => t + 1); };
+  const pasteStyle = () => { if (selEl && styleClip.current) patchH(selEl.id, styleClip.current); };
+  const toggleLock = () => { if (sel) patchH(sel, { locked: !selEl.locked }); };
+  const centerOnSlide = (axis) => {
+    if (!selEl || selEl.type === "arrow") return;
+    const w = selEl.width, h = selEl.height || (selEl.fontSize ? selEl.fontSize * 1.5 : 100);
+    if (axis === "h") patchH(selEl.id, { x: Math.round((VW - w) / 2) });
+    else patchH(selEl.id, { y: Math.round((VH - h) / 2) });
+  };
+
   // ── Slide ops ──
   const cloneSlide = (s) => ({ id: uid(), background: s.background, notes: s.notes, elements: (s.elements || []).map(e => ({ ...e, id: uid() })) });
   const duplicateSlide = () => { snapshot(false); const n = [...slides]; n.splice(cur + 1, 0, cloneSlide(slide)); commit(n); setCur(cur + 1); setSel(null); };
@@ -430,6 +443,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
   const startDrag = (e, el) => {
     e.stopPropagation();
     setSel(el.id);
+    if (el.locked) return;
     const sx = e.clientX, sy = e.clientY, ox = el.x, oy = el.y; let took = false;
     const move = (ev) => { if (!took) { snapshot(false); took = true; } patchEl(el.id, { x: Math.round(ox + (ev.clientX - sx) / scale), y: Math.round(oy + (ev.clientY - sy) / scale) }); };
     const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
@@ -438,6 +452,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
 
   const startResize = (e, el, fx, fy) => {
     e.stopPropagation();
+    if (el.locked) return;
     const hx = fx === 0 ? -1 : fx === 1 ? 1 : 0;
     const hy = fy === 0 ? -1 : fy === 1 ? 1 : 0;
     const sx = e.clientX, sy = e.clientY;
@@ -459,6 +474,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
   const startArrowDrag = (e, el) => {
     e.stopPropagation();
     setSel(el.id);
+    if (el.locked) return;
     const sx = e.clientX, sy = e.clientY, o = { x1: el.x1, y1: el.y1, x2: el.x2, y2: el.y2 }; let took = false;
     const move = (ev) => { if (!took) { snapshot(false); took = true; } const dx = (ev.clientX - sx) / scale, dy = (ev.clientY - sy) / scale;
       patchEl(el.id, { x1: Math.round(o.x1 + dx), y1: Math.round(o.y1 + dy), x2: Math.round(o.x2 + dx), y2: Math.round(o.y2 + dy) }); };
@@ -533,6 +549,19 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
           <Btn v="ghost" onClick={delSlide} disabled={slides.length < 2}>Delete slide</Btn>
         </div>
 
+        {/* contextual arrange row */}
+        {sel && (
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.08em" }}>Arrange</span>
+            <Btn v={selEl?.locked ? "pri" : "ghost"} onClick={toggleLock}>{selEl?.locked ? "🔒 Locked" : "Lock"}</Btn>
+            <Btn v="ghost" onClick={() => centerOnSlide("h")} disabled={selEl?.type === "arrow"}>Centre ⬄</Btn>
+            <Btn v="ghost" onClick={() => centerOnSlide("v")} disabled={selEl?.type === "arrow"}>Centre ⬍</Btn>
+            <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
+            <Btn v="ghost" onClick={copyStyle}>Copy style</Btn>
+            <Btn v="ghost" onClick={pasteStyle} disabled={!styleClip.current}>Paste style</Btn>
+          </div>
+        )}
+
         {/* symbol bar — visible while editing a text box */}
         {editing && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center", padding: "6px 8px",
@@ -587,7 +616,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
               })}
 
               {/* box resize handles */}
-              {selEl && selEl.type !== "arrow" && editing !== selEl.id && HANDLES.map(([name, fx, fy]) => {
+              {selEl && selEl.type !== "arrow" && editing !== selEl.id && !selEl.locked && HANDLES.map(([name, fx, fy]) => {
                 const h = selEl.height || (selEl.fontSize ? selEl.fontSize * 1.5 : 100);
                 const sz = HANDLE_PX / scale;
                 return (
@@ -599,7 +628,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
               })}
 
               {/* arrow endpoint handles */}
-              {selEl && selEl.type === "arrow" && [["a", selEl.x1, selEl.y1], ["b", selEl.x2, selEl.y2]].map(([k, px, py]) => {
+              {selEl && selEl.type === "arrow" && !selEl.locked && [["a", selEl.x1, selEl.y1], ["b", selEl.x2, selEl.y2]].map(([k, px, py]) => {
                 const sz = (HANDLE_PX + 2) / scale;
                 return (
                   <div key={k} onMouseDown={(e) => startArrowEnd(e, selEl, k)}
@@ -695,6 +724,13 @@ function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCrop }) {
   }
 
   const P = (patch) => patchEl(selEl.id, patch);
+  const selStyle = { padding: "4px 6px", border: `1px solid ${C.border}`, borderRadius: 4, fontFamily: C.mono, fontSize: 12, background: "#fff" };
+  const pill = (active) => ({ height: 26, padding: "0 10px", borderRadius: 4, cursor: "pointer", fontSize: 12, border: `1px solid ${active ? C.accent : C.border}`, background: active ? C.bg : "#fff", color: C.text });
+  const opacityCtl = (
+    <label style={{ display: "flex", alignItems: "center", gap: 6 }}>opacity
+      <input type="range" min={20} max={100} value={Math.round((selEl.opacity ?? 1) * 100)} onChange={(e) => P({ opacity: +e.target.value / 100 })} style={{ width: 70 }} />
+    </label>
+  );
 
   if (selEl.type === "text") {
     return (
@@ -726,20 +762,36 @@ function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCrop }) {
           highlight {color(selEl.bg?.startsWith("#") ? selEl.bg : "#2e3a5f", (v) => P({ bg: v }))}
           {selEl.bg && <button onClick={() => P({ bg: null })} style={{ fontSize: 11, color: C.muted, border: `1px solid ${C.border}`, background: "#fff", borderRadius: 4, padding: "2px 6px", cursor: "pointer" }}>none</button>}
         </label>
+        <button onClick={() => P({ shadow: !selEl.shadow })} style={pill(selEl.shadow)}>shadow</button>
+        {opacityCtl}
       </div>
     );
   }
 
   if (selEl.type === "rect") {
+    const shape = selEl.shape || "rect";
     return (
       <div style={wrap}>
-        {tag("box")}
+        {tag("shape")}
+        <select value={shape} onChange={(e) => P({ shape: e.target.value })} style={selStyle}>
+          <option value="rect">Rectangle</option>
+          <option value="ellipse">Ellipse</option>
+          <option value="triangle">Triangle</option>
+          <option value="star">Star</option>
+        </select>
         <label style={{ display: "flex", alignItems: "center", gap: 6 }}>fill {color(selEl.fill?.startsWith("#") ? selEl.fill : "#5e7c4b", (v) => P({ fill: v }))}</label>
-        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          border {color(selEl.stroke || "#1a1714", (v) => P({ stroke: v }))}
-          {selEl.stroke && <button onClick={() => P({ stroke: null })} style={{ fontSize: 11, color: C.muted, border: `1px solid ${C.border}`, background: "#fff", borderRadius: 4, padding: "2px 6px", cursor: "pointer" }}>none</button>}
-        </label>
-        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>round {num(selEl.radius ?? 6, (v) => P({ radius: Math.max(0, v) }))}</label>
+        {(shape === "rect" || shape === "ellipse") && (
+          <>
+            <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              border {color(selEl.stroke || "#1a1714", (v) => P({ stroke: v }))}
+              {selEl.stroke && <button onClick={() => P({ stroke: null })} style={{ fontSize: 11, color: C.muted, border: `1px solid ${C.border}`, background: "#fff", borderRadius: 4, padding: "2px 6px", cursor: "pointer" }}>none</button>}
+            </label>
+            {selEl.stroke && <button onClick={() => P({ dashed: !selEl.dashed })} style={pill(selEl.dashed)}>dashed</button>}
+          </>
+        )}
+        {shape === "rect" && <label style={{ display: "flex", alignItems: "center", gap: 6 }}>round {num(selEl.radius ?? 6, (v) => P({ radius: Math.max(0, v) }))}</label>}
+        <button onClick={() => P({ shadow: !selEl.shadow })} style={pill(selEl.shadow)}>shadow</button>
+        {opacityCtl}
       </div>
     );
   }
@@ -785,7 +837,13 @@ function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCrop }) {
         {tag("image")}
         <Btn v="ghost" onClick={onCrop} style={{ fontSize: 12, padding: "5px 12px" }}>Crop</Btn>
         {selEl.crop && <Btn v="ghost" onClick={onResetCrop} style={{ fontSize: 12, padding: "5px 12px" }}>Reset crop</Btn>}
-        <span style={{ color: C.dim }}>· drag the corners to resize</span>
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>round {num(selEl.radius ?? 0, (v) => P({ radius: Math.max(0, v) }))}</label>
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          border {color(selEl.stroke || "#1a1714", (v) => P({ stroke: v }))}
+          {selEl.stroke && <button onClick={() => P({ stroke: null })} style={{ fontSize: 11, color: C.muted, border: `1px solid ${C.border}`, background: "#fff", borderRadius: 4, padding: "2px 6px", cursor: "pointer" }}>none</button>}
+        </label>
+        <button onClick={() => P({ shadow: !selEl.shadow })} style={pill(selEl.shadow)}>shadow</button>
+        {opacityCtl}
       </div>
     );
   }

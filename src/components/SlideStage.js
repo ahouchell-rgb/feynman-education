@@ -7,11 +7,16 @@ export const VW = 960, VH = 540;
 
 export const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.max(0, s) % 60).padStart(2, "0")}`;
 
+const SHADOW = "0 6px 18px rgba(0,0,0,0.28)";
+const STAR = "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
+const TRIANGLE = "polygon(50% 0%, 0% 100%, 100% 100%)";
+
 /* Visual style for box-like elements (text / rect / image), in virtual
    coordinates. Shared by the editor and all read-only views. Arrows are drawn
    separately by <ArrowSvg/> since they're defined by two points, not a box. */
 export function elStyle(el) {
-  const base = { position: "absolute", left: el.x, top: el.y, width: el.width };
+  const rot = el.rotation ? `rotate(${el.rotation}deg)` : undefined;
+  const base = { position: "absolute", left: el.x, top: el.y, width: el.width, opacity: el.opacity ?? 1, transform: rot };
   if (el.type === "text")
     return {
       ...base, height: el.height,
@@ -23,18 +28,26 @@ export function elStyle(el) {
       background: el.bg || "transparent",
       padding: el.bg ? "6px 10px" : 0,
       borderRadius: el.bg ? 8 : 0,
+      boxShadow: el.shadow ? SHADOW : undefined,
       boxSizing: "border-box",
       lineHeight: 1.15, overflow: "hidden", whiteSpace: "pre-wrap", wordBreak: "break-word",
     };
-  if (el.type === "rect")
-    return {
-      ...base, height: el.height, background: el.fill,
-      borderRadius: el.radius ?? 6,
-      border: el.stroke ? `${el.strokeW || 3}px solid ${el.stroke}` : "none",
-      boxSizing: "border-box",
-    };
+  if (el.type === "rect") {
+    const shape = el.shape || "rect";
+    const border = el.stroke ? `${el.strokeW || 3}px ${el.dashed ? "dashed" : "solid"} ${el.stroke}` : "none";
+    const s = { ...base, height: el.height, background: el.fill, boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box" };
+    if (shape === "ellipse") return { ...s, borderRadius: "50%", border };
+    if (shape === "triangle") return { ...s, clipPath: TRIANGLE };
+    if (shape === "star") return { ...s, clipPath: STAR };
+    return { ...s, borderRadius: el.radius ?? 6, border };
+  }
   if (el.type === "image")
-    return { ...base, height: el.height };
+    return {
+      ...base, height: el.height,
+      borderRadius: el.radius ?? 0, overflow: "hidden",
+      border: el.stroke ? `${el.strokeW || 3}px solid ${el.stroke}` : "none",
+      boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box",
+    };
   if (el.type === "video" || el.type === "visualiser" || el.type === "retrieval")
     return { ...base, height: el.height, background: "#0f0f12", borderRadius: 8, overflow: "hidden", boxSizing: "border-box" };
   if (el.type === "timer")
