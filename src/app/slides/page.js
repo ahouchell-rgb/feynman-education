@@ -79,6 +79,8 @@ function SlidesContent() {
   const [save, setSave] = useState("saved");    // saved | saving | error
   const [err, setErr] = useState("");
   const [exporting, setExporting] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const importRef = useRef(null);
   const timer = useRef(null);
   const router = useRouter();
   const sp = useSearchParams();
@@ -140,6 +142,19 @@ function SlidesContent() {
   const createDeck = async () => {
     try { setActive(await store.create({ title: "Untitled deck", slides: [newSlide()] })); setSave("saved"); }
     catch (e) { setErr(e.message); }
+  };
+
+  const onImportFile = async (e) => {
+    const file = e.target.files?.[0]; e.target.value = "";
+    if (!file) return;
+    setImporting(true); setErr("");
+    try {
+      const { importPptx } = await import("@/lib/importPptx");
+      const slides = await importPptx(file);
+      const created = await store.create({ title: file.name.replace(/\.pptx$/i, ""), slides });
+      setActive(created); setSave("saved");
+    } catch (e) { setErr("Import failed: " + e.message); }
+    finally { setImporting(false); }
   };
 
   const openDeck = (d) => { setActive(d); setSave("saved"); };
@@ -275,7 +290,11 @@ function SlidesContent() {
     <Shell guest={guest}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 24 }}>
         <h1 style={{ fontFamily: C.serif, fontSize: 36, color: C.text, margin: 0 }}>Slides</h1>
-        <Btn onClick={createDeck}>+ New deck</Btn>
+        <div style={{ display: "flex", gap: 8 }}>
+          <input ref={importRef} type="file" accept=".pptx" onChange={onImportFile} style={{ display: "none" }} />
+          <Btn v="soft" onClick={() => importRef.current?.click()} disabled={importing}>{importing ? "Importing…" : "Import .pptx"}</Btn>
+          <Btn onClick={createDeck}>+ New deck</Btn>
+        </div>
       </div>
 
       {err && <div style={{ color: C.red, fontFamily: C.mono, fontSize: 12, marginBottom: 16 }}>{err}</div>}
