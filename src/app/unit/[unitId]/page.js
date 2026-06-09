@@ -18,6 +18,7 @@ function UnitContent() {
   const [unit, setUnit] = useState(null);
   const [lessons, setLessons] = useState([]);
   const [resources, setResources] = useState([]);
+  const [decks, setDecks] = useState([]);
   const [viewingResource, setViewingResource] = useState(null);
   const [editingSOW, setEditingSOW] = useState(false);
   const [sowDraft, setSowDraft] = useState("");
@@ -33,12 +34,14 @@ function UnitContent() {
       const u = await sk.q("units", { params: { id: `eq.${unitId}` }, single: true });
       if (!u) { setNotFound(true); setLoading(false); return; }
       setUnit(u); setSowDraft(u.scheme_of_work || "");
-      const [ls, rs] = await Promise.all([
+      const [ls, rs, dk] = await Promise.all([
         sk.q("lessons", { params: { unit_id: `eq.${unitId}`, select: "*", order: "sort_order.asc,lesson_number.asc" } }).catch(() => []),
         sk.q("resources", { params: { unit_id: `eq.${unitId}`, lesson_id: "is.null", select: "*", order: "created_at.asc" } }).catch(() => []),
+        sk.q("decks", { params: { unit_id: `eq.${unitId}`, select: "id,title,slides,lesson_id,updated_at", order: "updated_at.desc" } }).catch(() => []),
       ]);
       setLessons(ls || []);
       setResources(rs || []);
+      setDecks(dk || []);
     } catch {
       setNotFound(true);
     }
@@ -64,6 +67,13 @@ function UnitContent() {
     await sk.del("resources", { id: `eq.${res.id}` });
     await sk.storageDelete(res.file_path);
     loadData();
+  };
+
+  const newSlides = async () => {
+    try {
+      const [d] = await sk.q("decks", { method: "POST", body: { title: `${unit.title} — slides`, slides: [{ id: "s" + Date.now(), elements: [] }], unit_id: unitId } });
+      router.push(`/slides?deck=${d.id}`);
+    } catch (e) { alert("Couldn't create slides: " + e.message); }
   };
 
   const lessonHref = (lessonId) => {
@@ -102,6 +112,30 @@ function UnitContent() {
           {isAdmin && <FileUpload unitId={unitId} lessonId={null} onUploaded={loadData} />}
         </Card>
       )}
+
+      <Card style={{ padding: 16, marginBottom: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: decks.length ? 12 : 0 }}>
+          <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, flex: 1 }}>Your slides</div>
+          <Btn v="ghost" onClick={newSlides} style={{ fontSize: 11, padding: "4px 10px" }}>+ New slides</Btn>
+        </div>
+        {decks.length === 0 ? (
+          <div style={{ fontSize: 13, color: C.dim, fontStyle: "italic" }}>No slides for this unit yet — click “New slides” to build a deck. It saves here automatically.</div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {decks.map((dk) => (
+              <button key={dk.id} onClick={() => router.push(`/slides?deck=${dk.id}`)}
+                style={{ width: "100%", padding: "10px 14px", borderRadius: 6, background: C.surface, border: `1px solid ${C.border}`, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 12 }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = C.borderStrong}
+                onMouseLeave={e => e.currentTarget.style.borderColor = C.border}>
+                <span style={{ fontSize: 14 }}>🖥</span>
+                <span style={{ flex: 1, fontSize: 14, fontWeight: 500, color: C.text }}>{dk.title}</span>
+                <span style={{ fontSize: 11, color: C.dim, fontFamily: C.mono }}>{dk.slides?.length || 0} slide{(dk.slides?.length || 0) === 1 ? "" : "s"}</span>
+                <span style={{ color: C.dim, fontSize: 14 }}>→</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </Card>
 
       <Card style={{ padding: 20, marginBottom: 20 }}>
         <div style={{ display: "flex", alignItems: "center", marginBottom: 14 }}>
