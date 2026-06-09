@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "next": "14.2.3",
+    "pptxgenjs": "^4.0.1",
     "react": "^18",
     "react-dom": "^18"
   }

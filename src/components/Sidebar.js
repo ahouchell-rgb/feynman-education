@@ -46,6 +46,7 @@ export function Sidebar({ onOpenVisualiser }) {
           {[
             { href: "/", label: "This week" },
             { href: "/curriculum", label: "Curriculum" },
+            { href: "/slides", label: "Slides" },
             { href: "/manage", label: "Manage" },
             { href: "/setup", label: "Setup" },
           ].map(item => {

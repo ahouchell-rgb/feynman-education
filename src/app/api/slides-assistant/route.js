@@ -1,0 +1,141 @@
+// ScienceKit — Slides assistant
+// POST /api/slides-assistant
+//
+// Body: { slides: Slide[], currentSlide: number, instruction: string }
+// Returns: { slides: Slide[], summary: string }
+//
+// Claude edits the whole deck and returns it via a forced tool call, so the
+// response is always valid structured JSON we can apply straight to the editor.
+//
+// Required env: ANTHROPIC_API_KEY (set in .env.local for local dev, Vercel for prod).
+
+export const runtime = "edge";
+
+const MODEL = "claude-opus-4-8";
+const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
+const ANTHROPIC_VERSION = "2023-06-01";
+const MAX_OUTPUT_TOKENS = 8000;
+
+const json = (obj, status = 200) =>
+  new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json" } });
+
+const SYSTEM = `You edit a slide deck for a UK secondary science teacher. The deck is a JSON array of slides on a FIXED 960×540 canvas (16:9, pixels). You always return the COMPLETE updated deck via the edit_deck tool.
+
+COORDINATES: x,y is the top-left of an element in pixels, 0–960 across and 0–540 down. Keep elements inside the canvas with ~60px margins. Never overlap text blocks.
+
+ELEMENT TYPES:
+- text:  { id, type:"text", x, y, width, height, text, fontSize, color, bold?, italic?, align?, bg?, font? }
+    fontSize px: headings 44–72, subheadings 30–40, body 22–30. color is a #hex. align is "left"|"center"|"right".
+    bg (optional) is a #hex highlight drawn behind the text (use for labels/callouts). font (optional) is one of: "Sans","Serif","Mono","Friendly","Classic","Verdana".
+- rect:  { id, type:"rect", x, y, width, height, fill, stroke?, radius? }   fill/stroke are #hex; radius is corner rounding.
+- arrow: { id, type:"arrow", x1, y1, x2, y2, color, thickness? }   points FROM (x1,y1) TO (x2,y2); the arrowhead is at the (x2,y2) end.
+- image: { id, type:"image", x, y, width, height, src }   You CANNOT create images. Only keep, move, or resize images already present.
+
+SLIDE: { id, background?, elements: [...] }   background is an optional #hex (default white).
+
+RULES:
+- PRESERVE existing slides and elements unless the instruction asks to change them. The current slide index is given — "this slide" means that one.
+- Give every NEW element a unique id like "el" followed by random digits.
+- Lay out cleanly: a title near the top, content below, generous spacing. Aim for the look of a well-made teaching slide.
+- Palette when sensible: biology green #5e7c4b, chemistry orange/red #b95a3c, physics blue #2e3a5f, dark text #1a1714 on light backgrounds. Soft tinted backgrounds (e.g. #f3eee2) read well on a projector.
+- For labelled diagrams, draw arrows from a text label to the part it points at.
+- Keep all content scientifically accurate and pitched at KS3–GCSE.
+- Return EVERY slide in the deck, in order — not just the ones you changed.
+- Put a one-sentence plain-English description of what you did in "summary".`;
+
+const ELEMENT_SCHEMA = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+    type: { type: "string", enum: ["text", "rect", "arrow", "image"] },
+    x: { type: "number" }, y: { type: "number" },
+    width: { type: "number" }, height: { type: "number" },
+    text: { type: "string" }, fontSize: { type: "number" }, color: { type: "string" },
+    bold: { type: "boolean" }, italic: { type: "boolean" }, align: { type: "string" },
+    bg: { type: "string" }, font: { type: "string" },
+    fill: { type: "string" }, stroke: { type: "string" }, radius: { type: "number" },
+    x1: { type: "number" }, y1: { type: "number" }, x2: { type: "number" }, y2: { type: "number" },
+    thickness: { type: "number" }, src: { type: "string" },
+  },
+  required: ["type"],
+};
+
+const TOOL = {
+  name: "edit_deck",
+  description: "Replace the deck with the full updated set of slides.",
+  input_schema: {
+    type: "object",
+    properties: {
+      summary: { type: "string", description: "One short sentence describing what changed." },
+      slides: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            background: { type: "string" },
+            elements: { type: "array", items: ELEMENT_SCHEMA },
+          },
+          required: ["elements"],
+        },
+      },
+    },
+    required: ["summary", "slides"],
+  },
+};
+
+export async function POST(req) {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return json({ error: "ANTHROPIC_API_KEY is not set. Add it to .env.local and restart the dev server." }, 500);
+  }
+
+  let body;
+  try { body = await req.json(); } catch { return json({ error: "Invalid JSON body" }, 400); }
+
+  const slides = Array.isArray(body?.slides) ? body.slides : [];
+  const currentSlide = Number.isInteger(body?.currentSlide) ? body.currentSlide : 0;
+  const instruction = String(body?.instruction || "").trim();
+
+  if (!instruction) return json({ error: "instruction is required" }, 400);
+  if (instruction.length > 2000) return json({ error: "Instruction is too long." }, 400);
+
+  const userText =
+    `Current slide index: ${currentSlide}\n` +
+    `Current deck (JSON):\n${JSON.stringify(slides)}\n\n` +
+    `Instruction: ${instruction}`;
+
+  let res;
+  try {
+    res = await fetch(ANTHROPIC_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": process.env.ANTHROPIC_API_KEY,
+        "anthropic-version": ANTHROPIC_VERSION,
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: MAX_OUTPUT_TOKENS,
+        system: SYSTEM,
+        messages: [{ role: "user", content: userText }],
+        tools: [TOOL],
+        tool_choice: { type: "tool", name: "edit_deck" },
+      }),
+    });
+  } catch (e) {
+    return json({ error: `Request to Claude failed: ${e.message}` }, 502);
+  }
+
+  if (!res.ok) {
+    const t = await res.text().catch(() => "");
+    return json({ error: `Claude ${res.status}: ${t.slice(0, 300)}` }, 502);
+  }
+
+  const data = await res.json();
+  const toolBlock = (data.content || []).find((b) => b.type === "tool_use" && b.name === "edit_deck");
+  if (!toolBlock?.input?.slides) {
+    return json({ error: "Claude did not return a deck. Try rephrasing." }, 502);
+  }
+
+  return json({ slides: toolBlock.input.slides, summary: toolBlock.input.summary || "Done." });
+}
