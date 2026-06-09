@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { C } from "@/lib/theme";
 
 /* The fixed virtual canvas every element is positioned within. */
@@ -35,6 +35,8 @@ export function elStyle(el) {
     };
   if (el.type === "image")
     return { ...base, height: el.height };
+  if (el.type === "video" || el.type === "visualiser")
+    return { ...base, height: el.height, background: "#0f0f12", borderRadius: 8, overflow: "hidden", boxSizing: "border-box" };
   if (el.type === "timer")
     return {
       ...base, height: el.height,
@@ -46,14 +48,95 @@ export function elStyle(el) {
   return base;
 }
 
-/* Inner content of a box element. */
+/* Inner content of a box element (static / editor view). */
 export function ElInner({ el }) {
   if (el.type === "text") return el.text;
   if (el.type === "timer") return fmtTime(el.duration ?? 300);
-  if (el.type === "image")
-    return <img src={el.src} alt="" draggable={false}
-      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", pointerEvents: "none" }} />;
+  if (el.type === "image") return <ImageInner el={el} />;
+  if (el.type === "video") return <Placeholder icon="▶" label={el.title || el.src || "Video"} />;
+  if (el.type === "visualiser") return <Placeholder icon="📷" label="Visualiser — live camera in Present" />;
   return null;
+}
+
+/* Image, honouring an optional crop ({x,y,w,h} as 0–1 fractions of the image). */
+function ImageInner({ el }) {
+  if (el.crop) {
+    const { x, y, w, h } = el.crop;
+    return (
+      <div style={{ width: "100%", height: "100%", overflow: "hidden", position: "relative" }}>
+        <img src={el.src} alt="" draggable={false}
+          style={{ position: "absolute", width: `${100 / w}%`, height: `${100 / h}%`,
+                   left: `${-(x * 100) / w}%`, top: `${-(y * 100) / h}%`,
+                   objectFit: "fill", display: "block", pointerEvents: "none" }} />
+      </div>
+    );
+  }
+  return <img src={el.src} alt="" draggable={false}
+    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", pointerEvents: "none" }} />;
+}
+
+function Placeholder({ icon, label }) {
+  return (
+    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center",
+                  justifyContent: "center", gap: 8, color: "#cfcfd6", fontFamily: "system-ui, sans-serif", textAlign: "center", padding: 10 }}>
+      <span style={{ fontSize: 34 }}>{icon}</span>
+      <span style={{ fontSize: 13, opacity: 0.8, maxWidth: "92%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
+    </div>
+  );
+}
+
+/* Live video embed (Present only). stopPropagation so play-clicks don't advance. */
+function VideoFrame({ el }) {
+  const stop = (e) => e.stopPropagation();
+  if (el.provider === "file") {
+    return <video src={el.embed || el.src} controls onClick={stop} onMouseDown={stop}
+      style={{ width: "100%", height: "100%", display: "block", background: "#000" }} />;
+  }
+  return <iframe src={el.embed} title="video" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen
+    onClick={stop} onMouseDown={stop}
+    style={{ width: "100%", height: "100%", border: "none", display: "block" }} />;
+}
+
+/* Live webcam (Present only), with a device picker remembered per browser. */
+function LiveCamera() {
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
+  const [devices, setDevices] = useState([]);
+  const [deviceId, setDeviceId] = useState(() => { try { return localStorage.getItem("sk_visualiser_device") || ""; } catch { return ""; } });
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        if (!navigator?.mediaDevices?.getUserMedia) throw new Error("This browser can't access the camera.");
+        if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop());
+        const s = await navigator.mediaDevices.getUserMedia({ video: deviceId ? { deviceId: { exact: deviceId } } : true, audio: false });
+        if (cancelled) { s.getTracks().forEach((t) => t.stop()); return; }
+        streamRef.current = s;
+        if (videoRef.current) videoRef.current.srcObject = s;
+        const all = await navigator.mediaDevices.enumerateDevices();
+        if (!cancelled) setDevices(all.filter((d) => d.kind === "videoinput"));
+      } catch (e) { if (!cancelled) setError(e?.message || "Couldn't access the camera."); }
+    })();
+    return () => { cancelled = true; if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop()); };
+  }, [deviceId]);
+
+  const pick = (id) => { setDeviceId(id); try { localStorage.setItem("sk_visualiser_device", id); } catch {} };
+
+  if (error) return <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#e88", fontFamily: "system-ui", fontSize: 13, textAlign: "center", padding: 12 }}>📷 {error}</div>;
+  return (
+    <div style={{ width: "100%", height: "100%", position: "relative", background: "#000" }} onClick={(e) => e.stopPropagation()}>
+      <video ref={videoRef} autoPlay playsInline muted style={{ width: "100%", height: "100%", objectFit: "contain", background: "#000" }} />
+      {devices.length > 1 && (
+        <select value={deviceId} onChange={(e) => pick(e.target.value)}
+          style={{ position: "absolute", top: 8, right: 8, fontSize: 12, padding: "4px 6px", borderRadius: 6, opacity: 0.85, border: "none" }}>
+          <option value="">Default camera</option>
+          {devices.map((d, i) => <option key={d.deviceId} value={d.deviceId}>{d.label || `Camera ${i + 1}`}</option>)}
+        </select>
+      )}
+    </div>
+  );
 }
 
 /* A countdown that runs while a slide is presented. Restarts on mount (the
@@ -119,6 +202,8 @@ export function StaticSlide({ slide, width, style, reveal = Infinity, live = fal
           }
           if (el.type === "arrow") return <ArrowSvg key={el.id} el={el} />;
           if (el.type === "timer" && live) return <LiveTimer key={el.id} el={el} />;
+          if (el.type === "video" && live) return <div key={el.id} style={elStyle(el)}><VideoFrame el={el} /></div>;
+          if (el.type === "visualiser" && live) return <div key={el.id} style={elStyle(el)}><LiveCamera /></div>;
           return <div key={el.id} style={elStyle(el)}><ElInner el={el} /></div>;
         })}
       </div>

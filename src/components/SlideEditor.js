@@ -96,6 +96,18 @@ function selectRange(node, a, b) {
   s.addRange(r);
 }
 
+// Turn a pasted URL into an embeddable video element.
+function parseVideo(url) {
+  const u = (url || "").trim();
+  let m;
+  if ((m = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/)))
+    return { provider: "youtube", embed: `https://www.youtube.com/embed/${m[1]}`, src: u };
+  if ((m = u.match(/vimeo\.com\/(?:video\/)?(\d+)/)))
+    return { provider: "vimeo", embed: `https://player.vimeo.com/video/${m[1]}`, src: u };
+  if (/\.(mp4|webm|ogg)(\?|#|$)/i.test(u)) return { provider: "file", embed: u, src: u };
+  return { provider: "iframe", embed: u, src: u };
+}
+
 // Lesson-structure templates. build() returns a slide body; ids are added on insert.
 const TEMPLATES = [
   { label: "Title slide", build: () => ({ elements: [
@@ -231,6 +243,26 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
   const addRect = () => addEl({ type: "rect", x: 180, y: 160, width: 280, height: 180, fill: C.grnS });
   const addArrow = () => addEl({ type: "arrow", x1: 300, y1: 270, x2: 640, y2: 270, color: C.text, thickness: 6 });
   const addTimer = () => addEl({ type: "timer", x: 340, y: 190, width: 280, height: 150, duration: 300, fill: "#1a1714", color: "#ffffff", fontSize: 72 });
+  const addVideo = () => {
+    const url = prompt("Video URL (YouTube, Vimeo, or a direct .mp4):");
+    if (!url || !url.trim()) return;
+    const v = parseVideo(url);
+    addEl({ type: "video", x: 200, y: 110, width: 560, height: 315, ...v, title: v.provider === "file" ? "Video" : url.trim() });
+  };
+  const addVisualiser = () => addEl({ type: "visualiser", x: 260, y: 110, width: 440, height: 300 });
+
+  const [cropping, setCropping] = useState(null); // image id being cropped
+  const applyCrop = (id, crop, natW, natH) => {
+    snapshot(false);
+    const el = slide.elements.find((e) => e.id === id);
+    if (el && natW && natH && crop.w > 0 && crop.h > 0) {
+      const ratio = (crop.h * natH) / (crop.w * natW);
+      patchEl(id, { crop, height: Math.max(20, Math.round(el.width * ratio)) });
+    } else {
+      patchEl(id, { crop });
+    }
+    setCropping(null);
+  };
 
   const delEl = () => { if (sel) { snapshot(false); mapSlide(s => ({ ...s, elements: s.elements.filter(e => e.id !== sel) })); setSel(null); setEditing(null); } };
   const addSlide = () => { snapshot(false); const n = [...slides, { id: uid(), elements: [] }]; commit(n); setCur(n.length - 1); setSel(null); };
@@ -438,6 +470,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
   };
 
   return (
+    <>
     <div style={{ display: "flex", gap: 14, height: "100%", fontFamily: C.mono, minHeight: 0 }}>
       <input ref={fileRef} type="file" accept="image/*" onChange={pickImage} style={{ display: "none" }} />
 
@@ -478,6 +511,8 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
           <Btn v="soft" onClick={addArrow}>+ Arrow</Btn>
           <Btn v="soft" onClick={addTimer}>+ Timer</Btn>
           <Btn v="soft" onClick={() => fileRef.current?.click()}>+ Image</Btn>
+          <Btn v="soft" onClick={addVideo}>+ Video</Btn>
+          <Btn v="soft" onClick={addVisualiser}>+ Visualiser</Btn>
           <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
           <Btn v="ghost" onClick={duplicate} disabled={!sel} title="Duplicate (⌘D)">Duplicate</Btn>
           <Btn v="ghost" onClick={bringFront} disabled={!sel} title="Bring to front">Front</Btn>
@@ -568,7 +603,8 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
         </div>
 
         {/* properties bar */}
-        <PropsBar selEl={selEl} slide={slide} patchEl={patchH} setSlideBg={setSlideBg} />
+        <PropsBar selEl={selEl} slide={slide} patchEl={patchH} setSlideBg={setSlideBg}
+          onCrop={() => selEl && setCropping(selEl.id)} onResetCrop={() => selEl && patchH(selEl.id, { crop: null })} />
 
         {/* speaker notes */}
         <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
@@ -616,11 +652,16 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
         </div>
       )}
     </div>
+    {cropping && (() => {
+      const el = slide.elements.find((e) => e.id === cropping);
+      return el ? <CropModal el={el} onApply={(crop, w, h) => applyCrop(cropping, crop, w, h)} onCancel={() => setCropping(null)} /> : null;
+    })()}
+    </>
   );
 }
 
 /* ── Properties bar: element controls, or slide controls when nothing is selected ── */
-function PropsBar({ selEl, slide, patchEl, setSlideBg }) {
+function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCrop }) {
   const wrap = { display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", padding: "8px 12px",
                  background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6, fontSize: 12, color: C.muted };
   const tag = (t) => <span style={{ textTransform: "uppercase", letterSpacing: "0.08em", fontSize: 10, color: C.dim }}>{t}</span>;
@@ -729,8 +770,82 @@ function PropsBar({ selEl, slide, patchEl, setSlideBg }) {
     );
   }
 
+  if (selEl.type === "image") {
+    return (
+      <div style={wrap}>
+        {tag("image")}
+        <Btn v="ghost" onClick={onCrop} style={{ fontSize: 12, padding: "5px 12px" }}>Crop</Btn>
+        {selEl.crop && <Btn v="ghost" onClick={onResetCrop} style={{ fontSize: 12, padding: "5px 12px" }}>Reset crop</Btn>}
+        <span style={{ color: C.dim }}>· drag the corners to resize</span>
+      </div>
+    );
+  }
+
   return (
     <div style={wrap}>{tag(selEl.type)}<span style={{ color: C.dim }}>drag the corners to resize</span></div>
+  );
+}
+
+/* Crop modal: drag the box to move, drag the corner to resize. Stores the crop
+   as 0–1 fractions of the source image. */
+function CropModal({ el, onApply, onCancel }) {
+  const [nat, setNat] = useState({ w: 0, h: 0 });
+  const [disp, setDisp] = useState({ w: 0, h: 0 });
+  const [box, setBox] = useState(el.crop || { x: 0, y: 0, w: 1, h: 1 });
+
+  const onLoad = (e) => {
+    const im = e.target;
+    const r = Math.min(680 / im.naturalWidth, 440 / im.naturalHeight, 1);
+    setNat({ w: im.naturalWidth, h: im.naturalHeight });
+    setDisp({ w: Math.round(im.naturalWidth * r), h: Math.round(im.naturalHeight * r) });
+  };
+
+  const startMove = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const sx = e.clientX, sy = e.clientY, ox = box.x, oy = box.y, bw = box.w, bh = box.h;
+    const move = (ev) => {
+      const nx = Math.max(0, Math.min(ox + (ev.clientX - sx) / disp.w, 1 - bw));
+      const ny = Math.max(0, Math.min(oy + (ev.clientY - sy) / disp.h, 1 - bh));
+      setBox((b) => ({ ...b, x: nx, y: ny }));
+    };
+    const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
+    window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
+  };
+  const startResize = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const sx = e.clientX, sy = e.clientY, ow = box.w, oh = box.h, bx = box.x, by = box.y;
+    const move = (ev) => {
+      const nw = Math.max(0.05, Math.min(ow + (ev.clientX - sx) / disp.w, 1 - bx));
+      const nh = Math.max(0.05, Math.min(oh + (ev.clientY - sy) / disp.h, 1 - by));
+      setBox((b) => ({ ...b, w: nw, h: nh }));
+    };
+    const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
+    window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
+  };
+
+  return (
+    <div onMouseDown={onCancel} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div onMouseDown={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 12, padding: 18 }}>
+        <div style={{ fontFamily: C.mono, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", color: C.dim, marginBottom: 10 }}>Crop image</div>
+        <div style={{ position: "relative", width: disp.w || 320, height: disp.h || 200, userSelect: "none" }}>
+          <img src={el.src} alt="" draggable={false} onLoad={onLoad}
+            style={{ width: disp.w || "auto", height: disp.h || "auto", maxWidth: 680, maxHeight: 440, display: "block" }} />
+          {disp.w > 0 && (
+            <div onMouseDown={startMove}
+              style={{ position: "absolute", cursor: "move", boxSizing: "border-box",
+                       left: box.x * disp.w, top: box.y * disp.h, width: box.w * disp.w, height: box.h * disp.h,
+                       border: `2px solid ${C.accent}`, boxShadow: "0 0 0 9999px rgba(0,0,0,0.45)" }}>
+              <div onMouseDown={startResize}
+                style={{ position: "absolute", right: -7, bottom: -7, width: 14, height: 14, background: "#fff", border: `2px solid ${C.accent}`, borderRadius: 2, cursor: "nwse-resize" }} />
+            </div>
+          )}
+        </div>
+        <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end" }}>
+          <Btn v="ghost" onClick={onCancel}>Cancel</Btn>
+          <Btn onClick={() => onApply(box, nat.w, nat.h)}>Apply crop</Btn>
+        </div>
+      </div>
+    </div>
   );
 }
 

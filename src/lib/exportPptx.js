@@ -55,6 +55,15 @@ export async function exportDeck(deck) {
         continue;
       }
 
+      if (el.type === "video" || el.type === "visualiser") {
+        const b = { x: xIn(el.x), y: yIn(el.y), w: wIn(el.width), h: hIn(el.height || 100) };
+        slide.addShape(pptx.ShapeType.rect, { ...b, fill: { color: "0F0F12" }, line: { type: "none" }, rectRadius: 0.04 });
+        const label = el.type === "visualiser" ? "📷 Visualiser (live in app)" : `▶ ${el.src || "Video"}`;
+        slide.addText(label, { ...b, color: "FFFFFF", fontSize: 13, align: "center", valign: "middle",
+          hyperlink: el.type === "video" && el.src ? { url: el.src } : undefined });
+        continue;
+      }
+
       const box = { x: xIn(el.x), y: yIn(el.y), w: wIn(el.width), h: hIn(el.height || 100) };
       if (el.type === "rect") {
         slide.addShape(pptx.ShapeType.rect, {
