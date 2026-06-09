@@ -123,6 +123,11 @@ function SlidesContent() {
     try { await store.update(active.id, patch); } catch (e) { setErr(e.message); }
   };
 
+  const onThemeChange = (theme) => {
+    setActive((a) => ({ ...a, theme }));
+    if (active) store.update(active.id, { theme }).catch((e) => setErr(e.message));
+  };
+
   // Fork any deck (a Master or a colleague's) into my own editable copy.
   const copyDeck = async (d) => {
     try {
@@ -248,7 +253,8 @@ function SlidesContent() {
           </div>
           <div style={{ flex: 1, minHeight: 0 }}>
             <SlideEditor deck={active} onChange={onSlidesChange}
-              onUploadImage={(file) => store.uploadImage(file, active.id)} />
+              onUploadImage={(file) => store.uploadImage(file, active.id)}
+              onThemeChange={onThemeChange} />
           </div>
         </div>
       </Shell>

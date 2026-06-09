@@ -111,6 +111,18 @@ function parseVideo(url) {
 // Retrieval app embedded live in Present (teacher picks topics inside it).
 const RET_APP_ORIGIN = "https://retrieval-app.com";
 
+// Deck themes — applied across every slide (background + text fonts/colours).
+const THEMES = [
+  { name: "Clean", bg: "#ffffff", text: "#1a1714", heading: "#1a1714", accent: "#2e3a5f", headingFont: "Sans", bodyFont: "Sans" },
+  { name: "Editorial", bg: "#f3eee2", text: "#1a1714", heading: "#1a1714", accent: "#b95a3c", headingFont: "Serif", bodyFont: "Sans" },
+  { name: "Slate", bg: "#1f2430", text: "#e8e8ea", heading: "#ffffff", accent: "#6ea8fe", headingFont: "Sans", bodyFont: "Sans" },
+  { name: "Chalkboard", bg: "#22302b", text: "#eef3ee", heading: "#ffffff", accent: "#f2c14e", headingFont: "Friendly", bodyFont: "Friendly" },
+  { name: "Biology", bg: "#ffffff", text: "#1a1714", heading: "#3f5733", accent: "#5e7c4b", headingFont: "Serif", bodyFont: "Sans" },
+  { name: "Chemistry", bg: "#ffffff", text: "#1a1714", heading: "#8a3a22", accent: "#b95a3c", headingFont: "Serif", bodyFont: "Sans" },
+  { name: "Physics", bg: "#ffffff", text: "#1a1714", heading: "#22305c", accent: "#2e3a5f", headingFont: "Serif", bodyFont: "Sans" },
+];
+const fontByLabel = (label) => FONTS.find((f) => f.label === label) || FONTS[0];
+
 // Lesson-structure templates. build() returns a slide body; ids are added on insert.
 const TEMPLATES = [
   { label: "Title slide", build: () => ({ elements: [
@@ -182,7 +194,7 @@ const HANDLE_PX = 9;
 
 /* `deck.slides` is the single source of truth. Every action builds the next
    slides array, sets local state, and calls onChange so the parent can save. */
-export function SlideEditor({ deck, onChange, onUploadImage }) {
+export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
   const [slides, setSlides] = useState(() =>
     ensureIds(deck.slides?.length ? deck.slides : [{ id: uid(), elements: [] }]));
   const [cur, setCur] = useState(0);
@@ -192,6 +204,8 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
   const [editing, setEditing] = useState(null);
   const [guides, setGuides] = useState([]);           // smart-align guide lines (virtual coords)
   const [marquee, setMarquee] = useState(null);       // rubber-band rectangle (virtual coords)
+  const [themeState, setThemeState] = useState(deck.theme || null);
+  const [themeOpen, setThemeOpen] = useState(false);
 
   const wrapRef = useRef(null);
   const stageRef = useRef(null);
@@ -252,8 +266,8 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
 
   const addEl = (el) => { snapshot(false); const id = uid(); mapSlide(s => ({ ...s, elements: [...s.elements, { id, ...el }] })); setSel(id); setEditing(null); };
 
-  const addText = () => addEl({ type: "text", x: 120, y: 200, width: 460, height: 90, text: "New text", fontSize: 40, color: C.text, font: FONTS[0].css, fontFace: FONTS[0].face, align: "left" });
-  const addLabel = () => addEl({ type: "text", x: 360, y: 240, width: 240, height: 64, text: "Label", fontSize: 28, color: "#ffffff", bold: true, align: "center", bg: C.blu, font: FONTS[0].css, fontFace: FONTS[0].face });
+  const addText = () => { const f = themeState ? fontByLabel(themeState.bodyFont) : FONTS[0]; addEl({ type: "text", x: 120, y: 200, width: 460, height: 90, text: "New text", fontSize: 40, color: themeState?.text || C.text, font: f.css, fontFace: f.face, align: "left" }); };
+  const addLabel = () => { const f = themeState ? fontByLabel(themeState.bodyFont) : FONTS[0]; addEl({ type: "text", x: 360, y: 240, width: 240, height: 64, text: "Label", fontSize: 28, color: "#ffffff", bold: true, align: "center", bg: themeState?.accent || C.blu, font: f.css, fontFace: f.face }); };
   const addRect = () => addEl({ type: "rect", x: 180, y: 160, width: 280, height: 180, fill: C.grnS });
   const addArrow = () => addEl({ type: "arrow", x1: 300, y1: 270, x2: 640, y2: 270, color: C.text, thickness: 6 });
   const addTimer = () => addEl({ type: "timer", x: 340, y: 190, width: 280, height: 150, duration: 300, fill: "#1a1714", color: "#ffffff", fontSize: 72 });
@@ -324,6 +338,26 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
     const w = selEl.width, h = selEl.height || (selEl.fontSize ? selEl.fontSize * 1.5 : 100);
     if (axis === "h") patchH(selEl.id, { x: Math.round((VW - w) / 2) });
     else patchH(selEl.id, { y: Math.round((VH - h) / 2) });
+  };
+
+  // Apply a theme to every slide: background + heading/body fonts & colours.
+  const applyTheme = (t) => {
+    snapshot(false);
+    setThemeState(t);
+    onThemeChange?.(t);
+    const hf = fontByLabel(t.headingFont), bf = fontByLabel(t.bodyFont);
+    commit(slides.map((s) => ({
+      ...s,
+      background: t.bg,
+      elements: s.elements.map((e) => {
+        if (e.type !== "text") return e;
+        const heading = e.bold || (e.fontSize || 0) >= 40;
+        const f = heading ? hf : bf;
+        if (e.bg) return { ...e, bg: t.accent, color: "#ffffff", font: f.css, fontFace: f.face };
+        return { ...e, color: heading ? t.heading : t.text, font: f.css, fontFace: f.face };
+      }),
+    })));
+    setThemeOpen(false);
   };
 
   // ── Multi-select engine ──
@@ -666,9 +700,29 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
           <Btn v={selEl?.reveal ? "pri" : "ghost"} onClick={() => sel && patchH(sel, { reveal: !selEl.reveal })} disabled={!sel} title="Hidden until clicked in Present">Reveal</Btn>
           <Btn v="ghost" onClick={delSelection} disabled={!selIds.length}>Delete</Btn>
           <span style={{ flex: 1 }} />
+          <Btn v={themeOpen ? "pri" : "soft"} onClick={() => setThemeOpen((o) => !o)}>🎨 Theme</Btn>
           <Btn v={aiOpen ? "pri" : "soft"} onClick={() => setAiOpen((o) => !o)}>✦ Ask Claude</Btn>
           <Btn v="ghost" onClick={delSlide} disabled={slides.length < 2}>Delete slide</Btn>
         </div>
+
+        {/* theme picker */}
+        {themeOpen && (
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", padding: "8px 10px", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6 }}>
+            <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.08em" }}>Theme</span>
+            {THEMES.map((t) => (
+              <button key={t.name} onClick={() => applyTheme(t)} title={`Apply ${t.name} to all slides`}
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 10px", borderRadius: 6, cursor: "pointer",
+                         border: `1px solid ${themeState?.name === t.name ? C.accent : C.border}`, background: "#fff", fontFamily: C.sans, fontSize: 12, color: C.text }}>
+                <span style={{ display: "inline-flex" }}>
+                  <span style={{ width: 14, height: 14, borderRadius: 3, background: t.bg, border: `1px solid ${C.border}` }} />
+                  <span style={{ width: 14, height: 14, borderRadius: 3, background: t.accent, marginLeft: -4, border: `1px solid ${C.border}` }} />
+                </span>
+                {t.name}
+              </button>
+            ))}
+            <span style={{ fontSize: 10, color: C.faint }}>· sets background + fonts/colours on every slide</span>
+          </div>
+        )}
 
         {/* multi-select row */}
         {selIds.length > 1 && (
