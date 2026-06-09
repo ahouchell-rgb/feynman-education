@@ -186,10 +186,15 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
   const [slides, setSlides] = useState(() =>
     ensureIds(deck.slides?.length ? deck.slides : [{ id: uid(), elements: [] }]));
   const [cur, setCur] = useState(0);
-  const [sel, setSel] = useState(null);
+  const [selIds, setSelIds] = useState([]);          // multi-selection
+  const sel = selIds.length === 1 ? selIds[0] : null; // single-primary (drives props/handles)
+  const setSel = (id) => setSelIds(id ? [id] : []);
   const [editing, setEditing] = useState(null);
+  const [guides, setGuides] = useState([]);           // smart-align guide lines (virtual coords)
+  const [marquee, setMarquee] = useState(null);       // rubber-band rectangle (virtual coords)
 
   const wrapRef = useRef(null);
+  const stageRef = useRef(null);
   const fileRef = useRef(null);
   const editorApi = useRef(null); // set by the active inline TextEditor
   const [scale, setScale] = useState(1);
@@ -205,6 +210,8 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
   const slide = slides[cur] || slides[0];
   const selEl = slide.elements.find(e => e.id === sel) || null;
   const edEl = slide.elements.find(e => e.id === editing) || null;
+  const selSet = new Set(selIds);
+  const selEls = slide.elements.filter(e => selSet.has(e.id));
 
   const commit = (next) => { setSlides(next); onChange?.(next); };
   const mapSlide = (fn) => commit(slides.map((s, i) => (i === cur ? fn(s) : s)));
@@ -319,6 +326,100 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
     else patchH(selEl.id, { y: Math.round((VH - h) / 2) });
   };
 
+  // ── Multi-select engine ──
+  const groupOf = (id) => { const el = slide.elements.find((e) => e.id === id); if (!el?.groupId) return [id]; return slide.elements.filter((e) => e.groupId === el.groupId).map((e) => e.id); };
+  const boxOf = (el) => el.type === "arrow"
+    ? { x: Math.min(el.x1, el.x2), y: Math.min(el.y1, el.y2), w: Math.abs(el.x2 - el.x1), h: Math.abs(el.y2 - el.y1) }
+    : { x: el.x, y: el.y, w: el.width || 0, h: el.height || (el.fontSize ? el.fontSize * 1.5 : 100) };
+  const moveEl = (el, dx, dy) => el.type === "arrow"
+    ? { ...el, x1: Math.round(el.x1 + dx), y1: Math.round(el.y1 + dy), x2: Math.round(el.x2 + dx), y2: Math.round(el.y2 + dy) }
+    : { ...el, x: Math.round(el.x + dx), y: Math.round(el.y + dy) };
+  const mapSel = (fn) => mapSlide((s) => ({ ...s, elements: s.elements.map((e) => (selSet.has(e.id) ? fn(e) : e)) }));
+
+  const delSelection = () => { if (!selIds.length) return; snapshot(false); mapSlide((s) => ({ ...s, elements: s.elements.filter((e) => !selSet.has(e.id)) })); setSelIds([]); setEditing(null); };
+  const duplicateSelection = () => {
+    if (!selIds.length) return; snapshot(false);
+    const newIds = []; const copies = selEls.map((e) => { const nid = uid(); newIds.push(nid); return { ...e, id: nid, ...cloneOffset(e, 22) }; });
+    mapSlide((s) => ({ ...s, elements: [...s.elements, ...copies] })); setSelIds(newIds); setEditing(null);
+  };
+  const nudgeSelection = (dx, dy) => { if (!selIds.length) return; snapshot(true); mapSel((e) => moveEl(e, dx, dy)); };
+  const bringSelFront = () => { if (!selIds.length) return; snapshot(false); mapSlide((s) => ({ ...s, elements: [...s.elements.filter((e) => !selSet.has(e.id)), ...s.elements.filter((e) => selSet.has(e.id))] })); };
+  const sendSelBack = () => { if (!selIds.length) return; snapshot(false); mapSlide((s) => ({ ...s, elements: [...s.elements.filter((e) => selSet.has(e.id)), ...s.elements.filter((e) => !selSet.has(e.id))] })); };
+  const groupSel = () => { if (selIds.length < 2) return; snapshot(false); const gid = "grp" + uid(); mapSel((e) => ({ ...e, groupId: gid })); };
+  const ungroupSel = () => { const gids = new Set(selEls.map((e) => e.groupId).filter(Boolean)); if (!gids.size) return; snapshot(false); mapSlide((s) => ({ ...s, elements: s.elements.map((e) => (gids.has(e.groupId) ? { ...e, groupId: null } : e)) })); };
+
+  const alignSel = (how) => {
+    if (selIds.length < 2) return; snapshot(false);
+    const bs = selEls.map((e) => boxOf(e));
+    const minX = Math.min(...bs.map((b) => b.x)), maxX = Math.max(...bs.map((b) => b.x + b.w));
+    const minY = Math.min(...bs.map((b) => b.y)), maxY = Math.max(...bs.map((b) => b.y + b.h));
+    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+    mapSel((e) => { const b = boxOf(e); let dx = 0, dy = 0;
+      if (how === "left") dx = minX - b.x; else if (how === "right") dx = maxX - (b.x + b.w); else if (how === "cx") dx = cx - (b.x + b.w / 2);
+      else if (how === "top") dy = minY - b.y; else if (how === "bottom") dy = maxY - (b.y + b.h); else if (how === "cy") dy = cy - (b.y + b.h / 2);
+      return moveEl(e, dx, dy);
+    });
+  };
+  const distributeSel = (axis) => {
+    if (selIds.length < 3) return; snapshot(false);
+    const arr = selEls.map((e) => ({ e, b: boxOf(e) })).sort((a, z) => axis === "h" ? a.b.x - z.b.x : a.b.y - z.b.y);
+    const first = arr[0].b, last = arr[arr.length - 1].b;
+    const step = (axis === "h" ? last.x - first.x : last.y - first.y) / (arr.length - 1);
+    const target = {}; arr.forEach((o, i) => { target[o.e.id] = (axis === "h" ? first.x : first.y) + step * i; });
+    mapSel((e) => { const b = boxOf(e); return axis === "h" ? moveEl(e, target[e.id] - b.x, 0) : moveEl(e, 0, target[e.id] - b.y); });
+  };
+
+  // Smart guides: snap a single dragged box to other elements' / the slide's edges & centres.
+  const SNAP = 8;
+  const computeSnap = (movingId, b) => {
+    const xs = [0, VW / 2, VW], ys = [0, VH / 2, VH];
+    slide.elements.forEach((e) => { if (e.id === movingId || selSet.has(e.id)) return; const o = boxOf(e); xs.push(o.x, o.x + o.w / 2, o.x + o.w); ys.push(o.y, o.y + o.h / 2, o.y + o.h); });
+    let dX = 0, gx = null, bX = SNAP;
+    [b.x, b.x + b.w / 2, b.x + b.w].forEach((ex) => xs.forEach((t) => { const d = Math.abs(ex - t); if (d < bX) { bX = d; dX = t - ex; gx = t; } }));
+    let dY = 0, gy = null, bY = SNAP;
+    [b.y, b.y + b.h / 2, b.y + b.h].forEach((ey) => ys.forEach((t) => { const d = Math.abs(ey - t); if (d < bY) { bY = d; dY = t - ey; gy = t; } }));
+    const gl = []; if (gx !== null) gl.push({ type: "v", pos: gx }); if (gy !== null) gl.push({ type: "h", pos: gy });
+    return { dX, dY, guides: gl };
+  };
+
+  const startMarquee = (e) => {
+    setEditing(null);
+    const rect = stageRef.current?.getBoundingClientRect();
+    if (!rect) { if (!e.shiftKey) setSelIds([]); return; }
+    const sx = (e.clientX - rect.left) / scale, sy = (e.clientY - rect.top) / scale;
+    let moved = false;
+    const move = (ev) => { const cx = (ev.clientX - rect.left) / scale, cy = (ev.clientY - rect.top) / scale; moved = true; setMarquee({ x: Math.min(sx, cx), y: Math.min(sy, cy), w: Math.abs(cx - sx), h: Math.abs(cy - sy) }); };
+    const up = () => {
+      window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up);
+      setMarquee((m) => {
+        if (!moved || !m || (m.w < 5 && m.h < 5)) { if (!e.shiftKey) setSelIds([]); return null; }
+        const expanded = new Set();
+        slide.elements.forEach((el) => { const b = boxOf(el); if (b.x < m.x + m.w && b.x + b.w > m.x && b.y < m.y + m.h && b.y + b.h > m.y) groupOf(el.id).forEach((i) => expanded.add(i)); });
+        setSelIds(e.shiftKey ? [...new Set([...selIds, ...expanded])] : [...expanded]);
+        return null;
+      });
+    };
+    window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
+  };
+
+  const startRotate = (e, el) => {
+    e.stopPropagation();
+    const rect = stageRef.current?.getBoundingClientRect(); if (!rect) return;
+    const w = el.width, h = el.height || (el.fontSize ? el.fontSize * 1.5 : 100);
+    const cxs = rect.left + (el.x + w / 2) * scale, cys = rect.top + (el.y + h / 2) * scale;
+    let took = false;
+    const move = (ev) => {
+      if (!took) { snapshot(false); took = true; }
+      let deg = Math.atan2(ev.clientY - cys, ev.clientX - cxs) * 180 / Math.PI + 90;
+      deg = ((deg + 180) % 360 + 360) % 360 - 180;
+      if (ev.shiftKey) deg = Math.round(deg / 15) * 15;
+      else { const near = [-180, -90, 0, 90, 180].find((a) => Math.abs(deg - a) < 5); if (near !== undefined) deg = near; }
+      patchEl(el.id, { rotation: Math.round(deg) });
+    };
+    const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
+    window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
+  };
+
   // ── Slide ops ──
   const cloneSlide = (s) => ({ id: uid(), background: s.background, notes: s.notes, elements: (s.elements || []).map(e => ({ ...e, id: uid() })) });
   const duplicateSlide = () => { snapshot(false); const n = [...slides]; n.splice(cur + 1, 0, cloneSlide(slide)); commit(n); setCur(cur + 1); setSel(null); };
@@ -407,17 +508,18 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
         const k = e.key.toLowerCase();
         if (k === "z") { e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
         if (k === "y") { e.preventDefault(); redo(); return; }
-        if (k === "d") { e.preventDefault(); duplicate(); return; }
+        if (k === "d") { e.preventDefault(); duplicateSelection(); return; }
         if (k === "c") { copyEl(); return; }
         if (k === "v") { e.preventDefault(); pasteEl(); return; }
+        if (k === "a") { e.preventDefault(); setSelIds(slide.elements.map((el) => el.id)); return; }
       }
       if (e.key === "Delete" || e.key === "Backspace") {
         e.preventDefault();
-        if (sel) delEl(); else delSlide();
-      } else if (sel && e.key.startsWith("Arrow")) {
+        if (selIds.length) delSelection(); else delSlide();
+      } else if (selIds.length && e.key.startsWith("Arrow")) {
         e.preventDefault();
         const s = e.shiftKey ? 10 : 1;
-        nudge(e.key === "ArrowLeft" ? -s : e.key === "ArrowRight" ? s : 0,
+        nudgeSelection(e.key === "ArrowLeft" ? -s : e.key === "ArrowRight" ? s : 0,
               e.key === "ArrowUp" ? -s : e.key === "ArrowDown" ? s : 0);
       }
     };
@@ -442,11 +544,29 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
 
   const startDrag = (e, el) => {
     e.stopPropagation();
-    setSel(el.id);
+    if (e.shiftKey) {
+      const ids = groupOf(el.id);
+      setSelIds((cur) => { const s = new Set(cur); const allIn = ids.every((i) => s.has(i)); ids.forEach((i) => (allIn ? s.delete(i) : s.add(i))); return [...s]; });
+      return;
+    }
+    const ids = selSet.has(el.id) ? selIds : groupOf(el.id);
+    if (!selSet.has(el.id)) setSelIds(ids);
     if (el.locked) return;
-    const sx = e.clientX, sy = e.clientY, ox = el.x, oy = el.y; let took = false;
-    const move = (ev) => { if (!took) { snapshot(false); took = true; } patchEl(el.id, { x: Math.round(ox + (ev.clientX - sx) / scale), y: Math.round(oy + (ev.clientY - sy) / scale) }); };
-    const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
+    const originals = {};
+    ids.forEach((i) => { originals[i] = slide.elements.find((x) => x.id === i); });
+    const single = ids.length === 1 ? originals[ids[0]] : null;
+    const sx = e.clientX, sy = e.clientY; let took = false;
+    const move = (ev) => {
+      if (!took) { snapshot(false); took = true; }
+      let dx = (ev.clientX - sx) / scale, dy = (ev.clientY - sy) / scale;
+      if (single && single.type !== "arrow") {
+        const h = single.height || (single.fontSize ? single.fontSize * 1.5 : 100);
+        const snap = computeSnap(single.id, { x: single.x + dx, y: single.y + dy, w: single.width, h });
+        dx += snap.dX; dy += snap.dY; setGuides(snap.guides);
+      }
+      commit(slides.map((s, si) => (si !== cur ? s : { ...s, elements: s.elements.map((elm) => (originals[elm.id] ? moveEl(originals[elm.id], dx, dy) : elm)) })));
+    };
+    const up = () => { setGuides([]); window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
     window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
   };
 
@@ -473,6 +593,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
 
   const startArrowDrag = (e, el) => {
     e.stopPropagation();
+    if (e.shiftKey) { setSelIds((cur) => { const s = new Set(cur); s.has(el.id) ? s.delete(el.id) : s.add(el.id); return [...s]; }); return; }
     setSel(el.id);
     if (el.locked) return;
     const sx = e.clientX, sy = e.clientY, o = { x1: el.x1, y1: el.y1, x2: el.x2, y2: el.y2 }; let took = false;
@@ -539,15 +660,33 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
           <Btn v="soft" onClick={addVisualiser}>+ Visualiser</Btn>
           <Btn v="soft" onClick={addRetrieval}>+ Retrieval</Btn>
           <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
-          <Btn v="ghost" onClick={duplicate} disabled={!sel} title="Duplicate (⌘D)">Duplicate</Btn>
-          <Btn v="ghost" onClick={bringFront} disabled={!sel} title="Bring to front">Front</Btn>
-          <Btn v="ghost" onClick={sendBack} disabled={!sel} title="Send to back">Back</Btn>
+          <Btn v="ghost" onClick={duplicateSelection} disabled={!selIds.length} title="Duplicate (⌘D)">Duplicate</Btn>
+          <Btn v="ghost" onClick={bringSelFront} disabled={!selIds.length} title="Bring to front">Front</Btn>
+          <Btn v="ghost" onClick={sendSelBack} disabled={!selIds.length} title="Send to back">Back</Btn>
           <Btn v={selEl?.reveal ? "pri" : "ghost"} onClick={() => sel && patchH(sel, { reveal: !selEl.reveal })} disabled={!sel} title="Hidden until clicked in Present">Reveal</Btn>
-          <Btn v="ghost" onClick={delEl} disabled={!sel}>Delete</Btn>
+          <Btn v="ghost" onClick={delSelection} disabled={!selIds.length}>Delete</Btn>
           <span style={{ flex: 1 }} />
           <Btn v={aiOpen ? "pri" : "soft"} onClick={() => setAiOpen((o) => !o)}>✦ Ask Claude</Btn>
           <Btn v="ghost" onClick={delSlide} disabled={slides.length < 2}>Delete slide</Btn>
         </div>
+
+        {/* multi-select row */}
+        {selIds.length > 1 && (
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+            <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.08em" }}>{selIds.length} selected</span>
+            <Btn v="ghost" onClick={() => alignSel("left")} title="Align left">⬅</Btn>
+            <Btn v="ghost" onClick={() => alignSel("cx")} title="Align centre">↔</Btn>
+            <Btn v="ghost" onClick={() => alignSel("right")} title="Align right">➡</Btn>
+            <Btn v="ghost" onClick={() => alignSel("top")} title="Align top">⬆</Btn>
+            <Btn v="ghost" onClick={() => alignSel("cy")} title="Align middle">↕</Btn>
+            <Btn v="ghost" onClick={() => alignSel("bottom")} title="Align bottom">⬇</Btn>
+            <Btn v="ghost" onClick={() => distributeSel("h")} disabled={selIds.length < 3} title="Distribute horizontally">Dist ⬄</Btn>
+            <Btn v="ghost" onClick={() => distributeSel("v")} disabled={selIds.length < 3} title="Distribute vertically">Dist ⬍</Btn>
+            <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
+            <Btn v="ghost" onClick={groupSel}>Group</Btn>
+            <Btn v="ghost" onClick={ungroupSel}>Ungroup</Btn>
+          </div>
+        )}
 
         {/* contextual arrange row */}
         {sel && (
@@ -556,6 +695,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
             <Btn v={selEl?.locked ? "pri" : "ghost"} onClick={toggleLock}>{selEl?.locked ? "🔒 Locked" : "Lock"}</Btn>
             <Btn v="ghost" onClick={() => centerOnSlide("h")} disabled={selEl?.type === "arrow"}>Centre ⬄</Btn>
             <Btn v="ghost" onClick={() => centerOnSlide("v")} disabled={selEl?.type === "arrow"}>Centre ⬍</Btn>
+            {selEl?.rotation ? <Btn v="ghost" onClick={() => patchH(sel, { rotation: 0 })}>↺ {selEl.rotation}°</Btn> : null}
             <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
             <Btn v="ghost" onClick={copyStyle}>Copy style</Btn>
             <Btn v="ghost" onClick={pasteStyle} disabled={!styleClip.current}>Paste style</Btn>
@@ -593,13 +733,13 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
         <div ref={wrapRef} style={{ flex: 1, display: "flex", alignItems: "flex-start", justifyContent: "center",
                                     background: C.bg, borderRadius: 8, padding: 16, overflow: "hidden" }}>
           <div style={{ width: VW * scale, height: VH * scale, position: "relative" }}>
-            <div onMouseDown={() => { setSel(null); setEditing(null); }}
+            <div ref={stageRef} onMouseDown={startMarquee}
               style={{ width: VW, height: VH, position: "absolute", top: 0, left: 0,
                        transform: `scale(${scale})`, transformOrigin: "top left",
                        background: slide.background || "#fff", boxShadow: "0 2px 16px rgba(0,0,0,.12)", overflow: "hidden" }}>
               {slide.elements.map(el => {
                 if (el.type === "arrow")
-                  return <ArrowSvg key={el.id} el={el} selected={sel === el.id} hitProps={{ onMouseDown: (e) => startArrowDrag(e, el) }} />;
+                  return <ArrowSvg key={el.id} el={el} selected={selSet.has(el.id)} hitProps={{ onMouseDown: (e) => startArrowDrag(e, el) }} />;
                 if (editing === el.id)
                   return <TextEditor key={el.id} el={el} apiRef={editorApi}
                     onText={(text) => patchEl(el.id, { text })}
@@ -608,15 +748,15 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
                   <div key={el.id}
                     onMouseDown={(e) => startDrag(e, el)}
                     onDoubleClick={el.type === "text" ? () => { setSel(el.id); setEditing(el.id); } : undefined}
-                    style={{ ...elStyle(el), cursor: "move", opacity: el.reveal && sel !== el.id ? 0.55 : 1,
-                             outline: sel === el.id ? `2px solid ${C.accent}` : el.reveal ? `1.5px dashed ${C.dim}` : "none", outlineOffset: 1 }}>
+                    style={{ ...elStyle(el), cursor: "move", opacity: el.reveal && !selSet.has(el.id) ? 0.55 : (el.opacity ?? 1),
+                             outline: selSet.has(el.id) ? `2px solid ${C.accent}` : el.reveal ? `1.5px dashed ${C.dim}` : "none", outlineOffset: 1 }}>
                     <ElInner el={el} />
                   </div>
                 );
               })}
 
               {/* box resize handles */}
-              {selEl && selEl.type !== "arrow" && editing !== selEl.id && !selEl.locked && HANDLES.map(([name, fx, fy]) => {
+              {selEl && selEl.type !== "arrow" && editing !== selEl.id && !selEl.locked && !selEl.rotation && HANDLES.map(([name, fx, fy]) => {
                 const h = selEl.height || (selEl.fontSize ? selEl.fontSize * 1.5 : 100);
                 const sz = HANDLE_PX / scale;
                 return (
@@ -636,6 +776,30 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
                              background: "#fff", border: `${1.5 / scale}px solid ${C.accent}`, borderRadius: "50%", cursor: "move" }} />
                 );
               })}
+
+              {/* rotate handle (single box element) */}
+              {selEl && selEl.type !== "arrow" && editing !== selEl.id && !selEl.locked && (() => {
+                const w = selEl.width, h = selEl.height || (selEl.fontSize ? selEl.fontSize * 1.5 : 100);
+                const cx = selEl.x + w / 2, cy = selEl.y + h / 2;
+                const rad = (selEl.rotation || 0) * Math.PI / 180;
+                const ly = -(h / 2 + 26);
+                const hx = cx - ly * Math.sin(rad), hy = cy + ly * Math.cos(rad);
+                const sz = (HANDLE_PX + 3) / scale;
+                return (
+                  <div key="rot" onMouseDown={(e) => startRotate(e, selEl)} title="Drag to rotate (Shift = 15°)"
+                    style={{ position: "absolute", left: hx - sz / 2, top: hy - sz / 2, width: sz, height: sz,
+                             background: "#fff", border: `${1.5 / scale}px solid ${C.accent}`, borderRadius: "50%", cursor: "grab" }} />
+                );
+              })()}
+
+              {/* smart-align guide lines */}
+              {guides.map((g, i) => g.type === "v"
+                ? <div key={"g" + i} style={{ position: "absolute", left: g.pos, top: 0, width: 1 / scale, height: VH, background: "#e23b2e", pointerEvents: "none" }} />
+                : <div key={"g" + i} style={{ position: "absolute", top: g.pos, left: 0, height: 1 / scale, width: VW, background: "#e23b2e", pointerEvents: "none" }} />
+              )}
+
+              {/* marquee rectangle */}
+              {marquee && <div style={{ position: "absolute", left: marquee.x, top: marquee.y, width: marquee.w, height: marquee.h, border: `${1 / scale}px solid ${C.accent}`, background: `${C.accent}14`, pointerEvents: "none" }} />}
             </div>
           </div>
         </div>
