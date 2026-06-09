@@ -67,6 +67,28 @@ export async function exportDeck(deck) {
         continue;
       }
 
+      if (el.type === "table") {
+        const rows = el.rows || 1, cols = el.cols || 1;
+        const headerBg = (el.headerBg || "#1a1714").replace("#", "");
+        const headerColor = (el.headerColor || "#ffffff").replace("#", "");
+        const txt = toHex(el.color || "#1a1714");
+        const tableRows = [];
+        for (let r = 0; r < rows; r++) {
+          const row = [];
+          for (let c = 0; c < cols; c++) {
+            const head = el.headerRow && r === 0;
+            row.push({ text: el.cells?.[r]?.[c] || "", options: head ? { bold: true, fill: { color: headerBg }, color: headerColor } : { color: txt } });
+          }
+          tableRows.push(row);
+        }
+        slide.addTable(tableRows, {
+          x: xIn(el.x), y: yIn(el.y), w: wIn(el.width), h: hIn(el.height || 100),
+          border: { type: "solid", color: (el.borderColor || "#9a9486").replace("#", ""), pt: 1 },
+          fontSize: +((el.fontSize || 22) * 0.75).toFixed(1), fontFace: "Arial", valign: "middle", autoPage: false,
+        });
+        continue;
+      }
+
       const box = { x: xIn(el.x), y: yIn(el.y), w: wIn(el.width), h: hIn(el.height || 100) };
       if (el.type === "rect") {
         slide.addShape(pptx.ShapeType.rect, {

@@ -50,6 +50,8 @@ export function elStyle(el) {
     };
   if (el.type === "video" || el.type === "visualiser" || el.type === "retrieval")
     return { ...base, height: el.height, background: "#0f0f12", borderRadius: 8, overflow: "hidden", boxSizing: "border-box" };
+  if (el.type === "table")
+    return { ...base, height: el.height, boxSizing: "border-box" };
   if (el.type === "timer")
     return {
       ...base, height: el.height,
@@ -66,6 +68,7 @@ export function ElInner({ el }) {
   if (el.type === "text") return el.text;
   if (el.type === "timer") return fmtTime(el.duration ?? 300);
   if (el.type === "image") return <ImageInner el={el} />;
+  if (el.type === "table") return <TableView el={el} />;
   if (el.type === "video") return <Placeholder icon="▶" label={el.title || el.src || "Video"} />;
   if (el.type === "visualiser") return <Placeholder icon="📷" label="Visualiser — live camera in Present" />;
   if (el.type === "retrieval") return <Placeholder icon="📚" label="Retrieval — live app in Present" />;
@@ -87,6 +90,34 @@ function ImageInner({ el }) {
   }
   return <img src={el.src} alt="" draggable={false}
     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", pointerEvents: "none" }} />;
+}
+
+/* Read-only table (editor display, thumbnails, present). */
+export function TableView({ el }) {
+  const rows = el.rows || 1, cols = el.cols || 1, cells = el.cells || [];
+  const border = el.borderColor || "#9a9486";
+  const headerBg = el.headerBg || "#1a1714", headerColor = el.headerColor || "#ffffff";
+  return (
+    <table style={{ width: "100%", height: "100%", borderCollapse: "collapse", tableLayout: "fixed",
+                    fontFamily: el.font || C.sans, fontSize: el.fontSize || 22, color: el.color || "#1a1714" }}>
+      <tbody>
+        {Array.from({ length: rows }).map((_, r) => (
+          <tr key={r}>
+            {Array.from({ length: cols }).map((_, c) => {
+              const head = el.headerRow && r === 0;
+              return (
+                <td key={c} style={{ border: `1px solid ${border}`, padding: "4px 9px", verticalAlign: "middle",
+                                     background: head ? headerBg : "transparent", color: head ? headerColor : undefined,
+                                     fontWeight: head ? 700 : 400, overflow: "hidden", wordBreak: "break-word" }}>
+                  {cells[r]?.[c] || ""}
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 }
 
 function Placeholder({ icon, label }) {

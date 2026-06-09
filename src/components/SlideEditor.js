@@ -279,6 +279,12 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
   };
   const addVisualiser = () => addEl({ type: "visualiser", x: 260, y: 110, width: 440, height: 300 });
   const addRetrieval = () => addEl({ type: "retrieval", x: 50, y: 90, width: 860, height: 410, url: RET_APP_ORIGIN });
+  const addTable = () => {
+    const rows = 3, cols = 3;
+    const cells = Array.from({ length: rows }, () => Array.from({ length: cols }, () => ""));
+    cells[0] = ["Column 1", "Column 2", "Column 3"];
+    addEl({ type: "table", x: 110, y: 150, width: 740, height: 280, rows, cols, cells, headerRow: true, fontSize: 22, color: "#1a1714", borderColor: "#9a9486", headerBg: "#1a1714", headerColor: "#ffffff", font: (themeState ? fontByLabel(themeState.bodyFont) : FONTS[0]).css });
+  };
 
   const [cropping, setCropping] = useState(null); // image id being cropped
   const applyCrop = (id, crop, natW, natH) => {
@@ -578,6 +584,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
 
   const startDrag = (e, el) => {
     e.stopPropagation();
+    if (editing && editing !== el.id) setEditing(null);
     if (e.shiftKey) {
       const ids = groupOf(el.id);
       setSelIds((cur) => { const s = new Set(cur); const allIn = ids.every((i) => s.has(i)); ids.forEach((i) => (allIn ? s.delete(i) : s.add(i))); return [...s]; });
@@ -687,6 +694,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
           <Btn v="soft" onClick={addText}>+ Text</Btn>
           <Btn v="soft" onClick={addLabel}>+ Label</Btn>
           <Btn v="soft" onClick={addRect}>+ Box</Btn>
+          <Btn v="soft" onClick={addTable}>+ Table</Btn>
           <Btn v="soft" onClick={addArrow}>+ Arrow</Btn>
           <Btn v="soft" onClick={addTimer}>+ Timer</Btn>
           <Btn v="soft" onClick={() => fileRef.current?.click()}>+ Image</Btn>
@@ -757,7 +765,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
         )}
 
         {/* symbol bar — visible while editing a text box */}
-        {editing && (
+        {editing && edEl?.type === "text" && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center", padding: "6px 8px",
                         background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6 }}>
             <button title="Smaller (as you type)"
@@ -794,14 +802,20 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
               {slide.elements.map(el => {
                 if (el.type === "arrow")
                   return <ArrowSvg key={el.id} el={el} selected={selSet.has(el.id)} hitProps={{ onMouseDown: (e) => startArrowDrag(e, el) }} />;
-                if (editing === el.id)
+                if (editing === el.id && el.type === "text")
                   return <TextEditor key={el.id} el={el} apiRef={editorApi}
                     onText={(text) => patchEl(el.id, { text })}
                     onDone={() => setEditing(null)} />;
+                if (editing === el.id && el.type === "table")
+                  return (
+                    <div key={el.id} style={{ ...elStyle(el), outline: `2px solid ${C.accent}`, outlineOffset: 1 }}>
+                      <TableEditor el={el} onCells={(cells) => patchEl(el.id, { cells })} />
+                    </div>
+                  );
                 return (
                   <div key={el.id}
                     onMouseDown={(e) => startDrag(e, el)}
-                    onDoubleClick={el.type === "text" ? () => { setSel(el.id); setEditing(el.id); } : undefined}
+                    onDoubleClick={(el.type === "text" || el.type === "table") ? () => { setSel(el.id); setEditing(el.id); } : undefined}
                     style={{ ...elStyle(el), cursor: "move", opacity: el.reveal && !selSet.has(el.id) ? 0.55 : (el.opacity ?? 1),
                              outline: selSet.has(el.id) ? `2px solid ${C.accent}` : el.reveal ? `1.5px dashed ${C.dim}` : "none", outlineOffset: 1 }}>
                     <ElInner el={el} />
@@ -1049,6 +1063,26 @@ function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCrop }) {
     );
   }
 
+  if (selEl.type === "table") {
+    const resize = (rows, cols) => Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => selEl.cells?.[r]?.[c] ?? ""));
+    return (
+      <div style={wrap}>
+        {tag("table")}
+        <span style={{ color: C.dim }}>{selEl.rows}×{selEl.cols}</span>
+        <button onClick={() => P({ rows: selEl.rows + 1, cells: resize(selEl.rows + 1, selEl.cols) })} style={pill(false)}>+ Row</button>
+        <button onClick={() => selEl.rows > 1 && P({ rows: selEl.rows - 1, cells: resize(selEl.rows - 1, selEl.cols) })} style={pill(false)}>− Row</button>
+        <button onClick={() => P({ cols: selEl.cols + 1, cells: resize(selEl.rows, selEl.cols + 1) })} style={pill(false)}>+ Col</button>
+        <button onClick={() => selEl.cols > 1 && P({ cols: selEl.cols - 1, cells: resize(selEl.rows, selEl.cols - 1) })} style={pill(false)}>− Col</button>
+        <button onClick={() => P({ headerRow: !selEl.headerRow })} style={pill(selEl.headerRow)}>header</button>
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>size {num(selEl.fontSize || 22, (v) => P({ fontSize: v }))}</label>
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>text {color(selEl.color?.startsWith("#") ? selEl.color : "#1a1714", (v) => P({ color: v }))}</label>
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>lines {color(selEl.borderColor || "#9a9486", (v) => P({ borderColor: v }))}</label>
+        {selEl.headerRow && <label style={{ display: "flex", alignItems: "center", gap: 6 }}>header {color(selEl.headerBg || "#1a1714", (v) => P({ headerBg: v }))}</label>}
+        <span style={{ color: C.dim }}>· double-click to type</span>
+      </div>
+    );
+  }
+
   if (selEl.type === "image") {
     return (
       <div style={wrap}>
@@ -1132,6 +1166,40 @@ function CropModal({ el, onApply, onCancel }) {
       </div>
     </div>
   );
+}
+
+/* Editable table — each cell is a contentEditable seeded once on mount, so the
+   caret survives re-renders. Typing rebuilds the full cells matrix. */
+function TableEditor({ el, onCells }) {
+  const rows = el.rows || 1, cols = el.cols || 1;
+  const border = el.borderColor || "#9a9486";
+  const headerBg = el.headerBg || "#1a1714", headerColor = el.headerColor || "#ffffff";
+  const setCell = (r, c, text) => {
+    onCells(Array.from({ length: rows }, (_, rr) => Array.from({ length: cols }, (_, cc) => (rr === r && cc === c ? text : (el.cells?.[rr]?.[cc] ?? "")))));
+  };
+  return (
+    <table style={{ width: "100%", height: "100%", borderCollapse: "collapse", tableLayout: "fixed", fontFamily: el.font || C.sans, fontSize: el.fontSize || 22, color: el.color || "#1a1714" }}>
+      <tbody>
+        {Array.from({ length: rows }).map((_, r) => (
+          <tr key={r}>
+            {Array.from({ length: cols }).map((_, c) => {
+              const head = el.headerRow && r === 0;
+              return <Cell key={c} value={el.cells?.[r]?.[c] || ""} onInput={(t) => setCell(r, c, t)}
+                style={{ border: `1px solid ${border}`, padding: "4px 9px", verticalAlign: "middle", background: head ? headerBg : "transparent", color: head ? headerColor : (el.color || "#1a1714"), fontWeight: head ? 700 : 400, overflow: "hidden" }} />;
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+function Cell({ value, onInput, style }) {
+  const ref = useRef(null);
+  useEffect(() => { if (ref.current) ref.current.textContent = value || ""; }, []); // seed once
+  return <td ref={ref} contentEditable suppressContentEditableWarning
+    onMouseDown={(e) => e.stopPropagation()}
+    onInput={() => onInput(ref.current?.textContent ?? "")}
+    style={{ ...style, outline: "none", cursor: "text" }} />;
 }
 
 /* Inline text editor: a contentEditable seeded once on mount so React never
