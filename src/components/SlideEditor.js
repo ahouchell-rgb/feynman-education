@@ -108,6 +108,9 @@ function parseVideo(url) {
   return { provider: "iframe", embed: u, src: u };
 }
 
+// Retrieval app embedded live in Present (teacher picks topics inside it).
+const RET_APP_ORIGIN = "https://retrieval-app.com";
+
 // Lesson-structure templates. build() returns a slide body; ids are added on insert.
 const TEMPLATES = [
   { label: "Title slide", build: () => ({ elements: [
@@ -162,6 +165,10 @@ const TEMPLATES = [
   { label: "Answers", build: () => ({ background: "#f3eee2", elements: [
     { type: "text", x: 70, y: 50, width: 820, height: 56, text: "Answers", fontSize: 44, bold: true, color: "#5e7c4b" },
     { type: "text", x: 80, y: 140, width: 800, height: 360, text: "1.  \n2.  \n3.  \n4.  \n5.  ", fontSize: 30, color: "#1a1714", reveal: true },
+  ] }) },
+  { label: "Retrieval", build: () => ({ elements: [
+    { type: "text", x: 50, y: 26, width: 860, height: 50, text: "Retrieval", fontSize: 36, bold: true, color: "#1a1714" },
+    { type: "retrieval", x: 50, y: 88, width: 860, height: 424, url: "https://retrieval-app.com" },
   ] }) },
 ];
 
@@ -250,6 +257,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
     addEl({ type: "video", x: 200, y: 110, width: 560, height: 315, ...v, title: v.provider === "file" ? "Video" : url.trim() });
   };
   const addVisualiser = () => addEl({ type: "visualiser", x: 260, y: 110, width: 440, height: 300 });
+  const addRetrieval = () => addEl({ type: "retrieval", x: 50, y: 90, width: 860, height: 410, url: RET_APP_ORIGIN });
 
   const [cropping, setCropping] = useState(null); // image id being cropped
   const applyCrop = (id, crop, natW, natH) => {
@@ -513,6 +521,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
           <Btn v="soft" onClick={() => fileRef.current?.click()}>+ Image</Btn>
           <Btn v="soft" onClick={addVideo}>+ Video</Btn>
           <Btn v="soft" onClick={addVisualiser}>+ Visualiser</Btn>
+          <Btn v="soft" onClick={addRetrieval}>+ Retrieval</Btn>
           <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
           <Btn v="ghost" onClick={duplicate} disabled={!sel} title="Duplicate (⌘D)">Duplicate</Btn>
           <Btn v="ghost" onClick={bringFront} disabled={!sel} title="Bring to front">Front</Btn>

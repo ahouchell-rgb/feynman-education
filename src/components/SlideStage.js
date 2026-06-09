@@ -35,7 +35,7 @@ export function elStyle(el) {
     };
   if (el.type === "image")
     return { ...base, height: el.height };
-  if (el.type === "video" || el.type === "visualiser")
+  if (el.type === "video" || el.type === "visualiser" || el.type === "retrieval")
     return { ...base, height: el.height, background: "#0f0f12", borderRadius: 8, overflow: "hidden", boxSizing: "border-box" };
   if (el.type === "timer")
     return {
@@ -55,6 +55,7 @@ export function ElInner({ el }) {
   if (el.type === "image") return <ImageInner el={el} />;
   if (el.type === "video") return <Placeholder icon="▶" label={el.title || el.src || "Video"} />;
   if (el.type === "visualiser") return <Placeholder icon="📷" label="Visualiser — live camera in Present" />;
+  if (el.type === "retrieval") return <Placeholder icon="📚" label="Retrieval — live app in Present" />;
   return null;
 }
 
@@ -95,6 +96,24 @@ function VideoFrame({ el }) {
   return <iframe src={el.embed} title="video" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen
     onClick={stop} onMouseDown={stop}
     style={{ width: "100%", height: "100%", border: "none", display: "block" }} />;
+}
+
+/* Live embed of the retrieval app (Present only). The teacher picks topics
+   inside the embed. An "Open ↗" escape hatch covers the case where the
+   retrieval app blocks embedding (X-Frame-Options / CSP frame-ancestors). */
+function RetrievalFrame({ el }) {
+  const stop = (e) => e.stopPropagation();
+  const url = el.url || "https://retrieval-app.com";
+  return (
+    <div style={{ width: "100%", height: "100%", position: "relative", background: "#fff" }} onClick={stop} onMouseDown={stop}>
+      <iframe src={url} title="retrieval"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+        referrerPolicy="no-referrer-when-downgrade"
+        style={{ width: "100%", height: "100%", border: "none", display: "block", background: "#fff" }} />
+      <a href={url} target="_blank" rel="noreferrer" onClick={stop}
+        style={{ position: "absolute", top: 6, right: 8, fontSize: 11, fontFamily: "monospace", color: "#333", background: "rgba(255,255,255,0.88)", padding: "2px 8px", borderRadius: 6, textDecoration: "none" }}>Open ↗</a>
+    </div>
+  );
 }
 
 /* Live webcam (Present only), with a device picker remembered per browser. */
@@ -204,6 +223,7 @@ export function StaticSlide({ slide, width, style, reveal = Infinity, live = fal
           if (el.type === "timer" && live) return <LiveTimer key={el.id} el={el} />;
           if (el.type === "video" && live) return <div key={el.id} style={elStyle(el)}><VideoFrame el={el} /></div>;
           if (el.type === "visualiser" && live) return <div key={el.id} style={elStyle(el)}><LiveCamera /></div>;
+          if (el.type === "retrieval" && live) return <div key={el.id} style={elStyle(el)}><RetrievalFrame el={el} /></div>;
           return <div key={el.id} style={elStyle(el)}><ElInner el={el} /></div>;
         })}
       </div>

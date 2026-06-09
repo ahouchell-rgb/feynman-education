@@ -55,12 +55,15 @@ export async function exportDeck(deck) {
         continue;
       }
 
-      if (el.type === "video" || el.type === "visualiser") {
+      if (el.type === "video" || el.type === "visualiser" || el.type === "retrieval") {
         const b = { x: xIn(el.x), y: yIn(el.y), w: wIn(el.width), h: hIn(el.height || 100) };
         slide.addShape(pptx.ShapeType.rect, { ...b, fill: { color: "0F0F12" }, line: { type: "none" }, rectRadius: 0.04 });
-        const label = el.type === "visualiser" ? "📷 Visualiser (live in app)" : `▶ ${el.src || "Video"}`;
+        const label = el.type === "visualiser" ? "📷 Visualiser (live in app)"
+          : el.type === "retrieval" ? `📚 Retrieval — ${el.url || "open in app"}`
+          : `▶ ${el.src || "Video"}`;
+        const link = el.type === "video" ? el.src : el.type === "retrieval" ? el.url : null;
         slide.addText(label, { ...b, color: "FFFFFF", fontSize: 13, align: "center", valign: "middle",
-          hyperlink: el.type === "video" && el.src ? { url: el.src } : undefined });
+          hyperlink: link ? { url: link } : undefined });
         continue;
       }
 
