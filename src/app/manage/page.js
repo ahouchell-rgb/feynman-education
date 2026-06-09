@@ -318,6 +318,78 @@ function TimetableSection({ classes, slots, onChange }) {
     slotsByKey[`w${s.week_in_cycle}-d${s.day_of_week}-p${s.period}`] = s;
   });
 
+  // ── CSV import ──
+  const [importOpen, setImportOpen] = useState(false);
+  const [csvText, setCsvText] = useState("");
+  const [importMsg, setImportMsg] = useState("");
+  const [importing, setImporting] = useState(false);
+
+  const WEEK_MAP = { a: 1, b: 2, "1": 1, "2": 2, wka: 1, wkb: 2 };
+  const DAY_MAP = { mon: 1, monday: 1, tue: 2, tues: 2, tuesday: 2, wed: 3, weds: 3, wednesday: 3, thu: 4, thur: 4, thurs: 4, thursday: 4, fri: 5, friday: 5, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5 };
+
+  const parseCSV = (text) => {
+    const rows = [];
+    (text || "").split(/\r?\n/).forEach((line) => {
+      if (!line.trim()) return;
+      const cells = []; let cur = "", q = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (q) { if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (ch === '"') q = false; else cur += ch; }
+        else { if (ch === '"') q = true; else if (ch === ",") { cells.push(cur); cur = ""; } else cur += ch; }
+      }
+      cells.push(cur);
+      rows.push(cells.map((c) => c.trim()));
+    });
+    return rows;
+  };
+
+  const onFile = (e) => {
+    const f = e.target.files?.[0]; e.target.value = "";
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => setCsvText(String(reader.result || ""));
+    reader.readAsText(f);
+  };
+
+  const runImport = async () => {
+    setImporting(true); setImportMsg("");
+    try {
+      const rows = parseCSV(csvText);
+      if (!rows.length) throw new Error("No rows found.");
+      let start = 0;
+      const head = rows[0].map((c) => c.toLowerCase());
+      if (head.includes("class") || head.includes("week") || head.includes("period")) start = 1;
+      const byName = {};
+      activeClasses.forEach((c) => { byName[c.name.trim().toLowerCase()] = c; });
+      const desired = {}; const errors = [];
+      for (let r = start; r < rows.length; r++) {
+        const [wk, dy, pd, cl, room] = rows[r];
+        if (!cl && !wk && !dy && !pd) continue;
+        const week = WEEK_MAP[(wk || "").toLowerCase().trim()];
+        const day = DAY_MAP[(dy || "").toLowerCase().trim()];
+        const period = parseInt(pd, 10);
+        const klass = byName[(cl || "").trim().toLowerCase()];
+        if (!week || !day || !(period >= 1 && period <= 5) || !klass) {
+          errors.push(`Row ${r + 1}: "${[wk, dy, pd, cl].join(", ")}"${!klass ? " — unknown class" : " — bad week/day/period"}`);
+          continue;
+        }
+        desired[`w${week}-d${day}-p${period}`] = { week, day, period, klass, room: (room || "").trim() };
+      }
+      let added = 0, updated = 0;
+      for (const key of Object.keys(desired)) {
+        const dz = desired[key]; const existing = slotsByKey[key];
+        try {
+          if (existing) { await sk.q("class_timetable_slots", { method: "PATCH", params: { id: `eq.${existing.id}` }, body: { class_id: dz.klass.id, ...(dz.room ? { room: dz.room } : {}) } }); updated++; }
+          else { await sk.q("class_timetable_slots", { method: "POST", body: { class_id: dz.klass.id, week_in_cycle: dz.week, day_of_week: dz.day, period: dz.period, ...(dz.room ? { room: dz.room } : {}) } }); added++; }
+        } catch (e) { errors.push(`${key}: ${e.message}`); }
+      }
+      onChange();
+      setImportMsg(`✓ ${added} added, ${updated} updated${errors.length ? ` · ${errors.length} skipped:\n` + errors.slice(0, 6).join("\n") : ""}`);
+      if (!errors.length) setCsvText("");
+    } catch (e) { setImportMsg("⚠ " + e.message); }
+    finally { setImporting(false); }
+  };
+
   const cycleThrough = async (week, day, period) => {
     const key = `w${week}-d${day}-p${period}`;
     const existing = slotsByKey[key];
@@ -414,6 +486,26 @@ function TimetableSection({ classes, slots, onChange }) {
                 </div>
               );
             })}
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <Btn v="ghost" onClick={() => setImportOpen((o) => !o)} style={{ fontSize: 11, padding: "5px 12px" }}>
+              {importOpen ? "Close CSV import" : "Import from CSV"}
+            </Btn>
+            {importOpen && (
+              <div style={{ marginTop: 10, padding: 14, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 8 }}>
+                <div style={{ fontSize: 12, color: C.muted, marginBottom: 8, lineHeight: 1.5 }}>
+                  Columns: <code>week, day, period, class, room</code> — week = <b>A/B</b>, day = <b>Mon–Fri</b>, period = <b>1–5</b>, <code>class</code> must match a class name above, <code>room</code> optional. A header row is fine. Matching slots are updated, blanks left alone.
+                </div>
+                <input type="file" accept=".csv,text/csv" onChange={onFile} style={{ fontSize: 12, marginBottom: 8 }} />
+                <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} rows={6}
+                  placeholder={"week,day,period,class,room\nA,Mon,1,10X Chemistry,Lab 3\nA,Mon,2,8Y,Rm 12\nB,Tue,5,11Z Triple,"}
+                  style={{ width: "100%", fontFamily: C.mono, fontSize: 12, padding: 8, border: `1px solid ${C.border}`, borderRadius: 6, background: "#fff", color: C.text, resize: "vertical" }} />
+                <div style={{ display: "flex", gap: 10, alignItems: "flex-start", marginTop: 8 }}>
+                  <Btn onClick={runImport} disabled={importing || !csvText.trim()} style={{ fontSize: 12 }}>{importing ? "Importing…" : "Import"}</Btn>
+                  {importMsg && <span style={{ fontSize: 11, color: importMsg.startsWith("⚠") ? C.red : C.muted, whiteSpace: "pre-wrap", lineHeight: 1.5 }}>{importMsg}</span>}
+                </div>
+              </div>
+            )}
           </div>
           {renderWeek(1)}
           {renderWeek(2)}
