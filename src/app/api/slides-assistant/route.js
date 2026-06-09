@@ -137,5 +137,13 @@ export async function POST(req) {
     return json({ error: "Claude did not return a deck. Try rephrasing." }, 502);
   }
 
-  return json({ slides: toolBlock.input.slides, summary: toolBlock.input.summary || "Done." });
+  // Map font labels → the CSS/face the editor uses.
+  const FONT_CSS = { Sans: "'IBM Plex Sans', sans-serif", Serif: "Georgia, 'Instrument Serif', serif", Mono: "'IBM Plex Mono', monospace", Friendly: "'Comic Sans MS', 'Chalkboard SE', sans-serif", Classic: "'Times New Roman', serif", Verdana: "Verdana, sans-serif" };
+  const FONT_FACE = { Sans: "Arial", Serif: "Georgia", Mono: "Consolas", Friendly: "Comic Sans MS", Classic: "Times New Roman", Verdana: "Verdana" };
+  const slidesOut = (toolBlock.input.slides || []).map((s) => ({
+    ...s,
+    elements: (s.elements || []).map((e) => (e.type === "text" && e.font && FONT_CSS[e.font] ? { ...e, font: FONT_CSS[e.font], fontFace: FONT_FACE[e.font] } : e)),
+  }));
+
+  return json({ slides: slidesOut, summary: toolBlock.input.summary || "Done." });
 }

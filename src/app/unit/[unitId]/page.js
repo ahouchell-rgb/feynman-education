@@ -19,6 +19,7 @@ function UnitContent() {
   const [lessons, setLessons] = useState([]);
   const [resources, setResources] = useState([]);
   const [decks, setDecks] = useState([]);
+  const [generating, setGenerating] = useState(false);
   const [viewingResource, setViewingResource] = useState(null);
   const [editingSOW, setEditingSOW] = useState(false);
   const [sowDraft, setSowDraft] = useState("");
@@ -91,6 +92,33 @@ function UnitContent() {
     } catch (e) { alert("Couldn't copy: " + e.message); }
   };
 
+  const generateDeck = async () => {
+    if (generating) return;
+    setGenerating(true);
+    try {
+      const strip = (s) => (s || "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
+      const lessonCtx = (lessons || []).slice(0, 12).map((l) => `L${l.lesson_number} ${l.title}${l.objectives ? ` — ${strip(l.objectives)}` : ""}${l.keywords?.length ? ` [keywords: ${l.keywords.join(", ")}]` : ""}`).join("\n");
+      const ctx = [
+        `Unit: ${unit.title}${unit.discipline ? ` (${unit.discipline})` : ""}${unit.year_group ? ` · ${unit.year_group}` : ""}`,
+        unit.big_idea && `Big idea: ${strip(unit.big_idea)}`,
+        unit.prior_knowledge && `Prior knowledge: ${strip(unit.prior_knowledge)}`,
+        unit.content && `Key content: ${strip(unit.content).slice(0, 1800)}`,
+        unit.misconceptions?.length && `Common misconceptions: ${unit.misconceptions.join("; ")}`,
+        unit.required_practical && `Required practical: ${strip(unit.required_practical)}`,
+        lessonCtx && `Lessons in this unit:\n${lessonCtx}`,
+      ].filter(Boolean).join("\n");
+      const instruction = `Create a complete, ready-to-teach slide deck for this unit. Include, in order: a title slide; a learning-objectives slide; a starter / do-now; 3–6 content slides that teach the key ideas clearly with concise bullet points and key terms; a labelled-diagram slide if relevant; a few practice questions; and an exit ticket. Keep it scientifically accurate and pitched at ${unit.year_group || "KS3–GCSE"}, with clean layouts.\n\n${ctx}`;
+
+      const [d] = await sk.q("decks", { method: "POST", body: { title: `${unit.title} — slides`, slides: [{ id: "s" + Date.now(), elements: [] }], unit_id: unitId } });
+      const r = await fetch("/api/slides-assistant", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ slides: d.slides, currentSlide: 0, instruction }) });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || "Generation failed");
+      await sk.q("decks", { method: "PATCH", params: { id: `eq.${d.id}` }, body: { slides: data.slides } });
+      router.push(`/slides?deck=${d.id}`);
+    } catch (e) { alert("Generate failed: " + e.message); }
+    finally { setGenerating(false); }
+  };
+
   const lessonHref = (lessonId) => {
     const q = classId ? `?class=${classId}` : "";
     return `/unit/${unitId}/lesson/${lessonId}${q}`;
@@ -158,6 +186,7 @@ function UnitContent() {
       <Card style={{ padding: 16, marginBottom: 20 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
           <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, flex: 1 }}>Slides</div>
+          <Btn onClick={generateDeck} disabled={generating} style={{ fontSize: 11, padding: "4px 10px" }}>{generating ? "Generating…" : "✦ Generate"}</Btn>
           {author && <Btn v="ghost" onClick={newOfficial} style={{ fontSize: 11, padding: "4px 10px" }}>+ New official</Btn>}
           <Btn v="ghost" onClick={newSlides} style={{ fontSize: 11, padding: "4px 10px" }}>+ New slides</Btn>
         </div>
