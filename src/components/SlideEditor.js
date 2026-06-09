@@ -129,6 +129,28 @@ const TEMPLATES = [
     { type: "text", x: 70, y: 60, width: 820, height: 70, text: "Plenary", fontSize: 48, bold: true, color: "#2e3a5f" },
     { type: "text", x: 80, y: 200, width: 800, height: 220, text: "", fontSize: 40, color: "#1a1714" },
   ] }) },
+  { label: "Starter", build: () => ({ elements: [
+    { type: "text", x: 70, y: 56, width: 820, height: 64, text: "Starter", fontSize: 48, bold: true, color: "#2e3a5f" },
+    { type: "text", x: 80, y: 160, width: 800, height: 250, text: "", fontSize: 32, color: "#1a1714" },
+    { type: "text", x: 80, y: 432, width: 800, height: 46, text: "Answer in your books.", fontSize: 22, italic: true, color: "#8c8678" },
+  ] }) },
+  { label: "MCQ — check", build: () => ({ elements: [
+    { type: "text", x: 70, y: 48, width: 820, height: 56, text: "Quick check", fontSize: 40, bold: true, color: "#b95a3c" },
+    { type: "text", x: 70, y: 126, width: 820, height: 110, text: "Question…", fontSize: 34, color: "#1a1714" },
+    { type: "text", x: 90, y: 268, width: 370, height: 50, text: "A.  ", fontSize: 28, color: "#1a1714" },
+    { type: "text", x: 500, y: 268, width: 370, height: 50, text: "B.  ", fontSize: 28, color: "#1a1714" },
+    { type: "text", x: 90, y: 346, width: 370, height: 50, text: "C.  ", fontSize: 28, color: "#1a1714" },
+    { type: "text", x: 500, y: 346, width: 370, height: 50, text: "D.  ", fontSize: 28, color: "#1a1714" },
+    { type: "text", x: 70, y: 448, width: 820, height: 50, text: "Answer: ", fontSize: 26, bold: true, color: "#5e7c4b", reveal: true },
+  ] }) },
+  { label: "Questions", build: () => ({ elements: [
+    { type: "text", x: 70, y: 50, width: 820, height: 56, text: "Questions", fontSize: 44, bold: true, color: "#1a1714" },
+    { type: "text", x: 80, y: 140, width: 800, height: 360, text: "1.  \n2.  \n3.  \n4.  \n5.  ", fontSize: 30, color: "#1a1714" },
+  ] }) },
+  { label: "Answers", build: () => ({ background: "#f3eee2", elements: [
+    { type: "text", x: 70, y: 50, width: 820, height: 56, text: "Answers", fontSize: 44, bold: true, color: "#5e7c4b" },
+    { type: "text", x: 80, y: 140, width: 800, height: 360, text: "1.  \n2.  \n3.  \n4.  \n5.  ", fontSize: 30, color: "#1a1714", reveal: true },
+  ] }) },
 ];
 
 const HANDLES = [
@@ -163,6 +185,7 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
 
   const slide = slides[cur] || slides[0];
   const selEl = slide.elements.find(e => e.id === sel) || null;
+  const edEl = slide.elements.find(e => e.id === editing) || null;
 
   const commit = (next) => { setSlides(next); onChange?.(next); };
   const mapSlide = (fn) => commit(slides.map((s, i) => (i === cur ? fn(s) : s)));
@@ -470,6 +493,14 @@ export function SlideEditor({ deck, onChange, onUploadImage }) {
         {editing && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center", padding: "6px 8px",
                         background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6 }}>
+            <button title="Smaller (as you type)"
+              onMouseDown={(e) => { e.preventDefault(); if (edEl) patchH(editing, { fontSize: Math.max(8, (edEl.fontSize || 40) - 4) }); }}
+              style={{ height: 26, padding: "0 9px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 13, cursor: "pointer" }}>A−</button>
+            <span style={{ fontFamily: C.mono, fontSize: 11, color: C.muted, minWidth: 22, textAlign: "center" }}>{edEl?.fontSize || 40}</span>
+            <button title="Bigger (as you type)"
+              onMouseDown={(e) => { e.preventDefault(); if (edEl) patchH(editing, { fontSize: (edEl.fontSize || 40) + 4 }); }}
+              style={{ height: 26, padding: "0 9px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 15, cursor: "pointer" }}>A+</button>
+            <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 4px" }} />
             {[...SYMBOLS, ...STATES].map((sym) => (
               <button key={sym} title="Insert at cursor"
                 onMouseDown={(e) => { e.preventDefault(); editorApi.current?.insert(sym); }}
