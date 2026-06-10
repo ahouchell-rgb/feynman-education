@@ -192,7 +192,10 @@ const HANDLES = [
 const CURSORS = { nw: "nwse-resize", se: "nwse-resize", ne: "nesw-resize", sw: "nesw-resize", n: "ns-resize", s: "ns-resize", e: "ew-resize", w: "ew-resize" };
 const HANDLE_PX = 9;
 
-const DBG = (v, tag) => { if (typeof v === "number" && !isFinite(v)) console.error("DBG_NONFINITE_LEFT", tag, v); return v; };
+// Keep computed overlay coordinates finite — a non-finite element coordinate
+// (bad import / AI deck) would otherwise reach a CSS length and make React
+// flood the dev console with "`Infinity` is an invalid value for `left`".
+const fin = (v) => (typeof v === "number" && !Number.isFinite(v) ? 0 : v);
 
 /* `deck.slides` is the single source of truth. Every action builds the next
    slides array, sets local state, and calls onChange so the parent can save. */
@@ -456,6 +459,9 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   };
 
   const startMarquee = (e) => {
+    // A clean click on empty canvas (nothing selected / not typing) flips to the
+    // next slide — lets you click through an imported deck. A drag still box-selects.
+    const wasBusy = editing != null || selIds.length > 0;
     setEditing(null);
     const rect = stageRef.current?.getBoundingClientRect();
     if (!rect) { if (!e.shiftKey) setSelIds([]); return; }
@@ -465,7 +471,12 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     const up = () => {
       window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up);
       setMarquee((m) => {
-        if (!moved || !m || (m.w < 5 && m.h < 5)) { if (!e.shiftKey) setSelIds([]); return null; }
+        if (!moved || !m || (m.w < 5 && m.h < 5)) {
+          if (!e.shiftKey) setSelIds([]);
+          // not a drag, nothing was selected/being edited → advance a slide
+          if (!moved && !wasBusy && !e.shiftKey && cur < slides.length - 1) { setCur(cur + 1); setEditing(null); }
+          return null;
+        }
         const expanded = new Set();
         slide.elements.forEach((el) => { const b = boxOf(el); if (b.x < m.x + m.w && b.x + b.w > m.x && b.y < m.y + m.h && b.y + b.h > m.y) groupOf(el.id).forEach((i) => expanded.add(i)); });
         setSelIds(e.shiftKey ? [...new Set([...selIds, ...expanded])] : [...expanded]);
@@ -762,7 +773,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       <input ref={htmlRef} type="file" accept=".html,.htm,text/html" onChange={pickHtml} style={{ display: "none" }} />
 
       {/* slide rail */}
-      <div style={{ width: 132, flexShrink: 0, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ width: 184, flexShrink: 0, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
         {slides.map((s, i) => (
           <button key={s.id} onClick={() => { setCur(i); setSel(null); setEditing(null); }}
             draggable
@@ -776,7 +787,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                      overflow: "hidden", lineHeight: 0, transition: "border-color .12s, box-shadow .12s",
                      border: `2px solid ${i === cur ? C.accent : C.border}`,
                      boxShadow: i === cur ? `0 0 0 3px ${C.accent}22` : "none" }}>
-            <StaticSlide slide={s} width={120} master={masterState} index={i} total={slides.length} title={deck.title} />
+            <StaticSlide slide={s} width={168} master={masterState} index={i} total={slides.length} title={deck.title} />
             <span style={{ position: "absolute", bottom: 3, left: 4, fontSize: 9, fontWeight: 600, color: i === cur ? C.accent : C.dim, background: "rgba(255,255,255,.82)", borderRadius: 3, padding: "0 3px", lineHeight: 1.4 }}>{i + 1}</span>
             {s.notes ? <span title="Has speaker notes" style={{ position: "absolute", top: 3, right: 4, fontSize: 10, lineHeight: 1 }}>🗒</span> : null}
           </button>
@@ -845,7 +856,6 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
               style={{ width: VW, height: VH, position: "absolute", top: 0, left: 0,
                        transform: `scale(${scale})`, transformOrigin: "top left",
                        background: slide.background || "#fff", boxShadow: "0 2px 16px rgba(0,0,0,.12)", overflow: "hidden" }}>
-              {(typeof window !== "undefined") && (console.log("DBG_RENDER", { scale, fitScale, zoom, selEl: selEl?.id || null, guides: guides.length, marquee: !!marquee, els: slide.elements.length }), null)}
               {!slide.hideMaster && masterState?.enabled && <MasterFrame master={masterState} index={cur} total={slides.length} title={deck.title} />}
               {slide.elements.map(el => {
                 if (el.type === "arrow")
@@ -877,7 +887,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                 const sz = HANDLE_PX / scale;
                 return (
                   <div key={name} onMouseDown={(e) => startResize(e, selEl, fx, fy)}
-                    style={{ position: "absolute", left: DBG(selEl.x + fx * selEl.width - sz / 2, "resize"), top: selEl.y + fy * h - sz / 2,
+                    style={{ position: "absolute", left: fin(selEl.x + fx * selEl.width - sz / 2), top: fin(selEl.y + fy * h - sz / 2),
                              width: sz, height: sz, background: "#fff", border: `${1.5 / scale}px solid ${C.accent}`,
                              borderRadius: 2, cursor: CURSORS[name], boxSizing: "border-box" }} />
                 );
@@ -888,7 +898,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                 const sz = (HANDLE_PX + 2) / scale;
                 return (
                   <div key={k} onMouseDown={(e) => startArrowEnd(e, selEl, k)}
-                    style={{ position: "absolute", left: DBG(px - sz / 2, "arrowend"), top: py - sz / 2, width: sz, height: sz,
+                    style={{ position: "absolute", left: fin(px - sz / 2), top: fin(py - sz / 2), width: sz, height: sz,
                              background: "#fff", border: `${1.5 / scale}px solid ${C.accent}`, borderRadius: "50%", cursor: "move" }} />
                 );
               })}
@@ -903,19 +913,19 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                 const sz = (HANDLE_PX + 3) / scale;
                 return (
                   <div key="rot" onMouseDown={(e) => startRotate(e, selEl)} title="Drag to rotate (Shift = 15°)"
-                    style={{ position: "absolute", left: DBG(hx - sz / 2, "rotate"), top: hy - sz / 2, width: sz, height: sz,
+                    style={{ position: "absolute", left: fin(hx - sz / 2), top: fin(hy - sz / 2), width: sz, height: sz,
                              background: "#fff", border: `${1.5 / scale}px solid ${C.accent}`, borderRadius: "50%", cursor: "grab" }} />
                 );
               })()}
 
               {/* smart-align guide lines */}
               {guides.map((g, i) => g.type === "v"
-                ? <div key={"g" + i} style={{ position: "absolute", left: DBG(g.pos, "guideV"), top: 0, width: 1 / scale, height: VH, background: "#e23b2e", pointerEvents: "none" }} />
-                : <div key={"g" + i} style={{ position: "absolute", top: DBG(g.pos, "guideH"), left: 0, height: 1 / scale, width: VW, background: "#e23b2e", pointerEvents: "none" }} />
+                ? <div key={"g" + i} style={{ position: "absolute", left: fin(g.pos), top: 0, width: 1 / scale, height: VH, background: "#e23b2e", pointerEvents: "none" }} />
+                : <div key={"g" + i} style={{ position: "absolute", top: fin(g.pos), left: 0, height: 1 / scale, width: VW, background: "#e23b2e", pointerEvents: "none" }} />
               )}
 
               {/* marquee rectangle */}
-              {marquee && <div style={{ position: "absolute", left: DBG(marquee.x, "marquee"), top: marquee.y, width: marquee.w, height: marquee.h, border: `${1 / scale}px solid ${C.accent}`, background: `${C.accent}14`, pointerEvents: "none" }} />}
+              {marquee && <div style={{ position: "absolute", left: fin(marquee.x), top: fin(marquee.y), width: fin(marquee.w), height: fin(marquee.h), border: `${1 / scale}px solid ${C.accent}`, background: `${C.accent}14`, pointerEvents: "none" }} />}
             </div>
           </div>
         </div>

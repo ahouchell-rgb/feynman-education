@@ -13,17 +13,20 @@ const SHADOW = "0 6px 18px rgba(0,0,0,0.28)";
 const STAR = "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
 const TRIANGLE = "polygon(50% 0%, 0% 100%, 100% 100%)";
 
+// Guard against a non-finite coordinate (e.g. an Infinity/NaN x from a broken
+// import or AI-generated deck) reaching a CSS length — React floods the dev
+// console with "`Infinity` is an invalid value for the `left` css property".
+const finite = (v) => (typeof v === "number" && !Number.isFinite(v) ? 0 : v);
+
 /* Visual style for box-like elements (text / rect / image), in virtual
    coordinates. Shared by the editor and all read-only views. Arrows are drawn
    separately by <ArrowSvg/> since they're defined by two points, not a box. */
 export function elStyle(el) {
-  if (typeof window !== "undefined" && [el.x, el.y, el.width, el.height].some((v) => v != null && typeof v === "number" && !isFinite(v)))
-    console.error("DBG_ELSTYLE_NONFINITE", el.type, el.id, { x: el.x, y: el.y, width: el.width, height: el.height });
   const rot = el.rotation ? `rotate(${el.rotation}deg)` : undefined;
-  const base = { position: "absolute", left: el.x, top: el.y, width: el.width, opacity: el.opacity ?? 1, transform: rot };
+  const base = { position: "absolute", left: finite(el.x), top: finite(el.y), width: finite(el.width), opacity: el.opacity ?? 1, transform: rot };
   if (el.type === "text")
     return {
-      ...base, height: el.height,
+      ...base, height: finite(el.height),
       fontSize: el.fontSize, color: el.color,
       fontFamily: el.font || C.sans,
       fontWeight: el.bold ? 700 : 400,
@@ -39,7 +42,7 @@ export function elStyle(el) {
   if (el.type === "rect") {
     const shape = el.shape || "rect";
     const border = el.stroke ? `${el.strokeW || 3}px ${el.dashed ? "dashed" : "solid"} ${el.stroke}` : "none";
-    const s = { ...base, height: el.height, background: el.fill, boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box" };
+    const s = { ...base, height: finite(el.height), background: el.fill, boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box" };
     if (shape === "ellipse") return { ...s, borderRadius: "50%", border };
     if (shape === "triangle") return { ...s, clipPath: TRIANGLE };
     if (shape === "star") return { ...s, clipPath: STAR };
@@ -47,16 +50,16 @@ export function elStyle(el) {
   }
   if (el.type === "image")
     return {
-      ...base, height: el.height,
+      ...base, height: finite(el.height),
       borderRadius: el.radius ?? 0, overflow: "hidden",
       border: el.stroke ? `${el.strokeW || 3}px solid ${el.stroke}` : "none",
       boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box",
     };
   if (el.type === "chart")
-    return { ...base, height: el.height, background: el.bg || "transparent", overflow: "hidden", boxSizing: "border-box" };
+    return { ...base, height: finite(el.height), background: el.bg || "transparent", overflow: "hidden", boxSizing: "border-box" };
   if (el.type === "equation")
     return {
-      ...base, height: el.height,
+      ...base, height: finite(el.height),
       display: "flex", alignItems: "center",
       justifyContent: el.align === "left" ? "flex-start" : el.align === "right" ? "flex-end" : "center",
       color: el.color || "#1a1714", fontSize: el.fontSize || 36,
@@ -65,18 +68,18 @@ export function elStyle(el) {
     };
   if (el.type === "html")
     return {
-      ...base, height: el.height,
+      ...base, height: finite(el.height),
       background: "#ffffff", borderRadius: el.radius ?? 8, overflow: "hidden",
       border: el.stroke ? `${el.strokeW || 3}px solid ${el.stroke}` : "none",
       boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box",
     };
   if (el.type === "video" || el.type === "visualiser" || el.type === "retrieval")
-    return { ...base, height: el.height, background: "#0f0f12", borderRadius: 8, overflow: "hidden", boxSizing: "border-box" };
+    return { ...base, height: finite(el.height), background: "#0f0f12", borderRadius: 8, overflow: "hidden", boxSizing: "border-box" };
   if (el.type === "table")
-    return { ...base, height: el.height, boxSizing: "border-box" };
+    return { ...base, height: finite(el.height), boxSizing: "border-box" };
   if (el.type === "timer")
     return {
-      ...base, height: el.height,
+      ...base, height: finite(el.height),
       background: el.fill || "#1a1714", color: el.color || "#ffffff",
       borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
       fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700,
