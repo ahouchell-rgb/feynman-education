@@ -777,25 +777,45 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       <input ref={htmlRef} type="file" accept=".html,.htm,text/html" onChange={pickHtml} style={{ display: "none" }} />
 
       {/* slide rail */}
-      <div style={{ width: 500, flexShrink: 0, overflowY: "auto", display: "flex", flexDirection: "column", gap: 10 }}>
-        {slides.map((s, i) => (
-          <button key={s.id} onClick={() => { setCur(i); setSel(null); setEditing(null); }}
-            draggable
-            onDragStart={() => { dragIdx.current = i; }}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={() => reorderSlide(i)}
-            title="Drag to reorder"
-            onMouseEnter={(e) => { if (i !== cur) e.currentTarget.style.borderColor = C.accent; }}
-            onMouseLeave={(e) => { if (i !== cur) e.currentTarget.style.borderColor = C.border; }}
-            style={{ position: "relative", padding: 0, background: "#fff", borderRadius: 8, cursor: "pointer",
-                     overflow: "hidden", lineHeight: 0, transition: "border-color .12s, box-shadow .12s",
-                     border: `2px solid ${i === cur ? C.accent : C.border}`,
-                     boxShadow: i === cur ? `0 0 0 3px ${C.accent}22` : "none" }}>
-            <StaticSlide slide={s} width={492} master={masterState} index={i} total={slides.length} title={deck.title} />
-            <span style={{ position: "absolute", bottom: 3, left: 4, fontSize: 9, fontWeight: 600, color: i === cur ? C.accent : C.dim, background: "rgba(255,255,255,.82)", borderRadius: 3, padding: "0 3px", lineHeight: 1.4 }}>{i + 1}</span>
-            {s.notes ? <span title="Has speaker notes" style={{ position: "absolute", top: 3, right: 4, fontSize: 10, lineHeight: 1 }}>🗒</span> : null}
-          </button>
-        ))}
+      <div style={{ width: 264, flexShrink: 0, overflowY: "auto", display: "flex", flexDirection: "column", gap: 6 }}>
+        {slides.map((s, i) => {
+          // Extract first meaningful text for the label row
+          const labelTxt = (() => {
+            for (const el of (s.elements || [])) {
+              const t = (el.text || el.rich?.replace(/<[^>]+>/g, "") || "").trim();
+              if (t) return t.replace(/\n[\s\S]*/g, "").slice(0, 28);
+            }
+            return "";
+          })();
+          return (
+            <button key={s.id} onClick={() => { setCur(i); setSel(null); setEditing(null); }}
+              draggable
+              onDragStart={() => { dragIdx.current = i; }}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={() => reorderSlide(i)}
+              title={labelTxt || `Slide ${i + 1}`}
+              onMouseEnter={(e) => { if (i !== cur) e.currentTarget.style.borderColor = C.accent; }}
+              onMouseLeave={(e) => { if (i !== cur) e.currentTarget.style.borderColor = C.border; }}
+              style={{ position: "relative", padding: 0, background: C.bg, borderRadius: 7, cursor: "pointer",
+                       lineHeight: 0, transition: "border-color .12s, box-shadow .12s", textAlign: "left",
+                       border: `2px solid ${i === cur ? C.accent : C.border}`,
+                       boxShadow: i === cur ? `0 0 0 3px ${C.accent}22` : "none" }}>
+              {/* thumbnail */}
+              <div style={{ overflow: "hidden", borderRadius: "5px 5px 0 0", lineHeight: 0 }}>
+                <StaticSlide slide={s} width={248} master={masterState} index={i} total={slides.length} title={deck.title} />
+              </div>
+              {/* label row */}
+              <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "4px 7px 5px", lineHeight: "normal" }}>
+                <span style={{ fontSize: 10, fontWeight: 700, flexShrink: 0,
+                               color: i === cur ? C.accent : C.muted }}>{i + 1}</span>
+                <span style={{ fontSize: 10, color: C.muted, overflow: "hidden",
+                               textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1,
+                               fontFamily: C.sans }}>{labelTxt || "—"}</span>
+                {s.notes ? <span title="Has speaker notes" style={{ fontSize: 9, flexShrink: 0, lineHeight: 1 }}>🗒</span> : null}
+              </div>
+            </button>
+          );
+        })}
         <Btn v="soft" onClick={addSlide}>+ Slide</Btn>
         <select value="" onChange={(e) => { if (e.target.value !== "") { insertTemplate(+e.target.value); e.target.value = ""; } }}
           style={{ padding: "7px 8px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 11, background: C.bg, color: C.text, cursor: "pointer" }}>
