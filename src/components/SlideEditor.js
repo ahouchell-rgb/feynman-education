@@ -196,6 +196,11 @@ const HANDLE_PX = 9;
    slides array, sets local state, and calls onChange so the parent can save. */
 const DEFAULT_MASTER = { enabled: true, headerLeft: "", headerCenter: "", headerRight: "", footerLeft: "{title}", footerCenter: "", footerRight: "{n} / {total}", color: "#6b6256", accent: "#b95a3c", showRule: true };
 
+// Thin vertical divider used to group toolbar clusters.
+const Sep = () => <span style={{ width: 1, height: 22, alignSelf: "center", background: C.border, margin: "0 2px" }} />;
+// Small uppercase section label for the right inspector panel.
+const PanelLabel = ({ children }) => <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim }}>{children}</div>;
+
 export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMasterChange }) {
   const [slides, setSlides] = useState(() =>
     ensureIds(deck.slides?.length ? deck.slides : [{ id: uid(), elements: [] }]));
@@ -212,6 +217,14 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const [masterOpen, setMasterOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [find, setFind] = useState("");
+  const [insertOpen, setInsertOpen] = useState(false);   // "+ Insert" dropdown
+  // Right panel is single-occupancy: opening one view closes the others, and
+  // the column is always mounted so toggling never changes canvas width.
+  const openPanel = (name) => {
+    setThemeOpen(name === "theme" ? (v) => !v : false);
+    setMasterOpen(name === "brand" ? (v) => !v : false);
+    setAiOpen(name === "claude" ? (v) => !v : false);
+  };
   const updateMaster = (patch) => {
     const next = { ...DEFAULT_MASTER, ...(masterState || {}), ...patch };
     setMasterState(next); onMasterChange?.(next);
@@ -700,6 +713,26 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
   };
 
+  // Grouped insert menu — replaces the old flat row of ten "+" buttons.
+  const INSERT_GROUPS = [
+    [
+      { icon: "T", label: "Text", run: addText },
+      { icon: "▸", label: "Label", run: addLabel },
+      { icon: "▭", label: "Box", run: addRect },
+      { icon: "▦", label: "Table", run: addTable },
+      { icon: "↘", label: "Arrow", run: addArrow },
+    ],
+    [
+      { icon: "▣", label: "Image", run: () => fileRef.current?.click() },
+      { icon: "▶", label: "Video", run: addVideo },
+      { icon: "◉", label: "Visualiser", run: addVisualiser },
+    ],
+    [
+      { icon: "⏱", label: "Timer", run: addTimer },
+      { icon: "✦", label: "Retrieval", run: addRetrieval },
+    ],
+  ];
+
   return (
     <>
     <div style={{ display: "flex", gap: 14, height: "100%", fontFamily: C.mono, minHeight: 0 }}>
@@ -714,10 +747,14 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
             onDragOver={(e) => e.preventDefault()}
             onDrop={() => reorderSlide(i)}
             title="Drag to reorder"
-            style={{ position: "relative", padding: 0, background: "#fff", borderRadius: 5, cursor: "pointer",
-                     overflow: "hidden", lineHeight: 0, border: `2px solid ${i === cur ? C.accent : C.border}` }}>
+            onMouseEnter={(e) => { if (i !== cur) e.currentTarget.style.borderColor = C.accent; }}
+            onMouseLeave={(e) => { if (i !== cur) e.currentTarget.style.borderColor = C.border; }}
+            style={{ position: "relative", padding: 0, background: "#fff", borderRadius: 6, cursor: "pointer",
+                     overflow: "hidden", lineHeight: 0, transition: "border-color .12s, box-shadow .12s",
+                     border: `2px solid ${i === cur ? C.accent : C.border}`,
+                     boxShadow: i === cur ? `0 0 0 3px ${C.accent}22` : "none" }}>
             <StaticSlide slide={s} width={120} master={masterState} index={i} total={slides.length} title={deck.title} />
-            <span style={{ position: "absolute", bottom: 2, left: 4, fontSize: 9, color: C.dim, lineHeight: 1 }}>{i + 1}</span>
+            <span style={{ position: "absolute", bottom: 3, left: 4, fontSize: 9, fontWeight: 600, color: i === cur ? C.accent : C.dim, background: "rgba(255,255,255,.82)", borderRadius: 3, padding: "0 3px", lineHeight: 1.4 }}>{i + 1}</span>
             {s.notes ? <span title="Has speaker notes" style={{ position: "absolute", top: 3, right: 4, fontSize: 10, lineHeight: 1 }}>🗒</span> : null}
           </button>
         ))}
@@ -732,164 +769,51 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
 
       {/* editor column */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
+        {/* toolbar — one calm, grouped row. Selection & style controls live in the right panel. */}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
           <Btn v="ghost" onClick={undo} disabled={!histPast.current.length} title="Undo (⌘Z)">↶</Btn>
           <Btn v="ghost" onClick={redo} disabled={!histFuture.current.length} title="Redo (⌘⇧Z)">↷</Btn>
-          <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
-          <Btn v="soft" onClick={addText}>+ Text</Btn>
-          <Btn v="soft" onClick={addLabel}>+ Label</Btn>
-          <Btn v="soft" onClick={addRect}>+ Box</Btn>
-          <Btn v="soft" onClick={addTable}>+ Table</Btn>
-          <Btn v="soft" onClick={addArrow}>+ Arrow</Btn>
-          <Btn v="soft" onClick={addTimer}>+ Timer</Btn>
-          <Btn v="soft" onClick={() => fileRef.current?.click()}>+ Image</Btn>
-          <Btn v="soft" onClick={addVideo}>+ Video</Btn>
-          <Btn v="soft" onClick={addVisualiser}>+ Visualiser</Btn>
-          <Btn v="soft" onClick={addRetrieval}>+ Retrieval</Btn>
-          <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
-          <Btn v="ghost" onClick={duplicateSelection} disabled={!selIds.length} title="Duplicate (⌘D)">Duplicate</Btn>
-          <Btn v="ghost" onClick={bringSelFront} disabled={!selIds.length} title="Bring to front">Front</Btn>
-          <Btn v="ghost" onClick={sendSelBack} disabled={!selIds.length} title="Send to back">Back</Btn>
-          <Btn v={selEl?.reveal ? "pri" : "ghost"} onClick={() => sel && patchH(sel, { reveal: !selEl.reveal })} disabled={!sel} title="Hidden until clicked in Present">Reveal</Btn>
-          <Btn v="ghost" onClick={delSelection} disabled={!selIds.length}>Delete</Btn>
-          <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
-          <Btn v="ghost" onClick={() => zoomBy(-0.1)} title="Zoom out (⌘−)">−</Btn>
-          <button onClick={() => setZoom(1)} title="Reset to fit (⌘0)"
-            style={{ minWidth: 48, height: 28, borderRadius: 6, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.mono, fontSize: 12, cursor: "pointer" }}>{Math.round(scale * 100)}%</button>
-          <Btn v="ghost" onClick={() => zoomBy(0.1)} title="Zoom in (⌘+)">+</Btn>
+          <Sep />
+          {/* Insert menu — one button in place of the old ten */}
+          <div style={{ position: "relative" }}>
+            <Btn v={insertOpen ? "pri" : "soft"} onClick={() => setInsertOpen((o) => !o)} title="Add to slide">＋ Insert ▾</Btn>
+            {insertOpen && (
+              <>
+                <div onClick={() => setInsertOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 40 }} />
+                <div style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 41, width: 196, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 10px 32px rgba(0,0,0,0.16)", padding: 6 }}>
+                  {INSERT_GROUPS.map((grp, gi) => (
+                    <div key={gi} style={{ marginBottom: gi < INSERT_GROUPS.length - 1 ? 5 : 0, paddingBottom: gi < INSERT_GROUPS.length - 1 ? 5 : 0, borderBottom: gi < INSERT_GROUPS.length - 1 ? `1px solid ${C.border}` : "none" }}>
+                      {grp.map((item) => (
+                        <button key={item.label} onClick={() => { setInsertOpen(false); item.run(); }}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = C.bg)}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                          style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", padding: "7px 9px", border: "none", background: "transparent", borderRadius: 5, cursor: "pointer", fontFamily: C.sans, fontSize: 13, color: C.text }}>
+                          <span style={{ width: 18, textAlign: "center", fontSize: 14, color: C.muted }}>{item.icon}</span>{item.label}
+                        </button>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
           <span style={{ flex: 1 }} />
+          <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
+            <Btn v="ghost" onClick={() => zoomBy(-0.1)} title="Zoom out (⌘−)">−</Btn>
+            <button onClick={() => setZoom(1)} title="Reset to fit (⌘0)"
+              style={{ minWidth: 48, height: 28, borderRadius: 6, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.mono, fontSize: 12, cursor: "pointer" }}>{Math.round(scale * 100)}%</button>
+            <Btn v="ghost" onClick={() => zoomBy(0.1)} title="Zoom in (⌘+)">+</Btn>
+          </div>
           <input value={find} onChange={(e) => setFind(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") findNext(); }}
             placeholder="Find…" title="Find text across all slides (Enter = next match)"
-            style={{ width: 110, padding: "6px 9px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: "#fff", color: C.text, outline: "none" }} />
+            style={{ width: 104, padding: "6px 9px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: "#fff", color: C.text, outline: "none" }} />
           <Btn v="ghost" onClick={() => setHelpOpen(true)} title="Keyboard shortcuts (?)">?</Btn>
-          <Btn v={themeOpen ? "pri" : "soft"} onClick={() => setThemeOpen((o) => !o)}>🎨 Theme</Btn>
-          <Btn v={masterOpen ? "pri" : "soft"} onClick={() => setMasterOpen((o) => !o)}>🏷 Brand</Btn>
-          <Btn v={aiOpen ? "pri" : "soft"} onClick={() => setAiOpen((o) => !o)}>✦ Ask Claude</Btn>
-          <Btn v="ghost" onClick={delSlide} disabled={slides.length < 2}>Delete slide</Btn>
+          <Sep />
+          <Btn v={themeOpen ? "pri" : "soft"} onClick={() => openPanel("theme")} title="Deck theme">🎨 Theme</Btn>
+          <Btn v={masterOpen ? "pri" : "soft"} onClick={() => openPanel("brand")} title="Header / footer brand frame">🏷 Brand</Btn>
+          <Btn v={aiOpen ? "pri" : "soft"} onClick={() => openPanel("claude")} title="Ask Claude">✦ Claude</Btn>
+          <Btn v="ghost" onClick={delSlide} disabled={slides.length < 2} title="Delete this slide">🗑</Btn>
         </div>
-
-        {/* theme picker */}
-        {themeOpen && (
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", padding: "8px 10px", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6 }}>
-            <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.08em" }}>Theme</span>
-            {THEMES.map((t) => (
-              <button key={t.name} onClick={() => applyTheme(t)} title={`Apply ${t.name} to all slides`}
-                style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 10px", borderRadius: 6, cursor: "pointer",
-                         border: `1px solid ${themeState?.name === t.name ? C.accent : C.border}`, background: "#fff", fontFamily: C.sans, fontSize: 12, color: C.text }}>
-                <span style={{ display: "inline-flex" }}>
-                  <span style={{ width: 14, height: 14, borderRadius: 3, background: t.bg, border: `1px solid ${C.border}` }} />
-                  <span style={{ width: 14, height: 14, borderRadius: 3, background: t.accent, marginLeft: -4, border: `1px solid ${C.border}` }} />
-                </span>
-                {t.name}
-              </button>
-            ))}
-            <span style={{ fontSize: 10, color: C.faint }}>· sets background + fonts/colours on every slide</span>
-          </div>
-        )}
-
-        {/* brand / master frame */}
-        {masterOpen && (() => {
-          const m = masterState || DEFAULT_MASTER;
-          const on = !!(masterState && m.enabled);
-          const fld = (label, key) => (
-            <label style={{ display: "flex", flexDirection: "column", gap: 3, flex: "1 1 150px", minWidth: 120 }}>
-              <span style={{ fontSize: 9, color: C.dim, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</span>
-              <input value={m[key] || ""} onChange={(e) => updateMaster({ [key]: e.target.value })} disabled={!on}
-                style={{ padding: "5px 7px", border: `1px solid ${C.border}`, borderRadius: 5, fontFamily: C.sans, fontSize: 12, background: on ? "#fff" : C.bg, color: C.text, outline: "none" }} />
-            </label>
-          );
-          return (
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "10px 12px", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.08em" }}>Brand frame</span>
-                <Btn v={on ? "pri" : "soft"} onClick={() => updateMaster({ enabled: !on })}>{on ? "✓ On" : "Off"}</Btn>
-                <span style={{ fontSize: 10, color: C.faint }}>header &amp; footer on every slide · tokens: {"{n}"} {"{total}"} {"{title}"} {"{date}"}</span>
-                <span style={{ flex: 1 }} />
-                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted, cursor: "pointer" }}>
-                  <input type="checkbox" checked={!!slide.hideMaster} onChange={(e) => setHideMaster(e.target.checked)} />
-                  Hide on this slide
-                </label>
-              </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {fld("Header left", "headerLeft")}{fld("Header centre", "headerCenter")}{fld("Header right", "headerRight")}
-              </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {fld("Footer left", "footerLeft")}{fld("Footer centre", "footerCenter")}{fld("Footer right", "footerRight")}
-              </div>
-              <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted }}>
-                  Text <input type="color" value={m.color || "#6b6256"} onChange={(e) => updateMaster({ color: e.target.value })} disabled={!on} style={{ width: 28, height: 24, border: "none", background: "none", cursor: "pointer" }} />
-                </label>
-                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted }}>
-                  Rule <input type="color" value={m.accent || "#b95a3c"} onChange={(e) => updateMaster({ accent: e.target.value })} disabled={!on || !m.showRule} style={{ width: 28, height: 24, border: "none", background: "none", cursor: "pointer" }} />
-                </label>
-                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted, cursor: "pointer" }}>
-                  <input type="checkbox" checked={!!m.showRule} onChange={(e) => updateMaster({ showRule: e.target.checked })} disabled={!on} />
-                  Footer rule line
-                </label>
-              </div>
-            </div>
-          );
-        })()}
-
-        {/* multi-select row */}
-        {selIds.length > 1 && (
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-            <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.08em" }}>{selIds.length} selected</span>
-            <Btn v="ghost" onClick={() => alignSel("left")} title="Align left">⬅</Btn>
-            <Btn v="ghost" onClick={() => alignSel("cx")} title="Align centre">↔</Btn>
-            <Btn v="ghost" onClick={() => alignSel("right")} title="Align right">➡</Btn>
-            <Btn v="ghost" onClick={() => alignSel("top")} title="Align top">⬆</Btn>
-            <Btn v="ghost" onClick={() => alignSel("cy")} title="Align middle">↕</Btn>
-            <Btn v="ghost" onClick={() => alignSel("bottom")} title="Align bottom">⬇</Btn>
-            <Btn v="ghost" onClick={() => distributeSel("h")} disabled={selIds.length < 3} title="Distribute horizontally">Dist ⬄</Btn>
-            <Btn v="ghost" onClick={() => distributeSel("v")} disabled={selIds.length < 3} title="Distribute vertically">Dist ⬍</Btn>
-            <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
-            <Btn v="ghost" onClick={groupSel}>Group</Btn>
-            <Btn v="ghost" onClick={ungroupSel}>Ungroup</Btn>
-          </div>
-        )}
-
-        {/* contextual arrange row */}
-        {sel && (
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.08em" }}>Arrange</span>
-            <Btn v={selEl?.locked ? "pri" : "ghost"} onClick={toggleLock}>{selEl?.locked ? "🔒 Locked" : "Lock"}</Btn>
-            <Btn v="ghost" onClick={() => centerOnSlide("h")} disabled={selEl?.type === "arrow"}>Centre ⬄</Btn>
-            <Btn v="ghost" onClick={() => centerOnSlide("v")} disabled={selEl?.type === "arrow"}>Centre ⬍</Btn>
-            {selEl?.rotation ? <Btn v="ghost" onClick={() => patchH(sel, { rotation: 0 })}>↺ {selEl.rotation}°</Btn> : null}
-            <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 2px" }} />
-            <Btn v="ghost" onClick={copyStyle}>Copy style</Btn>
-            <Btn v="ghost" onClick={pasteStyle} disabled={!styleClip.current}>Paste style</Btn>
-          </div>
-        )}
-
-        {/* symbol bar — visible while editing a text box */}
-        {editing && edEl?.type === "text" && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center", padding: "6px 8px",
-                        background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6 }}>
-            <button title="Smaller (as you type)"
-              onMouseDown={(e) => { e.preventDefault(); if (edEl) patchH(editing, { fontSize: Math.max(8, (edEl.fontSize || 40) - 4) }); }}
-              style={{ height: 26, padding: "0 9px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 13, cursor: "pointer" }}>A−</button>
-            <span style={{ fontFamily: C.mono, fontSize: 11, color: C.muted, minWidth: 22, textAlign: "center" }}>{edEl?.fontSize || 40}</span>
-            <button title="Bigger (as you type)"
-              onMouseDown={(e) => { e.preventDefault(); if (edEl) patchH(editing, { fontSize: (edEl.fontSize || 40) + 4 }); }}
-              style={{ height: 26, padding: "0 9px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 15, cursor: "pointer" }}>A+</button>
-            <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 4px" }} />
-            {[...SYMBOLS, ...STATES].map((sym) => (
-              <button key={sym} title="Insert at cursor"
-                onMouseDown={(e) => { e.preventDefault(); editorApi.current?.insert(sym); }}
-                style={{ minWidth: 26, height: 26, padding: "0 6px", borderRadius: 4, border: `1px solid ${C.border}`,
-                         background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>{sym}</button>
-            ))}
-            <span style={{ width: 1, alignSelf: "stretch", background: C.border, margin: "0 4px" }} />
-            <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.subSup("sub"); }} title="Subscript selection (⌘,)"
-              style={{ height: 26, padding: "0 8px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>x₂</button>
-            <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.subSup("sup"); }} title="Superscript selection (⌘.)"
-              style={{ height: 26, padding: "0 8px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>x²</button>
-            <span style={{ fontSize: 10, color: C.faint, marginLeft: 4 }}>select text · ⌘, sub · ⌘. super</span>
-          </div>
-        )}
 
         {/* stage */}
         <div ref={wrapRef} style={{ flex: 1, overflow: "auto", background: C.bg, borderRadius: 8, padding: 16 }}>
@@ -972,10 +896,6 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
           </div>
         </div>
 
-        {/* properties bar */}
-        <PropsBar selEl={selEl} slide={slide} patchEl={patchH} setSlideBg={setSlideBg}
-          onCrop={() => selEl && setCropping(selEl.id)} onResetCrop={() => selEl && patchH(selEl.id, { crop: null })} />
-
         {/* speaker notes */}
         <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
           <span style={{ fontFamily: C.mono, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em", color: C.dim, paddingTop: 7, flexShrink: 0 }}>Notes</span>
@@ -987,40 +907,160 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
         </div>
       </div>
 
-      {/* Ask Claude panel */}
-      {aiOpen && (
-        <div style={{ width: 280, flexShrink: 0, display: "flex", flexDirection: "column", gap: 10,
-                      borderLeft: `1px solid ${C.border}`, paddingLeft: 14 }}>
-          <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim }}>✦ Ask Claude</div>
-          <textarea value={aiInput} onChange={(e) => setAiInput(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) askClaude(); }}
-            placeholder="Tell Claude what to make, e.g. “a title slide about photosynthesis, then 3 key facts”"
-            rows={5}
-            style={{ width: "100%", resize: "vertical", padding: "9px 11px", border: `1px solid ${C.border}`,
-                     borderRadius: 6, fontFamily: C.sans, fontSize: 13, lineHeight: 1.4, background: "#fff", color: C.text, outline: "none" }} />
-          <div style={{ display: "flex", gap: 8 }}>
-            <Btn onClick={askClaude} disabled={aiBusy || !aiInput.trim()} style={{ flex: 1 }}>
-              {aiBusy ? "thinking…" : "Generate"}
-            </Btn>
-            <Btn v="ghost" onClick={undoAI} disabled={!aiPrev.current}>Undo</Btn>
-          </div>
-          {aiMsg && (
-            <div style={{ fontSize: 12, lineHeight: 1.45, color: aiMsg.startsWith("⚠") ? C.red : C.muted }}>{aiMsg}</div>
-          )}
-          <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 2 }}>
-            {AI_QUICK.map((q) => (
-              <button key={q} onClick={() => setAiInput(q)}
-                style={{ textAlign: "left", padding: "6px 9px", border: `1px solid ${C.border}`, borderRadius: 6,
-                         background: C.surface, color: C.muted, fontFamily: C.sans, fontSize: 12, cursor: "pointer" }}>
-                {q}
-              </button>
-            ))}
-          </div>
-          <div style={{ marginTop: "auto", fontSize: 10, color: C.faint, lineHeight: 1.5 }}>
-            Claude edits the whole deck live — it can add slides, text, boxes, arrows and labels. It can’t create images. Press ⌘/Ctrl+Enter to send.
-          </div>
-        </div>
-      )}
+      {/* right panel — Claude / Theme / Brand / selection inspector. Always mounted at a fixed
+          width, so selecting an element or opening a panel never reflows or rescales the canvas. */}
+      <div style={{ width: 272, flexShrink: 0, display: "flex", flexDirection: "column", gap: 12,
+                    borderLeft: `1px solid ${C.border}`, paddingLeft: 14, overflowY: "auto" }}>
+        {aiOpen ? (
+          <>
+            <PanelLabel>✦ Ask Claude</PanelLabel>
+            <textarea value={aiInput} onChange={(e) => setAiInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) askClaude(); }}
+              placeholder="Tell Claude what to make, e.g. “a title slide about photosynthesis, then 3 key facts”"
+              rows={5}
+              style={{ width: "100%", resize: "vertical", padding: "9px 11px", border: `1px solid ${C.border}`,
+                       borderRadius: 6, fontFamily: C.sans, fontSize: 13, lineHeight: 1.4, background: "#fff", color: C.text, outline: "none" }} />
+            <div style={{ display: "flex", gap: 8 }}>
+              <Btn onClick={askClaude} disabled={aiBusy || !aiInput.trim()} style={{ flex: 1 }}>
+                {aiBusy ? "thinking…" : "Generate"}
+              </Btn>
+              <Btn v="ghost" onClick={undoAI} disabled={!aiPrev.current}>Undo</Btn>
+            </div>
+            {aiMsg && (
+              <div style={{ fontSize: 12, lineHeight: 1.45, color: aiMsg.startsWith("⚠") ? C.red : C.muted }}>{aiMsg}</div>
+            )}
+            <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 2 }}>
+              {AI_QUICK.map((q) => (
+                <button key={q} onClick={() => setAiInput(q)}
+                  style={{ textAlign: "left", padding: "6px 9px", border: `1px solid ${C.border}`, borderRadius: 6,
+                           background: C.surface, color: C.muted, fontFamily: C.sans, fontSize: 12, cursor: "pointer" }}>
+                  {q}
+                </button>
+              ))}
+            </div>
+            <div style={{ marginTop: "auto", fontSize: 10, color: C.faint, lineHeight: 1.5 }}>
+              Claude edits the whole deck live — it can add slides, text, boxes, arrows and labels. It can’t create images. Press ⌘/Ctrl+Enter to send.
+            </div>
+          </>
+        ) : themeOpen ? (
+          <>
+            <PanelLabel>Deck theme</PanelLabel>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {THEMES.map((t) => (
+                <button key={t.name} onClick={() => applyTheme(t)} title={`Apply ${t.name} to all slides`}
+                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 10px", borderRadius: 6, cursor: "pointer",
+                           border: `1px solid ${themeState?.name === t.name ? C.accent : C.border}`, background: themeState?.name === t.name ? C.bg : "#fff", fontFamily: C.sans, fontSize: 13, color: C.text }}>
+                  <span style={{ display: "inline-flex", flexShrink: 0 }}>
+                    <span style={{ width: 16, height: 16, borderRadius: 3, background: t.bg, border: `1px solid ${C.border}` }} />
+                    <span style={{ width: 16, height: 16, borderRadius: 3, background: t.accent, marginLeft: -5, border: `1px solid ${C.border}` }} />
+                  </span>
+                  {t.name}
+                </button>
+              ))}
+            </div>
+            <div style={{ fontSize: 10, color: C.faint, lineHeight: 1.5 }}>Sets the background, fonts and colours on every slide.</div>
+          </>
+        ) : masterOpen ? (() => {
+          const m = masterState || DEFAULT_MASTER;
+          const on = !!(masterState && m.enabled);
+          const fld = (label, key) => (
+            <label style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              <span style={{ fontSize: 9, color: C.dim, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</span>
+              <input value={m[key] || ""} onChange={(e) => updateMaster({ [key]: e.target.value })} disabled={!on}
+                style={{ padding: "5px 7px", border: `1px solid ${C.border}`, borderRadius: 5, fontFamily: C.sans, fontSize: 12, background: on ? "#fff" : C.bg, color: C.text, outline: "none" }} />
+            </label>
+          );
+          return (
+            <>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <PanelLabel>Brand frame</PanelLabel>
+                <Btn v={on ? "pri" : "soft"} onClick={() => updateMaster({ enabled: !on })}>{on ? "✓ On" : "Off"}</Btn>
+                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted, cursor: "pointer" }}>
+                  <input type="checkbox" checked={!!slide.hideMaster} onChange={(e) => setHideMaster(e.target.checked)} />
+                  Hide here
+                </label>
+              </div>
+              <div style={{ fontSize: 10, color: C.faint, lineHeight: 1.5 }}>Header &amp; footer on every slide · tokens: {"{n}"} {"{total}"} {"{title}"} {"{date}"}</div>
+              {fld("Header left", "headerLeft")}{fld("Header centre", "headerCenter")}{fld("Header right", "headerRight")}
+              {fld("Footer left", "footerLeft")}{fld("Footer centre", "footerCenter")}{fld("Footer right", "footerRight")}
+              <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", marginTop: 2 }}>
+                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted }}>
+                  Text <input type="color" value={m.color || "#6b6256"} onChange={(e) => updateMaster({ color: e.target.value })} disabled={!on} style={{ width: 28, height: 24, border: "none", background: "none", cursor: "pointer" }} />
+                </label>
+                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted }}>
+                  Rule <input type="color" value={m.accent || "#b95a3c"} onChange={(e) => updateMaster({ accent: e.target.value })} disabled={!on || !m.showRule} style={{ width: 28, height: 24, border: "none", background: "none", cursor: "pointer" }} />
+                </label>
+                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted, cursor: "pointer" }}>
+                  <input type="checkbox" checked={!!m.showRule} onChange={(e) => updateMaster({ showRule: e.target.checked })} disabled={!on} />
+                  Rule line
+                </label>
+              </div>
+            </>
+          );
+        })() : (
+          <>
+            {/* selection inspector — style + arrange in one place; nothing here reflows the canvas */}
+            {editing && edEl?.type === "text" && (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
+                <button title="Smaller (as you type)"
+                  onMouseDown={(e) => { e.preventDefault(); if (edEl) patchH(editing, { fontSize: Math.max(8, (edEl.fontSize || 40) - 4) }); }}
+                  style={{ height: 26, padding: "0 9px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 13, cursor: "pointer" }}>A−</button>
+                <span style={{ fontFamily: C.mono, fontSize: 11, color: C.muted, minWidth: 22, textAlign: "center" }}>{edEl?.fontSize || 40}</span>
+                <button title="Bigger (as you type)"
+                  onMouseDown={(e) => { e.preventDefault(); if (edEl) patchH(editing, { fontSize: (edEl.fontSize || 40) + 4 }); }}
+                  style={{ height: 26, padding: "0 9px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 15, cursor: "pointer" }}>A+</button>
+                <Sep />
+                {[...SYMBOLS, ...STATES].map((sym) => (
+                  <button key={sym} title="Insert at cursor"
+                    onMouseDown={(e) => { e.preventDefault(); editorApi.current?.insert(sym); }}
+                    style={{ minWidth: 26, height: 26, padding: "0 6px", borderRadius: 4, border: `1px solid ${C.border}`,
+                             background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>{sym}</button>
+                ))}
+                <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.subSup("sub"); }} title="Subscript selection (⌘,)"
+                  style={{ height: 26, padding: "0 8px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>x₂</button>
+                <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.subSup("sup"); }} title="Superscript selection (⌘.)"
+                  style={{ height: 26, padding: "0 8px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>x²</button>
+              </div>
+            )}
+
+            <PropsBar selEl={selEl} slide={slide} patchEl={patchH} setSlideBg={setSlideBg}
+              onCrop={() => selEl && setCropping(selEl.id)} onResetCrop={() => selEl && patchH(selEl.id, { crop: null })} />
+
+            {sel && (
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                <PanelLabel>Arrange</PanelLabel>
+                <Btn v="ghost" onClick={duplicateSelection} title="Duplicate (⌘D)">Duplicate</Btn>
+                <Btn v="ghost" onClick={bringSelFront} title="Bring to front">Front</Btn>
+                <Btn v="ghost" onClick={sendSelBack} title="Send to back">Back</Btn>
+                <Btn v={selEl?.locked ? "pri" : "ghost"} onClick={toggleLock}>{selEl?.locked ? "🔒 Locked" : "Lock"}</Btn>
+                <Btn v={selEl?.reveal ? "pri" : "ghost"} onClick={() => sel && patchH(sel, { reveal: !selEl.reveal })} title="Hidden until clicked in Present">Reveal</Btn>
+                <Btn v="ghost" onClick={() => centerOnSlide("h")} disabled={selEl?.type === "arrow"}>Centre ⬄</Btn>
+                <Btn v="ghost" onClick={() => centerOnSlide("v")} disabled={selEl?.type === "arrow"}>Centre ⬍</Btn>
+                {selEl?.rotation ? <Btn v="ghost" onClick={() => patchH(sel, { rotation: 0 })}>↺ {selEl.rotation}°</Btn> : null}
+                <Btn v="ghost" onClick={copyStyle}>Copy style</Btn>
+                <Btn v="ghost" onClick={pasteStyle} disabled={!styleClip.current}>Paste style</Btn>
+                <Btn v="ghost" onClick={delSelection}>Delete</Btn>
+              </div>
+            )}
+
+            {selIds.length > 1 && (
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                <PanelLabel>{selIds.length} selected</PanelLabel>
+                <Btn v="ghost" onClick={() => alignSel("left")} title="Align left">⬅</Btn>
+                <Btn v="ghost" onClick={() => alignSel("cx")} title="Align centre">↔</Btn>
+                <Btn v="ghost" onClick={() => alignSel("right")} title="Align right">➡</Btn>
+                <Btn v="ghost" onClick={() => alignSel("top")} title="Align top">⬆</Btn>
+                <Btn v="ghost" onClick={() => alignSel("cy")} title="Align middle">↕</Btn>
+                <Btn v="ghost" onClick={() => alignSel("bottom")} title="Align bottom">⬇</Btn>
+                <Btn v="ghost" onClick={() => distributeSel("h")} disabled={selIds.length < 3} title="Distribute horizontally">Dist ⬄</Btn>
+                <Btn v="ghost" onClick={() => distributeSel("v")} disabled={selIds.length < 3} title="Distribute vertically">Dist ⬍</Btn>
+                <Btn v="ghost" onClick={groupSel}>Group</Btn>
+                <Btn v="ghost" onClick={ungroupSel}>Ungroup</Btn>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
     {cropping && (() => {
       const el = slide.elements.find((e) => e.id === cropping);
