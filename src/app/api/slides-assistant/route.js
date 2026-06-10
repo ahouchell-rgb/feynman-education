@@ -35,7 +35,7 @@ ELEMENT TYPES YOU CAN CREATE:
     duration is SECONDS (e.g. 300 = 5 min). It counts down live when the teacher presents. Use for "Do Now" / timed tasks. A good size is ~280×150, fontSize 72, fill "#1a1714", color "#ffffff".
 
 ELEMENT TYPES YOU CAN KEEP/MOVE/RESIZE BUT MUST NOT CREATE (you don't have a valid source URL for them):
-- image { ...src }, video { ...src }, visualiser, retrieval. Preserve any that already exist; reposition them if asked, but never invent new ones.
+- image { ...src }, video { ...src }, visualiser, retrieval, html. Preserve any that already exist; reposition them if asked, but never invent new ones. An html element is an imported web-page template that fills its box and runs live when presented; its markup is hidden from you (shown as "[html omitted]") — keep it as-is, you may move/resize it but never change its html.
 
 REVEAL ON CLICK: any element may have reveal:true. Revealed elements are hidden when the slide first appears and the teacher clicks to reveal them one at a time, in array order. Use this for answers, exit-ticket responses, and "click to check" — put the question visible and mark the answer element reveal:true.
 
@@ -57,7 +57,7 @@ const ELEMENT_SCHEMA = {
   type: "object",
   properties: {
     id: { type: "string" },
-    type: { type: "string", enum: ["text", "rect", "arrow", "image", "table", "timer", "video", "visualiser", "retrieval"] },
+    type: { type: "string", enum: ["text", "rect", "arrow", "image", "table", "timer", "video", "visualiser", "retrieval", "html"] },
     x: { type: "number" }, y: { type: "number" },
     width: { type: "number" }, height: { type: "number" },
     text: { type: "string" }, fontSize: { type: "number" }, color: { type: "string" },
@@ -72,6 +72,8 @@ const ELEMENT_SCHEMA = {
     headerRow: { type: "boolean" }, headerBg: { type: "string" }, headerColor: { type: "string" }, borderColor: { type: "string" },
     // timer
     duration: { type: "number" },
+    // html template (content is stripped before the call and restored after)
+    html: { type: "string" }, title: { type: "string" },
     // shared flags
     reveal: { type: "boolean" }, rotation: { type: "number" },
   },
@@ -118,9 +120,21 @@ export async function POST(req) {
   if (!instruction) return json({ error: "instruction is required" }, 400);
   if (instruction.length > 2000) return json({ error: "Instruction is too long." }, 400);
 
+  // Imported HTML templates can be tens of KB each — far too large for Claude to
+  // echo back inside the 8K output budget. Strip the markup (keyed by element id)
+  // before the call and splice it back into the result afterwards.
+  const htmlById = {};
+  const sentSlides = slides.map((s) => ({
+    ...s,
+    elements: (s.elements || []).map((e) => {
+      if (e && e.type === "html") { if (e.id) htmlById[e.id] = e.html; return { ...e, html: "[html omitted]" }; }
+      return e;
+    }),
+  }));
+
   const userText =
     `Current slide index: ${currentSlide}\n` +
-    `Current deck (JSON):\n${JSON.stringify(slides)}\n\n` +
+    `Current deck (JSON):\n${JSON.stringify(sentSlides)}\n\n` +
     `Instruction: ${instruction}`;
 
   let res;
@@ -162,7 +176,10 @@ export async function POST(req) {
   const usesFont = (t) => t === "text" || t === "table";
   const slidesOut = (toolBlock.input.slides || []).map((s) => ({
     ...s,
-    elements: (s.elements || []).map((e) => (usesFont(e.type) && e.font && FONT_CSS[e.font] ? { ...e, font: FONT_CSS[e.font], fontFace: FONT_FACE[e.font] } : e)),
+    elements: (s.elements || []).map((e) => {
+      if (e.type === "html") return { ...e, html: htmlById[e.id] ?? (e.html === "[html omitted]" ? "" : e.html) };
+      return usesFont(e.type) && e.font && FONT_CSS[e.font] ? { ...e, font: FONT_CSS[e.font], fontFace: FONT_FACE[e.font] } : e;
+    }),
   }));
 
   return json({ slides: slidesOut, summary: toolBlock.input.summary || "Done." });

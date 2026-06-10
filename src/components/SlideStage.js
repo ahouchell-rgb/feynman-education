@@ -48,6 +48,13 @@ export function elStyle(el) {
       border: el.stroke ? `${el.strokeW || 3}px solid ${el.stroke}` : "none",
       boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box",
     };
+  if (el.type === "html")
+    return {
+      ...base, height: el.height,
+      background: "#ffffff", borderRadius: el.radius ?? 8, overflow: "hidden",
+      border: el.stroke ? `${el.strokeW || 3}px solid ${el.stroke}` : "none",
+      boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box",
+    };
   if (el.type === "video" || el.type === "visualiser" || el.type === "retrieval")
     return { ...base, height: el.height, background: "#0f0f12", borderRadius: 8, overflow: "hidden", boxSizing: "border-box" };
   if (el.type === "table")
@@ -72,7 +79,17 @@ export function ElInner({ el }) {
   if (el.type === "video") return <Placeholder icon="▶" label={el.title || el.src || "Video"} />;
   if (el.type === "visualiser") return <Placeholder icon="📷" label="Visualiser — live camera in Present" />;
   if (el.type === "retrieval") return <Placeholder icon="📚" label="Retrieval — live app in Present" />;
+  if (el.type === "html") return <HtmlInner el={el} />;
   return null;
+}
+
+/* Static preview of an imported HTML template. Scripts are disabled here
+   (sandbox="") so deck-list thumbnails and the editor stay cheap and safe;
+   the page comes alive interactively in Present (see HtmlFrame). */
+function HtmlInner({ el }) {
+  if (!el.html) return <Placeholder icon="</>" label={el.title || "HTML template"} />;
+  return <iframe title={el.title || "html"} srcDoc={el.html} sandbox="" scrolling="no"
+    style={{ width: "100%", height: "100%", border: "none", display: "block", background: "#fff", pointerEvents: "none" }} />;
 }
 
 /* Image, honouring an optional crop ({x,y,w,h} as 0–1 fractions of the image). */
@@ -157,6 +174,23 @@ function RetrievalFrame({ el }) {
       <a href={url} target="_blank" rel="noreferrer" onClick={stop}
         style={{ position: "absolute", top: 6, right: 8, fontSize: 11, fontFamily: "monospace", color: "#333", background: "rgba(255,255,255,0.88)", padding: "2px 8px", borderRadius: 6, textDecoration: "none" }}>Open ↗</a>
     </div>
+  );
+}
+
+/* Live, interactive HTML template (Present only). Runs the imported page's own
+   CSS/JS in a sandboxed iframe. stopPropagation so clicks inside the lesson
+   don't advance the slide (use the arrow keys to move on).
+   NOTE: deliberately NO allow-same-origin — a srcdoc iframe inherits the app's
+   origin, so allowing it together with scripts would let imported (and possibly
+   shared/department) HTML read this user's session. Without it the page runs in
+   an opaque origin: scripts/forms still work, but it can't touch the parent. */
+function HtmlFrame({ el }) {
+  const stop = (e) => e.stopPropagation();
+  return (
+    <iframe title={el.title || "html-slide"} srcDoc={el.html || ""}
+      sandbox="allow-scripts allow-forms allow-popups allow-modals allow-popups-to-escape-sandbox"
+      onClick={stop} onMouseDown={stop}
+      style={{ width: "100%", height: "100%", border: "none", display: "block", background: "#fff" }} />
   );
 }
 
@@ -307,6 +341,7 @@ export function StaticSlide({ slide, width, style, reveal = Infinity, live = fal
           if (el.type === "video" && live) return <div key={el.id} style={elStyle(el)}><VideoFrame el={el} /></div>;
           if (el.type === "visualiser" && live) return <div key={el.id} style={elStyle(el)}><LiveCamera /></div>;
           if (el.type === "retrieval" && live) return <div key={el.id} style={elStyle(el)}><RetrievalFrame el={el} /></div>;
+          if (el.type === "html" && live) return <div key={el.id} style={elStyle(el)}><HtmlFrame el={el} /></div>;
           return <div key={el.id} style={elStyle(el)}><ElInner el={el} /></div>;
         })}
       </div>

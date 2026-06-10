@@ -233,6 +233,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const wrapRef = useRef(null);
   const stageRef = useRef(null);
   const fileRef = useRef(null);
+  const htmlRef = useRef(null);
   const editorApi = useRef(null); // set by the active inline TextEditor
   const [fitScale, setFitScale] = useState(1);
   const [zoom, setZoom] = useState(1);
@@ -631,6 +632,19 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     } catch (err) { alert("Image upload failed: " + err.message); }
   };
 
+  // Insert an imported HTML page as a full-slide, interactive template element.
+  const pickHtml = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    try {
+      const html = await file.text();
+      if (!html.trim()) { alert("That HTML file looks empty."); return; }
+      const title = file.name.replace(/\.(html?|htm)$/i, "");
+      addEl({ type: "html", x: 0, y: 0, width: VW, height: VH, html, title });
+    } catch (err) { alert("Couldn't read that HTML file: " + err.message); }
+  };
+
   const startDrag = (e, el) => {
     e.stopPropagation();
     if (editing && editing !== el.id) setEditing(null);
@@ -726,6 +740,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       { icon: "▣", label: "Image", run: () => fileRef.current?.click() },
       { icon: "▶", label: "Video", run: addVideo },
       { icon: "◉", label: "Visualiser", run: addVisualiser },
+      { icon: "❮❯", label: "HTML file", run: () => htmlRef.current?.click() },
     ],
     [
       { icon: "⏱", label: "Timer", run: addTimer },
@@ -737,6 +752,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     <>
     <div style={{ display: "flex", gap: 14, height: "100%", fontFamily: C.mono, minHeight: 0 }}>
       <input ref={fileRef} type="file" accept="image/*" onChange={pickImage} style={{ display: "none" }} />
+      <input ref={htmlRef} type="file" accept=".html,.htm,text/html" onChange={pickHtml} style={{ display: "none" }} />
 
       {/* slide rail */}
       <div style={{ width: 132, flexShrink: 0, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 }}>

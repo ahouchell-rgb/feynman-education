@@ -110,6 +110,7 @@ function SlidesContent() {
   const [hovId, setHovId] = useState(null);     // card under the cursor
   const [confirmId, setConfirmId] = useState(null); // deck awaiting a 2nd delete click
   const importRef = useRef(null);
+  const importHtmlRef = useRef(null);
   const timer = useRef(null);
   const router = useRouter();
   const sp = useSearchParams();
@@ -185,6 +186,21 @@ function SlidesContent() {
       const { importPptx } = await import("@/lib/importPptx");
       const slides = await importPptx(file);
       const created = await store.create({ title: file.name.replace(/\.pptx$/i, ""), slides });
+      setActive(created); setSave("saved");
+    } catch (e) { setErr("Import failed: " + e.message); }
+    finally { setImporting(false); }
+  };
+
+  const onImportHtml = async (e) => {
+    const files = e.target.files; e.target.value = "";
+    if (!files || !files.length) return;
+    const names = Array.from(files).map((f) => f.name);
+    setImporting(true); setErr("");
+    try {
+      const { importHtmlFiles } = await import("@/lib/importHtml");
+      const slides = await importHtmlFiles(files);
+      const title = names.length === 1 ? names[0].replace(/\.(html?|htm)$/i, "") : `Imported HTML (${slides.length})`;
+      const created = await store.create({ title, slides });
       setActive(created); setSave("saved");
     } catch (e) { setErr("Import failed: " + e.message); }
     finally { setImporting(false); }
@@ -326,7 +342,9 @@ function SlidesContent() {
         <h1 style={{ fontFamily: C.serif, fontSize: 36, color: C.text, margin: 0 }}>Slides</h1>
         <div style={{ display: "flex", gap: 8 }}>
           <input ref={importRef} type="file" accept=".pptx" onChange={onImportFile} style={{ display: "none" }} />
+          <input ref={importHtmlRef} type="file" accept=".html,.htm,text/html" multiple onChange={onImportHtml} style={{ display: "none" }} />
           <Btn v="soft" onClick={() => importRef.current?.click()} disabled={importing}>{importing ? "Importing…" : "Import .pptx"}</Btn>
+          <Btn v="soft" onClick={() => importHtmlRef.current?.click()} disabled={importing}>{importing ? "Importing…" : "Import .html"}</Btn>
           <Btn onClick={createDeck}>+ New deck</Btn>
         </div>
       </div>

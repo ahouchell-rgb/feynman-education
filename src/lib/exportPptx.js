@@ -78,14 +78,16 @@ async function renderEl(pptx, slide, el) {
     return;
   }
 
-  if (el.type === "video" || el.type === "visualiser" || el.type === "retrieval") {
+  if (el.type === "video" || el.type === "visualiser" || el.type === "retrieval" || el.type === "html") {
     const b = { x: xIn(el.x), y: yIn(el.y), w: wIn(el.width), h: hIn(el.height || 100) };
-    slide.addShape(pptx.ShapeType.rect, { ...b, fill: { color: "0F0F12" }, line: { type: "none" }, rectRadius: 0.04, rotate: rot(el) });
+    const isHtml = el.type === "html";
+    slide.addShape(pptx.ShapeType.rect, { ...b, fill: { color: isHtml ? "FFFFFF" : "0F0F12" }, line: isHtml ? { color: "9A9486", width: 1 } : { type: "none" }, rectRadius: 0.04, rotate: rot(el) });
     const label = el.type === "visualiser" ? "📷 Visualiser (live in app)"
       : el.type === "retrieval" ? `📚 Retrieval — ${el.url || "open in app"}`
+      : isHtml ? `❮❯ ${el.title || "HTML template"} (interactive in app)`
       : `▶ ${el.src || "Video"}`;
     const link = el.type === "video" ? el.src : el.type === "retrieval" ? el.url : null;
-    slide.addText(label, { ...b, color: "FFFFFF", fontSize: 13, align: "center", valign: "middle",
+    slide.addText(label, { ...b, color: isHtml ? "1A1714" : "FFFFFF", fontSize: 13, align: "center", valign: "middle",
       hyperlink: link ? { url: link } : undefined, rotate: rot(el) });
     return;
   }
