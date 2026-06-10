@@ -5,10 +5,37 @@ import { sk, useAuth } from "@/lib/sk";
 import { C } from "@/lib/theme";
 import { Btn } from "@/lib/primitives";
 import { SlideEditor } from "@/components/SlideEditor";
+import { StaticSlide } from "@/components/SlideStage";
 import { guestRead, guestWrite, GUEST_KEY } from "@/lib/guestDecks";
 
 function newSlide() { return { id: "s" + Math.floor(performance.now() * 1000), elements: [] }; }
 function nowISO() { return new Date().toISOString(); }
+
+/* A live miniature of a deck's first slide, scaled to fill whatever width the
+   card happens to be (the grid stretches columns), so decks are recognisable
+   at a glance instead of reading titles. */
+function DeckThumb({ deck }) {
+  const ref = useRef(null);
+  const [w, setW] = useState(0);
+  useEffect(() => {
+    if (!ref.current) return;
+    const ro = new ResizeObserver(([e]) => setW(e.contentRect.width));
+    ro.observe(ref.current);
+    return () => ro.disconnect();
+  }, []);
+  const first = deck.slides?.[0];
+  return (
+    <div ref={ref} style={{ aspectRatio: "16/9", background: "#fff", borderBottom: `1px solid ${C.border}`, overflow: "hidden", lineHeight: 0 }}>
+      {w > 0 && first ? (
+        <StaticSlide slide={first} width={w} master={deck.master} index={0} total={deck.slides.length} title={deck.title} />
+      ) : (
+        <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: C.faint, fontSize: 11, fontFamily: C.mono }}>
+          {deck.slides?.length || 0} slide{(deck.slides?.length || 0) === 1 ? "" : "s"}
+        </div>
+      )}
+    </div>
+  );
+}
 
 const pickerStyle = { padding: "5px 8px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 11, background: C.bg, color: C.text, cursor: "pointer", maxWidth: 220 };
 const gridStyle = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 14 };
@@ -80,6 +107,8 @@ function SlidesContent() {
   const [err, setErr] = useState("");
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [hovId, setHovId] = useState(null);     // card under the cursor
+  const [confirmId, setConfirmId] = useState(null); // deck awaiting a 2nd delete click
   const importRef = useRef(null);
   const timer = useRef(null);
   const router = useRouter();
@@ -125,6 +154,10 @@ function SlidesContent() {
     try { await store.update(active.id, patch); } catch (e) { setErr(e.message); }
   };
 
+  const onMasterChange = (master) => {
+    setActive((a) => ({ ...a, master }));
+    if (active) store.update(active.id, { master }).catch((e) => setErr(e.message));
+  };
   const onThemeChange = (theme) => {
     setActive((a) => ({ ...a, theme }));
     if (active) store.update(active.id, { theme }).catch((e) => setErr(e.message));
@@ -185,7 +218,8 @@ function SlidesContent() {
 
   const deleteDeck = async (id, e) => {
     e.stopPropagation();
-    if (!confirm("Delete this deck?")) return;
+    if (confirmId !== id) { setConfirmId(id); return; }  // first click arms, second confirms
+    setConfirmId(null);
     try { await store.remove(id); setDecks((ds) => ds.filter((d) => d.id !== id)); }
     catch (e) { setErr(e.message); }
   };
@@ -269,7 +303,7 @@ function SlidesContent() {
           <div style={{ flex: 1, minHeight: 0 }}>
             <SlideEditor deck={active} onChange={onSlidesChange}
               onUploadImage={(file) => store.uploadImage(file, active.id)}
-              onThemeChange={onThemeChange} />
+              onThemeChange={onThemeChange} onMasterChange={onMasterChange} />
           </div>
         </div>
       </Shell>
@@ -300,7 +334,15 @@ function SlidesContent() {
       {err && <div style={{ color: C.red, fontFamily: C.mono, fontSize: 12, marginBottom: 16 }}>{err}</div>}
 
       {decks === null ? (
-        <div style={{ color: C.dim, fontFamily: C.mono, fontSize: 13 }}>Loading…</div>
+        <div style={gridStyle}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, overflow: "hidden" }}>
+              <div className="sk-shimmer" style={{ aspectRatio: "16/9", borderBottom: `1px solid ${C.border}` }} />
+              <div style={{ padding: "10px 12px" }}><div className="sk-shimmer" style={{ height: 12, width: "70%", borderRadius: 3 }} /></div>
+            </div>
+          ))}
+          <style>{`.sk-shimmer{background:linear-gradient(100deg,${C.bg} 30%,${C.border} 50%,${C.bg} 70%);background-size:200% 100%;animation:sk 1.2s ease-in-out infinite}@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}`}</style>
+        </div>
       ) : decks.length === 0 ? (
         <div style={{ color: C.dim, fontFamily: C.mono, fontSize: 13 }}>No decks yet. Create your first one.</div>
       ) : guest ? (
@@ -322,20 +364,25 @@ function SlidesContent() {
   );
 
   function renderCard(d) {
+    const hov = hovId === d.id;
+    const arming = confirmId === d.id;
     return (
       <button key={d.id} onClick={() => openDeck(d)}
-        style={{ textAlign: "left", padding: 0, background: C.surface, border: `1px solid ${C.border}`,
-                 borderRadius: 8, cursor: "pointer", overflow: "hidden", fontFamily: "inherit" }}
-        onMouseEnter={(e) => (e.currentTarget.style.borderColor = C.accent)}
-        onMouseLeave={(e) => (e.currentTarget.style.borderColor = C.border)}>
-        <div style={{ aspectRatio: "16/9", background: "#fff", borderBottom: `1px solid ${C.border}`,
-                      display: "flex", alignItems: "center", justifyContent: "center", color: C.faint, fontSize: 11, fontFamily: C.mono }}>
-          {d.slides?.length || 0} slide{(d.slides?.length || 0) === 1 ? "" : "s"}
-        </div>
+        onMouseEnter={() => setHovId(d.id)}
+        onMouseLeave={() => { setHovId(null); if (arming) setConfirmId(null); }}
+        style={{ textAlign: "left", padding: 0, background: C.surface,
+                 border: `1px solid ${hov ? C.accent : C.border}`, borderRadius: 8, cursor: "pointer",
+                 overflow: "hidden", fontFamily: "inherit", transition: "transform .14s ease, box-shadow .14s ease, border-color .14s ease",
+                 transform: hov ? "translateY(-2px)" : "none", boxShadow: hov ? "0 6px 18px rgba(0,0,0,0.10)" : "none" }}>
+        <DeckThumb deck={d} />
         <div style={{ padding: "10px 12px", display: "flex", alignItems: "center", gap: 8 }}>
           <span style={{ flex: 1, fontSize: 14, color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.title}</span>
-          <span onClick={(e) => deleteDeck(d.id, e)} title="Delete"
-            style={{ fontFamily: C.mono, fontSize: 11, color: C.dim, padding: "2px 6px", borderRadius: 4 }}>✕</span>
+          <span onClick={(e) => deleteDeck(d.id, e)} title={arming ? "Click again to delete" : "Delete"}
+            style={{ fontFamily: C.mono, fontSize: 11, padding: "2px 6px", borderRadius: 4, transition: "opacity .14s ease",
+                     color: arming ? C.red : C.dim, background: arming ? `${C.red}1a` : "transparent",
+                     opacity: arming ? 1 : hov ? 0.7 : 0 }}>
+            {arming ? "Delete?" : "✕"}
+          </span>
         </div>
       </button>
     );

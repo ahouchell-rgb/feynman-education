@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { C } from "@/lib/theme";
 import { Btn } from "@/lib/primitives";
 import { sk } from "@/lib/sk";
-import { VW, VH, elStyle, ElInner, ArrowSvg, StaticSlide } from "@/components/SlideStage";
+import { VW, VH, elStyle, ElInner, ArrowSvg, StaticSlide, MasterFrame } from "@/components/SlideStage";
 
 // Collision-proof id: a per-session counter guarantees uniqueness even when
 // many ids are minted in the same tick (templates, AI, slide clone). The old
@@ -194,7 +194,9 @@ const HANDLE_PX = 9;
 
 /* `deck.slides` is the single source of truth. Every action builds the next
    slides array, sets local state, and calls onChange so the parent can save. */
-export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
+const DEFAULT_MASTER = { enabled: true, headerLeft: "", headerCenter: "", headerRight: "", footerLeft: "{title}", footerCenter: "", footerRight: "{n} / {total}", color: "#6b6256", accent: "#b95a3c", showRule: true };
+
+export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMasterChange }) {
   const [slides, setSlides] = useState(() =>
     ensureIds(deck.slides?.length ? deck.slides : [{ id: uid(), elements: [] }]));
   const [cur, setCur] = useState(0);
@@ -206,6 +208,14 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
   const [marquee, setMarquee] = useState(null);       // rubber-band rectangle (virtual coords)
   const [themeState, setThemeState] = useState(deck.theme || null);
   const [themeOpen, setThemeOpen] = useState(false);
+  const [masterState, setMasterState] = useState(deck.master || null);
+  const [masterOpen, setMasterOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [find, setFind] = useState("");
+  const updateMaster = (patch) => {
+    const next = { ...DEFAULT_MASTER, ...(masterState || {}), ...patch };
+    setMasterState(next); onMasterChange?.(next);
+  };
 
   const wrapRef = useRef(null);
   const stageRef = useRef(null);
@@ -266,6 +276,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
   const patchH = (id, patch) => { snapshot(true); patchEl(id, patch); };
   const setSlideBg = (bg) => { snapshot(true); mapSlide(s => ({ ...s, background: bg })); };
   const setNotes = (notes) => { snapshot(true); mapSlide(s => ({ ...s, notes })); };
+  const setHideMaster = (v) => { snapshot(false); mapSlide(s => ({ ...s, hideMaster: v })); };
 
   const addEl = (el) => { snapshot(false); const id = uid(); mapSlide(s => ({ ...s, elements: [...s.elements, { id, ...el }] })); setSel(id); setEditing(null); };
 
@@ -489,7 +500,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
     background: s.background,
     elements: (s.elements || []).map((e) => {
       const el = { ...e, id: e.id || uid() };
-      if (el.type === "text" && el.font) {
+      if ((el.type === "text" || el.type === "table") && el.font) {
         const f = FONTS.find((x) => x.label === el.font || x.css === el.font);
         if (f) { el.font = f.css; el.fontFace = f.face; }
       }
@@ -537,9 +548,26 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
     "Make a title slide for today's lesson",
     "Add 3 key facts as bullet points",
     "Add a labelled diagram with arrows",
-    "Add a quick exit-ticket question",
+    "Add a Do Now with a 5-minute timer",
+    "Add a comparison table",
+    "Add an exit-ticket question with the answer hidden until I click",
     "Give this slide a soft tinted background",
   ];
+
+  // Find text across the whole deck; jump to the next slide that contains it.
+  const findNext = () => {
+    const q = find.trim().toLowerCase();
+    if (!q) return;
+    const has = (s) => (s.elements || []).some((el) => {
+      const hay = [el.text, el.url, ...(el.cells ? el.cells.flat() : [])].filter(Boolean).join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+    const n = slides.length;
+    for (let off = 1; off <= n; off++) {
+      const idx = (cur + off) % n;
+      if (has(slides[idx])) { setCur(idx); setSel(null); setEditing(null); return; }
+    }
+  };
 
   // Keyboard: Delete removes the selection (or current slide); arrows nudge.
   useEffect(() => {
@@ -559,6 +587,8 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
         if (k === "-" || k === "_") { e.preventDefault(); zoomBy(-0.1); return; }
         if (k === "0") { e.preventDefault(); setZoom(1); return; }
       }
+      if (e.key === "?") { e.preventDefault(); setHelpOpen((o) => !o); return; }
+      if (e.key === "Escape" && helpOpen) { setHelpOpen(false); return; }
       if (e.key === "Delete" || e.key === "Backspace") {
         e.preventDefault();
         if (selIds.length) delSelection(); else delSlide();
@@ -632,6 +662,15 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
       if (hx === 1) w = Math.max(MIN, ow + vx);
       if (hy === -1) { h = oh - vy; y = oy + vy; if (h < MIN) { y = oy + oh - MIN; h = MIN; } }
       if (hy === 1) h = Math.max(MIN, oh + vy);
+      // Images keep their proportions on a corner drag (hold ⇧ to free-resize),
+      // so photos and diagrams don't get stretched. The anchored corner stays put.
+      if (el.type === "image" && hx !== 0 && hy !== 0 && !ev.shiftKey && oh) {
+        const aspect = ow / oh;
+        h = w / aspect;
+        if (h < MIN) { h = MIN; w = h * aspect; }
+        if (hx === -1) x = ox + ow - w;
+        if (hy === -1) y = oy + oh - h;
+      }
       patchEl(el.id, { x: Math.round(x), y: Math.round(y), width: Math.round(w), height: Math.round(h) });
     };
     const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
@@ -677,7 +716,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
             title="Drag to reorder"
             style={{ position: "relative", padding: 0, background: "#fff", borderRadius: 5, cursor: "pointer",
                      overflow: "hidden", lineHeight: 0, border: `2px solid ${i === cur ? C.accent : C.border}` }}>
-            <StaticSlide slide={s} width={120} />
+            <StaticSlide slide={s} width={120} master={masterState} index={i} total={slides.length} title={deck.title} />
             <span style={{ position: "absolute", bottom: 2, left: 4, fontSize: 9, color: C.dim, lineHeight: 1 }}>{i + 1}</span>
             {s.notes ? <span title="Has speaker notes" style={{ position: "absolute", top: 3, right: 4, fontSize: 10, lineHeight: 1 }}>🗒</span> : null}
           </button>
@@ -719,7 +758,12 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
             style={{ minWidth: 48, height: 28, borderRadius: 6, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.mono, fontSize: 12, cursor: "pointer" }}>{Math.round(scale * 100)}%</button>
           <Btn v="ghost" onClick={() => zoomBy(0.1)} title="Zoom in (⌘+)">+</Btn>
           <span style={{ flex: 1 }} />
+          <input value={find} onChange={(e) => setFind(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") findNext(); }}
+            placeholder="Find…" title="Find text across all slides (Enter = next match)"
+            style={{ width: 110, padding: "6px 9px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: "#fff", color: C.text, outline: "none" }} />
+          <Btn v="ghost" onClick={() => setHelpOpen(true)} title="Keyboard shortcuts (?)">?</Btn>
           <Btn v={themeOpen ? "pri" : "soft"} onClick={() => setThemeOpen((o) => !o)}>🎨 Theme</Btn>
+          <Btn v={masterOpen ? "pri" : "soft"} onClick={() => setMasterOpen((o) => !o)}>🏷 Brand</Btn>
           <Btn v={aiOpen ? "pri" : "soft"} onClick={() => setAiOpen((o) => !o)}>✦ Ask Claude</Btn>
           <Btn v="ghost" onClick={delSlide} disabled={slides.length < 2}>Delete slide</Btn>
         </div>
@@ -742,6 +786,51 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
             <span style={{ fontSize: 10, color: C.faint }}>· sets background + fonts/colours on every slide</span>
           </div>
         )}
+
+        {/* brand / master frame */}
+        {masterOpen && (() => {
+          const m = masterState || DEFAULT_MASTER;
+          const on = !!(masterState && m.enabled);
+          const fld = (label, key) => (
+            <label style={{ display: "flex", flexDirection: "column", gap: 3, flex: "1 1 150px", minWidth: 120 }}>
+              <span style={{ fontSize: 9, color: C.dim, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</span>
+              <input value={m[key] || ""} onChange={(e) => updateMaster({ [key]: e.target.value })} disabled={!on}
+                style={{ padding: "5px 7px", border: `1px solid ${C.border}`, borderRadius: 5, fontFamily: C.sans, fontSize: 12, background: on ? "#fff" : C.bg, color: C.text, outline: "none" }} />
+            </label>
+          );
+          return (
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, padding: "10px 12px", background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.08em" }}>Brand frame</span>
+                <Btn v={on ? "pri" : "soft"} onClick={() => updateMaster({ enabled: !on })}>{on ? "✓ On" : "Off"}</Btn>
+                <span style={{ fontSize: 10, color: C.faint }}>header &amp; footer on every slide · tokens: {"{n}"} {"{total}"} {"{title}"} {"{date}"}</span>
+                <span style={{ flex: 1 }} />
+                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted, cursor: "pointer" }}>
+                  <input type="checkbox" checked={!!slide.hideMaster} onChange={(e) => setHideMaster(e.target.checked)} />
+                  Hide on this slide
+                </label>
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {fld("Header left", "headerLeft")}{fld("Header centre", "headerCenter")}{fld("Header right", "headerRight")}
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {fld("Footer left", "footerLeft")}{fld("Footer centre", "footerCenter")}{fld("Footer right", "footerRight")}
+              </div>
+              <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted }}>
+                  Text <input type="color" value={m.color || "#6b6256"} onChange={(e) => updateMaster({ color: e.target.value })} disabled={!on} style={{ width: 28, height: 24, border: "none", background: "none", cursor: "pointer" }} />
+                </label>
+                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted }}>
+                  Rule <input type="color" value={m.accent || "#b95a3c"} onChange={(e) => updateMaster({ accent: e.target.value })} disabled={!on || !m.showRule} style={{ width: 28, height: 24, border: "none", background: "none", cursor: "pointer" }} />
+                </label>
+                <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.muted, cursor: "pointer" }}>
+                  <input type="checkbox" checked={!!m.showRule} onChange={(e) => updateMaster({ showRule: e.target.checked })} disabled={!on} />
+                  Footer rule line
+                </label>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* multi-select row */}
         {selIds.length > 1 && (
@@ -809,6 +898,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
               style={{ width: VW, height: VH, position: "absolute", top: 0, left: 0,
                        transform: `scale(${scale})`, transformOrigin: "top left",
                        background: slide.background || "#fff", boxShadow: "0 2px 16px rgba(0,0,0,.12)", overflow: "hidden" }}>
+              {!slide.hideMaster && masterState?.enabled && <MasterFrame master={masterState} index={cur} total={slides.length} title={deck.title} />}
               {slide.elements.map(el => {
                 if (el.type === "arrow")
                   return <ArrowSvg key={el.id} el={el} selected={selSet.has(el.id)} hitProps={{ onMouseDown: (e) => startArrowDrag(e, el) }} />;
@@ -936,7 +1026,59 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange }) {
       const el = slide.elements.find((e) => e.id === cropping);
       return el ? <CropModal el={el} onApply={(crop, w, h) => applyCrop(cropping, crop, w, h)} onCancel={() => setCropping(null)} /> : null;
     })()}
+    {helpOpen && <ShortcutHelp onClose={() => setHelpOpen(false)} />}
     </>
+  );
+}
+
+/* Keyboard-shortcut cheat sheet (press ?). Surfaces the editor's many shortcuts,
+   which were previously undiscoverable. */
+const SHORTCUTS = [
+  ["Editing", [
+    ["Undo / Redo", "⌘Z / ⌘⇧Z"],
+    ["Duplicate selection", "⌘D"],
+    ["Copy / Paste element", "⌘C / ⌘V"],
+    ["Select all on slide", "⌘A"],
+    ["Delete selection / slide", "Delete"],
+    ["Nudge (10px with ⇧)", "Arrow keys"],
+  ]],
+  ["Canvas", [
+    ["Zoom in / out", "⌘+ / ⌘−"],
+    ["Reset zoom to fit", "⌘0"],
+    ["Multi-select", "Shift-click / drag"],
+    ["Free-resize an image", "⇧ + corner drag"],
+    ["Rotate in 15° steps", "⇧ while rotating"],
+  ]],
+  ["General", [
+    ["Edit text / table", "Double-click"],
+    ["Find text in deck", "Find box · Enter"],
+    ["This cheat sheet", "?"],
+    ["Close overlay", "Esc"],
+  ]],
+];
+function ShortcutHelp({ onClose }) {
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 60, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, padding: "22px 26px", maxWidth: 640, width: "100%", boxShadow: "0 12px 48px rgba(0,0,0,0.3)", fontFamily: C.sans }}>
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 16 }}>
+          <div style={{ fontFamily: C.serif, fontSize: 22, color: C.text }}>Keyboard shortcuts</div>
+          <button onClick={onClose} style={{ fontFamily: C.mono, fontSize: 12, color: C.dim, background: "none", border: `1px solid ${C.border}`, borderRadius: 6, padding: "4px 10px", cursor: "pointer" }}>Esc</button>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "18px 28px" }}>
+          {SHORTCUTS.map(([group, rows]) => (
+            <div key={group}>
+              <div style={{ fontFamily: C.mono, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.1em", color: C.accent, marginBottom: 8 }}>{group}</div>
+              {rows.map(([label, keys]) => (
+                <div key={label} style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: 13, color: C.text, padding: "3px 0" }}>
+                  <span style={{ color: C.muted }}>{label}</span>
+                  <span style={{ fontFamily: C.mono, fontSize: 12, color: C.text, whiteSpace: "nowrap" }}>{keys}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 

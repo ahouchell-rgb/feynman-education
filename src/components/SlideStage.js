@@ -246,10 +246,48 @@ export function ArrowSvg({ el, selected, hitProps }) {
 /* How many elements on a slide are marked "reveal on click". */
 export const revealCount = (slide) => (slide?.elements || []).filter((e) => e.reveal).length;
 
+/* Replace brand-frame tokens. index is 0-based; {n} shows it 1-based. */
+export function masterToken(str, { index = 0, total = 1, title = "" } = {}) {
+  return String(str || "")
+    .replace(/\{n\}/g, index + 1)
+    .replace(/\{total\}/g, total)
+    .replace(/\{title\}/g, title)
+    .replace(/\{date\}/g, new Date().toLocaleDateString("en-GB"));
+}
+
+/* The deck "master": a header/footer brand frame drawn on every slide (unless
+   the slide sets hideMaster). Positioned in virtual 960×540 coords so it scales
+   with the slide. Non-interactive. */
+export function MasterFrame({ master, index = 0, total = 1, title = "" }) {
+  if (!master?.enabled) return null;
+  const color = master.color || "#6b6256";
+  const ctx = { index, total, title };
+  const cell = (txt, align) => (
+    <div style={{ flex: 1, textAlign: align, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+      {masterToken(txt, ctx)}
+    </div>
+  );
+  const row = (top, l, c, r) => (
+    <div style={{ position: "absolute", left: 44, right: 44, top, display: "flex", gap: 16,
+                  fontFamily: "'IBM Plex Sans', sans-serif", fontSize: 15, color, lineHeight: 1.2 }}>
+      {cell(l, "left")}{cell(c, "center")}{cell(r, "right")}
+    </div>
+  );
+  const hasHeader = master.headerLeft || master.headerCenter || master.headerRight;
+  const hasFooter = master.footerLeft || master.footerCenter || master.footerRight;
+  return (
+    <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1 }}>
+      {hasHeader && row(16, master.headerLeft, master.headerCenter, master.headerRight)}
+      {master.showRule && <div style={{ position: "absolute", left: 44, right: 44, bottom: 36, height: 2, background: master.accent || color, opacity: 0.5 }} />}
+      {hasFooter && row(VH - 32, master.footerLeft, master.footerCenter, master.footerRight)}
+    </div>
+  );
+}
+
 /* A non-interactive slide scaled to `width` px. Used for thumbnails, the
    editor's rail, and present mode. `reveal` caps how many reveal-flagged
    elements are shown (in order) — Infinity shows everything. */
-export function StaticSlide({ slide, width, style, reveal = Infinity, live = false }) {
+export function StaticSlide({ slide, width, style, reveal = Infinity, live = false, master, index = 0, total = 1, title = "" }) {
   const scale = width / VW;
   let rIdx = 0;
   return (
@@ -257,6 +295,7 @@ export function StaticSlide({ slide, width, style, reveal = Infinity, live = fal
       <div style={{ width: VW, height: VH, position: "absolute", top: 0, left: 0,
                     transform: `scale(${scale})`, transformOrigin: "top left",
                     background: slide?.background || "#fff", overflow: "hidden" }}>
+        {!slide?.hideMaster && <MasterFrame master={master} index={index} total={total} title={title} />}
         {(slide?.elements || []).map((el) => {
           if (el.reveal) {
             const show = rIdx < reveal;

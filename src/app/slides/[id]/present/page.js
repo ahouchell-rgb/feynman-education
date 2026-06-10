@@ -135,7 +135,8 @@ export default function PresentPage() {
       {/* stage */}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ position: "relative", width, height }}>
-          <StaticSlide key={i} slide={slide} width={width} reveal={step} live />
+          <StaticSlide key={i} slide={slide} width={width} reveal={step} live
+            master={deck?.master} index={i} total={slides.length} title={deck?.title} />
           <svg viewBox={`0 0 ${VW} ${VH}`} width={width} height={height}
             onClick={(e) => e.stopPropagation()}
             onPointerDown={pen ? penDown : undefined} onPointerMove={pen ? penMove : undefined}
@@ -171,7 +172,7 @@ export default function PresentPage() {
           <div style={{ marginTop: "auto" }}>
             <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "#777", marginBottom: 6 }}>Next</div>
             {slides[i + 1]
-              ? <div style={{ borderRadius: 6, overflow: "hidden", border: "1px solid #2a2a2a", lineHeight: 0 }}><StaticSlide slide={slides[i + 1]} width={336} /></div>
+              ? <div style={{ borderRadius: 6, overflow: "hidden", border: "1px solid #2a2a2a", lineHeight: 0 }}><StaticSlide slide={slides[i + 1]} width={336} master={deck?.master} index={i + 1} total={slides.length} title={deck?.title} /></div>
               : <div style={{ fontSize: 13, color: "#666" }}>End of deck</div>}
           </div>
         </div>
@@ -192,7 +193,7 @@ export default function PresentPage() {
               <button key={s.id || n} onClick={(e) => { e.stopPropagation(); jump(n); }}
                 style={{ position: "relative", padding: 0, borderRadius: 6, overflow: "hidden", cursor: "pointer", lineHeight: 0,
                          border: `2px solid ${n === i ? "#fff" : "transparent"}` }}>
-                <StaticSlide slide={s} width={200} />
+                <StaticSlide slide={s} width={200} master={deck?.master} index={n} total={slides.length} title={deck?.title} />
                 <span style={{ position: "absolute", bottom: 4, left: 6, fontFamily: "monospace", fontSize: 11, color: "#fff", textShadow: "0 1px 3px #000" }}>{n + 1}</span>
               </button>
             ))}

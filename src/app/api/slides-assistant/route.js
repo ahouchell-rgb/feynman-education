@@ -23,15 +23,25 @@ const SYSTEM = `You edit a slide deck for a UK secondary science teacher. The de
 
 COORDINATES: x,y is the top-left of an element in pixels, 0–960 across and 0–540 down. Keep elements inside the canvas with ~60px margins. Never overlap text blocks.
 
-ELEMENT TYPES:
+ELEMENT TYPES YOU CAN CREATE:
 - text:  { id, type:"text", x, y, width, height, text, fontSize, color, bold?, italic?, align?, bg?, font? }
     fontSize px: headings 44–72, subheadings 30–40, body 22–30. color is a #hex. align is "left"|"center"|"right".
-    bg (optional) is a #hex highlight drawn behind the text (use for labels/callouts). font (optional) is one of: "Sans","Serif","Mono","Friendly","Classic","Verdana".
-- rect:  { id, type:"rect", x, y, width, height, fill, stroke?, radius? }   fill/stroke are #hex; radius is corner rounding.
+    bg (optional) is a #hex highlight drawn behind the text — use it for labels/callouts/key terms. font (optional) is one of: "Sans","Serif","Mono","Friendly","Classic","Verdana".
+- rect:  { id, type:"rect", x, y, width, height, fill, stroke?, radius? }   fill/stroke are #hex; radius is corner rounding. Use as callout boxes or panels BEHIND text (give the box a lower position in the array so text sits on top).
 - arrow: { id, type:"arrow", x1, y1, x2, y2, color, thickness? }   points FROM (x1,y1) TO (x2,y2); the arrowhead is at the (x2,y2) end.
-- image: { id, type:"image", x, y, width, height, src }   You CANNOT create images. Only keep, move, or resize images already present.
+- table: { id, type:"table", x, y, width, height, rows, cols, cells, headerRow?, fontSize?, color?, borderColor?, headerBg?, headerColor?, font? }
+    cells is a 2D array [rows][cols] of strings. Set headerRow:true to style the first row as a header. Great for comparisons and data.
+- timer: { id, type:"timer", x, y, width, height, duration, fill?, color?, fontSize? }
+    duration is SECONDS (e.g. 300 = 5 min). It counts down live when the teacher presents. Use for "Do Now" / timed tasks. A good size is ~280×150, fontSize 72, fill "#1a1714", color "#ffffff".
 
-SLIDE: { id, background?, elements: [...] }   background is an optional #hex (default white).
+ELEMENT TYPES YOU CAN KEEP/MOVE/RESIZE BUT MUST NOT CREATE (you don't have a valid source URL for them):
+- image { ...src }, video { ...src }, visualiser, retrieval. Preserve any that already exist; reposition them if asked, but never invent new ones.
+
+REVEAL ON CLICK: any element may have reveal:true. Revealed elements are hidden when the slide first appears and the teacher clicks to reveal them one at a time, in array order. Use this for answers, exit-ticket responses, and "click to check" — put the question visible and mark the answer element reveal:true.
+
+ROTATION: any element may have rotation (degrees clockwise). Use sparingly.
+
+SLIDE: { id, background?, notes?, elements: [...] }   background is an optional #hex (default white). notes is optional speaker-note text shown to the teacher in Presenter view — add concise teaching notes when it helps.
 
 RULES:
 - PRESERVE existing slides and elements unless the instruction asks to change them. The current slide index is given — "this slide" means that one.
@@ -47,7 +57,7 @@ const ELEMENT_SCHEMA = {
   type: "object",
   properties: {
     id: { type: "string" },
-    type: { type: "string", enum: ["text", "rect", "arrow", "image"] },
+    type: { type: "string", enum: ["text", "rect", "arrow", "image", "table", "timer", "video", "visualiser", "retrieval"] },
     x: { type: "number" }, y: { type: "number" },
     width: { type: "number" }, height: { type: "number" },
     text: { type: "string" }, fontSize: { type: "number" }, color: { type: "string" },
@@ -56,6 +66,14 @@ const ELEMENT_SCHEMA = {
     fill: { type: "string" }, stroke: { type: "string" }, radius: { type: "number" },
     x1: { type: "number" }, y1: { type: "number" }, x2: { type: "number" }, y2: { type: "number" },
     thickness: { type: "number" }, src: { type: "string" },
+    // table
+    rows: { type: "number" }, cols: { type: "number" },
+    cells: { type: "array", items: { type: "array", items: { type: "string" } } },
+    headerRow: { type: "boolean" }, headerBg: { type: "string" }, headerColor: { type: "string" }, borderColor: { type: "string" },
+    // timer
+    duration: { type: "number" },
+    // shared flags
+    reveal: { type: "boolean" }, rotation: { type: "number" },
   },
   required: ["type"],
 };
@@ -74,6 +92,7 @@ const TOOL = {
           properties: {
             id: { type: "string" },
             background: { type: "string" },
+            notes: { type: "string" },
             elements: { type: "array", items: ELEMENT_SCHEMA },
           },
           required: ["elements"],
@@ -140,9 +159,10 @@ export async function POST(req) {
   // Map font labels → the CSS/face the editor uses.
   const FONT_CSS = { Sans: "'IBM Plex Sans', sans-serif", Serif: "Georgia, 'Instrument Serif', serif", Mono: "'IBM Plex Mono', monospace", Friendly: "'Comic Sans MS', 'Chalkboard SE', sans-serif", Classic: "'Times New Roman', serif", Verdana: "Verdana, sans-serif" };
   const FONT_FACE = { Sans: "Arial", Serif: "Georgia", Mono: "Consolas", Friendly: "Comic Sans MS", Classic: "Times New Roman", Verdana: "Verdana" };
+  const usesFont = (t) => t === "text" || t === "table";
   const slidesOut = (toolBlock.input.slides || []).map((s) => ({
     ...s,
-    elements: (s.elements || []).map((e) => (e.type === "text" && e.font && FONT_CSS[e.font] ? { ...e, font: FONT_CSS[e.font], fontFace: FONT_FACE[e.font] } : e)),
+    elements: (s.elements || []).map((e) => (usesFont(e.type) && e.font && FONT_CSS[e.font] ? { ...e, font: FONT_CSS[e.font], fontFace: FONT_FACE[e.font] } : e)),
   }));
 
   return json({ slides: slidesOut, summary: toolBlock.input.summary || "Done." });
