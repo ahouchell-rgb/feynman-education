@@ -777,7 +777,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       <input ref={htmlRef} type="file" accept=".html,.htm,text/html" onChange={pickHtml} style={{ display: "none" }} />
 
       {/* slide rail */}
-      <div style={{ width: 236, flexShrink: 0, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ width: 320, flexShrink: 0, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
         {slides.map((s, i) => (
           <button key={s.id} onClick={() => { setCur(i); setSel(null); setEditing(null); }}
             draggable
@@ -791,7 +791,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                      overflow: "hidden", lineHeight: 0, transition: "border-color .12s, box-shadow .12s",
                      border: `2px solid ${i === cur ? C.accent : C.border}`,
                      boxShadow: i === cur ? `0 0 0 3px ${C.accent}22` : "none" }}>
-            <StaticSlide slide={s} width={220} master={masterState} index={i} total={slides.length} title={deck.title} />
+            <StaticSlide slide={s} width={316} master={masterState} index={i} total={slides.length} title={deck.title} />
             <span style={{ position: "absolute", bottom: 3, left: 4, fontSize: 9, fontWeight: 600, color: i === cur ? C.accent : C.dim, background: "rgba(255,255,255,.82)", borderRadius: 3, padding: "0 3px", lineHeight: 1.4 }}>{i + 1}</span>
             {s.notes ? <span title="Has speaker notes" style={{ position: "absolute", top: 3, right: 4, fontSize: 10, lineHeight: 1 }}>🗒</span> : null}
           </button>
