@@ -50,6 +50,8 @@ export function elStyle(el) {
       border: el.stroke ? `${el.strokeW || 3}px solid ${el.stroke}` : "none",
       boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box",
     };
+  if (el.type === "chart")
+    return { ...base, height: el.height, background: el.bg || "transparent", overflow: "hidden", boxSizing: "border-box" };
   if (el.type === "equation")
     return {
       ...base, height: el.height,
@@ -92,7 +94,94 @@ export function ElInner({ el }) {
   if (el.type === "retrieval") return <Placeholder icon="📚" label="Retrieval — live app in Present" />;
   if (el.type === "html") return <HtmlInner el={el} />;
   if (el.type === "equation") return <EqInner el={el} />;
+  if (el.type === "chart") return <ChartInner el={el} />;
   return null;
+}
+
+/* Default chart palette (chem orange, physics blue, bio green, …). */
+export const CHART_COLORS = ["#2e3a5f", "#b95a3c", "#5e7c4b", "#c9a227", "#7a4e7e", "#3b7dd8", "#9a3b5a", "#3b9a86"];
+
+/* A bar / line / pie chart drawn as plain SVG so it renders identically in the
+   editor, thumbnails and Present (and exports as a native PowerPoint chart). */
+function ChartInner({ el }) {
+  const W = el.width || 480, H = el.height || 320;
+  const type = el.chartType || "bar";
+  const labels = (el.labels && el.labels.length ? el.labels : ["A", "B", "C"]);
+  const series = (el.series && el.series.length ? el.series : [{ name: "Series 1", values: [4, 7, 3] }])
+    .map((s, i) => ({ name: s.name || `Series ${i + 1}`, color: s.color || CHART_COLORS[i % CHART_COLORS.length], values: s.values || [] }));
+  const font = el.font || C.sans;
+  const axis = "#9a9486", grid = "#e7e2d6", ink = el.color || "#1a1714";
+  const title = el.title;
+  const showLegend = el.showLegend !== false && (type === "pie" || series.length > 1);
+  const padT = (title ? 26 : 10) + 4, padB = 30, padL = 40, padR = 12;
+  const legendH = showLegend ? 24 : 0;
+  const plotW = Math.max(10, W - padL - padR), plotH = Math.max(10, H - padT - padB - legendH);
+  const x0 = padL, y0 = padT, y1 = padT + plotH;
+
+  const titleEl = title ? <text x={W / 2} y={16} textAnchor="middle" fontFamily={font} fontSize={15} fontWeight={700} fill={ink}>{title}</text> : null;
+  const legendEl = showLegend ? (
+    <g fontFamily={font} fontSize={11} fill={ink}>
+      {(type === "pie" ? labels : series.map((s) => s.name)).map((name, i) => {
+        const col = type === "pie" ? CHART_COLORS[i % CHART_COLORS.length] : series[i].color;
+        const lx = padL + i * Math.min(120, plotW / Math.max(1, (type === "pie" ? labels : series).length));
+        return <g key={i} transform={`translate(${lx}, ${H - 14})`}><rect width={11} height={11} y={-9} fill={col} rx={2} /><text x={15} y={0}>{String(name).slice(0, 12)}</text></g>;
+      })}
+    </g>
+  ) : null;
+
+  if (type === "pie") {
+    const vals = (series[0]?.values || []).map((v) => Math.max(0, +v || 0));
+    const total = vals.reduce((a, b) => a + b, 0) || 1;
+    const cx = x0 + plotW / 2, cy = y0 + plotH / 2, r = Math.max(8, Math.min(plotW, plotH) / 2 - 4);
+    let acc = 0;
+    const arcs = vals.map((v, i) => {
+      const a0 = (acc / total) * 2 * Math.PI - Math.PI / 2; acc += v;
+      const a1 = (acc / total) * 2 * Math.PI - Math.PI / 2;
+      const large = a1 - a0 > Math.PI ? 1 : 0;
+      const p = (a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+      const [sx, sy] = p(a0), [ex, ey] = p(a1);
+      if (v <= 0) return null;
+      if (vals.length === 1) return <circle key={i} cx={cx} cy={cy} r={r} fill={CHART_COLORS[i % CHART_COLORS.length]} />;
+      return <path key={i} d={`M${cx},${cy} L${sx},${sy} A${r},${r} 0 ${large} 1 ${ex},${ey} Z`} fill={CHART_COLORS[i % CHART_COLORS.length]} stroke="#fff" strokeWidth={1.5} />;
+    });
+    return <svg width="100%" height="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">{titleEl}{arcs}{legendEl}</svg>;
+  }
+
+  const allVals = series.flatMap((s) => s.values.map((v) => +v || 0));
+  const maxV = Math.max(1, ...allVals), minV = Math.min(0, ...allVals);
+  const yToPx = (v) => y1 - ((v - minV) / (maxV - minV || 1)) * plotH;
+  const ticks = 4;
+  const gridLines = Array.from({ length: ticks + 1 }, (_, i) => {
+    const v = minV + (i / ticks) * (maxV - minV); const y = yToPx(v);
+    return <g key={i}><line x1={x0} y1={y} x2={x0 + plotW} y2={y} stroke={grid} strokeWidth={1} /><text x={x0 - 5} y={y + 3} textAnchor="end" fontFamily={font} fontSize={10} fill={axis}>{Math.round(v * 10) / 10}</text></g>;
+  });
+  const bandW = plotW / labels.length;
+  const labelEls = labels.map((lab, i) => <text key={i} x={x0 + bandW * (i + 0.5)} y={y1 + 16} textAnchor="middle" fontFamily={font} fontSize={10} fill={axis}>{String(lab).slice(0, 10)}</text>);
+
+  let marks = null;
+  if (type === "line") {
+    marks = series.map((s, si) => {
+      const pts = s.values.map((v, i) => `${x0 + bandW * (i + 0.5)},${yToPx(+v || 0)}`).join(" ");
+      return <g key={si}><polyline points={pts} fill="none" stroke={s.color} strokeWidth={2.5} strokeLinejoin="round" />
+        {s.values.map((v, i) => <circle key={i} cx={x0 + bandW * (i + 0.5)} cy={yToPx(+v || 0)} r={3} fill={s.color} />)}</g>;
+    });
+  } else { // bar (grouped)
+    const gap = bandW * 0.18, groupW = bandW - gap * 2, barW = groupW / series.length;
+    marks = labels.map((_, i) => (
+      <g key={i}>{series.map((s, si) => {
+        const v = +s.values[i] || 0; const y = yToPx(v); const base = yToPx(0);
+        return <rect key={si} x={x0 + bandW * i + gap + si * barW} y={Math.min(y, base)} width={Math.max(1, barW - 2)} height={Math.abs(base - y)} fill={s.color} rx={2} />;
+      })}</g>
+    ));
+  }
+  return (
+    <svg width="100%" height="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
+      {titleEl}{gridLines}
+      <line x1={x0} y1={y0} x2={x0} y2={y1} stroke={axis} strokeWidth={1} />
+      <line x1={x0} y1={y1} x2={x0 + plotW} y2={y1} stroke={axis} strokeWidth={1} />
+      {marks}{labelEls}{legendEl}
+    </svg>
+  );
 }
 
 /* A LaTeX equation rendered with KaTeX. Colour & size come from the element

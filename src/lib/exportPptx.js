@@ -22,6 +22,7 @@ function toFill(c) {
   return { color: "CCCCCC" };
 }
 const toHex = (c) => toFill(c).color;
+const CHART_PALETTE = ["2e3a5f", "b95a3c", "5e7c4b", "c9a227", "7a4e7e", "3b7dd8", "9a3b5a", "3b9a86"];
 
 /* Rotation: PptxGenJS wants an integer 0–359 (clockwise), matching our CSS
    `rotate(Ndeg)`. Returns undefined when there's nothing to rotate. */
@@ -142,6 +143,22 @@ async function renderEl(pptx, slide, el) {
       wrap: true,
       margin: el.bg ? 6 : 0,
       rotate: rot(el),
+    });
+  } else if (el.type === "chart") {
+    const labels = el.labels?.length ? el.labels.map(String) : ["A", "B", "C"];
+    const series = el.series?.length ? el.series : [{ name: "Series 1", values: [1, 2, 3] }];
+    const ct = el.chartType === "line" ? pptx.ChartType.line : el.chartType === "pie" ? pptx.ChartType.pie : pptx.ChartType.bar;
+    const data = el.chartType === "pie"
+      ? [{ name: el.title || "Data", labels, values: (series[0]?.values || []).map((v) => +v || 0) }]
+      : series.map((s) => ({ name: s.name || "Series", labels, values: (s.values || []).map((v) => +v || 0) }));
+    const colors = el.chartType === "pie"
+      ? labels.map((_, i) => CHART_PALETTE[i % CHART_PALETTE.length])
+      : series.map((s, i) => (s.color ? toHex(s.color) : CHART_PALETTE[i % CHART_PALETTE.length]));
+    slide.addChart(ct, data, {
+      ...box, chartColors: colors,
+      showLegend: el.chartType === "pie" || (series.length > 1 && el.showLegend !== false), legendPos: "b",
+      showTitle: !!el.title, title: el.title || "", titleColor: toHex(el.color), titleFontSize: 14,
+      showValue: false, catAxisLabelColor: toHex(el.color), valAxisLabelColor: toHex(el.color),
     });
   } else if (el.type === "equation") {
     // PowerPoint has no portable way to take rendered KaTeX, so export the

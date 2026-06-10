@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { C } from "@/lib/theme";
 import { Btn } from "@/lib/primitives";
 import { sk } from "@/lib/sk";
-import { VW, VH, elStyle, ElInner, ArrowSvg, StaticSlide, MasterFrame } from "@/components/SlideStage";
+import { VW, VH, elStyle, ElInner, ArrowSvg, StaticSlide, MasterFrame, CHART_COLORS } from "@/components/SlideStage";
 
 // Collision-proof id: a per-session counter guarantees uniqueness even when
 // many ids are minted in the same tick (templates, AI, slide clone). The old
@@ -241,7 +241,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const zoomBy = (d) => setZoom((z) => Math.min(4, Math.max(0.25, +(z + d).toFixed(2))));
 
   useLayoutEffect(() => {
-    const fit = () => setFitScale(Math.min(1, ((wrapRef.current?.clientWidth || VW) - 32) / VW));
+    const fit = () => setFitScale(Math.max(0.05, Math.min(1, ((wrapRef.current?.clientWidth || VW) - 32) / VW))); // clamp >0 so 1/scale never blows up
     fit();
     const ro = new ResizeObserver(fit);
     if (wrapRef.current) ro.observe(wrapRef.current);
@@ -308,6 +308,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const addVisualiser = () => addEl({ type: "visualiser", x: 260, y: 110, width: 440, height: 300 });
   const addRetrieval = () => addEl({ type: "retrieval", x: 50, y: 90, width: 860, height: 410, url: RET_APP_ORIGIN });
   const addEquation = () => addEl({ type: "equation", x: 280, y: 210, width: 400, height: 120, latex: "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}", fontSize: 44, color: themeState?.text || C.text });
+  const addChart = () => addEl({ type: "chart", x: 240, y: 120, width: 480, height: 320, chartType: "bar", title: "Results", labels: ["A", "B", "C", "D"], series: [{ name: "Series 1", color: CHART_COLORS[0], values: [4, 7, 3, 6] }], font: (themeState ? fontByLabel(themeState.bodyFont) : FONTS[0]).css, color: themeState?.text || "#1a1714" });
   const addTable = () => {
     const rows = 3, cols = 3;
     const cells = Array.from({ length: rows }, () => Array.from({ length: cols }, () => ""));
@@ -316,6 +317,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   };
 
   const [cropping, setCropping] = useState(null); // image id being cropped
+  const [charting, setCharting] = useState(null);  // chart id whose data is being edited
   const applyCrop = (id, crop, natW, natH) => {
     snapshot(false);
     const el = slide.elements.find((e) => e.id === id);
@@ -737,6 +739,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       { icon: "▦", label: "Table", run: addTable },
       { icon: "↘", label: "Arrow", run: addArrow },
       { icon: "∑", label: "Equation", run: addEquation },
+      { icon: "▥", label: "Chart", run: addChart },
     ],
     [
       { icon: "▣", label: "Image", run: () => fileRef.current?.click() },
@@ -1042,7 +1045,8 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
             )}
 
             <PropsBar selEl={selEl} slide={slide} patchEl={patchH} setSlideBg={setSlideBg}
-              onCrop={() => selEl && setCropping(selEl.id)} onResetCrop={() => selEl && patchH(selEl.id, { crop: null })} />
+              onCrop={() => selEl && setCropping(selEl.id)} onResetCrop={() => selEl && patchH(selEl.id, { crop: null })}
+              onEditChart={() => selEl && setCharting(selEl.id)} />
 
             {sel && (
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
@@ -1083,6 +1087,10 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     {cropping && (() => {
       const el = slide.elements.find((e) => e.id === cropping);
       return el ? <CropModal el={el} onApply={(crop, w, h) => applyCrop(cropping, crop, w, h)} onCancel={() => setCropping(null)} /> : null;
+    })()}
+    {charting && (() => {
+      const el = slide.elements.find((e) => e.id === charting);
+      return el ? <ChartDataModal el={el} onApply={(patch) => { patchH(charting, patch); setCharting(null); }} onCancel={() => setCharting(null)} /> : null;
     })()}
     {helpOpen && <ShortcutHelp onClose={() => setHelpOpen(false)} />}
     </>
@@ -1141,7 +1149,7 @@ function ShortcutHelp({ onClose }) {
 }
 
 /* ── Properties bar: element controls, or slide controls when nothing is selected ── */
-function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCrop }) {
+function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCrop, onEditChart }) {
   const wrap = { display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", padding: "8px 12px",
                  background: C.surface, border: `1px solid ${C.border}`, borderRadius: 6, fontSize: 12, color: C.muted };
   const tag = (t) => <span style={{ textTransform: "uppercase", letterSpacing: "0.08em", fontSize: 10, color: C.dim }}>{t}</span>;
@@ -1310,6 +1318,25 @@ function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCrop }) {
     );
   }
 
+  if (selEl.type === "chart") {
+    return (
+      <div style={wrap}>
+        {tag("chart")}
+        <select value={selEl.chartType || "bar"} onChange={(e) => P({ chartType: e.target.value })} style={selStyle}>
+          <option value="bar">Bar</option>
+          <option value="line">Line</option>
+          <option value="pie">Pie</option>
+        </select>
+        <input value={selEl.title || ""} onChange={(e) => P({ title: e.target.value })} placeholder="Title"
+          style={{ width: 120, padding: "5px 7px", border: `1px solid ${C.border}`, borderRadius: 4, fontFamily: C.mono, fontSize: 12 }} />
+        <Btn v="soft" onClick={onEditChart} style={{ fontSize: 12, padding: "5px 12px" }}>Edit data…</Btn>
+        {selEl.chartType !== "pie" && <button onClick={() => P({ showLegend: !(selEl.showLegend !== false) })} style={pill(selEl.showLegend !== false)}>legend</button>}
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>labels {color(selEl.color?.startsWith("#") ? selEl.color : "#1a1714", (v) => P({ color: v }))}</label>
+        <span style={{ color: C.dim }}>· {(selEl.series || []).length} series × {(selEl.labels || []).length} cats</span>
+      </div>
+    );
+  }
+
   if (selEl.type === "equation") {
     return (
       <div style={{ ...wrap, alignItems: "flex-start" }}>
@@ -1393,6 +1420,65 @@ function CropModal({ el, onApply, onCancel }) {
         <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end" }}>
           <Btn v="ghost" onClick={onCancel}>Cancel</Btn>
           <Btn onClick={() => onApply(box, nat.w, nat.h)}>Apply crop</Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Chart data editor: categories down the side, one column per series
+   (name + colour + a value per category). Add/remove either dimension. */
+function ChartDataModal({ el, onApply, onCancel }) {
+  const [labels, setLabels] = useState(() => (el.labels?.length ? [...el.labels] : ["A", "B", "C"]));
+  const [series, setSeries] = useState(() => (el.series?.length ? el.series.map((s) => ({ name: s.name || "", color: s.color || CHART_COLORS[0], values: [...(s.values || [])] })) : [{ name: "Series 1", color: CHART_COLORS[0], values: [1, 2, 3] }]));
+
+  const inp = { padding: "4px 6px", border: `1px solid ${C.border}`, borderRadius: 4, fontFamily: C.mono, fontSize: 12, width: "100%", boxSizing: "border-box" };
+  const setLabel = (i, v) => setLabels((a) => a.map((x, j) => (j === i ? v : x)));
+  const setVal = (si, ri, v) => setSeries((a) => a.map((s, j) => (j === si ? { ...s, values: labels.map((_, ri2) => (ri2 === ri ? v : (s.values[ri2] ?? ""))) } : s)));
+  const setSName = (si, v) => setSeries((a) => a.map((s, j) => (j === si ? { ...s, name: v } : s)));
+  const setSColor = (si, v) => setSeries((a) => a.map((s, j) => (j === si ? { ...s, color: v } : s)));
+  const addRow = () => { setLabels((a) => [...a, `Cat ${a.length + 1}`]); setSeries((a) => a.map((s) => ({ ...s, values: [...s.values, 0] }))); };
+  const delRow = (i) => { if (labels.length <= 1) return; setLabels((a) => a.filter((_, j) => j !== i)); setSeries((a) => a.map((s) => ({ ...s, values: s.values.filter((_, j) => j !== i) }))); };
+  const addSeries = () => setSeries((a) => [...a, { name: `Series ${a.length + 1}`, color: CHART_COLORS[a.length % CHART_COLORS.length], values: labels.map(() => 0) }]);
+  const delSeries = (si) => setSeries((a) => (a.length <= 1 ? a : a.filter((_, j) => j !== si)));
+  const apply = () => onApply({ labels, series: series.map((s) => ({ ...s, values: labels.map((_, i) => +s.values[i] || 0) })) });
+
+  return (
+    <div onMouseDown={onCancel} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div onMouseDown={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: 12, padding: 18, maxWidth: 720, maxHeight: "84vh", overflow: "auto" }}>
+        <div style={{ fontFamily: C.mono, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", color: C.dim, marginBottom: 12 }}>Chart data</div>
+        <table style={{ borderCollapse: "collapse", fontFamily: C.sans }}>
+          <thead>
+            <tr>
+              <th style={{ padding: 4, fontSize: 11, color: C.dim, textAlign: "left" }}>Category</th>
+              {series.map((s, si) => (
+                <th key={si} style={{ padding: 4, minWidth: 90 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    <input type="color" value={s.color} onChange={(e) => setSColor(si, e.target.value)} style={{ width: 22, height: 22, border: "none", background: "none", padding: 0, cursor: "pointer" }} />
+                    <input value={s.name} onChange={(e) => setSName(si, e.target.value)} style={{ ...inp, width: 80 }} />
+                    {series.length > 1 && <button onClick={() => delSeries(si)} title="Remove series" style={{ border: "none", background: "none", color: C.muted, cursor: "pointer", fontSize: 14 }}>×</button>}
+                  </div>
+                </th>
+              ))}
+              <th style={{ padding: 4 }}><button onClick={addSeries} style={{ fontSize: 11, padding: "4px 8px", border: `1px solid ${C.border}`, borderRadius: 4, background: "#fff", cursor: "pointer" }}>+ Series</button></th>
+            </tr>
+          </thead>
+          <tbody>
+            {labels.map((lab, ri) => (
+              <tr key={ri}>
+                <td style={{ padding: 3 }}><input value={lab} onChange={(e) => setLabel(ri, e.target.value)} style={{ ...inp, width: 110 }} /></td>
+                {series.map((s, si) => (
+                  <td key={si} style={{ padding: 3 }}><input type="number" value={s.values[ri] ?? 0} onChange={(e) => setVal(si, ri, e.target.value)} style={inp} /></td>
+                ))}
+                <td style={{ padding: 3 }}>{labels.length > 1 && <button onClick={() => delRow(ri)} title="Remove row" style={{ border: "none", background: "none", color: C.muted, cursor: "pointer", fontSize: 14 }}>×</button>}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button onClick={addRow} style={{ marginTop: 8, fontSize: 11, padding: "4px 8px", border: `1px solid ${C.border}`, borderRadius: 4, background: "#fff", cursor: "pointer" }}>+ Category</button>
+        <div style={{ display: "flex", gap: 8, marginTop: 16, justifyContent: "flex-end" }}>
+          <Btn v="ghost" onClick={onCancel}>Cancel</Btn>
+          <Btn onClick={apply}>Apply</Btn>
         </div>
       </div>
     </div>

@@ -35,6 +35,8 @@ ELEMENT TYPES YOU CAN CREATE:
     duration is SECONDS (e.g. 300 = 5 min). It counts down live when the teacher presents. Use for "Do Now" / timed tasks. A good size is ~280×150, fontSize 72, fill "#1a1714", color "#ffffff".
 - equation: { id, type:"equation", x, y, width, height, latex, fontSize, color, align? }
     latex is a LaTeX math string (KaTeX), e.g. "6CO_2 + 6H_2O \\rightarrow C_6H_{12}O_6 + 6O_2" or "v = f\\lambda". Use for any maths/science formula, equation or expression. fontSize ~36–56. Prefer this over plain text for real equations.
+- chart: { id, type:"chart", x, y, width, height, chartType, title?, labels, series, showLegend?, color? }
+    chartType is "bar" | "line" | "pie". labels is an array of category names. series is an array of { name, color (#hex), values (array of numbers, one per label) }. For pie, use ONE series. color is the axis/label text colour. Use for data, results, trends and comparisons. A good size is ~480×320.
 
 ELEMENT TYPES YOU CAN KEEP/MOVE/RESIZE BUT MUST NOT CREATE (you don't have a valid source URL for them):
 - image { ...src }, video { ...src }, visualiser, retrieval, html. Preserve any that already exist; reposition them if asked, but never invent new ones. An html element is an imported web-page template that fills its box and runs live when presented; its markup is hidden from you (shown as "[html omitted]") — keep it as-is, you may move/resize it but never change its html.
@@ -59,7 +61,7 @@ const ELEMENT_SCHEMA = {
   type: "object",
   properties: {
     id: { type: "string" },
-    type: { type: "string", enum: ["text", "rect", "arrow", "image", "table", "timer", "video", "visualiser", "retrieval", "html", "equation"] },
+    type: { type: "string", enum: ["text", "rect", "arrow", "image", "table", "timer", "video", "visualiser", "retrieval", "html", "equation", "chart"] },
     x: { type: "number" }, y: { type: "number" },
     width: { type: "number" }, height: { type: "number" },
     text: { type: "string" }, fontSize: { type: "number" }, color: { type: "string" },
@@ -78,6 +80,10 @@ const ELEMENT_SCHEMA = {
     html: { type: "string" }, title: { type: "string" },
     // equation (LaTeX)
     latex: { type: "string" },
+    // chart
+    chartType: { type: "string" }, showLegend: { type: "boolean" },
+    labels: { type: "array", items: { type: "string" } },
+    series: { type: "array", items: { type: "object", properties: { name: { type: "string" }, color: { type: "string" }, values: { type: "array", items: { type: "number" } } } } },
     // shared flags
     reveal: { type: "boolean" }, rotation: { type: "number" },
   },
