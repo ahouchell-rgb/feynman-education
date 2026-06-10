@@ -148,7 +148,12 @@ const faceOf = (latin) => { const f = A(latin, "typeface"); if (!f) return undef
 const bulletOf = (pPr) => { if (!pPr) return undefined; if (first(pPr, "buNone")) return ""; const bc = first(pPr, "buChar"); if (bc) return A(bc, "char") || "•"; if (first(pPr, "buAutoNum")) return "#"; return undefined; };
 const alignOf = (pPr) => ({ l: "left", ctr: "center", r: "right", just: "left" }[A(pPr, "algn")] || undefined);
 
-export async function importPptx(file) {
+// opts.uploadImage(File) => Promise<url>. When provided, images are uploaded to
+// storage and referenced by URL (keeps the deck row tiny — base64-inlining a
+// graphics-heavy deck makes the row many MB and times out the DB on save).
+// Without it, images are inlined as base64 data URLs (guest / localStorage).
+export async function importPptx(file, opts = {}) {
+  const uploadImage = opts.uploadImage;
   const zip = await JSZip.loadAsync(file);
   const pres = await parseXml(zip, "ppt/presentation.xml");
   const sz = pres && firstDesc(pres.documentElement, "sldSz");
@@ -286,16 +291,32 @@ export async function importPptx(file) {
     const tree = doc.getElementsByTagName("p:spTree")[0] || firstDesc(doc.documentElement, "spTree");
     walkShapes(tree, T0);
 
-    // Resolve image data URLs.
-    for (const el of elements) { if (el._src) { try { el.src = `data:${el._src.mime};base64,${await el._src.f.async("base64")}`; } catch {} delete el._src; } }
-
     // Background: slide → layout → master, resolving theme colours; skip plain white.
     const bgOf = (d) => { const bg = d && firstDesc(d.documentElement, "bg"); if (!bg) return null; const bgPr = first(bg, "bgPr"); if (bgPr) return fillColor(bgPr, ctx); const bgRef = first(bg, "bgRef"); if (bgRef) return clrToHex(firstColorChild(bgRef), ctx); return null; };
     let bg = bgOf(doc) || bgOf(layoutDoc) || bgOf(masterDoc) || undefined;
     if (bg === "none" || bg === "#ffffff") bg = undefined;
 
-    slides.push({ id: uid(), background: bg, elements: elements.filter((e) => e.type !== "image" || e.src) });
+    slides.push({ id: uid(), background: bg, elements });
   }
+
+  // Resolve images — upload to storage (small deck row) or inline as base64.
+  const imgEls = [];
+  for (const s of slides) for (const el of s.elements) if (el._src) imgEls.push(el);
+  const resolveImg = async (el) => {
+    try {
+      if (uploadImage) {
+        const blob = await el._src.f.async("blob");
+        const ext = ({ "image/png": "png", "image/gif": "gif", "image/svg+xml": "svg", "image/webp": "webp" })[el._src.mime] || "jpg";
+        el.src = await uploadImage(new File([blob], `img.${ext}`, { type: el._src.mime }));
+      } else {
+        el.src = `data:${el._src.mime};base64,${await el._src.f.async("base64")}`;
+      }
+    } catch {}
+    delete el._src;
+  };
+  const POOL = 6;
+  for (let i = 0; i < imgEls.length; i += POOL) await Promise.all(imgEls.slice(i, i + POOL).map(resolveImg));
+  for (const s of slides) s.elements = s.elements.filter((e) => e.type !== "image" || e.src);
 
   if (!slides.length) throw new Error("No slides found in this file.");
   return slides;

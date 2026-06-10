@@ -184,7 +184,12 @@ function SlidesContent() {
     setImporting(true); setErr("");
     try {
       const { importPptx } = await import("@/lib/importPptx");
-      const slides = await importPptx(file);
+      // Signed in: upload images to storage so the saved deck row stays small
+      // (base64-inlining a graphics-heavy deck times out the DB on save).
+      // Guest: inline as base64 (localStorage has no storage bucket).
+      const folder = "import-" + Math.floor(performance.now());
+      const opts = guest ? {} : { uploadImage: (f) => store.uploadImage(f, folder) };
+      const slides = await importPptx(file, opts);
       const created = await store.create({ title: file.name.replace(/\.pptx$/i, ""), slides });
       setActive(created); setSave("saved");
     } catch (e) { setErr("Import failed: " + e.message); }
