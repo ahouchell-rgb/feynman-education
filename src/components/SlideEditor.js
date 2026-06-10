@@ -323,6 +323,10 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
 
   const [cropping, setCropping] = useState(null); // image id being cropped
   const [charting, setCharting] = useState(null);  // chart id whose data is being edited
+  // Click-advance: when on, a click anywhere on the slide jumps to the next slide
+  // (for clicking through an imported deck). Turn off to edit. Remembered per browser.
+  const [clickThru, setClickThru] = useState(() => { try { return localStorage.getItem("sk_click_advance") !== "0"; } catch { return true; } });
+  const toggleClickThru = () => setClickThru((v) => { const n = !v; try { localStorage.setItem("sk_click_advance", n ? "1" : "0"); } catch {} if (n) { setSel(null); setEditing(null); } return n; });
   const applyCrop = (id, crop, natW, natH) => {
     snapshot(false);
     const el = slide.elements.find((e) => e.id === id);
@@ -773,7 +777,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       <input ref={htmlRef} type="file" accept=".html,.htm,text/html" onChange={pickHtml} style={{ display: "none" }} />
 
       {/* slide rail */}
-      <div style={{ width: 184, flexShrink: 0, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ width: 236, flexShrink: 0, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
         {slides.map((s, i) => (
           <button key={s.id} onClick={() => { setCur(i); setSel(null); setEditing(null); }}
             draggable
@@ -787,7 +791,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                      overflow: "hidden", lineHeight: 0, transition: "border-color .12s, box-shadow .12s",
                      border: `2px solid ${i === cur ? C.accent : C.border}`,
                      boxShadow: i === cur ? `0 0 0 3px ${C.accent}22` : "none" }}>
-            <StaticSlide slide={s} width={168} master={masterState} index={i} total={slides.length} title={deck.title} />
+            <StaticSlide slide={s} width={220} master={masterState} index={i} total={slides.length} title={deck.title} />
             <span style={{ position: "absolute", bottom: 3, left: 4, fontSize: 9, fontWeight: 600, color: i === cur ? C.accent : C.dim, background: "rgba(255,255,255,.82)", borderRadius: 3, padding: "0 3px", lineHeight: 1.4 }}>{i + 1}</span>
             {s.notes ? <span title="Has speaker notes" style={{ position: "absolute", top: 3, right: 4, fontSize: 10, lineHeight: 1 }}>🗒</span> : null}
           </button>
@@ -843,6 +847,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
             style={{ width: 104, padding: "6px 9px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: "#fff", color: C.text, outline: "none" }} />
           <Btn v="ghost" onClick={() => setHelpOpen(true)} title="Keyboard shortcuts (?)">?</Btn>
           <Sep />
+          <Btn v={clickThru ? "pri" : "ghost"} onClick={toggleClickThru} title="When on, click anywhere on the slide to go to the next slide. Turn off to edit.">{clickThru ? "🖱 Click → next: on" : "🖱 Click → next: off"}</Btn>
           <Btn v={themeOpen ? "pri" : "soft"} onClick={() => openPanel("theme")} title="Deck theme">🎨 Theme</Btn>
           <Btn v={masterOpen ? "pri" : "soft"} onClick={() => openPanel("brand")} title="Header / footer brand frame">🏷 Brand</Btn>
           <Btn v={aiOpen ? "pri" : "soft"} onClick={() => openPanel("claude")} title="Ask Claude">✦ Claude</Btn>
@@ -926,6 +931,13 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
 
               {/* marquee rectangle */}
               {marquee && <div style={{ position: "absolute", left: fin(marquee.x), top: fin(marquee.y), width: fin(marquee.w), height: fin(marquee.h), border: `${1 / scale}px solid ${C.accent}`, background: `${C.accent}14`, pointerEvents: "none" }} />}
+
+              {/* click-advance overlay — sits on top so a click anywhere flips to the next slide */}
+              {clickThru && (
+                <div title="Click → next slide. Turn off “Click → next” in the toolbar to edit."
+                  onMouseDown={(e) => { e.stopPropagation(); setSel(null); setEditing(null); if (cur < slides.length - 1) setCur(cur + 1); }}
+                  style={{ position: "absolute", inset: 0, zIndex: 50, cursor: "pointer" }} />
+              )}
             </div>
           </div>
         </div>
