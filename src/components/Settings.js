@@ -60,7 +60,7 @@ export function Settings({ onClose }) {
 
   const disconnectMicrosoft = async () => {
     if (!profile?.id) return;
-    if (!confirm("Disconnect your Microsoft account? Any PowerPoint files in OneDrive stay there, but you won't be able to edit them inside ScienceKit until you reconnect.")) return;
+    if (!confirm("Disconnect your Microsoft account? Any PowerPoint files in OneDrive stay there, but you won't be able to edit them inside Feynman until you reconnect.")) return;
     setMsBusy(true);
     try {
       await ms.disconnect(profile.id);
@@ -142,7 +142,7 @@ export function Settings({ onClose }) {
           ) : (
             <>
               <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim, lineHeight: 1.5, marginBottom: 10 }}>
-                Connect your school Microsoft account to edit PowerPoints directly inside ScienceKit. Files are stored in your own OneDrive.
+                Connect your school Microsoft account to edit PowerPoints directly inside Feynman. Files are stored in your own OneDrive.
               </div>
               <Btn v="ghost" onClick={connectMicrosoft} style={{ fontSize: 12, padding: "6px 12px" }}>
                 Connect Microsoft account →

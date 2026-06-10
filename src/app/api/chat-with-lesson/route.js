@@ -1,4 +1,4 @@
-// ScienceKit — Chat-with-Claude edge function
+// Feynman Education — Chat-with-Claude edge function
 // POST /api/chat-with-lesson
 //
 // Body:    { lessonId, userMessage }

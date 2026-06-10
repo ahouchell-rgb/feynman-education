@@ -2,8 +2,8 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/sk";
 
 export const metadata = {
-  title: "ScienceKit — Feynman Education",
-  description: "Science curriculum workspace",
+  title: "Feynman Education",
+  description: "A shared curriculum workspace for every subject",
 };
 
 export default function RootLayout({ children }) {
