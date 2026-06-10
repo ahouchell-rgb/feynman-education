@@ -256,6 +256,25 @@ const Headline = ({ children, size = 24, style }) => <div style={{ fontFamily: C
 const Deck = ({ children, style }) => <div style={{ fontFamily: C.serif, fontSize: 14, fontStyle: "italic", lineHeight: 1.45, color: C.mid, ...style }}>{children}</div>;
 const SectionTitle = ({ children, style }) => <div style={{ fontFamily: C.serif, fontSize: 16, fontWeight: 600, letterSpacing: "-0.01em", color: C.txt, ...style }}>{children}</div>;
 const Dateline = ({ left, right, style }) => <div style={{ padding: "8px 0", borderBottom: `1px solid ${C.bdr}`, display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 10, letterSpacing: ".14em", textTransform: "uppercase", color: C.mid, fontWeight: 500, ...style }}><span style={{ color: C.pri, fontWeight: 600 }}>{left}</span><span>{right}</span></div>;
+// Collapsible detail section: shows just a title + one-line teaser until the
+// teacher opens it. Lets the dashboard lead with headlines and keep the deep
+// analytics/settings one tap away. `right` holds header controls shown when open.
+const Section = ({ label, teaser, right = null, defaultOpen = false, children }) => {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div style={{ borderTop: `2px solid ${C.bdr}`, marginTop: 18 }}>
+      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, padding: open ? "14px 0 10px" : "14px 0" }}>
+        <button onClick={() => setOpen(o => !o)} style={{ display: "flex", alignItems: "baseline", gap: 9, minWidth: 0, background: "transparent", border: "none", cursor: "pointer", textAlign: "left", fontFamily: "inherit", padding: 0 }}>
+          <span style={{ color: C.dim, fontSize: 10, fontWeight: 700, flexShrink: 0 }}>{open ? "▾" : "▸"}</span>
+          <span style={{ color: C.txt, fontWeight: 600, fontSize: 13, flexShrink: 0 }}>{label}</span>
+          {!open && teaser != null && <span style={{ fontSize: 11, color: C.dim, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{teaser}</span>}
+        </button>
+        {open && (right || <button onClick={() => setOpen(false)} style={{ fontSize: 11, color: C.dim, fontWeight: 600, background: "transparent", border: "none", cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }}>Hide</button>)}
+      </div>
+      {open && <div style={{ paddingBottom: 4 }}>{children}</div>}
+    </div>
+  );
+};
 
 /* ─── AUTH ─── */
 function Auth({ onAuth }) {
@@ -3489,82 +3508,12 @@ function Teacher({ user, isMod, isHoD }) {
                 })()}
               </div>
 
-              {/* Class target slider */}
-              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Weekly homework target</div>
-                  <span style={{ fontFamily: "monospace", fontWeight: 700, fontSize: 18, color: C.pri }}>{targetDraft ?? dash.clsTarget}</span>
-                </div>
-                <input type="range" min={5} max={100} step={5}
-                  value={targetDraft ?? dash.clsTarget}
-                  onChange={e => setTargetDraft(Number(e.target.value))}
-                  onMouseUp={e => { if (targetDraft !== null) saveClsTarget(targetDraft); setTargetDraft(null); }}
-                  onTouchEnd={e => { if (targetDraft !== null) saveClsTarget(targetDraft); setTargetDraft(null); }}
-                  style={{ width: "100%", accentColor: C.pri, cursor: "pointer" }}
-                />
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
-                  <span style={{ fontSize: 10, color: C.dim }}>5</span>
-                  <span style={{ fontSize: 10, color: C.dim }}>questions / week · applies to whole class · override per student below</span>
-                  <span style={{ fontSize: 10, color: C.dim }}>100</span>
-                </div>
-              </Card>
-
-              {/* Recently taught — drives question frequency via forgetting curve boost */}
-              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
-                <div style={{ marginBottom: 10 }}>
-                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13, marginBottom: 2 }}>Recently taught</div>
-                  <div style={{ fontSize: 11, color: C.dim }}>Questions from recent topics appear more frequently. Slot 1 gets the strongest boost — students will see it most.</div>
-                </div>
-                {/* "What did you just teach?" picker */}
-                <div style={{ display: "flex", gap: 8, marginBottom: 14, alignItems: "center" }}>
-                  <select
-                    defaultValue=""
-                    onChange={e => { if (e.target.value) setTopicRecency(e.target.value); e.target.value = ""; }}
-                    disabled={savingRecency}
-                    style={{ flex: 1, padding: "9px 10px", background: C.card2, border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.txt, fontSize: 13, fontFamily: "inherit", cursor: "pointer" }}
-                  >
-                    <option value="" disabled>{savingRecency ? "Saving..." : "What did you just teach? →"}</option>
-                    {topics.filter(t => unlocked.has(t.id)).map(t => (
-                      <option key={t.id} value={t.id}>{t.name}</option>
-                    ))}
-                  </select>
-                </div>
-                {/* Current slots */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  {[1, 2, 3].map(rank => {
-                    const slot = dash.recency?.find(r => r.rank === rank);
-                    const topicName = slot ? topics.find(t => t.id === slot.topicId)?.name : null;
-                    const boostLabel = rank === 1 ? "strongest boost" : rank === 2 ? "medium boost" : "light boost";
-                    return (
-                      <div key={rank} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 8, background: C.card2, border: `1px solid ${slot ? "rgba(200,54,45,0.25)" : C.bdr}` }}>
-                        <div style={{ width: 22, height: 22, borderRadius: 6, background: slot ? C.priSoft : C.bdr, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: slot ? C.pri : C.dim }}>{rank}</span>
-                        </div>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          {slot ? (
-                            <>
-                              <div style={{ fontSize: 13, color: C.txt, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{topicName || "Unknown topic"}</div>
-                              <div style={{ fontSize: 10, color: C.dim }}>{boostLabel}</div>
-                            </>
-                          ) : (
-                            <div style={{ fontSize: 13, color: C.dim, fontStyle: "italic" }}>Not set</div>
-                          )}
-                        </div>
-                        {slot && (
-                          <button onClick={() => clearTopicRecency(slot.topicId)} style={{ background: "none", border: "none", color: C.dim, cursor: "pointer", fontSize: 16, padding: "0 2px", lineHeight: 1 }}>×</button>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </Card>
-
-              {/* (At-risk now surfaced in the action hero at the top of the dashboard) */}
+              {/* ── Insights: detailed analytics, collapsed by default so the dashboard leads with headlines ── */}
+              <div style={{ marginTop: 26, marginBottom: 2, fontSize: 10, fontWeight: 700, letterSpacing: ".16em", textTransform: "uppercase", color: C.dim }}>Insights</div>
 
 
-              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, gap: 8, flexWrap: "wrap" }}>
-                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Students <span style={{ color: C.dim, fontWeight: 500 }}>· {timePeriod === "thisWeek" ? "this week" : timePeriod === "lastWeek" ? "last week" : timePeriod === "last4Weeks" ? "last 4 weeks" : "all time"}</span></div>
+              <Section label="Students" teaser={`${dash.students.length} enrolled · ${timePeriod === "thisWeek" ? "this week" : timePeriod === "lastWeek" ? "last week" : timePeriod === "last4Weeks" ? "last 4 weeks" : "all time"}`}
+                right={(
                   <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
                     <button
                       onClick={exportSummaryCsv}
@@ -3581,15 +3530,12 @@ function Teacher({ user, isMod, isHoD }) {
                       ↓ Detailed CSV
                     </button>
                   </div>
-                </div>
+                )}>
                 {dash.students.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No students yet. Share the join code above.</div> :
                   <StudentList students={dash.students} cls={cls} clsTarget={dash.clsTarget} timePeriod={timePeriod} onRefresh={() => loadCls(cls)} parentTokens={parentTokens} onGenerateToken={generateParentToken} onRevokeToken={revokeParentToken} />}
-              </Card>
+              </Section>
 
-              <BulkUpload cls={cls} onRefresh={() => loadCls(cls)} />
-
-              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
-                <div style={{ color: C.txt, fontWeight: 600, fontSize: 13, marginBottom: 10 }}>Top Misconceptions</div>
+              <Section label="Top Misconceptions" teaser={dash.mis.length ? `${dash.mis.length} recurring` : "No data yet"}>
                 {dash.mis.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No data yet.</div> :
                   dash.mis.map((m, i) => (
                     <div key={i} style={{ padding: "10px 12px", borderRadius: 10, background: C.card2, borderLeft: `3px solid ${C.red}`, marginBottom: 6 }}>
@@ -3601,16 +3547,11 @@ function Teacher({ user, isMod, isHoD }) {
                       {m.ans.length > 0 && <div style={{ marginTop: 5, display: "flex", gap: 4, flexWrap: "wrap" }}>{m.ans.map((a, j) => <span key={j} style={{ fontSize: 11, color: C.mid, background: C.redS, padding: "2px 7px", borderRadius: 6 }}>"{a}"</span>)}</div>}
                     </div>
                   ))}
-              </Card>
+              </Section>
 
               {/* Question stats — per-question accuracy with drill-down to actual wrong answers.
-                  Uses the same rawResps already in scope. Sorted by wrong-rate so the worst-performing
-                  questions surface first. Threshold of 3 attempts to avoid noise from one-off blips. */}
-              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 18 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, gap: 8 }}>
-                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Question stats</div>
-                  <span style={{ fontSize: 11, color: C.dim }}>Hardest questions first · tap for wrong answers</span>
-                </div>
+                  Sorted by wrong-rate; threshold of 3 attempts to avoid noise from one-off blips. */}
+              <Section label="Question stats" teaser="hardest questions first · tap for wrong answers">
                 {(() => {
                   // Group responses by question_id
                   const qStats = {};
@@ -3695,10 +3636,9 @@ function Teacher({ user, isMod, isHoD }) {
                     );
                   });
                 })()}
-              </Card>
+              </Section>
 
-              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginBottom: 8 }}>
-                <div style={{ color: C.txt, fontWeight: 600, fontSize: 13, marginBottom: 10 }}>Topic Performance</div>
+              <Section label="Topic Performance" teaser={dash.tp.length ? (() => { const w = [...dash.tp].sort((a, b) => a.pct - b.pct)[0]; return w ? `weakest: ${w.name} ${w.pct}%` : `${dash.tp.length} topics`; })() : "No data yet"}>
                 {dash.tp.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No data yet.</div> :
                   dash.tp.map((t, i) => (
                     <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 8px", borderRadius: 8, background: C.card2, marginBottom: 4 }}>
@@ -3708,7 +3648,7 @@ function Teacher({ user, isMod, isHoD }) {
                       <span style={{ fontSize: 11, fontWeight: 700, color: t.pct >= 70 ? C.grn : t.pct >= 50 ? C.amb : C.red, minWidth: 28, textAlign: "right" }}>{t.pct}%</span>
                     </div>
                   ))}
-              </Card>
+              </Section>
 
               {/* Question spread — completion volume + bank coverage per subtopic, classwide and per student.
                   Pure counts only: NO accuracy, NO misconceptions on this panel by design.
@@ -3716,11 +3656,7 @@ function Teacher({ user, isMod, isHoD }) {
                   so a "full" box means the whole bank has been worked through. The raw attempt count (volume)
                   sits alongside it. Subtopic == topic here (CSV subtopics are flattened to topics on import).
                   rawResps + dash.students already in scope; topicBank holds non-archived bank sizes. */}
-              <Card style={{ background: "transparent", border: "none", borderTop: `2px solid ${C.bdr}`, borderRadius: 0, padding: "18px 0 0", marginTop: 18, marginBottom: 8 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, gap: 8 }}>
-                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Question spread</div>
-                  <span style={{ fontSize: 11, color: C.dim }}>coverage of each subtopic · tap for students</span>
-                </div>
+              <Section label="Question spread" teaser="coverage of each subtopic · tap for students">
                 <div style={{ fontSize: 11, color: C.dim, marginBottom: 14, lineHeight: 1.4 }}>
                   Bar fills as distinct questions get practised; figure after the dot is total attempts. Not accuracy.
                 </div>
@@ -3799,7 +3735,79 @@ function Teacher({ user, isMod, isHoD }) {
                     );
                   });
                 })()}
-              </Card>
+              </Section>
+
+              {/* ── Class settings: configuration, tucked below the monitoring view ── */}
+              <div style={{ marginTop: 28, marginBottom: 2, fontSize: 10, fontWeight: 700, letterSpacing: ".16em", textTransform: "uppercase", color: C.dim }}>Class settings</div>
+
+              <Section label="Weekly homework target" teaser={`${dash.clsTarget} questions / week`}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                  <div style={{ color: C.txt, fontWeight: 600, fontSize: 13 }}>Target</div>
+                  <span style={{ fontFamily: "monospace", fontWeight: 700, fontSize: 18, color: C.pri }}>{targetDraft ?? dash.clsTarget}</span>
+                </div>
+                <input type="range" min={5} max={100} step={5}
+                  value={targetDraft ?? dash.clsTarget}
+                  onChange={e => setTargetDraft(Number(e.target.value))}
+                  onMouseUp={e => { if (targetDraft !== null) saveClsTarget(targetDraft); setTargetDraft(null); }}
+                  onTouchEnd={e => { if (targetDraft !== null) saveClsTarget(targetDraft); setTargetDraft(null); }}
+                  style={{ width: "100%", accentColor: C.pri, cursor: "pointer" }}
+                />
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                  <span style={{ fontSize: 10, color: C.dim }}>5</span>
+                  <span style={{ fontSize: 10, color: C.dim }}>questions / week · applies to whole class · override per student below</span>
+                  <span style={{ fontSize: 10, color: C.dim }}>100</span>
+                </div>
+              </Section>
+
+              <Section label="Recently taught" teaser={dash.recency?.length ? `${dash.recency.length} topic${dash.recency.length === 1 ? "" : "s"} boosted` : "none set"}>
+                <div style={{ fontSize: 11, color: C.dim, marginBottom: 12 }}>Questions from recent topics appear more frequently. Slot 1 gets the strongest boost — students will see it most.</div>
+                {/* "What did you just teach?" picker */}
+                <div style={{ display: "flex", gap: 8, marginBottom: 14, alignItems: "center" }}>
+                  <select
+                    defaultValue=""
+                    onChange={e => { if (e.target.value) setTopicRecency(e.target.value); e.target.value = ""; }}
+                    disabled={savingRecency}
+                    style={{ flex: 1, padding: "9px 10px", background: C.card2, border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.txt, fontSize: 13, fontFamily: "inherit", cursor: "pointer" }}
+                  >
+                    <option value="" disabled>{savingRecency ? "Saving..." : "What did you just teach? →"}</option>
+                    {topics.filter(t => unlocked.has(t.id)).map(t => (
+                      <option key={t.id} value={t.id}>{t.name}</option>
+                    ))}
+                  </select>
+                </div>
+                {/* Current slots */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {[1, 2, 3].map(rank => {
+                    const slot = dash.recency?.find(r => r.rank === rank);
+                    const topicName = slot ? topics.find(t => t.id === slot.topicId)?.name : null;
+                    const boostLabel = rank === 1 ? "strongest boost" : rank === 2 ? "medium boost" : "light boost";
+                    return (
+                      <div key={rank} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 8, background: C.card2, border: `1px solid ${slot ? "rgba(200,54,45,0.25)" : C.bdr}` }}>
+                        <div style={{ width: 22, height: 22, borderRadius: 6, background: slot ? C.priSoft : C.bdr, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <span style={{ fontSize: 11, fontWeight: 700, color: slot ? C.pri : C.dim }}>{rank}</span>
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          {slot ? (
+                            <>
+                              <div style={{ fontSize: 13, color: C.txt, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{topicName || "Unknown topic"}</div>
+                              <div style={{ fontSize: 10, color: C.dim }}>{boostLabel}</div>
+                            </>
+                          ) : (
+                            <div style={{ fontSize: 13, color: C.dim, fontStyle: "italic" }}>Not set</div>
+                          )}
+                        </div>
+                        {slot && (
+                          <button onClick={() => clearTopicRecency(slot.topicId)} style={{ background: "none", border: "none", color: C.dim, cursor: "pointer", fontSize: 16, padding: "0 2px", lineHeight: 1 }}>×</button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </Section>
+
+              <div style={{ borderTop: `2px solid ${C.bdr}`, marginTop: 18, paddingTop: 14 }}>
+                <BulkUpload cls={cls} onRefresh={() => loadCls(cls)} />
+              </div>
             </div>
           )}
 
