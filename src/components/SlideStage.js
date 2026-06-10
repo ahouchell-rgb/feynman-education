@@ -17,6 +17,8 @@ const TRIANGLE = "polygon(50% 0%, 0% 100%, 100% 100%)";
    coordinates. Shared by the editor and all read-only views. Arrows are drawn
    separately by <ArrowSvg/> since they're defined by two points, not a box. */
 export function elStyle(el) {
+  if (typeof window !== "undefined" && [el.x, el.y, el.width, el.height].some((v) => v != null && typeof v === "number" && !isFinite(v)))
+    console.error("DBG_ELSTYLE_NONFINITE", el.type, el.id, { x: el.x, y: el.y, width: el.width, height: el.height });
   const rot = el.rotation ? `rotate(${el.rotation}deg)` : undefined;
   const base = { position: "absolute", left: el.x, top: el.y, width: el.width, opacity: el.opacity ?? 1, transform: rot };
   if (el.type === "text")
@@ -32,7 +34,7 @@ export function elStyle(el) {
       borderRadius: el.bg ? 8 : 0,
       boxShadow: el.shadow ? SHADOW : undefined,
       boxSizing: "border-box",
-      lineHeight: 1.15, overflow: "hidden", whiteSpace: "pre-wrap", wordBreak: "break-word",
+      lineHeight: 1.15, overflow: "hidden", whiteSpace: el.rich ? "normal" : "pre-wrap", wordBreak: "break-word",
     };
   if (el.type === "rect") {
     const shape = el.shape || "rect";
@@ -85,7 +87,7 @@ export function elStyle(el) {
 
 /* Inner content of a box element (static / editor view). */
 export function ElInner({ el }) {
-  if (el.type === "text") return el.text;
+  if (el.type === "text") return el.rich ? <span className="rt" style={{ display: "block", width: "100%" }} dangerouslySetInnerHTML={{ __html: el.rich }} /> : el.text;
   if (el.type === "timer") return fmtTime(el.duration ?? 300);
   if (el.type === "image") return <ImageInner el={el} />;
   if (el.type === "table") return <TableView el={el} />;

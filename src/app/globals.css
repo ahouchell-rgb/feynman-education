@@ -9,3 +9,11 @@ body {
 }
 [contenteditable]:focus { outline: none; }
 input, textarea, select, button { font-family: inherit; }
+
+/* Rich text boxes (el.rich): restore list rendering the global reset strips. */
+.rt ul, .rt ol { padding-left: 1.3em; margin: 0; }
+.rt ul { list-style: disc; }
+.rt ol { list-style: decimal; }
+.rt li { margin: 0; }
+.rt ul ul { list-style: circle; }
+.rt p, .rt div { margin: 0; }

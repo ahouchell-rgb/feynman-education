@@ -192,6 +192,8 @@ const HANDLES = [
 const CURSORS = { nw: "nwse-resize", se: "nwse-resize", ne: "nesw-resize", sw: "nesw-resize", n: "ns-resize", s: "ns-resize", e: "ew-resize", w: "ew-resize" };
 const HANDLE_PX = 9;
 
+const DBG = (v, tag) => { if (typeof v === "number" && !isFinite(v)) console.error("DBG_NONFINITE_LEFT", tag, v); return v; };
+
 /* `deck.slides` is the single source of truth. Every action builds the next
    slides array, sets local state, and calls onChange so the parent can save. */
 const DEFAULT_MASTER = { enabled: true, headerLeft: "", headerCenter: "", headerRight: "", footerLeft: "{title}", footerCenter: "", footerRight: "{n} / {total}", color: "#6b6256", accent: "#b95a3c", showRule: true };
@@ -843,13 +845,14 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
               style={{ width: VW, height: VH, position: "absolute", top: 0, left: 0,
                        transform: `scale(${scale})`, transformOrigin: "top left",
                        background: slide.background || "#fff", boxShadow: "0 2px 16px rgba(0,0,0,.12)", overflow: "hidden" }}>
+              {(typeof window !== "undefined") && (console.log("DBG_RENDER", { scale, fitScale, zoom, selEl: selEl?.id || null, guides: guides.length, marquee: !!marquee, els: slide.elements.length }), null)}
               {!slide.hideMaster && masterState?.enabled && <MasterFrame master={masterState} index={cur} total={slides.length} title={deck.title} />}
               {slide.elements.map(el => {
                 if (el.type === "arrow")
                   return <ArrowSvg key={el.id} el={el} selected={selSet.has(el.id)} hitProps={{ onMouseDown: (e) => startArrowDrag(e, el) }} />;
                 if (editing === el.id && el.type === "text")
                   return <TextEditor key={el.id} el={el} apiRef={editorApi}
-                    onText={(text) => patchEl(el.id, { text })}
+                    onText={(text, rich) => patchEl(el.id, { text, rich: rich || null })}
                     onDone={() => setEditing(null)} />;
                 if (editing === el.id && el.type === "table")
                   return (
@@ -874,7 +877,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                 const sz = HANDLE_PX / scale;
                 return (
                   <div key={name} onMouseDown={(e) => startResize(e, selEl, fx, fy)}
-                    style={{ position: "absolute", left: selEl.x + fx * selEl.width - sz / 2, top: selEl.y + fy * h - sz / 2,
+                    style={{ position: "absolute", left: DBG(selEl.x + fx * selEl.width - sz / 2, "resize"), top: selEl.y + fy * h - sz / 2,
                              width: sz, height: sz, background: "#fff", border: `${1.5 / scale}px solid ${C.accent}`,
                              borderRadius: 2, cursor: CURSORS[name], boxSizing: "border-box" }} />
                 );
@@ -885,7 +888,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                 const sz = (HANDLE_PX + 2) / scale;
                 return (
                   <div key={k} onMouseDown={(e) => startArrowEnd(e, selEl, k)}
-                    style={{ position: "absolute", left: px - sz / 2, top: py - sz / 2, width: sz, height: sz,
+                    style={{ position: "absolute", left: DBG(px - sz / 2, "arrowend"), top: py - sz / 2, width: sz, height: sz,
                              background: "#fff", border: `${1.5 / scale}px solid ${C.accent}`, borderRadius: "50%", cursor: "move" }} />
                 );
               })}
@@ -900,19 +903,19 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                 const sz = (HANDLE_PX + 3) / scale;
                 return (
                   <div key="rot" onMouseDown={(e) => startRotate(e, selEl)} title="Drag to rotate (Shift = 15°)"
-                    style={{ position: "absolute", left: hx - sz / 2, top: hy - sz / 2, width: sz, height: sz,
+                    style={{ position: "absolute", left: DBG(hx - sz / 2, "rotate"), top: hy - sz / 2, width: sz, height: sz,
                              background: "#fff", border: `${1.5 / scale}px solid ${C.accent}`, borderRadius: "50%", cursor: "grab" }} />
                 );
               })()}
 
               {/* smart-align guide lines */}
               {guides.map((g, i) => g.type === "v"
-                ? <div key={"g" + i} style={{ position: "absolute", left: g.pos, top: 0, width: 1 / scale, height: VH, background: "#e23b2e", pointerEvents: "none" }} />
-                : <div key={"g" + i} style={{ position: "absolute", top: g.pos, left: 0, height: 1 / scale, width: VW, background: "#e23b2e", pointerEvents: "none" }} />
+                ? <div key={"g" + i} style={{ position: "absolute", left: DBG(g.pos, "guideV"), top: 0, width: 1 / scale, height: VH, background: "#e23b2e", pointerEvents: "none" }} />
+                : <div key={"g" + i} style={{ position: "absolute", top: DBG(g.pos, "guideH"), left: 0, height: 1 / scale, width: VW, background: "#e23b2e", pointerEvents: "none" }} />
               )}
 
               {/* marquee rectangle */}
-              {marquee && <div style={{ position: "absolute", left: marquee.x, top: marquee.y, width: marquee.w, height: marquee.h, border: `${1 / scale}px solid ${C.accent}`, background: `${C.accent}14`, pointerEvents: "none" }} />}
+              {marquee && <div style={{ position: "absolute", left: DBG(marquee.x, "marquee"), top: marquee.y, width: marquee.w, height: marquee.h, border: `${1 / scale}px solid ${C.accent}`, background: `${C.accent}14`, pointerEvents: "none" }} />}
             </div>
           </div>
         </div>
@@ -1030,6 +1033,22 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                 <button title="Bigger (as you type)"
                   onMouseDown={(e) => { e.preventDefault(); if (edEl) patchH(editing, { fontSize: (edEl.fontSize || 40) + 4 }); }}
                   style={{ height: 26, padding: "0 9px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 15, cursor: "pointer" }}>A+</button>
+                <Sep />
+                {/* inline formatting — acts on the current selection while editing */}
+                {(() => { const fb = { height: 26, minWidth: 26, padding: "0 7px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, cursor: "pointer", fontSize: 14 }; return (
+                  <>
+                    <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.bold(); }} title="Bold (⌘B)" style={{ ...fb, fontWeight: 700 }}>B</button>
+                    <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.italic(); }} title="Italic (⌘I)" style={{ ...fb, fontStyle: "italic" }}>I</button>
+                    <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.bullet(); }} title="Bulleted list" style={fb}>•≡</button>
+                    <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.number(); }} title="Numbered list" style={fb}>1.≡</button>
+                    <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.outdent(); }} title="Decrease indent" style={fb}>⇤</button>
+                    <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.indent(); }} title="Increase indent" style={fb}>⇥</button>
+                    {["#1a1714", "#b95a3c", "#2c5f2d", "#1e2761", "#c9a227"].map((c) => (
+                      <button key={c} onMouseDown={(e) => { e.preventDefault(); editorApi.current?.color(c); }} title={`Colour selection ${c}`}
+                        style={{ width: 20, height: 20, borderRadius: "50%", border: `1px solid ${C.border}`, background: c, cursor: "pointer", padding: 0 }} />
+                    ))}
+                  </>
+                ); })()}
                 <Sep />
                 {[...SYMBOLS, ...STATES].map((sym) => (
                   <button key={sym} title="Insert at cursor"
@@ -1523,61 +1542,65 @@ function Cell({ value, onInput, style }) {
    fights the caret. Saves on EVERY keystroke (onText) so the text is never
    lost if the editor is torn down by a click elsewhere; onDone just exits.
    Exposes insert()/subSup() via apiRef so the symbol bar and ⌘,/⌘. work. */
+// Does this contentEditable HTML carry any inline formatting / lists worth
+// persisting as `rich`? Plain typing (incl. <div>/<br> line breaks) does not.
+const isRich = (html) => /<(b|strong|i|em|u|s|span|font|ul|ol|li)\b/i.test(html || "");
+
 function TextEditor({ el, onText, onDone, apiRef }) {
   const ref = useRef(null);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    node.textContent = el.text || "";
+    if (el.rich) node.innerHTML = el.rich; else node.textContent = el.text || "";
     node.focus();
-    selectRange(node, 0, (el.text || "").length);
+    // place caret at end (selecting all rich HTML is jarring)
+    const sel = window.getSelection(); const r = document.createRange();
+    r.selectNodeContents(node); r.collapse(false); sel.removeAllRanges(); sel.addRange(r);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Insert a string at the caret (replacing any selection).
-  const doInsert = (str) => {
-    const node = ref.current;
-    if (!node) return;
-    const len = (node.textContent || "").length;
-    const off = caretOffsets(node) || { start: len, end: len };
-    const full = node.textContent || "";
-    const next = full.slice(0, off.start) + str + full.slice(off.end);
-    node.textContent = next;
-    onText(next);
-    selectRange(node, off.start + str.length);
+  // Persist both a plain-text fallback and the rich HTML (only when formatted).
+  const persist = () => {
+    const node = ref.current; if (!node) return;
+    const html = node.innerHTML;
+    onText(node.textContent ?? "", isRich(html) ? html : null);
   };
 
-  // Sub/superscript the current selection (toggles back if already converted).
+  const exec = (cmd, val) => { ref.current?.focus(); try { document.execCommand(cmd, false, val); } catch {} persist(); };
+  const doInsert = (str) => { ref.current?.focus(); try { document.execCommand("insertText", false, str); } catch {} persist(); };
   const doSubSup = (kind) => {
-    const node = ref.current;
-    if (!node) return;
-    const off = caretOffsets(node);
-    if (!off || off.start === off.end) return;
-    const full = node.textContent || "";
-    const mapped = mapScript(full.slice(off.start, off.end), kind);
-    const next = full.slice(0, off.start) + mapped + full.slice(off.end);
-    node.textContent = next;
-    onText(next);
-    selectRange(node, off.start, off.start + mapped.length);
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return;
+    const mapped = mapScript(sel.toString(), kind);
+    ref.current?.focus(); try { document.execCommand("insertText", false, mapped); } catch {} persist();
   };
 
-  // Re-register each render so the symbol bar calls the latest closures.
+  // Re-register each render so the toolbar calls the latest closures.
   useEffect(() => {
     if (!apiRef) return;
-    apiRef.current = { insert: doInsert, subSup: doSubSup };
+    apiRef.current = {
+      insert: doInsert, subSup: doSubSup,
+      bold: () => exec("bold"), italic: () => exec("italic"), underline: () => exec("underline"),
+      color: (v) => exec("foreColor", v),
+      bullet: () => exec("insertUnorderedList"), number: () => exec("insertOrderedList"),
+      indent: () => exec("indent"), outdent: () => exec("outdent"),
+    };
     return () => { apiRef.current = null; };
   });
 
   return (
     <div ref={ref} contentEditable suppressContentEditableWarning
       onMouseDown={(e) => e.stopPropagation()}
-      onInput={() => onText(ref.current?.textContent ?? "")}
+      onInput={persist}
       onBlur={onDone}
       onKeyDown={(e) => {
-        if ((e.metaKey || e.ctrlKey) && e.key === ",") { e.preventDefault(); doSubSup("sub"); }
+        if ((e.metaKey || e.ctrlKey) && (e.key === "b" || e.key === "B")) { e.preventDefault(); exec("bold"); }
+        else if ((e.metaKey || e.ctrlKey) && (e.key === "i" || e.key === "I")) { e.preventDefault(); exec("italic"); }
+        else if ((e.metaKey || e.ctrlKey) && e.key === ",") { e.preventDefault(); doSubSup("sub"); }
         else if ((e.metaKey || e.ctrlKey) && e.key === ".") { e.preventDefault(); doSubSup("sup"); }
         else if (e.key === "Escape") { e.preventDefault(); ref.current?.blur(); }
       }}
+      className={el.rich ? "rt" : undefined}
       style={{ ...elStyle(el), outline: `2px solid ${C.accent}`, outlineOffset: 1, cursor: "text", overflow: "visible" }} />
   );
 }

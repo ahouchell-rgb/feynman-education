@@ -66,7 +66,7 @@ const ELEMENT_SCHEMA = {
     width: { type: "number" }, height: { type: "number" },
     text: { type: "string" }, fontSize: { type: "number" }, color: { type: "string" },
     bold: { type: "boolean" }, italic: { type: "boolean" }, align: { type: "string" },
-    bg: { type: "string" }, font: { type: "string" },
+    bg: { type: "string" }, font: { type: "string" }, rich: { type: "string" },
     fill: { type: "string" }, stroke: { type: "string" }, radius: { type: "number" },
     x1: { type: "number" }, y1: { type: "number" }, x2: { type: "number" }, y2: { type: "number" },
     thickness: { type: "number" }, src: { type: "string" },
@@ -134,10 +134,12 @@ export async function POST(req) {
   // echo back inside the 8K output budget. Strip the markup (keyed by element id)
   // before the call and splice it back into the result afterwards.
   const htmlById = {};
+  const richById = {}; // id → { rich, text } so we can restore inline formatting Claude can't see
   const sentSlides = slides.map((s) => ({
     ...s,
     elements: (s.elements || []).map((e) => {
       if (e && e.type === "html") { if (e.id) htmlById[e.id] = e.html; return { ...e, html: "[html omitted]" }; }
+      if (e && e.type === "text" && e.rich) { if (e.id) richById[e.id] = { rich: e.rich, text: e.text }; const { rich, ...rest } = e; return rest; }
       return e;
     }),
   }));
@@ -188,7 +190,10 @@ export async function POST(req) {
     ...s,
     elements: (s.elements || []).map((e) => {
       if (e.type === "html") return { ...e, html: htmlById[e.id] ?? (e.html === "[html omitted]" ? "" : e.html) };
-      return usesFont(e.type) && e.font && FONT_CSS[e.font] ? { ...e, font: FONT_CSS[e.font], fontFace: FONT_FACE[e.font] } : e;
+      let out = usesFont(e.type) && e.font && FONT_CSS[e.font] ? { ...e, font: FONT_CSS[e.font], fontFace: FONT_FACE[e.font] } : e;
+      // Restore inline rich formatting only if Claude left the text untouched.
+      if (e.type === "text" && richById[e.id]) out = e.text === richById[e.id].text ? { ...out, rich: richById[e.id].rich } : out;
+      return out;
     }),
   }));
 

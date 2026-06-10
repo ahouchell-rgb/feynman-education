@@ -24,6 +24,46 @@ function toFill(c) {
 const toHex = (c) => toFill(c).color;
 const CHART_PALETTE = ["2e3a5f", "b95a3c", "5e7c4b", "c9a227", "7a4e7e", "3b7dd8", "9a3b5a", "3b9a86"];
 
+/* Convert a rich-text box's HTML (el.rich) into PptxGenJS text runs, preserving
+   bold/italic/underline/colour and bullet/numbered lists with indent. Returns
+   null on any problem so the caller can fall back to plain text. */
+function richToRuns(html) {
+  if (typeof DOMParser === "undefined") return null;
+  let doc;
+  try { doc = new DOMParser().parseFromString(`<body>${html}</body>`, "text/html"); } catch { return null; }
+  const colorOf = (node) => node.style?.color || node.getAttribute?.("color") || null;
+  const lines = []; let cur = { runs: [], bullet: undefined, indent: 0 };
+  const flush = () => { if (cur.runs.some((r) => r.text.trim() !== "")) lines.push(cur); cur = { runs: [], bullet: undefined, indent: 0 }; };
+  const add = (text, fmt) => { if (text) cur.runs.push({ text, ...fmt }); };
+  const walk = (node, fmt, list) => {
+    for (const n of Array.from(node.childNodes)) {
+      if (n.nodeType === 3) { const t = n.nodeValue.replace(/\s+/g, " "); if (t) add(t, fmt); continue; }
+      if (n.nodeType !== 1) continue;
+      const tag = n.tagName.toLowerCase();
+      if (tag === "br") { flush(); continue; }
+      if (tag === "ul" || tag === "ol") { walk(n, fmt, { ordered: tag === "ol", depth: (list?.depth || 0) + 1 }); continue; }
+      if (tag === "li") { flush(); cur.bullet = list?.ordered ? { type: "number" } : true; cur.indent = Math.max(0, (list?.depth || 1) - 1); walk(n, fmt, list); flush(); continue; }
+      if (tag === "div" || tag === "p") { flush(); walk(n, fmt, list); flush(); continue; }
+      const f = { ...fmt };
+      if (tag === "b" || tag === "strong") f.bold = true;
+      if (tag === "i" || tag === "em") f.italic = true;
+      if (tag === "u") f.underline = true;
+      const c = colorOf(n); if (c) f.color = c;
+      walk(n, f, list);
+    }
+  };
+  try { walk(doc.body, {}, null); } catch { return null; }
+  flush();
+  const out = [];
+  lines.forEach((ln) => ln.runs.forEach((r, i) => out.push({
+    text: r.text,
+    options: { bold: r.bold || undefined, italic: r.italic || undefined, underline: r.underline || undefined,
+      color: r.color ? toHex(r.color) : undefined, bullet: ln.bullet, indentLevel: ln.indent || undefined,
+      breakLine: i === ln.runs.length - 1 },
+  })));
+  return out.length ? out : null;
+}
+
 /* Rotation: PptxGenJS wants an integer 0–359 (clockwise), matching our CSS
    `rotate(Ndeg)`. Returns undefined when there's nothing to rotate. */
 const rot = (el) => (el.rotation ? ((Math.round(el.rotation) % 360) + 360) % 360 : undefined);
@@ -129,7 +169,8 @@ async function renderEl(pptx, slide, el) {
     if (data) slide.addImage({ ...box, data, rotate: rot(el) });
     else slide.addImage({ ...box, path: el.src, rotate: rot(el) });
   } else if (el.type === "text") {
-    slide.addText(el.text || "", {
+    const richRuns = el.rich ? richToRuns(el.rich) : null;
+    slide.addText(richRuns || (el.text || ""), {
       ...box,
       h: hIn(el.height || el.fontSize * 1.5),
       fontSize: +(el.fontSize * 0.75).toFixed(1), // px → pt at this scale
