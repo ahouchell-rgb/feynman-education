@@ -1,5 +1,7 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import katex from "katex";
+import "katex/dist/katex.min.css";
 import { C } from "@/lib/theme";
 
 /* The fixed virtual canvas every element is positioned within. */
@@ -48,6 +50,15 @@ export function elStyle(el) {
       border: el.stroke ? `${el.strokeW || 3}px solid ${el.stroke}` : "none",
       boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box",
     };
+  if (el.type === "equation")
+    return {
+      ...base, height: el.height,
+      display: "flex", alignItems: "center",
+      justifyContent: el.align === "left" ? "flex-start" : el.align === "right" ? "flex-end" : "center",
+      color: el.color || "#1a1714", fontSize: el.fontSize || 36,
+      background: el.bg || "transparent", padding: el.bg ? "6px 12px" : 0, borderRadius: el.bg ? 8 : 0,
+      overflow: "visible", boxSizing: "border-box", // never clip maths; size with fontSize
+    };
   if (el.type === "html")
     return {
       ...base, height: el.height,
@@ -80,7 +91,24 @@ export function ElInner({ el }) {
   if (el.type === "visualiser") return <Placeholder icon="📷" label="Visualiser — live camera in Present" />;
   if (el.type === "retrieval") return <Placeholder icon="📚" label="Retrieval — live app in Present" />;
   if (el.type === "html") return <HtmlInner el={el} />;
+  if (el.type === "equation") return <EqInner el={el} />;
   return null;
+}
+
+/* A LaTeX equation rendered with KaTeX. Colour & size come from the element
+   box (KaTeX inherits currentColor and the container font-size). Renders the
+   same in the editor, thumbnails, Present and (via a snapshot) export. */
+function EqInner({ el }) {
+  const html = useMemo(() => {
+    if (!el.latex) return "";
+    try {
+      return katex.renderToString(el.latex, { displayMode: true, throwOnError: false, output: "html" })
+        .replace('class="katex-display"', 'class="katex-display" style="margin:0"');
+    } catch { return null; }
+  }, [el.latex]);
+  if (!el.latex) return <Placeholder icon="∑" label="Equation — add LaTeX in the panel" />;
+  if (html === null) return <span style={{ color: "#c0392b", fontFamily: "monospace", fontSize: 14, padding: 6 }}>⚠ {el.latex}</span>;
+  return <span style={{ maxWidth: "100%" }} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 /* Static preview of an imported HTML template. Scripts are disabled here

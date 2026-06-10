@@ -143,6 +143,15 @@ async function renderEl(pptx, slide, el) {
       margin: el.bg ? 6 : 0,
       rotate: rot(el),
     });
+  } else if (el.type === "equation") {
+    // PowerPoint has no portable way to take rendered KaTeX, so export the
+    // LaTeX source as a monospace box (still readable / re-typable).
+    slide.addText(el.latex || "", {
+      ...box, h: hIn(el.height || 80),
+      fontSize: +((el.fontSize || 36) * 0.55).toFixed(1), color: toHex(el.color),
+      fontFace: "Consolas", align: el.align || "center", valign: "middle",
+      fill: el.bg ? toFill(el.bg) : undefined, wrap: true, rotate: rot(el),
+    });
   }
 }
 

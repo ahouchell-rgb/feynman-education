@@ -307,6 +307,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   };
   const addVisualiser = () => addEl({ type: "visualiser", x: 260, y: 110, width: 440, height: 300 });
   const addRetrieval = () => addEl({ type: "retrieval", x: 50, y: 90, width: 860, height: 410, url: RET_APP_ORIGIN });
+  const addEquation = () => addEl({ type: "equation", x: 280, y: 210, width: 400, height: 120, latex: "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}", fontSize: 44, color: themeState?.text || C.text });
   const addTable = () => {
     const rows = 3, cols = 3;
     const cells = Array.from({ length: rows }, () => Array.from({ length: cols }, () => ""));
@@ -735,6 +736,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       { icon: "▭", label: "Box", run: addRect },
       { icon: "▦", label: "Table", run: addTable },
       { icon: "↘", label: "Arrow", run: addArrow },
+      { icon: "∑", label: "Equation", run: addEquation },
     ],
     [
       { icon: "▣", label: "Image", run: () => fileRef.current?.click() },
@@ -1304,6 +1306,27 @@ function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCrop }) {
         </label>
         <button onClick={() => P({ shadow: !selEl.shadow })} style={pill(selEl.shadow)}>shadow</button>
         {opacityCtl}
+      </div>
+    );
+  }
+
+  if (selEl.type === "equation") {
+    return (
+      <div style={{ ...wrap, alignItems: "flex-start" }}>
+        {tag("equation")}
+        <textarea value={selEl.latex || ""} onChange={(e) => P({ latex: e.target.value })} spellCheck={false}
+          placeholder="LaTeX, e.g. \\frac{1}{2}mv^2"
+          style={{ width: 280, height: 56, padding: "6px 8px", border: `1px solid ${C.border}`, borderRadius: 4, fontFamily: C.mono, fontSize: 12, background: "#fff", resize: "vertical" }} />
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>size {num(selEl.fontSize || 36, (v) => P({ fontSize: Math.max(8, v) }))}</label>
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }}>colour {color(selEl.color?.startsWith("#") ? selEl.color : "#1a1714", (v) => P({ color: v }))}</label>
+        <span style={{ display: "flex", gap: 4 }}>
+          {["left", "center", "right"].map(a =>
+            <button key={a} onClick={() => P({ align: a })}
+              style={{ width: 28, height: 26, borderRadius: 4, cursor: "pointer", border: `1px solid ${selEl.align === a || (!selEl.align && a === "center") ? C.accent : C.border}`, background: "#fff", color: C.text }}>
+              {a === "left" ? "⬅" : a === "center" ? "↔" : "➡"}
+            </button>)}
+        </span>
+        <a href="https://katex.org/docs/supported.html" target="_blank" rel="noreferrer" style={{ color: C.dim, fontSize: 11 }}>LaTeX help ↗</a>
       </div>
     );
   }
