@@ -109,6 +109,8 @@ function SlidesContent() {
   const [importing, setImporting] = useState(false);
   const [hovId, setHovId] = useState(null);     // card under the cursor
   const [confirmId, setConfirmId] = useState(null); // deck awaiting a 2nd delete click
+  const [curSlide, setCurSlide] = useState(0);  // slide selected in the editor rail (for "present from here")
+  const [presentOpen, setPresentOpen] = useState(false); // "▶ Present ▾" menu
   const importRef = useRef(null);
   const importHtmlRef = useRef(null);
   const timer = useRef(null);
@@ -211,7 +213,7 @@ function SlidesContent() {
     finally { setImporting(false); }
   };
 
-  const openDeck = (d) => { setActive(d); setSave("saved"); };
+  const openDeck = (d) => { setActive(d); setSave("saved"); setCurSlide(0); };
   const closeDeck = () => { clearTimeout(timer.current); setActive(null); load(); };
 
   // Debounced persist whenever the editor reports a change.
@@ -319,10 +321,33 @@ function SlidesContent() {
               {save === "saving" ? "saving…" : save === "error" ? "save failed" : "saved"}
             </span>
             <Btn v="soft" onClick={exportPptx} disabled={exporting}>{exporting ? "exporting…" : "Export .pptx"}</Btn>
-            <Btn onClick={() => router.push(`/slides/${active.id}/present`)}>▶ Present</Btn>
+            <div style={{ position: "relative" }}>
+              <Btn onClick={() => setPresentOpen((o) => !o)} title="Start the slideshow">▶ Present ▾</Btn>
+              {presentOpen && (
+                <>
+                  <div onClick={() => setPresentOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 40 }} />
+                  <div style={{ position: "absolute", top: "calc(100% + 6px)", right: 0, zIndex: 41, width: 232, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 10px 32px rgba(0,0,0,0.16)", padding: 6 }}>
+                    {[
+                      { label: "From beginning", sub: "Slide 1", start: 0 },
+                      { label: "From current slide", sub: `Slide ${curSlide + 1}`, start: curSlide },
+                    ].map((it) => (
+                      <button key={it.label}
+                        onClick={() => { setPresentOpen(false); router.push(`/slides/${active.id}/present${it.start ? `?start=${it.start}` : ""}`); }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = C.bg)}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                        style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12, width: "100%", textAlign: "left",
+                                 padding: "8px 10px", border: "none", background: "transparent", borderRadius: 5, cursor: "pointer", fontFamily: C.sans, fontSize: 13, color: C.text }}>
+                        <span>{it.label}</span>
+                        <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>{it.sub}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
           <div style={{ flex: 1, minHeight: 0 }}>
-            <SlideEditor deck={active} onChange={onSlidesChange}
+            <SlideEditor deck={active} onChange={onSlidesChange} onCurChange={setCurSlide}
               onUploadImage={(file) => store.uploadImage(file, active.id)}
               onThemeChange={onThemeChange} onMasterChange={onMasterChange} />
           </div>

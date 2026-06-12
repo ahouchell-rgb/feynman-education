@@ -41,6 +41,17 @@ export default function PresentPage() {
     })();
   }, [id]);
 
+  // Start from the slide passed in ?start= (e.g. "Present from current slide"),
+  // applied once the deck is known so we can clamp to a valid index.
+  const startedRef = useRef(false);
+  useEffect(() => {
+    if (!deck || startedRef.current) return;
+    startedRef.current = true;
+    const raw = new URLSearchParams(window.location.search).get("start");
+    const n = raw != null ? parseInt(raw, 10) : 0;
+    if (Number.isFinite(n) && n > 0) { setI(Math.min(n, (deck.slides?.length || 1) - 1)); setStep(0); }
+  }, [deck]);
+
   useEffect(() => {
     const f = () => setSize({ w: window.innerWidth, h: window.innerHeight });
     f(); window.addEventListener("resize", f);

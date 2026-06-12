@@ -206,7 +206,7 @@ const Sep = () => <span style={{ width: 1, height: 22, alignSelf: "center", back
 // Small uppercase section label for the right inspector panel.
 const PanelLabel = ({ children }) => <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim }}>{children}</div>;
 
-export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMasterChange }) {
+export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMasterChange, onCurChange }) {
   const [slides, setSlides] = useState(() =>
     ensureIds(deck.slides?.length ? deck.slides : [{ id: uid(), elements: [] }]));
   const [cur, setCur] = useState(0);
@@ -253,6 +253,9 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     if (wrapRef.current) ro.observe(wrapRef.current);
     return () => ro.disconnect();
   }, []);
+
+  // Report the selected slide up so the page's "Present ▾" can start from here.
+  useEffect(() => { onCurChange?.(cur); }, [cur]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const slide = slides[cur] || slides[0];
   const selEl = slide.elements.find(e => e.id === sel) || null;
