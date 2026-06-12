@@ -517,6 +517,11 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const addSlideAfter = (i) => { snapshot(false); const n = [...slides]; n.splice(i + 1, 0, { id: uid(), elements: [] }); commit(n); setCur(i + 1); setSel(null); setEditing(null); };
   const duplicateSlideAt = (i) => { snapshot(false); const n = [...slides]; n.splice(i + 1, 0, cloneSlide(slides[i])); commit(n); setCur(i + 1); setSel(null); setEditing(null); };
   const delSlideAt = (i) => { if (slides.length < 2) return; snapshot(false); const n = slides.filter((_, k) => k !== i); commit(n); setCur(Math.min(i, n.length - 1)); setSel(null); setEditing(null); };
+  // Copy / paste a whole slide (deep-cloned with fresh ids on paste, so the copy
+  // survives editing the original and can be pasted many times).
+  const slideClip = useRef(null);
+  const copySlide = (i) => { slideClip.current = slides[i]; };
+  const pasteSlideAfter = (i) => { if (!slideClip.current) return; snapshot(false); const n = [...slides]; n.splice(i + 1, 0, cloneSlide(slideClip.current)); commit(n); setCur(i + 1); setSel(null); setEditing(null); };
   const dragIdx = useRef(null);
   const reorderSlide = (to) => { const from = dragIdx.current; dragIdx.current = null; if (from == null || from === to) return; snapshot(false); const n = [...slides]; const [m] = n.splice(from, 1); n.splice(to, 0, m); commit(n); setCur(to); setSel(null); };
   const insertTemplate = (idx) => {
@@ -831,7 +836,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
               onDragStart={() => { dragIdx.current = i; }}
               onDragOver={(e) => e.preventDefault()}
               onDrop={() => reorderSlide(i)}
-              onContextMenu={(e) => { e.preventDefault(); setCur(i); setSlideMenu({ x: e.clientX, y: Math.min(e.clientY, (typeof window !== "undefined" ? window.innerHeight : 800) - 140), index: i }); }}
+              onContextMenu={(e) => { e.preventDefault(); setCur(i); setSlideMenu({ x: e.clientX, y: Math.min(e.clientY, (typeof window !== "undefined" ? window.innerHeight : 800) - 210), index: i }); }}
               title={labelTxt || `Slide ${i + 1}`}
               onMouseEnter={(e) => { if (i !== cur) e.currentTarget.style.borderColor = C.accent; }}
               onMouseLeave={(e) => { if (i !== cur) e.currentTarget.style.borderColor = C.border; }}
@@ -1217,6 +1222,8 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
           {[
             { label: "New slide", icon: "＋", run: () => addSlideAfter(slideMenu.index) },
             { label: "Duplicate slide", icon: "⧉", run: () => duplicateSlideAt(slideMenu.index) },
+            { label: "Copy slide", icon: "⎘", run: () => copySlide(slideMenu.index) },
+            { label: "Paste slide", icon: "📋", disabled: !slideClip.current, run: () => pasteSlideAfter(slideMenu.index) },
             { label: "Delete slide", icon: "🗑", danger: true, disabled: slides.length < 2, run: () => delSlideAt(slideMenu.index) },
           ].map((item) => (
             <button key={item.label} disabled={item.disabled}
