@@ -223,6 +223,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const [helpOpen, setHelpOpen] = useState(false);
   const [find, setFind] = useState("");
   const [insertOpen, setInsertOpen] = useState(false);   // "+ Insert" dropdown
+  const [slideMenu, setSlideMenu] = useState(null);      // { x, y, index } — slide-rail right-click menu
   // Right panel is single-occupancy: opening one view closes the others, and
   // the column is always mounted so toggling never changes canvas width.
   const openPanel = (name) => {
@@ -511,6 +512,11 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   // ── Slide ops ──
   const cloneSlide = (s) => ({ id: uid(), background: s.background, notes: s.notes, elements: (s.elements || []).map(e => ({ ...e, id: uid() })) });
   const duplicateSlide = () => { snapshot(false); const n = [...slides]; n.splice(cur + 1, 0, cloneSlide(slide)); commit(n); setCur(cur + 1); setSel(null); };
+  // Index-aware variants used by the slide-rail right-click menu (operate on the
+  // slide that was clicked, not the current one). Each inserts after `i` and selects it.
+  const addSlideAfter = (i) => { snapshot(false); const n = [...slides]; n.splice(i + 1, 0, { id: uid(), elements: [] }); commit(n); setCur(i + 1); setSel(null); setEditing(null); };
+  const duplicateSlideAt = (i) => { snapshot(false); const n = [...slides]; n.splice(i + 1, 0, cloneSlide(slides[i])); commit(n); setCur(i + 1); setSel(null); setEditing(null); };
+  const delSlideAt = (i) => { if (slides.length < 2) return; snapshot(false); const n = slides.filter((_, k) => k !== i); commit(n); setCur(Math.min(i, n.length - 1)); setSel(null); setEditing(null); };
   const dragIdx = useRef(null);
   const reorderSlide = (to) => { const from = dragIdx.current; dragIdx.current = null; if (from == null || from === to) return; snapshot(false); const n = [...slides]; const [m] = n.splice(from, 1); n.splice(to, 0, m); commit(n); setCur(to); setSel(null); };
   const insertTemplate = (idx) => {
@@ -793,6 +799,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
               onDragStart={() => { dragIdx.current = i; }}
               onDragOver={(e) => e.preventDefault()}
               onDrop={() => reorderSlide(i)}
+              onContextMenu={(e) => { e.preventDefault(); setCur(i); setSlideMenu({ x: e.clientX, y: Math.min(e.clientY, (typeof window !== "undefined" ? window.innerHeight : 800) - 140), index: i }); }}
               title={labelTxt || `Slide ${i + 1}`}
               onMouseEnter={(e) => { if (i !== cur) e.currentTarget.style.borderColor = C.accent; }}
               onMouseLeave={(e) => { if (i !== cur) e.currentTarget.style.borderColor = C.border; }}
@@ -1154,6 +1161,32 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       return el ? <ChartDataModal el={el} onApply={(patch) => { patchH(charting, patch); setCharting(null); }} onCancel={() => setCharting(null)} /> : null;
     })()}
     {helpOpen && <ShortcutHelp onClose={() => setHelpOpen(false)} />}
+    {slideMenu && (
+      <>
+        {/* click/right-click anywhere else dismisses the menu */}
+        <div onClick={() => setSlideMenu(null)} onContextMenu={(e) => { e.preventDefault(); setSlideMenu(null); }}
+          style={{ position: "fixed", inset: 0, zIndex: 60 }} />
+        <div style={{ position: "fixed", top: slideMenu.y, left: slideMenu.x, zIndex: 61, width: 188,
+          background: "#fff", border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 10px 32px rgba(0,0,0,0.16)", padding: 6 }}>
+          {[
+            { label: "New slide", icon: "＋", run: () => addSlideAfter(slideMenu.index) },
+            { label: "Duplicate slide", icon: "⧉", run: () => duplicateSlideAt(slideMenu.index) },
+            { label: "Delete slide", icon: "🗑", danger: true, disabled: slides.length < 2, run: () => delSlideAt(slideMenu.index) },
+          ].map((item) => (
+            <button key={item.label} disabled={item.disabled}
+              onClick={() => { setSlideMenu(null); item.run(); }}
+              onMouseEnter={(e) => { if (!item.disabled) e.currentTarget.style.background = C.bg; }}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+              style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", padding: "7px 9px",
+                border: "none", background: "transparent", borderRadius: 5, cursor: item.disabled ? "default" : "pointer",
+                fontFamily: C.sans, fontSize: 13, opacity: item.disabled ? 0.45 : 1,
+                color: item.danger ? "#b4332a" : C.text }}>
+              <span style={{ width: 18, textAlign: "center", fontSize: 14, color: item.danger ? "#b4332a" : C.muted }}>{item.icon}</span>{item.label}
+            </button>
+          ))}
+        </div>
+      </>
+    )}
     </>
   );
 }
