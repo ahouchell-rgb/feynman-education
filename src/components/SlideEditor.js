@@ -753,6 +753,38 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
   };
 
+  // Topmost element under a viewport point (for click-to-select within the group frame).
+  const elAt = (clientX, clientY) => {
+    const rect = stageRef.current?.getBoundingClientRect(); if (!rect) return null;
+    const vx = (clientX - rect.left) / scale, vy = (clientY - rect.top) / scale;
+    return [...slide.elements].reverse().find((el) => { const b = boxOf(el); return vx >= b.x && vx <= b.x + b.w && vy >= b.y && vy <= b.y + b.h; }) || null;
+  };
+  // Drag the whole multi-selection from anywhere inside its bounding box (the
+  // group frame). A click without movement falls through to selecting the single
+  // element under the cursor, so you can still pick one out of the group.
+  const startGroupDrag = (e) => {
+    e.stopPropagation();
+    if (e.shiftKey) {
+      const hit = elAt(e.clientX, e.clientY);
+      if (hit) { const ids = groupOf(hit.id); setSelIds((cur) => { const s = new Set(cur); const allIn = ids.every((i) => s.has(i)); ids.forEach((i) => (allIn ? s.delete(i) : s.add(i))); return [...s]; }); }
+      return;
+    }
+    const originals = {};
+    selIds.forEach((i) => { originals[i] = slide.elements.find((x) => x.id === i); });
+    const sx = e.clientX, sy = e.clientY; let took = false, moved = false;
+    const move = (ev) => {
+      if (!moved && Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) < 3) return; // ignore jitter
+      if (!took) { snapshot(false); took = true; } moved = true;
+      const dx = (ev.clientX - sx) / scale, dy = (ev.clientY - sy) / scale;
+      commit(slides.map((s, si) => (si !== cur ? s : { ...s, elements: s.elements.map((elm) => (originals[elm.id] ? moveEl(originals[elm.id], dx, dy) : elm)) })));
+    };
+    const up = (ev) => {
+      window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up);
+      if (!moved) { const hit = elAt(ev.clientX, ev.clientY); setSelIds(hit ? groupOf(hit.id) : []); setEditing(null); }
+    };
+    window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
+  };
+
   // Grouped insert menu — replaces the old flat row of ten "+" buttons.
   const INSERT_GROUPS = [
     [
@@ -912,6 +944,20 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                   </div>
                 );
               })}
+
+              {/* group frame — when 2+ elements are selected, a dashed box you can
+                  grab anywhere to move the whole selection together. */}
+              {selIds.length >= 2 && !marquee && (() => {
+                const bs = selEls.map(boxOf);
+                if (!bs.length) return null;
+                const minX = Math.min(...bs.map(b => b.x)), minY = Math.min(...bs.map(b => b.y));
+                const maxX = Math.max(...bs.map(b => b.x + b.w)), maxY = Math.max(...bs.map(b => b.y + b.h));
+                return (
+                  <div onMouseDown={startGroupDrag} title="Drag to move all selected together · Shift-click to add/remove · click an item to pick just it"
+                    style={{ position: "absolute", left: fin(minX), top: fin(minY), width: fin(maxX - minX), height: fin(maxY - minY),
+                             border: `${1.5 / scale}px dashed ${C.accent}`, background: `${C.accent}0d`, cursor: "move", boxSizing: "border-box" }} />
+                );
+              })()}
 
               {/* box resize handles */}
               {selEl && selEl.type !== "arrow" && editing !== selEl.id && !selEl.locked && !selEl.rotation && HANDLES.map(([name, fx, fy]) => {
