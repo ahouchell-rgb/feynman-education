@@ -1159,9 +1159,9 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                     style={{ minWidth: 26, height: 26, padding: "0 6px", borderRadius: 4, border: `1px solid ${C.border}`,
                              background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>{sym}</button>
                 ))}
-                <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.subSup("sub"); }} title="Subscript selection (⌘,)"
+                <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.subSup("sub"); }} title="Subscript: ⌘, toggles typing mode (or converts a selection)"
                   style={{ height: 26, padding: "0 8px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>x₂</button>
-                <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.subSup("sup"); }} title="Superscript selection (⌘.)"
+                <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.subSup("sup"); }} title="Superscript: ⌘. toggles typing mode (or converts a selection)"
                   style={{ height: 26, padding: "0 8px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>x²</button>
               </div>
             )}
@@ -1679,6 +1679,8 @@ const isRich = (html) => /<(b|strong|i|em|u|s|span|font|ul|ol|li)\b/i.test(html 
 
 function TextEditor({ el, onText, onDone, apiRef }) {
   const ref = useRef(null);
+  const scriptRef = useRef(null);            // live typing mode: null | "sub" | "sup"
+  const [script, setScript] = useState(null); // mirror, for the on-screen indicator
 
   useEffect(() => {
     const node = ref.current;
@@ -1705,12 +1707,23 @@ function TextEditor({ el, onText, onDone, apiRef }) {
     const mapped = mapScript(sel.toString(), kind);
     ref.current?.focus(); try { document.execCommand("insertText", false, mapped); } catch {} persist();
   };
+  // ⌘, / ⌘. behaviour: with text selected, convert it (Unicode). With just a caret,
+  // toggle a typing mode so each character typed next is mapped, until toggled off.
+  const toggleScript = (kind) => {
+    const sel = window.getSelection();
+    if (sel && !sel.isCollapsed) { doSubSup(kind); return; }
+    const next = scriptRef.current === kind ? null : kind;
+    scriptRef.current = next; setScript(next);
+    ref.current?.focus();
+  };
+  // Leaving the editor clears any active mode.
+  useEffect(() => () => { scriptRef.current = null; }, []);
 
   // Re-register each render so the toolbar calls the latest closures.
   useEffect(() => {
     if (!apiRef) return;
     apiRef.current = {
-      insert: doInsert, subSup: doSubSup,
+      insert: doInsert, subSup: toggleScript,
       bold: () => exec("bold"), italic: () => exec("italic"), underline: () => exec("underline"),
       color: (v) => exec("foreColor", v),
       bullet: () => exec("insertUnorderedList"), number: () => exec("insertOrderedList"),
@@ -1720,6 +1733,7 @@ function TextEditor({ el, onText, onDone, apiRef }) {
   });
 
   return (
+   <>
     <div ref={ref} contentEditable suppressContentEditableWarning
       onMouseDown={(e) => e.stopPropagation()}
       onInput={persist}
@@ -1727,11 +1741,28 @@ function TextEditor({ el, onText, onDone, apiRef }) {
       onKeyDown={(e) => {
         if ((e.metaKey || e.ctrlKey) && (e.key === "b" || e.key === "B")) { e.preventDefault(); exec("bold"); }
         else if ((e.metaKey || e.ctrlKey) && (e.key === "i" || e.key === "I")) { e.preventDefault(); exec("italic"); }
-        else if ((e.metaKey || e.ctrlKey) && e.key === ",") { e.preventDefault(); doSubSup("sub"); }
-        else if ((e.metaKey || e.ctrlKey) && e.key === ".") { e.preventDefault(); doSubSup("sup"); }
-        else if (e.key === "Escape") { e.preventDefault(); ref.current?.blur(); }
+        else if ((e.metaKey || e.ctrlKey) && e.key === ",") { e.preventDefault(); toggleScript("sub"); }
+        else if ((e.metaKey || e.ctrlKey) && e.key === ".") { e.preventDefault(); toggleScript("sup"); }
+        else if (e.key === "Escape") { e.preventDefault(); scriptRef.current = null; setScript(null); ref.current?.blur(); }
+        else if (scriptRef.current && !e.metaKey && !e.ctrlKey && !e.altKey && e.key.length === 1) {
+          // In subscript/superscript typing mode: map the character to its Unicode form.
+          const map = scriptRef.current === "sub" ? SUB : SUP;
+          e.preventDefault();
+          try { document.execCommand("insertText", false, map[e.key] ?? e.key); } catch {}
+          persist();
+        }
       }}
       className={el.rich ? "rt" : undefined}
       style={{ ...elStyle(el), outline: `2px solid ${C.accent}`, outlineOffset: 1, cursor: "text", overflow: "visible" }} />
+    {script && (
+      <div style={{ position: "fixed", left: "50%", bottom: 24, transform: "translateX(-50%)",
+        background: C.text, color: C.bg, fontFamily: C.mono, fontSize: 12, padding: "6px 14px",
+        borderRadius: 999, boxShadow: "0 4px 16px rgba(0,0,0,0.25)", pointerEvents: "none", zIndex: 9999,
+        display: "flex", alignItems: "center", gap: 10, whiteSpace: "nowrap" }}>
+        <span>{script === "sub" ? "X₂ subscript" : "X² superscript"} mode</span>
+        <span style={{ opacity: 0.6 }}>⌘{script === "sub" ? "," : "."} to exit</span>
+      </div>
+    )}
+   </>
   );
 }
