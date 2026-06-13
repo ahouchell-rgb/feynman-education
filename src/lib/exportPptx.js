@@ -2,14 +2,14 @@ import PptxGenJS from "pptxgenjs";
 
 /* Map the 960×540 virtual canvas onto a 10in × 5.625in 16:9 slide. */
 const VW = 960, VH = 540, W_IN = 10, H_IN = 5.625;
-const xIn = (v) => +((v / VW) * W_IN).toFixed(3);
-const yIn = (v) => +((v / VH) * H_IN).toFixed(3);
-const wIn = (v) => +((v / VW) * W_IN).toFixed(3);
-const hIn = (v) => +((v / VH) * H_IN).toFixed(3);
+export const xIn = (v) => +((v / VW) * W_IN).toFixed(3);
+export const yIn = (v) => +((v / VH) * H_IN).toFixed(3);
+export const wIn = (v) => +((v / VW) * W_IN).toFixed(3);
+export const hIn = (v) => +((v / VH) * H_IN).toFixed(3);
 
 /* PptxGenJS wants "RRGGBB" + an optional 0–100 transparency. Accepts our
    hex colours and the theme's rgba() fills. */
-function toFill(c) {
+export function toFill(c) {
   if (!c) return { color: "FFFFFF" };
   if (c.startsWith("#")) return { color: c.slice(1).padEnd(6, "0").slice(0, 6).toUpperCase() };
   const m = c.match(/rgba?\(([^)]+)\)/);
@@ -21,13 +21,13 @@ function toFill(c) {
   }
   return { color: "CCCCCC" };
 }
-const toHex = (c) => toFill(c).color;
+export const toHex = (c) => toFill(c).color;
 const CHART_PALETTE = ["2e3a5f", "b95a3c", "5e7c4b", "c9a227", "7a4e7e", "3b7dd8", "9a3b5a", "3b9a86"];
 
 /* Convert a rich-text box's HTML (el.rich) into PptxGenJS text runs, preserving
    bold/italic/underline/colour and bullet/numbered lists with indent. Returns
    null on any problem so the caller can fall back to plain text. */
-function richToRuns(html) {
+export function richToRuns(html) {
   if (typeof DOMParser === "undefined") return null;
   let doc;
   try { doc = new DOMParser().parseFromString(`<body>${html}</body>`, "text/html"); } catch { return null; }
@@ -66,7 +66,7 @@ function richToRuns(html) {
 
 /* Rotation: PptxGenJS wants an integer 0–359 (clockwise), matching our CSS
    `rotate(Ndeg)`. Returns undefined when there's nothing to rotate. */
-const rot = (el) => (el.rotation ? ((Math.round(el.rotation) % 360) + 360) % 360 : undefined);
+export const rot = (el) => (el.rotation ? ((Math.round(el.rotation) % 360) + 360) % 360 : undefined);
 
 /* ── Image crop ──────────────────────────────────────────────────────────
    Crops are stored as {x,y,w,h} fractions (0–1) of the source image. PptxGenJS
@@ -239,7 +239,7 @@ function drawMaster(slide, master, index, total, title) {
    export (PPTX has no native equivalent of our reveal mechanism). A slide with
    no reveals exports as a single slide, unchanged. Returns an array of element
    lists, one per exported slide. */
-function revealFrames(elements) {
+export function revealFrames(elements) {
   const els = elements || [];
   const revealCount = els.filter((e) => e.reveal).length;
   if (revealCount === 0) return [els];
