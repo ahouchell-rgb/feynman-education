@@ -3336,6 +3336,19 @@ function Teacher({ user, isMod, isHoD }) {
                 <div style={{ textAlign: "right" }}>
                   <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.dim, marginBottom: 4 }}>Join code</div>
                   <div style={{ fontSize: 22, fontWeight: 800, color: C.pri, letterSpacing: 4, fontFamily: "monospace", lineHeight: 1 }}>{cls.join_code || "..."}</div>
+                  <div style={{ marginTop: 12, display: "flex", gap: 6, justifyContent: "flex-end", alignItems: "center" }}>
+                    <span style={{ fontSize: 11, color: C.dim }}>Export</span>
+                    <button onClick={exportSummaryCsv} disabled={!dash || dash.students.length === 0}
+                      title="One row per student — totals, accuracy, weakest topic, last active"
+                      style={{ padding: "5px 10px", fontSize: 12, fontWeight: 600, borderRadius: 6, border: `1px solid ${C.pri}`, background: C.priSoft, color: C.pri, cursor: (!dash || dash.students.length === 0) ? "not-allowed" : "pointer", fontFamily: "inherit", opacity: (!dash || dash.students.length === 0) ? 0.5 : 1 }}>
+                      ↓ Summary
+                    </button>
+                    <button onClick={exportDetailedCsv} disabled={!rawResps.length}
+                      title="One row per response — every answer with the question, student answer, mark, and feedback"
+                      style={{ padding: "5px 10px", fontSize: 12, fontWeight: 600, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: !rawResps.length ? "not-allowed" : "pointer", fontFamily: "inherit", opacity: !rawResps.length ? 0.5 : 1 }}>
+                      ↓ Detailed
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -3512,25 +3525,7 @@ function Teacher({ user, isMod, isHoD }) {
               <div style={{ marginTop: 26, marginBottom: 2, fontSize: 10, fontWeight: 700, letterSpacing: ".16em", textTransform: "uppercase", color: C.dim }}>Insights</div>
 
 
-              <Section label="Students" teaser={`${dash.students.length} enrolled · ${timePeriod === "thisWeek" ? "this week" : timePeriod === "lastWeek" ? "last week" : timePeriod === "last4Weeks" ? "last 4 weeks" : "all time"}`}
-                right={(
-                  <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
-                    <button
-                      onClick={exportSummaryCsv}
-                      disabled={!dash || dash.students.length === 0}
-                      title="One row per student — totals, accuracy, weakest topic, last active"
-                      style={{ padding: "5px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: (!dash || dash.students.length === 0) ? "not-allowed" : "pointer", fontFamily: "inherit", opacity: (!dash || dash.students.length === 0) ? 0.5 : 1 }}>
-                      ↓ Summary CSV
-                    </button>
-                    <button
-                      onClick={exportDetailedCsv}
-                      disabled={!rawResps.length}
-                      title="One row per response — every answer with the question, student answer, mark, and feedback"
-                      style={{ padding: "5px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: !rawResps.length ? "not-allowed" : "pointer", fontFamily: "inherit", opacity: !rawResps.length ? 0.5 : 1 }}>
-                      ↓ Detailed CSV
-                    </button>
-                  </div>
-                )}>
+              <Section label="Students" teaser={`${dash.students.length} enrolled · ${timePeriod === "thisWeek" ? "this week" : timePeriod === "lastWeek" ? "last week" : timePeriod === "last4Weeks" ? "last 4 weeks" : "all time"}`}>
                 {dash.students.length === 0 ? <div style={{ color: C.dim, fontSize: 13 }}>No students yet. Share the join code above.</div> :
                   <StudentList students={dash.students} cls={cls} clsTarget={dash.clsTarget} timePeriod={timePeriod} onRefresh={() => loadCls(cls)} parentTokens={parentTokens} onGenerateToken={generateParentToken} onRevokeToken={revokeParentToken} />}
               </Section>
