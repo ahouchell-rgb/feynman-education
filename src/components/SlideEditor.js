@@ -69,9 +69,45 @@ const mapScript = (seg, kind) => {
 const toSubscript = (t) => (t || "").replace(/([A-Za-z\)\]])(\d+)/g, (m, a, d) => a + d.replace(/\d/g, (c) => SUB[c]));
 const toSuperscript = (t) => (t || "").replace(/\^(-?\d+|[+\-])/g, (m, g) => g.replace(/[\d+\-]/g, (c) => SUP[c] || c));
 
+// Live auto-format: subscript digits ONLY inside chemical-formula-shaped tokens,
+// so lesson codes (P1.1, C2, B9) and ordinary numbers (Year 7) are left alone
+// while CO2, H2O, H2SO4, CaCO3, Ca(OH)2 convert. A "formula" needs ≥2 element
+// groups, or a lowercase element letter (Ca, Cl…) — a lone capital+digit (P1, C2)
+// is too code-like to touch. Length-preserving (digit→sub digit) so the caret is
+// stable; superscript stays manual (⌘. / the X² button), since live ^N breaks as
+// you type the second digit.
+const looksLikeFormula = (tok) => {
+  if (!/\d/.test(tok) || !/^[A-Za-z0-9()[\]]+$/.test(tok)) return false;
+  const groups = tok.match(/\([A-Za-z0-9]+\)\d*|[A-Z][a-z]?\d*/g);
+  if (!groups || groups.join("") !== tok) return false;
+  return groups.length >= 2 || /[A-Z][a-z]/.test(tok);
+};
+const autoSub = (text) => (text || "").replace(/[A-Za-z0-9()[\]]+/g, (tok) =>
+  looksLikeFormula(tok) ? tok.replace(/([A-Za-z\)\]])(\d+)/g, (m, a, d) => a + d.replace(/\d/g, (c) => SUB[c] || c)) : tok);
+
 // Symbol palette for science slides.
 const SYMBOLS = ["→", "⇌", "↑", "↓", "°", "×", "÷", "±", "≈", "≠", "≤", "≥", "∝", "√", "∞", "Δ", "Σ", "π", "λ", "μ", "α", "β", "γ", "θ", "ρ", "σ", "Ω", "ω", "ε", "φ", "⋅", "½"];
 const STATES = ["(s)", "(l)", "(g)", "(aq)"];
+// Common ion charges — superscript glyphs inserted at the cursor, so SO₄ + ²⁻ → SO₄²⁻.
+const CHARGES = ["⁺", "⁻", "²⁺", "²⁻", "³⁺", "³⁻"];
+// Curated science equations, pre-formatted with Unicode (÷ × ² Δ ½ ρ λ) so they
+// drop in clean. Inserted as text at the cursor.
+const EQUATIONS = [
+  "speed = distance ÷ time",
+  "a = Δv ÷ t",
+  "F = m × a",
+  "W = F × d",
+  "P = E ÷ t",
+  "E = ½ m v²",
+  "E = m × g × h",
+  "ρ = m ÷ V",
+  "V = I × R",
+  "Q = I × t",
+  "p = m × v",
+  "moment = F × d",
+  "pressure = F ÷ A",
+  "moles = mass ÷ Mr",
+];
 
 // Character offsets of the current selection within a contentEditable node.
 function caretOffsets(node) {
@@ -221,6 +257,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const [masterState, setMasterState] = useState(deck.master || null);
   const [masterOpen, setMasterOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [fxOpen, setFxOpen] = useState(false);          // equations palette popover
   const [find, setFind] = useState("");
   const [insertOpen, setInsertOpen] = useState(false);   // "+ Insert" dropdown
   const [slideMenu, setSlideMenu] = useState(null);      // { x, y, index } — slide-rail right-click menu
@@ -616,6 +653,9 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       if (has(slides[idx])) { setCur(idx); setSel(null); setEditing(null); return; }
     }
   };
+
+  // Close the equations popover whenever we leave text editing.
+  useEffect(() => { if (!editing) setFxOpen(false); }, [editing]);
 
   // Keyboard: Delete removes the selection (or current slide); arrows nudge.
   useEffect(() => {
@@ -1163,6 +1203,34 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                   style={{ height: 26, padding: "0 8px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>x₂</button>
                 <button onMouseDown={(e) => { e.preventDefault(); editorApi.current?.subSup("sup"); }} title="Superscript: ⌘. toggles typing mode (or converts a selection)"
                   style={{ height: 26, padding: "0 8px", borderRadius: 4, border: `1px solid ${C.border}`, background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>x²</button>
+                <Sep />
+                {CHARGES.map((ch) => (
+                  <button key={ch} title="Insert ion charge at cursor"
+                    onMouseDown={(e) => { e.preventDefault(); editorApi.current?.insert(ch); }}
+                    style={{ minWidth: 26, height: 26, padding: "0 6px", borderRadius: 4, border: `1px solid ${C.border}`,
+                             background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 14, cursor: "pointer" }}>{ch}</button>
+                ))}
+                <Sep />
+                <span style={{ position: "relative", display: "inline-flex" }}>
+                  <button title="Insert a science equation at the cursor"
+                    onMouseDown={(e) => { e.preventDefault(); setFxOpen((o) => !o); }}
+                    style={{ height: 26, padding: "0 8px", borderRadius: 4, border: `1px solid ${fxOpen ? C.accent : C.border}`,
+                             background: "#fff", color: C.text, fontFamily: C.sans, fontSize: 13, fontStyle: "italic", cursor: "pointer" }}>fx ▾</button>
+                  {fxOpen && (
+                    <div style={{ position: "absolute", top: 30, left: 0, zIndex: 50, background: "#fff",
+                      border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 8px 24px rgba(0,0,0,0.16)",
+                      padding: 6, display: "flex", flexDirection: "column", gap: 2, minWidth: 210, maxHeight: 300, overflowY: "auto" }}>
+                      {EQUATIONS.map((eq) => (
+                        <button key={eq}
+                          onMouseDown={(e) => { e.preventDefault(); editorApi.current?.insert(eq); setFxOpen(false); }}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = C.surface)}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                          style={{ textAlign: "left", padding: "5px 8px", borderRadius: 4, border: "none",
+                            background: "transparent", color: C.text, fontFamily: C.sans, fontSize: 13, cursor: "pointer", whiteSpace: "nowrap" }}>{eq}</button>
+                      ))}
+                    </div>
+                  )}
+                </span>
               </div>
             )}
 
@@ -1699,6 +1767,23 @@ function TextEditor({ el, onText, onDone, apiRef }) {
     onText(node.textContent ?? "", isRich(html) ? html : null);
   };
 
+  // On input, auto-subscript chemical formulae — but only in simple single-line
+  // plain text, never rich or multi-line boxes (replacing textContent would drop
+  // formatting / line breaks). Length-preserving, so we restore the caret offset.
+  const handleInput = () => {
+    const node = ref.current; if (!node) return;
+    if (!isRich(node.innerHTML) && node.childNodes.length <= 1) {
+      const cur = node.textContent ?? "";
+      const next = autoSub(cur);
+      if (next !== cur) {
+        const off = caretOffsets(node);
+        node.textContent = next;
+        if (off) selectRange(node, off.start, off.end);
+      }
+    }
+    persist();
+  };
+
   const exec = (cmd, val) => { ref.current?.focus(); try { document.execCommand(cmd, false, val); } catch {} persist(); };
   const doInsert = (str) => { ref.current?.focus(); try { document.execCommand("insertText", false, str); } catch {} persist(); };
   const doSubSup = (kind) => {
@@ -1736,7 +1821,7 @@ function TextEditor({ el, onText, onDone, apiRef }) {
    <>
     <div ref={ref} contentEditable suppressContentEditableWarning
       onMouseDown={(e) => e.stopPropagation()}
-      onInput={persist}
+      onInput={handleInput}
       onBlur={onDone}
       onKeyDown={(e) => {
         if ((e.metaKey || e.ctrlKey) && (e.key === "b" || e.key === "B")) { e.preventDefault(); exec("bold"); }
