@@ -116,6 +116,7 @@ function SlidesContent() {
   const timer = useRef(null);
   const router = useRouter();
   const sp = useSearchParams();
+  const [groups, setGroups] = useState([]);
   const [units, setUnits] = useState([]);
   const [lessons, setLessons] = useState([]);
 
@@ -130,16 +131,29 @@ function SlidesContent() {
     if (guest || loading) return;
     (async () => {
       try {
-        const [u, l] = await Promise.all([
+        const [g, u, l] = await Promise.all([
+          sk.q("groups", { params: { order: "sort_order.asc" } }),
           sk.q("units", { params: { select: "id,title,group_id,discipline,sort_order", order: "sort_order.asc" } }),
           sk.q("lessons", { params: { select: "id,unit_id,title,lesson_number", order: "lesson_number.asc" } }),
         ]);
-        setUnits(u || []); setLessons(l || []);
+        setGroups(g || []); setUnits(u || []); setLessons(l || []);
       } catch {}
     })();
   }, [guest, loading]);
 
   const unitById = useMemo(() => Object.fromEntries(units.map((u) => [u.id, u])), [units]);
+
+  // Units grouped by year for the "save to" picker: years in sort_order, units in
+  // teaching-sequence order within each year. Mirrors the curriculum page grouping.
+  const unitsByYear = useMemo(() => {
+    const out = groups
+      .map((g) => ({ key: g.id, label: g.label || g.id, units: units.filter((u) => u.group_id === g.id) }))
+      .filter((grp) => grp.units.length);
+    const known = new Set(groups.map((g) => g.id));
+    const orphans = units.filter((u) => !known.has(u.group_id));
+    if (orphans.length) out.push({ key: "__other", label: "Other", units: orphans });
+    return out;
+  }, [groups, units]);
 
   // Open a specific deck via ?deck=<id> (e.g. opened from a unit page).
   useEffect(() => {
@@ -292,7 +306,11 @@ function SlidesContent() {
                 <select value={active.unit_id || ""} title="Save this deck in a curriculum unit"
                   onChange={(e) => fileDeck({ unit_id: e.target.value || null, lesson_id: null })} style={pickerStyle}>
                   <option value="">📁 Unfiled</option>
-                  {units.map((u) => <option key={u.id} value={u.id}>{u.title}</option>)}
+                  {unitsByYear.map((grp) => (
+                    <optgroup key={grp.key} label={grp.label}>
+                      {grp.units.map((u) => <option key={u.id} value={u.id}>{u.title}</option>)}
+                    </optgroup>
+                  ))}
                 </select>
                 {active.unit_id && (
                   <select value={active.lesson_id || ""} title="Optionally pin to a lesson"
@@ -357,13 +375,24 @@ function SlidesContent() {
   }
 
   /* ── Deck list ── */
-  // Group signed-in decks by curriculum unit (folders), then "Unfiled".
+  // Group signed-in decks by year → curriculum unit (folders) → decks, then "Unfiled".
+  // Years follow group sort_order; units follow teaching sequence within each year.
   const deckGroups = (() => {
     if (guest || !decks) return [];
     const byUnit = {};
     decks.forEach((d) => { const k = d.unit_id || "__none"; (byUnit[k] ||= []).push(d); });
-    const filed = units.filter((u) => byUnit[u.id]).map((u) => ({ key: u.id, label: u.title, decks: byUnit[u.id] }));
-    return byUnit.__none ? [...filed, { key: "__none", label: "Unfiled", decks: byUnit.__none }] : filed;
+    const unitSection = (u) => ({ key: u.id, label: u.title, decks: byUnit[u.id] });
+
+    const sections = [];
+    groups.forEach((g) => {
+      const yUnits = units.filter((u) => u.group_id === g.id && byUnit[u.id]).map(unitSection);
+      if (yUnits.length) sections.push({ key: g.id, label: g.label || g.id, units: yUnits });
+    });
+    const known = new Set(groups.map((g) => g.id));
+    const orphanUnits = units.filter((u) => !known.has(u.group_id) && byUnit[u.id]).map(unitSection);
+    if (orphanUnits.length) sections.push({ key: "__other", label: "Other", units: orphanUnits });
+    if (byUnit.__none) sections.push({ key: "__none", label: "Unfiled", units: [{ key: "__none", label: null, decks: byUnit.__none }] });
+    return sections;
   })();
 
   return (
@@ -396,14 +425,25 @@ function SlidesContent() {
       ) : guest ? (
         <div style={gridStyle}>{decks.map(renderCard)}</div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-          {deckGroups.map((g) => (
-            <div key={g.key}>
-              <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-                <span>{g.key === "__none" ? "🗂 Unfiled" : `📁 ${g.label}`}</span>
-                <span style={{ color: C.faint }}>· {g.decks.length}</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
+          {deckGroups.map((section) => (
+            <div key={section.key}>
+              <div style={{ fontFamily: C.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.text, marginBottom: 16, paddingBottom: 8, borderBottom: `1px solid ${C.rule}` }}>
+                {section.key === "__none" ? "🗂 Unfiled" : section.label}
               </div>
-              <div style={gridStyle}>{g.decks.map(renderCard)}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                {section.units.map((u) => (
+                  <div key={u.key}>
+                    {u.label && (
+                      <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
+                        <span>📁 {u.label}</span>
+                        <span style={{ color: C.faint }}>· {u.decks.length}</span>
+                      </div>
+                    )}
+                    <div style={gridStyle}>{u.decks.map(renderCard)}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
