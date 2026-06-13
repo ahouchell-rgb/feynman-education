@@ -15,7 +15,7 @@ jobs:
           node-version: '22'
       - name: Install dependencies
         working-directory: Downloads/retrieval-app
-        run: npm ci
+        run: npm install --no-audit --no-fund
       - name: Run tests
         working-directory: Downloads/retrieval-app
         run: npm test
