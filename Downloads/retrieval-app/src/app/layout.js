@@ -20,6 +20,13 @@ export const metadata = {
   description: "Spaced repetition science retrieval practice",
 };
 
+// Ensure the layout scales correctly on phones (students practise on mobile).
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${plex.variable} ${serif.variable}`}>
