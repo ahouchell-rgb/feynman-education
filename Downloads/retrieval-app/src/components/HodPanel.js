@@ -30,7 +30,7 @@ export function HodPanel({ user }) {
       const classIds = cls.map(c => c.id);
       const [mems, resps, tps] = await Promise.all([
         sb.q("class_members", { params: { class_id: `in.(${classIds.join(",")})`, select: "class_id,student_id,profiles(display_name,email)" } }),
-        sb.q("responses", { params: { class_id: `in.(${classIds.join(",")})`, select: "question_id,student_id,class_id,is_correct,answered_at,student_answer,questions(topic_id,topics(name))", order: "answered_at.desc", limit: "5000" } }),
+        sb.qAll("responses", { params: { class_id: `in.(${classIds.join(",")})`, select: "question_id,student_id,class_id,is_correct,answered_at,student_answer,questions(topic_id,topics(name))", order: "answered_at.desc" } }),
         sb.q("topics", { params: { select: "id,name" } }),
       ]);
       setClassMembers(mems);

@@ -8,6 +8,23 @@ import { detectFakeAnswer, localMark } from "./marking";
 export const SUPA_URL = process.env.NEXT_PUBLIC_SUPA_URL || "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 export const SUPA_KEY = process.env.NEXT_PUBLIC_SUPA_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 
+/* ─── Paginated fetch ───
+ * A single PostgREST request is capped at the server's max-rows, and these
+ * dashboards used a hard `limit: "10000"` / "5000" that silently undercounts
+ * once a class / the platform passes that ceiling. paginate() walks the table
+ * in batches (advancing offset by what's collected) until a page comes back
+ * empty, so aggregates stay correct at any data volume. Pure & testable: it
+ * just calls fetchPage(offset, batch) repeatedly. */
+export async function paginate(fetchPage, { batch = 1000, max = 500000 } = {}) {
+  const out = [];
+  while (out.length < max) {
+    const page = await fetchPage(out.length, batch);
+    if (!Array.isArray(page) || page.length === 0) break;
+    out.push(...page);
+  }
+  return out;
+}
+
 /* ─── Supabase client ─── */
 export const sb = (() => {
   let token = null, user = null;
@@ -31,6 +48,16 @@ export const sb = (() => {
     await fetch(u, { method: "DELETE", headers: h() });
   };
 
+  // Fetch every matching row across pages. Drops any caller-supplied limit/offset
+  // and manages them itself. Use for aggregation reads that must not be capped.
+  const qAll = (tbl, { params = {}, batch, max } = {}) => {
+    const { limit, offset, ...rest } = params;
+    return paginate(
+      (off, lim) => q(tbl, { params: { ...rest, limit: String(lim), offset: String(off) } }),
+      { batch, max }
+    );
+  };
+
   const auth = {
     signUp: async (email, pw, meta = {}) => {
       const r = await fetch(`${SUPA_URL}/auth/v1/signup`, { method: "POST", headers: { "Content-Type": "application/json", apikey: SUPA_KEY }, body: JSON.stringify({ email, password: pw, data: meta }) });
@@ -49,7 +76,7 @@ export const sb = (() => {
     user: () => user,
     getToken: () => token,
   };
-  return { q, del, auth };
+  return { q, del, qAll, auth };
 })();
 
 export async function aiMark(qText, model, student, marks, question_id) {

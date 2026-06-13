@@ -49,7 +49,7 @@ export function AdminPanel({ user }) {
         sb.q("profiles", { params: { select: "*", order: "created_at.desc" } }),
         sb.q("classes", { params: { select: "*,profiles!classes_teacher_id_fkey(display_name,email)", order: "created_at.desc" } }),
         sb.q("class_members", { params: { select: "class_id,student_id" } }),
-        sb.q("responses", { params: { select: "class_id,answered_at", answered_at: `gte.${cutoff}`, order: "answered_at.desc", limit: "10000" } }),
+        sb.qAll("responses", { params: { select: "class_id,answered_at", answered_at: `gte.${cutoff}`, order: "answered_at.desc" } }),
       ]);
       setTeachers(profs.filter(p => p.role === "teacher" || p.role === "moderator" || p.role === "hod"));
       setStudents(profs.filter(p => p.role === "student"));
@@ -484,11 +484,10 @@ export function AdminPanel({ user }) {
           setAiUsageLoading(true);
           try {
             const cutoff = new Date(Date.now() - days * 86400000).toISOString();
-            const rows = await sb.q("ai_usage", { params: {
+            const rows = await sb.qAll("ai_usage", { params: {
               select: "ts,call_label,input_tokens,output_tokens,cache_creation_tokens,cache_read_tokens",
               ts: `gte.${cutoff}`,
-              order: "ts.desc",
-              limit: "10000"
+              order: "ts.desc"
             }});
             setAiUsage(rows || []);
           } catch (e) {
