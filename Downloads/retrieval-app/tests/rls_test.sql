@@ -111,3 +111,39 @@ begin
     raise notice 'PASS: responses are written only by the mark-answer function (service role)';
   end if;
 end $$;
+
+-- 7) Question privacy (mixed content model) — HARD GATE.
+--    A private (shared=false) question must be invisible to a pupil who is not
+--    taught by its author, and visible to the author. Uses a transaction-local
+--    synthetic row (cleaned up) so it runs on any dataset.
+do $$
+declare s uuid; auth_teacher uuid; tid uuid; qid uuid; vis int; owner_vis int;
+begin
+  select cm.student_id into s from class_members cm limit 1;
+  select p.id into auth_teacher from profiles p
+    where p.role in ('teacher','hod','moderator')
+      and not exists (select 1 from class_members cm join classes c on c.id=cm.class_id
+                      where cm.student_id = s and c.teacher_id = p.id)
+    limit 1;
+  select id into tid from topics limit 1;
+  if s is null or auth_teacher is null or tid is null then raise notice 'SKIP: insufficient fixtures'; return; end if;
+
+  insert into questions (topic_id, question_text, model_answer, marks, difficulty, created_by, shared)
+    values (tid, 'RLS TEST private q', 'x', 1, 1, auth_teacher, false) returning id into qid;
+
+  perform set_config('role','authenticated', true);
+  perform set_config('request.jwt.claims', json_build_object('sub', s, 'role','authenticated')::text, true);
+  select count(*) into vis from questions where id = qid;
+  reset role;
+
+  perform set_config('role','authenticated', true);
+  perform set_config('request.jwt.claims', json_build_object('sub', auth_teacher, 'role','authenticated')::text, true);
+  select count(*) into owner_vis from questions where id = qid;
+  reset role;
+
+  delete from questions where id = qid;
+
+  if vis <> 0 then raise exception 'FAIL: unrelated pupil can read a private question'; end if;
+  if owner_vis <> 1 then raise exception 'FAIL: author cannot read their own private question'; end if;
+  raise notice 'PASS: private questions are author-scoped (hidden from non-pupils)';
+end $$;
