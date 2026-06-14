@@ -140,7 +140,8 @@ export default function Pricing() {
           ) : (
             <>
               <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: -0.5 }}>Start a free pilot or request a quote</div>
-              <div style={{ fontSize: 13, color: C.mid, marginTop: 6, marginBottom: 18 }}>Tell us about your school and we’ll get you set up — no card required.</div>
+              <div style={{ fontSize: 13, color: C.mid, marginTop: 6 }}>Tell us about your school and we’ll get you set up — no card required.</div>
+              <div style={{ fontSize: 13, color: C.mid, marginTop: 4, marginBottom: 18 }}>Prefer email? Write to <a href="mailto:schools@feynmaneducation.com" style={{ color: C.pri, fontWeight: 600, textDecoration: "none" }}>schools@feynmaneducation.com</a>.</div>
               <form onSubmit={submit}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
                   <div><label style={label}>School name *</label><input style={input} value={form.school_name} onChange={set("school_name")} required /></div>
@@ -168,7 +169,8 @@ export default function Pricing() {
       </div>
 
       <div style={{ borderTop: `1px solid ${C.bdr}`, padding: "20px 0", textAlign: "center", fontSize: 12, color: C.dim }}>
-        {BRAND} · All prices exclude VAT · Prices valid for the 2026/27 academic year.
+        {BRAND} · <a href="mailto:schools@feynmaneducation.com" style={{ color: C.dim }}>schools@feynmaneducation.com</a> · feynmaneducation.com<br />
+        All prices exclude VAT · Prices valid for the 2026/27 academic year.
       </div>
     </div>
   );
