@@ -96,3 +96,18 @@ begin
   end if;
   raise notice 'PASS: privileged profile columns (role/hod_id/school_id) are not client-writable';
 end $$;
+
+-- 6) Grade integrity — PENDING GATE (warning until the lock-in migration runs).
+--    Once the client records via the mark-answer edge function and
+--    db/migrations/20260614_02_grade_integrity_lockin.sql has been applied, the
+--    browser must NOT be able to INSERT responses directly (it would let a pupil
+--    forge is_correct / marks_awarded). Flip RAISE WARNING -> RAISE EXCEPTION
+--    after applying that migration to make this a hard gate.
+do $$
+begin
+  if has_table_privilege('authenticated', 'public.responses', 'INSERT') then
+    raise warning 'PENDING: authenticated can still INSERT responses directly. Apply db/migrations/20260614_02_grade_integrity_lockin.sql once the new client is live, then make this a hard assertion.';
+  else
+    raise notice 'PASS: responses are written only by the mark-answer function (service role)';
+  end if;
+end $$;

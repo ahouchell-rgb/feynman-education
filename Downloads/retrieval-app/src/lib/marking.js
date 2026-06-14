@@ -1,7 +1,8 @@
 /* ─── Smart local marking + fake-answer detection ───
- * Extracted from src/app/page.js so the grade-affecting logic can be
- * unit-tested. Pure functions: no React, no network. `aiMark` (which calls
- * the Supabase edge function) stays in page.js and imports these as fallback. */
+ * Pure, unit-testable grading logic: no React, no network. The authoritative
+ * grade comes from the mark-answer edge function (see supabase/functions); these
+ * are the offline fallback used by sb.submitAnswer when the function is
+ * unreachable, plus client-side stats helpers (detectFakeAnswer). */
 
 /* Lenient, typo-tolerant marking for short-answer retrieval practice.
  * Returns { correct, marks_awarded, feedback }. */

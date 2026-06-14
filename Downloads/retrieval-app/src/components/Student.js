@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { detectFakeAnswer } from "../lib/marking";
 import { getSRInfo, sortQuestions } from "../lib/questions";
 import { nextSR } from "../lib/sr";
-import { aiMark, sb } from "../lib/supabase";
+import { sb } from "../lib/supabase";
 import { C } from "../lib/theme";
 import { STAR_INTERVAL, WEEKLY_TARGET, getWeekBounds } from "../lib/week";
 import { StudentPaperAttempt } from "./StudentPaperAttempt";
@@ -384,7 +384,10 @@ export function Student({ user }) {
       ? qs.filter(q => mistakeQIds.has(q.id))
       : (studyMode && studyTopicId ? qs.filter(q => q.topic_id === studyTopicId) : qs);
     const q = activeQs[qi];
-    const r = await aiMark(q.question_text, q.model_answer, ans, q.marks, q.id);
+    // One authoritative call: the edge function marks AND records the response
+    // server-side, so the grade can't be forged client-side. It still returns a
+    // verdict for the UI and queues itself if the network is down.
+    const r = await sb.submitAnswer({ question: q.question_text, model_answer: q.model_answer, student_answer: ans, marks: q.marks, question_id: q.id, class_id: cls.id, student_id: user.id });
     setRes(r);
     const prev = sr[q.id] || {};
     const nxt = nextSR(r.correct, prev);
@@ -422,11 +425,9 @@ export function Student({ user }) {
       }
     }
 
-    // recordResponse never throws on a network failure — it queues the answer to
-    // retry, so a flaky connection doesn't lose the pupil's work. A queued write
-    // has no row id yet, so flagging this answer's mark is unavailable until it syncs.
-    const row = await sb.recordResponse({ student_id: user.id, question_id: q.id, class_id: cls.id, student_answer: ans, is_correct: r.correct, ai_feedback: r.flagged ? "FLAGGED: " + r.feedback : r.feedback, marks_awarded: r.marks_awarded });
-    if (row?.id) setLastResponseId(row.id);
+    // A queued (offline) answer has no row id yet, so flagging its mark is
+    // unavailable until it syncs; everything else counts optimistically.
+    if (r.response_id) setLastResponseId(r.response_id);
     setStats(s => ({ t: s.t + 1, c: s.c + (r.correct ? 1 : 0) }));
     setSessionQCount(n => n + 1);
     setMarking(false);

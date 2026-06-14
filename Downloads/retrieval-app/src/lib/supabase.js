@@ -131,11 +131,14 @@ export const sb = (() => {
     );
   };
 
-  /* ─── Resilient response recording ───
-   * A dropped request on flaky school wifi used to silently lose a pupil's
-   * answer (submit() only console.error'd). Queue a failed write to localStorage
-   * and retry it on the next answer / page load so practice isn't lost. */
-  const PENDING_KEY = "retrieval.pendingResponses";
+  /* ─── Authoritative answer submission + offline resilience ───
+   * The mark-answer edge function is the single source of truth for the grade
+   * AND the writer of the responses row, so the browser can't mark itself
+   * correct (see supabase/functions/mark-answer). On a network failure we queue
+   * the submission and replay it through the function later — never a
+   * client-chosen grade — so a dropped request on flaky school wifi neither
+   * loses the answer nor opens a forgery path. */
+  const PENDING_KEY = "retrieval.pendingAnswers";
   const readPending = () => {
     if (typeof window === "undefined") return [];
     try { return JSON.parse(window.localStorage.getItem(PENDING_KEY) || "[]"); } catch { return []; }
@@ -148,32 +151,69 @@ export const sb = (() => {
     } catch { /* quota — best effort */ }
   };
 
+  // POST one submission to the marking function. Sends the user's JWT so the
+  // function can identify the pupil and record server-side. Throws on a network
+  // / non-2xx failure. Returns { correct, marks_awarded, feedback, flagged,
+  // source, recorded, response_id }.
+  const callMarkAnswer = async (payload) => {
+    await ensureFresh();
+    const headers = { "Content-Type": "application/json", apikey: SUPA_KEY };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+    const r = await fetch(`${SUPA_URL}/functions/v1/mark-answer`, { method: "POST", headers, body: JSON.stringify(payload) });
+    if (!r.ok) throw new Error(`mark-answer ${r.status}`);
+    return r.json();
+  };
+
   let flushing = false;
-  const flushResponses = async () => {
-    if (flushing) return;
+  const flushAnswers = async () => {
+    if (flushing || !token) return;
     flushing = true;
     try {
       let pending = readPending();
       while (pending.length) {
-        try { await q("responses", { method: "POST", body: pending[0].body }); }
-        catch { break; }                 // still failing — leave the rest queued
+        let res;
+        try { res = await callMarkAnswer(pending[0]); } catch { break; }   // still offline
+        if (!res?.recorded) break;                                         // reachable but not storing — keep queued
         pending = pending.slice(1);
         writePending(pending);
       }
     } finally { flushing = false; }
   };
 
-  // Record a student response. Returns the inserted row on success, or
-  // { queued: true } if it was saved to retry later. Never throws on a network
-  // failure — the answer is preserved either way.
-  const recordResponse = async (body) => {
-    flushResponses().catch(() => {});    // opportunistically drain earlier failures
+  // Mark + record one answer authoritatively. Always returns a verdict for the
+  // UI: recorded:true (with response_id) when the server stored it, or
+  // queued:true when saved to retry. The grade always comes from the server.
+  const submitAnswer = async (payload) => {
+    flushAnswers().catch(() => {});      // opportunistically drain earlier failures
+    const fake = detectFakeAnswer(payload.student_answer);
+    const body = { ...payload, prejudged_flagged: fake || undefined };
     try {
-      const rows = await q("responses", { method: "POST", body });
-      return Array.isArray(rows) ? rows[0] : rows;
-    } catch (e) {
-      writePending([...readPending(), { body, ts: Date.now() }]);
-      return { queued: true, error: e.message };
+      const d = await callMarkAnswer(body);
+      const verdict = { correct: !!d.correct, marks_awarded: d.marks_awarded ?? 0, feedback: d.feedback, flagged: !!d.flagged, source: d.source };
+      if (d.recorded) return { ...verdict, recorded: true, response_id: d.response_id ?? null };
+      // Reached the function but it didn't store (transient, or pre-lock-in).
+      // Persist the SERVER's verdict directly so nothing is lost; once the
+      // client-INSERT lock-in lands this fails and falls through to the queue.
+      try {
+        const rows = await q("responses", { method: "POST", body: {
+          student_id: payload.student_id, question_id: payload.question_id, class_id: payload.class_id,
+          student_answer: payload.student_answer, is_correct: verdict.correct,
+          ai_feedback: verdict.flagged ? "FLAGGED: " + verdict.feedback : verdict.feedback, marks_awarded: verdict.marks_awarded,
+        } });
+        const row = Array.isArray(rows) ? rows[0] : rows;
+        return { ...verdict, recorded: true, response_id: row?.id ?? null };
+      } catch {
+        writePending([...readPending(), body]);
+        return { ...verdict, recorded: false, queued: true, response_id: null };
+      }
+    } catch {
+      // Offline: optimistic local verdict for instant feedback; the authoritative
+      // mark is recorded by the function when this submission replays.
+      writePending([...readPending(), body]);
+      const local = fake
+        ? { correct: false, marks_awarded: 0, feedback: fake, flagged: true }
+        : localMark(payload.question, payload.model_answer, payload.student_answer, payload.marks);
+      return { ...local, source: "queued_local", recorded: false, queued: true, response_id: null };
     }
   };
 
@@ -189,7 +229,7 @@ export const sb = (() => {
       const r = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=password`, { method: "POST", headers: { "Content-Type": "application/json", apikey: SUPA_KEY }, body: JSON.stringify({ email, password: pw }) });
       const d = await r.json();
       if (!r.ok || !d.access_token) throw new Error(d.error_description || d.error?.message || "Login failed");
-      setSession(d); flushResponses().catch(() => {}); return d;
+      setSession(d); flushAnswers().catch(() => {}); return d;
     },
     out: () => clearSession(),
     user: () => user,
@@ -200,39 +240,9 @@ export const sb = (() => {
       if (!token && !refreshToken) return null;
       await ensureFresh();
       if (!token && refreshToken) await refresh();
-      if (token) flushResponses().catch(() => {});   // resend answers queued before the reload
+      if (token) flushAnswers().catch(() => {});   // resend answers queued before the reload
       return token ? user : null;
     },
   };
-  return { q, del, qAll, auth, recordResponse, flushResponses, pendingResponses: () => readPending().length };
+  return { q, del, qAll, auth, submitAnswer, flushAnswers, pendingAnswers: () => readPending().length };
 })();
-
-export async function aiMark(qText, model, student, marks, question_id) {
-  // Check for fake/spam answers first
-  const fake = detectFakeAnswer(student);
-  if (fake) return { correct: false, marks_awarded: 0, feedback: fake, flagged: true };
-
-  // Try AI marking via Supabase Edge Function (proxies to Claude API)
-  // Sources we accept from the function (in v10): "ai", "ai_double_check_overturned",
-  // "ai_double_check_confirmed", "numerical_match", "cache", "fallback".
-  // If we don't recognise a source, fall through to local marking — defensive.
-  const VALID_SOURCES = new Set([
-    "ai", "ai_double_check_overturned", "ai_double_check_confirmed",
-    "numerical_match", "cache", "fallback"
-  ]);
-  try {
-    const r = await fetch(`${SUPA_URL}/functions/v1/mark-answer`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", apikey: SUPA_KEY },
-      body: JSON.stringify({ question: qText, model_answer: model, student_answer: student, marks, question_id }),
-    });
-    if (r.ok) {
-      const d = await r.json();
-      if (VALID_SOURCES.has(d.source)) return d;
-    }
-  } catch (e) {
-    console.log("Edge function unavailable, using local marking:", e);
-  }
-  // Fallback to local fuzzy matching
-  return localMark(qText, model, student, marks);
-}
