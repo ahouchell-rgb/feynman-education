@@ -563,7 +563,7 @@ export function Teacher({ user }) {
           <Card style={{ padding: 16, marginBottom: 14, background: C.priSoft, borderColor: "rgba(200,54,45,0.25)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4, gap: 8 }}>
               <div>
-                <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>Welcome to retrieval. — let's get you set up</div>
+                <div style={{ color: C.txt, fontWeight: 700, fontSize: 14 }}>Welcome to Feynman — let's get you set up</div>
                 <div style={{ color: C.dim, fontSize: 12, marginTop: 2 }}>Three quick steps. Takes about 5 minutes.</div>
               </div>
               <button onClick={dismissOnboarding}

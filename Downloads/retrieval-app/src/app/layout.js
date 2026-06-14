@@ -16,8 +16,8 @@ const serif = Source_Serif_4({
 });
 
 export const metadata = {
-  title: "Retrieval — Science Practice",
-  description: "Spaced repetition science retrieval practice",
+  title: "Feynman Education — Practice that sticks",
+  description: "AI-marked retrieval practice: instant, fair feedback on written answers, with spaced repetition scheduling what each pupil needs to revisit.",
 };
 
 // Ensure the layout scales correctly on phones (students practise on mobile).

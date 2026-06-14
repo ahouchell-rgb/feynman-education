@@ -108,7 +108,7 @@ export function AdminPanel({ user }) {
       {/* Header */}
       <div style={{ marginBottom: 16, padding: "16px 20px", background: `linear-gradient(135deg, ${C.priSoft}, transparent)`, border: `1px solid ${C.pri}33`, borderRadius: 12 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: C.pri, marginBottom: 4 }}>Moderator panel</div>
-        <div style={{ fontSize: 12, color: C.mid }}>You can see every teacher and student across retrieval. Only ahouchell@gmail.com has this access.</div>
+        <div style={{ fontSize: 12, color: C.mid }}>You can see every teacher and student across Feynman Education. Only ahouchell@gmail.com has this access.</div>
       </div>
 
       {/* Overview stats */}
