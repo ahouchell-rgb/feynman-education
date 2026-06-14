@@ -34,7 +34,9 @@ export const roleColor = (u) => isModerator(u) ? C.pri : isHoD(u) ? C.amb : isTe
 export async function attachProfile(u) {
   let profile;
   try {
-    profile = await sb.q("profiles", { params: { id: `eq.${u.id}` }, single: true });
+    // Embed the school's plan row (schools.plan) so entitlements (see lib/plans.js)
+    // are available client-side without a second round-trip. schools is world-readable.
+    profile = await sb.q("profiles", { params: { id: `eq.${u.id}`, select: "*,school:schools(id,name,plan,plan_status,term_end)" }, single: true });
   } catch {
     profile = { role: u.user_metadata?.role || "student", display_name: u.user_metadata?.display_name || u.email };
   }

@@ -4,6 +4,8 @@ import { SUPA_KEY, SUPA_URL, sb } from "../lib/supabase";
 import { isStudent, isTeacher } from "../lib/roles";
 import { C } from "../lib/theme";
 import { Teacher } from "./Teacher";
+import { CostDashboard } from "./CostDashboard";
+import { SchoolsPanel } from "./SchoolsPanel";
 import { Badge, Btn, Headline, Inp, Pill, Stat, StatTile } from "./ui";
 
 export function AdminPanel({ user }) {
@@ -21,13 +23,6 @@ export function AdminPanel({ user }) {
   const [cacheRows, setCacheRows] = useState(null);
   const [cacheLoading, setCacheLoading] = useState(false);
   const [cachePurging, setCachePurging] = useState(null); // id being purged
-  // Cost estimate: ~150 input tokens + ~80 output tokens per AI mark at Haiku 4.5 pricing
-  // ($1/1M in + $5/1M out) = ~$0.00055/answer. ~25% of answers skip the AI via the
-  // numerical exemption shortcut, so effective cost is ~$0.00041/answer.
-  // Converted to pence at ~0.79 GBP/USD ≈ 0.033p/answer.
-  const COST_PER_AI_MARK_PENCE = 0.055 * 0.79;      // ≈ 0.043p before exemptions
-  const EXEMPTION_RATE = 0.25;                        // empirical: ~25% are pure-number answers
-  const EFFECTIVE_COST_PER_ANSWER_PENCE = COST_PER_AI_MARK_PENCE * (1 - EXEMPTION_RATE); // ≈ 0.033p
   const [filter, setFilter] = useState("");
   const [view, setView] = useState("overview"); // overview | teachers | students | unjoined
   const [busy, setBusy] = useState(false);
@@ -126,7 +121,7 @@ export function AdminPanel({ user }) {
 
       {/* View tabs */}
       <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>
-        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }, { k: "costs", l: "Costs" }, { k: "aiusage", l: "AI usage" }, { k: "cache", l: "Cache health" }].map(t => (
+        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }, { k: "schools", l: "Schools & plans" }, { k: "costs", l: "Costs" }, { k: "aiusage", l: "AI usage" }, { k: "cache", l: "Cache health" }].map(t => (
           <Pill key={t.k} on={view === t.k} onClick={() => setView(t.k)} style={{ fontSize: 12, padding: "6px 12px" }}>{t.l}</Pill>
         ))}
       </div>
@@ -376,108 +371,13 @@ export function AdminPanel({ user }) {
         </div>
       )}
 
-      {/* COSTS */}
-      {view === "costs" && (() => {
-        const classTeacherMap = Object.fromEntries(classes.map(c => [c.id, c.teacher_id]));
-        const teacherHodMap = Object.fromEntries(teachers.map(t => [t.id, t.hod_id || null]));
-        const teacherNameMap = Object.fromEntries(teachers.map(t => [t.id, t.display_name || t.email || "—"]));
-        const hodNameMap = Object.fromEntries(
-          teachers.filter(t => t.role === "hod").map(h => [h.id, h.display_name || h.email || "—"])
-        );
+      {/* SCHOOLS & PLANS — moderator provisioning + fair-use metering */}
+      {view === "schools" && <SchoolsPanel />}
 
-        const now = new Date();
-        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-        const rollingCutoff = now.getTime() - 30 * 86400000;
-
-        const monthResps = responses30d.filter(r => new Date(r.answered_at).getTime() >= startOfMonth);
-        const rollingResps = responses30d.filter(r => new Date(r.answered_at).getTime() >= rollingCutoff);
-
-        const monthTotal = monthResps.length;
-        const rollingTotal = rollingResps.length;
-        const monthCostPence = monthTotal * EFFECTIVE_COST_PER_ANSWER_PENCE;
-        const rollingCostPence = rollingTotal * EFFECTIVE_COST_PER_ANSWER_PENCE;
-
-        const deptAgg = {};
-        monthResps.forEach(r => {
-          const tid = classTeacherMap[r.class_id];
-          if (!tid) return;
-          const hodId = teacherHodMap[tid] || "__unassigned__";
-          if (!deptAgg[hodId]) deptAgg[hodId] = { hodId, responses: 0, teacherIds: new Set() };
-          deptAgg[hodId].responses++;
-          deptAgg[hodId].teacherIds.add(tid);
-        });
-
-        const deptRows = Object.values(deptAgg)
-          .map(d => ({
-            hodId: d.hodId,
-            name: d.hodId === "__unassigned__" ? "Unassigned" : (hodNameMap[d.hodId] || "—") + "'s department",
-            teacherCount: d.teacherIds.size,
-            teacherNames: [...d.teacherIds].map(tid => teacherNameMap[tid]).sort(),
-            responses: d.responses,
-            costPence: d.responses * EFFECTIVE_COST_PER_ANSWER_PENCE,
-            pct: monthTotal > 0 ? (d.responses / monthTotal) * 100 : 0,
-          }))
-          .sort((a, b) => b.costPence - a.costPence);
-
-        const fmt = (pence) => {
-          if (pence < 1) return `${pence.toFixed(1)}p`;
-          if (pence < 100) return `${pence.toFixed(0)}p`;
-          return `£${(pence / 100).toFixed(2)}`;
-        };
-
-        const monthLabel = now.toLocaleString("en-GB", { month: "long", year: "numeric" });
-
-        return (
-          <div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
-              <div style={{ padding: "16px 18px", background: `linear-gradient(135deg, ${C.priSoft}, transparent)`, border: `1px solid ${C.pri}33`, borderRadius: 12 }}>
-                <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600, marginBottom: 4 }}>{monthLabel}</div>
-                <div style={{ fontSize: 24, fontWeight: 800, color: C.pri, lineHeight: 1 }}>{fmt(monthCostPence)}</div>
-                <div style={{ fontSize: 11, color: C.mid, marginTop: 4 }}>{monthTotal.toLocaleString()} answers this month</div>
-              </div>
-              <div style={{ padding: "16px 18px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 12 }}>
-                <div style={{ fontSize: 10, color: C.mid, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600, marginBottom: 4 }}>Rolling 30 days</div>
-                <div style={{ fontSize: 24, fontWeight: 800, color: C.txt, lineHeight: 1 }}>{fmt(rollingCostPence)}</div>
-                <div style={{ fontSize: 11, color: C.mid, marginTop: 4 }}>{rollingTotal.toLocaleString()} answers</div>
-              </div>
-            </div>
-
-            <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>By department ({monthLabel})</div>
-            {deptRows.length === 0 ? (
-              <div style={{ padding: 20, textAlign: "center", color: C.mid, fontSize: 12, background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8 }}>No answers this month yet.</div>
-            ) : (
-              deptRows.map(d => (
-                <div key={d.hodId} style={{ padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, marginBottom: 6 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{d.name}</div>
-                      <div style={{ fontSize: 11, color: C.dim, marginTop: 2 }}>
-                        {d.teacherCount} teacher{d.teacherCount === 1 ? "" : "s"} · {d.responses.toLocaleString()} answer{d.responses === 1 ? "" : "s"}
-                      </div>
-                    </div>
-                    <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: C.txt }}>{fmt(d.costPence)}</div>
-                      <div style={{ fontSize: 10, color: C.dim }}>{d.pct.toFixed(0)}% of total</div>
-                    </div>
-                  </div>
-                  <div style={{ height: 4, background: C.bdr, borderRadius: 99, overflow: "hidden" }}>
-                    <div style={{ width: `${d.pct}%`, height: "100%", background: d.hodId === "__unassigned__" ? C.amb : C.pri, borderRadius: 99 }} />
-                  </div>
-                  {d.teacherNames.length > 0 && d.teacherNames.length <= 6 && (
-                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 8 }}>
-                      {d.teacherNames.map((n, i) => <span key={i} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 99, background: C.bg, color: C.mid, border: `1px solid ${C.bdr}` }}>{n}</span>)}
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
-
-            <div style={{ marginTop: 16, padding: "10px 12px", background: C.card, border: `1px dashed ${C.bdr}`, borderRadius: 8, fontSize: 11, color: C.mid, lineHeight: 1.6 }}>
-              <strong style={{ color: C.txt }}>How this is calculated.</strong> Estimated from response count × ~{EFFECTIVE_COST_PER_ANSWER_PENCE.toFixed(3)}p per AI-marked answer (Claude Sonnet 4 pricing, ~25% of answers auto-marked numerically so skip the AI). Department figures group teachers by their HoD link. Accurate to within a few pence per month. Doesn't include Supabase or Vercel (both ≈ free at current scale).
-            </div>
-          </div>
-        );
-      })()}
+      {/* COSTS — live spend, blend and unit economics from the real ai_usage token log */}
+      {view === "costs" && (
+        <CostDashboard students={students} classes={classes} teachers={teachers} responses30d={responses30d} />
+      )}
 
       {/* AI USAGE — real cache hit rate from logged Anthropic usage */}
       {view === "aiusage" && (() => {
@@ -503,7 +403,10 @@ export function AdminPanel({ user }) {
           loadAiUsage(aiUsageWindow);
         }
 
-        const rows = aiUsage || [];
+        const allRows = aiUsage || [];
+        // Exclude the zero-token 'shortcut' rows (numerical/exact/cache/flagged) — this
+        // tab is specifically about the AI calls; the Costs tab shows the full blend.
+        const rows = allRows.filter(r => r.call_label !== "shortcut");
         const totalCalls = rows.length;
         const totalInput = rows.reduce((s, r) => s + (r.input_tokens || 0), 0);
         const totalOutput = rows.reduce((s, r) => s + (r.output_tokens || 0), 0);
