@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Auth } from "../components/Auth";
+import { Landing } from "../components/Landing";
 import { Student } from "../components/Student";
 import { Teacher } from "../components/Teacher";
 import { Badge, Btn } from "../components/ui";
@@ -11,6 +12,9 @@ import { C } from "../lib/theme";
 export default function App() {
   const [user, setUser] = useState(null);
   const [restoring, setRestoring] = useState(true);
+  // Logged-out visitors land on the marketing front door; "Log in" reveals the auth
+  // form. A ?login deep-link (used by the pricing page's "Log in") skips straight to it.
+  const [showLogin, setShowLogin] = useState(false);
 
   // Re-establish a persisted session on load so a refresh doesn't bounce to login.
   useEffect(() => {
@@ -19,14 +23,21 @@ export default function App() {
       try {
         const u = await sb.auth.restore();
         if (u && alive) setUser(await attachProfile(u));
-      } catch { /* no valid session — fall through to the login screen */ }
+      } catch { /* no valid session — fall through to the landing page */ }
       if (alive) setRestoring(false);
     })();
     return () => { alive = false; };
   }, []);
 
+  // Deep-link to the login form (e.g. from /pricing) without a hydration mismatch.
+  useEffect(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).has("login")) setShowLogin(true);
+  }, []);
+
   if (restoring) return <div style={{ minHeight: "100dvh", background: C.bg }} />;
-  if (!user) return <Auth onAuth={setUser} />;
+  if (!user) return showLogin
+    ? <Auth onAuth={setUser} onBack={() => setShowLogin(false)} />
+    : <Landing onLogin={() => setShowLogin(true)} />;
   const teacherSide = isTeacher(user);
 
   return (
@@ -34,7 +45,7 @@ export default function App() {
       <div style={{ borderBottom: `1px solid ${C.bdr}`, background: C.card, padding: "0 16px", position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 700, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", height: 50 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.5 }}>retrieval<span style={{ color: C.pri }}>.</span></span>
+            <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.3 }}>Feynman<span style={{ color: C.pri }}> Education</span></span>
             <Badge color={roleColor(user)}>{roleLabel(user)}</Badge>
           </div>
           <Btn v="ghost" onClick={() => { sb.auth.out(); setUser(null); }} style={{ padding: "6px 12px", fontSize: 12 }}>Log out</Btn>

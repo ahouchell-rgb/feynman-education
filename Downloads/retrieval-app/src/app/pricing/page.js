@@ -9,13 +9,13 @@ import { C } from "../../lib/theme";
 const BRAND = "Feynman Education";
 
 const TIERS = [
-  { key: "free", name: "Starter", price: "Free", sub: "Try it out",
+  { key: "free", name: "Starter", price: "Free", sub: "Try it out", href: "/?login=1",
     features: ["1 class, 1 teacher", "AI marking + retrieval practice", "Up to 2,000 marks / month"], cta: "Start free" },
-  { key: "essentials", name: "Essentials", price: "£890", sub: "per school / year",
+  { key: "essentials", name: "Essentials", price: "£890", sub: "per school / year", href: "#contact",
     features: ["Whole science, up to 600 pupils", "Shared question bank", "Core dashboards & support"], cta: "Request a quote" },
-  { key: "core", name: "Core", price: "£2.95–£4.95", sub: "per pupil / year", highlight: true,
+  { key: "core", name: "Core", price: "£2.95–£4.95", sub: "per pupil / year", highlight: true, href: "#contact",
     features: ["Unlimited pupils & teachers", "Your own questions + full bank", "Leadership dashboards & MIS"], cta: "Request a quote" },
-  { key: "single_cohort", name: "Single cohort", price: "£8.95", sub: "per pupil / year",
+  { key: "single_cohort", name: "Single cohort", price: "£8.95", sub: "per pupil / year", href: "#contact",
     features: ["One year group (e.g. Year 11)", "Full Core features", "Easy to expand later"], cta: "Request a quote" },
 ];
 
@@ -53,6 +53,14 @@ export default function Pricing() {
 
   return (
     <div style={{ minHeight: "100dvh", background: C.bg, color: C.txt, fontFamily: "var(--font-plex), -apple-system, sans-serif" }}>
+      {/* Nav */}
+      <div style={{ borderBottom: `1px solid ${C.bdr}`, background: C.card }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 20px", height: 56, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <a href="/" style={{ fontSize: 16, fontWeight: 800, color: C.txt, letterSpacing: -0.3, textDecoration: "none" }}>Feynman<span style={{ color: C.pri }}> Education</span></a>
+          <a href="/?login=1" style={{ fontSize: 13, fontWeight: 700, color: "#fff", background: C.pri, padding: "8px 16px", borderRadius: 8, textDecoration: "none" }}>Log in</a>
+        </div>
+      </div>
+
       {/* Hero */}
       <div style={{ background: `linear-gradient(160deg, ${C.priSoft}, transparent)`, borderBottom: `1px solid ${C.bdr}`, padding: "56px 0 48px" }}>
         <div style={wrap}>
@@ -82,7 +90,7 @@ export default function Pricing() {
                   </div>
                 ))}
               </div>
-              <a href="#contact" style={{ display: "block", textAlign: "center", fontSize: 13, fontWeight: 600, padding: "9px", borderRadius: 8, textDecoration: "none",
+              <a href={t.href} style={{ display: "block", textAlign: "center", fontSize: 13, fontWeight: 600, padding: "9px", borderRadius: 8, textDecoration: "none",
                 background: t.highlight ? C.pri : "transparent", color: t.highlight ? "#fff" : C.pri, border: t.highlight ? "none" : `1px solid ${C.pri}55` }}>{t.cta}</a>
             </div>
           ))}
