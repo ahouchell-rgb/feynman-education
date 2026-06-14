@@ -48,9 +48,13 @@ not reinstate data the school instructed us to erase beyond the backup window.
 
 ## Open engineering follow-ups
 - [x] Pupil data **export** (DSAR / portability) — `export_student_data` RPC + Admin button (migration 09).
-- [ ] Verify `delete_student` (the deployed `manage-student` edge function) fully cascades
-      (responses, paper_attempts/paper_responses, marking_flags, parent_tokens, support_tickets,
-      auth user). The function source lives only in Supabase — review it there, or add
-      `on delete cascade` FKs as a migration so deletion is guaranteed at the DB layer.
-- [ ] Add a **class deletion** + **whole-school offboarding** RPC/runbook (currently service-role tooling).
+- [x] **Class deletion** + **whole-school offboarding** RPCs — `delete_class` (moderator or the
+      class's teacher) and `offboard_school` (moderator) (migration 11). All child FKs to
+      `classes` are `on delete cascade`, so a class/school delete removes its responses,
+      members, parent_tokens, paper attempts, marking flags, etc. automatically. `ai_usage`
+      detaches (school_id → null), keeping cost history.
+- [ ] **Pupil auth-account cascade:** `delete_class`/`offboard_school` remove practice data and
+      detach profiles, but do NOT delete pupil/teacher `auth.users` (needs the service role).
+      Verify the deployed `manage-student` edge function deletes the auth user + profile per
+      pupil, and add a bulk per-school account-deletion step for full offboarding.
 - [ ] Define and implement the end-of-year anonymisation job (e.g. current + 1 academic year).
