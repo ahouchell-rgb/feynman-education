@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { SUPA_KEY, SUPA_URL, sb } from "../lib/supabase";
+import { isStudent, isTeacher } from "../lib/roles";
 import { C } from "../lib/theme";
 import { Teacher } from "./Teacher";
 import { Badge, Btn, Headline, Inp, Pill, Stat, StatTile } from "./ui";
@@ -51,8 +52,8 @@ export function AdminPanel({ user }) {
         sb.q("class_members", { params: { select: "class_id,student_id" } }),
         sb.qAll("responses", { params: { select: "class_id,answered_at", answered_at: `gte.${cutoff}`, order: "answered_at.desc" } }),
       ]);
-      setTeachers(profs.filter(p => p.role === "teacher" || p.role === "moderator" || p.role === "hod"));
-      setStudents(profs.filter(p => p.role === "student"));
+      setTeachers(profs.filter(isTeacher));
+      setStudents(profs.filter(isStudent));
       setClasses(clss);
       setClassMembers(mems);
       setResponses30d(resps || []);

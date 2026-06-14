@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import { sb } from "../lib/supabase";
+import { attachProfile } from "../lib/roles";
 import { C } from "../lib/theme";
-import { Teacher } from "./Teacher";
 import { Btn, Card, Inp } from "./ui";
 
 /* ─── AUTH ─── */
@@ -20,10 +20,7 @@ export function Auth({ onAuth }) {
         const res = await sb.auth.signUp(email, pw, { display_name: name, role: "student" });
         if (res?.needsConfirm) { setInfo("Check email to confirm, then log in. (Or disable email confirmation in Supabase → Auth → Settings)"); setMode("login"); setBusy(false); return; }
       } else { await sb.auth.signIn(email, pw); }
-      const u = sb.auth.user();
-      let prof;
-      try { prof = await sb.q("profiles", { params: { id: `eq.${u.id}` }, single: true }); } catch { prof = { role: u.user_metadata?.role || "student", display_name: u.user_metadata?.display_name || u.email }; }
-      onAuth({ ...u, profile: prof });
+      onAuth(await attachProfile(sb.auth.user()));
     } catch (e) {
       const m = e.message || "";
       setErr(m.toLowerCase().includes("fetch") || m.toLowerCase().includes("load") ? "Network error — try opening this in a new tab (expand icon top-right), or check that Supabase email confirmation is disabled." : m);

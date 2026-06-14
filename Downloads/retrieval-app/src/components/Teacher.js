@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { sb } from "../lib/supabase";
 import { C } from "../lib/theme";
+import { isHoD, isModerator } from "../lib/roles";
 import { STAR_INTERVAL, WEEKLY_TARGET, getWeekBounds } from "../lib/week";
 import { AdminPanel } from "./AdminPanel";
 import { BulkUpload } from "./BulkUpload";
@@ -15,8 +16,13 @@ import { StudentPaperAttempt } from "./StudentPaperAttempt";
 import { TopicSelector } from "./TopicSelector";
 import { Badge, Bar, Btn, Card, Dateline, Deck, Headline, Inp, Kicker, Pill, Section, TA } from "./ui";
 
-export function Teacher({ user, isMod, isHoD }) {
-  const [tab, setTab] = useState(isHoD ? "hod" : "dashboard");
+export function Teacher({ user }) {
+  const isMod = isModerator(user);
+  // Strict HoD: only an actual Head of Department gets the (self-scoped)
+  // department view. Moderators have the Admin panel instead — previously they
+  // were treated as HoDs and landed on an empty department tab.
+  const showDept = isHoD(user);
+  const [tab, setTab] = useState(showDept ? "hod" : "dashboard");
   const [classes, setClasses] = useState([]);
   const [cls, setCls] = useState(null);
   const [topics, setTopics] = useState([]);
@@ -518,7 +524,7 @@ export function Teacher({ user, isMod, isHoD }) {
           <Btn v="ghost" onClick={() => setSetup("class")} style={{ padding: "10px 14px", fontSize: 13, whiteSpace: "nowrap" }}>+ New</Btn>
         </div>
         <div style={{ display: "flex", gap: 6, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 2 }}>
-          {[...(isHoD ? ["hod"] : []), ...["dashboard", "starter", "topics", "questions", "papers"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : (t === "hod" ? { borderColor: C.amb, color: tab === t ? C.amb : C.amb } : undefined)}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "Admin" : t === "hod" ? "Department" : t === "papers" ? "Papers" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
+          {[...(showDept ? ["hod"] : []), ...["dashboard", "starter", "topics", "questions", "papers"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : (t === "hod" ? { borderColor: C.amb, color: tab === t ? C.amb : C.amb } : undefined)}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "Admin" : t === "hod" ? "Department" : t === "papers" ? "Papers" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
         </div>
       </div>
 
@@ -1130,7 +1136,7 @@ export function Teacher({ user, isMod, isHoD }) {
           {tab === "questions" && <QMgr subjectId={cls.subject_id} userId={user.id} topics={topics} setTopics={setTopics} />}
           {tab === "papers" && <PaperManager user={user} cls={cls} classes={classes} topics={topics} subjectId={cls.subject_id} />}
           {tab === "admin" && isMod && <AdminPanel user={user} />}
-          {tab === "hod" && isHoD && <HodPanel user={user} />}
+          {tab === "hod" && showDept && <HodPanel user={user} />}
         </>
       )}
     </div>

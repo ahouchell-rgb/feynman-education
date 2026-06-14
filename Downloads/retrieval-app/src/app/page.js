@@ -1,18 +1,33 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Auth } from "../components/Auth";
 import { Student } from "../components/Student";
 import { Teacher } from "../components/Teacher";
 import { Badge, Btn } from "../components/ui";
 import { sb } from "../lib/supabase";
+import { attachProfile, isTeacher, roleColor, roleLabel } from "../lib/roles";
 import { C } from "../lib/theme";
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [restoring, setRestoring] = useState(true);
+
+  // Re-establish a persisted session on load so a refresh doesn't bounce to login.
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const u = await sb.auth.restore();
+        if (u && alive) setUser(await attachProfile(u));
+      } catch { /* no valid session — fall through to the login screen */ }
+      if (alive) setRestoring(false);
+    })();
+    return () => { alive = false; };
+  }, []);
+
+  if (restoring) return <div style={{ minHeight: "100dvh", background: C.bg }} />;
   if (!user) return <Auth onAuth={setUser} />;
-  const isT = user.profile?.role === "teacher" || user.profile?.role === "moderator" || user.profile?.role === "hod" || user.user_metadata?.role === "teacher";
-  const isMod = user.profile?.role === "moderator";
-  const isHoD = user.profile?.role === "hod" || user.profile?.role === "moderator";
+  const teacherSide = isTeacher(user);
 
   return (
     <div style={{ minHeight: "100dvh", background: C.bg, fontFamily: "var(--font-plex), -apple-system, sans-serif", color: C.txt }}>
@@ -20,12 +35,12 @@ export default function App() {
         <div style={{ maxWidth: 700, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", height: 50 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.5 }}>retrieval<span style={{ color: C.pri }}>.</span></span>
-            <Badge color={isMod ? C.pri : (user.profile?.role === "hod" ? C.amb : (isT ? C.acc : C.pri))}>{isMod ? "Moderator" : (user.profile?.role === "hod" ? "Head of Department" : (isT ? "Teacher" : "Student"))}</Badge>
+            <Badge color={roleColor(user)}>{roleLabel(user)}</Badge>
           </div>
           <Btn v="ghost" onClick={() => { sb.auth.out(); setUser(null); }} style={{ padding: "6px 12px", fontSize: 12 }}>Log out</Btn>
         </div>
       </div>
-      <div style={{ paddingBottom: 60 }}>{isT ? <Teacher user={user} isMod={isMod} isHoD={isHoD} /> : <Student user={user} />}</div>
+      <div style={{ paddingBottom: 60 }}>{teacherSide ? <Teacher user={user} /> : <Student user={user} />}</div>
       <style>{`
         *{box-sizing:border-box;margin:0;padding:0}
         body{background:${C.bg};-webkit-font-smoothing:antialiased}
