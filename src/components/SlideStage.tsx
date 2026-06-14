@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import { C } from "@/lib/theme";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 /* The fixed virtual canvas every element is positioned within. */
 export const VW = 960, VH = 540;
@@ -470,13 +471,17 @@ export function StaticSlide({ slide, width, style, reveal = Infinity, live = fal
             rIdx += 1;
             if (!show) return null;
           }
-          if (el.type === "arrow") return <ArrowSvg key={el.id} el={el} />;
-          if (el.type === "timer" && live) return <LiveTimer key={el.id} el={el} />;
-          if (el.type === "video" && live) return <div key={el.id} style={elStyle(el)}><VideoFrame el={el} /></div>;
-          if (el.type === "visualiser" && live) return <div key={el.id} style={elStyle(el)}><LiveCamera /></div>;
-          if (el.type === "retrieval" && live) return <div key={el.id} style={elStyle(el)}><RetrievalFrame el={el} /></div>;
-          if (el.type === "html" && live) return <div key={el.id} style={elStyle(el)}><HtmlFrame el={el} /></div>;
-          return <div key={el.id} style={elStyle(el)}><ElInner el={el} /></div>;
+          let node;
+          if (el.type === "arrow") node = <ArrowSvg el={el} />;
+          else if (el.type === "timer" && live) node = <LiveTimer el={el} />;
+          else if (el.type === "video" && live) node = <div style={elStyle(el)}><VideoFrame el={el} /></div>;
+          else if (el.type === "visualiser" && live) node = <div style={elStyle(el)}><LiveCamera /></div>;
+          else if (el.type === "retrieval" && live) node = <div style={elStyle(el)}><RetrievalFrame el={el} /></div>;
+          else if (el.type === "html" && live) node = <div style={elStyle(el)}><HtmlFrame el={el} /></div>;
+          else node = <div style={elStyle(el)}><ElInner el={el} /></div>;
+          // Isolate each element: one malformed element (bad coords/chart/LaTeX)
+          // renders nothing rather than crashing the whole slide and the app.
+          return <ErrorBoundary key={el.id} fallback={null}>{node}</ErrorBoundary>;
         })}
       </div>
     </div>

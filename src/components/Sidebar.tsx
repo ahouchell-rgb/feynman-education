@@ -6,7 +6,7 @@ import { useAuth, sk } from "@/lib/sk";
 import { C, DISC } from "@/lib/theme";
 import { Settings } from "./Settings";
 
-export function Sidebar({ onOpenVisualiser }) {
+export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
   const { profile, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -40,6 +40,15 @@ export function Sidebar({ onOpenVisualiser }) {
             <div style={{ fontFamily: C.mono, fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 4 }}>Feynman Education</div>
             <div style={{ fontFamily: C.serif, fontSize: 24, lineHeight: 1, letterSpacing: "-0.01em", color: C.text }}>Feyn<em style={{ fontStyle: "italic", color: C.grn }}>man</em></div>
           </Link>
+        </div>
+
+        <div style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
+          <button onClick={() => onOpenSearch?.()} aria-label="Search the curriculum"
+            style={{ width: "100%", display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", border: `1px solid ${C.border}`, borderRadius: 6, background: C.bg, color: C.muted, cursor: "pointer", fontFamily: C.mono, fontSize: 12 }}>
+            <span aria-hidden style={{ fontSize: 13 }}>⌕</span>
+            <span style={{ flex: 1, textAlign: "left" }}>Search</span>
+            <span style={{ fontSize: 10, color: C.dim, border: `1px solid ${C.border}`, borderRadius: 3, padding: "1px 5px" }}>⌘K</span>
+          </button>
         </div>
 
         <div style={{ padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
