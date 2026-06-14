@@ -62,11 +62,10 @@ begin
   raise notice 'PASS: teacher reads own class responses (visible=%)', visible;
 end $$;
 
--- 4) Profiles PII exposure — KNOWN ISSUE (warning, not failure, until fixed).
---    Today profiles_select is `USING (true)` for role public, so any signed-in
---    user (and anon) can read every pupil's name + email. Once profiles_select
---    is scoped (own + teacher's students + HoD's dept + moderator), change the
---    RAISE WARNING below to RAISE EXCEPTION so this becomes a hard regression gate.
+-- 4) Profiles PII exposure — HARD GATE.
+--    profiles_select is scoped via can_view_profile(id) (own + teacher's students
+--    + HoD's dept + moderator) and granted to `authenticated` only, so a student
+--    must see only their own profile — never another pupil's name/email.
 do $$
 declare a uuid; others int;
 begin
@@ -77,9 +76,23 @@ begin
   perform set_config('request.jwt.claims', json_build_object('sub', a, 'role', 'authenticated')::text, true);
   select count(*) into others from profiles where id <> a;
   reset role;
-  if others > 0 then
-    raise warning 'KNOWN ISSUE: student can read % other profiles (names + emails). Scope profiles_select, then make this a hard assertion.', others;
-  else
-    raise notice 'PASS: profile read access is scoped to self/permitted';
+  if others > 0 then raise exception 'FAIL: student % can read % other profiles (names + emails)', a, others; end if;
+  raise notice 'PASS: profile read access is scoped to self/permitted';
+end $$;
+
+-- 5) Profiles privilege-escalation — HARD GATE.
+--    A signed-in user must NOT be able to write their own role/hod_id/school_id
+--    (those are changed only by the manage-student edge function via service role).
+--    Otherwise a pupil could PATCH role->'moderator' and read everyone's PII,
+--    defeating test 4. We assert the column UPDATE grants are revoked.
+do $$
+declare leaks text;
+begin
+  select string_agg(col, ', ') into leaks
+  from (values ('role'), ('hod_id'), ('school_id')) as c(col)
+  where has_column_privilege('authenticated', 'public.profiles', c.col, 'UPDATE');
+  if leaks is not null then
+    raise exception 'FAIL: authenticated can UPDATE privileged profile column(s): %', leaks;
   end if;
+  raise notice 'PASS: privileged profile columns (role/hod_id/school_id) are not client-writable';
 end $$;
