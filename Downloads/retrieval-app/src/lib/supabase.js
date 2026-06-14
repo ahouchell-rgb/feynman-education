@@ -131,6 +131,52 @@ export const sb = (() => {
     );
   };
 
+  /* ─── Resilient response recording ───
+   * A dropped request on flaky school wifi used to silently lose a pupil's
+   * answer (submit() only console.error'd). Queue a failed write to localStorage
+   * and retry it on the next answer / page load so practice isn't lost. */
+  const PENDING_KEY = "retrieval.pendingResponses";
+  const readPending = () => {
+    if (typeof window === "undefined") return [];
+    try { return JSON.parse(window.localStorage.getItem(PENDING_KEY) || "[]"); } catch { return []; }
+  };
+  const writePending = (list) => {
+    if (typeof window === "undefined") return;
+    try {
+      if (list.length) window.localStorage.setItem(PENDING_KEY, JSON.stringify(list));
+      else window.localStorage.removeItem(PENDING_KEY);
+    } catch { /* quota — best effort */ }
+  };
+
+  let flushing = false;
+  const flushResponses = async () => {
+    if (flushing) return;
+    flushing = true;
+    try {
+      let pending = readPending();
+      while (pending.length) {
+        try { await q("responses", { method: "POST", body: pending[0].body }); }
+        catch { break; }                 // still failing — leave the rest queued
+        pending = pending.slice(1);
+        writePending(pending);
+      }
+    } finally { flushing = false; }
+  };
+
+  // Record a student response. Returns the inserted row on success, or
+  // { queued: true } if it was saved to retry later. Never throws on a network
+  // failure — the answer is preserved either way.
+  const recordResponse = async (body) => {
+    flushResponses().catch(() => {});    // opportunistically drain earlier failures
+    try {
+      const rows = await q("responses", { method: "POST", body });
+      return Array.isArray(rows) ? rows[0] : rows;
+    } catch (e) {
+      writePending([...readPending(), { body, ts: Date.now() }]);
+      return { queued: true, error: e.message };
+    }
+  };
+
   const auth = {
     signUp: async (email, pw, meta = {}) => {
       const r = await fetch(`${SUPA_URL}/auth/v1/signup`, { method: "POST", headers: { "Content-Type": "application/json", apikey: SUPA_KEY }, body: JSON.stringify({ email, password: pw, data: meta }) });
@@ -143,7 +189,7 @@ export const sb = (() => {
       const r = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=password`, { method: "POST", headers: { "Content-Type": "application/json", apikey: SUPA_KEY }, body: JSON.stringify({ email, password: pw }) });
       const d = await r.json();
       if (!r.ok || !d.access_token) throw new Error(d.error_description || d.error?.message || "Login failed");
-      setSession(d); return d;
+      setSession(d); flushResponses().catch(() => {}); return d;
     },
     out: () => clearSession(),
     user: () => user,
@@ -154,10 +200,11 @@ export const sb = (() => {
       if (!token && !refreshToken) return null;
       await ensureFresh();
       if (!token && refreshToken) await refresh();
+      if (token) flushResponses().catch(() => {});   // resend answers queued before the reload
       return token ? user : null;
     },
   };
-  return { q, del, qAll, auth };
+  return { q, del, qAll, auth, recordResponse, flushResponses, pendingResponses: () => readPending().length };
 })();
 
 export async function aiMark(qText, model, student, marks, question_id) {

@@ -422,12 +422,13 @@ export function Student({ user }) {
       }
     }
 
-    try {
-      const respRows = await sb.q("responses", { method: "POST", body: { student_id: user.id, question_id: q.id, class_id: cls.id, student_answer: ans, is_correct: r.correct, ai_feedback: r.flagged ? "FLAGGED: " + r.feedback : r.feedback, marks_awarded: r.marks_awarded } });
-      if (Array.isArray(respRows) && respRows[0]?.id) setLastResponseId(respRows[0].id);
-      setStats(s => ({ t: s.t + 1, c: s.c + (r.correct ? 1 : 0) }));
-      setSessionQCount(n => n + 1);
-    } catch (e) { console.error(e); }
+    // recordResponse never throws on a network failure — it queues the answer to
+    // retry, so a flaky connection doesn't lose the pupil's work. A queued write
+    // has no row id yet, so flagging this answer's mark is unavailable until it syncs.
+    const row = await sb.recordResponse({ student_id: user.id, question_id: q.id, class_id: cls.id, student_answer: ans, is_correct: r.correct, ai_feedback: r.flagged ? "FLAGGED: " + r.feedback : r.feedback, marks_awarded: r.marks_awarded });
+    if (row?.id) setLastResponseId(row.id);
+    setStats(s => ({ t: s.t + 1, c: s.c + (r.correct ? 1 : 0) }));
+    setSessionQCount(n => n + 1);
     setMarking(false);
   };
 
