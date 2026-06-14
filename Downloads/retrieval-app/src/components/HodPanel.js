@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { detectFakeAnswer } from "../lib/marking";
 import { sb } from "../lib/supabase";
 import { C } from "../lib/theme";
-import { Card, Dateline, Deck, Headline, Kicker, Pill } from "./ui";
+import { Btn, Card, Dateline, Deck, Headline, Kicker, Pill, TA } from "./ui";
 
 export function HodPanel({ user }) {
   const [loading, setLoading] = useState(true);
@@ -12,8 +12,12 @@ export function HodPanel({ user }) {
   const [classMembers, setClassMembers] = useState([]);
   const [responses, setResponses] = useState([]);
   const [topics, setTopics] = useState({}); // id -> name
-  const [view, setView] = useState("overview"); // overview | teachers | topics | atrisk
+  const [view, setView] = useState("overview"); // overview | teachers | topics | lowacc | inactive | flags
   const [error, setError] = useState("");
+  const [flags, setFlags] = useState([]);           // unresolved marking appeals across the department
+  const [expandedFlag, setExpandedFlag] = useState(null);
+  const [flagNote, setFlagNote] = useState("");
+  const [flagBusy, setFlagBusy] = useState(null);
 
   useEffect(() => { loadAll(); }, []);
 
@@ -28,17 +32,42 @@ export function HodPanel({ user }) {
       setClasses(cls);
       if (cls.length === 0) { setClassMembers([]); setResponses([]); setLoading(false); return; }
       const classIds = cls.map(c => c.id);
-      const [mems, resps, tps] = await Promise.all([
+      const [mems, resps, tps, mflags] = await Promise.all([
         sb.q("class_members", { params: { class_id: `in.(${classIds.join(",")})`, select: "class_id,student_id,profiles(display_name,email)" } }),
         sb.qAll("responses", { params: { class_id: `in.(${classIds.join(",")})`, select: "question_id,student_id,class_id,is_correct,answered_at,student_answer,questions(topic_id,topics(name))", order: "answered_at.desc" } }),
         sb.q("topics", { params: { select: "id,name" } }),
+        sb.q("marking_flags", { params: { class_id: `in.(${classIds.join(",")})`, or: `(resolved.is.null,resolved.eq.false)`, select: "id,response_id,student_id,class_id,question_id,student_answer,ai_feedback,ai_correct,student_reason,created_at,questions(question_text,marks,model_answer),profiles!marking_flags_student_id_fkey(display_name)", order: "created_at.desc" } }),
       ]);
       setClassMembers(mems);
       setResponses(resps);
+      setFlags(mflags);
       const topicMap = {}; tps.forEach(t => { topicMap[t.id] = t.name; });
       setTopics(topicMap);
     } catch (e) { console.error(e); setError(e.message); }
     setLoading(false);
+  };
+
+  // Resolve a marking appeal for a department class (now permitted by RLS:
+  // marking_flags_update + responses_update both gained a HoD branch). Mirrors
+  // the teacher resolve flow — overturn corrects the pupil's response, both
+  // outcomes mark the flag resolved.
+  const resolveFlag = async (flag, decision, note) => {
+    if (flagBusy) return;
+    setFlagBusy(flag.id);
+    try {
+      if (decision === "overturned" && flag.response_id) {
+        const maxMarks = flag.questions?.marks ?? 1;
+        const newFeedback = `[OVERTURNED by HoD] ${flag.ai_feedback || ""}`.slice(0, 2000);
+        await sb.q("responses", { method: "PATCH", params: { id: `eq.${flag.response_id}` }, body: { is_correct: true, marks_awarded: maxMarks, ai_feedback: newFeedback } });
+      }
+      await sb.q("marking_flags", { method: "PATCH", params: { id: `eq.${flag.id}` }, body: {
+        resolved: true, resolved_at: new Date().toISOString(), resolved_by: user.id,
+        teacher_decision: decision, teacher_notes: (note || "").trim() || null,
+      } });
+      setExpandedFlag(null); setFlagNote("");
+      setFlags(prev => prev.filter(f => f.id !== flag.id));
+    } catch (e) { console.error("resolveFlag failed", e); alert("Could not save: " + e.message); }
+    setFlagBusy(null);
   };
 
   // Analysis
@@ -164,6 +193,17 @@ export function HodPanel({ user }) {
             const inact = inactiveStudents.length, low = lowAccuracyStudents.length;
             const Triangle = (col) => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 9v4M12 17h.01" /><path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0Z" /></svg>;
             const inkBtn = (label, onClick) => <button onClick={onClick} style={{ width: "100%", marginTop: 14, padding: "13px", background: C.txt, color: C.bg, border: "none", borderRadius: 4, cursor: "pointer", fontFamily: "inherit", fontSize: 14, fontWeight: 700, letterSpacing: ".02em" }}>{label}</button>;
+            // Marking appeals lead — pupils are waiting on a disputed mark.
+            if (flags.length > 0) return (
+              <div style={{ background: C.ambS, border: `1px solid ${C.amb}33`, borderLeft: `4px solid ${C.amb}`, borderRadius: "0 6px 6px 0", padding: "16px 18px", marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>{Triangle(C.amb)}<span style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", color: C.amb }}>Marking appeals</span></div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginTop: 10 }}>
+                  <span style={{ fontFamily: C.serif, fontSize: 44, fontWeight: 600, lineHeight: .9, color: C.amb, fontVariantNumeric: "tabular-nums" }}>{flags.length}</span>
+                  <span style={{ fontFamily: C.serif, fontSize: 16, lineHeight: 1.25, color: C.txt }}>marking {flags.length === 1 ? "appeal is" : "appeals are"} awaiting review</span>
+                </div>
+                {inkBtn("Review appeals →", () => setView("flags"))}
+              </div>
+            );
             if (inact > 0) return (
               <div style={{ background: C.redS, border: `1px solid ${C.red}33`, borderLeft: `4px solid ${C.red}`, borderRadius: "0 6px 6px 0", padding: "16px 18px", marginBottom: 20 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>{Triangle(C.red)}<span style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", color: C.red }}>Needs your attention</span></div>
@@ -213,7 +253,7 @@ export function HodPanel({ user }) {
 
           {/* View tabs */}
           <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>
-            {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "Teachers" }, { k: "topics", l: "Weak topics" }, { k: "lowacc", l: `Low accuracy${lowAccuracyStudents.length > 0 ? ` (${lowAccuracyStudents.length})` : ""}` }, { k: "inactive", l: `Inactive${inactiveStudents.length > 0 ? ` (${inactiveStudents.length})` : ""}` }].map(t => (
+            {[{ k: "overview", l: "Overview" }, { k: "flags", l: `Flags${flags.length > 0 ? ` (${flags.length})` : ""}` }, { k: "teachers", l: "Teachers" }, { k: "topics", l: "Weak topics" }, { k: "lowacc", l: `Low accuracy${lowAccuracyStudents.length > 0 ? ` (${lowAccuracyStudents.length})` : ""}` }, { k: "inactive", l: `Inactive${inactiveStudents.length > 0 ? ` (${inactiveStudents.length})` : ""}` }].map(t => (
               <Pill key={t.k} on={view === t.k} onClick={() => setView(t.k)} style={{ fontSize: 12, padding: "6px 12px" }}>{t.l}</Pill>
             ))}
           </div>
@@ -421,6 +461,72 @@ export function HodPanel({ user }) {
                   </div>
                 </div>
               ))}
+            </>
+          )}
+
+          {/* FLAGS — resolve marking appeals across the department */}
+          {view === "flags" && (
+            <>
+              <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>
+                Marking appeals awaiting review across your department
+              </div>
+              {flags.length === 0 ? (
+                <Card style={{ padding: 40, textAlign: "center" }}>
+                  <div style={{ marginBottom: 10, display: "flex", justifyContent: "center" }}><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={C.grn} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><path d="m9 11 3 3L22 4" /></svg></div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: C.txt, marginBottom: 4 }}>No open marking appeals</div>
+                  <div style={{ fontSize: 12, color: C.mid }}>Pupils' disputed marks across the department appear here.</div>
+                </Card>
+              ) : flags.map(f => {
+                const cls_ = classes.find(c => c.id === f.class_id);
+                const teacherName = teachers.find(t => t.id === cls_?.teacher_id)?.display_name || "—";
+                const maxMarks = f.questions?.marks ?? 1;
+                const isOpen = expandedFlag === f.id;
+                const busy = flagBusy === f.id;
+                return (
+                  <div key={f.id} style={{ background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, marginBottom: 6 }}>
+                    <button onClick={() => { setExpandedFlag(isOpen ? null : f.id); setFlagNote(""); }} style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, padding: "10px 12px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left", fontFamily: "inherit", color: C.txt }}>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600 }}>{f.profiles?.display_name || "?"}</div>
+                        <div style={{ fontSize: 11, color: C.mid, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{cls_?.name || "—"} · {teacherName}</div>
+                      </div>
+                      <span style={{ fontSize: 11, color: C.dim, whiteSpace: "nowrap" }}>{isOpen ? "−" : "+"} {new Date(f.created_at).toLocaleDateString()}</span>
+                    </button>
+                    {isOpen && (
+                      <div style={{ padding: "0 12px 12px", borderTop: `1px solid ${C.bdr}` }}>
+                        <div style={{ marginTop: 12 }}>
+                          <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 4 }}>Question · {maxMarks} mark{maxMarks !== 1 ? "s" : ""}</div>
+                          <div style={{ fontSize: 13, color: C.txt, lineHeight: 1.5 }}>{f.questions?.question_text || "(question missing)"}</div>
+                        </div>
+                        {f.questions?.model_answer && (
+                          <div style={{ marginTop: 10 }}>
+                            <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 4 }}>Model answer</div>
+                            <div style={{ fontSize: 12, color: C.mid, lineHeight: 1.5, padding: "8px 10px", background: C.card2, border: `1px solid ${C.bdr}`, borderRadius: 4 }}>{f.questions.model_answer}</div>
+                          </div>
+                        )}
+                        <div style={{ marginTop: 10 }}>
+                          <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 4 }}>Pupil's answer</div>
+                          <div style={{ fontSize: 13, color: C.txt, lineHeight: 1.5, padding: "8px 10px", background: C.card2, border: `1px solid ${C.bdr}`, borderRadius: 4 }}>{f.student_answer || "(blank)"}</div>
+                        </div>
+                        <div style={{ marginTop: 10 }}>
+                          <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 4 }}>AI marked as · <span style={{ color: f.ai_correct ? C.grn : C.red, fontWeight: 700 }}>{f.ai_correct ? "correct" : "wrong"}</span></div>
+                          <div style={{ fontSize: 12, color: C.mid, lineHeight: 1.5, padding: "8px 10px", background: C.card2, border: `1px solid ${C.bdr}`, borderRadius: 4 }}>{f.ai_feedback || "(no feedback)"}</div>
+                        </div>
+                        {f.student_reason && (
+                          <div style={{ marginTop: 10 }}>
+                            <div style={{ fontSize: 10, color: C.mid, letterSpacing: 0.6, textTransform: "uppercase", marginBottom: 4 }}>Pupil's reason</div>
+                            <div style={{ fontSize: 13, color: C.txt, lineHeight: 1.5, padding: "8px 10px", background: C.priSoft, border: `1px solid ${C.bdr}`, borderRadius: 4, fontStyle: "italic" }}>"{f.student_reason}"</div>
+                          </div>
+                        )}
+                        <TA placeholder="Optional note (saved with your decision)" value={isOpen ? flagNote : ""} onChange={e => setFlagNote(e.target.value)} rows={2} style={{ marginTop: 10 }} />
+                        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+                          <Btn onClick={() => resolveFlag(f, "overturned", flagNote)} disabled={busy || !f.response_id} style={{ flex: 1, background: C.grn, color: C.bg }}>{busy ? "Saving…" : `Overturn — award ${maxMarks} mark${maxMarks !== 1 ? "s" : ""}`}</Btn>
+                          <Btn v="ghost" onClick={() => resolveFlag(f, "upheld", flagNote)} disabled={busy} style={{ flex: 1 }}>{busy ? "Saving…" : "Uphold AI mark"}</Btn>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </>
           )}
         </>
