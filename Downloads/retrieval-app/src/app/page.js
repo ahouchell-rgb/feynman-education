@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Auth } from "../components/Auth";
+import { Auth, ResetPassword } from "../components/Auth";
+import { AccountModal } from "../components/Account";
+import { SupportModal } from "../components/SupportModal";
 import { Landing } from "../components/Landing";
 import { Student } from "../components/Student";
 import { Teacher } from "../components/Teacher";
@@ -15,11 +17,16 @@ export default function App() {
   // Logged-out visitors land on the marketing front door; "Log in" reveals the auth
   // form. A ?login deep-link (used by the pricing page's "Log in") skips straight to it.
   const [showLogin, setShowLogin] = useState(false);
+  const [recovery, setRecovery] = useState(false);   // arrived via a password-reset email link
+  const [showAccount, setShowAccount] = useState(false);
+  const [showSupport, setShowSupport] = useState(false);
 
   // Re-establish a persisted session on load so a refresh doesn't bounce to login.
   useEffect(() => {
     let alive = true;
     (async () => {
+      // A password-reset email link lands here with recovery tokens in the URL hash.
+      if (sb.auth.applyRecovery()) { if (alive) { setRecovery(true); setRestoring(false); } return; }
       try {
         const u = await sb.auth.restore();
         if (u && alive) setUser(await attachProfile(u));
@@ -35,6 +42,7 @@ export default function App() {
   }, []);
 
   if (restoring) return <div style={{ minHeight: "100dvh", background: C.bg }} />;
+  if (recovery) return <ResetPassword onDone={() => { setRecovery(false); setShowLogin(true); }} />;
   if (!user) return showLogin
     ? <Auth onAuth={setUser} onBack={() => setShowLogin(false)} />
     : <Landing onLogin={() => setShowLogin(true)} />;
@@ -48,9 +56,16 @@ export default function App() {
             <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.3 }}>Feynman<span style={{ color: C.pri }}> Education</span></span>
             <Badge color={roleColor(user)}>{roleLabel(user)}</Badge>
           </div>
-          <Btn v="ghost" onClick={() => { sb.auth.out(); setUser(null); }} style={{ padding: "6px 12px", fontSize: 12 }}>Log out</Btn>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Btn v="ghost" onClick={() => setShowSupport(true)} style={{ padding: "6px 12px", fontSize: 12 }}>Help</Btn>
+            <Btn v="ghost" onClick={() => setShowAccount(true)} style={{ padding: "6px 12px", fontSize: 12 }}>Account</Btn>
+            <Btn v="ghost" onClick={() => { sb.auth.out(); setUser(null); }} style={{ padding: "6px 12px", fontSize: 12 }}>Log out</Btn>
+          </div>
         </div>
       </div>
+      {showAccount && <AccountModal user={user} onClose={() => setShowAccount(false)}
+        onUpdated={(name) => setUser(u => ({ ...u, user_metadata: { ...u.user_metadata, display_name: name }, profile: { ...u.profile, display_name: name } }))} />}
+      {showSupport && <SupportModal user={user} onClose={() => setShowSupport(false)} />}
       <div style={{ paddingBottom: 60 }}>{teacherSide ? <Teacher user={user} /> : <Student user={user} />}</div>
       <style>{`
         *{box-sizing:border-box;margin:0;padding:0}

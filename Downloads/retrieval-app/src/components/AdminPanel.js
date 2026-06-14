@@ -33,8 +33,30 @@ export function AdminPanel({ user }) {
   const [addClassId, setAddClassId] = useState(""); // selected class in the student's "Add to class" dropdown
   const [showCreateTeacher, setShowCreateTeacher] = useState(false);
   const [newTeacher, setNewTeacher] = useState({ email: "", display_name: "", password: "" });
+  // In-app support tickets (Support tab). openCount drives the tab's flag badge.
+  const [tickets, setTickets] = useState(null);   // null = not loaded
+  const [openCount, setOpenCount] = useState(0);
 
   useEffect(() => { loadAll(); }, []);
+
+  // Lazy-load the full ticket list when the Support tab is first opened.
+  useEffect(() => { if (view === "support" && tickets === null) loadTickets(); /* eslint-disable-next-line */ }, [view]);
+
+  const loadTickets = async () => {
+    try {
+      const t = await sb.q("support_tickets", { params: { select: "*", order: "created_at.desc" } });
+      setTickets(t || []);
+      setOpenCount((t || []).filter(x => x.status === "open").length);
+    } catch (e) { setTickets([]); setMsg("Support tickets unavailable — has migration 07 been applied? " + e.message); }
+  };
+
+  const resolveTicket = async (id, status) => {
+    try {
+      await sb.q("support_tickets", { method: "PATCH", params: { id: `eq.${id}` }, body: { status, resolved_at: status === "resolved" ? new Date().toISOString() : null } });
+      setTickets(ts => (ts || []).map(t => t.id === id ? { ...t, status } : t));
+      setOpenCount(c => status === "resolved" ? Math.max(0, c - 1) : c + 1);
+    } catch (e) { setMsg("Error: " + e.message); }
+  };
 
   const loadAll = async () => {
     setLoading(true);
@@ -52,6 +74,8 @@ export function AdminPanel({ user }) {
       setClasses(clss);
       setClassMembers(mems);
       setResponses30d(resps || []);
+      // Open-support-ticket flag for the Support tab (table may not exist pre-migration).
+      try { const ot = await sb.q("support_tickets", { params: { status: "eq.open", select: "id" } }); setOpenCount((ot || []).length); } catch { /* migration 07 not applied yet */ }
     } catch (e) { console.error(e); setMsg("Error loading: " + e.message); }
     setLoading(false);
   };
@@ -73,6 +97,22 @@ export function AdminPanel({ user }) {
       } else {
         setMsg("Error: " + (d.error || "Unknown error"));
       }
+    } catch (e) { setMsg("Error: " + e.message); }
+    setBusy(false);
+  };
+
+  // GDPR data-subject export: download all of one pupil's data as JSON.
+  const exportStudentData = async (s) => {
+    setBusy(true); setMsg("");
+    try {
+      const data = await sb.rpc("export_student_data", { p_student: s.id });
+      if (!data) { setMsg("Error: not authorised, or this needs migration 09 applied."); setBusy(false); return; }
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = `${(s.display_name || "pupil").replace(/[^a-z0-9_-]+/gi, "_")}_data_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+      setMsg("✓ Pupil data exported.");
     } catch (e) { setMsg("Error: " + e.message); }
     setBusy(false);
   };
@@ -121,7 +161,7 @@ export function AdminPanel({ user }) {
 
       {/* View tabs */}
       <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>
-        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }, { k: "schools", l: "Schools & plans" }, { k: "costs", l: "Costs" }, { k: "aiusage", l: "AI usage" }, { k: "cache", l: "Cache health" }].map(t => (
+        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }, { k: "support", l: `Support${openCount > 0 ? ` (${openCount})` : ""}` }, { k: "schools", l: "Schools & plans" }, { k: "costs", l: "Costs" }, { k: "aiusage", l: "AI usage" }, { k: "cache", l: "Cache health" }].map(t => (
           <Pill key={t.k} on={view === t.k} onClick={() => setView(t.k)} style={{ fontSize: 12, padding: "6px 12px" }}>{t.l}</Pill>
         ))}
       </div>
@@ -358,6 +398,11 @@ export function AdminPanel({ user }) {
                       </div>
                     )}
 
+                    {/* GDPR export */}
+                    <div>
+                      <Btn v="ghost" onClick={() => exportStudentData(s)} disabled={busy} style={{ width: "100%", fontSize: 11, padding: "8px 10px" }}>Export data (GDPR · JSON)</Btn>
+                    </div>
+
                     {/* Delete */}
                     <div>
                       <Btn v="ghost" onClick={() => { if (confirm(`Permanently delete ${s.display_name}? This removes the account entirely.`)) callManage("delete_student", s.id); }} disabled={busy} style={{ width: "100%", fontSize: 11, padding: "8px 10px", background: C.redS, color: C.red, borderColor: "rgba(239,68,68,.3)" }}>Delete student account</Btn>
@@ -372,6 +417,30 @@ export function AdminPanel({ user }) {
       )}
 
       {/* SCHOOLS & PLANS — moderator provisioning + fair-use metering */}
+      {view === "support" && (
+        <div>
+          {tickets === null ? <div style={{ padding: 20, color: C.mid, fontSize: 12 }}>Loading…</div>
+           : tickets.length === 0 ? <div style={{ padding: 20, textAlign: "center", color: C.mid, fontSize: 12 }}>No support messages yet.</div>
+           : tickets.map(t => (
+             <Card key={t.id} style={{ padding: 14, marginBottom: 10, borderLeft: `3px solid ${t.status === "open" ? C.amb : C.bdr}` }}>
+               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, marginBottom: 6 }}>
+                 <div style={{ fontSize: 13, fontWeight: 600, color: C.txt }}>{t.display_name || t.email || "Unknown"} <span style={{ fontWeight: 400, color: C.mid }}>· {t.role || "?"}</span></div>
+                 <div style={{ fontSize: 11, color: C.dim, whiteSpace: "nowrap" }}>{new Date(t.created_at).toLocaleString("en-GB")}</div>
+               </div>
+               <div style={{ fontSize: 14, color: C.txt, lineHeight: 1.5, whiteSpace: "pre-wrap" }}>{t.message}</div>
+               <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10, fontSize: 11, color: C.dim }}>
+                 {t.email && <a href={`mailto:${t.email}?subject=Re%3A%20your%20Feynman%20Education%20message`} style={{ color: C.pri, fontWeight: 600, textDecoration: "none" }}>Reply by email</a>}
+                 {t.page && <span>· {t.page}</span>}
+                 <span style={{ flex: 1 }} />
+                 {t.status === "open"
+                   ? <Btn onClick={() => resolveTicket(t.id, "resolved")} style={{ fontSize: 11, padding: "6px 12px" }}>Mark resolved</Btn>
+                   : <Btn v="ghost" onClick={() => resolveTicket(t.id, "open")} style={{ fontSize: 11, padding: "6px 12px" }}>Reopen</Btn>}
+               </div>
+             </Card>
+           ))}
+        </div>
+      )}
+
       {view === "schools" && <SchoolsPanel />}
 
       {/* COSTS — live spend, blend and unit economics from the real ai_usage token log */}

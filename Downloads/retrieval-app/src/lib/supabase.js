@@ -256,6 +256,44 @@ export const sb = (() => {
       if (token) flushAnswers().catch(() => {});   // resend answers queued before the reload
       return token ? user : null;
     },
+    // Send a password-reset email (Supabase emails a recovery link).
+    recover: async (email) => {
+      const r = await fetch(`${SUPA_URL}/auth/v1/recover`, { method: "POST", headers: { "Content-Type": "application/json", apikey: SUPA_KEY }, body: JSON.stringify({ email }) });
+      if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error_description || d.msg || d.error?.message || "Could not send reset email"); }
+      return true;
+    },
+    // Change the signed-in user's password (self-service, or during recovery).
+    updatePassword: async (newPassword) => {
+      await ensureFresh();
+      const r = await fetch(`${SUPA_URL}/auth/v1/user`, { method: "PUT", headers: { "Content-Type": "application/json", apikey: SUPA_KEY, Authorization: `Bearer ${token}` }, body: JSON.stringify({ password: newPassword }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error_description || d.msg || d.error?.message || "Could not update password");
+      return d;
+    },
+    // Change the signed-in user's display name (auth metadata + profiles row).
+    updateName: async (display_name) => {
+      await ensureFresh();
+      const r = await fetch(`${SUPA_URL}/auth/v1/user`, { method: "PUT", headers: { "Content-Type": "application/json", apikey: SUPA_KEY, Authorization: `Bearer ${token}` }, body: JSON.stringify({ data: { display_name } }) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error_description || d.msg || d.error?.message || "Could not update name");
+      if (d && d.id) { user = d; persist(); }
+      try { if (user?.id) await q("profiles", { method: "PATCH", params: { id: `eq.${user.id}` }, body: { display_name } }); } catch { /* RLS/offline — auth metadata still updated */ }
+      return d;
+    },
+    // Recovery deep-link: Supabase returns the user with tokens in the URL hash
+    // (#access_token=…&type=recovery). Apply them as a session so the user can set
+    // a new password. Returns true when a recovery link was handled.
+    applyRecovery: () => {
+      if (typeof window === "undefined") return false;
+      const hash = window.location.hash || "";
+      if (!hash.includes("type=recovery") || !hash.includes("access_token")) return false;
+      const p = new URLSearchParams(hash.replace(/^#/, ""));
+      const access_token = p.get("access_token");
+      if (!access_token) return false;
+      setSession({ access_token, refresh_token: p.get("refresh_token"), expires_in: Number(p.get("expires_in")) || 3600 });
+      try { window.history.replaceState(null, "", window.location.pathname + window.location.search); } catch { /* ignore */ }
+      return true;
+    },
   };
   return { q, del, qAll, rpc, auth, submitAnswer, flushAnswers, pendingAnswers: () => readPending().length };
 })();
