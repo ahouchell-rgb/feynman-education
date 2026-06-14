@@ -15,6 +15,7 @@ psql "$DATABASE_URL" -f db/migrations/<file>.sql
 | `20260614_01_profiles_privilege_lockdown.sql` | APPLIED | Stops a pupil self-promoting to `moderator` (and then reading all PII) by revoking client UPDATE on privileged `profiles` columns. |
 | `20260614_02_grade_integrity_lockin.sql` | APPLIED (2026-06-14) | Revokes client INSERT on `responses` so only the `mark-answer` edge function (service role) can record a grade. |
 | `20260614_03_hod_resolve_marking_flags.sql` | APPLIED | Adds a HoD branch to `marking_flags_update`, and adds the missing `responses` UPDATE policy (teacher/HoD/moderator) — which also fixes "overturn" silently no-op'ing for everyone. |
+| `20260614_04_paper_grade_integrity_lockin.sql` | PENDING | Past-paper equivalent of 02: revokes client write on `paper_responses` + `paper_attempts.awarded_marks` so only `mark-paper-answer` (service role) sets exam marks. **Apply after the paper client is deployed.** |
 
 After applying a migration, run the RLS regression suite to confirm the gates
 hold:

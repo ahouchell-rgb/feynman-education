@@ -70,10 +70,16 @@ export function StudentPaperAttempt({ user, cls, paperId, onExit, forceNewAttemp
     if (!ans.trim() || marking || !currentQ) return;
     setMarking(true);
     try {
+      // The function grades from the DB's marking points AND writes the response
+      // server-side (authoritative), so a pupil can't set their own exam marks.
+      // Sending the pupil's token lets it identify them and record.
+      const token = sb.auth.getToken();
       const r = await fetch(`${SUPA_URL}/functions/v1/mark-paper-answer`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", apikey: SUPA_KEY },
+        headers: { "Content-Type": "application/json", apikey: SUPA_KEY, ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify({
+          attempt_id: attempt.id,
+          paper_question_id: currentQ.id,
           question: currentQ.question_text,
           command_word: currentQ.command_word,
           marks: currentQ.marks,
@@ -82,24 +88,21 @@ export function StudentPaperAttempt({ user, cls, paperId, onExit, forceNewAttemp
         }),
       });
       const d = await r.json();
-      // Persist the response
-      const body = {
-        attempt_id: attempt.id,
-        paper_question_id: currentQ.id,
-        student_answer: ans,
-        marks_awarded: d.marks_awarded ?? 0,
-        marks_max: currentQ.marks,
-        ai_feedback: d.feedback || null,
-        awarded_points: d.awarded_points || [],
-        flagged: !!d.flagged,
-      };
-      // Upsert: delete existing then insert (PostgREST upsert via UNIQUE constraint)
-      if (existingResp) {
-        await sb.q("paper_responses", { method: "PATCH", params: { id: `eq.${existingResp.id}` }, body });
-        setResponses(prev => ({ ...prev, [currentQ.id]: { ...existingResp, ...body } }));
+      if (d.recorded) {
+        const row = { id: d.response_id, attempt_id: attempt.id, paper_question_id: currentQ.id, student_answer: ans, marks_awarded: d.marks_awarded ?? 0, marks_max: currentQ.marks, ai_feedback: d.feedback || null, awarded_points: d.awarded_points || [], flagged: !!d.flagged };
+        setResponses(prev => ({ ...prev, [currentQ.id]: row }));
       } else {
-        const [created] = await sb.q("paper_responses", { method: "POST", body });
-        setResponses(prev => ({ ...prev, [currentQ.id]: created }));
+        // Transition/fallback: store the SERVER's verdict directly. After the
+        // lock-in migration this RLS path closes and every client records via
+        // the function. Marks come from the function, never client-chosen.
+        const body = { attempt_id: attempt.id, paper_question_id: currentQ.id, student_answer: ans, marks_awarded: d.marks_awarded ?? 0, marks_max: currentQ.marks, ai_feedback: d.feedback || null, awarded_points: d.awarded_points || [], flagged: !!d.flagged };
+        if (existingResp) {
+          await sb.q("paper_responses", { method: "PATCH", params: { id: `eq.${existingResp.id}` }, body });
+          setResponses(prev => ({ ...prev, [currentQ.id]: { ...existingResp, ...body } }));
+        } else {
+          const [created] = await sb.q("paper_responses", { method: "POST", body });
+          setResponses(prev => ({ ...prev, [currentQ.id]: created }));
+        }
       }
       setLastResult(d);
     } catch (e) { console.error("mark failed", e); alert("Marking failed: " + e.message); }
@@ -122,12 +125,13 @@ export function StudentPaperAttempt({ user, cls, paperId, onExit, forceNewAttemp
     try {
       const total = questions.reduce((s, q) => s + (q.marks || 0), 0);
       const awarded = Object.values(responses).reduce((s, r) => s + (r.marks_awarded || 0), 0);
+      // awarded_marks / total_marks are maintained server-side by the marking
+      // function (recomputed from the stored responses); the client only marks
+      // the attempt submitted — so the score can't be forged.
       await sb.q("paper_attempts", { method: "PATCH", params: { id: `eq.${attempt.id}` }, body: {
         submitted_at: new Date().toISOString(),
-        total_marks: total,
-        awarded_marks: awarded,
       }});
-      // Show final results inline (don't exit yet)
+      // Optimistic UI only — the authoritative totals already live on the row.
       setAttempt(prev => ({ ...prev, submitted_at: new Date().toISOString(), total_marks: total, awarded_marks: awarded }));
     } catch (e) { console.error("submit failed", e); alert("Submission failed: " + e.message); }
     setSubmitting(false);
