@@ -35,4 +35,7 @@ as $$
 $$;
 
 revoke all on function public.export_student_data(uuid) from public;
+-- Supabase default privileges also auto-grant EXECUTE to anon on new functions;
+-- revoke that so only signed-in staff can call this DSAR export.
+revoke execute on function public.export_student_data(uuid) from anon;
 grant execute on function public.export_student_data(uuid) to authenticated;
