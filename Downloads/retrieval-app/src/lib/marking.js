@@ -111,8 +111,9 @@ export function detectFakeAnswer(answer) {
   // All same word repeated
   const words = trimmed.toLowerCase().split(/\s+/);
   if (words.length >= 3 && new Set(words).size === 1) return "Same word repeated — doesn't count.";
-  // No vowels — keyboard mashing
-  if (trimmed.length >= 5 && !/[aeiouAEIOU]/.test(trimmed)) return "This doesn't look like a real answer — doesn't count.";
+  // No vowels — keyboard mashing. 'y' counts as a vowel so real science words
+  // like "rhythm", "lymph", "crypt", "glycyl" aren't rejected as gibberish.
+  if (trimmed.length >= 5 && !/[aeiouyAEIOUY]/.test(trimmed)) return "This doesn't look like a real answer — doesn't count.";
   // "I don't know" and explicit non-attempt phrases
   if (/^(i )?(don'?t|do not|dont) know\.?$/i.test(trimmed)) return "Please attempt the answer — doesn't count towards target.";
   if (/^(idk|dunno|no idea|not sure|unsure|no clue|i have no idea|i dont know|idek)\.?$/i.test(trimmed)) return "Please attempt the answer — doesn't count towards target.";

@@ -72,6 +72,12 @@ describe("detectFakeAnswer", () => {
     expect(detectFakeAnswer("bcdfg")).toMatch(/doesn't look like a real answer/i);
   });
 
+  it("does not reject real science words whose only vowel is 'y'", () => {
+    for (const w of ["rhythm", "lymph", "crypt", "glycyl"]) {
+      expect(detectFakeAnswer(w)).toBeNull();
+    }
+  });
+
   it("flags explicit non-attempts", () => {
     expect(detectFakeAnswer("I don't know")).toMatch(/attempt/i);
     expect(detectFakeAnswer("idk")).toMatch(/attempt/i);
