@@ -147,3 +147,38 @@ begin
   if owner_vis <> 1 then raise exception 'FAIL: author cannot read their own private question'; end if;
   raise notice 'PASS: private questions are author-scoped (hidden from non-pupils)';
 end $$;
+
+-- 8) Class visibility — HARD GATE. A pupil must NOT read a class they aren't
+--    enrolled in (join codes were previously world-readable via classes_select
+--    USING(true)). The teacher and an enrolled pupil must still read it.
+do $$
+declare s uuid; cls uuid; t uuid; other_s uuid; v_in int; v_t int; v_out int;
+begin
+  select cm.student_id, cm.class_id into s, cls from class_members cm limit 1;
+  if s is null then raise notice 'SKIP: no class members'; return; end if;
+  select teacher_id into t from classes where id = cls;
+  select cm.student_id into other_s from class_members cm where cm.class_id <> cls and cm.student_id <> s limit 1;
+
+  perform set_config('role','authenticated', true);
+  perform set_config('request.jwt.claims', json_build_object('sub', s, 'role','authenticated')::text, true);
+  select count(*) into v_in from classes where id = cls;
+  reset role;
+
+  perform set_config('role','authenticated', true);
+  perform set_config('request.jwt.claims', json_build_object('sub', t, 'role','authenticated')::text, true);
+  select count(*) into v_t from classes where id = cls;
+  reset role;
+
+  v_out := 0;
+  if other_s is not null then
+    perform set_config('role','authenticated', true);
+    perform set_config('request.jwt.claims', json_build_object('sub', other_s, 'role','authenticated')::text, true);
+    select count(*) into v_out from classes where id = cls;
+    reset role;
+  end if;
+
+  if v_in <> 1 then raise exception 'FAIL: enrolled pupil cannot read their class'; end if;
+  if v_t  <> 1 then raise exception 'FAIL: teacher cannot read own class'; end if;
+  if v_out <> 0 then raise exception 'FAIL: outsider pupil can read a class (join-code leak)'; end if;
+  raise notice 'PASS: class rows scoped to teacher/enrolled (join codes not world-readable)';
+end $$;

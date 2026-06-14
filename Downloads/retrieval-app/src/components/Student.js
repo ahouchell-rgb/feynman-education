@@ -207,14 +207,16 @@ export function Student({ user }) {
     setJoinErr(""); setJoining(true);
     try {
       const code = joinCode.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
-      const matches = await sb.q("classes", { params: { join_code: `eq.${code}`, select: "*,subjects(name)" } });
-      if (!matches.length) { setJoinErr("No class found with that code. Check with your teacher."); setJoining(false); return; }
-      const c = matches[0];
-      // Check not already enrolled
-      const existing = await sb.q("class_members", { params: { class_id: `eq.${c.id}`, student_id: `eq.${user.id}`, select: "id" } });
-      if (existing.length) { setJoinErr("You're already in this class!"); setJoining(false); return; }
-      await sb.q("class_members", { method: "POST", body: { class_id: c.id, student_id: user.id } });
-      setClasses(p => [...p, c]);
+      // Joining is validated + enrolled server-side: the RPC looks up the class by
+      // code and adds the membership. So join codes aren't world-readable and a
+      // pupil can't enrol in an arbitrary class. Idempotent — re-joining is fine.
+      const rows = await sb.rpc("join_class_by_code", { p_code: code });
+      if (!rows || !rows.length) { setJoinErr("No class found with that code. Check with your teacher."); setJoining(false); return; }
+      const joined = rows[0];
+      // Now enrolled, so classes_select lets us read the full row for the UI.
+      let full = joined;
+      try { full = await sb.q("classes", { params: { id: `eq.${joined.id}`, select: "*,subjects(name)" }, single: true }); } catch { /* fall back to id+name */ }
+      setClasses(p => p.some(x => x.id === joined.id) ? p : [...p, full]);
       setJoinCode("");
     } catch (e) { setJoinErr(e.message); }
     setJoining(false);

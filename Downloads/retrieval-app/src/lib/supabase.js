@@ -131,6 +131,19 @@ export const sb = (() => {
     );
   };
 
+  // Call a Postgres function (RPC). Used for SECURITY DEFINER operations that
+  // must be validated server-side — e.g. joining a class by code (so join codes
+  // don't need to be world-readable and a pupil can't enrol in an arbitrary class).
+  const rpc = async (fn, args = {}) => {
+    await ensureFresh();
+    const u = `${SUPA_URL}/rest/v1/rpc/${fn}`;
+    const send = () => fetch(u, { method: "POST", headers: h(), body: JSON.stringify(args) });
+    let r = await send();
+    if (r.status === 401 && token && await refresh()) r = await send();
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || `rpc ${fn} failed`); }
+    return r.json();
+  };
+
   /* ─── Authoritative answer submission + offline resilience ───
    * The mark-answer edge function is the single source of truth for the grade
    * AND the writer of the responses row, so the browser can't mark itself
@@ -244,5 +257,5 @@ export const sb = (() => {
       return token ? user : null;
     },
   };
-  return { q, del, qAll, auth, submitAnswer, flushAnswers, pendingAnswers: () => readPending().length };
+  return { q, del, qAll, rpc, auth, submitAnswer, flushAnswers, pendingAnswers: () => readPending().length };
 })();
