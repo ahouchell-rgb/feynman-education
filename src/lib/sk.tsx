@@ -1,5 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import type { ReactNode } from "react";
+import { buildRestUrl, restError } from "./supabaseRest";
 
 /* ─── Config ─── */
 export const SK_URL  = "https://uujbgdwnuspfnvfpdtvr.supabase.co";
@@ -11,37 +13,60 @@ export const SK_API_KEY = "MIHy7pb5UoumNqcqxkGfAREqRQkWFP64M1eYPsvc5oo";
 const STORAGE_KEY = "sk_auth";
 const REFRESH_BUFFER_MS = 60 * 1000; // refresh 60s before expiry
 
+/* ─── Types ─── */
+export interface SkUser { id: string; email?: string; [k: string]: any; }
+export interface SkSession {
+  access_token: string;
+  refresh_token: string;
+  expires_at: number;
+  user: SkUser;
+}
+export interface QueryOpts {
+  method?: string;
+  body?: any;
+  params?: Record<string, string>;
+  single?: boolean;
+}
+export type Profile = any;
+interface AuthState { user: SkUser | null; profile: Profile; loading: boolean; }
+interface AuthValue extends AuthState {
+  login: (email: string, pw: string) => Promise<Profile>;
+  signup: (email: string, pw: string, name?: string) => Promise<{ needsConfirmation?: boolean; profile?: Profile }>;
+  logout: () => void;
+  setProfile: (p: Profile) => void;
+}
+
 /* ─── Session storage ─── */
-const readSession = () => {
+const readSession = (): SkSession | null => {
   if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch { return null; }
 };
-const writeSession = (s) => {
+const writeSession = (s: SkSession | null) => {
   if (typeof window === "undefined") return;
   if (s) localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
   else localStorage.removeItem(STORAGE_KEY);
 };
 
 /* ─── Module-level token holder, kept in sync with context ─── */
-let _session = null;
+let _session: SkSession | null = null;
 const getToken = () => _session?.access_token || null;
-const setSession = (s) => {
+const setSession = (s: SkSession | null) => {
   _session = s;
   writeSession(s);
 };
 
 /* ─── HTTP helpers ─── */
-const h = (extra = {}) => ({
+const h = (extra: Record<string, string> = {}): Record<string, string> => ({
   "Content-Type": "application/json",
   apikey: SK_KEY,
   Authorization: `Bearer ${getToken() || SK_KEY}`,
   ...extra,
 });
 
-const refreshAccessToken = async () => {
+const refreshAccessToken = async (): Promise<SkSession | null> => {
   if (!_session?.refresh_token) return null;
   try {
     const r = await fetch(`${SK_URL}/auth/v1/token?grant_type=refresh_token`, {
@@ -51,7 +76,7 @@ const refreshAccessToken = async () => {
     });
     const d = await r.json();
     if (!r.ok || !d.access_token) throw new Error("refresh failed");
-    const updated = {
+    const updated: SkSession = {
       access_token: d.access_token,
       refresh_token: d.refresh_token,
       expires_at: Math.floor(Date.now() / 1000) + (d.expires_in || 3600),
@@ -67,14 +92,13 @@ const refreshAccessToken = async () => {
 
 const ensureFreshToken = async () => {
   if (!_session) return;
-  const now = Math.floor(Date.now() / 1000);
   if (_session.expires_at && _session.expires_at * 1000 - Date.now() < REFRESH_BUFFER_MS) {
     await refreshAccessToken();
   }
 };
 
 /* ─── REST client ─── */
-const skFetch = async (input, init = {}) => {
+const skFetch = async (input: RequestInfo | URL, init: RequestInit = {}) => {
   await ensureFreshToken();
   let r = await fetch(input, init);
   if (r.status === 401 && _session?.refresh_token) {
@@ -89,25 +113,22 @@ const skFetch = async (input, init = {}) => {
 };
 
 export const sk = {
-  q: async (tbl, { method = "GET", body, params = {}, single } = {}) => {
-    const u = new URL(`${SK_URL}/rest/v1/${tbl}`);
-    Object.entries(params).forEach(([k, v]) => u.searchParams.set(k, v));
+  q: async (tbl: string, { method = "GET", body, params = {}, single }: QueryOpts = {}): Promise<any> => {
+    const u = buildRestUrl(SK_URL, tbl, params);
     const hd = h();
     if (single) hd["Accept"] = "application/vnd.pgrst.object+json";
     if (method === "POST" || method === "PATCH") hd["Prefer"] = "return=representation";
     const r = await skFetch(u, { method, headers: hd, body: body ? JSON.stringify(body) : undefined });
-    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || `${method} ${tbl} failed`); }
+    if (!r.ok) throw await restError(r, `${method} ${tbl} failed`);
     if (method === "DELETE") return null;
     return r.json();
   },
 
-  del: async (tbl, p = {}) => {
-    const u = new URL(`${SK_URL}/rest/v1/${tbl}`);
-    Object.entries(p).forEach(([k, v]) => u.searchParams.set(k, v));
-    await skFetch(u, { method: "DELETE", headers: h() });
+  del: async (tbl: string, p: Record<string, string> = {}) => {
+    await skFetch(buildRestUrl(SK_URL, tbl, p), { method: "DELETE", headers: h() });
   },
 
-  upload: async (path, file) => {
+  upload: async (path: string, file: File) => {
     await ensureFreshToken();
     const r = await fetch(`${SK_URL}/storage/v1/object/resources/${path}`, {
       method: "POST",
@@ -118,17 +139,17 @@ export const sk = {
     return `${SK_URL}/storage/v1/object/public/resources/${path}`;
   },
 
-  rpc: async (fn, body = {}) => {
-    const r = await skFetch(`${SK_URL}/rest/v1/rpc/${fn}`, {
+  rpc: async (fn: string, body: any = {}): Promise<any> => {
+    const r = await skFetch(buildRestUrl(SK_URL, `rpc/${fn}`), {
       method: "POST",
       headers: h(),
       body: JSON.stringify(body),
     });
-    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || `RPC ${fn} failed`); }
+    if (!r.ok) throw await restError(r, `RPC ${fn} failed`);
     return r.json();
   },
 
-  storageDelete: async (path) => {
+  storageDelete: async (path: string) => {
     await ensureFreshToken();
     await fetch(`${SK_URL}/storage/v1/object/resources/${path}`, {
       method: "DELETE",
@@ -137,7 +158,7 @@ export const sk = {
   },
 
   auth: {
-    signIn: async (email, pw) => {
+    signIn: async (email: string, pw: string): Promise<SkSession> => {
       const r = await fetch(`${SK_URL}/auth/v1/token?grant_type=password`, {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: SK_KEY },
@@ -145,7 +166,7 @@ export const sk = {
       });
       const d = await r.json();
       if (!r.ok || !d.access_token) throw new Error(d.error_description || "Login failed");
-      const s = {
+      const s: SkSession = {
         access_token: d.access_token,
         refresh_token: d.refresh_token,
         expires_at: Math.floor(Date.now() / 1000) + (d.expires_in || 3600),
@@ -154,7 +175,7 @@ export const sk = {
       setSession(s);
       return s;
     },
-    signUp: async (email, pw, name) => {
+    signUp: async (email: string, pw: string, name?: string): Promise<any> => {
       const r = await fetch(`${SK_URL}/auth/v1/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json", apikey: SK_KEY },
@@ -163,7 +184,7 @@ export const sk = {
       const d = await r.json();
       if (!r.ok || d.error) throw new Error(d.error?.message || "Signup failed");
       if (d.access_token) {
-        const s = {
+        const s: SkSession = {
           access_token: d.access_token,
           refresh_token: d.refresh_token,
           expires_at: Math.floor(Date.now() / 1000) + (d.expires_in || 3600),
@@ -182,7 +203,7 @@ export const sk = {
 
 /* ─── Retrieval-app helper (separate Supabase, anon-only reads) ─── */
 export const ret = {
-  fetchClasses: async () => {
+  fetchClasses: async (): Promise<any[]> => {
     try {
       const r = await fetch(`${RET_URL}/rest/v1/classes?select=id,name,join_code&order=name.asc`, {
         headers: { apikey: RET_KEY, Authorization: `Bearer ${RET_KEY}` },
@@ -193,14 +214,14 @@ export const ret = {
 };
 
 /* ─── Misc helpers ─── */
-export const pubUrl = (path) => `${SK_URL}/storage/v1/object/public/resources/${path}`;
-export const officeUrl = (url) => `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+export const pubUrl = (path: string) => `${SK_URL}/storage/v1/object/public/resources/${path}`;
+export const officeUrl = (url: string) => `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
 
 /* ─── React auth context ─── */
-const AuthCtx = createContext({ user: null, profile: null, loading: true });
+const AuthCtx = createContext<AuthValue>({ user: null, profile: null, loading: true } as AuthValue);
 
-export function AuthProvider({ children }) {
-  const [state, setState] = useState({ user: null, profile: null, loading: true });
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [state, setState] = useState<AuthState>({ user: null, profile: null, loading: true });
 
   const hydrate = useCallback(async () => {
     const stored = readSession();
@@ -227,22 +248,22 @@ export function AuthProvider({ children }) {
     return () => clearInterval(t);
   }, [state.user]);
 
-  const login = async (email, pw) => {
+  const login = async (email: string, pw: string) => {
     await sk.auth.signIn(email, pw);
     let profile;
-    try { profile = await sk.q("profiles", { params: { id: `eq.${_session.user.id}` }, single: true }); }
-    catch { profile = { id: _session.user.id, role: "teacher", full_name: email }; }
-    setState({ user: _session.user, profile, loading: false });
+    try { profile = await sk.q("profiles", { params: { id: `eq.${_session!.user.id}` }, single: true }); }
+    catch { profile = { id: _session!.user.id, role: "teacher", full_name: email }; }
+    setState({ user: _session!.user, profile, loading: false });
     return profile;
   };
 
-  const signup = async (email, pw, name) => {
+  const signup = async (email: string, pw: string, name?: string) => {
     const res = await sk.auth.signUp(email, pw, name);
     if (!res.access_token) return { needsConfirmation: true };
     let profile;
-    try { profile = await sk.q("profiles", { params: { id: `eq.${_session.user.id}` }, single: true }); }
-    catch { profile = { id: _session.user.id, role: "teacher", full_name: name || email }; }
-    setState({ user: _session.user, profile, loading: false });
+    try { profile = await sk.q("profiles", { params: { id: `eq.${_session!.user.id}` }, single: true }); }
+    catch { profile = { id: _session!.user.id, role: "teacher", full_name: name || email }; }
+    setState({ user: _session!.user, profile, loading: false });
     return { profile };
   };
 
@@ -251,7 +272,7 @@ export function AuthProvider({ children }) {
     setState({ user: null, profile: null, loading: false });
   };
 
-  const setProfile = (p) => setState(s => ({ ...s, profile: p }));
+  const setProfile = (p: Profile) => setState(s => ({ ...s, profile: p }));
 
   return (
     <AuthCtx.Provider value={{ ...state, login, signup, logout, setProfile }}>

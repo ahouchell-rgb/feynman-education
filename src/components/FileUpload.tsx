@@ -8,9 +8,9 @@ export function FileUpload({ unitId, lessonId, onUploaded }) {
   const [uploading, setUploading] = useState(false);
   const [err, setErr] = useState("");
 
-  const handleFiles = async (files) => {
+  const handleFiles = async (files: FileList | File[] | null) => {
     setErr(""); setUploading(true);
-    for (const file of Array.from(files)) {
+    for (const file of Array.from(files || []) as File[]) {
       try {
         const ext = file.name.split(".").pop().toLowerCase();
         const resourceType = ["ppt","pptx"].includes(ext) ? "slides" :

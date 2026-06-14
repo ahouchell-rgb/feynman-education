@@ -9,6 +9,8 @@
 //   ANTHROPIC_API_KEY            — secret, from console.anthropic.com
 //   SUPABASE_SERVICE_ROLE_KEY    — secret, from Supabase dashboard
 
+import { supaRest } from "@/lib/supabaseRest";
+
 export const runtime = "edge";
 
 const SK_URL = "https://uujbgdwnuspfnvfpdtvr.supabase.co";
@@ -53,25 +55,18 @@ function stripHtml(s) {
 }
 
 // Supabase REST helper. Defaults to user-token auth (RLS applies).
-async function sb(path, { method = "GET", body, token, params, single, useServiceRole = false } = {}) {
-  const url = new URL(`${SK_URL}/rest/v1/${path}`);
-  if (params) Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-  const key = useServiceRole ? process.env.SUPABASE_SERVICE_ROLE_KEY : SK_ANON_KEY;
+interface SbOpts {
+  method?: string;
+  body?: any;
+  token?: string;
+  params?: Record<string, string>;
+  single?: boolean;
+  useServiceRole?: boolean;
+}
+async function sb(path: string, { method = "GET", body, token, params, single, useServiceRole = false }: SbOpts = {}): Promise<any> {
+  const key = useServiceRole ? process.env.SUPABASE_SERVICE_ROLE_KEY! : SK_ANON_KEY;
   const bearer = useServiceRole ? process.env.SUPABASE_SERVICE_ROLE_KEY : token;
-  const headers = {
-    "content-type": "application/json",
-    apikey: key,
-    Authorization: `Bearer ${bearer}`,
-  };
-  if (single) headers["Accept"] = "application/vnd.pgrst.object+json";
-  if (method === "POST" || method === "PATCH") headers["Prefer"] = "return=representation";
-  const r = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
-  if (!r.ok) {
-    const t = await r.text().catch(() => "");
-    throw new Error(`Supabase ${method} ${path} ${r.status}: ${t.slice(0, 200)}`);
-  }
-  if (method === "DELETE" || r.status === 204) return null;
-  return r.json();
+  return supaRest(SK_URL, path, { method, body, params, apikey: key, bearer, single });
 }
 
 function buildSystemPrompt({ lesson, unit, teacherContent, widgets }) {

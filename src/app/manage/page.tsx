@@ -9,7 +9,7 @@ import { AppShell } from "@/components/AppShell";
 
 function ClassRow({ cls, allUnits, slotCount, onChange, onArchive, onRestore }) {
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState({});
+  const [draft, setDraft] = useState<any>({});
   const [busy, setBusy] = useState(false);
   const d = DISC[cls.discipline] || DISC.combined;
 
@@ -578,7 +578,7 @@ function CalendarSection({ profile, calendar, onChange }) {
     setBusy(true); setMsg("");
     try {
       const current = calendar?.holiday_periods || [];
-      const entry = { start: holStart, end: holEnd };
+      const entry: { start: string; end: string; label?: string } = { start: holStart, end: holEnd };
       if (holLabel.trim()) entry.label = holLabel.trim();
       const updated = [...current, entry].sort((a, b) => a.start.localeCompare(b.start));
       await sk.q("timetable_calendar", { method: "PATCH",
@@ -708,7 +708,7 @@ function CalendarSection({ profile, calendar, onChange }) {
 
 /* ───────────────────────── SHARED ───────────────────────── */
 
-function SectionHeader({ title, count, suffix }) {
+function SectionHeader({ title, count, suffix }: { title: string; count?: number; suffix?: string }) {
   return (
     <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 500, letterSpacing: "0.22em", textTransform: "uppercase", color: C.dim, padding: "0 0 14px", display: "flex", alignItems: "baseline", gap: 12 }}>
       <span style={{ width: 24, height: 1, background: C.ruleStrong, alignSelf: "center" }} />

@@ -36,7 +36,7 @@ export function richToRuns(html) {
   const flush = () => { if (cur.runs.some((r) => r.text.trim() !== "")) lines.push(cur); cur = { runs: [], bullet: undefined, indent: 0 }; };
   const add = (text, fmt) => { if (text) cur.runs.push({ text, ...fmt }); };
   const walk = (node, fmt, list) => {
-    for (const n of Array.from(node.childNodes)) {
+    for (const n of Array.from(node.childNodes) as any[]) {
       if (n.nodeType === 3) { const t = n.nodeValue.replace(/\s+/g, " "); if (t) add(t, fmt); continue; }
       if (n.nodeType !== 1) continue;
       const tag = n.tagName.toLowerCase();
@@ -73,8 +73,8 @@ export const rot = (el) => (el.rotation ? ((Math.round(el.rotation) % 360) + 360
    has no clean fractional-source crop, so we draw the cropped region onto a
    canvas and embed the result. Falls back to the original image if the source
    can't be read (e.g. a cross-origin URL that taints the canvas). */
-function loadImage(src) {
-  return new Promise((res, rej) => {
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise<HTMLImageElement>((res, rej) => {
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = () => res(img);

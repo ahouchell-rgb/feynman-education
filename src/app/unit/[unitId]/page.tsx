@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useAuth, sk } from "@/lib/sk";
 import { C, DISC } from "@/lib/theme";
@@ -134,8 +135,8 @@ function UnitContent() {
   const masters = decks.filter((dk) => dk.is_master);
   const mineDecks = decks.filter((dk) => !dk.is_master && dk.owner === user?.id);
   const deptDecks = decks.filter((dk) => !dk.is_master && dk.shared && dk.owner !== user?.id);
-  const subhead = { fontFamily: C.mono, fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: C.dim, marginBottom: 8 };
-  const listCol = { display: "flex", flexDirection: "column", gap: 4 };
+  const subhead: CSSProperties = { fontFamily: C.mono, fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: C.dim, marginBottom: 8 };
+  const listCol: CSSProperties = { display: "flex", flexDirection: "column", gap: 4 };
 
   const renderDeck = (dk, kind) => {
     const n = dk.slides?.length || 0;

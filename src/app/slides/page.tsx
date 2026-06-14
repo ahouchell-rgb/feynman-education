@@ -215,7 +215,7 @@ function SlidesContent() {
   const onImportHtml = async (e) => {
     const files = e.target.files; e.target.value = "";
     if (!files || !files.length) return;
-    const names = Array.from(files).map((f) => f.name);
+    const names = Array.from(files as FileList).map((f) => f.name);
     setImporting(true); setErr("");
     try {
       const { importHtmlFiles } = await import("@/lib/importHtml");
@@ -379,7 +379,7 @@ function SlidesContent() {
   // Years follow group sort_order; units follow teaching sequence within each year.
   const deckGroups = (() => {
     if (guest || !decks) return [];
-    const byUnit = {};
+    const byUnit: Record<string, any[]> = {};
     decks.forEach((d) => { const k = d.unit_id || "__none"; (byUnit[k] ||= []).push(d); });
     const unitSection = (u) => ({ key: u.id, label: u.title, decks: byUnit[u.id] });
 

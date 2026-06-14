@@ -13,6 +13,7 @@
 
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { supaRest } from "@/lib/supabaseRest";
 
 const TENANT = process.env.MICROSOFT_TENANT;
 const CLIENT_ID = process.env.MICROSOFT_CLIENT_ID;
@@ -132,20 +133,13 @@ export async function GET(req) {
     updated_at: new Date().toISOString(),
   }];
 
-  const upsertRes = await fetch(`${SK_URL}/rest/v1/microsoft_tokens`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      apikey: SK_SERVICE_KEY,
-      Authorization: `Bearer ${SK_SERVICE_KEY}`,
-      Prefer: "resolution=merge-duplicates,return=minimal",
-    },
-    body: JSON.stringify(upsertBody),
-  });
-
-  if (!upsertRes.ok) {
-    const text = await upsertRes.text().catch(() => "");
-    console.error("MS tokens upsert failed:", upsertRes.status, text);
+  try {
+    await supaRest(SK_URL, "microsoft_tokens", {
+      method: "POST", body: upsertBody, apikey: SK_SERVICE_KEY!, bearer: SK_SERVICE_KEY,
+      prefer: "resolution=merge-duplicates,return=minimal",
+    });
+  } catch (e) {
+    console.error("MS tokens upsert failed:", e);
     return errorRedirect(origin, "token_persist_failed");
   }
 

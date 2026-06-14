@@ -152,7 +152,7 @@ const alignOf = (pPr) => ({ l: "left", ctr: "center", r: "right", just: "left" }
 // storage and referenced by URL (keeps the deck row tiny — base64-inlining a
 // graphics-heavy deck makes the row many MB and times out the DB on save).
 // Without it, images are inlined as base64 data URLs (guest / localStorage).
-export async function importPptx(file, opts = {}) {
+export async function importPptx(file: File | Blob, opts: { uploadImage?: (f: any) => Promise<any> } = {}) {
   const uploadImage = opts.uploadImage;
   const zip = await JSZip.loadAsync(file);
   const pres = await parseXml(zip, "ppt/presentation.xml");
@@ -177,7 +177,7 @@ export async function importPptx(file, opts = {}) {
     const themePath = masterPath ? relByType(masterRels, masterPath, "theme") : null;
     const scheme = await getTheme(themePath);
     const cmEl = masterDoc && firstDesc(masterDoc.documentElement, "clrMap");
-    const clrMap = {}; Object.assign(clrMap, DEFAULT_CLRMAP); if (cmEl) for (const k of Object.keys(DEFAULT_CLRMAP)) { const v = A(cmEl, k); if (v) clrMap[k] = v; }
+    const clrMap: Record<string, string> = {}; Object.assign(clrMap, DEFAULT_CLRMAP); if (cmEl) for (const k of Object.keys(DEFAULT_CLRMAP)) { const v = A(cmEl, k); if (v) clrMap[k] = v; }
     const ctx = { scheme, clrMap, text: scheme[clrMap.tx1] || scheme.dk1 || "#1a1714" };
     const layoutPh = layoutPath ? (phCache[layoutPath] || (phCache[layoutPath] = buildPhMap(layoutDoc))) : { map: {}, byCat: {} };
     const masterPh = masterPath ? (phCache[masterPath] || (phCache[masterPath] = buildPhMap(masterDoc))) : { map: {}, byCat: {} };
@@ -208,7 +208,7 @@ export async function importPptx(file, opts = {}) {
       return inherited ? rawXfrm(inherited) : null;
     };
 
-    const textOf = (r) => { const t = first(r, "t"); return t ? t.textContent : ""; };
+    const textOf = (r) => { const t = first(r, "t") as Element | null; return t ? t.textContent : ""; };
     const buildText = (sp, spPr, rect) => {
       const txBody = first(sp, "txBody"); if (!txBody) return null;
       const ph = phOf(sp), cat = phCategory(ph), levels = styles[cat] || {};

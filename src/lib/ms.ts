@@ -113,7 +113,11 @@ export const ms = {
    *   path: e.g. "/me" or "/me/drive/root/children"
    *   opts: { method, body, headers, raw? }
    */
-  graphFetch: async (profileId, path, opts = {}) => {
+  graphFetch: async (
+    profileId: string,
+    path: string,
+    opts: { method?: string; body?: any; headers?: Record<string, string>; raw?: boolean } = {},
+  ): Promise<any> => {
     let token = await ms.getAccessToken(profileId);
     if (!token) throw new Error("Microsoft account not connected");
 
