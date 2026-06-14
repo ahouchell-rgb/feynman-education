@@ -1193,7 +1193,7 @@ export function Teacher({ user }) {
           )}
 
           {tab === "questions" && (planAllows(user, "customQuestions")
-            ? <QMgr subjectId={cls.subject_id} userId={user.id} topics={topics} setTopics={setTopics} />
+            ? <QMgr subjectId={cls.subject_id} userId={user.id} topics={topics} setTopics={setTopics} canPublishShared={isHoD(user) || isModerator(user)} />
             : (
               <div style={{ maxWidth: 560, margin: "20px auto", padding: 24, textAlign: "center", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 12 }}>
                 <div style={{ fontSize: 26, marginBottom: 8 }}>🔒</div>

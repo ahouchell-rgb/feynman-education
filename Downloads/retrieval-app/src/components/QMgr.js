@@ -4,7 +4,7 @@ import { SUPA_KEY, SUPA_URL, sb } from "../lib/supabase";
 import { C } from "../lib/theme";
 import { Badge, Btn, Headline, Inp, Kicker, Pill, TA } from "./ui";
 
-export function QMgr({ subjectId, userId, topics, setTopics }) {
+export function QMgr({ subjectId, userId, topics, setTopics, canPublishShared = false }) {
   const [nt, setNt] = useState(""); const [tid, setTid] = useState(""); const [qt, setQt] = useState(""); const [qa, setQa] = useState(""); const [mk, setMk] = useState(1);
   const [added, setAdded] = useState(0); const [mode, setMode] = useState("single"); const [bt, setBt] = useState(""); const [imp, setImp] = useState(false);
   const [csvRows, setCsvRows] = useState(null); const [csvErr, setCsvErr] = useState(""); const [csvProgress, setCsvProgress] = useState(null);
@@ -101,6 +101,15 @@ export function QMgr({ subjectId, userId, topics, setTopics }) {
       await sb.q("questions", { method: "PATCH", params: { id: `eq.${id}` }, body: { archived: true } });
       setQl(prev => prev.filter(q => q.id !== id));
       setConfirmArchive(null); setEditId(null);
+    } catch (e) { console.error(e); }
+  };
+
+  // Publish / unpublish a question to the cross-school shared bank. The DB trigger
+  // only honours this for moderators/HoDs; canPublishShared gates the UI to match.
+  const setShared = async (id, shared) => {
+    try {
+      await sb.q("questions", { method: "PATCH", params: { id: `eq.${id}` }, body: { shared } });
+      setQl(prev => prev.map(q => q.id === id ? { ...q, shared } : q));
     } catch (e) { console.error(e); }
   };
 
@@ -311,6 +320,14 @@ export function QMgr({ subjectId, userId, topics, setTopics }) {
                         <div style={{ fontSize: 11, color: C.dim }}>{q.model_answer}</div>
                       </div>
                       <div style={{ display: "flex", gap: 6, flexShrink: 0, alignItems: "center" }}>
+                        {q.shared && !canPublishShared && <Badge color={C.grn}>Shared</Badge>}
+                        {canPublishShared && (
+                          <button onClick={() => setShared(q.id, !q.shared)}
+                            title={q.shared ? "In the shared bank — click to make it private" : "Publish to the cross-school shared question bank"}
+                            style={{ background: q.shared ? C.grnS : C.card2, border: `1px solid ${q.shared ? "rgba(22,165,88,.4)" : C.bdr}`, borderRadius: 6, color: q.shared ? C.grn : C.mid, fontSize: 11, cursor: "pointer", padding: "4px 9px", fontFamily: "inherit", fontWeight: 600, whiteSpace: "nowrap" }}>
+                            {q.shared ? "✓ Shared" : "Publish"}
+                          </button>
+                        )}
                         <span style={{ fontSize: 10, color: C.dim, whiteSpace: "nowrap" }}>{q.marks}mk</span>
                         <button onClick={() => startEdit(q)} style={{ background: C.priSoft, border: "none", borderRadius: 6, color: C.pri, fontSize: 12, cursor: "pointer", padding: "4px 10px", fontFamily: "inherit", fontWeight: 600 }}>Edit</button>
                       </div>
