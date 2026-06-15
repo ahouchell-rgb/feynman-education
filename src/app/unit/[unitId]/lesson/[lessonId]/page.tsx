@@ -14,6 +14,7 @@ import { ChatSidebar } from "@/components/ChatSidebar";
 import { SetCurrentLessonModal } from "@/components/SetCurrentLessonModal";
 import { SingleFileSlot } from "@/components/SingleFileSlot";
 import { RetrievalAppFrame } from "@/components/RetrievalAppFrame";
+import { UnitGaps } from "@/components/UnitGaps";
 
 /* ─── Sticky lesson header (appears on scroll past title) ─── */
 function StickyHeader({ visible, lesson, contextClass, mapEntry, onMarkTaught, discColor }) {
@@ -453,6 +454,9 @@ function LessonContent() {
         record={sowRow}
         onChange={() => loadLessonData(lessonId)}
       />
+
+      {/* Close the loop: this class's weakest objectives in this unit, + feedforward */}
+      <UnitGaps unitId={unitId as string} unitTitle={unit?.title} lessonId={lessonId as string} contextClass={contextClass} />
 
       {/* Retrieval-app embed — only renders if the lesson is linked to a topic */}
       <RetrievalAppFrame mapEntry={mapEntry} />

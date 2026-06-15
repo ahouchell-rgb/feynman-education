@@ -211,6 +211,29 @@ export const ret = {
       return r.ok ? r.json() : [];
     } catch { return []; }
   },
+  // Aggregate weak objectives for one unit across the teacher's linked retrieval
+  // classes. Calls the class_unit_gaps RPC (security-definer; returns only
+  // non-personal aggregates) once per class id and merges the results. Used to
+  // close the loop: surface what a class is weak on right where you plan.
+  unitGaps: async (classIds: string[], unitId: string): Promise<any[]> => {
+    if (!classIds?.length || !unitId) return [];
+    try {
+      const per = await Promise.all(classIds.map(cid =>
+        fetch(`${RET_URL}/rest/v1/rpc/class_unit_gaps`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", apikey: RET_KEY, Authorization: `Bearer ${RET_KEY}`, "x-sciencekit-key": SK_API_KEY },
+          body: JSON.stringify({ p_class_id: cid, p_unit_id: unitId }),
+        }).then(r => (r.ok ? r.json() : [])).catch(() => [])
+      ));
+      // If several linked classes hit the same topic, keep the weakest reading.
+      const byTopic = new Map<string, any>();
+      for (const row of per.flat()) {
+        const prev = byTopic.get(row.topic_id);
+        if (!prev || row.pct_correct < prev.pct_correct) byTopic.set(row.topic_id, row);
+      }
+      return [...byTopic.values()].sort((a, b) => a.pct_correct - b.pct_correct);
+    } catch { return []; }
+  },
 };
 
 /* ─── Misc helpers ─── */
