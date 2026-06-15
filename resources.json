@@ -193,13 +193,31 @@
           "level": "Key Stage 3",
           "type": "interactive tool",
           "about": "Biology"
+        },
+        {
+          "href": "embryo-screening-evaluate.html",
+          "accent": "#C84A6D",
+          "cat": "biology",
+          "tokens": "ks3 tool",
+          "spec": "Y8 · Inheritance",
+          "folder": "Exam technique",
+          "name": "Evaluate: <em>Embryo Screening</em>",
+          "tag": "PGD vs CVS — writing an evaluation",
+          "desc": "An exam-technique builder for the 'evaluate' question on embryo screening — fix the key vocabulary, weigh the benefits and risks of PGD and CVS, and structure a justified conclusion.",
+          "tags": [
+            "KS3",
+            "Year 8"
+          ],
+          "level": "Key Stage 3",
+          "type": "interactive tool",
+          "about": "Biology"
         }
       ]
     },
     {
       "id": "physics",
       "title": "Physics",
-      "blurb": "Forces, particles, energy and power",
+      "blurb": "Forces, electricity, energy, waves and space",
       "items": [
         {
           "href": "force-diagram-builder.html",
@@ -287,6 +305,113 @@
           "tags": [
             "KS3",
             "Year 7"
+          ],
+          "level": "Key Stage 3",
+          "type": "interactive tool",
+          "about": "Physics"
+        },
+        {
+          "href": "circuits-properly.html",
+          "accent": "#C77A1E",
+          "cat": "physics",
+          "tokens": "gcse tool",
+          "spec": "AQA · Electricity",
+          "folder": "Electricity",
+          "name": "Circuits, <em>properly</em>",
+          "tag": "series, parallel & resistance — for real",
+          "desc": "A staged walkthrough of what's actually happening inside a circuit — electron drift, surface charges, the electric field and energy flow — across resistance, series and parallel scenes, with a free-explore mode.",
+          "tags": [
+            "KS3",
+            "GCSE"
+          ],
+          "level": "GCSE",
+          "type": "interactive tool",
+          "about": "Physics"
+        },
+        {
+          "href": "em-field-circuits.html",
+          "accent": "#C77A1E",
+          "cat": "physics",
+          "tokens": "gcse tool",
+          "spec": "AQA · Electricity",
+          "folder": "Electricity",
+          "name": "Electricity, <em>properly</em>",
+          "tag": "fields, energy & electrons",
+          "desc": "Peels back the layers of a working circuit — electrons, surface charges, the electric and magnetic fields and where the energy actually flows — with a standard circuit and a long-wire demo.",
+          "tags": [
+            "GCSE"
+          ],
+          "level": "GCSE",
+          "type": "interactive tool",
+          "about": "Physics"
+        },
+        {
+          "href": "rp-acceleration.html",
+          "accent": "#C77A1E",
+          "cat": "physics",
+          "tokens": "gcse tool",
+          "spec": "AQA · Physics Paper 2",
+          "folder": "Required Practicals",
+          "name": "RP: <em>Acceleration</em>",
+          "tag": "resultant force & acceleration",
+          "desc": "The required practical for how the resultant force on a trolley affects its acceleration — set up the runway and light gates, put the method in order, and work with the data.",
+          "tags": [
+            "GCSE",
+            "Required practical"
+          ],
+          "level": "GCSE",
+          "type": "interactive tool",
+          "about": "Physics"
+        },
+        {
+          "href": "rp-force-extension.html",
+          "accent": "#C77A1E",
+          "cat": "physics",
+          "tokens": "gcse tool",
+          "spec": "AQA · Physics Paper 2",
+          "folder": "Required Practicals",
+          "name": "RP: <em>Force &amp; Extension</em>",
+          "tag": "Hooke's law & the spring practical",
+          "desc": "The required practical on how a spring's extension depends on the force applied — build the apparatus, order the method, and read the force–extension graph up to the limit of proportionality.",
+          "tags": [
+            "GCSE",
+            "Required practical"
+          ],
+          "level": "GCSE",
+          "type": "interactive tool",
+          "about": "Physics"
+        },
+        {
+          "href": "rp-waves.html",
+          "accent": "#C77A1E",
+          "cat": "physics",
+          "tokens": "gcse tool",
+          "spec": "AQA · Physics Paper 2",
+          "folder": "Required Practicals",
+          "name": "RP: <em>Waves</em>",
+          "tag": "wavelength, frequency & wave speed",
+          "desc": "The required practical for measuring waves — use a ripple tank and waves on a string to find wavelength and frequency, then calculate the wave speed.",
+          "tags": [
+            "GCSE",
+            "Required practical"
+          ],
+          "level": "GCSE",
+          "type": "interactive tool",
+          "about": "Physics"
+        },
+        {
+          "href": "cosmic-zoom.html",
+          "accent": "#C77A1E",
+          "cat": "physics",
+          "tokens": "tool",
+          "spec": "Enrichment · Space",
+          "folder": "Space",
+          "name": "Cosmic <em>Zoom</em>",
+          "tag": "the solar system to the edge of the universe",
+          "desc": "A continuous flight outward — from the solar system and the Milky Way's heart at Sagittarius A* to the cosmic microwave background, the oldest light there is. Pure wonder.",
+          "tags": [
+            "Space",
+            "Wonder"
           ],
           "level": "Key Stage 3",
           "type": "interactive tool",
@@ -387,6 +512,59 @@
             "Trilogy"
           ],
           "level": "GCSE",
+          "type": "interactive tool",
+          "about": "Chemistry"
+        },
+        {
+          "href": "earth-igneous.html",
+          "accent": "#3672C2",
+          "cat": "chemistry",
+          "tokens": "ks3 tool",
+          "spec": "KS3 · Earth structure",
+          "folder": "The Earth",
+          "name": "Inside the Earth &amp; <em>Igneous Rocks</em>",
+          "tag": "the layers, and how igneous rock forms",
+          "desc": "Explore the layers beneath your feet, then watch how cooling speed decides whether cooling magma forms big crystals or small ones.",
+          "tags": [
+            "KS3"
+          ],
+          "level": "Key Stage 3",
+          "type": "interactive tool",
+          "about": "Chemistry"
+        },
+        {
+          "href": "carbon-cycle.html",
+          "accent": "#3672C2",
+          "cat": "chemistry",
+          "tokens": "gcse tool",
+          "spec": "AQA · The carbon cycle",
+          "folder": "The Carbon Cycle",
+          "name": "The <em>Carbon Cycle</em>",
+          "tag": "photosynthesis to combustion",
+          "desc": "An animated walk through the carbon cycle — photosynthesis, respiration, feeding, decomposition, fossilisation and combustion — showing how carbon moves between the atmosphere, living things and fossil fuels.",
+          "tags": [
+            "GCSE",
+            "Combined"
+          ],
+          "level": "GCSE",
+          "type": "interactive tool",
+          "about": "Biology"
+        },
+        {
+          "href": "sedimentary-formation.html",
+          "accent": "#3672C2",
+          "cat": "chemistry",
+          "tokens": "ks3 tool",
+          "spec": "Y8 · Earth's systems",
+          "folder": "The Earth",
+          "name": "Sedimentary Rocks &amp; <em>Fossils</em>",
+          "tag": "how they form, in six stages",
+          "desc": "A six-stage journey from bare rock to sedimentary layers — weathering, erosion, transport, deposition, compaction and cementation — and how fossils get trapped along the way.",
+          "tags": [
+            "KS3",
+            "Year 8"
+          ],
+          "level": "Key Stage 3",
           "type": "interactive tool",
           "about": "Chemistry"
         }
