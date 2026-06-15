@@ -7,6 +7,7 @@ import { planAllows } from "../lib/plans";
 import { STAR_INTERVAL, WEEKLY_TARGET, getWeekBounds } from "../lib/week";
 import { AdminPanel } from "./AdminPanel";
 import { BulkUpload } from "./BulkUpload";
+import { ClassGaps } from "./ClassGaps";
 import { HodPanel } from "./HodPanel";
 import { LessonStarter } from "./LessonStarter";
 import { PaperManager } from "./PaperManager";
@@ -898,6 +899,9 @@ export function Teacher({ user }) {
                   );
                 })()}
               </div>
+
+              {/* Class gaps — weakest objectives from the mastery spine, mapped to planning units */}
+              <ClassGaps cls={cls} />
 
               {/* ── Insights: detailed analytics, collapsed by default so the dashboard leads with headlines ── */}
               <div style={{ marginTop: 26, marginBottom: 2, fontSize: 10, fontWeight: 700, letterSpacing: ".16em", textTransform: "uppercase", color: C.dim }}>Insights</div>
