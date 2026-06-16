@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/halfterm-feedforward",
+      "schedule": "0 6 * * *"
+    }
+  ]
+}
