@@ -13,6 +13,9 @@ export function StudentList({ students, cls, clsTarget, timePeriod = "thisWeek",
   const [msg, setMsg] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [targetEdits, setTargetEdits] = useState({}); // studentId -> draft value
+  // First-party parent report link (replaces the old external parent-hub).
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const parentUrl = (id) => `${origin}/parent/${parentTokens[id]}`;
 
   const callManage = async (action, studentId, extra = {}) => {
     setBusy(true); setMsg("");
@@ -176,9 +179,9 @@ export function StudentList({ students, cls, clsTarget, timePeriod = "thisWeek",
                   {parentTokens[s.id] ? (
                     <div>
                       <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
-                        <input readOnly value={`https://parent-hub-ten.vercel.app/view/${parentTokens[s.id]}`}
+                        <input readOnly value={parentUrl(s.id)}
                           style={{ flex: 1, padding: "6px 8px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 6, color: C.dim, fontSize: 11, fontFamily: "monospace", outline: "none" }} />
-                        <button onClick={() => { navigator.clipboard.writeText(`https://parent-hub-ten.vercel.app/view/${parentTokens[s.id]}`); setMsg("Link copied!"); setTimeout(() => setMsg(""), 2000); }}
+                        <button onClick={() => { navigator.clipboard.writeText(parentUrl(s.id)); setMsg("Link copied!"); setTimeout(() => setMsg(""), 2000); }}
                           style={{ padding: "6px 10px", borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.pri, color: "#fff", fontSize: 11, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
                           Copy
                         </button>

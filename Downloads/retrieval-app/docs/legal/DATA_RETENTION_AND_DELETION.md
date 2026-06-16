@@ -11,15 +11,16 @@ delete or anonymise it.
 | Data | Retention | Then |
 | --- | --- | --- |
 | Pupil account (name, email) | While enrolled / account active | Deleted on leaving or on school/parent request |
-| Practice responses, marks, feedback | While account active, or `[e.g. current + 1 academic year]` | Deleted or anonymised |
+| Practice responses, marks, feedback | While account active, or current + 1 academic year *(confirm with school)* | Deleted or anonymised |
 | Past-paper attempts/responses | As above | Deleted or anonymised |
 | Teacher/staff accounts | While employed at the school using the service | Deleted on offboarding/termination |
 | Marking-flag appeals | With the related response | Deleted with it |
-| Request/access logs (provider) | Per provider default `[confirm]` | Auto-expired |
-| Billing records | `[6 years per UK tax law]` | Deleted |
+| Support messages | 1 year from resolution | Deleted |
+| Request/access logs (provider) | Per provider default *(typically ≤30 days; confirm)* | Auto-expired |
+| Billing records | 6 years (UK tax law) | Deleted |
 
 On **contract termination**, all Controller personal data is deleted within
-**`[N]` days** (per the DPA).
+**30 days** *(confirm period)* (per the DPA).
 
 ## How deletion works (mechanism)
 - **Delete a pupil:** the `manage-student` edge function supports
@@ -32,16 +33,28 @@ On **contract termination**, all Controller personal data is deleted within
 - **Bulk / account deletion:** run on request via service-role tooling;
   `[document the script/runbook]`.
 
-## Data-subject erasure requests
-Pupil/parent requests come **through the school** (the controller). On the
-school's instruction we erase the relevant records and confirm completion.
+## Data-subject access / portability requests
+Pupil/parent requests come **through the school** (the controller). School staff
+can **export a pupil's full data as JSON** from Admin → expand pupil → *Export
+data (GDPR · JSON)* (backed by the `export_student_data` RPC, restricted to a
+moderator or the pupil's class teacher). On the school's instruction we erase the
+relevant records and confirm completion.
 
 ## Backups
-Deleted data may persist in backups until they rotate out (`[retention window]`).
-Backups are encrypted and access-controlled; a restore would not reinstate data
-the school instructed us to erase beyond the backup window. See the ops runbook.
+Deleted data may persist in backups until they rotate out (the Supabase backup /
+point-in-time-recovery window — typically up to 7 days on the production plan;
+*confirm your plan*). Backups are encrypted and access-controlled; a restore would
+not reinstate data the school instructed us to erase beyond the backup window.
 
 ## Open engineering follow-ups
-- [ ] Verify `delete_student` fully cascades (responses, paper_*, marking_flags, auth user).
-- [ ] Add a documented **class deletion** + **whole-school offboarding** path.
-- [ ] Define and implement the end-of-year anonymisation job (`[period]`).
+- [x] Pupil data **export** (DSAR / portability) — `export_student_data` RPC + Admin button (migration 09).
+- [x] **Class deletion** + **whole-school offboarding** RPCs — `delete_class` (moderator or the
+      class's teacher) and `offboard_school` (moderator) (migration 11). All child FKs to
+      `classes` are `on delete cascade`, so a class/school delete removes its responses,
+      members, parent_tokens, paper attempts, marking flags, etc. automatically. `ai_usage`
+      detaches (school_id → null), keeping cost history.
+- [ ] **Pupil auth-account cascade:** `delete_class`/`offboard_school` remove practice data and
+      detach profiles, but do NOT delete pupil/teacher `auth.users` (needs the service role).
+      Verify the deployed `manage-student` edge function deletes the auth user + profile per
+      pupil, and add a bulk per-school account-deletion step for full offboarding.
+- [ ] Define and implement the end-of-year anonymisation job (e.g. current + 1 academic year).

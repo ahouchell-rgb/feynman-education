@@ -14,6 +14,11 @@ export function Auth({ onAuth, onBack }) {
   const go = async () => {
     setErr(""); setInfo(""); setBusy(true);
     try {
+      if (mode === "forgot") {
+        await sb.auth.recover(email);
+        setInfo("If that email has an account, a reset link is on its way. Check your inbox (and spam).");
+        setBusy(false); return;
+      }
       if (mode === "signup") {
         // Teacher/HoD/moderator accounts can only be created by a moderator via the admin panel.
         // Public signups always create students.
@@ -34,14 +39,21 @@ export function Auth({ onAuth, onBack }) {
         {onBack && <button onClick={onBack} style={{ background: "none", border: "none", color: C.dim, fontSize: 13, cursor: "pointer", fontFamily: "inherit", padding: 0, marginBottom: 14 }}>← Home</button>}
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <div style={{ fontSize: 30, fontWeight: 800, color: C.txt, letterSpacing: -0.5 }}>Feynman<span style={{ color: C.pri }}> Education</span></div>
-          <div style={{ fontFamily: C.serif, fontStyle: "italic", fontSize: 14, color: C.dim, marginTop: 6 }}>Science practice that sticks</div>
+          <div style={{ fontFamily: C.serif, fontStyle: "italic", fontSize: 14, color: C.dim, marginTop: 6 }}>Retrieval practice that sticks</div>
         </div>
         <Card style={{ padding: "28px 24px" }}>
-          <div style={{ display: "flex", gap: 24, marginBottom: 22, borderBottom: `1px solid ${C.bdrSoft}` }}>
-            {["login", "signup"].map(m => (
-              <button key={m} onClick={() => { setMode(m); setErr(""); setInfo(""); }} style={{ background: "none", border: "none", padding: "0 0 10px", cursor: "pointer", fontFamily: "inherit", fontSize: 15, fontWeight: mode === m ? 700 : 600, color: mode === m ? C.txt : C.dim, borderBottom: mode === m ? `2.5px solid ${C.pri}` : "2.5px solid transparent", marginBottom: -1 }}>{m === "login" ? "Log in" : "Sign up"}</button>
-            ))}
-          </div>
+          {mode === "forgot" ? (
+            <div style={{ marginBottom: 18 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: C.txt }}>Reset your password</div>
+              <div style={{ fontSize: 13, color: C.dim, marginTop: 4, lineHeight: 1.5 }}>Enter your email and we'll send a reset link.</div>
+            </div>
+          ) : (
+            <div style={{ display: "flex", gap: 24, marginBottom: 22, borderBottom: `1px solid ${C.bdrSoft}` }}>
+              {["login", "signup"].map(m => (
+                <button key={m} onClick={() => { setMode(m); setErr(""); setInfo(""); }} style={{ background: "none", border: "none", padding: "0 0 10px", cursor: "pointer", fontFamily: "inherit", fontSize: 15, fontWeight: mode === m ? 700 : 600, color: mode === m ? C.txt : C.dim, borderBottom: mode === m ? `2.5px solid ${C.pri}` : "2.5px solid transparent", marginBottom: -1 }}>{m === "login" ? "Log in" : "Sign up"}</button>
+              ))}
+            </div>
+          )}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {mode === "signup" && <>
               <Inp placeholder="Your name" value={name} onChange={e => setName(e.target.value)} />
@@ -49,12 +61,60 @@ export function Auth({ onAuth, onBack }) {
                 You're signing up as a <strong style={{ color: C.txt, fontWeight: 600 }}>student</strong>. Teachers — please ask your admin for an account.
               </div>
             </>}
-            <Inp placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
-            <Inp placeholder="Password (min 6)" type="password" value={pw} onChange={e => setPw(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} />
+            <Inp placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && mode === "forgot" && go()} />
+            {mode !== "forgot" && <Inp placeholder="Password (min 6)" type="password" value={pw} onChange={e => setPw(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} />}
+            {mode === "login" && (
+              <button onClick={() => { setMode("forgot"); setErr(""); setInfo(""); }} style={{ alignSelf: "flex-start", background: "none", border: "none", padding: 0, color: C.pri, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>Forgot password?</button>
+            )}
             {err && <div style={{ color: C.red, fontSize: 13, padding: "10px 12px", background: C.redS, borderRadius: 8, lineHeight: 1.5 }}>{err}</div>}
             {info && <div style={{ color: C.amb, fontSize: 13, padding: "10px 12px", background: C.ambS, borderRadius: 8, lineHeight: 1.5 }}>{info}</div>}
-            <Btn onClick={go} disabled={busy || !email || !pw} style={{ marginTop: 6, width: "100%", ...((busy || !email || !pw) ? { background: C.bg, color: C.dim, border: `1.5px solid ${C.bdr}`, opacity: 1 } : { background: C.txt, color: C.bg }) }}>{busy ? "Working..." : mode === "login" ? "Log in" : "Create account"}</Btn>
+            <Btn onClick={go} disabled={busy || !email || (mode !== "forgot" && !pw)} style={{ marginTop: 6, width: "100%", ...((busy || !email || (mode !== "forgot" && !pw)) ? { background: C.bg, color: C.dim, border: `1.5px solid ${C.bdr}`, opacity: 1 } : { background: C.txt, color: C.bg }) }}>{busy ? "Working..." : mode === "login" ? "Log in" : mode === "forgot" ? "Send reset link" : "Create account"}</Btn>
+            {mode === "forgot" && (
+              <button onClick={() => { setMode("login"); setErr(""); setInfo(""); }} style={{ background: "none", border: "none", padding: 0, color: C.dim, fontSize: 13, cursor: "pointer", fontFamily: "inherit", marginTop: 2 }}>← Back to log in</button>
+            )}
           </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+/* ─── RESET PASSWORD (after an email recovery link) ─── */
+export function ResetPassword({ onDone }) {
+  const [pw, setPw] = useState(""); const [pw2, setPw2] = useState("");
+  const [err, setErr] = useState(""); const [busy, setBusy] = useState(false); const [done, setDone] = useState(false);
+
+  const save = async () => {
+    setErr("");
+    if (pw.length < 6) { setErr("Password must be at least 6 characters."); return; }
+    if (pw !== pw2) { setErr("Passwords don't match."); return; }
+    setBusy(true);
+    try { await sb.auth.updatePassword(pw); sb.auth.out(); setDone(true); }
+    catch (e) { setErr(e.message || "Could not update password"); }
+    setBusy(false);
+  };
+
+  return (
+    <div style={{ minHeight: "100dvh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: "var(--font-plex), -apple-system, sans-serif" }}>
+      <div style={{ width: "100%", maxWidth: 380 }}>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <div style={{ fontSize: 30, fontWeight: 800, color: C.txt, letterSpacing: -0.5 }}>Feynman<span style={{ color: C.pri }}> Education</span></div>
+        </div>
+        <Card style={{ padding: "28px 24px" }}>
+          <div style={{ fontSize: 18, fontWeight: 700, color: C.txt, marginBottom: 16 }}>Choose a new password</div>
+          {done ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ color: C.grn, fontSize: 14, padding: "10px 12px", background: C.grnS, borderRadius: 8, lineHeight: 1.5 }}>Password updated. You can log in with it now.</div>
+              <Btn onClick={onDone} style={{ width: "100%", background: C.txt, color: C.bg }}>Go to log in</Btn>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <Inp placeholder="New password (min 6)" type="password" value={pw} onChange={e => setPw(e.target.value)} />
+              <Inp placeholder="Confirm new password" type="password" value={pw2} onChange={e => setPw2(e.target.value)} onKeyDown={e => e.key === "Enter" && save()} />
+              {err && <div style={{ color: C.red, fontSize: 13, padding: "10px 12px", background: C.redS, borderRadius: 8, lineHeight: 1.5 }}>{err}</div>}
+              <Btn onClick={save} disabled={busy || !pw || !pw2} style={{ marginTop: 6, width: "100%", ...((busy || !pw || !pw2) ? { background: C.bg, color: C.dim, border: `1.5px solid ${C.bdr}`, opacity: 1 } : { background: C.txt, color: C.bg }) }}>{busy ? "Saving..." : "Update password"}</Btn>
+            </div>
+          )}
         </Card>
       </div>
     </div>
