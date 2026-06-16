@@ -29,6 +29,7 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const [sheets, setSheets] = useState<{ id: string; class_label: string | null; created_at: string }[]>([]);
+  const [reteach, setReteach] = useState<{ href: string; name: string; origin: string }[]>([]);
 
   const loadSheets = () => {
     sk.q("feedforward_sheets", { params: { lesson_id: `eq.${lessonId}`, order: "created_at.desc", select: "id,class_label,created_at" } })
@@ -39,6 +40,18 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
     if (lessonId) loadSheets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lessonId]);
+
+  // re-teach resources for this unit (interactive-science.com), revision first
+  useEffect(() => {
+    if (!unitId) return;
+    sk.q("resource_map", { params: { unit_id: `eq.${unitId}`, order: "rtype.asc", limit: "8", select: "href,name,origin,rtype" } })
+      .then((d: any) => {
+        const list = (Array.isArray(d) ? d : []).filter((r: any) => r.rtype !== "widget");
+        const pref = [...list.filter((r: any) => r.rtype === "revision"), ...list.filter((r: any) => r.rtype === "interactive tool")];
+        setReteach(pref.slice(0, 3).map((r: any) => ({ href: r.href, name: r.name, origin: r.origin })));
+      }).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unitId]);
 
   const openSheet = async (id: string) => {
     try {
@@ -120,6 +133,17 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
             <Btn onClick={genFeedforward} disabled={busy}>{busy ? "Generating…" : "Generate feedforward sheet"}</Btn>
             <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim }}>Scaffolded practice from these gaps · opens to print</span>
           </div>
+          {reteach.length > 0 && (
+            <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: ".06em" }}>Re-teach</span>
+              {reteach.map((r) => (
+                <a key={r.href} href={`${(r.origin || "https://interactive-science.com").replace(/\/$/, "")}/${r.href}`} target="_blank" rel="noreferrer"
+                  style={{ fontSize: 12, color: C.blu, textDecoration: "none", border: `1px solid ${C.border}`, borderRadius: 6, padding: "3px 9px" }}>
+                  {r.name} ↗
+                </a>
+              ))}
+            </div>
+          )}
           {err ? <div style={{ marginTop: 8, fontSize: 12, color: C.red }}>{err}</div> : null}
           {sheets.length > 0 && (
             <div style={{ marginTop: 12, paddingTop: 10, borderTop: `1px solid ${C.border}` }}>
