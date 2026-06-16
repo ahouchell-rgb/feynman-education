@@ -115,7 +115,7 @@ function SetupContent() {
   const saveClasses = async () => {
     setErr(""); setBusy(true);
     try {
-      const toCreate = Object.entries(classConfig).filter(([_, c]) => c.include);
+      const toCreate = (Object.entries(classConfig) as [string, any][]).filter(([_, c]) => c.include);
       const created = [];
       for (const [retId, c] of toCreate) {
         const retCls = retClasses.find(r => r.id === retId);

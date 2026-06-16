@@ -20,8 +20,8 @@ export function htmlToSlide(name, html) {
 }
 
 // Read one or more selected .html files → slides (one per file, in order).
-export async function importHtmlFiles(files) {
-  const arr = Array.from(files || []);
+export async function importHtmlFiles(files: FileList | File[]) {
+  const arr = Array.from(files || []) as File[];
   const slides = [];
   for (const f of arr) {
     const text = await f.text();

@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
+import type { CSSProperties } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import { C } from "@/lib/theme";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 /* The fixed virtual canvas every element is positioned within. */
 export const VW = 960, VH = 540;
@@ -21,9 +23,9 @@ const finite = (v) => (typeof v === "number" && !Number.isFinite(v) ? 0 : v);
 /* Visual style for box-like elements (text / rect / image), in virtual
    coordinates. Shared by the editor and all read-only views. Arrows are drawn
    separately by <ArrowSvg/> since they're defined by two points, not a box. */
-export function elStyle(el) {
+export function elStyle(el: any): CSSProperties {
   const rot = el.rotation ? `rotate(${el.rotation}deg)` : undefined;
-  const base = { position: "absolute", left: finite(el.x), top: finite(el.y), width: finite(el.width), opacity: el.opacity ?? 1, transform: rot };
+  const base: CSSProperties = { position: "absolute", left: finite(el.x), top: finite(el.y), width: finite(el.width), opacity: el.opacity ?? 1, transform: rot };
   if (el.type === "text")
     return {
       ...base, height: finite(el.height),
@@ -42,7 +44,7 @@ export function elStyle(el) {
   if (el.type === "rect") {
     const shape = el.shape || "rect";
     const border = el.stroke ? `${el.strokeW || 3}px ${el.dashed ? "dashed" : "solid"} ${el.stroke}` : "none";
-    const s = { ...base, height: finite(el.height), background: el.fill, boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box" };
+    const s: CSSProperties = { ...base, height: finite(el.height), background: el.fill, boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box" };
     if (shape === "ellipse") return { ...s, borderRadius: "50%", border };
     if (shape === "triangle") return { ...s, clipPath: TRIANGLE };
     if (shape === "star") return { ...s, clipPath: STAR };
@@ -372,7 +374,7 @@ function LiveTimer({ el }) {
 
 /* An arrow, defined by two endpoints. Read-only by default; the editor passes
    `hitProps` to add a fat transparent grab-line and `selected` to highlight. */
-export function ArrowSvg({ el, selected, hitProps }) {
+export function ArrowSvg({ el, selected, hitProps }: { el: any; selected?: boolean; hitProps?: any }) {
   const color = el.color || C.text;
   const w = el.thickness || 5;
   const mid = "ah-" + el.id;
@@ -403,10 +405,10 @@ export function ArrowSvg({ el, selected, hitProps }) {
 export const revealCount = (slide) => (slide?.elements || []).filter((e) => e.reveal).length;
 
 /* Replace brand-frame tokens. index is 0-based; {n} shows it 1-based. */
-export function masterToken(str, { index = 0, total = 1, title = "" } = {}) {
+export function masterToken(str: string, { index = 0, total = 1, title = "" }: { index?: number; total?: number; title?: string } = {}) {
   return String(str || "")
-    .replace(/\{n\}/g, index + 1)
-    .replace(/\{total\}/g, total)
+    .replace(/\{n\}/g, String(index + 1))
+    .replace(/\{total\}/g, String(total))
     .replace(/\{title\}/g, title)
     .replace(/\{date\}/g, new Date().toLocaleDateString("en-GB"));
 }
@@ -443,7 +445,18 @@ export function MasterFrame({ master, index = 0, total = 1, title = "" }) {
 /* A non-interactive slide scaled to `width` px. Used for thumbnails, the
    editor's rail, and present mode. `reveal` caps how many reveal-flagged
    elements are shown (in order) — Infinity shows everything. */
-export function StaticSlide({ slide, width, style, reveal = Infinity, live = false, master, index = 0, total = 1, title = "" }) {
+interface StaticSlideProps {
+  slide: any;
+  width: number;
+  style?: CSSProperties;
+  reveal?: number;
+  live?: boolean;
+  master?: any;
+  index?: number;
+  total?: number;
+  title?: string;
+}
+export function StaticSlide({ slide, width, style, reveal = Infinity, live = false, master, index = 0, total = 1, title = "" }: StaticSlideProps) {
   const scale = width / VW;
   let rIdx = 0;
   return (
@@ -458,13 +471,17 @@ export function StaticSlide({ slide, width, style, reveal = Infinity, live = fal
             rIdx += 1;
             if (!show) return null;
           }
-          if (el.type === "arrow") return <ArrowSvg key={el.id} el={el} />;
-          if (el.type === "timer" && live) return <LiveTimer key={el.id} el={el} />;
-          if (el.type === "video" && live) return <div key={el.id} style={elStyle(el)}><VideoFrame el={el} /></div>;
-          if (el.type === "visualiser" && live) return <div key={el.id} style={elStyle(el)}><LiveCamera /></div>;
-          if (el.type === "retrieval" && live) return <div key={el.id} style={elStyle(el)}><RetrievalFrame el={el} /></div>;
-          if (el.type === "html" && live) return <div key={el.id} style={elStyle(el)}><HtmlFrame el={el} /></div>;
-          return <div key={el.id} style={elStyle(el)}><ElInner el={el} /></div>;
+          let node;
+          if (el.type === "arrow") node = <ArrowSvg el={el} />;
+          else if (el.type === "timer" && live) node = <LiveTimer el={el} />;
+          else if (el.type === "video" && live) node = <div style={elStyle(el)}><VideoFrame el={el} /></div>;
+          else if (el.type === "visualiser" && live) node = <div style={elStyle(el)}><LiveCamera /></div>;
+          else if (el.type === "retrieval" && live) node = <div style={elStyle(el)}><RetrievalFrame el={el} /></div>;
+          else if (el.type === "html" && live) node = <div style={elStyle(el)}><HtmlFrame el={el} /></div>;
+          else node = <div style={elStyle(el)}><ElInner el={el} /></div>;
+          // Isolate each element: one malformed element (bad coords/chart/LaTeX)
+          // renders nothing rather than crashing the whole slide and the app.
+          return <ErrorBoundary key={el.id} fallback={null}>{node}</ErrorBoundary>;
         })}
       </div>
     </div>

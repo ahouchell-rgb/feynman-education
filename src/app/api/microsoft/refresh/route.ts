@@ -11,6 +11,7 @@
 // the table has no client-write RLS policy.
 
 import { NextResponse } from "next/server";
+import { supaRest } from "@/lib/supabaseRest";
 
 const TENANT = process.env.MICROSOFT_TENANT;
 const CLIENT_ID = process.env.MICROSOFT_CLIENT_ID;
@@ -45,19 +46,15 @@ export async function POST(req) {
   }
 
   // Fetch the row using service role (bypasses RLS) so we can read refresh_token.
-  const rowRes = await fetch(
-    `${SK_URL}/rest/v1/microsoft_tokens?teacher_id=eq.${userId}&select=refresh_token`,
-    {
-      headers: {
-        apikey: SK_SERVICE_KEY,
-        Authorization: `Bearer ${SK_SERVICE_KEY}`,
-      },
-    }
-  );
-  if (!rowRes.ok) {
+  let rows;
+  try {
+    rows = await supaRest(SK_URL, "microsoft_tokens", {
+      params: { teacher_id: `eq.${userId}`, select: "refresh_token" },
+      apikey: SK_SERVICE_KEY!, bearer: SK_SERVICE_KEY,
+    });
+  } catch {
     return NextResponse.json({ error: "row_lookup_failed" }, { status: 500 });
   }
-  const rows = await rowRes.json();
   const row = Array.isArray(rows) ? rows[0] : rows;
   if (!row?.refresh_token) {
     return NextResponse.json({ error: "no_refresh_token" }, { status: 404 });
@@ -92,22 +89,13 @@ export async function POST(req) {
   }
 
   // Persist
-  const updRes = await fetch(`${SK_URL}/rest/v1/microsoft_tokens?teacher_id=eq.${userId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      apikey: SK_SERVICE_KEY,
-      Authorization: `Bearer ${SK_SERVICE_KEY}`,
-      Prefer: "return=minimal",
-    },
-    body: JSON.stringify({
-      access_token: newAccess,
-      refresh_token: newRefresh,
-      expires_at: expiresAt,
-      updated_at: new Date().toISOString(),
-    }),
-  });
-  if (!updRes.ok) {
+  try {
+    await supaRest(SK_URL, "microsoft_tokens", {
+      method: "PATCH", params: { teacher_id: `eq.${userId}` },
+      body: { access_token: newAccess, refresh_token: newRefresh, expires_at: expiresAt, updated_at: new Date().toISOString() },
+      apikey: SK_SERVICE_KEY!, bearer: SK_SERVICE_KEY, prefer: "return=minimal",
+    });
+  } catch {
     return NextResponse.json({ error: "persist_failed" }, { status: 500 });
   }
 

@@ -114,6 +114,8 @@ function SlidesContent() {
   const importRef = useRef(null);
   const importHtmlRef = useRef(null);
   const timer = useRef(null);
+  const baseRef = useRef(null);                  // last-known server updated_at (optimistic concurrency)
+  const [conflict, setConflict] = useState("");  // set when a colleague edited the deck elsewhere
   const router = useRouter();
   const sp = useSearchParams();
   const [groups, setGroups] = useState([]);
@@ -140,6 +142,12 @@ function SlidesContent() {
       } catch {}
     })();
   }, [guest, loading]);
+
+  // Capture the loaded version's updated_at whenever a *different* deck is opened,
+  // so the slides autosave can detect a colleague writing over it.
+  useEffect(() => { baseRef.current = active?.updated_at ?? null; setConflict(""); /* eslint-disable-next-line */ }, [active?.id]);
+
+  const bumpBase = (rows) => { const ts = Array.isArray(rows) ? rows[0]?.updated_at : null; if (ts) baseRef.current = ts; };
 
   const unitById = useMemo(() => Object.fromEntries(units.map((u) => [u.id, u])), [units]);
 
@@ -168,16 +176,16 @@ function SlidesContent() {
 
   const fileDeck = async (patch) => {
     setActive((a) => ({ ...a, ...patch }));
-    try { await store.update(active.id, patch); } catch (e) { setErr(e.message); }
+    try { bumpBase(await store.update(active.id, patch)); } catch (e) { setErr(e.message); }
   };
 
   const onMasterChange = (master) => {
     setActive((a) => ({ ...a, master }));
-    if (active) store.update(active.id, { master }).catch((e) => setErr(e.message));
+    if (active) store.update(active.id, { master }).then(bumpBase).catch((e) => setErr(e.message));
   };
   const onThemeChange = (theme) => {
     setActive((a) => ({ ...a, theme }));
-    if (active) store.update(active.id, { theme }).catch((e) => setErr(e.message));
+    if (active) store.update(active.id, { theme }).then(bumpBase).catch((e) => setErr(e.message));
   };
 
   // Fork any deck (a Master or a colleague's) into my own editable copy.
@@ -215,7 +223,7 @@ function SlidesContent() {
   const onImportHtml = async (e) => {
     const files = e.target.files; e.target.value = "";
     if (!files || !files.length) return;
-    const names = Array.from(files).map((f) => f.name);
+    const names = Array.from(files as FileList).map((f) => f.name);
     setImporting(true); setErr("");
     try {
       const { importHtmlFiles } = await import("@/lib/importHtml");
@@ -230,20 +238,53 @@ function SlidesContent() {
   const openDeck = (d) => { setActive(d); setSave("saved"); setCurSlide(0); };
   const closeDeck = () => { clearTimeout(timer.current); setActive(null); load(); };
 
+  // Pull the latest version after a conflict so the teacher continues from the
+  // colleague's saved copy instead of overwriting it.
+  const reloadDeck = async () => {
+    try {
+      const d = await sk.q("decks", { params: { id: `eq.${active.id}`, select: "*" }, single: true });
+      if (d) { setActive(d); baseRef.current = d.updated_at ?? null; setConflict(""); setSave("saved"); }
+    } catch (e) { setErr(e.message); }
+  };
+
+  // Save slides with optimistic concurrency: if the stored updated_at moved since
+  // we loaded, a colleague edited it elsewhere — surface a conflict instead of
+  // clobbering their work. Returns false on conflict, true on a clean write.
+  const saveSupabaseSlides = async (slides) => {
+    if (baseRef.current) {
+      let cur = null;
+      try { cur = await sk.q("decks", { params: { id: `eq.${active.id}`, select: "updated_at" }, single: true }); }
+      catch { cur = null; } // network read failed — fall through and let the write try
+      if (cur?.updated_at && cur.updated_at !== baseRef.current) {
+        setConflict("A colleague edited this deck elsewhere. Reload to get their version — your last change here wasn’t saved.");
+        return false;
+      }
+    }
+    const newTs = nowISO();
+    const rows = await sk.q("decks", { method: "PATCH", params: { id: `eq.${active.id}` }, body: { slides, updated_at: newTs } });
+    baseRef.current = (Array.isArray(rows) ? rows[0]?.updated_at : undefined) ?? newTs;
+    return true;
+  };
+
   // Debounced persist whenever the editor reports a change.
   const onSlidesChange = (slides) => {
+    if (conflict) { setActive((a) => ({ ...a, slides })); return; } // don't auto-save over an unresolved conflict
     setActive((a) => ({ ...a, slides }));
     setSave("saving");
     clearTimeout(timer.current);
     timer.current = setTimeout(async () => {
-      try { await store.update(active.id, { slides, updated_at: nowISO() }); setSave("saved"); }
-      catch (e) { setErr(e.message); setSave("error"); }
+      try {
+        let ok = true;
+        if (guest) await store.update(active.id, { slides, updated_at: nowISO() });
+        else ok = await saveSupabaseSlides(slides);
+        setSave(ok ? "saved" : "error");
+      } catch (e) { setErr(e.message); setSave("error"); }
     }, 600);
   };
 
   const renameDeck = async (title) => {
     setActive((a) => ({ ...a, title }));
-    try { await store.update(active.id, { title }); } catch (e) { setErr(e.message); }
+    try { bumpBase(await store.update(active.id, { title })); } catch (e) { setErr(e.message); }
   };
 
   const exportPptx = async () => {
@@ -339,6 +380,7 @@ function SlidesContent() {
               {save === "saving" ? "saving…" : save === "error" ? "save failed" : "saved"}
             </span>
             <Btn v="soft" onClick={exportPptx} disabled={exporting}>{exporting ? "exporting…" : "Export .pptx"}</Btn>
+            <Btn v="soft" title="Printable handout / PDF" onClick={() => window.open(`/slides/${active.id}/print`, "_blank")}>Print / PDF</Btn>
             <div style={{ position: "relative" }}>
               <Btn onClick={() => setPresentOpen((o) => !o)} title="Start the slideshow">▶ Present ▾</Btn>
               {presentOpen && (
@@ -364,6 +406,13 @@ function SlidesContent() {
               )}
             </div>
           </div>
+          {conflict && (
+            <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: `${C.amb}1a`, border: `1px solid ${C.amb}`, borderRadius: 8, color: C.text, fontSize: 13 }}>
+              <span style={{ fontSize: 16 }}>⚠</span>
+              <span style={{ flex: 1 }}>{conflict}</span>
+              <Btn v="soft" onClick={reloadDeck}>Reload</Btn>
+            </div>
+          )}
           <div style={{ flex: 1, minHeight: 0 }}>
             <SlideEditor deck={active} onChange={onSlidesChange} onCurChange={setCurSlide}
               onUploadImage={(file) => store.uploadImage(file, active.id)}
@@ -379,7 +428,7 @@ function SlidesContent() {
   // Years follow group sort_order; units follow teaching sequence within each year.
   const deckGroups = (() => {
     if (guest || !decks) return [];
-    const byUnit = {};
+    const byUnit: Record<string, any[]> = {};
     decks.forEach((d) => { const k = d.unit_id || "__none"; (byUnit[k] ||= []).push(d); });
     const unitSection = (u) => ({ key: u.id, label: u.title, decks: byUnit[u.id] });
 
