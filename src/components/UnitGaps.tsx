@@ -28,6 +28,25 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
   const [gaps, setGaps] = useState<Gap[] | null>(null); // null = loading
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  const [sheets, setSheets] = useState<{ id: string; class_label: string | null; created_at: string }[]>([]);
+
+  const loadSheets = () => {
+    sk.q("feedforward_sheets", { params: { lesson_id: `eq.${lessonId}`, order: "created_at.desc", select: "id,class_label,created_at" } })
+      .then((d: any) => setSheets(Array.isArray(d) ? d : []))
+      .catch(() => {});
+  };
+  useEffect(() => {
+    if (lessonId) loadSheets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lessonId]);
+
+  const openSheet = async (id: string) => {
+    try {
+      const row: any = await sk.q("feedforward_sheets", { params: { id: `eq.${id}`, select: "html" }, single: true });
+      const w = window.open("", "_blank");
+      if (w && row?.html) { w.document.open(); w.document.write(row.html); w.document.close(); }
+    } catch { /* ignore */ }
+  };
 
   useEffect(() => {
     let live = true;
@@ -63,6 +82,7 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
       const w = window.open("", "_blank");
       if (w) { w.document.open(); w.document.write(j.html); w.document.close(); }
       else { setErr("Allow pop-ups to open the printable sheet."); }
+      loadSheets(); // the route saved it server-side — refresh the saved list
     } catch (e: any) {
       setErr(e.message || "Couldn't generate the sheet.");
     } finally {
@@ -101,6 +121,16 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
             <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim }}>Scaffolded practice from these gaps · opens to print</span>
           </div>
           {err ? <div style={{ marginTop: 8, fontSize: 12, color: C.red }}>{err}</div> : null}
+          {sheets.length > 0 && (
+            <div style={{ marginTop: 12, paddingTop: 10, borderTop: `1px solid ${C.border}` }}>
+              <div style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".06em" }}>Saved sheets</div>
+              {sheets.map((s) => (
+                <button key={s.id} onClick={() => openSheet(s.id)} style={{ display: "block", width: "100%", textAlign: "left", background: "transparent", border: "none", cursor: "pointer", padding: "4px 0", color: C.muted, fontSize: 12, fontFamily: "inherit" }}>
+                  ↗ {s.class_label || "Feedforward"} · {new Date(s.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                </button>
+              ))}
+            </div>
+          )}
         </>
       )}
     </Card>

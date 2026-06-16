@@ -139,6 +139,14 @@ export async function POST(req: Request) {
   const inputTok = data.usage?.input_tokens || 0;
   const outputTok = data.usage?.output_tokens || 0;
 
+  // Persist the sheet (best-effort) so it's reusable, not just open-to-print.
+  try {
+    await sb("feedforward_sheets", {
+      method: "POST", token,
+      body: { lesson_id: lessonId, unit_id: lesson.unit_id, class_label: className || null, gaps, html },
+    });
+  } catch { /* non-fatal — the teacher still receives the sheet on-screen */ }
+
   // Log token usage (best-effort; never fails the response).
   if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
     try {
