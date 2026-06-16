@@ -4,12 +4,14 @@ import { C } from "@/lib/theme";
 import { Btn } from "@/lib/primitives";
 
 // The retrieval-app origin is env-driven so prod / preview / local can differ.
-// FILL: set NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN to the real retrieval-app URL, and
-// confirm the topic route segment below (this assumes /topic/{id}; change it if
-// the real route differs). The retrieval-app must allow this origin to frame it
-// (frame-ancestors CSP — set via ALLOWED_FRAME_ANCESTORS in the retrieval-app's
-// next.config.js) and must NOT send X-Frame-Options. Auth cookies inside the
-// iframe need SameSite=None; Secure.
+// The default below is the CONFIRMED production domain (Vercel project
+// "retrieval-app"; retrieval-app.vercel.app 307-redirects here). Override with
+// NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN for preview/local.
+// STILL A GAP: the topic route segment — this assumes /topic/{id}, which the
+// retrieval app doesn't expose yet (build that route to make the embed live).
+// The retrieval-app must allow this origin to frame it (frame-ancestors CSP via
+// ALLOWED_FRAME_ANCESTORS in its next.config.js) and must NOT send
+// X-Frame-Options. Auth cookies inside the iframe need SameSite=None; Secure.
 const RET_APP_ORIGIN = process.env.NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN || "https://retrieval-app.com";
 const RET_APP_TOPIC_URL = (topicId) => `${RET_APP_ORIGIN}/topic/${encodeURIComponent(topicId)}`;
 
