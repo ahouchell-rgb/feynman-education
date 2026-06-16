@@ -16,6 +16,7 @@ import { SingleFileSlot } from "@/components/SingleFileSlot";
 import { RetrievalAppFrame } from "@/components/RetrievalAppFrame";
 import { UnitGaps } from "@/components/UnitGaps";
 import { HalftermDecks } from "@/components/HalftermDecks";
+import { UnitResources } from "@/components/UnitResources";
 
 /* ─── Sticky lesson header (appears on scroll past title) ─── */
 function StickyHeader({ visible, lesson, contextClass, mapEntry, onMarkTaught, discColor }) {
@@ -461,6 +462,9 @@ function LessonContent() {
 
       {/* Auto-generated half-term feedforward decks for this class */}
       <HalftermDecks contextClass={contextClass} />
+
+      {/* interactive-science.com tools + revision mapped to this unit */}
+      <UnitResources unitId={unitId as string} lessonId={lessonId as string} teacherId={profile?.id} onEmbed={() => loadLessonData(lessonId)} />
 
       {/* Retrieval-app embed — only renders if the lesson is linked to a topic */}
       <RetrievalAppFrame mapEntry={mapEntry} />
