@@ -391,7 +391,7 @@ export function Teacher({ user }) {
         const [s] = await sb.q("schools", { method: "POST", body: { name: fv } });
         setSchools(p => [...p, s]); schoolId = s.id;
       }
-      if (!schoolId) return;
+      if (!schoolId) { alert("Enter a school name to create your first class."); return; }
 
       if (!subjectId && subjects.length > 0) {
         // Pick the subject with the most topics (the one with your question bank)
@@ -405,7 +405,10 @@ export function Teacher({ user }) {
       const [c] = await sb.q("classes", { method: "POST", body: { name: cf.n, school_id: schoolId, teacher_id: user.id, subject_id: subjectId, year_group: parseInt(cf.y) || null } });
       const full = await sb.q("classes", { params: { id: `eq.${c.id}`, select: "*,subjects(name)" }, single: true });
       setClasses(p => [...p, full]); setCls(full); setSetup(null); setCf({ n: "", y: "" }); await loadCls(full);
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+      alert("Could not create class: " + (e?.message || "unknown error"));
+    }
   };
 
   if (loading) return <div style={{ color: C.mid, padding: 40, textAlign: "center" }}>Loading...</div>;
