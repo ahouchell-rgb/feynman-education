@@ -23,15 +23,19 @@ On **contract termination**, all Controller personal data is deleted within
 **30 days** *(confirm period)* (per the DPA).
 
 ## How deletion works (mechanism)
-- **Delete a pupil:** the `manage-student` edge function supports
-  `delete_student`, which removes the pupil's account and associated records
-  (memberships, responses). Teachers/moderators trigger this from the
-  Students/Admin panel. *(Engineering note: confirm it cascades to `responses`,
-  `paper_attempts`/`paper_responses`, `marking_flags`, and Auth user — extend if
-  any orphan rows remain.)*
-- **Delete a class:** `[document the path / add one if missing]`.
-- **Bulk / account deletion:** run on request via service-role tooling;
-  `[document the script/runbook]`.
+- **Delete a pupil:** the `manage-student` edge function `delete_student` action
+  calls `auth.admin.deleteUser`, deleting the pupil's Auth account. Verified
+  2026-06-14: the FK chain cascades from `auth.users` → `profiles` →
+  `responses`, `paper_attempts`/`paper_responses`, `class_members`,
+  `marking_flags`, `parent_tokens` (all `ON DELETE CASCADE`), so no pupil rows
+  are left orphaned. Teachers/moderators trigger this from the Students/Admin panel.
+- **Delete a class:** the `delete_class(uuid)` RPC (moderator or the class's
+  teacher); every child FK to `classes` is `ON DELETE CASCADE`.
+- **Whole-school offboarding:** the `offboard_school(uuid)` RPC (moderator)
+  deletes the school and cascades its classes/responses/attempts. *(Known gap:
+  it does NOT delete the teacher/pupil `auth.users` accounts for that school —
+  per-pupil `delete_student` does, but a bulk per-school Auth purge is still to
+  be added for complete offboarding.)*
 
 ## Data-subject access / portability requests
 Pupil/parent requests come **through the school** (the controller). School staff
@@ -53,8 +57,15 @@ not reinstate data the school instructed us to erase beyond the backup window.
       `classes` are `on delete cascade`, so a class/school delete removes its responses,
       members, parent_tokens, paper attempts, marking flags, etc. automatically. `ai_usage`
       detaches (school_id → null), keeping cost history.
-- [ ] **Pupil auth-account cascade:** `delete_class`/`offboard_school` remove practice data and
-      detach profiles, but do NOT delete pupil/teacher `auth.users` (needs the service role).
-      Verify the deployed `manage-student` edge function deletes the auth user + profile per
-      pupil, and add a bulk per-school account-deletion step for full offboarding.
+- [x] **Per-pupil auth-account cascade verified (2026-06-14):** `manage-student`'s `delete_student`
+      deletes the Auth user and the whole FK chain cascades (profiles, responses, paper
+      attempts/responses, memberships, marking flags, parent tokens). No orphan rows.
+- [ ] **Bulk per-school Auth purge:** `offboard_school` deletes practice data but leaves the
+      school's teacher/pupil `auth.users` + `profiles`. Add a service-role per-school account
+      deletion for full offboarding (`classes.teacher_id` is `NO ACTION`, so teacher deletion
+      also needs the classes removed first).
+- [ ] **AuthZ fix (found 2026-06-14):** `manage-student` `delete_student` and `reset_password`
+      only check the caller is a teacher, NOT that they teach the target pupil (no class-ownership
+      check like `rename_student` has). Any teacher could delete or reset any pupil platform-wide.
+      Add the ownership check before onboarding a 2nd school.
 - [ ] Define and implement the end-of-year anonymisation job (e.g. current + 1 academic year).
