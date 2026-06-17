@@ -109,6 +109,22 @@ do $$ declare r record; begin
   end loop;
 end $$;
 
+-- 4b. Restore the privileges pg_dump --no-privileges dropped. The moved teacher tables
+--     keep their RLS policies (those travel with the table), but the authenticated role
+--     needs granting so the teacher app can reach its data; owner-only writes stay
+--     enforced by the carried-over policies.
+do $$ declare t text; begin
+  foreach t in array array[
+    'units','lessons','groups','resources','modelling_diagrams','lesson_teacher_content',
+    'lesson_retrieval_map','taught_log','decks','class_timetable_slots','class_progress',
+    'timetable_calendar','lesson_widgets','lesson_chat_messages','daily_token_usage',
+    'microsoft_tokens','resource_map','feedforward_sheets','feedforward_decks'] loop
+    if exists (select 1 from pg_tables where schemaname='public' and tablename=t) then
+      execute format('grant select, insert, update, delete on public.%I to authenticated', t);
+    end if;
+  end loop;
+end $$;
+
 -- 5. Repoint the class-dependent FKs from feynman.classes onto public.classes,
 --    and give public.classes.current_unit_id its FK now that units are in public.
 alter table public.class_timetable_slots drop constraint if exists class_timetable_slots_class_id_fkey;
