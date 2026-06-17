@@ -20,7 +20,7 @@ const CLIENT_ID = process.env.MICROSOFT_CLIENT_ID;
 const CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET;
 const STATE_SECRET = process.env.MICROSOFT_STATE_SECRET || CLIENT_SECRET;
 
-const SK_URL = process.env.NEXT_PUBLIC_SK_URL || "https://uujbgdwnuspfnvfpdtvr.supabase.co";
+const SK_URL = process.env.NEXT_PUBLIC_SK_URL || "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const SK_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const STATE_MAX_AGE_MS = 10 * 60 * 1000; // 10 minutes

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
-import { useAuth, sk, RET_URL, RET_KEY } from "@/lib/sk";
+import { useAuth, sk } from "@/lib/sk";
 import { C, DISC } from "@/lib/theme";
 import { Btn, Badge, Card } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
@@ -171,10 +171,8 @@ function LessonContent() {
       try {
         const ids = profile.retrieval_class_ids || [];
         if (!ids.length) { setRetClassNameMap(new Map()); return; }
-        const r = await fetch(`${RET_URL}/rest/v1/classes?select=id,name`, {
-          headers: { apikey: RET_KEY, Authorization: `Bearer ${RET_KEY}` }
-        });
-        const all = r.ok ? await r.json() : [];
+        // Unified anchor: read the teacher's own classes via the authenticated client.
+        const all = await sk.q("classes", { params: { select: "id,name" } }).catch(() => []);
         const m = new Map();
         (all || []).forEach(c => m.set(c.id, c.name));
         setRetClassNameMap(m);
