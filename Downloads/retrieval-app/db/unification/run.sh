@@ -15,7 +15,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 # Make Postgres.app's psql/pg_dump available if installed (no Homebrew needed).
-for pgbin in /Applications/Postgres.app/Contents/Versions/*/bin; do
+for pgbin in /Applications/Postgres.app/Contents/Versions/*/bin /Library/PostgreSQL/*/bin /opt/homebrew/opt/libpq/bin; do
   if [ -d "$pgbin" ]; then PATH="$pgbin:$PATH"; fi
 done
 export PATH
