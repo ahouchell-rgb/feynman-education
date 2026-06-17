@@ -9,6 +9,15 @@ import { STAR_INTERVAL, WEEKLY_TARGET, getWeekBounds } from "../lib/week";
 import { StudentPaperAttempt } from "./StudentPaperAttempt";
 import { Badge, Btn, Card, Dateline, Deck, Headline, Inp, Kicker, Pill, TA } from "./ui";
 
+// Small inline icon for a revision resource link. Booklets/PDFs get a book;
+// interactive tools/widgets get a "spark" so the two read differently at a glance.
+function ResIcon({ kind, color }) {
+  if (kind === "booklet" || kind === "pdf") {
+    return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></svg>;
+  }
+  return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" /></svg>;
+}
+
 export function Student({ user }) {
   // Gamification UI toggle. false = editorial "one focal point" student view
   // (streak banner, 7-day strip, milestone overlay, star-pop, streak/star badges,
@@ -42,8 +51,9 @@ export function Student({ user }) {
   const [weeklyData, setWeeklyData] = useState([]);
   const [showWeeks, setShowWeeks] = useState(false);
   const [starPop, setStarPop] = useState(false);
-  const [topicStats, setTopicStats] = useState([]); // [{name, t, c, notStarted}]
+  const [topicStats, setTopicStats] = useState([]); // [{topicId, name, t, c, notStarted}]
   const [showTopics, setShowTopics] = useState(false);
+  const [topicResources, setTopicResources] = useState({}); // topicId → [{kind,title,url,sort_order}] from interactive-science.com
   const [statView, setStatView] = useState("allTime"); // "allTime" | "thisWeek"
   const [sessionStats, setSessionStats] = useState({ t: 0, c: 0, topics: [], struggles: [] });
   const [showSummary, setShowSummary] = useState(false);
@@ -256,9 +266,9 @@ export function Student({ user }) {
 
       // Build per-topic accuracy from responses
       const qMap = {}; questions.forEach(q => { qMap[q.id] = q; });
-      const tAcc = {}; // topicId → {name, t, c}
+      const tAcc = {}; // topicId → {topicId, name, t, c}
       questions.forEach(q => {
-        if (!tAcc[q.topic_id]) tAcc[q.topic_id] = { name: q.topics?.name || "Unknown", t: 0, c: 0 };
+        if (!tAcc[q.topic_id]) tAcc[q.topic_id] = { topicId: q.topic_id, name: q.topics?.name || "Unknown", t: 0, c: 0 };
       });
       resps.forEach(r => {
         const q = qMap[r.question_id];
@@ -267,6 +277,15 @@ export function Student({ user }) {
       const attempted = Object.values(tAcc).filter(t => t.t > 0).sort((a, b) => (a.c/a.t) - (b.c/b.t));
       const notStarted = Object.values(tAcc).filter(t => t.t === 0).length;
       setTopicStats([...attempted, ...(notStarted > 0 ? [{ name: `${notStarted} topic${notStarted !== 1 ? "s" : ""} not yet started`, t: 0, c: 0, isPlaceholder: true }] : [])]);
+
+      // Topic-level revision resources (interactive-science.com tools/widgets/booklets),
+      // keyed by topic id — powers the "revise your weak spots" panel below.
+      try {
+        const trs = await sb.q("topic_resources", { params: { retrieval_topic_id: `in.(${tids.join(",")})`, select: "retrieval_topic_id,kind,title,url,sort_order", order: "sort_order.asc" } });
+        const trMap = {};
+        (trs || []).forEach(r => { if (!trMap[r.retrieval_topic_id]) trMap[r.retrieval_topic_id] = []; trMap[r.retrieval_topic_id].push(r); });
+        setTopicResources(trMap);
+      } catch (e) { console.error("resource load failed", e); setTopicResources({}); }
 
       setQs(sortQuestions(questions, srMap, recencyBoost, new Set()));
       setQi(0); setAns(""); setRes(null);
@@ -541,6 +560,16 @@ export function Student({ user }) {
     .map(([id, name]) => ({ id, name, count: qs.filter(qq => qq.topic_id === id).length }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
+  // The pupil's own weak spots: their weakest *attempted* topics (topicStats is
+  // already sorted weakest-first) that have a mapped revision resource. This is
+  // the completion of the loop — their retrieval data → the spine → the matching
+  // interactive-science tool/booklet — surfaced back to the learner, not just the teacher.
+  const weakSpots = topicStats
+    .filter(t => !t.isPlaceholder && t.t > 0 && t.topicId)
+    .map(t => ({ ...t, pct: Math.round((t.c / t.t) * 100), resources: topicResources[t.topicId] || [] }))
+    .filter(t => t.pct < 70 && t.resources.length > 0)
+    .slice(0, 4);
+
   // ── Paper-taking flow: when the student has tapped a paper, swap the entire
   // page to the paper attempt UI. The retrieval flow is paused; class context
   // is preserved so the back button returns them to where they were.
@@ -597,6 +626,39 @@ export function Student({ user }) {
         <Headline size={22} style={{ marginBottom: 6 }}>Welcome back.</Headline>
         <Deck>{weeklyValid >= WEEKLY_TARGET ? "You've hit this week's target. Anything more is gravy." : `${WEEKLY_TARGET - weeklyValid} question${WEEKLY_TARGET - weeklyValid === 1 ? "" : "s"} to reach this week's target of ${WEEKLY_TARGET}.`}</Deck>
       </div>
+
+      {/* ── Your weak spots → revise them ──────────────────────────────────
+           The pupil's own lowest topics, each linked to the matching
+           interactive-science tool / widget / revision booklet. Only the weakest
+           topics that actually have a mapped resource appear, so this stays a
+           short, do-this-next list rather than a full report. */}
+      {weakSpots.length > 0 && (
+        <Card style={{ padding: 16, marginBottom: 18, borderColor: "rgba(200,54,45,0.3)", background: C.priSoft }}>
+          <Kicker>Your weak spots → revise them</Kicker>
+          <Headline size={18} style={{ marginBottom: 4 }}>Target the gaps</Headline>
+          <Deck style={{ marginBottom: 14 }}>Your lowest topics, each with a tool or booklet to revise it.</Deck>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {weakSpots.map((t, i) => (
+              <div key={t.topicId} style={{ paddingBottom: i < weakSpots.length - 1 ? 12 : 0, borderBottom: i < weakSpots.length - 1 ? `1px solid ${C.bdrSoft}` : "none" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8, marginBottom: 7 }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: C.txt, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.name}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: t.pct < 50 ? C.red : C.amb, flexShrink: 0 }}>{t.pct}%</span>
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {t.resources.map(r => (
+                    <a key={r.url} href={r.url} target="_blank" rel="noopener noreferrer"
+                      style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 99, border: `1px solid ${C.pri}`, background: C.card, color: C.pri, fontSize: 12, fontWeight: 600, textDecoration: "none", fontFamily: "inherit" }}>
+                      <ResIcon kind={r.kind} color={C.pri} />
+                      {r.title}
+                      <span style={{ opacity: 0.55, fontWeight: 400 }}>↗</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {/* Study mode topic picker */}
       {studyMode && (
