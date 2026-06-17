@@ -8,11 +8,31 @@
 
 begin;
 
--- 1. Move the teacher enum types into public (the anchor has none of these).
+-- 0. Identity remap: fold your teacher account into your anchor account. The pg_dump
+--    path (README) already does this via a stream sed, so these UPDATEs match 0 rows
+--    there; the MCP-driven path relies on them. Idempotent either way. Validated on a
+--    branch 2026-06-17.
+update feynman.profiles               set id='cef87533-7ff1-4f93-bfcf-22feb66f896a'        where id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.classes                set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.decks                  set owner='cef87533-7ff1-4f93-bfcf-22feb66f896a'     where owner='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.taught_log             set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.microsoft_tokens       set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.daily_token_usage      set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.timetable_calendar     set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.lesson_widgets         set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.lesson_chat_messages   set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.lesson_teacher_content set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.feedforward_sheets     set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.feedforward_decks      set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.lesson_retrieval_map   set created_by='cef87533-7ff1-4f93-bfcf-22feb66f896a' where created_by='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.resources              set uploaded_by='cef87533-7ff1-4f93-bfcf-22feb66f896a' where uploaded_by='ab56a97d-b326-434b-bd0f-1a894fb15819';
+
+-- 1. Move the teacher enum types into public (the anchor has none of these). FIVE types
+--    (the rehearsal caught two missing: paper_number, resource_type).
 do $$
 declare ty text;
 begin
-  foreach ty in array array['discipline','key_stage','term','paper'] loop
+  foreach ty in array array['discipline','key_stage','term','paper_number','resource_type'] loop
     if exists (select 1 from pg_type t join pg_namespace n on n.oid=t.typnamespace
                where n.nspname='feynman' and t.typname=ty)
        and not exists (select 1 from pg_type t join pg_namespace n on n.oid=t.typnamespace

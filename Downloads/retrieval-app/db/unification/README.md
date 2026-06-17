@@ -5,7 +5,22 @@ Collapses the **Feynman/ScienceKit teacher** project (`uujbgdwnuspfnvfpdtvr`) an
 (`uvzukwoxqhcxaxtzrziy`), with one shared Supabase Auth pool. Approved plan:
 `~/.claude/plans/synchronous-tickling-crystal.md`.
 
-> **Status: PENDING — rehearse on a branch first. Nothing here has been applied to any live DB.**
+> **Status: REHEARSED on a throwaway branch 2026-06-17 (logic + DDL validated on synthetic data); PENDING the gated live cutover. Nothing here has been applied to a live app DB.**
+
+## Rehearsal result (2026-06-17)
+
+Ran the full reconcile against a Supabase branch with the teacher schema reconstructed into
+`feynman` (via the catalog) + a synthetic fixture. All checks green: enum moves, profile merge
+(1 row, not duplicated), class import honouring the `key_stage`/`tier` checks (KS4⇒`Higher`),
+identity remap, table moves, FK repoints, crosswalk FKs, 0 orphans, 0 schema leaks, empty
+`feynman` afterward. Three bugs were caught and fixed in this kit:
+1. **Enum list incomplete** — there are **five** teacher enums (`discipline, key_stage, term, paper_number, resource_type`); the kit moved four and misnamed `paper`→`paper_number`. Fixed in `10_reconcile.sql` step 1.
+2. **Identity remap** — added as `10_reconcile.sql` step 0 (the `pg_dump` path does it via sed; the MCP path needs the explicit `UPDATE`s).
+3. **Verify leak-scan** crashed on aggregate functions — fixed with `prokind='f'` in `20_verify.sql`.
+
+**Notes for the live cutover:**
+- The anchor's 64 registered migrations **don't cleanly replay on a fresh branch** (`MIGRATIONS_FAILED`; `topic_map`/`topic_resources` didn't land) — so don't rely on branch-from-migrations for a data-faithful rehearsal. The live cutover runs against the real anchor, which already has the full schema + data, so this doesn't block it.
+- **Auth FKs:** in the `pg_dump` path the moved teacher tables keep their `→auth.users` FKs and the sed remap makes the data valid at load. In the **MCP-driven** path (staging built from the catalog without the `→auth.users` FKs), re-add those FKs after the remap+move if you want them enforced in the unified anchor.
 
 ## Phase 0 — verified facts (2026-06-17)
 

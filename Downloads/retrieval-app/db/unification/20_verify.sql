@@ -46,7 +46,8 @@ select 'functions', proname from pg_proc p join pg_namespace n on n.oid=p.pronam
 
 \echo '== over-qualification leak check: any public function body referencing feynman.* (expect 0 rows) =='
 select proname from pg_proc p join pg_namespace n on n.oid=p.pronamespace
-where n.nspname='public' and pg_get_functiondef(p.oid) ilike '%feynman.%';
+where n.nspname='public' and p.prokind='f' and pg_get_functiondef(p.oid) ilike '%feynman.%';
+-- (prokind='f' — pg_get_functiondef errors on aggregate/window funcs; the rehearsal caught this)
 
 \echo '== over-qualification leak check: any public RLS policy referencing feynman.* (expect 0 rows) =='
 select tablename, policyname from pg_policies
