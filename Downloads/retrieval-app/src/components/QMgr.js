@@ -22,6 +22,14 @@ export function QMgr({ subjectId, userId, topics, setTopics, canPublishShared = 
   const [editImageUrl, setEditImageUrl] = useState("");
   const [editImageBusy, setEditImageBusy] = useState(false);
   const [editImageErr, setEditImageErr] = useState("");
+  // AI question generation (Tier-2: question acquisition)
+  const [aiCount, setAiCount] = useState(5);
+  const [aiBusy, setAiBusy] = useState(false); const [aiErr, setAiErr] = useState("");
+  const [aiDrafts, setAiDrafts] = useState(null); // null | [{question_text, model_answer, marks, _on}]
+  const [aiSaved, setAiSaved] = useState(0);
+  // Tenant-fillable resource links (Tier-2)
+  const [resList, setResList] = useState(null); const [resBusy, setResBusy] = useState(false); const [resErr, setResErr] = useState("");
+  const [resUrl, setResUrl] = useState(""); const [resTitle, setResTitle] = useState(""); const [resKind, setResKind] = useState("tool");
 
   // Upload a File to the question-images bucket and return its public URL.
   // Caller is responsible for size/type validation.
@@ -113,7 +121,73 @@ export function QMgr({ subjectId, userId, topics, setTopics, canPublishShared = 
     } catch (e) { console.error(e); }
   };
 
+  // ── AI question generation ──
+  const topicName = () => (topics.find(t => t.id === tid)?.name || "");
+  const updDraft = (i, patch) => setAiDrafts(d => d.map((q, j) => j === i ? { ...q, ...patch } : q));
+  const generateAI = async () => {
+    if (!tid) return;
+    setAiBusy(true); setAiErr(""); setAiSaved(0);
+    try {
+      // Give the model the topic's existing questions so it doesn't duplicate them.
+      let existing = ql.map(q => q.question_text);
+      if (!existing.length) {
+        try { const qs = await sb.q("questions", { params: { topic_id: `eq.${tid}`, archived: "eq.false", select: "question_text", limit: "40" } }); existing = (qs || []).map(q => q.question_text); } catch { /* best effort */ }
+      }
+      const jwt = sb.auth.getToken();
+      const r = await fetch(`${SUPA_URL}/functions/v1/generate-questions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SUPA_KEY, Authorization: `Bearer ${jwt || SUPA_KEY}` },
+        body: JSON.stringify({ topic_name: topicName(), count: aiCount, existing }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || `Generation failed (${r.status})`);
+      setAiDrafts((d.questions || []).map(q => ({ ...q, _on: true })));
+    } catch (e) { setAiErr(String(e.message || e)); }
+    setAiBusy(false);
+  };
+  const saveAIDrafts = async () => {
+    if (!aiDrafts || !tid) return;
+    setAiBusy(true); setAiErr("");
+    const chosen = aiDrafts.filter(q => q._on && q.question_text.trim() && q.model_answer.trim());
+    let n = 0, failed = false;
+    for (const q of chosen) {
+      try {
+        await sb.q("questions", { method: "POST", body: { topic_id: tid, question_text: q.question_text.trim(), model_answer: q.model_answer.trim(), marks: q.marks || 1, difficulty: 1, created_by: userId } });
+        n++;
+      } catch { failed = true; }
+    }
+    if (n) { setAdded(p => p + n); setAiSaved(n); }
+    if (failed) setAiErr("Some couldn't be saved — your plan may not allow custom questions, or you lack permission.");
+    if (n) setAiDrafts(null);
+    setAiBusy(false);
+  };
+
+  // ── Tenant resource links ──
+  const loadResources = async (topicId) => {
+    if (!topicId) { setResList([]); return; }
+    setResList(null); setResErr("");
+    try {
+      const rs = await sb.q("topic_resources", { params: { retrieval_topic_id: `eq.${topicId}`, select: "id,url,title,kind,school_id,created_by", order: "sort_order.asc" } });
+      setResList(Array.isArray(rs) ? rs : []);
+    } catch (e) { setResErr(e.message || "Could not load resources"); setResList([]); }
+  };
+  const addResource = async () => {
+    if (!tid || !resUrl.trim() || !resTitle.trim()) return;
+    setResBusy(true); setResErr("");
+    try {
+      await sb.rpc("upsert_topic_resource", { p_topic_id: tid, p_url: resUrl.trim(), p_title: resTitle.trim(), p_kind: resKind });
+      setResUrl(""); setResTitle(""); setResKind("tool");
+      await loadResources(tid);
+    } catch (e) { setResErr(e.message || "Could not add link"); }
+    setResBusy(false);
+  };
+  const removeResource = async (id) => {
+    try { await sb.rpc("delete_topic_resource", { p_id: id }); setResList(prev => (prev || []).filter(r => r.id !== id)); }
+    catch (e) { setResErr(e.message || "Could not remove"); }
+  };
+
   useEffect(() => { if (mode === "browse" && tid) loadQl(tid); }, [mode, tid]);
+  useEffect(() => { if (mode === "resources" && tid) loadResources(tid); if (mode === "ai") { setAiDrafts(null); setAiErr(""); } }, [mode, tid]);
 
   // ── CSV parsing ──
   const parseCSVLine = (line) => {
@@ -210,6 +284,8 @@ export function QMgr({ subjectId, userId, topics, setTopics, canPublishShared = 
         <Pill on={mode === "bulk"} onClick={() => setMode("bulk")}>Bulk</Pill>
         <Pill on={mode === "csv"} onClick={() => { setMode("csv"); setCsvRows(null); setCsvErr(""); }}>CSV import</Pill>
         <Pill on={mode === "browse"} onClick={() => setMode("browse")}>Browse & edit</Pill>
+        <Pill on={mode === "ai"} onClick={() => setMode("ai")}>✦ AI generate</Pill>
+        <Pill on={mode === "resources"} onClick={() => setMode("resources")}>Resources</Pill>
       </div>
 
       {mode === "single" && (
@@ -395,6 +471,92 @@ export function QMgr({ subjectId, userId, topics, setTopics, canPublishShared = 
                 <div style={{ height: "100%", background: C.pri, borderRadius: 99, width: `${(csvProgress.done / csvProgress.total) * 100}%`, transition: "width .2s" }} />
               </div>
             </div>
+          )}
+        </div>
+      )}
+
+      {mode === "ai" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {!tid ? (
+            <div style={{ padding: "24px 0", textAlign: "center", color: C.dim, fontSize: 13 }}>Select a topic above to generate questions for it</div>
+          ) : (
+            <>
+              {!aiDrafts && (
+                <div style={{ padding: 12, border: `1px dashed ${C.bdr}`, borderRadius: 10, background: C.card2, display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ fontSize: 13, color: C.txt }}>Generate exam-style questions for <b>{topicName()}</b> with AI, then review and save the ones you want.</div>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                    <span style={{ fontSize: 12, color: C.dim }}>How many:</span>
+                    <Inp type="number" min={1} max={10} value={aiCount} onChange={e => setAiCount(Math.max(1, Math.min(10, parseInt(e.target.value) || 5)))} style={{ width: 70 }} />
+                    <Btn onClick={generateAI} disabled={aiBusy}>{aiBusy ? "Generating…" : "✦ Generate"}</Btn>
+                  </div>
+                  <div style={{ fontSize: 10, color: C.dim }}>Drafts are always reviewed before saving. Saved questions are private to you until published to the shared bank.</div>
+                </div>
+              )}
+              {aiErr && <div style={{ padding: "10px 14px", borderRadius: 8, background: C.redS, color: C.red, fontSize: 12 }}>{aiErr}</div>}
+              {aiSaved > 0 && !aiDrafts && <div style={{ fontSize: 12, color: C.grn, fontWeight: 600 }}>✓ {aiSaved} saved to the bank</div>}
+              {aiDrafts && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <div style={{ fontSize: 11, color: C.dim }}>{aiDrafts.length} draft{aiDrafts.length !== 1 ? "s" : ""} — edit, untick any you don't want, then save.</div>
+                  {aiDrafts.map((q, i) => (
+                    <div key={i} style={{ border: `1px solid ${C.bdr}`, borderRadius: 10, padding: 10, background: q._on ? C.card2 : "transparent", opacity: q._on ? 1 : 0.55, display: "flex", flexDirection: "column", gap: 6 }}>
+                      <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: C.mid, cursor: "pointer" }}>
+                        <input type="checkbox" checked={q._on} onChange={e => updDraft(i, { _on: e.target.checked })} /> include
+                      </label>
+                      <TA value={q.question_text} onChange={e => updDraft(i, { question_text: e.target.value })} rows={2} style={{ fontSize: 13 }} />
+                      <TA value={q.model_answer} onChange={e => updDraft(i, { model_answer: e.target.value })} rows={2} style={{ fontSize: 13, color: C.mid }} />
+                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                        <span style={{ fontSize: 11, color: C.dim }}>Marks:</span>
+                        <Inp type="number" min={1} max={6} value={q.marks} onChange={e => updDraft(i, { marks: Math.max(1, Math.min(6, parseInt(e.target.value) || 1)) })} style={{ width: 64, fontSize: 13, padding: "6px 10px" }} />
+                      </div>
+                    </div>
+                  ))}
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <Btn onClick={saveAIDrafts} disabled={aiBusy || !aiDrafts.some(q => q._on)} style={{ flex: 1 }}>{aiBusy ? "Saving…" : `Save ${aiDrafts.filter(q => q._on).length} to bank`}</Btn>
+                    <Btn v="ghost" onClick={() => setAiDrafts(null)} style={{ fontSize: 12 }}>Discard</Btn>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {mode === "resources" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {!tid ? (
+            <div style={{ padding: "24px 0", textAlign: "center", color: C.dim, fontSize: 13 }}>Select a topic above to manage its revision resources</div>
+          ) : (
+            <>
+              <div style={{ fontSize: 12, color: C.dim }}>Links shown to pupils on their “revise your weak spots” panel for this topic. Your school’s links sit alongside the built-in ones.</div>
+              <div style={{ padding: 12, border: `1px dashed ${C.bdr}`, borderRadius: 10, background: C.card2, display: "flex", flexDirection: "column", gap: 8 }}>
+                <Inp placeholder="Title (e.g. Cells — revision booklet)" value={resTitle} onChange={e => setResTitle(e.target.value)} />
+                <Inp placeholder="https://…" value={resUrl} onChange={e => setResUrl(e.target.value)} onKeyDown={e => e.key === "Enter" && addResource()} />
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <select value={resKind} onChange={e => setResKind(e.target.value)} style={{ padding: "8px 10px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 6, color: C.txt, fontSize: 13 }}>
+                    <option value="tool">Tool</option><option value="widget">Widget</option><option value="booklet">Booklet</option><option value="pdf">PDF</option>
+                  </select>
+                  <Btn onClick={addResource} disabled={resBusy || !resUrl.trim() || !resTitle.trim()}>{resBusy ? "Adding…" : "+ Add link"}</Btn>
+                </div>
+              </div>
+              {resErr && <div style={{ padding: "10px 14px", borderRadius: 8, background: C.redS, color: C.red, fontSize: 12 }}>{resErr}</div>}
+              {resList === null ? (
+                <div style={{ padding: "16px 0", textAlign: "center", color: C.dim, fontSize: 13 }}>Loading…</div>
+              ) : resList.length === 0 ? (
+                <div style={{ padding: "16px 0", textAlign: "center", color: C.dim, fontSize: 13 }}>No resources for this topic yet.</div>
+              ) : (
+                resList.map(r => (
+                  <div key={r.id} style={{ display: "flex", gap: 10, alignItems: "center", border: `1px solid ${C.bdr}`, borderRadius: 8, padding: "8px 12px" }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <a href={r.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: C.pri, fontWeight: 600, textDecoration: "none" }}>{r.title}</a>
+                      <div style={{ fontSize: 10, color: C.dim, textTransform: "capitalize" }}>{r.kind} · {r.school_id ? "your school" : "built-in"}</div>
+                    </div>
+                    {r.school_id && r.created_by === userId
+                      ? <button onClick={() => removeResource(r.id)} style={{ background: "none", border: "1px solid rgba(239,68,68,.3)", borderRadius: 6, color: C.red, fontSize: 11, cursor: "pointer", padding: "4px 10px", fontFamily: "inherit" }}>Remove</button>
+                      : <Badge color={C.acc}>{r.school_id ? "school" : "built-in"}</Badge>}
+                  </div>
+                ))
+              )}
+            </>
           )}
         </div>
       )}
