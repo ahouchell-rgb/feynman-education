@@ -47,6 +47,11 @@ export function Student({ user }) {
   const [joinCode, setJoinCode] = useState("");
   const [joinErr, setJoinErr] = useState("");
   const [joining, setJoining] = useState(false);
+  // Self-serve onboarding (a fresh, unaffiliated account starting a school)
+  const [schoolName, setSchoolName] = useState("");
+  const [creatingSchool, setCreatingSchool] = useState(false);
+  const [createErr, setCreateErr] = useState("");
+  const [showStart, setShowStart] = useState(false);
   const [weeklyValid, setWeeklyValid] = useState(0);
   const [weeklyData, setWeeklyData] = useState([]);
   const [showWeeks, setShowWeeks] = useState(false);
@@ -230,6 +235,18 @@ export function Student({ user }) {
       setJoinCode("");
     } catch (e) { setJoinErr(e.message); }
     setJoining(false);
+  };
+
+  // Self-serve onboarding: an unaffiliated account can stand up its own school
+  // (create_school makes the caller a school lead). Reload so the app re-routes to
+  // the teacher side as the new 'hod'.
+  const startSchool = async () => {
+    if (!schoolName.trim()) return;
+    setCreatingSchool(true); setCreateErr("");
+    try {
+      await sb.rpc("create_school", { p_name: schoolName.trim() });
+      if (typeof window !== "undefined") window.location.reload();
+    } catch (e) { setCreateErr(e.message || "Could not create the school"); setCreatingSchool(false); }
   };
 
   const pickClass = async (c) => {
@@ -515,6 +532,28 @@ export function Student({ user }) {
         </div>
         {joinErr && <div style={{ color: C.red, fontSize: 13, marginTop: 8, padding: "8px 10px", background: C.redS, borderRadius: 8 }}>{joinErr}</div>}
       </Card>
+
+      {/* Self-serve onboarding — only for a fresh, unaffiliated account */}
+      {classes.length === 0 && !user?.profile?.school_id && (
+        <Card style={{ padding: 16, marginBottom: 16, background: C.card2 }}>
+          {!showStart ? (
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+              <div style={{ fontSize: 13, color: C.mid }}>A teacher setting up your school?</div>
+              <Btn v="ghost" onClick={() => setShowStart(true)} style={{ fontSize: 12, whiteSpace: "nowrap" }}>Start a school</Btn>
+            </div>
+          ) : (
+            <div>
+              <div style={{ color: C.txt, fontWeight: 600, fontSize: 14, marginBottom: 8 }}>Set up your school</div>
+              <div style={{ color: C.dim, fontSize: 12, marginBottom: 10 }}>You'll become the lead for a new free trial — then create classes and share join codes with pupils.</div>
+              <div style={{ display: "flex", gap: 8 }}>
+                <Inp placeholder="School name" value={schoolName} onChange={e => setSchoolName(e.target.value)} onKeyDown={e => e.key === "Enter" && startSchool()} />
+                <Btn onClick={startSchool} disabled={!schoolName.trim() || creatingSchool} style={{ whiteSpace: "nowrap" }}>{creatingSchool ? "..." : "Create"}</Btn>
+              </div>
+              {createErr && <div style={{ color: C.red, fontSize: 13, marginTop: 8, padding: "8px 10px", background: C.redS, borderRadius: 8 }}>{createErr}</div>}
+            </div>
+          )}
+        </Card>
+      )}
 
       {classes.length === 0 ? (
         <Card style={{ padding: "32px 20px", textAlign: "center" }}>

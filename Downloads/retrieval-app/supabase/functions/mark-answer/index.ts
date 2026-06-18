@@ -468,7 +468,7 @@ async function recordResponse(
   question_id: string | undefined,
   class_id: string | undefined,
   student_answer: string,
-  verdict: { correct: boolean; marks_awarded: number; feedback: string; flagged: boolean },
+  verdict: { correct: boolean; marks_awarded: number; feedback: string; flagged: boolean; confidence?: string },
 ): Promise<string | null> {
   if (!sb || !uid || !question_id || !class_id) return null;
   try {
@@ -489,6 +489,7 @@ async function recordResponse(
         is_correct: verdict.correct,
         marks_awarded: verdict.marks_awarded,
         ai_feedback: verdict.flagged ? "FLAGGED: " + verdict.feedback : verdict.feedback,
+        ai_confidence: verdict.confidence ?? null,
       })
       .select("id")
       .single();
@@ -519,7 +520,7 @@ Deno.serve(async (req: Request) => {
     const schoolId = await resolveSchoolId(class_id);
 
     // ── Build the verdict (this is the only place the grade is decided) ──
-    let verdict: { correct: boolean; marks_awarded: number; feedback: string; flagged: boolean; source: string };
+    let verdict: { correct: boolean; marks_awarded: number; feedback: string; flagged: boolean; source: string; confidence?: string };
 
     if (prejudged_flagged) {
       // The client's cheap heuristic flagged this as a non-attempt. Trusting it
@@ -567,7 +568,7 @@ Deno.serve(async (req: Request) => {
         const first = await callAiMark("first", "ai", schoolId, question, model_answer, student_answer, maxMarks);
         if (first.correct || first.flagged) {
           tryWriteCache(first).catch(() => {});
-          verdict = { correct: !!first.correct, marks_awarded: first.marks_awarded ?? (first.correct ? maxMarks : 0), feedback: first.feedback || "", flagged: !!first.flagged, source: "ai" };
+          verdict = { correct: !!first.correct, marks_awarded: first.marks_awarded ?? (first.correct ? maxMarks : 0), feedback: first.feedback || "", flagged: !!first.flagged, source: "ai", confidence: first.confidence };
         } else {
           // Double-check wrong answers — the model is sometimes harsh on first pass.
           // COST LEVER 3: skip the re-check when the first pass is already high
@@ -587,8 +588,8 @@ Deno.serve(async (req: Request) => {
             }
           }
           verdict = overturned
-            ? { correct: true, marks_awarded: overturned.marks_awarded ?? maxMarks, feedback: overturned.feedback || "", flagged: false, source: "ai_double_check_overturned" }
-            : { correct: !!first.correct, marks_awarded: first.marks_awarded ?? 0, feedback: first.feedback || "", flagged: !!first.flagged, source: "ai_double_check_confirmed" };
+            ? { correct: true, marks_awarded: overturned.marks_awarded ?? maxMarks, feedback: overturned.feedback || "", flagged: false, source: "ai_double_check_overturned", confidence: "medium" }
+            : { correct: !!first.correct, marks_awarded: first.marks_awarded ?? 0, feedback: first.feedback || "", flagged: !!first.flagged, source: "ai_double_check_confirmed", confidence: first.confidence };
         }
       }
     }
@@ -597,6 +598,10 @@ Deno.serve(async (req: Request) => {
     let awarded = Number(verdict.marks_awarded);
     if (!Number.isFinite(awarded)) awarded = verdict.correct ? maxMarks : 0;
     verdict.marks_awarded = Math.max(0, Math.min(maxMarks, Math.round(awarded)));
+    // Deterministic marks (numerical/exact/cache/client_flagged) and the fallback are
+    // certain by construction — record them as high confidence. The review queue keys
+    // off low/medium, so these correctly never appear in it.
+    if (!verdict.confidence) verdict.confidence = "high";
 
     // Log the no-AI markings for the cost dashboard. AI markings already logged their
     // tokens (logUsage 'first'); here we record one zero-token 'shortcut' row per

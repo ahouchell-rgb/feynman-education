@@ -9,6 +9,7 @@ import { AdminPanel } from "./AdminPanel";
 import { BulkUpload } from "./BulkUpload";
 import { ClassGaps } from "./ClassGaps";
 import { HodPanel } from "./HodPanel";
+import { MarkReview } from "./MarkReview";
 import { LessonStarter } from "./LessonStarter";
 import { PaperManager } from "./PaperManager";
 import { QMgr } from "./QMgr";
@@ -582,7 +583,7 @@ export function Teacher({ user }) {
           <Btn v="ghost" onClick={() => setSetup("class")} style={{ padding: "10px 14px", fontSize: 13, whiteSpace: "nowrap" }}>+ New</Btn>
         </div>
         <div style={{ display: "flex", gap: 6, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 2 }}>
-          {[...(showDept ? ["hod"] : []), ...["dashboard", "starter", "topics", "questions", "papers"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : (t === "hod" ? { borderColor: C.amb, color: tab === t ? C.amb : C.amb } : undefined)}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "Admin" : t === "hod" ? "Department" : t === "papers" ? "Papers" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
+          {[...(showDept ? ["hod"] : []), ...["dashboard", "review", "starter", "topics", "questions", "papers"], ...(isMod ? ["admin"] : [])].map(t => <Pill key={t} on={tab === t} onClick={() => setTab(t)} style={t === "admin" ? { borderColor: C.pri, color: tab === t ? C.pri : C.pri } : (t === "hod" ? { borderColor: C.amb, color: tab === t ? C.amb : C.amb } : undefined)}>{t === "starter" ? "Lesson Starter" : t === "admin" ? "Admin" : t === "hod" ? "Department" : t === "papers" ? "Papers" : t === "review" ? "Review marks" : t.charAt(0).toUpperCase() + t.slice(1)}</Pill>)}
         </div>
       </div>
 
@@ -1190,6 +1191,8 @@ export function Teacher({ user }) {
               </div>
             </div>
           )}
+
+          {tab === "review" && cls && <MarkReview cls={cls} />}
 
           {tab === "starter" && (
             <LessonStarter topics={topics} unlocked={unlocked} cls={cls} dash={dash} />
