@@ -110,8 +110,10 @@ function UnitContent() {
       ].filter(Boolean).join("\n");
       const instruction = `Create a complete, ready-to-teach slide deck for this unit. Include, in order: a title slide; a learning-objectives slide; a starter / do-now; 3–6 content slides that teach the key ideas clearly with concise bullet points and key terms; a labelled-diagram slide if relevant; a few practice questions; and an exit ticket. Keep it scientifically accurate and pitched at ${unit.year_group || "KS3–GCSE"}, with clean layouts.\n\n${ctx}`;
 
+      const token = sk.auth.getToken();
+      if (!token) throw new Error("Sign in to generate slides.");
       const [d] = await sk.q("decks", { method: "POST", body: { title: `${unit.title} — slides`, slides: [{ id: "s" + Date.now(), elements: [] }], unit_id: unitId } });
-      const r = await fetch("/api/slides-assistant", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ slides: d.slides, currentSlide: 0, instruction }) });
+      const r = await fetch("/api/slides-assistant", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify({ slides: d.slides, currentSlide: 0, instruction }) });
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || "Generation failed");
       await sk.q("decks", { method: "PATCH", params: { id: `eq.${d.id}` }, body: { slides: data.slides } });

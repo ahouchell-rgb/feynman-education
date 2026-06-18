@@ -16,6 +16,30 @@ const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION = "2023-06-01";
 const MAX_OUTPUT_TOKENS = 8000;
 
+// ─── Auth + cost backstop (mirrors chat-with-lesson) ─────────────────────
+// This route drives Opus, so it MUST require an authenticated teacher and meter
+// spend — otherwise it is an open, uncapped Opus endpoint on our API key.
+const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
+// Same public anon key as src/lib/sk + chat-with-lesson — used as the apikey header
+// alongside the caller's bearer for the auth check and the RLS usage read.
+const SK_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
+
+// Opus pricing (claude-opus-4-8): $5 in / $25 out per Mtok.
+const INPUT_USD_PER_MTOK = 5;
+const OUTPUT_USD_PER_MTOK = 25;
+const GBP_PER_USD = 0.79;
+// Dedicated daily ceiling for Opus deck-generation, separate from the £1 chat cap:
+// whole-deck Opus edits are the core authoring action and cost more per call, so a
+// flat £1 would block real lesson-building. This is an abuse / runaway backstop per
+// authenticated teacher, not a usage budget — tune freely. It reads the shared
+// daily_token_usage pool, priced at Opus rates (conservative: Sonnet tokens from the
+// chat/feedforward routes in that pool are over-counted, only making the cap stricter).
+const DAILY_CAP_GBP = 5.0;
+
+const todayISO = () => new Date().toISOString().slice(0, 10);
+const costGBP = (input, output) =>
+  (input / 1e6) * INPUT_USD_PER_MTOK * GBP_PER_USD + (output / 1e6) * OUTPUT_USD_PER_MTOK * GBP_PER_USD;
+
 const json = (obj, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json" } });
 
@@ -119,6 +143,14 @@ export async function POST(req) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return json({ error: "ANTHROPIC_API_KEY is not set. Add it to .env.local and restart the dev server." }, 500);
   }
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return json({ error: "SUPABASE_SERVICE_ROLE_KEY is not set." }, 500);
+  }
+
+  // Require an authenticated teacher — this is no longer an open Opus endpoint.
+  const authHeader = req.headers.get("authorization") || "";
+  if (!authHeader.startsWith("Bearer ")) return json({ error: "Sign in to use the AI assistant." }, 401);
+  const token = authHeader.slice(7);
 
   let body;
   try { body = await req.json(); } catch { return json({ error: "Invalid JSON body" }, 400); }
@@ -129,6 +161,36 @@ export async function POST(req) {
 
   if (!instruction) return json({ error: "instruction is required" }, 400);
   if (instruction.length > 2000) return json({ error: "Instruction is too long." }, 400);
+
+  // Validate the session and get the teacher's UID (also the usage key).
+  let userId;
+  try {
+    const ur = await fetch(`${SK_URL}/auth/v1/user`, {
+      headers: { apikey: SK_ANON_KEY, Authorization: `Bearer ${token}` },
+    });
+    if (!ur.ok) return json({ error: "Invalid or expired session — sign in again." }, 401);
+    const user = await ur.json();
+    userId = user.id;
+  } catch {
+    return json({ error: "Auth check failed." }, 401);
+  }
+
+  // Daily cost backstop (per teacher). Fails OPEN on a read blip so a transient infra
+  // issue never blocks authoring — the auth requirement above is the primary defence.
+  try {
+    const ur = await fetch(
+      `${SK_URL}/rest/v1/daily_token_usage?teacher_id=eq.${userId}&day=eq.${todayISO()}&select=input_tokens,output_tokens`,
+      { headers: { apikey: SK_ANON_KEY, Authorization: `Bearer ${token}` } },
+    );
+    if (ur.ok) {
+      const rows = await ur.json();
+      const u = (rows && rows[0]) || { input_tokens: 0, output_tokens: 0 };
+      const usedGBP = costGBP(u.input_tokens || 0, u.output_tokens || 0);
+      if (usedGBP >= DAILY_CAP_GBP) {
+        return json({ error: `Daily AI limit of £${DAILY_CAP_GBP.toFixed(2)} reached (used £${usedGBP.toFixed(2)}). Resets at midnight UTC.` }, 429);
+      }
+    }
+  } catch { /* fail open */ }
 
   // Imported HTML templates can be tens of KB each — far too large for Claude to
   // echo back inside the 8K output budget. Strip the markup (keyed by element id)
@@ -177,6 +239,27 @@ export async function POST(req) {
   }
 
   const data = await res.json();
+
+  // Record token spend so the daily cap accrues (service-role RPC, same as
+  // chat-with-lesson). Best-effort: a logging hiccup must not fail the user's edit.
+  try {
+    const u = data.usage || {};
+    await fetch(`${SK_URL}/rest/v1/rpc/increment_token_usage`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+      body: JSON.stringify({
+        p_teacher_id: userId,
+        p_day: todayISO(),
+        p_input: u.input_tokens || 0,
+        p_output: u.output_tokens || 0,
+      }),
+    });
+  } catch { /* best-effort */ }
+
   const toolBlock = (data.content || []).find((b) => b.type === "tool_use" && b.name === "edit_deck");
   if (!toolBlock?.input?.slides) {
     return json({ error: "Claude did not return a deck. Try rephrasing." }, 502);
