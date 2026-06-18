@@ -261,6 +261,28 @@ async function resolveSchoolId(class_id: string | undefined): Promise<string | n
   }
 }
 
+// Hard cost backstop: true when a school's AI-mark usage is >3x its fair-use
+// allowance (school_mark_status RPC). The soft cap (admin Schools view) never blocks
+// pupils; this only ever catches genuine runaway/abuse. Per-instance cached 5 min,
+// and fails OPEN on any error (a transient DB issue must never block real marking).
+// Comped pilots and uncapped/unknown plans always return false.
+const markBackstopCache = new Map<string, { over: boolean; ts: number }>();
+async function overBackstop(school_id: string | null): Promise<boolean> {
+  if (!sb || !school_id) return false;
+  const hit = markBackstopCache.get(school_id);
+  if (hit && (Date.now() - hit.ts) < 300000) return hit.over;
+  try {
+    const { data, error } = await sb.rpc("school_mark_status", { p_school_id: school_id });
+    if (error) return false;
+    const row = Array.isArray(data) ? data[0] : data;
+    const over = !!(row && row.over_backstop);
+    markBackstopCache.set(school_id, { over, ts: Date.now() });
+    return over;
+  } catch {
+    return false;
+  }
+}
+
 // Fire-and-forget AI usage logging. `source` tags the row so the admin cost dashboard
 // can break spend down (ai / ai_double_check); `school_id` attributes it to a school.
 function logUsage(label: string, source: string, school_id: string | null, usage: Record<string, unknown> | undefined) {
@@ -527,6 +549,11 @@ Deno.serve(async (req: Request) => {
         verdict = { correct: true, marks_awarded: cached.marks_awarded, feedback: cached.feedback || "Correct.", flagged: false, source: "cache" };
       } else if (!ANTHROPIC_API_KEY) {
         verdict = { correct: false, marks_awarded: 0, feedback: "AI marking not configured.", flagged: false, source: "fallback" };
+      } else if (await overBackstop(schoolId)) {
+        // Hard cost backstop: this school is >3x its fair-use allowance (see
+        // school_mark_status). Skip the paid AI call and don't record a grade — the
+        // soft cap never blocks pupils, but this stops genuine runaway/abuse cost.
+        verdict = { correct: false, marks_awarded: 0, feedback: "Marking is paused for your school right now — please let your teacher know.", flagged: false, source: "cap_backstop" };
       } else {
         const tryWriteCache = async (result: { correct?: boolean; flagged?: boolean; confidence?: string; marks_awarded?: number; feedback?: string }) => {
           if (!question_id) return;
@@ -581,7 +608,8 @@ Deno.serve(async (req: Request) => {
 
     // ── Record server-side (authenticated pupil, their own class only) ──
     const uid = await getAuthedUid(req);
-    const response_id = await recordResponse(uid, question_id, class_id, student_answer, verdict);
+    // Never persist a backstop "verdict" as a grade — it isn't one.
+    const response_id = verdict.source === "cap_backstop" ? null : await recordResponse(uid, question_id, class_id, student_answer, verdict);
 
     return json({ ...verdict, recorded: response_id !== null, response_id });
   } catch (error) {
