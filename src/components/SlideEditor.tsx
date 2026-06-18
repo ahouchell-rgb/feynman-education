@@ -372,9 +372,11 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     if (!instruction || aiBusy) return;
     setAiBusy(true); setAiMsg("");
     try {
+      const token = sk.auth.getToken();
+      if (!token) throw new Error("Sign in to use the AI assistant.");
       const r = await fetch("/api/slides-assistant", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ slides, currentSlide: cur, instruction }),
       });
       const d = await r.json();
