@@ -9,6 +9,8 @@
 //
 // Required env: ANTHROPIC_API_KEY (set in .env.local for local dev, Vercel for prod).
 
+import { HOUSE_LESSON_STYLE } from "@/lib/lessonStyle";
+
 export const runtime = "edge";
 
 const MODEL = "claude-opus-4-8";
@@ -70,6 +72,10 @@ REVEAL ON CLICK: any element may have reveal:true. Revealed elements are hidden 
 ROTATION: any element may have rotation (degrees clockwise). Use sparingly.
 
 SLIDE: { id, background?, notes?, elements: [...] }   background is an optional #hex (default white). notes is optional speaker-note text shown to the teacher in Presenter view — add concise teaching notes when it helps.
+
+HOUSE LESSON TEMPLATE — when the instruction is to BUILD, DRAFT or EXTEND a lesson (not a one-off tweak), follow this teacher's routine below: one slide per beat, in order, using the EXACT on-screen labels. Map beats to elements — use a timer element for the "90 seconds"/"60 seconds" tasks; for the MCQ keep the question + four options visible and put the "The correct answer is N" tick and the "Why:" misconception diagnosis on reveal:true elements (or the following slide); keep "→ USE VISUALISER" as a cue line and leave space for a visualiser/retrieval element where a beat needs one; use a table for comparisons. Keep the teacher's wording and conventions verbatim. For a one-off edit, ignore the template and just do what's asked.
+
+${HOUSE_LESSON_STYLE}
 
 RULES:
 - PRESERVE existing slides and elements unless the instruction asks to change them. The current slide index is given — "this slide" means that one.

@@ -10,6 +10,7 @@
 //   SUPABASE_SERVICE_ROLE_KEY    — secret, from Supabase dashboard
 
 import { supaRest } from "@/lib/supabaseRest";
+import { HOUSE_LESSON_STYLE } from "@/lib/lessonStyle";
 
 export const runtime = "edge";
 
@@ -97,6 +98,10 @@ function buildSystemPrompt({ lesson, unit, teacherContent, widgets }) {
 When the teacher asks for an interactive activity (sorter, simulator, drag-and-drop, quiz, animation, diagram explorer, retrieval starter, etc.), return it as ONE complete self-contained HTML document inside a single \`\`\`html ... \`\`\` code block. Include all HTML, CSS, and JavaScript inline. NO external resources — no CDNs, no remote fonts, no remote images. The widget renders inside a sandboxed iframe with sandbox="allow-scripts" only: NO cookies, NO localStorage, NO parent-page access, NO network requests. Design accordingly. Target ~700×480 but make it responsive and pleasant on a projector.
 
 When proposing rewrites of lesson sections (objectives, starter, etc.), use clear markdown headings like "## Suggested objectives" so the teacher can identify what you're proposing.
+
+When the teacher asks for a starter, hook, retrieval question, MCQ, written task, model answer, scaffold, plenary or a whole lesson, MATCH the house style below — reuse its named beats, exact on-screen labels and conventions (etymology vocab, whiteboard MCQs with misconception-mapped distractors, "in full sentences" writing, green-pen model answers with mark schemes, sentence-starter scaffolds, 60-second oracy plenaries). Adapt the content to THIS lesson's topic.
+
+${HOUSE_LESSON_STYLE}
 
 ═══════════ LESSON CONTEXT ═══════════
 Unit: ${unit.title || "(untitled unit)"} · ${unit.discipline || ""} · ${unit.year_group || ""}
