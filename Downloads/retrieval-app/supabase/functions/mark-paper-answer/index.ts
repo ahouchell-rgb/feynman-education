@@ -198,13 +198,56 @@ async function getAuthedUid(req: Request): Promise<string | null> {
   } catch { return null; }
 }
 
+// Resolve the school behind a paper attempt's class, so usage is attributed and the
+// fair-use backstop can apply. Cached in module scope (a class never changes school
+// within a warm instance), mirroring mark-answer.
+const schoolIdCache = new Map<string, string | null>();
+async function resolveSchoolId(class_id: string | undefined | null): Promise<string | null> {
+  if (!sb || !class_id) return null;
+  if (schoolIdCache.has(class_id)) return schoolIdCache.get(class_id) ?? null;
+  try {
+    const { data } = await sb.from("classes").select("school_id").eq("id", class_id).single();
+    const sid = (data?.school_id as string) ?? null;
+    schoolIdCache.set(class_id, sid);
+    return sid;
+  } catch {
+    return null;
+  }
+}
+
+// Hard cost backstop, identical in spirit to mark-answer: true when a school's
+// AI-mark usage is >3x its fair-use allowance (school_mark_status RPC). The soft cap
+// (admin Schools view) never blocks pupils; this only ever catches genuine
+// runaway/abuse. Per-instance cached 5 min, and fails OPEN on any error so a transient
+// DB issue never blocks real marking. Comped pilots / uncapped plans always return false.
+const markBackstopCache = new Map<string, { over: boolean; ts: number }>();
+async function overBackstop(school_id: string | null): Promise<boolean> {
+  if (!sb || !school_id) return false;
+  const hit = markBackstopCache.get(school_id);
+  if (hit && (Date.now() - hit.ts) < 300000) return hit.over;
+  try {
+    const { data, error } = await sb.rpc("school_mark_status", { p_school_id: school_id });
+    if (error) return false;
+    const row = Array.isArray(data) ? data[0] : data;
+    const over = !!(row && row.over_backstop);
+    markBackstopCache.set(school_id, { over, ts: Date.now() });
+    return over;
+  } catch {
+    return false;
+  }
+}
+
 // Fire-and-forget AI usage logging. Mirrors mark-answer so the prompt-cache state is
 // observable: a warm cache shows cache_read_tokens > 0 for the "mark-paper" call_label
 // in ai_usage; cache_read_tokens stuck at 0 means the prefix is below the 4096 floor.
-function logUsage(label: string, usage: Record<string, unknown> | undefined) {
+// school_id attributes paper-mark spend to the school so school_mark_status (and thus
+// the backstop above) actually counts it.
+function logUsage(label: string, school_id: string | null, usage: Record<string, unknown> | undefined) {
   if (!sb || !usage) return;
   const row = {
     call_label: label,
+    source: "ai",
+    school_id,
     input_tokens: Number(usage.input_tokens) || 0,
     output_tokens: Number(usage.output_tokens) || 0,
     cache_creation_tokens: Number(usage.cache_creation_input_tokens) || 0,
@@ -213,7 +256,7 @@ function logUsage(label: string, usage: Record<string, unknown> | undefined) {
   sb.from("ai_usage").insert(row).then(() => {}).catch((e) => console.error("ai_usage insert failed:", e));
 }
 
-async function markWithAI(question: string, command_word: string, marks: number, marking_points: Array<{ text?: string; marks?: number }>, student_answer: string) {
+async function markWithAI(question: string, command_word: string, marks: number, marking_points: Array<{ text?: string; marks?: number }>, student_answer: string, school_id: string | null) {
   const pointsList = marking_points
     .map((p, i) => `  ${i}. (${p.marks ?? 1} mark${(p.marks ?? 1) > 1 ? "s" : ""}) ${p.text ?? ""}`)
     .join("\n");
@@ -229,7 +272,7 @@ async function markWithAI(question: string, command_word: string, marks: number,
     }),
   });
   const data = await response.json();
-  logUsage("mark-paper", data?.usage);
+  logUsage("mark-paper", school_id, data?.usage);
   const text = data.content?.[0]?.text || "";
   const clean = text.replace(/```json|```/g, "").trim();
   let parsed: { marks_awarded?: number; awarded_points?: number[]; feedback?: string; flagged?: boolean };
@@ -249,61 +292,80 @@ Deno.serve(async (req: Request) => {
     const { attempt_id, paper_question_id, student_answer } = body;
     if (!student_answer) return json({ error: "Missing fields" }, 400);
 
-    // Resolve the question AUTHORITATIVELY from the DB when we have its id — never
-    // trust client-supplied marks / marking_points (a cheat could inflate them).
-    // Falls back to client fields for older clients (marking only, no recording).
-    let dbQ: { paper_id?: string; question_text?: string; command_word?: string; marks?: number; marking_points?: unknown } | null = null;
-    if (sb && paper_question_id) {
-      const { data } = await sb.from("paper_questions")
-        .select("paper_id, question_text, command_word, marks, marking_points")
-        .eq("id", paper_question_id).single();
-      if (data) dbQ = data;
+    // ── AUTH IS REQUIRED to trigger a paid marking call ──
+    // Past-paper marking costs money AND writes a grade, so this endpoint no longer
+    // marks for an unauthenticated caller (the old "mark only, record nothing" path
+    // was an open, unmetered AI cost sink). A valid pupil JWT is mandatory; the
+    // question / marks / marking points are ALWAYS loaded from the DB — never trusted
+    // from the client, so a cheat can neither inflate the marks nor balloon the token
+    // volume with a fabricated marking-point list — and the attempt must be the
+    // calling pupil's own.
+    if (!sb) return json({ error: "Server not configured." }, 500);
+    const uid = await getAuthedUid(req);
+    if (!uid) return json({ error: "Sign in to submit an answer." }, 401);
+    if (!attempt_id || !paper_question_id) {
+      return json({ error: "attempt_id and paper_question_id are required" }, 400);
     }
-    const question = (dbQ?.question_text ?? body.question) as string;
-    const command_word = (dbQ?.command_word ?? body.command_word) as string;
-    const marks = Number(dbQ?.marks ?? body.marks) || 1;
-    const marking_points = Array.isArray(dbQ?.marking_points) ? dbQ!.marking_points as Array<{ text?: string; marks?: number }>
-      : (Array.isArray(body.marking_points) ? body.marking_points : []);
-    if (!question || !Array.isArray(marking_points)) return json({ error: "Missing fields" }, 400);
+
+    // The attempt must exist and belong to THIS pupil.
+    const att = await sb.from("paper_attempts")
+      .select("id, paper_id, class_id, student_id").eq("id", attempt_id).single();
+    if (att.error || !att.data || att.data.student_id !== uid) {
+      return json({ error: "Not your attempt." }, 403);
+    }
+
+    // Load the question authoritatively and confirm it belongs to the attempt's paper.
+    const q = await sb.from("paper_questions")
+      .select("paper_id, question_text, command_word, marks, marking_points")
+      .eq("id", paper_question_id).single();
+    if (q.error || !q.data || q.data.paper_id !== att.data.paper_id) {
+      return json({ error: "Question does not belong to this attempt." }, 400);
+    }
+    const question = q.data.question_text as string;
+    const command_word = q.data.command_word as string;
+    const marks = Number(q.data.marks) || 1;
+    const marking_points = Array.isArray(q.data.marking_points)
+      ? q.data.marking_points as Array<{ text?: string; marks?: number }> : [];
+    if (!question) return json({ error: "Question has no text." }, 400);
 
     if (!ANTHROPIC_API_KEY) {
       return json({ marks_awarded: 0, awarded_points: [], feedback: "AI marking not configured.", flagged: false, source: "fallback", recorded: false, response_id: null });
     }
 
-    const verdict = await markWithAI(question, command_word, marks, marking_points, student_answer);
+    // Hard cost backstop (same as mark-answer): a school >3x its fair-use allowance
+    // skips the paid call and records nothing. Fails open; never catches normal use.
+    const schoolId = await resolveSchoolId(att.data.class_id as string);
+    if (await overBackstop(schoolId)) {
+      return json({ marks_awarded: 0, awarded_points: [], feedback: "Marking is paused for your school right now — please let your teacher know.", flagged: false, source: "cap_backstop", recorded: false, response_id: null });
+    }
 
-    // Record server-side, but ONLY for the authenticated pupil, ONLY on their own
-    // attempt, and ONLY when the question really belongs to that attempt's paper.
+    const verdict = await markWithAI(question, command_word, marks, marking_points, student_answer, schoolId);
+
+    // Record server-side (authoritative): the attempt and question were already
+    // verified above, so neither the marks nor the totals are ever client-supplied.
     let recorded = false;
     let response_id: string | null = null;
-    const uid = await getAuthedUid(req);
-    if (sb && uid && dbQ && attempt_id && paper_question_id) {
-      const att = await sb.from("paper_attempts").select("id, paper_id, student_id").eq("id", attempt_id).single();
-      if (!att.error && att.data && att.data.student_id === uid && att.data.paper_id === dbQ.paper_id) {
-        const row = {
-          attempt_id, paper_question_id, student_answer,
-          marks_awarded: verdict.marks_awarded, marks_max: marks,
-          ai_feedback: verdict.feedback, awarded_points: verdict.awarded_points, flagged: verdict.flagged,
-        };
-        const existing = await sb.from("paper_responses").select("id").eq("attempt_id", attempt_id).eq("paper_question_id", paper_question_id).limit(1);
-        if (!existing.error && existing.data && existing.data.length > 0) {
-          await sb.from("paper_responses").update(row).eq("id", existing.data[0].id);
-          response_id = existing.data[0].id as string;
-          recorded = true;
-        } else {
-          const ins = await sb.from("paper_responses").insert(row).select("id").single();
-          if (!ins.error && ins.data) { response_id = ins.data.id as string; recorded = true; }
-        }
-        // Recompute the attempt totals from the stored responses — authoritative,
-        // so neither awarded_marks nor total_marks is ever a client-supplied value.
-        if (recorded) {
-          const all = await sb.from("paper_responses").select("marks_awarded").eq("attempt_id", attempt_id);
-          const awarded = (all.data || []).reduce((s, r) => s + (Number(r.marks_awarded) || 0), 0);
-          const pq = await sb.from("paper_questions").select("marks").eq("paper_id", dbQ.paper_id);
-          const total = (pq.data || []).reduce((s, r) => s + (Number(r.marks) || 0), 0);
-          await sb.from("paper_attempts").update({ awarded_marks: awarded, total_marks: total }).eq("id", attempt_id);
-        }
-      }
+    const row = {
+      attempt_id, paper_question_id, student_answer,
+      marks_awarded: verdict.marks_awarded, marks_max: marks,
+      ai_feedback: verdict.feedback, awarded_points: verdict.awarded_points, flagged: verdict.flagged,
+    };
+    const existing = await sb.from("paper_responses").select("id").eq("attempt_id", attempt_id).eq("paper_question_id", paper_question_id).limit(1);
+    if (!existing.error && existing.data && existing.data.length > 0) {
+      await sb.from("paper_responses").update(row).eq("id", existing.data[0].id);
+      response_id = existing.data[0].id as string;
+      recorded = true;
+    } else {
+      const ins = await sb.from("paper_responses").insert(row).select("id").single();
+      if (!ins.error && ins.data) { response_id = ins.data.id as string; recorded = true; }
+    }
+    // Recompute the attempt totals from the stored responses — authoritative.
+    if (recorded) {
+      const all = await sb.from("paper_responses").select("marks_awarded").eq("attempt_id", attempt_id);
+      const awarded = (all.data || []).reduce((s, r) => s + (Number(r.marks_awarded) || 0), 0);
+      const pq = await sb.from("paper_questions").select("marks").eq("paper_id", att.data.paper_id);
+      const total = (pq.data || []).reduce((s, r) => s + (Number(r.marks) || 0), 0);
+      await sb.from("paper_attempts").update({ awarded_marks: awarded, total_marks: total }).eq("id", attempt_id);
     }
 
     return json({ ...verdict, source: "ai", recorded, response_id });
