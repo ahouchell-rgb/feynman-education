@@ -52,7 +52,9 @@ alter table public.profiles
   add column if not exists subscription_status   text,
   add column if not exists subscription_id       text,
   add column if not exists subscription_end_date timestamptz,
-  add column if not exists is_lead               boolean not null default false;
+  add column if not exists is_lead               boolean not null default false,
+  add column if not exists retrieval_class_ids   uuid[] default '{}'::uuid[],
+  add column if not exists retrieval_email        text;
 
 update public.profiles p set
   full_name             = coalesce(p.full_name, f.full_name),
@@ -60,7 +62,9 @@ update public.profiles p set
   subscription_status   = coalesce(p.subscription_status, f.subscription_status),
   subscription_id       = coalesce(p.subscription_id, f.subscription_id),
   subscription_end_date = coalesce(p.subscription_end_date, f.subscription_end_date),
-  is_lead               = p.is_lead or coalesce(f.is_lead, false)
+  is_lead               = p.is_lead or coalesce(f.is_lead, false),
+  retrieval_class_ids   = coalesce(nullif(p.retrieval_class_ids,'{}'), f.retrieval_class_ids),
+  retrieval_email       = coalesce(p.retrieval_email, f.retrieval_email)
 from feynman.profiles f
 where lower(p.email) = lower(f.email);
 
@@ -81,11 +85,12 @@ alter table public.classes
   add column if not exists academic_year text,
   add column if not exists current_unit_id text,
   add column if not exists archived      boolean not null default false,
-  add column if not exists archived_at   timestamptz;
+  add column if not exists archived_at   timestamptz,
+  add column if not exists retrieval_class_ids uuid[] not null default '{}'::uuid[];  -- the teacher app + get_teaching_week still use this to link a teacher class to its retrieval class(es)
 
 insert into public.classes
   (id, name, school_id, teacher_id, subject_id, year_group, created_at, join_code,
-   weekly_target, key_stage, tier, discipline, pathway, academic_year, current_unit_id, archived, archived_at)
+   weekly_target, key_stage, tier, discipline, pathway, academic_year, current_unit_id, archived, archived_at, retrieval_class_ids)
 select
   c.id, c.name,
   (select school_id from public.profiles where id = c.teacher_id),         -- your school
@@ -96,7 +101,7 @@ select
   10,
   upper(c.key_stage::text),                                                -- ks3→KS3, ks4→KS4
   case when upper(c.key_stage::text) = 'KS4' then 'Higher' else null end,  -- satisfies composite check
-  c.discipline, c.pathway, c.academic_year, c.current_unit_id, c.archived, c.archived_at
+  c.discipline, c.pathway, c.academic_year, c.current_unit_id, c.archived, c.archived_at, c.retrieval_class_ids
 from feynman.classes c
 on conflict (id) do nothing;
 
