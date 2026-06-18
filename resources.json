@@ -220,6 +220,24 @@
       "blurb": "Forces, electricity, energy, waves and space",
       "items": [
         {
+          "href": "interactives/pressure-in-liquids.html",
+          "accent": "#C77A1E",
+          "cat": "physics",
+          "tokens": "ks3 gcse tool",
+          "spec": "KS3 &middot; Pressure (P4)",
+          "folder": "Pressure &amp; Forces",
+          "name": "Pressure in a <em>Liquid</em>",
+          "tag": "depth, density &amp; p = ρgh",
+          "desc": "Drag a sensor down a tank and watch the pressure climb with depth. Switch the liquid to see how density changes it, with the p = density × g × depth equation worked live.",
+          "tags": [
+            "KS3",
+            "GCSE"
+          ],
+          "level": "KS3",
+          "type": "interactive tool",
+          "about": "Physics"
+        },
+        {
           "href": "force-diagram-builder.html",
           "accent": "#C77A1E",
           "cat": "physics",
@@ -759,6 +777,176 @@
           "name": "Acids &amp; alkalis, <em>bitesize</em>",
           "tag": "five short topics · the pH scale to making salts",
           "desc": "Acids, alkalis and the pH scale, bases and alkalis, indicators, neutralisation and naming salts, and the reactions of acids with metals. Worked examples, hinge questions, a hide-and-reveal quiz, an embedded pH slider and neutralisation curve, and a print-ready PDF.",
+          "tags": [
+            "KS3",
+            "Year 8"
+          ],
+          "level": "Key Stage 3",
+          "type": "revision",
+          "about": "Year 8"
+        },
+        {
+          "href": "skeleton-and-muscles-revision.html",
+          "accent": "#7E4FB8",
+          "cat": "revision",
+          "tokens": "ks3 revision",
+          "spec": "Y7 · Skeleton &amp; muscles",
+          "name": "Skeleton &amp; muscles, <em>bitesize</em>",
+          "tag": "five short topics · bones, joints, antagonistic pairs",
+          "desc": "The four functions of the skeleton, the named bones, hinge and ball-and-socket joints (with ligaments, cartilage and synovial fluid), how muscles pull rather than push, antagonistic pairs like the biceps and triceps, and reading a muscle-strength graph with a line of best fit. Each topic is a bitesize summary with a hinge question, watch-outs for the usual mix-ups, and a hide-and-reveal quiz.",
+          "tags": [
+            "KS3",
+            "Year 7"
+          ],
+          "level": "Key Stage 3",
+          "type": "revision",
+          "about": "Year 7"
+        },
+        {
+          "href": "separation-techniques-revision.html",
+          "accent": "#7E4FB8",
+          "cat": "revision",
+          "tokens": "ks3 revision",
+          "spec": "Y7 · Pure &amp; impure substances",
+          "name": "Separation, <em>bitesize</em>",
+          "tag": "six short topics · pure substances to chromatography",
+          "desc": "Pure substances and mixtures (and the melting-point purity test), dissolving and solubility, filtration, evaporation and crystallisation, distillation, and chromatography. Worked particle diagrams of every technique, hinge questions, watch-outs for the classic 'filtering removes dissolved salt' mistake, and a hide-and-reveal quiz.",
+          "tags": [
+            "KS3",
+            "Year 7"
+          ],
+          "level": "Key Stage 3",
+          "type": "revision",
+          "about": "Year 7"
+        },
+        {
+          "href": "elements-and-compounds-revision.html",
+          "accent": "#7E4FB8",
+          "cat": "revision",
+          "tokens": "ks3 revision",
+          "spec": "Y7 · Elements &amp; compounds",
+          "name": "Elements &amp; compounds, <em>bitesize</em>",
+          "tag": "six short topics · symbols to mixtures vs compounds",
+          "desc": "Elements and chemical symbols (and the capital-letter rule), what a compound is, reading formulae and counting atoms through brackets, the KS3 naming rules (–ide, –ate, prefixes), how a compound's properties differ from its elements, and mixtures vs compounds. Worked atom-counting examples, hinge questions and a hide-and-reveal quiz.",
+          "tags": [
+            "KS3",
+            "Year 7"
+          ],
+          "level": "Key Stage 3",
+          "type": "revision",
+          "about": "Year 7"
+        },
+        {
+          "href": "diet-and-health-revision.html",
+          "accent": "#7E4FB8",
+          "cat": "revision",
+          "tokens": "ks3 revision",
+          "spec": "Y8 · Diet &amp; health",
+          "name": "Diet &amp; health, <em>bitesize</em>",
+          "tag": "five short topics · a balanced diet to smoking &amp; drugs",
+          "desc": "A balanced diet and the seven food groups, energy in food and why energy needs vary (with a bar chart to read), measuring the energy in food by burning it, diet-related problems and deficiency diseases, and the effects of smoking, vaping, alcohol and drugs. Hinge questions, watch-outs and a hide-and-reveal quiz.",
+          "tags": [
+            "KS3",
+            "Year 8"
+          ],
+          "level": "Key Stage 3",
+          "type": "revision",
+          "about": "Year 8"
+        },
+        {
+          "href": "digestion-revision.html",
+          "accent": "#7E4FB8",
+          "cat": "revision",
+          "tokens": "ks3 revision",
+          "spec": "Y8 · Digestion",
+          "name": "Digestion, <em>bitesize</em>",
+          "tag": "five short topics · why we digest to gut bacteria",
+          "desc": "Why food has to be digested (big insoluble molecules to small soluble ones), the journey of food through the gut, mechanical and chemical digestion, how the small intestine is adapted with villi for absorption, and the role of gut bacteria. Labelled diagrams, hinge questions, watch-outs and a hide-and-reveal quiz.",
+          "tags": [
+            "KS3",
+            "Year 8"
+          ],
+          "level": "Key Stage 3",
+          "type": "revision",
+          "about": "Year 8"
+        },
+        {
+          "href": "reproduction-revision.html",
+          "accent": "#7E4FB8",
+          "cat": "revision",
+          "tokens": "ks3 revision",
+          "spec": "Y8 · Reproduction",
+          "name": "Reproduction, <em>bitesize</em>",
+          "tag": "six short topics · gametes to plant reproduction",
+          "desc": "Sexual reproduction and gametes, the male and female reproductive systems, the adaptations of sperm and egg, fertilisation through to the placenta and pregnancy, the menstrual cycle, and plant reproduction including pollination and seed dispersal. Labelled diagrams, hinge questions, watch-outs and a hide-and-reveal quiz.",
+          "tags": [
+            "KS3",
+            "Year 8"
+          ],
+          "level": "Key Stage 3",
+          "type": "revision",
+          "about": "Year 8"
+        },
+        {
+          "href": "energy-resources-revision.html",
+          "accent": "#7E4FB8",
+          "cat": "revision",
+          "tokens": "ks3 revision",
+          "spec": "Y8 · Energy resources &amp; heating",
+          "name": "Energy resources, <em>bitesize</em>",
+          "tag": "five short topics · fossil fuels to thermal equilibrium",
+          "desc": "Where we get our energy and why fossil fuels are finite, how power stations generate electricity, renewable vs non-renewable resources and their trade-offs, energy use and cost with the kilowatt-hour, and heating and thermal equilibrium with insulation. Worked kWh cost calculations, hinge questions, watch-outs and a hide-and-reveal quiz.",
+          "tags": [
+            "KS3",
+            "Year 8"
+          ],
+          "level": "Key Stage 3",
+          "type": "revision",
+          "about": "Year 8"
+        },
+        {
+          "href": "energy-changes-revision.html",
+          "accent": "#7E4FB8",
+          "cat": "revision",
+          "tokens": "ks3 revision",
+          "spec": "Y8 · Energy changes",
+          "name": "Energy changes, <em>bitesize</em>",
+          "tag": "four short topics · heating curves to endo &amp; exothermic",
+          "desc": "Heating curves and why temperature plateaus during a change of state, exothermic reactions that warm the surroundings, endothermic reactions that cool them, and investigating energy changes by measuring temperature change. Worked temperature-change calculations, hinge questions, the 'endothermic feels cold' watch-out, and a hide-and-reveal quiz.",
+          "tags": [
+            "KS3",
+            "Year 8"
+          ],
+          "level": "Key Stage 3",
+          "type": "revision",
+          "about": "Year 8"
+        },
+        {
+          "href": "sound-revision.html",
+          "accent": "#7E4FB8",
+          "cat": "revision",
+          "tokens": "ks3 revision",
+          "spec": "Y8 · Sound &amp; waves",
+          "name": "Sound &amp; waves, <em>bitesize</em>",
+          "tag": "six short topics · waves to ultrasound",
+          "desc": "What a wave is and the parts of a transverse wave, measuring amplitude, wavelength and frequency, why sound needs a medium, how frequency and amplitude control pitch and loudness, the ear and how we hear, and the speed of sound and ultrasound. Labelled wave and oscilloscope diagrams, hinge questions, watch-outs and a hide-and-reveal quiz.",
+          "tags": [
+            "KS3",
+            "Year 8"
+          ],
+          "level": "Key Stage 3",
+          "type": "revision",
+          "about": "Year 8"
+        },
+        {
+          "href": "light-revision.html",
+          "accent": "#7E4FB8",
+          "cat": "revision",
+          "tokens": "ks3 revision",
+          "spec": "Y8 · Light",
+          "name": "Light, <em>bitesize</em>",
+          "tag": "five short topics · how light travels to colour",
+          "desc": "How light travels in straight lines, the law of reflection and ray diagrams, refraction and why light bends, the eye, lenses and the pinhole camera, and colour, the spectrum and filters. Labelled ray diagrams, hinge questions, watch-outs for the 'we see by light leaving our eyes' misconception, and a hide-and-reveal quiz.",
           "tags": [
             "KS3",
             "Year 8"

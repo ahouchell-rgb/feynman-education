@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Separation Techniques — Year 7 Revision</title>
+<meta name="description" content="A Year 7 chemistry revision booklet on pure and impure substances — six short topics covering pure substances and mixtures, dissolving and solubility, filtration, evaporation and crystallisation, distillation, and chromatography.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Year 7 · Chemistry · Pure &amp; Impure Substances</div>
+    <h1>Separating mixtures, <em>but bitesize.</em></h1>
+    <p class="tag">A revision booklet — six short topics, from what makes a substance pure to splitting the dyes in an ink.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Take it one topic at a time.</strong> There are six topics. Each one is short — about 10 minutes. Do one or two a day.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Pure &amp; mixtures</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Dissolving</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Filtration</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Evaporation</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Distillation</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Chromatography</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — PURE SUBSTANCES & MIXTURES                                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · Pure &amp; Impure Substances</div>
+    <h2 class="lesson-title">Pure substances &amp; <em>mixtures</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know exactly what "pure" means in chemistry, how a mixture is different, and how to test whether something is pure.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What "pure" really means</h3>
+    <p>In everyday life, "pure" can mean clean, or natural, or healthy. "Pure orange juice", "pure mountain water". But in chemistry, <strong>pure</strong> means something very specific and quite strict.</p>
+    <p>A <strong>pure substance</strong> is made of only <strong>one type of substance</strong> — nothing else mixed in. Pure water is <em>only</em> water particles. Pure copper is <em>only</em> copper. Nothing has been added.</p>
+    <p>A <strong>mixture</strong> is the opposite: it contains <strong>two or more different substances</strong> that are simply jumbled together. The substances in a mixture are <strong>not chemically joined</strong> — they're just sharing the same space. Because of that, they can be separated again using the techniques in this booklet.</p>
+    <p>So "pure" mountain water from the advert isn't pure in the chemistry sense at all — it has minerals dissolved in it. It's a mixture.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <!-- Pure substance box -->
+        <g>
+          <rect x="40" y="40" width="180" height="140" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- All same particles (navy circles) -->
+          <g fill="#1E2761">
+            <circle cx="80" cy="80" r="9"/>
+            <circle cx="130" cy="75" r="9"/>
+            <circle cx="180" cy="85" r="9"/>
+            <circle cx="105" cy="115" r="9"/>
+            <circle cx="155" cy="118" r="9"/>
+            <circle cx="75" cy="150" r="9"/>
+            <circle cx="125" cy="148" r="9"/>
+            <circle cx="180" cy="150" r="9"/>
+          </g>
+          <text x="130" y="205" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">PURE SUBSTANCE</text>
+          <text x="130" y="222" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">one type of particle only</text>
+        </g>
+
+        <!-- Mixture box -->
+        <g>
+          <rect x="340" y="40" width="180" height="140" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Mixed particles (navy + accent) -->
+          <g>
+            <circle cx="380" cy="80" r="9" fill="#1E2761"/>
+            <circle cx="430" cy="75" r="9" fill="#B85042"/>
+            <circle cx="480" cy="85" r="9" fill="#1E2761"/>
+            <circle cx="405" cy="115" r="9" fill="#B85042"/>
+            <circle cx="455" cy="118" r="9" fill="#1E2761"/>
+            <circle cx="375" cy="150" r="9" fill="#B85042"/>
+            <circle cx="425" cy="148" r="9" fill="#1E2761"/>
+            <circle cx="480" cy="150" r="9" fill="#B85042"/>
+          </g>
+          <text x="430" y="205" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">MIXTURE</text>
+          <text x="430" y="222" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">two or more, not joined</text>
+        </g>
+
+        <!-- vs -->
+        <text x="280" y="118" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="20" fill="#B85042">vs</text>
+      </svg>
+      <div class="caption">Pure = one type of particle · Mixture = a jumble of more than one</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Pure substance</dt>
+        <dd>A substance made of only one type of substance, with nothing else mixed in.</dd>
+        <dt>Mixture</dt>
+        <dd>Two or more different substances jumbled together but not chemically joined, so they can be separated again.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The melting-point purity test</h3>
+    <p>Here's the clever bit. You can't always tell if something is pure just by looking. But there's a test: <strong>melting and boiling points</strong>.</p>
+    <p>A <strong>pure substance has a sharp, fixed melting point and boiling point.</strong> Pure ice melts at exactly 0&nbsp;°C. Pure water boils at exactly 100&nbsp;°C. Every time. The temperature stays still while it changes state.</p>
+    <p>A <strong>mixture melts and boils over a range of temperatures</strong>, not at one fixed number. Salty water doesn't boil at exactly 100&nbsp;°C — it boils higher, and over a spread. So if a substance changes state over a range instead of at a sharp point, you know it's <strong>impure</strong> — it's a mixture.</p>
+    <p>This is genuinely how chemists check purity: measure the melting point and see if it's sharp.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "pure" in chemistry isn't "clean" or "natural"</h4>
+      <p>In adverts, "pure" means natural or healthy. In chemistry it means <strong>only one substance, nothing added</strong>. By that test, "pure mountain spring water" is actually a <strong>mixture</strong> — it has minerals dissolved in it, so it boils over a range, not at a sharp 100&nbsp;°C. Distilled water is the pure one.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Substance X melts sharply at exactly 80&nbsp;°C. Substance Y melts gradually between 70&nbsp;°C and 78&nbsp;°C. Which is pure?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>X — it melts at one sharp, fixed temperature</span></li>
+        <li><span class="letter">B</span><span>Y — it melts at a lower temperature</span></li>
+        <li><span class="letter">C</span><span>Both are pure — they both melt</span></li>
+        <li><span class="letter">D</span><span>You can't tell from melting points</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — Substance X is pure.</strong> A pure substance melts at one sharp, fixed temperature. Substance Y melts over a <em>range</em> (70–78&nbsp;°C), which is the signature of a mixture — so Y is impure.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is a pure substance?</summary>
+        <div class="ans">A substance made of only <strong>one type of substance</strong>, with nothing else mixed in.</div>
+      </details></li>
+      <li><details>
+        <summary>What is a mixture?</summary>
+        <div class="ans"><strong>Two or more substances</strong> jumbled together but <strong>not chemically joined</strong> — so they can be separated again.</div>
+      </details></li>
+      <li><details>
+        <summary>How does the melting point of a pure substance behave?</summary>
+        <div class="ans">It is <strong>sharp and fixed</strong> — the substance melts at one exact temperature, every time.</div>
+      </details></li>
+      <li><details>
+        <summary>How does the melting or boiling of a mixture behave differently?</summary>
+        <div class="ans">A mixture melts or boils over a <strong>range</strong> of temperatures, not at one fixed point.</div>
+      </details></li>
+      <li><details>
+        <summary>A liquid boils gradually between 98 °C and 105 °C. Is it pure or a mixture? How do you know?</summary>
+        <div class="ans">It is a <strong>mixture</strong>. A pure liquid would boil at one sharp, fixed temperature; boiling over a range shows it is impure.</div>
+      </details></li>
+      <li><details>
+        <summary>An advert calls bottled spring water "pure". A chemist disagrees. Who is right and why?</summary>
+        <div class="ans">The <strong>chemist</strong>. Spring water has minerals dissolved in it, so it is really a <strong>mixture</strong>. In chemistry "pure" means only one substance — that would be distilled water.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — DISSOLVING & SOLUBILITY                                        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · Pure &amp; Impure Substances</div>
+    <h2 class="lesson-title">Dissolving &amp; <em>solubility</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know the three key words solute, solvent and solution, what soluble and saturated mean, and why dissolving keeps all the mass.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Solute, solvent, solution</h3>
+    <p>When you stir sugar into tea, the sugar seems to vanish. It hasn't gone anywhere — it has <strong>dissolved</strong>. The sugar particles have spread out evenly through the water, too small to see. To talk about this properly, chemists use three words that go together:</p>
+    <p>The <strong>solute</strong> is the substance that dissolves — the sugar or salt. The <strong>solvent</strong> is the liquid that does the dissolving — usually water. The <strong>solution</strong> is what you end up with — the clear, even mixture of the two.</p>
+    <p>An easy way to remember the order: a soluTE dissolves <em>in</em>to a solvenT to make a soluTION. The solute is the one that disappears; the solvent is the one doing the work.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Beaker 1: solvent with undissolved solute -->
+        <g>
+          <path d="M 50 50 L 50 150 Q 50 165 65 165 L 135 165 Q 150 165 150 150 L 150 50" fill="none" stroke="#1E2761" stroke-width="2"/>
+          <path d="M 52 95 L 52 150 Q 52 163 65 163 L 135 163 Q 148 163 148 150 L 148 95 Z" fill="#EDF2FA"/>
+          <!-- solute clump at bottom -->
+          <g fill="#B85042">
+            <circle cx="90" cy="152" r="5"/>
+            <circle cx="100" cy="156" r="5"/>
+            <circle cx="110" cy="152" r="5"/>
+            <circle cx="100" cy="146" r="5"/>
+          </g>
+          <text x="100" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">SOLUTE in SOLVENT</text>
+          <text x="100" y="188" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">before stirring</text>
+        </g>
+
+        <!-- Arrow -->
+        <g>
+          <line x1="200" y1="110" x2="330" y2="110" stroke="#C8A24A" stroke-width="2"/>
+          <path d="M 330 110 l -10 -6 l 0 12 z" fill="#C8A24A"/>
+          <text x="265" y="100" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">stir / dissolve</text>
+        </g>
+
+        <!-- Beaker 2: solution -->
+        <g>
+          <path d="M 380 50 L 380 150 Q 380 165 395 165 L 465 165 Q 480 165 480 150 L 480 50" fill="none" stroke="#1E2761" stroke-width="2"/>
+          <path d="M 382 95 L 382 150 Q 382 163 395 163 L 465 163 Q 478 163 478 150 L 478 95 Z" fill="#F4DAD7"/>
+          <!-- spread out solute particles -->
+          <g fill="#B85042">
+            <circle cx="400" cy="115" r="3"/>
+            <circle cx="425" cy="105" r="3"/>
+            <circle cx="450" cy="120" r="3"/>
+            <circle cx="415" cy="140" r="3"/>
+            <circle cx="445" cy="145" r="3"/>
+            <circle cx="460" cy="108" r="3"/>
+            <circle cx="395" cy="135" r="3"/>
+            <circle cx="430" cy="128" r="3"/>
+          </g>
+          <text x="430" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">SOLUTION</text>
+          <text x="430" y="188" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">spread out evenly</text>
+        </g>
+      </svg>
+      <div class="caption">Solute + solvent → solution · the particles spread out, they don't vanish</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Solute</dt>
+        <dd>The substance that dissolves (e.g. salt or sugar).</dd>
+        <dt>Solvent</dt>
+        <dd>The liquid that does the dissolving (usually water).</dd>
+        <dt>Solution</dt>
+        <dd>The even mixture made when a solute dissolves in a solvent.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Soluble, insoluble &amp; saturated</h3>
+    <p>Not everything dissolves. Salt and sugar dissolve in water — we say they are <strong>soluble</strong>. Sand and chalk don't dissolve no matter how hard you stir — they are <strong>insoluble</strong>. (This matters in the next topic, because filtration only works on insoluble solids.)</p>
+    <p>Even a soluble solid has a limit. Keep adding salt to water and stirring, and eventually no more will dissolve — extra salt just sits at the bottom. The solution is now <strong>saturated</strong>: it holds as much dissolved solute as it possibly can at that temperature.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Soluble</dt>
+        <dd>A substance that <em>can</em> dissolve in a particular solvent.</dd>
+        <dt>Insoluble</dt>
+        <dd>A substance that <em>cannot</em> dissolve (e.g. sand in water).</dd>
+        <dt>Saturated solution</dt>
+        <dd>A solution that holds as much dissolved solute as it can — no more will dissolve.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Dissolving is not melting — and mass is conserved</h3>
+    <p>Two ideas pupils mix up. First, <strong>dissolving is not the same as melting</strong>. Melting needs heat and turns a solid into its own liquid (ice → water). Dissolving doesn't need heat — the solid spreads out <em>into a different liquid</em> and the solid is still there, just hidden.</p>
+    <p>Second, and really important: when something dissolves, <strong>the mass is conserved</strong>. The solute hasn't been destroyed — its particles have just spread out among the water particles, too small to see. So the total mass stays exactly the same.</p>
+    <p>Try the maths: 100&nbsp;g of water plus 10&nbsp;g of salt makes 110&nbsp;g of salty solution. Not 100&nbsp;g — the salt is still in there. This links to the law of <strong>conservation of mass</strong>: in any change like this, mass is never lost.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — dissolving doesn't destroy the solute</h4>
+      <p>When sugar dissolves it <em>looks</em> like it has disappeared or been destroyed. It hasn't. The sugar particles are still there, spread evenly through the water — that's why the drink tastes sweet, and why you could get the sugar back by evaporating the water. <strong>The mass is conserved: 100&nbsp;g water + 10&nbsp;g sugar = 110&nbsp;g solution.</strong></p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">50&nbsp;g of water is added to 8&nbsp;g of salt and stirred until it all dissolves. What is the mass of the solution?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>50 g — the salt dissolved away</span></li>
+        <li><span class="letter">B</span><span>42 g — the salt was used up</span></li>
+        <li><span class="letter">C</span><span>58 g — mass is conserved, so you add them</span></li>
+        <li><span class="letter">D</span><span>You can't tell until you weigh it</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 58 g.</strong> Dissolving doesn't destroy the salt; its particles just spread out. Mass is conserved, so 50&nbsp;g + 8&nbsp;g = 58&nbsp;g. <em>A is the trap — "dissolved" never means "disappeared".</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is the solute?</summary>
+        <div class="ans">The substance that <strong>dissolves</strong> (e.g. salt or sugar).</div>
+      </details></li>
+      <li><details>
+        <summary>What is the solvent?</summary>
+        <div class="ans">The liquid that <strong>does the dissolving</strong> (usually water).</div>
+      </details></li>
+      <li><details>
+        <summary>What is a solution?</summary>
+        <div class="ans">The even mixture you get when a solute <strong>dissolves in a solvent</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What does "saturated" mean?</summary>
+        <div class="ans">A saturated solution holds <strong>as much dissolved solute as it can</strong> — no more will dissolve at that temperature.</div>
+      </details></li>
+      <li><details>
+        <summary>Is sand soluble or insoluble in water?</summary>
+        <div class="ans"><strong>Insoluble</strong> — it does not dissolve, however much you stir.</div>
+      </details></li>
+      <li><details>
+        <summary>20 g of sugar is dissolved in 200 g of water. What is the mass of the solution, and why?</summary>
+        <div class="ans"><strong>220 g</strong>. Mass is conserved — the sugar isn't destroyed, just spread out — so you add the two masses (200 + 20).</div>
+      </details></li>
+      <li><details>
+        <summary>Explain the difference between dissolving and melting.</summary>
+        <div class="ans"><strong>Melting</strong> uses heat to turn a solid into its own liquid (ice → water). <strong>Dissolving</strong> spreads a solid out into a <em>different</em> liquid (a solvent) without destroying it; it doesn't need heating.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — FILTRATION                                                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · Pure &amp; Impure Substances</div>
+    <h2 class="lesson-title"><em>Filtration</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what filtration separates, the difference between residue and filtrate, and the one thing filtration cannot do.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Separating a solid from a liquid</h3>
+    <p>Imagine a beaker of muddy water — sand mixed into water. The sand is <strong>insoluble</strong>, so it hasn't dissolved; it's just floating about. How do you get the clean water out? You <strong>filter</strong> it.</p>
+    <p><strong>Filtration separates an insoluble solid from a liquid.</strong> You pour the mixture through a folded piece of <strong>filter paper</strong> sitting in a funnel. The filter paper is like a very fine sieve — full of tiny holes. The liquid particles are small enough to slip through the holes, but the solid bits are too big and get trapped.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <!-- Funnel -->
+        <g>
+          <path d="M 210 40 L 350 40 L 295 130 L 265 130 Z" fill="none" stroke="#1E2761" stroke-width="2"/>
+          <line x1="265" y1="130" x2="265" y2="160" stroke="#1E2761" stroke-width="2"/>
+          <line x1="295" y1="130" x2="295" y2="160" stroke="#1E2761" stroke-width="2"/>
+          <!-- filter paper (cone inside) -->
+          <path d="M 222 48 L 338 48 L 290 120 L 270 120 Z" fill="#FCFAF4" stroke="#5C6370" stroke-width="1"/>
+          <!-- residue on filter paper -->
+          <g fill="#B85042">
+            <circle cx="272" cy="60" r="4"/>
+            <circle cx="285" cy="64" r="4"/>
+            <circle cx="298" cy="60" r="4"/>
+            <circle cx="280" cy="72" r="4"/>
+            <circle cx="293" cy="74" r="4"/>
+          </g>
+          <text x="395" y="58" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">RESIDUE</text>
+          <text x="395" y="74" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">insoluble solid,</text>
+          <text x="395" y="88" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">trapped in paper</text>
+          <text x="120" y="60" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">FILTER PAPER</text>
+          <text x="120" y="76" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">+ funnel</text>
+        </g>
+
+        <!-- Drips -->
+        <g fill="#1E2761">
+          <circle cx="280" cy="172" r="3"/>
+          <circle cx="280" cy="186" r="3"/>
+        </g>
+
+        <!-- Beaker collecting filtrate -->
+        <g>
+          <path d="M 230 195 L 230 235 Q 230 245 240 245 L 320 245 Q 330 245 330 235 L 330 195" fill="none" stroke="#1E2761" stroke-width="2"/>
+          <path d="M 232 212 L 232 235 Q 232 243 240 243 L 320 243 Q 328 243 328 235 L 328 212 Z" fill="#EDF2FA"/>
+          <text x="395" y="222" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">FILTRATE</text>
+          <text x="395" y="238" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">liquid that passes</text>
+          <text x="395" y="252" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">through</text>
+        </g>
+      </svg>
+      <div class="caption">Filtration apparatus · solid = residue (kept in paper), liquid = filtrate (passes through)</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Filtration</dt>
+        <dd>Separating an insoluble solid from a liquid by passing the mixture through filter paper.</dd>
+        <dt>Residue</dt>
+        <dd>The insoluble solid left behind, trapped in the filter paper.</dd>
+        <dt>Filtrate</dt>
+        <dd>The liquid that passes through the filter paper.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>What filtration can't do</h3>
+    <p>This is the most important point — and the most common exam trap. <strong>Filtration cannot separate a dissolved solid from a liquid.</strong></p>
+    <p>Think about why. When salt dissolves in water, its particles spread out and become as tiny as the water particles themselves. They are <em>way</em> smaller than the holes in the filter paper. So they sail straight through with the water — nothing gets caught.</p>
+    <p>So if you filter salty water, you get… salty water. To get a <em>dissolved</em> solid back, you need <strong>evaporation</strong> or <strong>distillation</strong>, which are the next two topics. Filtration is only for solids that haven't dissolved.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — filtering does NOT separate dissolved salt from water</h4>
+      <p>A classic mistake: "to get the salt out of salty water, just filter it." This won't work. Dissolved salt particles are far too small to be caught by filter paper — they pass straight through with the water. Filtration only removes <strong>insoluble</strong> solids (like sand). For a dissolved (soluble) solid, you must use <strong>evaporation or distillation</strong>.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">You have a mixture of sand and salt dissolved in water. You filter it. What ends up in the filter paper?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The sand and the salt — both are solids</span></li>
+        <li><span class="letter">B</span><span>Just the sand — it's insoluble; the dissolved salt passes through</span></li>
+        <li><span class="letter">C</span><span>Just the salt — it's heavier</span></li>
+        <li><span class="letter">D</span><span>Nothing — everything passes through</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — just the sand.</strong> Sand is insoluble, so it's caught in the filter paper as the residue. The salt is dissolved, so its tiny particles pass straight through with the water — they end up in the filtrate, still as salty water. <em>To get that salt back you'd then evaporate the filtrate.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What does filtration separate?</summary>
+        <div class="ans">An <strong>insoluble solid</strong> from a <strong>liquid</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the residue?</summary>
+        <div class="ans">The <strong>insoluble solid</strong> left behind, trapped in the filter paper.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the filtrate?</summary>
+        <div class="ans">The <strong>liquid</strong> that passes through the filter paper.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does the liquid pass through the filter paper but the solid doesn't?</summary>
+        <div class="ans">The filter paper has tiny holes. The liquid particles are <strong>small enough to pass through</strong>, but the insoluble solid bits are <strong>too big</strong> and get trapped.</div>
+      </details></li>
+      <li><details>
+        <summary>Can you use filtration to separate dissolved salt from water? Explain.</summary>
+        <div class="ans"><strong>No.</strong> Dissolved salt particles are far too small and pass straight through the filter paper with the water. Filtration only removes <strong>insoluble</strong> solids; you would need evaporation or distillation for dissolved salt.</div>
+      </details></li>
+      <li><details>
+        <summary>You want clean water from muddy pond water. Which technique, and what do you call the clean water you collect?</summary>
+        <div class="ans"><strong>Filtration</strong>. The mud is insoluble, so it stays in the filter paper as the residue, and the clean water that comes through is the <strong>filtrate</strong>.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — EVAPORATION & CRYSTALLISATION                                  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · Pure &amp; Impure Substances</div>
+    <h2 class="lesson-title">Evaporation &amp; <em>crystallisation</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know how to get a dissolved solid back from a solution, and why going slowly grows crystals.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Getting a dissolved solid back</h3>
+    <p>Filtration failed us with salty water — the salt passed straight through. So how <em>do</em> you get a dissolved solid back out of a solution? You get rid of the liquid instead.</p>
+    <p>If you <strong>evaporate the solvent</strong> — heat the solution so the water turns to vapour and escapes — the dissolved solid is left behind. The salt can't evaporate, so as the water leaves, the salt has nowhere to go. It stays in the dish as a solid.</p>
+    <p>You usually do this in an <strong>evaporating basin</strong> (a wide shallow dish) heated gently. As the water boils away, the solution gets more and more concentrated, until finally only the solid remains.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Evaporating basin -->
+        <g>
+          <path d="M 60 70 Q 130 70 200 70 Q 175 120 130 120 Q 85 120 60 70 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="130" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">SOLUTION</text>
+          <!-- vapour rising -->
+          <g stroke="#5C6370" stroke-width="1.5" fill="none" opacity="0.7">
+            <path d="M 100 40 q 6 -10 0 -20"/>
+            <path d="M 130 40 q 6 -10 0 -20"/>
+            <path d="M 160 40 q 6 -10 0 -20"/>
+          </g>
+          <text x="130" y="12" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">WATER VAPOUR LEAVES</text>
+          <!-- flame -->
+          <path d="M 122 150 Q 118 135 130 128 Q 142 135 138 150 Q 130 145 122 150 Z" fill="#B85042"/>
+          <text x="130" y="170" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">heat</text>
+        </g>
+
+        <!-- Arrow -->
+        <g>
+          <line x1="240" y1="95" x2="350" y2="95" stroke="#C8A24A" stroke-width="2"/>
+          <path d="M 350 95 l -10 -6 l 0 12 z" fill="#C8A24A"/>
+          <text x="295" y="85" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">water evaporates</text>
+        </g>
+
+        <!-- Basin with crystals -->
+        <g>
+          <path d="M 390 70 Q 460 70 530 70 Q 505 120 460 120 Q 415 120 390 70 Z" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+          <!-- crystals -->
+          <g fill="#C8A24A" stroke="#1E2761" stroke-width="0.5">
+            <rect x="435" y="92" width="9" height="9" transform="rotate(20 439 96)"/>
+            <rect x="455" y="96" width="11" height="11" transform="rotate(-15 460 101)"/>
+            <rect x="475" y="92" width="8" height="8" transform="rotate(30 479 96)"/>
+            <rect x="447" y="104" width="9" height="9" transform="rotate(10 451 108)"/>
+          </g>
+          <text x="460" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">CRYSTALS LEFT</text>
+          <text x="460" y="150" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">the solid stays behind</text>
+        </g>
+      </svg>
+      <div class="caption">Evaporating basin · the solvent escapes as vapour, the dissolved solid is left as crystals</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Slow evaporation grows crystals</h3>
+    <p>There's a difference between rushing it and taking your time. If you boil the water off fast, you get a fine powder. If you let the water evaporate <strong>slowly</strong> — leaving the basin somewhere warm for days rather than boiling it — the solid forms neat, regular <strong>crystals</strong>. This slow process is called <strong>crystallisation</strong>.</p>
+    <p>Slow is better because the particles have time to line up into an orderly pattern, building proper crystals. Rush it and they get locked in place too quickly to form nice shapes.</p>
+
+    <div class="keywords">
+      <h4>Keywords for this topic</h4>
+      <dl>
+        <dt>Evaporation</dt>
+        <dd>Heating a solution so the solvent turns to vapour and escapes, leaving the dissolved solid behind.</dd>
+        <dt>Crystallisation</dt>
+        <dd>Letting a solution evaporate slowly so the solid forms regular crystals.</dd>
+        <dt>Evaporating basin</dt>
+        <dd>The wide, shallow dish used to evaporate a solution.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — to get the dissolved solid back, evaporate the water (don't filter)</h4>
+      <p>You can't filter dissolved salt out of water — it's too small to catch. To recover a <strong>dissolved</strong> solid you must <strong>evaporate the solvent</strong> so the solid is left behind. And remember the solid was there all along — evaporating just removes the water and reveals it, which is more proof that dissolving never destroyed it.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">You want to recover large, regular salt crystals from salty water. What should you do?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Filter it — the salt will be caught in the paper</span></li>
+        <li><span class="letter">B</span><span>Boil it as fast as possible to save time</span></li>
+        <li><span class="letter">C</span><span>Let the water evaporate slowly so crystals can grow</span></li>
+        <li><span class="letter">D</span><span>Add more water to spread the salt out</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — let it evaporate slowly.</strong> Slow evaporation (crystallisation) gives the particles time to line up into neat, regular crystals. <em>A fails because dissolved salt passes through filter paper; B gives a fine powder, not nice crystals.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>How do you get a dissolved solid back from a solution?</summary>
+        <div class="ans"><strong>Evaporate the solvent</strong> (heat the solution) so the liquid leaves as vapour and the solid is left behind.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does the salt stay behind when the water evaporates?</summary>
+        <div class="ans">The salt <strong>cannot evaporate</strong>, so as the water turns to vapour and escapes, the salt has nowhere to go and is left in the basin.</div>
+      </details></li>
+      <li><details>
+        <summary>What is crystallisation?</summary>
+        <div class="ans">Letting a solution evaporate <strong>slowly</strong> so the dissolved solid forms regular <strong>crystals</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does slow evaporation give better crystals than fast boiling?</summary>
+        <div class="ans">Slow evaporation gives the particles <strong>time to line up</strong> into an orderly pattern, forming neat crystals. Boiling fast locks them in place too quickly, giving a fine powder.</div>
+      </details></li>
+      <li><details>
+        <summary>What piece of apparatus is used to evaporate a solution?</summary>
+        <div class="ans">An <strong>evaporating basin</strong> (a wide, shallow dish), heated gently.</div>
+      </details></li>
+      <li><details>
+        <summary>A student tries to filter salt out of salty water and gets nothing in the filter paper. What went wrong, and what should they do instead?</summary>
+        <div class="ans">The salt is <strong>dissolved</strong>, so it passes through the filter paper — filtration can't separate it. They should <strong>evaporate the water</strong> instead, leaving the salt behind.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — DISTILLATION                                                   -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · Pure &amp; Impure Substances</div>
+    <h2 class="lesson-title"><em>Distillation</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know how distillation keeps the liquid instead of the solid, the job of the condenser, and how it separates two liquids.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Keeping the liquid, not the solid</h3>
+    <p>Evaporation gets you the dissolved <em>solid</em> back — but the water is lost into the air. What if it's the <strong>pure water</strong> you want, and the salt you want to throw away? For that you use <strong>distillation</strong>.</p>
+    <p>Distillation separates the <strong>solvent (e.g. pure water)</strong> from a solution. The trick: instead of letting the water vapour escape into the room, you <strong>catch it and turn it back into a liquid</strong>. You boil the solution, the water evaporates and leaves the salt behind, then the vapour is cooled so it <strong>condenses</strong> back into pure liquid water — which you collect in a separate container.</p>
+    <p>So distillation = evaporation <em>plus</em> condensing. Evaporation throws the water away; distillation keeps it.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Flask with solution -->
+        <g>
+          <circle cx="90" cy="150" r="42" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <rect x="80" y="78" width="20" height="35" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="90" y="155" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">SOLUTION</text>
+          <text x="90" y="168" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8" fill="#5C6370">(salt left here)</text>
+          <!-- flame -->
+          <path d="M 82 200 Q 78 188 90 182 Q 102 188 98 200 Q 90 195 82 200 Z" fill="#B85042"/>
+          <text x="90" y="218" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">heat</text>
+        </g>
+
+        <!-- vapour label -->
+        <text x="160" y="72" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370">VAPOUR →</text>
+
+        <!-- Condenser (slanted tube) -->
+        <g>
+          <line x1="100" y1="80" x2="200" y2="80" stroke="#1E2761" stroke-width="2"/>
+          <!-- outer jacket -->
+          <path d="M 200 65 L 360 130 L 360 150 L 200 95 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- inner tube -->
+          <line x1="205" y1="78" x2="358" y2="138" stroke="#5C6370" stroke-width="1.5"/>
+          <text x="280" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">CONDENSER</text>
+          <text x="280" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">cools vapour → liquid</text>
+          <!-- cold water in/out -->
+          <text x="365" y="120" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">cold water</text>
+        </g>
+
+        <!-- drips -->
+        <g fill="#1E2761">
+          <circle cx="380" cy="155" r="3"/>
+          <circle cx="385" cy="172" r="3"/>
+        </g>
+
+        <!-- collecting beaker -->
+        <g>
+          <path d="M 350 185 L 350 225 Q 350 235 360 235 L 420 235 Q 430 235 430 225 L 430 185" fill="none" stroke="#1E2761" stroke-width="2"/>
+          <path d="M 352 200 L 352 225 Q 352 233 360 233 L 420 233 Q 428 233 428 225 L 428 200 Z" fill="#EDF2FA"/>
+          <text x="475" y="208" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">PURE</text>
+          <text x="475" y="222" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">WATER</text>
+        </g>
+      </svg>
+      <div class="caption">Distillation · heat → vapour → condenser cools it → pure liquid collected</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Distillation</dt>
+        <dd>Separating a solvent (e.g. pure water) from a solution by evaporating it and then condensing the vapour back to liquid.</dd>
+        <dt>Condenser</dt>
+        <dd>The cooled tube that turns the hot vapour back into a liquid.</dd>
+        <dt>Condense</dt>
+        <dd>To cool a gas/vapour so it turns back into a liquid.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Separating two liquids</h3>
+    <p>Distillation has a second use: separating <strong>two liquids that have different boiling points</strong>. Say you have a mixture of two liquids, one that boils at 78&nbsp;°C and one that boils at 100&nbsp;°C. As you heat the mixture, the liquid with the <strong>lower boiling point evaporates first</strong>. Its vapour travels into the condenser, cools back to liquid, and is collected — separate from the other liquid, which is still in the flask.</p>
+    <p>It's the same idea: the part that boils off first gets condensed and caught. Whether you're separating a solvent from a solution or two liquids from each other, distillation works by <strong>boiling something off and then condensing it back</strong>.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — evaporation keeps the solid, distillation keeps the liquid</h4>
+      <p>Easy to muddle. Use <strong>evaporation/crystallisation</strong> when you want the <strong>dissolved solid</strong> (the water is thrown away). Use <strong>distillation</strong> when you want the <strong>pure liquid</strong> back — the condenser catches the vapour so the water isn't lost. Same start, different goal.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">You want to collect pure drinking water from seawater. Which technique, and what is the condenser for?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Filtration — to trap the salt in the paper</span></li>
+        <li><span class="letter">B</span><span>Evaporation — but then the water is lost as vapour</span></li>
+        <li><span class="letter">C</span><span>Distillation — the condenser cools the vapour back into pure liquid water</span></li>
+        <li><span class="letter">D</span><span>Crystallisation — to grow water crystals</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — distillation.</strong> You want the <em>liquid</em> back, not the salt, so you must catch the vapour. The condenser cools the steam so it condenses into pure liquid water that you collect; the salt stays behind in the flask. <em>B fails because plain evaporation lets the water escape into the air.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What does distillation separate?</summary>
+        <div class="ans">The <strong>solvent (e.g. pure water)</strong> from a solution — or two liquids with <strong>different boiling points</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the job of the condenser?</summary>
+        <div class="ans">To <strong>cool the vapour</strong> so it condenses back into a liquid that can be collected.</div>
+      </details></li>
+      <li><details>
+        <summary>How is distillation different from evaporation?</summary>
+        <div class="ans">Evaporation keeps the <strong>dissolved solid</strong> and loses the water as vapour. Distillation <strong>catches and condenses</strong> the vapour, so you keep the <strong>pure liquid</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>A mixture contains liquid A (boils at 78 °C) and liquid B (boils at 100 °C). When you heat and distil it, which is collected first?</summary>
+        <div class="ans"><strong>Liquid A</strong>, because it has the <strong>lower boiling point</strong>, so it evaporates and is condensed first.</div>
+      </details></li>
+      <li><details>
+        <summary>During distillation of salty water, where does the salt end up?</summary>
+        <div class="ans">It is <strong>left behind in the flask</strong> — salt can't evaporate, so only the water vapour travels to the condenser.</div>
+      </details></li>
+      <li><details>
+        <summary>Name the two changes of state that happen during distillation.</summary>
+        <div class="ans"><strong>Evaporating/boiling</strong> (liquid → vapour) in the flask, then <strong>condensing</strong> (vapour → liquid) in the condenser.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — CHROMATOGRAPHY                                                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · Pure &amp; Impure Substances</div>
+    <h2 class="lesson-title"><em>Chromatography</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know how chromatography splits a coloured mixture, how to run the practical, and how to read the result.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Splitting up the colours in an ink</h3>
+    <p>A black felt-tip pen looks like one colour. But black ink is often a <strong>mixture</strong> of several different coloured dyes mixed together. <strong>Chromatography</strong> is the technique that separates a mixture of soluble coloured substances — like the dyes in an ink — so you can see them one by one.</p>
+    <p>It works because the different dyes travel <strong>different distances up a piece of paper</strong>. Put a spot of ink near the bottom of the paper and dip the very bottom edge into water (or another solvent). The water soaks upwards through the paper, carrying the dyes with it. Some dyes get carried a long way; others lag behind. By the time the water reaches the top, the dyes have spread out into separate marks.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <!-- Start: single spot -->
+        <g>
+          <rect x="60" y="30" width="90" height="150" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+          <!-- start line -->
+          <line x1="60" y1="160" x2="150" y2="160" stroke="#5C6370" stroke-width="1" stroke-dasharray="3 3"/>
+          <!-- single ink spot -->
+          <circle cx="105" cy="160" r="7" fill="#1E2761"/>
+          <!-- solvent at bottom -->
+          <rect x="60" y="180" width="90" height="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="1"/>
+          <text x="105" y="215" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">START</text>
+          <text x="105" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">one spot of ink</text>
+        </g>
+
+        <!-- Arrow -->
+        <g>
+          <line x1="180" y1="105" x2="290" y2="105" stroke="#C8A24A" stroke-width="2"/>
+          <path d="M 290 105 l -10 -6 l 0 12 z" fill="#C8A24A"/>
+          <text x="235" y="95" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">solvent rises</text>
+        </g>
+
+        <!-- End: separated spots (chromatogram) -->
+        <g>
+          <rect x="320" y="30" width="90" height="150" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+          <line x1="320" y1="160" x2="410" y2="160" stroke="#5C6370" stroke-width="1" stroke-dasharray="3 3"/>
+          <!-- solvent front -->
+          <line x1="320" y1="48" x2="410" y2="48" stroke="#5C6370" stroke-width="1"/>
+          <text x="455" y="50" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">solvent front</text>
+          <!-- separated dye spots -->
+          <circle cx="365" cy="68" r="7" fill="#C8A24A"/>
+          <circle cx="365" cy="105" r="7" fill="#B85042"/>
+          <circle cx="365" cy="140" r="7" fill="#2C5F2D"/>
+          <text x="455" y="72" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">dye 1 (far)</text>
+          <text x="455" y="109" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">dye 2</text>
+          <text x="455" y="144" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">dye 3 (near)</text>
+          <text x="365" y="215" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">CHROMATOGRAM</text>
+        </g>
+      </svg>
+      <div class="caption">Chromatography · one ink spot separates into its different dyes as the solvent rises</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Chromatography</dt>
+        <dd>Separating a mixture of soluble coloured substances (e.g. the dyes in an ink).</dd>
+        <dt>Chromatogram</dt>
+        <dd>The finished paper, showing the separated dye spots.</dd>
+        <dt>Solvent front</dt>
+        <dd>The highest line the solvent (water) reaches as it rises up the paper.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The practical &amp; reading the result</h3>
+    <p>To run it properly, a couple of rules matter:</p>
+    <p><strong>Draw the start line in pencil, not pen.</strong> If you used pen, the line itself would be an ink that separates and ruins your result — and pencil (graphite) is insoluble, so it won't move. Put the ink spots <strong>above the level of the solvent</strong>, otherwise the dye would just wash off into the water instead of travelling up the paper.</p>
+    <p><strong>Reading the chromatogram:</strong> count the spots — that tells you how many different dyes were in the ink. A <strong>pure</strong> substance gives just <em>one</em> spot (it can't be separated further). A dye that travels <strong>further</strong> up the paper is more strongly carried by the solvent. You can also compare an unknown ink against known dyes: if a spot lines up at the same height, it's probably the same dye.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — pencil for the line, and keep the ink above the water</h4>
+      <p>Two classic errors. (1) Drawing the start line in <strong>pen</strong> — the line is itself an ink and will separate, spoiling the result. Always use <strong>pencil</strong>, which is insoluble. (2) Dipping the paper so deep that the <strong>ink spots sit in the solvent</strong> — the dye just dissolves away into the water instead of rising up the paper. The spots must start <strong>above</strong> the solvent level.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">After running chromatography, a green ink separates into a blue spot and a yellow spot. What does this tell you?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The ink is a pure substance</span></li>
+        <li><span class="letter">B</span><span>The ink is a mixture of at least two different dyes</span></li>
+        <li><span class="letter">C</span><span>The experiment went wrong — green should stay green</span></li>
+        <li><span class="letter">D</span><span>Blue and yellow are insoluble</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — it's a mixture of at least two dyes.</strong> The green ink separated into a blue dye and a yellow dye, which means it was never a single substance — it's a mixture. <em>A would be true only if the ink gave a single spot.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What does chromatography separate?</summary>
+        <div class="ans">A mixture of <strong>soluble coloured substances</strong> — for example, the different dyes in an ink.</div>
+      </details></li>
+      <li><details>
+        <summary>Why do the dyes separate?</summary>
+        <div class="ans">Different dyes travel <strong>different distances</strong> up the paper as the solvent rises — some are carried further than others.</div>
+      </details></li>
+      <li><details>
+        <summary>Why must the start line be drawn in pencil, not pen?</summary>
+        <div class="ans">Pen ink would <strong>separate too</strong> and spoil the result. Pencil (graphite) is <strong>insoluble</strong>, so it stays put.</div>
+      </details></li>
+      <li><details>
+        <summary>Why must the ink spots start above the level of the solvent?</summary>
+        <div class="ans">If the spots were below the solvent, the dye would just <strong>wash off into the water</strong> instead of travelling up the paper.</div>
+      </details></li>
+      <li><details>
+        <summary>An ink gives just one spot on the chromatogram. What does this tell you?</summary>
+        <div class="ans">The ink is a <strong>pure substance</strong> — it is a single dye that cannot be separated further.</div>
+      </details></li>
+      <li><details>
+        <summary>How can you tell how many dyes were in an ink from its chromatogram?</summary>
+        <div class="ans"><strong>Count the spots.</strong> The number of separate spots tells you how many different dyes the ink contained.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the finished piece of paper, showing the separated spots, called?</summary>
+        <div class="ans">A <strong>chromatogram</strong>.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>Year 7 Chemistry · Pure &amp; Impure Substances (separation techniques)</p>
+  <p>A revision booklet</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'separation-y7-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+</body>
+</html>

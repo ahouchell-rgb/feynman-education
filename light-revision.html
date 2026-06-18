@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Light — Year 8 Revision</title>
+<meta name="description" content="A Year 8 revision booklet on light — five short topics covering how light travels, reflection, refraction, the eye and lenses, and colour and the spectrum.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Year 8 · Physics · Light</div>
+    <h1>Light, <em>but bitesize.</em></h1>
+    <p class="tag">A revision booklet — five short topics, from how light travels to why a prism splits white light into a rainbow.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Take it one topic at a time.</strong> There are five topics. Each one is short — about 10 minutes. Do one or two a day.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">How light travels</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Reflection</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Refraction</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">The eye &amp; lenses</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Colour &amp; the spectrum</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — HOW LIGHT TRAVELS                                              -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · Physics · Light</div>
+    <h2 class="lesson-title">How <em>light travels</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know how fast light travels, why we draw it as straight rays, the difference between luminous and non-luminous objects, and how shadows form.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Light travels in straight lines</h3>
+    <p>Switch on a torch in a dusty room and you can see the beam: it goes in a perfectly <strong>straight line</strong>. Light never bends round corners on its own. That's why you can't see round a wall, and why a shadow has sharp edges.</p>
+    <p>Because light travels in straight lines, we draw it as a <strong>ray</strong> — a straight line with an arrow showing the direction the light is going. Rays are the basic tool you'll use to explain almost everything about light.</p>
+    <p>Light is also astonishingly <strong>fast</strong>. It travels at about <strong>300 000 000 metres every second</strong> (300 million m/s) — far faster than sound. That's why you see lightning <strong>before</strong> you hear the thunder, even though they happen at the same moment: the light reaches you almost instantly, but the sound takes a few seconds to catch up.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Lamp / source -->
+        <g>
+          <circle cx="70" cy="100" r="22" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+          <text x="70" y="105" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">LAMP</text>
+        </g>
+        <!-- Straight rays radiating out -->
+        <g stroke="#C8A24A" stroke-width="2">
+          <line x1="92" y1="90" x2="300" y2="40"/>
+          <line x1="92" y1="100" x2="320" y2="100"/>
+          <line x1="92" y1="110" x2="300" y2="160"/>
+        </g>
+        <!-- Arrowheads -->
+        <g fill="#C8A24A">
+          <path d="M 300 40 L 286 40 L 296 52 Z"/>
+          <path d="M 320 100 L 306 95 L 306 105 Z"/>
+          <path d="M 300 160 L 286 160 L 296 148 Z"/>
+        </g>
+        <!-- Object blocking middle ray -->
+        <rect x="330" y="78" width="22" height="44" rx="2" fill="#1E2761"/>
+        <text x="341" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">object</text>
+        <!-- Screen -->
+        <rect x="500" y="30" width="14" height="140" rx="2" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="507" y="185" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">screen</text>
+        <!-- Shadow region on screen -->
+        <rect x="500" y="78" width="14" height="44" fill="#1E2761" opacity="0.65"/>
+        <line x1="352" y1="78" x2="500" y2="60" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+        <line x1="352" y1="122" x2="500" y2="140" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+        <text x="540" y="103" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#1E2761" transform="rotate(90 540 103)">SHADOW</text>
+        <text x="280" y="195" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">light travels in straight lines — so a blocked ray leaves a shadow</text>
+      </svg>
+      <div class="caption">Straight-line rays form a shadow behind an opaque object</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Ray</dt>
+        <dd>A straight line with an arrow that shows the path and direction of light.</dd>
+        <dt>Speed of light</dt>
+        <dd>About 300 000 000 m/s — far faster than the speed of sound.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>How we see things</h3>
+    <p>To see anything, light has to enter your eyes. There are two ways that happens.</p>
+    <p><strong>Luminous objects make their own light.</strong> The Sun, a lit candle, a glowing bulb, a phone screen — light travels straight from them into your eyes. You see them directly.</p>
+    <p><strong>Non-luminous objects don't make their own light.</strong> A book, the Moon, a tree, this page — they make no light of their own. You only see them because light from a luminous source <strong>bounces off them</strong> (reflects) and travels into your eyes. Turn off every light source and a non-luminous object disappears, because there's nothing for it to reflect.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Luminous</dt>
+        <dd>An object that makes its own light (the Sun, a flame, a bulb).</dd>
+        <dt>Non-luminous</dt>
+        <dd>An object that makes no light of its own — we see it by reflected light (a book, the Moon).</dd>
+        <dt>Transparent</dt>
+        <dd>Lets almost all light through, so you can see clearly through it (clear glass, air, water).</dd>
+        <dt>Translucent</dt>
+        <dd>Lets some light through but scatters it, so you can't see a sharp image (frosted glass, tissue paper).</dd>
+        <dt>Opaque</dt>
+        <dd>Lets no light through — it blocks the light and casts a shadow (wood, metal, you).</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — we don't see by light coming OUT of our eyes</h4>
+      <p>A really common idea is that your eyes send something out to "look at" objects, like a torch beam. <strong>They don't.</strong> Seeing only ever works one way: light travels <strong>into</strong> your eyes. For a luminous object the light comes straight from it; for everything else, light bounces off it first. If no light reaches your eyes, you see nothing — which is exactly why a dark room is dark.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">In a completely dark room you cannot see a red apple on the table. Why not?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The apple has stopped being red in the dark</span></li>
+        <li><span class="letter">B</span><span>There is no light to reflect off the apple into your eyes</span></li>
+        <li><span class="letter">C</span><span>Your eyes have run out of light to send to the apple</span></li>
+        <li><span class="letter">D</span><span>The apple is now transparent</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — there is no light to reflect off the apple into your eyes.</strong> An apple is non-luminous, so you only see it by reflected light. With no light source in the room, nothing reflects off it and nothing reaches your eyes. <em>C is the trap — eyes never send light out; seeing always means light coming in.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>How does light travel?</summary>
+        <div class="ans">In <strong>straight lines</strong>, which we draw as rays with arrows.</div>
+      </details></li>
+      <li><details>
+        <summary>Roughly how fast does light travel?</summary>
+        <div class="ans">About <strong>300 000 000 m/s</strong> (300 million metres per second) — much faster than sound.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the difference between a luminous and a non-luminous object? Give one example of each.</summary>
+        <div class="ans">A <strong>luminous</strong> object makes its own light (e.g. the Sun, a bulb, a flame). A <strong>non-luminous</strong> object does not — we see it by reflected light (e.g. a book, the Moon).</div>
+      </details></li>
+      <li><details>
+        <summary>How do we see a non-luminous object such as a chair?</summary>
+        <div class="ans">Light from a source (like the Sun or a lamp) <strong>reflects off the chair</strong> and travels into our eyes.</div>
+      </details></li>
+      <li><details>
+        <summary>Sort these into transparent, translucent or opaque: clear window glass, frosted bathroom glass, a wooden door.</summary>
+        <div class="ans">Clear window glass = <strong>transparent</strong>. Frosted glass = <strong>translucent</strong>. Wooden door = <strong>opaque</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does an opaque object cast a shadow?</summary>
+        <div class="ans">Light travels in <strong>straight lines</strong>, so it cannot bend round the object. The object <strong>blocks the light</strong>, leaving a dark region (the shadow) on the far side.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — REFLECTION                                                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · Physics · Light</div>
+    <h2 class="lesson-title">Reflection</h2>
+    <p class="lesson-promise">By the end of this topic you'll know the law of reflection, what the normal is, how to draw a ray diagram, and the difference between specular and diffuse reflection.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The law of reflection</h3>
+    <p>When light hits a mirror it <strong>bounces off</strong>. This bouncing is called <strong>reflection</strong>. The ray going in is the <strong>incident ray</strong>; the ray coming back off is the <strong>reflected ray</strong>.</p>
+    <p>To measure the angles properly, we draw one extra line: the <strong>normal</strong>. This is a dashed line drawn at exactly <strong>90° to the mirror</strong> at the point where the light hits. We always measure angles from the normal, never from the mirror's surface.</p>
+    <p>Now the rule itself, the <strong>law of reflection</strong>:</p>
+    <p style="text-align:center"><span class="formula">angle of incidence = angle of reflection</span></p>
+    <p>So if light hits the mirror at 30° to the normal, it bounces off at 30° to the normal on the other side. The two angles are always equal.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Mirror surface -->
+        <line x1="60" y1="190" x2="500" y2="190" stroke="#1E2761" stroke-width="3"/>
+        <!-- Hatching behind mirror -->
+        <g stroke="#5C6370" stroke-width="1" opacity="0.5">
+          <line x1="70" y1="190" x2="60" y2="205"/>
+          <line x1="110" y1="190" x2="100" y2="205"/>
+          <line x1="150" y1="190" x2="140" y2="205"/>
+          <line x1="190" y1="190" x2="180" y2="205"/>
+          <line x1="230" y1="190" x2="220" y2="205"/>
+          <line x1="270" y1="190" x2="260" y2="205"/>
+          <line x1="310" y1="190" x2="300" y2="205"/>
+          <line x1="350" y1="190" x2="340" y2="205"/>
+          <line x1="390" y1="190" x2="380" y2="205"/>
+          <line x1="430" y1="190" x2="420" y2="205"/>
+          <line x1="470" y1="190" x2="460" y2="205"/>
+        </g>
+        <text x="500" y="207" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">mirror</text>
+        <!-- Normal (dashed, vertical at 90 deg) -->
+        <line x1="280" y1="50" x2="280" y2="190" stroke="#5C6370" stroke-width="1.5" stroke-dasharray="6 4"/>
+        <text x="280" y="42" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-style="italic" fill="#5C6370">normal (90°)</text>
+        <!-- Right-angle marker -->
+        <path d="M 280 178 L 292 178 L 292 190" fill="none" stroke="#5C6370" stroke-width="1"/>
+        <!-- Incident ray -->
+        <line x1="110" y1="70" x2="280" y2="190" stroke="#C8A24A" stroke-width="2.5"/>
+        <path d="M 205 137 L 192 132 L 198 145 Z" fill="#C8A24A"/>
+        <text x="140" y="95" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">incident ray</text>
+        <!-- Reflected ray -->
+        <line x1="280" y1="190" x2="450" y2="70" stroke="#B85042" stroke-width="2.5"/>
+        <path d="M 380 120 L 366 118 L 375 130 Z" fill="#B85042"/>
+        <text x="385" y="95" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">reflected ray</text>
+        <!-- Angle arcs -->
+        <path d="M 252 170 A 32 32 0 0 1 268 162" fill="none" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="244" y="155" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#1E2761">i</text>
+        <path d="M 292 162 A 32 32 0 0 1 308 170" fill="none" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="316" y="155" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#1E2761">r</text>
+        <text x="280" y="232" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">angle of incidence (i) = angle of reflection (r)</text>
+      </svg>
+      <div class="caption">A reflection ray diagram — angles measured from the normal</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Reflection</dt>
+        <dd>Light bouncing off a surface.</dd>
+        <dt>Normal</dt>
+        <dd>A dashed line drawn at 90° to the surface, where the ray hits. All angles are measured from it.</dd>
+        <dt>Angle of incidence</dt>
+        <dd>The angle between the incident ray and the normal.</dd>
+        <dt>Angle of reflection</dt>
+        <dd>The angle between the reflected ray and the normal. It always equals the angle of incidence.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Smooth vs rough — why mirrors give an image</h3>
+    <p>The law of reflection is true for <em>every</em> surface, even a wall. So why do you get a clear reflection in a mirror but not in a brick wall?</p>
+    <p><strong>Specular reflection</strong> happens on a smooth, shiny surface like a mirror or still water. All the rays land on a flat surface, so they all bounce off in the same neat direction. The reflected rays stay organised, and you see a clear <strong>image</strong>.</p>
+    <p><strong>Diffuse reflection</strong> happens on a rough surface like paper or a wall. Each ray still obeys the law of reflection, but because the surface is bumpy, the normals point in all different directions, so the rays scatter everywhere. No clear image forms — which is exactly why you can read a page from any angle but can't see your face in it.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Specular reflection</dt>
+        <dd>Reflection off a smooth surface — rays stay parallel and form a clear image (a mirror).</dd>
+        <dt>Diffuse reflection</dt>
+        <dd>Reflection off a rough surface — rays scatter in all directions, so no image forms (paper, a wall).</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — always measure angles from the normal</h4>
+      <p>The angle of incidence is the angle between the ray and the <strong>normal</strong>, not the angle between the ray and the mirror. If a ray hits a mirror at 20° to the <em>surface</em>, that is 70° to the <em>normal</em> — and 70° is the number you use. Draw the dashed normal first, every time, and measure from there.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A ray of light hits a mirror at an angle of incidence of 35°. At what angle does it reflect, and where do you measure that angle from?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>35°, measured from the normal</span></li>
+        <li><span class="letter">B</span><span>55°, measured from the normal</span></li>
+        <li><span class="letter">C</span><span>35°, measured from the mirror surface</span></li>
+        <li><span class="letter">D</span><span>It depends on how shiny the mirror is</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — 35°, measured from the normal.</strong> By the law of reflection, the angle of reflection equals the angle of incidence, and both are always measured from the normal. <em>B mixes it up with the angle to the surface (90 − 35 = 55), which isn't what we use.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>State the law of reflection.</summary>
+        <div class="ans">The <strong>angle of incidence equals the angle of reflection</strong> (both measured from the normal).</div>
+      </details></li>
+      <li><details>
+        <summary>What is the normal, and what angle does it make with the mirror?</summary>
+        <div class="ans">The normal is a <strong>dashed line drawn at 90°</strong> to the mirror at the point where the ray hits. We measure all angles from it.</div>
+      </details></li>
+      <li><details>
+        <summary>A ray hits a mirror with an angle of incidence of 50°. What is the angle of reflection?</summary>
+        <div class="ans"><strong>50°</strong> — the two angles are always equal.</div>
+      </details></li>
+      <li><details>
+        <summary>Name the two rays in a reflection ray diagram.</summary>
+        <div class="ans">The <strong>incident ray</strong> (going towards the mirror) and the <strong>reflected ray</strong> (coming back off it).</div>
+      </details></li>
+      <li><details>
+        <summary>Why can you see a clear image in a mirror but not in a sheet of paper?</summary>
+        <div class="ans">A mirror is smooth, so it gives <strong>specular reflection</strong> — rays stay neat and form an image. Paper is rough, so it gives <strong>diffuse reflection</strong> — rays scatter in all directions and no image forms.</div>
+      </details></li>
+      <li><details>
+        <summary>A ray hits a mirror at 25° to the mirror surface. What is the angle of incidence (measured from the normal)?</summary>
+        <div class="ans">90 − 25 = <strong>65°</strong>. (Always convert to the angle from the normal first.)</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — REFRACTION                                                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · Physics · Light</div>
+    <h2 class="lesson-title">Refraction</h2>
+    <p class="lesson-promise">By the end of this topic you'll know what refraction is, why it happens, which way light bends entering and leaving glass, and the everyday effects it causes.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Light bends when it changes speed</h3>
+    <p>Light travels at slightly different speeds in different materials. It's fastest in air, slower in water, and slower still in glass. When a ray passes from one material into another — say from air into glass — it <strong>changes speed</strong>, and this makes it <strong>change direction</strong>. This bending is called <strong>refraction</strong>.</p>
+    <p>A good way to picture it: imagine a trolley rolling at an angle off a smooth path onto thick grass. One wheel hits the grass first and slows down while the other is still on the path, so the trolley swings round. Light does the same when one edge of the beam slows before the other.</p>
+    <p>The rule for which way it bends, measured from the normal:</p>
+    <p>· Going from air <strong>into</strong> glass or water (speeding down), light bends <strong>towards the normal</strong>.<br>
+    · Going from glass or water <strong>out</strong> into air (speeding up), light bends <strong>away from the normal</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Glass block -->
+        <rect x="180" y="40" width="200" height="160" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761" opacity="0.55">GLASS</text>
+        <!-- Normals (dashed) at entry and exit -->
+        <line x1="180" y1="50" x2="180" y2="130" stroke="#5C6370" stroke-width="1" stroke-dasharray="5 4"/>
+        <line x1="380" y1="110" x2="380" y2="190" stroke="#5C6370" stroke-width="1" stroke-dasharray="5 4"/>
+        <text x="172" y="58" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="9" font-style="italic" fill="#5C6370">normal</text>
+        <text x="388" y="190" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="9" font-style="italic" fill="#5C6370">normal</text>
+        <!-- Incoming ray (air -> glass), hits at (180,90) -->
+        <line x1="60" y1="50" x2="180" y2="90" stroke="#C8A24A" stroke-width="2.5"/>
+        <path d="M 130 73 L 117 70 L 124 82 Z" fill="#C8A24A"/>
+        <!-- Inside glass: bent towards normal (steeper) -> exits at (380,150) -->
+        <line x1="180" y1="90" x2="380" y2="150" stroke="#C8A24A" stroke-width="2.5"/>
+        <path d="M 290 117 L 277 116 L 284 128 Z" fill="#C8A24A"/>
+        <!-- Out of glass: bent away from normal -->
+        <line x1="380" y1="150" x2="500" y2="170" stroke="#C8A24A" stroke-width="2.5"/>
+        <path d="M 455 162 L 442 158 L 446 170 Z" fill="#C8A24A"/>
+        <!-- Faint continuation line (where ray would have gone with no bend) -->
+        <line x1="180" y1="90" x2="300" y2="130" stroke="#B85042" stroke-width="1" stroke-dasharray="3 3" opacity="0.55"/>
+        <!-- Labels -->
+        <text x="95" y="42" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">air</text>
+        <text x="470" y="150" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">air</text>
+        <text x="150" y="155" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">bends TOWARDS</text>
+        <text x="455" y="200" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">bends AWAY</text>
+        <text x="280" y="228" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">into glass: towards the normal · out of glass: away from the normal</text>
+      </svg>
+      <div class="caption">A ray refracting as it passes through a glass block</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Refraction</dt>
+        <dd>The bending of light when it passes between two materials and changes speed.</dd>
+        <dt>Towards the normal</dt>
+        <dd>The way light bends when entering a denser material (e.g. air into glass), where it slows down.</dd>
+        <dt>Away from the normal</dt>
+        <dd>The way light bends when entering a less dense material (e.g. glass into air), where it speeds up.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Refraction in everyday life</h3>
+    <p>You see refraction all the time without realising it:</p>
+    <p>· A <strong>straw in a glass of water looks bent or broken</strong> at the surface. The light from the underwater part of the straw refracts as it leaves the water, so it reaches your eyes from a slightly different direction — and your brain sees the straw as bent.</p>
+    <p>· A <strong>swimming pool looks shallower than it really is.</strong> Light from the bottom bends as it leaves the water, so the bottom appears to be raised up. Pools are always deeper than they look — which is why "it looked shallow" is a dangerous reason to dive.</p>
+    <p>· A coin at the bottom of a mug can <strong>seem to reappear</strong> when you pour water in, because the refracted light now reaches your eye over the rim.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — refraction is NOT the same as reflection</h4>
+      <p>They sound similar and both can happen at glass or water, but they're different. <strong>Reflection</strong> is light <em>bouncing off</em> a surface. <strong>Refraction</strong> is light <em>passing through</em> into a new material and <em>bending</em> because its speed changes. Reflection gives you a mirror image; refraction makes a straw look bent. Don't swap the words.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A ray of light passes from air into a glass block. What happens to its speed, and which way does it bend?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Speeds up · bends away from the normal</span></li>
+        <li><span class="letter">B</span><span>Slows down · bends towards the normal</span></li>
+        <li><span class="letter">C</span><span>Slows down · bends away from the normal</span></li>
+        <li><span class="letter">D</span><span>Stays the same speed · travels straight on</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — slows down and bends towards the normal.</strong> Light travels more slowly in glass than in air, and when it slows on entering a denser material it bends towards the normal. <em>It only carries straight on if it hits the surface exactly along the normal (head-on).</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is refraction?</summary>
+        <div class="ans">The <strong>bending of light</strong> when it passes from one material into another and changes speed.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does light refract when it goes from air into water?</summary>
+        <div class="ans">Because it <strong>changes speed</strong> — light travels slower in water than in air, and the change of speed makes it change direction.</div>
+      </details></li>
+      <li><details>
+        <summary>Which way does light bend when it goes from air into glass?</summary>
+        <div class="ans"><strong>Towards the normal</strong>, because it slows down.</div>
+      </details></li>
+      <li><details>
+        <summary>Which way does light bend when it leaves glass back into air?</summary>
+        <div class="ans"><strong>Away from the normal</strong>, because it speeds up again.</div>
+      </details></li>
+      <li><details>
+        <summary>Explain why a straw in a glass of water looks bent.</summary>
+        <div class="ans">Light from the underwater part of the straw <strong>refracts (bends) as it leaves the water</strong>, so it reaches your eyes from a different direction. Your brain assumes the light travelled straight, so the straw looks bent at the surface.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the key difference between reflection and refraction?</summary>
+        <div class="ans"><strong>Reflection</strong> is light bouncing off a surface. <strong>Refraction</strong> is light passing into a new material and bending because its speed changes.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — THE EYE, LENSES & THE PINHOLE CAMERA                           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · Physics · Light</div>
+    <h2 class="lesson-title">The eye, lenses &amp; the <em>pinhole camera</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know how a converging lens focuses light, the parts of the eye and what they do, and why a pinhole camera makes an upside-down image.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Lenses focus light</h3>
+    <p>A <strong>lens</strong> is a curved piece of glass or plastic that bends light by refraction. A <strong>converging lens</strong> is fatter in the middle. When parallel rays of light pass through it, they all bend inwards and meet at a single point called the <strong>focus</strong>. This is how a magnifying glass can concentrate sunlight to a tiny bright spot.</p>
+    <p>Focusing light onto one point is exactly what's needed to make a sharp <strong>image</strong> — and it's the job your eye does every time you look at something.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Converging lens</dt>
+        <dd>A lens that is fatter in the middle and brings parallel rays of light together to a focus.</dd>
+        <dt>Focus</dt>
+        <dd>The point where a converging lens brings rays of light together.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The parts of the eye</h3>
+    <p>Your eye is a clever light-focusing instrument. Light goes through several parts before you "see":</p>
+    <p>· <strong>Cornea</strong> — the clear front layer that does most of the focusing as light enters.<br>
+    · <strong>Pupil</strong> — the black hole that lets light into the eye.<br>
+    · <strong>Iris</strong> — the coloured ring of muscle that changes the size of the pupil to control how much light gets in (small in bright light, wide in the dark).<br>
+    · <strong>Lens</strong> — fine-tunes the focusing so objects near and far look sharp.<br>
+    · <strong>Retina</strong> — the light-sensitive layer at the back where the image is formed.<br>
+    · <strong>Optic nerve</strong> — carries the signal from the retina to the brain.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Eyeball -->
+        <ellipse cx="270" cy="120" rx="150" ry="100" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+        <!-- Cornea bulge (front, left) -->
+        <path d="M 120 120 Q 105 95 122 78 Q 140 110 140 120 Q 140 130 122 162 Q 105 145 120 120 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- Iris + pupil -->
+        <line x1="138" y1="92" x2="138" y2="105" stroke="#B85042" stroke-width="5"/>
+        <line x1="138" y1="135" x2="138" y2="148" stroke="#B85042" stroke-width="5"/>
+        <!-- Lens (converging, just behind pupil) -->
+        <ellipse cx="160" cy="120" rx="12" ry="32" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- Retina (back inner wall, right) -->
+        <path d="M 405 75 A 145 95 0 0 1 405 165" fill="none" stroke="#C8A24A" stroke-width="4"/>
+        <!-- Optic nerve -->
+        <path d="M 415 120 q 30 0 45 -8" fill="none" stroke="#1E2761" stroke-width="6"/>
+        <!-- Light rays entering and focusing to a point on retina -->
+        <g stroke="#5C6370" stroke-width="1.3" opacity="0.8">
+          <line x1="40" y1="95" x2="138" y2="110"/>
+          <line x1="40" y1="145" x2="138" y2="130"/>
+        </g>
+        <g stroke="#5C6370" stroke-width="1.3" opacity="0.8">
+          <line x1="160" y1="100" x2="408" y2="120"/>
+          <line x1="160" y1="140" x2="408" y2="120"/>
+        </g>
+        <!-- Labels -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">
+          <text x="100" y="60" text-anchor="middle">cornea</text>
+          <text x="138" y="178" text-anchor="middle">pupil</text>
+          <text x="138" y="192" text-anchor="middle">&amp; iris</text>
+          <text x="160" y="62" text-anchor="middle">lens</text>
+          <text x="420" y="55" text-anchor="middle" fill="#C8A24A" font-weight="700">retina</text>
+          <text x="478" y="100" text-anchor="middle">optic</text>
+          <text x="478" y="113" text-anchor="middle">nerve</text>
+        </g>
+        <text x="270" y="232" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">the cornea and lens focus light onto the retina</text>
+      </svg>
+      <div class="caption">The human eye, labelled</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Cornea</dt>
+        <dd>The clear front of the eye that does most of the focusing.</dd>
+        <dt>Iris</dt>
+        <dd>The coloured muscle that controls the size of the pupil.</dd>
+        <dt>Retina</dt>
+        <dd>The light-sensitive layer at the back of the eye where the image forms.</dd>
+        <dt>Optic nerve</dt>
+        <dd>Carries the signal from the retina to the brain.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>The pinhole camera</h3>
+    <p>A <strong>pinhole camera</strong> is the simplest camera there is: a sealed box with a tiny hole at the front and a screen at the back. No lens at all.</p>
+    <p>Because light travels in straight lines, rays from the <strong>top</strong> of an object travel through the pinhole and land near the <strong>bottom</strong> of the screen, and rays from the bottom land near the top. The rays cross over at the hole. The result is a real image that is <strong>upside down</strong> (inverted) — and left and right are swapped too.</p>
+    <p>Interestingly, your eye does the same thing: the image on your retina is upside down. Your brain simply flips it the right way up, so the world looks normal.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Object: an upright arrow (tree) on the left -->
+        <line x1="70" y1="50" x2="70" y2="150" stroke="#1E2761" stroke-width="3"/>
+        <path d="M 70 50 L 62 66 L 78 66 Z" fill="#1E2761"/>
+        <text x="70" y="170" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">object</text>
+        <!-- Camera box -->
+        <rect x="330" y="40" width="150" height="140" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <text x="405" y="200" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">box (screen at back)</text>
+        <!-- Pinhole -->
+        <circle cx="330" cy="110" r="3" fill="#B85042"/>
+        <text x="318" y="100" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#B85042">pinhole</text>
+        <!-- Rays crossing at the pinhole -->
+        <line x1="70" y1="50" x2="330" y2="110" stroke="#C8A24A" stroke-width="1.5"/>
+        <line x1="330" y1="110" x2="478" y2="150" stroke="#C8A24A" stroke-width="1.5"/>
+        <line x1="70" y1="150" x2="330" y2="110" stroke="#C8A24A" stroke-width="1.5"/>
+        <line x1="330" y1="110" x2="478" y2="72" stroke="#C8A24A" stroke-width="1.5"/>
+        <!-- Inverted image on back wall -->
+        <line x1="478" y1="72" x2="478" y2="150" stroke="#B85042" stroke-width="3"/>
+        <path d="M 478 150 L 470 134 L 486 134 Z" fill="#B85042"/>
+        <text x="500" y="115" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#B85042">image</text>
+        <text x="500" y="128" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#B85042">(upside down)</text>
+        <text x="280" y="214" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">rays cross at the pinhole, so the image is inverted</text>
+      </svg>
+      <div class="caption">A pinhole camera forms an inverted (upside-down) image</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the image is upside down, not back-to-front only</h4>
+      <p>Pupils often say the pinhole image is "the same way up" or only "left-right swapped". It is fully <strong>inverted</strong> — turned upside down (and left-right swapped too). This happens because light travels in <strong>straight lines</strong> and the rays from the top and bottom of the object <strong>cross over</strong> at the tiny hole.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A pinhole camera is pointed at a candle so the flame is at the top. Where does the flame appear on the screen, and why?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>At the top — the image keeps the same orientation</span></li>
+        <li><span class="letter">B</span><span>At the bottom — the rays cross at the pinhole, so the image is inverted</span></li>
+        <li><span class="letter">C</span><span>In the middle — pinhole images are always centred</span></li>
+        <li><span class="letter">D</span><span>It doesn't appear because there's no lens</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — at the bottom, because the rays cross at the pinhole.</strong> Light travels in straight lines, so rays from the top of the object pass through the hole and land at the bottom of the screen. The whole image is inverted. <em>You don't need a lens for a pinhole image — just a small hole.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What does a converging lens do to parallel rays of light?</summary>
+        <div class="ans">It bends them inwards so they meet at a single point called the <strong>focus</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Which part of the eye does most of the focusing as light enters?</summary>
+        <div class="ans">The <strong>cornea</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the job of the iris?</summary>
+        <div class="ans">It controls the <strong>size of the pupil</strong>, changing how much light enters the eye (small in bright light, wide in the dark).</div>
+      </details></li>
+      <li><details>
+        <summary>Where in the eye is the image formed?</summary>
+        <div class="ans">On the <strong>retina</strong>, the light-sensitive layer at the back of the eye.</div>
+      </details></li>
+      <li><details>
+        <summary>What carries the signal from the eye to the brain?</summary>
+        <div class="ans">The <strong>optic nerve</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Describe the image formed by a pinhole camera.</summary>
+        <div class="ans">It is <strong>upside down (inverted)</strong> and left-right swapped, because rays from the object cross over at the pinhole.</div>
+      </details></li>
+      <li><details>
+        <summary>Why is the image in a pinhole camera inverted?</summary>
+        <div class="ans">Because light travels in <strong>straight lines</strong>, rays from the top of the object pass through the hole to the bottom of the screen (and vice versa), so the image is flipped.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — COLOUR & THE SPECTRUM                                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · Physics · Light</div>
+    <h2 class="lesson-title">Colour &amp; the <em>spectrum</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know that white light is a mix of colours, how a prism splits it, why objects look coloured, and what a colour filter really does.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>White light is a mixture</h3>
+    <p>White light, like sunlight, doesn't look like it has any colour in it — but it does. It's actually a <strong>mixture of all the colours</strong> mixed together. You can prove this by splitting it apart with a triangular block of glass called a <strong>prism</strong>.</p>
+    <p>As white light enters and leaves the prism it <strong>refracts</strong> (bends). Each colour bends by a slightly different amount — violet bends the most, red the least — so they spread out into a band of separate colours. This spreading-out is called <strong>dispersion</strong>, and the band of colours is the <strong>spectrum</strong>.</p>
+    <p>The colours of the spectrum, in order, are <strong>red, orange, yellow, green, blue, indigo, violet</strong> — remembered as <strong>ROYGBIV</strong>. A rainbow is the same thing made by raindrops acting like tiny prisms.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- White light source label -->
+        <text x="40" y="95" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">white</text>
+        <text x="40" y="109" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">light</text>
+        <!-- Incoming white ray -->
+        <line x1="80" y1="110" x2="215" y2="110" stroke="#5C6370" stroke-width="3"/>
+        <path d="M 205 104 L 218 110 L 205 116 Z" fill="#5C6370"/>
+        <!-- Prism (triangle) -->
+        <path d="M 250 50 L 215 160 L 305 160 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="257" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">prism</text>
+        <!-- Dispersed spectrum fanning out -->
+        <g stroke-width="3">
+          <line x1="288" y1="135" x2="500" y2="62" stroke="#B85042"/>
+          <line x1="289" y1="138" x2="500" y2="80" stroke="#E08A2A"/>
+          <line x1="290" y1="141" x2="500" y2="98" stroke="#C8A24A"/>
+          <line x1="291" y1="144" x2="500" y2="116" stroke="#2C5F2D"/>
+          <line x1="292" y1="147" x2="500" y2="134" stroke="#2a3478"/>
+          <line x1="293" y1="150" x2="500" y2="152" stroke="#1E2761"/>
+          <line x1="294" y1="153" x2="500" y2="170" stroke="#5B3A8A"/>
+        </g>
+        <!-- Spectrum labels -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">
+          <text x="508" y="65">red</text>
+          <text x="508" y="83">orange</text>
+          <text x="508" y="101">yellow</text>
+          <text x="508" y="119">green</text>
+          <text x="508" y="137">blue</text>
+          <text x="508" y="155">indigo</text>
+          <text x="508" y="173">violet</text>
+        </g>
+        <text x="280" y="210" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">a prism disperses white light into the spectrum (ROYGBIV)</text>
+      </svg>
+      <div class="caption">A prism splitting white light into the spectrum</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Prism</dt>
+        <dd>A triangular block of glass that splits white light into a spectrum.</dd>
+        <dt>Dispersion</dt>
+        <dd>The splitting of white light into separate colours, because each colour refracts by a different amount.</dd>
+        <dt>Spectrum</dt>
+        <dd>The band of colours that make up white light: red, orange, yellow, green, blue, indigo, violet (ROYGBIV).</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Why objects look coloured</h3>
+    <p>Now the key idea: a coloured object does not <em>make</em> its own colour. When white light lands on it, the object <strong>reflects some colours and absorbs the rest</strong>. The colour you see is the colour it reflects into your eyes.</p>
+    <p>· A <strong>red</strong> jumper reflects red light and absorbs all the other colours.<br>
+    · A <strong>green</strong> leaf reflects green light and absorbs the rest.<br>
+    · A <strong>white</strong> object reflects all the colours equally.<br>
+    · A <strong>black</strong> object absorbs all the colours and reflects almost none — which is why black objects warm up fastest in the Sun.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- White light arriving -->
+        <text x="40" y="50" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">white light in</text>
+        <g stroke-width="2.5">
+          <line x1="70" y1="70" x2="230" y2="100" stroke="#B85042"/>
+          <line x1="70" y1="85" x2="230" y2="100" stroke="#2C5F2D"/>
+          <line x1="70" y1="100" x2="230" y2="100" stroke="#2a3478"/>
+        </g>
+        <!-- Red object -->
+        <rect x="230" y="70" width="90" height="90" rx="6" fill="#B85042" stroke="#1E2761" stroke-width="2"/>
+        <text x="275" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#FCFAF4">RED</text>
+        <text x="275" y="136" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#FCFAF4">object</text>
+        <!-- Reflected red ray to eye -->
+        <line x1="320" y1="100" x2="470" y2="60" stroke="#B85042" stroke-width="3"/>
+        <path d="M 460 56 L 472 59 L 462 68 Z" fill="#B85042"/>
+        <text x="400" y="50" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#B85042">red reflected</text>
+        <!-- Absorbed colours (small arrows stopping inside) -->
+        <g stroke-width="2" stroke-dasharray="3 3">
+          <line x1="260" y1="100" x2="290" y2="100" stroke="#2C5F2D" opacity="0.8"/>
+          <line x1="260" y1="112" x2="290" y2="112" stroke="#2a3478" opacity="0.8"/>
+        </g>
+        <text x="275" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">other colours absorbed</text>
+        <!-- Eye -->
+        <ellipse cx="495" cy="60" rx="20" ry="13" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="495" cy="60" r="5" fill="#1E2761"/>
+        <text x="495" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">eye sees red</text>
+        <text x="280" y="196" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">a red object reflects red and absorbs the other colours</text>
+      </svg>
+      <div class="caption">An object reflects its own colour and absorbs the rest</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Colour filters</h3>
+    <p>A <strong>colour filter</strong> is a piece of transparent coloured plastic or glass. It works in the same way as a coloured object: it <strong>lets its own colour through and absorbs the others</strong>.</p>
+    <p>A <strong>red filter</strong> lets red light pass through and absorbs all the other colours. So if you shine white light through a red filter, only red comes out the other side. A green filter only lets green through, and so on.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — a filter ABSORBS colours, it doesn't ADD them</h4>
+      <p>A common mistake is to think a red filter "adds red" or "turns the light red". It doesn't add anything — it <strong>removes the colours it isn't</strong>. A red filter lets red through and <strong>absorbs the rest</strong>; red was already in the white light. In the same way, a black object isn't "without colour" — it <strong>absorbs all the colours</strong> and reflects almost none.</p>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 3</h4>
+      <dl>
+        <dt>Colour filter</dt>
+        <dd>Transparent coloured material that lets its own colour through and absorbs the others.</dd>
+        <dt>Absorb</dt>
+        <dd>To take in light energy rather than reflect it or let it through.</dd>
+      </dl>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">White light is shone through a blue filter. What comes out the other side, and why?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Blue light — the filter adds blue to the beam</span></li>
+        <li><span class="letter">B</span><span>Blue light — the filter lets blue through and absorbs the other colours</span></li>
+        <li><span class="letter">C</span><span>White light — filters don't change the colour</span></li>
+        <li><span class="letter">D</span><span>No light — the filter absorbs everything</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — blue light, because the filter lets blue through and absorbs the rest.</strong> The blue was already part of the white light. The filter doesn't <em>add</em> blue; it <em>removes</em> all the colours that aren't blue. <em>A is the classic trap — filters subtract colours, they never add them.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is white light made of?</summary>
+        <div class="ans">A <strong>mixture of all the colours</strong> of the spectrum.</div>
+      </details></li>
+      <li><details>
+        <summary>What does a prism do to white light, and what is this called?</summary>
+        <div class="ans">It splits white light into the <strong>spectrum</strong> (a band of colours). This splitting is called <strong>dispersion</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>List the colours of the spectrum in order.</summary>
+        <div class="ans"><strong>Red, orange, yellow, green, blue, indigo, violet</strong> (ROYGBIV).</div>
+      </details></li>
+      <li><details>
+        <summary>Why does a red jumper look red in white light?</summary>
+        <div class="ans">It <strong>reflects red light</strong> into your eyes and <strong>absorbs all the other colours</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does a black object look black, and why does it warm up quickly in sunlight?</summary>
+        <div class="ans">It <strong>absorbs all the colours</strong> of light and reflects almost none, so it looks black. Because it absorbs that light energy, it warms up faster than a light-coloured object.</div>
+      </details></li>
+      <li><details>
+        <summary>What does a green colour filter do to white light?</summary>
+        <div class="ans">It lets <strong>green light through</strong> and <strong>absorbs all the other colours</strong>, so only green comes out.</div>
+      </details></li>
+      <li><details>
+        <summary>A student says "a red filter adds red light to the beam." Are they right? Explain.</summary>
+        <div class="ans"><strong>No.</strong> A filter doesn't add any colour. The red filter <strong>lets red through and absorbs the rest</strong> — the red was already in the white light.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>Year 8 Physics · Light</p>
+  <p>A revision booklet</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'light-y8-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+</body>
+</html>

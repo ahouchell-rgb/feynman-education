@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digestion — Year 8 Revision</title>
+<meta name="description" content="A Year 8 revision booklet on digestion — five short topics covering why we digest food, the journey of food through the gut, mechanical and chemical digestion, the adaptations of the small intestine, and gut bacteria.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Year 8 · Biology · Digestion</div>
+    <h1>Digestion, <em>but bitesize.</em></h1>
+    <p class="tag">A revision booklet — five short topics, from why we digest food to the trillions of helpful bacteria living in your gut.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Take it one topic at a time.</strong> There are five topics. Each one is short — about 10 minutes. Do one or two a day.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Why we digest</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Journey of food</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Mechanical &amp; chemical</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Small intestine</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Gut bacteria</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — WHY WE DIGEST FOOD                                            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · B · Digestion</div>
+    <h2 class="lesson-title">Why we <em>digest food</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know why your food has to be broken down, and how each type of food is broken into the small molecules your body can actually use.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Food is too big to use</h3>
+    <p>Think about a mouthful of bread. It's solid, it's bulky, and it's made of huge molecules. Your body can't use it like that. Every cell in your body needs feeding — but cells are tiny, and they're fed by your <strong>blood</strong>. So whatever you eat has to get into your blood first.</p>
+    <p>Here's the problem: the molecules in food are <strong>large</strong> and <strong>insoluble</strong> — they don't dissolve, and they're far too big to pass through the wall of your gut into the blood. A whole chunk of bread simply can't fit through.</p>
+    <p>So your body does something clever. It breaks the large molecules down into <strong>small</strong>, <strong>soluble</strong> ones — small enough to slip through the gut wall and dissolve into the blood. That breaking-down process is called <strong>digestion</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <!-- Gut wall line -->
+        <line x1="280" y1="20" x2="280" y2="210" stroke="#1E2761" stroke-width="2" stroke-dasharray="4 4"/>
+        <text x="280" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#1E2761" letter-spacing="1">GUT WALL</text>
+        <text x="120" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">INSIDE THE GUT</text>
+        <text x="430" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#B85042" letter-spacing="1">BLOOD</text>
+
+        <!-- Big molecule (left) -->
+        <g>
+          <circle cx="90" cy="90" r="20" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <circle cx="120" cy="80" r="20" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <circle cx="110" cy="115" r="20" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <circle cx="80" cy="120" r="20" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="100" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">LARGE molecule</text>
+          <text x="100" y="176" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">insoluble · too big</text>
+        </g>
+
+        <!-- Arrow: digestion -->
+        <line x1="150" y1="100" x2="230" y2="100" stroke="#B85042" stroke-width="2.5" marker-end="url(#arrowR1)"/>
+        <text x="190" y="92" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#B85042">digestion</text>
+
+        <!-- Small molecules crossing -->
+        <g fill="#C8A24A" stroke="#1E2761" stroke-width="1.5">
+          <circle cx="250" cy="60" r="7"/>
+          <circle cx="265" cy="95" r="7"/>
+          <circle cx="252" cy="130" r="7"/>
+          <circle cx="268" cy="165" r="7"/>
+          <!-- crossed into blood -->
+          <circle cx="320" cy="70" r="7"/>
+          <circle cx="350" cy="110" r="7"/>
+          <circle cx="330" cy="150" r="7"/>
+          <circle cx="370" cy="80" r="7"/>
+        </g>
+        <text x="345" y="195" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">SMALL molecules</text>
+        <text x="345" y="211" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">soluble · cross into blood</text>
+
+        <!-- arrow marker def -->
+        <defs>
+          <marker id="arrowR1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#B85042"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="caption">Big insoluble molecules → small soluble molecules that cross into the blood</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Digestion</dt>
+        <dd>Breaking large, insoluble food molecules into small, soluble ones the body can absorb.</dd>
+        <dt>Soluble</dt>
+        <dd>Able to dissolve. Small molecules are soluble, so they can pass into the blood.</dd>
+        <dt>Absorption</dt>
+        <dd>When the small, soluble molecules pass through the gut wall into the blood.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Each food breaks into its own pieces</h3>
+    <p>Not all food is the same, so it doesn't all break into the same thing. The three main food groups each break down into their own small building blocks:</p>
+    <p>· <strong>Carbohydrates</strong> (like bread, pasta, rice) break down into <strong>sugars</strong>.<br>
+    · <strong>Proteins</strong> (like meat, eggs, beans) break down into <strong>amino acids</strong>.<br>
+    · <strong>Fats</strong> (like oil, butter, cheese) break down into <strong>fatty acids</strong> (and glycerol).</p>
+    <p>Once these small molecules are in the blood, the body uses them. Sugars give you <strong>energy</strong>; amino acids are used to <strong>build and repair</strong> your body; fatty acids store energy and build cell membranes.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Carbohydrate row -->
+        <g>
+          <rect x="20" y="20" width="150" height="40" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="95" y="45" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">CARBOHYDRATE</text>
+          <line x1="180" y1="40" x2="240" y2="40" stroke="#B85042" stroke-width="2.5" marker-end="url(#arrowR2)"/>
+          <rect x="250" y="20" width="150" height="40" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+          <text x="325" y="45" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">sugars</text>
+        </g>
+        <!-- Protein row -->
+        <g>
+          <rect x="20" y="80" width="150" height="40" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="95" y="105" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">PROTEIN</text>
+          <line x1="180" y1="100" x2="240" y2="100" stroke="#B85042" stroke-width="2.5" marker-end="url(#arrowR2)"/>
+          <rect x="250" y="80" width="150" height="40" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+          <text x="325" y="105" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">amino acids</text>
+        </g>
+        <!-- Fat row -->
+        <g>
+          <rect x="20" y="140" width="150" height="40" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="95" y="165" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">FAT</text>
+          <line x1="180" y1="160" x2="240" y2="160" stroke="#B85042" stroke-width="2.5" marker-end="url(#arrowR2)"/>
+          <rect x="250" y="140" width="150" height="40" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+          <text x="325" y="165" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">fatty acids</text>
+        </g>
+        <!-- Side note -->
+        <text x="480" y="90" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#5C6370">big food →</text>
+        <text x="480" y="112" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#5C6370">small blocks</text>
+        <defs>
+          <marker id="arrowR2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#B85042"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="caption">Each food group breaks into its own small, soluble building blocks</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — food doesn't enter your blood unchanged</h4>
+      <p>A common mistake is thinking the food you eat goes straight into your blood as-is. It doesn't. The bread, the chicken, the chips — all of it has to be <strong>broken down into small molecules first</strong>. Only sugars, amino acids and fatty acids can cross the gut wall, never a whole lump of food.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why must your food be broken down before it can reach your cells?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>To make it taste better</span></li>
+        <li><span class="letter">B</span><span>Because large molecules are insoluble and too big to pass into the blood</span></li>
+        <li><span class="letter">C</span><span>So it can be stored in the stomach for longer</span></li>
+        <li><span class="letter">D</span><span>It doesn't — food passes into the blood exactly as you eat it</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — large molecules are insoluble and too big to pass into the blood.</strong> Digestion turns them into small, soluble molecules that can cross the gut wall and dissolve into the blood, which carries them to your cells. <em>D is the trap — food is never absorbed unchanged.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is digestion?</summary>
+        <div class="ans">Breaking <strong>large, insoluble</strong> food molecules into <strong>small, soluble</strong> ones the body can absorb.</div>
+      </details></li>
+      <li><details>
+        <summary>Why can't large food molecules pass into the blood?</summary>
+        <div class="ans">They are <strong>too big</strong> and <strong>insoluble</strong>, so they cannot pass through the gut wall.</div>
+      </details></li>
+      <li><details>
+        <summary>What do carbohydrates break down into?</summary>
+        <div class="ans"><strong>Sugars</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What do proteins break down into?</summary>
+        <div class="ans"><strong>Amino acids</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What do fats break down into?</summary>
+        <div class="ans"><strong>Fatty acids</strong> (and glycerol).</div>
+      </details></li>
+      <li><details>
+        <summary>A student says, "When I eat a sandwich, the sandwich goes straight into my blood." Why are they wrong?</summary>
+        <div class="ans">The sandwich is made of <strong>large, insoluble molecules</strong> that are too big to enter the blood. It must first be <strong>digested</strong> into small, soluble molecules (sugars, amino acids, fatty acids) before anything can be absorbed.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — THE JOURNEY OF FOOD                                           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · B · Digestion</div>
+    <h2 class="lesson-title">The <em>journey of food</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know the path food takes through your body, and what happens at each stop along the way.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>One long tube</h3>
+    <p>Your digestive system is basically one long tube running from your mouth to your bottom — about nine metres of it, coiled up inside you. Food travels along it in one direction, getting broken down and absorbed as it goes. The order is always the same:</p>
+    <p style="text-align:center"><span class="formula">mouth → oesophagus → stomach → small intestine → large intestine → rectum → anus</span></p>
+    <p>It helps to think of it as a journey with stops. At each stop, something different happens to the food.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Mouth -->
+        <circle cx="120" cy="35" r="20" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="120" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">MOUTH</text>
+        <text x="160" y="40" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">chewing &amp; saliva</text>
+        <!-- Oesophagus -->
+        <rect x="110" y="55" width="20" height="55" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="160" y="88" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">oesophagus — peristalsis</text>
+        <text x="100" y="85" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">food pipe</text>
+        <!-- Stomach -->
+        <path d="M 120 110 Q 90 120 95 150 Q 100 180 130 175 Q 150 170 145 140 Q 142 118 120 110 Z" fill="#F4DAD7" stroke="#1E2761" stroke-width="2"/>
+        <text x="118" y="148" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">STOMACH</text>
+        <text x="170" y="148" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">churning &amp; acid</text>
+        <!-- Small intestine (coiled) -->
+        <path d="M 130 175 Q 160 200 130 215 Q 95 230 130 245 Q 165 260 125 270" fill="none" stroke="#C8A24A" stroke-width="9" stroke-linecap="round"/>
+        <text x="118" y="292" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">SMALL INTESTINE</text>
+        <text x="200" y="225" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">digestion &amp; absorption</text>
+        <!-- Large intestine (frame) -->
+        <path d="M 70 175 L 70 270 L 125 270" fill="none" stroke="#1E2761" stroke-width="11" stroke-linecap="round"/>
+        <text x="200" y="252" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">large intestine — water absorbed</text>
+        <!-- Rectum / anus -->
+        <text x="200" y="278" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">rectum → anus — faeces leave</text>
+
+        <!-- Pathway list -->
+        <g font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#1A1A1A">
+          <text x="380" y="40" font-weight="700" fill="#1E2761">THE ROUTE</text>
+          <text x="380" y="66">1 · mouth</text>
+          <text x="380" y="88">2 · oesophagus</text>
+          <text x="380" y="110">3 · stomach</text>
+          <text x="380" y="132">4 · small intestine</text>
+          <text x="380" y="154">5 · large intestine</text>
+          <text x="380" y="176">6 · rectum</text>
+          <text x="380" y="198">7 · anus</text>
+        </g>
+        <text x="430" y="232" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">one tube,</text>
+        <text x="430" y="252" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">one direction,</text>
+        <text x="430" y="272" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">mouth to anus</text>
+      </svg>
+      <div class="caption">The digestive system — food travels in one direction through each part</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>What happens at each stop</h3>
+    <p><strong>Mouth.</strong> Your teeth <strong>chew</strong> the food into smaller pieces. <strong>Saliva</strong> wets it so it's easy to swallow, and starts breaking down starch.</p>
+    <p><strong>Oesophagus.</strong> When you swallow, the food is squeezed down this tube by waves of muscle called <strong>peristalsis</strong>. This is why you can swallow even upside down — it isn't gravity, it's muscle.</p>
+    <p><strong>Stomach.</strong> A muscular bag that <strong>churns</strong> the food and mixes it with acid and juices, turning it into a soupy liquid.</p>
+    <p><strong>Small intestine.</strong> The main event. Most <strong>digestion is finished here</strong>, and the small, soluble molecules are <strong>absorbed</strong> into the blood.</p>
+    <p><strong>Large intestine.</strong> Whatever's left is mostly water and waste. The large intestine <strong>absorbs the water</strong> back into the body, leaving solid waste behind.</p>
+    <p><strong>Rectum &amp; anus.</strong> The solid waste, called <strong>faeces</strong>, is stored in the rectum and leaves the body through the anus.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Peristalsis</dt>
+        <dd>Waves of muscle squeezing food along the gut. It's how food moves, not gravity.</dd>
+        <dt>Faeces</dt>
+        <dd>The solid waste left after digestion and water absorption — what leaves through the anus.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — digestion doesn't only happen in the stomach</h4>
+      <p>It's easy to think the stomach does all the work. It doesn't. The stomach churns and mixes, but <strong>most digestion is finished — and almost all absorption happens — in the small intestine</strong>. The stomach is just one stop on the journey.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Put these in the correct order: stomach, mouth, small intestine, oesophagus.</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>mouth → stomach → oesophagus → small intestine</span></li>
+        <li><span class="letter">B</span><span>mouth → oesophagus → stomach → small intestine</span></li>
+        <li><span class="letter">C</span><span>oesophagus → mouth → stomach → small intestine</span></li>
+        <li><span class="letter">D</span><span>mouth → small intestine → stomach → oesophagus</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — mouth → oesophagus → stomach → small intestine.</strong> Food is chewed in the mouth, swallowed down the oesophagus by peristalsis, churned in the stomach, then digested and absorbed in the small intestine. <em>Remember: the oesophagus is the pipe between mouth and stomach.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>List, in order, the parts food passes through from mouth to anus.</summary>
+        <div class="ans"><strong>Mouth → oesophagus → stomach → small intestine → large intestine → rectum → anus</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What two things happen to food in the mouth?</summary>
+        <div class="ans">It is <strong>chewed</strong> by the teeth into smaller pieces, and mixed with <strong>saliva</strong> to make it easy to swallow (and start breaking down starch).</div>
+      </details></li>
+      <li><details>
+        <summary>What is peristalsis?</summary>
+        <div class="ans">Waves of <strong>muscle contraction</strong> that squeeze food along the gut, for example down the oesophagus.</div>
+      </details></li>
+      <li><details>
+        <summary>What happens to food in the stomach?</summary>
+        <div class="ans">It is <strong>churned</strong> and mixed with acid and digestive juices, turning it into a soupy liquid.</div>
+      </details></li>
+      <li><details>
+        <summary>Where does most absorption of food molecules take place?</summary>
+        <div class="ans">In the <strong>small intestine</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the main job of the large intestine?</summary>
+        <div class="ans">To <strong>absorb water</strong> back into the body from the leftover waste, leaving solid faeces behind.</div>
+      </details></li>
+      <li><details>
+        <summary>You can swallow a drink while lying down or even upside down. Explain why.</summary>
+        <div class="ans">Food and drink are moved along the oesophagus by <strong>peristalsis</strong> — waves of muscle — not by gravity, so the direction you're facing doesn't matter.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — MECHANICAL AND CHEMICAL DIGESTION                             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · B · Digestion</div>
+    <h2 class="lesson-title">Mechanical &amp; <em>chemical digestion</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know the two ways food gets broken down, why both are needed, and what enzymes do.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Two ways to break food down</h3>
+    <p>Your body breaks food down in <strong>two different ways</strong>, and they work as a team.</p>
+    <p><strong>Mechanical digestion</strong> is the <strong>physical</strong> breaking up of food. Your <strong>teeth</strong> cut and grind it, and your <strong>stomach</strong> churns it. This doesn't change what the food is made of — it just smashes it into smaller pieces.</p>
+    <p>Why bother? Smaller pieces have a bigger <strong>surface area</strong>. The more surface there is, the more places the chemicals can attack at once — so chemical digestion happens faster.</p>
+    <p><strong>Chemical digestion</strong> is where the actual molecules get broken apart. Special <strong>digestive juices</strong> contain <strong>enzymes</strong> that break the <strong>bonds</strong> holding big molecules together. Mechanical makes the pieces small; chemical changes what they're made of.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- MECHANICAL side -->
+        <text x="140" y="24" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#1E2761" letter-spacing="1">MECHANICAL</text>
+        <!-- one big block -> several blocks -->
+        <rect x="55" y="55" width="50" height="50" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="115" y1="80" x2="155" y2="80" stroke="#B85042" stroke-width="2.5" marker-end="url(#arrowR3)"/>
+        <g fill="#EDF2FA" stroke="#1E2761" stroke-width="2">
+          <rect x="165" y="55" width="22" height="22" rx="3"/>
+          <rect x="192" y="55" width="22" height="22" rx="3"/>
+          <rect x="165" y="82" width="22" height="22" rx="3"/>
+          <rect x="192" y="82" width="22" height="22" rx="3"/>
+        </g>
+        <text x="140" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">same stuff, smaller pieces</text>
+        <text x="140" y="148" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">teeth · churning → bigger surface area</text>
+
+        <!-- divider -->
+        <line x1="280" y1="40" x2="280" y2="190" stroke="#CFD8E3" stroke-width="1.5"/>
+
+        <!-- CHEMICAL side -->
+        <text x="420" y="24" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042" letter-spacing="1">CHEMICAL</text>
+        <!-- chain of beads -> single beads -->
+        <g fill="#F2E6BD" stroke="#1E2761" stroke-width="2">
+          <circle cx="335" cy="80" r="11"/>
+          <circle cx="357" cy="80" r="11"/>
+          <circle cx="379" cy="80" r="11"/>
+        </g>
+        <text x="357" y="108" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">bonds</text>
+        <line x1="395" y1="80" x2="430" y2="80" stroke="#B85042" stroke-width="2.5" marker-end="url(#arrowR3)"/>
+        <text x="412" y="70" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#B85042">enzyme</text>
+        <g fill="#F2E6BD" stroke="#1E2761" stroke-width="2">
+          <circle cx="450" cy="62" r="11"/>
+          <circle cx="478" cy="80" r="11"/>
+          <circle cx="455" cy="100" r="11"/>
+        </g>
+        <text x="420" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">bonds broken — new molecules</text>
+        <text x="420" y="148" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">enzymes break the bonds</text>
+
+        <defs>
+          <marker id="arrowR3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#B85042"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="caption">Mechanical breaks pieces smaller · chemical breaks the bonds inside molecules</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Mechanical digestion</dt>
+        <dd>Physically breaking food into smaller pieces (teeth, stomach churning). Increases surface area.</dd>
+        <dt>Chemical digestion</dt>
+        <dd>Breaking the bonds inside molecules using digestive juices and enzymes.</dd>
+        <dt>Surface area</dt>
+        <dd>The total amount of surface on the outside of the pieces. More surface = faster chemical digestion.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Enzymes: the biological breakers</h3>
+    <p>An <strong>enzyme</strong> is a special molecule made by your body that <strong>speeds up</strong> the breaking of food. Think of enzymes as tiny biological scissors — they snip the big molecules into small ones, far faster than would happen on its own.</p>
+    <p>Different enzymes do different jobs: one type breaks down carbohydrates, another breaks down proteins, another breaks down fats. Each one is fussy and only works on its own kind of food.</p>
+    <p>A couple of other organs help out. The <strong>pancreas</strong> makes lots of digestive juices full of enzymes and releases them into the small intestine. The <strong>liver</strong> makes <strong>bile</strong>, a green liquid that breaks large fat droplets into tiny ones — that's mechanical digestion of fat, giving the fat-digesting enzymes a bigger surface area to work on.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — mechanical and chemical are not the same thing</h4>
+      <p>Chewing and churning are <strong>mechanical</strong> — they only change the <strong>size</strong> of the pieces, not what the food is made of. Enzymes are <strong>chemical</strong> — they break the <strong>bonds</strong> and change the molecules into something new. Both are needed: the mechanical part makes the chemical part work faster.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why does chewing your food help chemical digestion happen faster?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Because chewing adds enzymes to the food</span></li>
+        <li><span class="letter">B</span><span>Because smaller pieces have a larger surface area for enzymes to act on</span></li>
+        <li><span class="letter">C</span><span>Because chewing makes the food warmer</span></li>
+        <li><span class="letter">D</span><span>It doesn't — chewing has nothing to do with chemical digestion</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — smaller pieces have a larger surface area for enzymes to act on.</strong> Chewing is mechanical digestion. It breaks food into smaller pieces, increasing the surface area, so the enzymes can break the bonds in more places at once. <em>Mechanical and chemical digestion work as a team.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is mechanical digestion?</summary>
+        <div class="ans">The <strong>physical breaking</strong> of food into smaller pieces — by the teeth and by the churning of the stomach.</div>
+      </details></li>
+      <li><details>
+        <summary>What is chemical digestion?</summary>
+        <div class="ans">Breaking the <strong>bonds inside molecules</strong> using digestive juices and <strong>enzymes</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Give two examples of mechanical digestion.</summary>
+        <div class="ans">Any two from: <strong>chewing with teeth</strong>, <strong>churning in the stomach</strong>, bile breaking large fat droplets into smaller ones.</div>
+      </details></li>
+      <li><details>
+        <summary>What is an enzyme?</summary>
+        <div class="ans">A molecule made by the body that <strong>speeds up</strong> the breaking down of food, by breaking the bonds in large molecules. (Like tiny biological scissors.)</div>
+      </details></li>
+      <li><details>
+        <summary>Why does mechanical digestion make chemical digestion faster?</summary>
+        <div class="ans">It breaks food into smaller pieces, which <strong>increases the surface area</strong>, so enzymes can act on more of the food at once.</div>
+      </details></li>
+      <li><details>
+        <summary>What does the liver make, and what does it do?</summary>
+        <div class="ans">The liver makes <strong>bile</strong>, which breaks large fat droplets into tiny ones (increasing their surface area for fat-digesting enzymes).</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — ADAPTATIONS OF THE SMALL INTESTINE                            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · B · Digestion</div>
+    <h2 class="lesson-title">The <em>small intestine</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know how the small intestine is built for absorption, what a villus is, and how surface area and diffusion make it so efficient.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Built for absorption</h3>
+    <p>The small intestine has one big job: to <strong>absorb</strong> the small, soluble molecules into the blood. To do that as fast as possible, it is brilliantly designed.</p>
+    <p>First, it is <strong>very long</strong> — around five metres. A longer tube means more time and more space for absorption.</p>
+    <p>Second, its inside wall isn't smooth. It's covered in <strong>millions of tiny finger-like bumps called villi</strong> (one of them is a <strong>villus</strong>). These villi massively increase the <strong>surface area</strong> — like the way a folded, crinkled towel has far more surface than a flat sheet of the same size. More surface area means more absorption can happen at once.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <!-- A single villus, cross-section -->
+        <!-- gut interior label -->
+        <text x="160" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">FOOD IN THE GUT</text>
+        <!-- villus body -->
+        <path d="M 120 230 L 120 90 Q 120 45 160 45 Q 200 45 200 90 L 200 230 Z" fill="#F4DAD7" stroke="#1E2761" stroke-width="2.5"/>
+        <!-- thin wall note (one cell thick) -->
+        <path d="M 120 90 Q 120 45 160 45 Q 200 45 200 90" fill="none" stroke="#1E2761" stroke-width="5"/>
+        <text x="248" y="55" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">thin wall</text>
+        <text x="248" y="71" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">one cell thick</text>
+        <line x1="205" y1="60" x2="244" y2="58" stroke="#5C6370" stroke-width="1"/>
+        <!-- blood vessel inside -->
+        <path d="M 160 215 L 160 95 Q 160 75 175 75" fill="none" stroke="#B85042" stroke-width="6" stroke-linecap="round"/>
+        <text x="248" y="120" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">rich blood supply</text>
+        <text x="248" y="136" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">carries molecules away</text>
+        <line x1="166" y1="120" x2="244" y2="124" stroke="#5C6370" stroke-width="1"/>
+        <!-- nutrient molecules diffusing in -->
+        <g fill="#C8A24A" stroke="#1E2761" stroke-width="1.2">
+          <circle cx="95" cy="100" r="6"/>
+          <circle cx="100" cy="140" r="6"/>
+          <circle cx="92" cy="180" r="6"/>
+          <circle cx="225" cy="120" r="6"/>
+          <circle cx="222" cy="165" r="6"/>
+        </g>
+        <!-- diffusion arrows into villus -->
+        <line x1="103" y1="105" x2="125" y2="110" stroke="#1E2761" stroke-width="1.5" marker-end="url(#arrowR4)"/>
+        <line x1="108" y1="142" x2="128" y2="142" stroke="#1E2761" stroke-width="1.5" marker-end="url(#arrowR4)"/>
+        <line x1="217" y1="122" x2="197" y2="124" stroke="#1E2761" stroke-width="1.5" marker-end="url(#arrowR4)"/>
+        <text x="160" y="248" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">A VILLUS (cross-section)</text>
+        <!-- short caption text right -->
+        <text x="430" y="175" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">small molecules</text>
+        <text x="430" y="195" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">diffuse through the</text>
+        <text x="430" y="215" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">thin wall into the blood</text>
+        <defs>
+          <marker id="arrowR4" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#1E2761"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="caption">A single villus — thin wall, rich blood supply, huge surface area</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Thin walls, rich blood supply, diffusion</h3>
+    <p>Look closely at one villus and you'll see two more clever features.</p>
+    <p>The wall of a villus is <strong>very thin — just one cell thick</strong>. That means the small molecules have only a tiny distance to travel to get from the gut into the blood.</p>
+    <p>Inside each villus is a <strong>rich blood supply</strong> — lots of tiny blood vessels. As soon as molecules cross into the blood, they're swept away and carried off around the body. This keeps the inside of the villus "empty," so more molecules keep flowing in.</p>
+    <p>The molecules move across by <strong>diffusion</strong> — they spread from where there are lots of them (the gut) to where there are fewer (the blood). A big surface area, a thin wall and a steep difference in amount all make diffusion fast. This is exactly why <strong>surface-area-to-volume ratio</strong> matters: the villi give a huge surface for the volume they take up.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Villus (plural: villi)</dt>
+        <dd>A tiny finger-like bump on the inside of the small intestine that increases surface area for absorption.</dd>
+        <dt>Diffusion</dt>
+        <dd>The spreading of molecules from where there are many to where there are fewer.</dd>
+        <dt>Surface area to volume</dt>
+        <dd>How much surface there is compared to the size of the object. Villi give a huge surface area, so absorption is fast.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — villi absorb, they don't digest</h4>
+      <p>A very common slip is to say the villi "digest" the food. They don't. By the time food reaches the villi it has <strong>already been digested</strong> into small, soluble molecules. The villi's job is to <strong>absorb</strong> those finished molecules into the blood — absorption, not digestion.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which feature of a villus is NOT a reason it absorbs food quickly?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It has a thin wall, one cell thick</span></li>
+        <li><span class="letter">B</span><span>It has a rich blood supply</span></li>
+        <li><span class="letter">C</span><span>There are millions of them, giving a huge surface area</span></li>
+        <li><span class="letter">D</span><span>It makes its own enzymes to digest the food first</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>D — making enzymes to digest the food is not the villus's absorbing feature.</strong> Villi <em>absorb</em> already-digested molecules; they don't digest. A, B and C are all genuine adaptations for fast absorption: thin wall (short distance), rich blood supply (carries molecules away), and huge surface area (millions of villi). <em>These all speed up diffusion.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is the main job of the small intestine?</summary>
+        <div class="ans">To <strong>absorb</strong> the small, soluble food molecules into the blood (and to finish digestion).</div>
+      </details></li>
+      <li><details>
+        <summary>What is a villus?</summary>
+        <div class="ans">A tiny <strong>finger-like bump</strong> on the inside wall of the small intestine that increases surface area for absorption.</div>
+      </details></li>
+      <li><details>
+        <summary>Name three adaptations of the small intestine for fast absorption.</summary>
+        <div class="ans">Any three from: it is <strong>very long</strong>; lined with <strong>millions of villi</strong> (huge surface area); villi have <strong>thin walls, one cell thick</strong>; villi have a <strong>rich blood supply</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Why do villi have walls only one cell thick?</summary>
+        <div class="ans">So the molecules have only a <strong>very short distance to travel</strong> to get from the gut into the blood, making absorption faster.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does each villus need a rich blood supply?</summary>
+        <div class="ans">To <strong>carry the absorbed molecules away quickly</strong>, keeping the difference in concentration high so more molecules keep diffusing in.</div>
+      </details></li>
+      <li><details>
+        <summary>By what process do food molecules move from the small intestine into the blood?</summary>
+        <div class="ans"><strong>Diffusion</strong> — they spread from where there are many (the gut) to where there are fewer (the blood).</div>
+      </details></li>
+      <li><details>
+        <summary>A student writes "the villi digest the food." Correct them.</summary>
+        <div class="ans">The villi do <strong>not</strong> digest food. The food is <strong>already digested</strong> into small molecules by the time it reaches them. The villi's job is to <strong>absorb</strong> those molecules into the blood.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — GUT BACTERIA (THE MICROBIOME)                                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · B · Digestion</div>
+    <h2 class="lesson-title">Gut bacteria, the <em>microbiome</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what the microbiome is, the helpful jobs gut bacteria do, and why a healthy balance matters.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Trillions of tiny helpers</h3>
+    <p>Here's something surprising: your gut is home to <strong>trillions of bacteria</strong>. That sounds alarming — aren't bacteria the things that make you ill? Some are. But most of the bacteria living in your gut are <strong>helpful</strong>, and you couldn't be fully healthy without them.</p>
+    <p>This huge community of bacteria is called your <strong>microbiome</strong>. It mostly lives in the large intestine, and it does several useful jobs:</p>
+    <p>· It helps <strong>break down food</strong> that your own body can't digest on its own (like some tough plant fibre).<br>
+    · It <strong>makes some vitamins</strong> for you, such as certain B vitamins and vitamin K.<br>
+    · It <strong>protects against harmful microbes</strong> by crowding them out — there's no room for the bad bacteria to settle when the good ones are already there.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- HEALTHY balance (left) -->
+        <text x="150" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#2C5F2D" letter-spacing="1">HEALTHY BALANCE</text>
+        <rect x="40" y="38" width="220" height="120" rx="10" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <!-- many helpful bacteria (green) -->
+        <g fill="#2C5F2D">
+          <ellipse cx="70" cy="70" rx="12" ry="7"/>
+          <ellipse cx="110" cy="95" rx="12" ry="7"/>
+          <ellipse cx="150" cy="65" rx="12" ry="7"/>
+          <ellipse cx="190" cy="100" rx="12" ry="7"/>
+          <ellipse cx="230" cy="70" rx="12" ry="7"/>
+          <ellipse cx="85" cy="130" rx="12" ry="7"/>
+          <ellipse cx="135" cy="125" rx="12" ry="7"/>
+          <ellipse cx="195" cy="135" rx="12" ry="7"/>
+          <ellipse cx="235" cy="120" rx="12" ry="7"/>
+        </g>
+        <!-- one tiny harmful (red) crowded out -->
+        <ellipse cx="160" cy="100" rx="9" ry="5" fill="#B85042"/>
+        <text x="150" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">lots of helpful bacteria</text>
+        <text x="150" y="196" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">harmful ones crowded out</text>
+
+        <!-- UNHEALTHY (right) -->
+        <text x="420" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042" letter-spacing="1">OUT OF BALANCE</text>
+        <rect x="310" y="38" width="220" height="120" rx="10" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <!-- few helpful (green) -->
+        <g fill="#2C5F2D">
+          <ellipse cx="345" cy="75" rx="12" ry="7"/>
+          <ellipse cx="500" cy="130" rx="12" ry="7"/>
+        </g>
+        <!-- many harmful (red) -->
+        <g fill="#B85042">
+          <ellipse cx="390" cy="70" rx="11" ry="6"/>
+          <ellipse cx="430" cy="95" rx="11" ry="6"/>
+          <ellipse cx="470" cy="68" rx="11" ry="6"/>
+          <ellipse cx="380" cy="125" rx="11" ry="6"/>
+          <ellipse cx="430" cy="135" rx="11" ry="6"/>
+          <ellipse cx="465" cy="120" rx="11" ry="6"/>
+        </g>
+        <text x="420" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">harmful bacteria take over</text>
+        <text x="420" y="196" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">more likely to feel ill</text>
+      </svg>
+      <div class="caption">A healthy microbiome keeps helpful bacteria in charge and harmful ones out</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Microbiome</dt>
+        <dd>The huge community of bacteria (mostly helpful) living in your gut.</dd>
+        <dt>Bacteria</dt>
+        <dd>Tiny living microbes. Some cause illness, but many — like those in your gut — are helpful.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Keeping the balance healthy</h3>
+    <p>A <strong>healthy microbiome</strong> is one where the helpful bacteria are thriving and in charge. When the balance is good, you digest food better, get a steady supply of those extra vitamins, and harmful microbes find it hard to take hold.</p>
+    <p>If the balance gets upset — for example after an illness — harmful bacteria can take over, which can leave you feeling unwell. This is one reason a varied diet with plenty of <strong>fibre</strong> matters: it feeds your helpful gut bacteria and helps keep them in the majority.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — not all bacteria are the enemy</h4>
+      <p>It's easy to think "bacteria = bad." In your gut, the opposite is mostly true. The <strong>majority of your gut bacteria are helpful</strong> — they aid digestion, make vitamins, and protect you. Keeping these good bacteria healthy is part of staying well.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which of these is NOT a job done by the helpful bacteria in your gut?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Helping to break down food the body can't digest alone</span></li>
+        <li><span class="letter">B</span><span>Making some vitamins</span></li>
+        <li><span class="letter">C</span><span>Protecting against harmful microbes</span></li>
+        <li><span class="letter">D</span><span>Pumping blood around the body</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>D — pumping blood is not a job of gut bacteria</strong> (that's the heart). The helpful bacteria of the microbiome do A, B and C: they help break down food, make some vitamins, and protect against harmful microbes by crowding them out. <em>A healthy microbiome keeps the good bacteria in the majority.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is the microbiome?</summary>
+        <div class="ans">The huge community of <strong>bacteria</strong> (trillions of them, mostly helpful) living in your gut.</div>
+      </details></li>
+      <li><details>
+        <summary>Are most gut bacteria helpful or harmful?</summary>
+        <div class="ans">Most are <strong>helpful</strong>. Only some bacteria cause illness.</div>
+      </details></li>
+      <li><details>
+        <summary>Give one way gut bacteria help with digestion.</summary>
+        <div class="ans">They help <strong>break down food</strong> that the body can't digest on its own, such as some tough plant fibre.</div>
+      </details></li>
+      <li><details>
+        <summary>Other than digestion, name two things helpful gut bacteria do.</summary>
+        <div class="ans">They <strong>make some vitamins</strong> (such as certain B vitamins and vitamin K) and <strong>protect against harmful microbes</strong> by crowding them out.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does a healthy microbiome matter?</summary>
+        <div class="ans">Helpful bacteria help you <strong>digest food, supply extra vitamins, and keep harmful microbes out</strong>. If the balance is upset, harmful bacteria can take over and make you feel unwell.</div>
+      </details></li>
+      <li><details>
+        <summary>A student says "all bacteria are bad for you." Explain why this is wrong.</summary>
+        <div class="ans">Many bacteria are <strong>helpful</strong>. The majority of bacteria in your gut aid digestion, make vitamins and protect against harmful microbes — you couldn't be fully healthy without them.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>Year 8 Biology · Digestion</p>
+  <p>A revision booklet</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'digestion-y8-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy resources — Year 8 Revision</title>
+<meta name="description" content="A Year 8 revision booklet on energy resources — five short topics covering fossil fuels, how power stations generate electricity, renewable vs non-renewable resources, kilowatt-hours and electricity bills, and heating and thermal equilibrium.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Year 8 · Physics · Energy resources &amp; heating</div>
+    <h1>Energy resources, <em>but bitesize.</em></h1>
+    <p class="tag">A revision booklet — five short topics, from where our energy comes from to how heat moves and why we insulate homes.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Take it one topic at a time.</strong> There are five topics. Each one is short — about 10 minutes. Do one or two a day.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Fossil fuels</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Generating electricity</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Renewable vs not</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">kWh &amp; bills</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Heating &amp; equilibrium</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — WHERE WE GET OUR ENERGY & FOSSIL FUELS                         -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · Physics · Energy resources</div>
+    <h2 class="lesson-title">Where we get our <em>energy</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what an energy resource is, what fossil fuels are and how they formed, and why burning them is a problem.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Energy resources</h3>
+    <p>Everything we do — heating homes, running cars, charging phones — needs energy. We get that energy from <strong>energy resources</strong>: the raw materials and natural sources we tap into to release useful energy.</p>
+    <p>The main ones you need to know are <strong>fossil fuels</strong> (coal, oil and natural gas), <strong>nuclear</strong> fuel, and the renewables: <strong>wind, solar, hydroelectric, tidal, geothermal</strong> and <strong>biomass</strong>. Right now, most of the world's energy still comes from burning fossil fuels.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Energy resource</dt>
+        <dd>A natural source we use to release useful energy — for example a fuel, the wind, or the Sun.</dd>
+        <dt>Fuel</dt>
+        <dd>A substance that stores energy and releases it when we burn it (or, for nuclear, when we split its atoms).</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>What are fossil fuels?</h3>
+    <p>The three fossil fuels are <strong>coal</strong>, <strong>oil</strong> (crude oil) and <strong>natural gas</strong>. They are called "fossil" fuels because they formed from the remains of living things — dead plants and tiny sea creatures — that were buried millions of years ago.</p>
+    <p>Over <strong>millions of years</strong>, heat and pressure from the rock above squashed and cooked those remains into coal, oil and gas. The energy locked inside them originally came from the <strong>Sun</strong>, captured by those plants and creatures when they were alive. When we burn a fossil fuel, we are releasing ancient, stored sunlight.</p>
+    <p>Because they take millions of years to form, fossil fuels are <strong>finite</strong> — once we have used them, they are gone on any human timescale. We say they are <strong>non-renewable</strong>: they are being used up far faster than they can ever be replaced.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Stage 1: living things -->
+        <g>
+          <rect x="20" y="60" width="150" height="120" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="95" y="48" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">MILLIONS OF YEARS AGO</text>
+          <!-- plant -->
+          <line x1="70" y1="155" x2="70" y2="110" stroke="#2C5F2D" stroke-width="3"/>
+          <circle cx="70" cy="105" r="12" fill="#2C5F2D"/>
+          <!-- sea creatures -->
+          <circle cx="115" cy="140" r="7" fill="#B85042"/>
+          <circle cx="135" cy="155" r="6" fill="#B85042"/>
+          <circle cx="120" cy="160" r="5" fill="#B85042"/>
+          <!-- sun -->
+          <circle cx="135" cy="85" r="11" fill="#C8A24A"/>
+          <g stroke="#C8A24A" stroke-width="1.5">
+            <line x1="135" y1="68" x2="135" y2="62"/>
+            <line x1="150" y1="78" x2="155" y2="74"/>
+            <line x1="120" y1="78" x2="115" y2="74"/>
+          </g>
+          <text x="95" y="173" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">dead plants &amp; sea life</text>
+        </g>
+        <!-- arrow -->
+        <g stroke="#1E2761" stroke-width="2" fill="none">
+          <line x1="180" y1="120" x2="215" y2="120"/>
+          <path d="M 210 114 L 218 120 L 210 126" />
+        </g>
+        <text x="198" y="108" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="11" fill="#5C6370">buried</text>
+        <!-- Stage 2: buried under rock -->
+        <g>
+          <rect x="228" y="60" width="150" height="120" rx="6" fill="#EFE8D6" stroke="#1E2761" stroke-width="2"/>
+          <!-- rock layers -->
+          <rect x="228" y="60" width="150" height="26" fill="#5C6370" opacity="0.35"/>
+          <rect x="228" y="86" width="150" height="22" fill="#5C6370" opacity="0.5"/>
+          <!-- pressure arrows -->
+          <g stroke="#B85042" stroke-width="2" fill="none">
+            <line x1="270" y1="40" x2="270" y2="58"/>
+            <path d="M 266 52 L 270 60 L 274 52" />
+            <line x1="335" y1="40" x2="335" y2="58"/>
+            <path d="M 331 52 L 335 60 L 339 52" />
+          </g>
+          <text x="303" y="135" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">heat + pressure</text>
+          <text x="303" y="153" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">over millions of years</text>
+        </g>
+        <!-- arrow -->
+        <g stroke="#1E2761" stroke-width="2" fill="none">
+          <line x1="388" y1="120" x2="423" y2="120"/>
+          <path d="M 418 114 L 426 120 L 418 126" />
+        </g>
+        <!-- Stage 3: the three fuels -->
+        <g>
+          <rect x="436" y="60" width="104" height="120" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="488" y="48" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">FOSSIL FUELS</text>
+          <rect x="450" y="78" width="76" height="24" rx="3" fill="#1A1A1A"/>
+          <text x="488" y="94" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#FCFAF4">COAL</text>
+          <rect x="450" y="108" width="76" height="24" rx="3" fill="#5C6370"/>
+          <text x="488" y="124" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#FCFAF4">OIL</text>
+          <rect x="450" y="138" width="76" height="24" rx="3" fill="#C8A24A"/>
+          <text x="488" y="154" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">NATURAL GAS</text>
+        </g>
+        <text x="280" y="218" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">Stored sunlight, cooked underground for millions of years.</text>
+      </svg>
+      <div class="caption">How the three fossil fuels formed</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Fossil fuel</dt>
+        <dd>Coal, oil or natural gas — formed from the buried remains of living things over millions of years.</dd>
+        <dt>Finite / non-renewable</dt>
+        <dd>A resource that is being used up far faster than it can form, so it will eventually run out.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Why burning them is a problem</h3>
+    <p>When we burn a fossil fuel, the carbon inside it joins with oxygen from the air and releases <strong>carbon dioxide</strong> (CO₂). Carbon dioxide is a <strong>greenhouse gas</strong> — it traps heat in the atmosphere, and releasing more of it is causing <strong>climate change</strong> (global warming).</p>
+    <p>Burning fossil fuels also releases other <strong>pollutants</strong>, such as sulfur dioxide (which causes acid rain) and tiny soot particles that harm our lungs. So fossil fuels are useful and reliable, but using them comes at a real cost to the environment.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — fossil fuels are not "made" quickly</h4>
+      <p>It is easy to think we could just make more coal or oil. We cannot — not in any useful time. Fossil fuels take <strong>millions of years</strong> to form, so for us they are effectively a one-time supply. That is exactly what <strong>non-renewable</strong> means.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why are coal, oil and natural gas described as "fossil" fuels?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Because they are dug up from very old rocks, like fossils</span></li>
+        <li><span class="letter">B</span><span>Because they formed from the remains of living things buried millions of years ago</span></li>
+        <li><span class="letter">C</span><span>Because they contain actual dinosaur bones</span></li>
+        <li><span class="letter">D</span><span>Because they will never run out</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — they formed from the buried remains of living things.</strong> Dead plants and tiny sea creatures were squashed and heated over millions of years into coal, oil and gas. <em>D is wrong — fossil fuels are finite and will run out.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>Name the three fossil fuels.</summary>
+        <div class="ans"><strong>Coal, oil (crude oil) and natural gas.</strong></div>
+      </details></li>
+      <li><details>
+        <summary>How did fossil fuels form?</summary>
+        <div class="ans">From the <strong>remains of dead living things</strong> (plants and tiny sea creatures), buried and squashed by heat and pressure over <strong>millions of years</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What does it mean to say fossil fuels are "non-renewable"?</summary>
+        <div class="ans">They are being used up <strong>much faster than they can form</strong>, so they are finite and will eventually <strong>run out</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Which gas is released when fossil fuels are burned, and why is it a problem?</summary>
+        <div class="ans"><strong>Carbon dioxide (CO₂)</strong>. It is a <strong>greenhouse gas</strong> that traps heat in the atmosphere, contributing to climate change.</div>
+      </details></li>
+      <li><details>
+        <summary>Where did the energy stored in fossil fuels originally come from?</summary>
+        <div class="ans">From the <strong>Sun</strong> — captured by plants and creatures when they were alive, then stored when they were buried.</div>
+      </details></li>
+      <li><details>
+        <summary>Other than carbon dioxide, name one harmful substance released by burning fossil fuels.</summary>
+        <div class="ans">Any one of: <strong>sulfur dioxide</strong> (causes acid rain) or <strong>soot / particulates</strong> (harm the lungs).</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — GENERATING ELECTRICITY                                        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · Physics · Energy resources</div>
+    <h2 class="lesson-title">Generating <em>electricity</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know the step-by-step recipe most power stations use to make electricity, and why electricity is generated rather than dug up.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The power-station recipe</h3>
+    <p>Most power stations work in almost exactly the same way, whatever fuel they use. Coal, gas and nuclear stations all follow the same chain — only the way they make the heat is different.</p>
+    <p>Here is the recipe. A <strong>fuel</strong> is burned (or nuclear fuel releases energy) to <strong>heat water</strong>. The water boils into high-pressure <strong>steam</strong>. The steam rushes past the blades of a <strong>turbine</strong> and makes it spin. The spinning turbine turns a <strong>generator</strong>, which produces <strong>electricity</strong>. The electricity then travels out along the <strong>National Grid</strong> to homes and businesses.</p>
+    <p style="text-align:center"><span class="formula">fuel → heat → water → steam → turbine → generator → electricity</span></p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Boiler / fuel -->
+        <g>
+          <rect x="14" y="70" width="92" height="80" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- flames -->
+          <path d="M 45 140 Q 50 118 55 140 Q 60 122 65 140 Q 70 120 74 140 Z" fill="#B85042"/>
+          <text x="60" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">BOILER</text>
+          <text x="60" y="165" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">fuel heats water</text>
+        </g>
+        <!-- steam arrow -->
+        <g stroke="#5C6370" stroke-width="2" fill="none">
+          <line x1="108" y1="100" x2="142" y2="100"/>
+          <path d="M 137 94 L 145 100 L 137 106" fill="#5C6370"/>
+        </g>
+        <text x="126" y="90" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="11" fill="#5C6370">steam</text>
+        <!-- Turbine -->
+        <g>
+          <rect x="146" y="70" width="92" height="80" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <g transform="translate(192,110)">
+            <g stroke="#1E2761" stroke-width="2" fill="#C8A24A">
+              <ellipse cx="0" cy="0" rx="6" ry="20"/>
+              <ellipse cx="0" cy="0" rx="20" ry="6"/>
+              <ellipse cx="0" cy="0" rx="15" ry="15" transform="rotate(45)" fill="none"/>
+            </g>
+            <circle cx="0" cy="0" r="4" fill="#1E2761"/>
+          </g>
+          <text x="192" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">TURBINE</text>
+          <text x="192" y="165" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">steam spins it</text>
+        </g>
+        <!-- shaft arrow -->
+        <g stroke="#1E2761" stroke-width="2" fill="none">
+          <line x1="240" y1="110" x2="274" y2="110"/>
+          <path d="M 269 104 L 277 110 L 269 116" fill="#1E2761"/>
+        </g>
+        <text x="258" y="100" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="11" fill="#5C6370">spins</text>
+        <!-- Generator -->
+        <g>
+          <rect x="278" y="70" width="92" height="80" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="324" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="22" font-weight="700" fill="#C8A24A">G</text>
+          <text x="324" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">GENERATOR</text>
+          <text x="324" y="165" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">makes electricity</text>
+        </g>
+        <!-- electricity arrow -->
+        <g stroke="#C8A24A" stroke-width="2" fill="none">
+          <line x1="372" y1="110" x2="406" y2="110"/>
+          <path d="M 401 104 L 409 110 L 401 116" fill="#C8A24A"/>
+        </g>
+        <!-- Grid / pylon -->
+        <g>
+          <rect x="410" y="70" width="136" height="80" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- pylon -->
+          <g stroke="#1E2761" stroke-width="2" fill="none">
+            <path d="M 460 145 L 472 95 L 484 145 Z"/>
+            <line x1="466" y1="115" x2="478" y2="115"/>
+            <line x1="463" y1="130" x2="481" y2="130"/>
+            <line x1="455" y1="98" x2="489" y2="98"/>
+          </g>
+          <text x="488" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">NATIONAL GRID</text>
+          <text x="510" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">to homes</text>
+        </g>
+        <text x="280" y="190" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Same chain in coal, gas and nuclear stations — only the heat source changes.</text>
+      </svg>
+      <div class="caption">The power-station chain: fuel → boiler → turbine → generator → grid</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Turbine</dt>
+        <dd>A wheel of angled blades that spins when steam (or wind, or water) pushes past it.</dd>
+        <dt>Generator</dt>
+        <dd>A machine that turns the movement of a spinning turbine into electricity.</dd>
+        <dt>National Grid</dt>
+        <dd>The network of cables and pylons that carries electricity from power stations to where it is used.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Electricity is generated, not dug up</h3>
+    <p>This is the key idea, and it trips a lot of people up. <strong>Electricity is not a fuel and it is not an energy resource.</strong> You cannot dig up electricity or drill for it. It has to be <strong>generated</strong> from an energy resource — by spinning a generator.</p>
+    <p>So coal is a fuel; electricity is what we <em>make</em> from it. The same is true of wind: the wind is the resource, and a wind turbine generates electricity from it. Whenever you describe the process, get the chain the right way round: resource → generator → electricity.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "electricity is a fuel" is wrong</h4>
+      <p>Electricity is <strong>not</strong> a fuel or an energy resource — it is <strong>generated</strong> from one. We burn fuels (or use wind, water, the Sun) to spin a generator, and the generator produces the electricity. Saying "we get our energy from electricity" gets it backwards: electricity is the thing we <em>make</em>, not the source.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">In a coal-fired power station, what is the job of the turbine?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It burns the coal to make heat</span></li>
+        <li><span class="letter">B</span><span>It is spun by the steam, and turns the generator</span></li>
+        <li><span class="letter">C</span><span>It stores the electricity until it is needed</span></li>
+        <li><span class="letter">D</span><span>It carries the electricity to people's homes</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — the steam spins the turbine, and the turbine turns the generator.</strong> The boiler makes the heat (A), the National Grid carries the electricity to homes (D). The turbine sits in the middle of the chain, turning the rush of steam into spinning motion.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>Put the power-station chain in order: turbine, fuel, generator, steam, electricity.</summary>
+        <div class="ans"><strong>fuel → steam → turbine → generator → electricity.</strong> (The fuel heats water into steam, the steam spins the turbine, the turbine turns the generator, the generator makes electricity.)</div>
+      </details></li>
+      <li><details>
+        <summary>What is the job of the boiler?</summary>
+        <div class="ans">To <strong>heat water</strong> using the fuel, turning it into high-pressure <strong>steam</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What does the generator do?</summary>
+        <div class="ans">It turns the <strong>spinning motion</strong> of the turbine into <strong>electricity</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>"We dig electricity out of the ground." Explain what is wrong with this statement.</summary>
+        <div class="ans">Electricity is <strong>not a fuel or a resource</strong> — it cannot be dug up. It has to be <strong>generated</strong> from an energy resource by spinning a generator.</div>
+      </details></li>
+      <li><details>
+        <summary>Coal, gas and nuclear power stations all use the same basic chain. What is the main difference between them?</summary>
+        <div class="ans">The way they <strong>produce the heat</strong> to boil the water — burning coal, burning gas, or splitting atoms in nuclear fuel. The turbine–generator part is the same.</div>
+      </details></li>
+      <li><details>
+        <summary>What carries the electricity from a power station to homes and businesses?</summary>
+        <div class="ans">The <strong>National Grid</strong> — the network of cables and pylons.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — RENEWABLE VS NON-RENEWABLE                                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · Physics · Energy resources</div>
+    <h2 class="lesson-title">Renewable <em>vs</em> non-renewable</h2>
+    <p class="lesson-promise">By the end of this topic you'll be able to sort resources into renewable and non-renewable, and weigh up their pros and cons fairly.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Two groups of resources</h3>
+    <p>Energy resources split into two groups. <strong>Renewable</strong> resources will not run out — they are replaced as fast as we use them (or faster). <strong>Non-renewable</strong> resources are finite — once used, they are gone.</p>
+    <p>The <strong>renewables</strong> are: <strong>wind, solar</strong> (the Sun), <strong>hydroelectric</strong> (falling water in dams), <strong>tidal</strong> (the rise and fall of the sea), <strong>geothermal</strong> (heat from inside the Earth) and <strong>biomass</strong> (burning plants or plant waste, which can be re-grown).</p>
+    <p>The <strong>non-renewables</strong> are the <strong>fossil fuels</strong> (coal, oil, gas) and <strong>nuclear</strong> fuel. Nuclear is not a fossil fuel, but its fuel (uranium) is still mined and finite, so it counts as non-renewable.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Renewable</dt>
+        <dd>A resource that is replaced as fast as we use it, so it will not run out — e.g. wind, solar, hydroelectric, tidal, geothermal, biomass.</dd>
+        <dt>Non-renewable</dt>
+        <dd>A finite resource that is used up far faster than it forms — the fossil fuels and nuclear.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Weighing up pros and cons</h3>
+    <p>No single resource is perfect — each is a trade-off. A fair comparison looks at several things: how much it <strong>costs</strong> to build and run, how <strong>reliable</strong> it is (can we use it whenever we want?), how much <strong>carbon dioxide</strong> it produces, and its impact on <strong>land and views</strong>.</p>
+    <p>Fossil fuels are cheap and very reliable, but release lots of CO₂. Renewables release little or no CO₂ while running, but many depend on the weather (no wind, no sun, no power) and can take up a lot of land or change the landscape. The table below sums it up.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 270" xmlns="http://www.w3.org/2000/svg">
+        <!-- header row -->
+        <g font-family="IBM Plex Sans,sans-serif">
+          <rect x="10" y="14" width="540" height="34" fill="#1E2761"/>
+          <text x="95" y="36" text-anchor="middle" font-size="12" font-weight="700" fill="#FCFAF4">RESOURCE</text>
+          <text x="245" y="36" text-anchor="middle" font-size="12" font-weight="700" fill="#FCFAF4">CO₂?</text>
+          <text x="345" y="36" text-anchor="middle" font-size="12" font-weight="700" fill="#FCFAF4">RELIABLE?</text>
+          <text x="470" y="36" text-anchor="middle" font-size="12" font-weight="700" fill="#FCFAF4">DOWNSIDE</text>
+        </g>
+        <!-- rows -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="11.5" fill="#1A1A1A">
+          <!-- fossil fuels -->
+          <rect x="10" y="48" width="540" height="36" fill="#F4DAD7" stroke="#CFD8E3"/>
+          <text x="20" y="70" font-weight="700" fill="#1E2761">Fossil fuels</text>
+          <text x="245" y="70" text-anchor="middle" fill="#B85042" font-weight="700">a lot</text>
+          <text x="345" y="70" text-anchor="middle" fill="#2C5F2D" font-weight="700">yes</text>
+          <text x="470" y="70" text-anchor="middle">finite · pollution</text>
+          <!-- nuclear -->
+          <rect x="10" y="84" width="540" height="36" fill="#FCFAF4" stroke="#CFD8E3"/>
+          <text x="20" y="106" font-weight="700" fill="#1E2761">Nuclear</text>
+          <text x="245" y="106" text-anchor="middle" fill="#2C5F2D" font-weight="700">very low</text>
+          <text x="345" y="106" text-anchor="middle" fill="#2C5F2D" font-weight="700">yes</text>
+          <text x="470" y="106" text-anchor="middle">costly · waste</text>
+          <!-- wind -->
+          <rect x="10" y="120" width="540" height="36" fill="#DDEBDD" stroke="#CFD8E3"/>
+          <text x="20" y="142" font-weight="700" fill="#1E2761">Wind</text>
+          <text x="245" y="142" text-anchor="middle" fill="#2C5F2D" font-weight="700">none*</text>
+          <text x="345" y="142" text-anchor="middle" fill="#B85042" font-weight="700">no — needs wind</text>
+          <text x="470" y="142" text-anchor="middle">noise · views</text>
+          <!-- solar -->
+          <rect x="10" y="156" width="540" height="36" fill="#DDEBDD" stroke="#CFD8E3"/>
+          <text x="20" y="178" font-weight="700" fill="#1E2761">Solar</text>
+          <text x="245" y="178" text-anchor="middle" fill="#2C5F2D" font-weight="700">none*</text>
+          <text x="345" y="178" text-anchor="middle" fill="#B85042" font-weight="700">no — needs sun</text>
+          <text x="470" y="178" text-anchor="middle">land use</text>
+          <!-- hydro -->
+          <rect x="10" y="192" width="540" height="36" fill="#DDEBDD" stroke="#CFD8E3"/>
+          <text x="20" y="214" font-weight="700" fill="#1E2761">Hydroelectric</text>
+          <text x="245" y="214" text-anchor="middle" fill="#2C5F2D" font-weight="700">none*</text>
+          <text x="345" y="214" text-anchor="middle" fill="#2C5F2D" font-weight="700">yes</text>
+          <text x="470" y="214" text-anchor="middle">floods valleys</text>
+        </g>
+        <text x="280" y="252" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">*little or no CO₂ while running — every resource is a trade-off.</text>
+      </svg>
+      <div class="caption">A fair comparison of energy resources</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — renewable does NOT mean "no downsides"</h4>
+      <p>Renewables are better for the climate, but they are <strong>not free of problems</strong>. Wind and solar are <strong>unreliable</strong> — no wind or no sun means no power. They can take up <strong>lots of land</strong> or change the view, and they cost a lot to build. A good answer always gives the trade-offs, not just "renewables are good".</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which of these is the best reason a country might still use fossil fuels alongside renewables?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Fossil fuels produce no carbon dioxide</span></li>
+        <li><span class="letter">B</span><span>Fossil fuels are reliable — they can supply power whenever it is needed</span></li>
+        <li><span class="letter">C</span><span>Fossil fuels will never run out</span></li>
+        <li><span class="letter">D</span><span>Fossil fuels take up no land at all</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — fossil fuels are reliable.</strong> They can be burned on demand, day or night, regardless of the weather, which renewables like wind and solar cannot. <em>A and C are false (they do produce CO₂, and they are finite), and D is not the key reason.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is the difference between a renewable and a non-renewable resource?</summary>
+        <div class="ans">A <strong>renewable</strong> resource is replaced as fast as we use it, so it will not run out. A <strong>non-renewable</strong> resource is finite and is used up faster than it can form.</div>
+      </details></li>
+      <li><details>
+        <summary>Name three renewable energy resources.</summary>
+        <div class="ans">Any three from: <strong>wind, solar, hydroelectric, tidal, geothermal, biomass.</strong></div>
+      </details></li>
+      <li><details>
+        <summary>Name two non-renewable energy resources.</summary>
+        <div class="ans">Any two from the fossil fuels — <strong>coal, oil, natural gas</strong> — and <strong>nuclear</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Is nuclear power renewable? Explain.</summary>
+        <div class="ans"><strong>No.</strong> Although it is not a fossil fuel and gives off very little CO₂, its fuel (uranium) is <strong>mined and finite</strong>, so it is non-renewable.</div>
+      </details></li>
+      <li><details>
+        <summary>Give one advantage and one disadvantage of wind power.</summary>
+        <div class="ans"><strong>Advantage:</strong> renewable and gives off little or no CO₂. <strong>Disadvantage:</strong> unreliable (no power when there is no wind), and turbines can be noisy or spoil the view.</div>
+      </details></li>
+      <li><details>
+        <summary>Why are wind and solar described as "unreliable"?</summary>
+        <div class="ans">They depend on the <strong>weather</strong> — no wind means no wind power, and no sun (e.g. at night) means no solar power. We cannot turn them on whenever we want.</div>
+      </details></li>
+      <li><details>
+        <summary>"Renewable energy has no impact on the environment." Is this correct?</summary>
+        <div class="ans"><strong>No.</strong> Renewables are far better for the climate, but they still have downsides — they can take up large areas of <strong>land</strong>, change the <strong>view</strong>, cost a lot to build, and can be unreliable.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — ENERGY USE, kWh & BILLS                                       -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · Physics · Energy resources</div>
+    <h2 class="lesson-title">Energy use, <em>kWh &amp; bills</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what a power rating is, what a kilowatt-hour is, and how to work out the cost of running an appliance.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Power ratings</h3>
+    <p>Every electrical appliance has a <strong>power rating</strong> — how much energy it transfers each second. It is measured in <strong>watts (W)</strong> or <strong>kilowatts (kW)</strong>, where 1 kW = 1000 W. The bigger the power rating, the more energy the appliance uses every second it is switched on.</p>
+    <p>A phone charger might be 5 W. A laptop, about 50 W. A kettle is a big one — often 2 to 3 kW. A typical fridge runs at about 100 W but is on all day. You will often need to convert: divide watts by 1000 to get kilowatts (so 2000 W = 2 kW).</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- appliance bars showing power rating -->
+        <g font-family="IBM Plex Sans,sans-serif">
+          <text x="20" y="26" font-size="12" font-weight="700" fill="#1E2761">Typical power ratings</text>
+          <!-- charger -->
+          <text x="20" y="58" font-size="11" fill="#1A1A1A">Phone charger</text>
+          <rect x="160" y="48" width="14" height="14" fill="#C8A24A" stroke="#1E2761" stroke-width="1"/>
+          <text x="185" y="59" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">5 W</text>
+          <!-- laptop -->
+          <text x="20" y="88" font-size="11" fill="#1A1A1A">Laptop</text>
+          <rect x="160" y="78" width="60" height="14" fill="#C8A24A" stroke="#1E2761" stroke-width="1"/>
+          <text x="230" y="89" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">50 W</text>
+          <!-- fridge -->
+          <text x="20" y="118" font-size="11" fill="#1A1A1A">Fridge</text>
+          <rect x="160" y="108" width="100" height="14" fill="#C8A24A" stroke="#1E2761" stroke-width="1"/>
+          <text x="270" y="119" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">100 W = 0.1 kW</text>
+          <!-- kettle -->
+          <text x="20" y="148" font-size="11" fill="#1A1A1A">Kettle</text>
+          <rect x="160" y="138" width="360" height="14" fill="#B85042" stroke="#1E2761" stroke-width="1"/>
+          <text x="160" y="172" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">3000 W = 3 kW</text>
+        </g>
+        <text x="280" y="194" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">A kettle's power rating dwarfs a charger's.</text>
+      </svg>
+      <div class="caption">Power ratings of everyday appliances (W and kW)</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Power rating</dt>
+        <dd>How much energy an appliance transfers each second, in watts (W) or kilowatts (kW). 1 kW = 1000 W.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The kilowatt-hour (kWh)</h3>
+    <p>Joules are tiny, so they are awkward for an electricity bill — a single kettle boil is hundreds of thousands of joules. Instead, energy companies use a bigger unit of <strong>energy</strong>: the <strong>kilowatt-hour (kWh)</strong>, sometimes called a "unit".</p>
+    <p>One kilowatt-hour is the energy used by a <strong>1 kW</strong> appliance running for <strong>1 hour</strong>. To find the energy used in kilowatt-hours, multiply the power (in kW) by the time (in hours):</p>
+    <p style="text-align:center"><span class="formula">energy (kWh) = power (kW) × time (hours)</span></p>
+    <p>So a 2 kW heater on for 3 hours uses 2 × 3 = 6 kWh. Easy — as long as the power is in <strong>kW</strong> and the time is in <strong>hours</strong>.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Kilowatt-hour (kWh)</dt>
+        <dd>A unit of energy used on bills. The energy used by a 1 kW appliance running for 1 hour. Also called a "unit".</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — a kW is not a kWh</h4>
+      <p>These look alike but mean different things. A <strong>kilowatt (kW)</strong> is a measure of <strong>power</strong> — how fast energy is used. A <strong>kilowatt-hour (kWh)</strong> is a measure of <strong>energy</strong> — the total amount used. A 2 kW kettle does not use "2 kWh" unless it runs for exactly one hour. Power × time = energy.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Working out the cost</h3>
+    <p>The electricity company charges a fixed price for each kilowatt-hour. To find the cost of running an appliance, first work out the energy it uses in kWh, then multiply by the price per kWh:</p>
+    <p style="text-align:center"><span class="formula">cost = energy used (kWh) × price per kWh</span></p>
+    <p>Use the <strong>FIFA</strong> method to lay it out cleanly — <strong>F</strong>ormula, <strong>I</strong>nsert the numbers, <strong>F</strong>ix any units (get power into kW and time into hours), <strong>A</strong>nswer with the unit (£ or p).</p>
+
+    <div class="worked">
+      <h4>Worked example 1 — cost of running a heater</h4>
+      <p class="q">A <strong>2 kW</strong> heater is switched on for <strong>3 hours</strong>. Electricity costs <strong>30p per kWh</strong>. Find the cost of running the heater.</p>
+      <div class="step"><div class="label">Formula</div><div class="v">energy = power × time, then cost = energy × price</div></div>
+      <div class="step"><div class="label">Insert</div><div class="v">energy = 2 × 3</div></div>
+      <div class="step"><div class="label">Fix</div><div class="v">power already in kW, time already in hours, no conversion needed<br>energy = 6 kWh<br>cost = 6 × 30p</div></div>
+      <div class="step answer"><div class="label">Answer</div><div class="v">cost = 180p = £1.80</div></div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example 2 — converting the units first</h4>
+      <p class="q">A <strong>2000 W</strong> kettle is used for a total of <strong>30 minutes</strong> across the day. Electricity costs <strong>34p per kWh</strong>. Find the cost.</p>
+      <div class="step"><div class="label">Formula</div><div class="v">energy = power × time, then cost = energy × price</div></div>
+      <div class="step"><div class="label">Insert</div><div class="v">energy = 2000 × 30 &nbsp; <em style="color:#B85042">← wrong units</em></div></div>
+      <div class="step"><div class="label">Fix</div><div class="v">power: 2000 W ÷ 1000 = 2 kW<br>time: 30 min ÷ 60 = 0.5 hours<br>energy = 2 × 0.5 = 1 kWh<br>cost = 1 × 34p</div></div>
+      <div class="step answer"><div class="label">Answer</div><div class="v">cost = 34p = £0.34</div></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A <strong>0.1 kW</strong> fridge runs for <strong>24 hours</strong>. Electricity costs <strong>30p per kWh</strong>. How much does it cost to run for the day?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>2.4 kWh, costing 72p</span></li>
+        <li><span class="letter">B</span><span>240 kWh, costing £72</span></li>
+        <li><span class="letter">C</span><span>0.24 kWh, costing about 7p</span></li>
+        <li><span class="letter">D</span><span>24 kWh, costing £7.20</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — 2.4 kWh, costing 72p.</strong> energy = power × time = 0.1 × 24 = 2.4 kWh. cost = 2.4 × 30p = 72p. <em>B is the trap from forgetting the fridge is 0.1 kW, not 10 kW. Always check whether the power is in W or kW first.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is a power rating, and what units is it measured in?</summary>
+        <div class="ans">How much energy an appliance transfers <strong>each second</strong>. Measured in <strong>watts (W)</strong> or <strong>kilowatts (kW)</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What is a kilowatt-hour?</summary>
+        <div class="ans">A <strong>unit of energy</strong> used on bills — the energy used by a <strong>1 kW</strong> appliance running for <strong>1 hour</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Write the equation for the energy used in kWh.</summary>
+        <div class="ans"><strong>energy (kWh) = power (kW) × time (hours).</strong></div>
+      </details></li>
+      <li><details>
+        <summary>A 3 kW kettle is used for 0.5 hours in total. How much energy does it use, in kWh?</summary>
+        <div class="ans">energy = power × time = 3 × 0.5 = <strong>1.5 kWh</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>A 1.5 kW hairdryer is used for 2 hours over a week. Electricity costs 30p per kWh. Find the cost.</summary>
+        <div class="ans">energy = 1.5 × 2 = 3 kWh. cost = 3 × 30p = <strong>90p (£0.90)</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>A 100 W lamp is left on for 10 hours. Electricity costs 30p per kWh. Find the cost. (Hint: convert W to kW first.)</summary>
+        <div class="ans">Convert: 100 W = 0.1 kW. energy = 0.1 × 10 = 1 kWh. cost = 1 × 30p = <strong>30p</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Explain the difference between a kilowatt (kW) and a kilowatt-hour (kWh).</summary>
+        <div class="ans">A <strong>kW</strong> is a measure of <strong>power</strong> (how fast energy is used). A <strong>kWh</strong> is a measure of <strong>energy</strong> (the total amount used). Energy = power × time.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — HEATING & THERMAL EQUILIBRIUM                                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · Physics · Energy resources</div>
+    <h2 class="lesson-title">Heating &amp; <em>thermal equilibrium</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know which way energy flows when things are at different temperatures, the three ways heat travels, and why insulation matters.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Energy flows hot to cold</h3>
+    <p>Put a cold spoon into a hot cup of tea and the spoon warms up while the tea cools down. Energy always flows from the <strong>hotter</strong> object to the <strong>cooler</strong> one — never the other way round.</p>
+    <p>This continues until both objects reach the <strong>same temperature</strong>. At that point there is no temperature difference to drive the flow, and the energy stops moving (overall). We say the two objects have reached <strong>thermal equilibrium</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- BEFORE -->
+        <g>
+          <text x="140" y="26" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#5C6370" letter-spacing="1">AT THE START</text>
+          <!-- hot object -->
+          <rect x="40" y="60" width="80" height="80" rx="8" fill="#B85042" stroke="#1E2761" stroke-width="2"/>
+          <text x="80" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#FCFAF4">80°C</text>
+          <text x="80" y="156" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">hot</text>
+          <!-- cold object -->
+          <rect x="160" y="60" width="80" height="80" rx="8" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="200" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#1E2761">20°C</text>
+          <text x="200" y="156" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">cold</text>
+          <!-- energy flow arrow hot->cold -->
+          <g stroke="#C8A24A" stroke-width="3" fill="none">
+            <line x1="124" y1="100" x2="156" y2="100"/>
+            <path d="M 150 93 L 160 100 L 150 107" fill="#C8A24A" stroke="none"/>
+          </g>
+          <text x="140" y="88" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="11" fill="#B85042">energy</text>
+        </g>
+        <!-- divider -->
+        <line x1="300" y1="40" x2="300" y2="160" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="4 4"/>
+        <!-- AFTER -->
+        <g>
+          <text x="420" y="26" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#5C6370" letter-spacing="1">AFTER A WHILE</text>
+          <rect x="340" y="60" width="80" height="80" rx="8" fill="#C8A24A" stroke="#1E2761" stroke-width="2" opacity="0.85"/>
+          <text x="380" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#1E2761">50°C</text>
+          <rect x="440" y="60" width="80" height="80" rx="8" fill="#C8A24A" stroke="#1E2761" stroke-width="2" opacity="0.85"/>
+          <text x="480" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#1E2761">50°C</text>
+          <text x="430" y="156" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">same temperature — no more flow</text>
+        </g>
+        <text x="280" y="190" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Energy flows hot → cold until both reach thermal equilibrium.</text>
+      </svg>
+      <div class="caption">Two objects reaching thermal equilibrium</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Thermal equilibrium</dt>
+        <dd>When two objects in contact reach the same temperature, so there is no overall flow of energy between them.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "cold" does not flow into warm things</h4>
+      <p>It feels like the cold from an ice cube "moves into" your hand. It does not — there is no such thing as cold flowing. What really happens is that <strong>energy flows out of your warm hand into the cold ice</strong>, which is why your hand feels colder. Energy always travels <strong>hot → cold</strong>, never the reverse.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Three ways heat travels</h3>
+    <p>Energy can travel from a hotter place to a cooler place in three ways:</p>
+    <p><strong>Conduction</strong> — through solids. The particles vibrate and pass the energy on to their neighbours, like a row of dominoes. Metals are especially good conductors.</p>
+    <p><strong>Convection</strong> — in liquids and gases. Warm fluid rises (it is less dense), cool fluid sinks to take its place, and this sets up a circulating <strong>convection current</strong>.</p>
+    <p><strong>Radiation</strong> — by invisible <strong>infrared</strong> waves. This needs no particles at all, which is how the Sun's energy reaches us across empty space.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Conduction</dt>
+        <dd>Energy passed through a solid by vibrating particles bumping into their neighbours.</dd>
+        <dt>Convection</dt>
+        <dd>Energy carried by a moving liquid or gas as warm fluid rises and cool fluid sinks.</dd>
+        <dt>Radiation</dt>
+        <dd>Energy carried by infrared waves, which can travel through empty space.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Insulation &amp; keeping homes warm</h3>
+    <p>We cannot stop energy flowing from hot to cold, but we can <strong>slow it down</strong>. That is what an <strong>insulator</strong> does — it is a poor conductor of heat, so energy escapes through it much more slowly.</p>
+    <p>Homes lose heat to the colder outside, so we insulate them to keep that energy in. <strong>Loft insulation</strong> and <strong>cavity wall insulation</strong> use trapped air (a great insulator) to slow conduction. <strong>Double glazing</strong> traps air or gas between two panes of glass. All of this cuts the energy needed for heating — saving money and reducing the fuel we burn.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <!-- house outline -->
+        <g stroke="#1E2761" stroke-width="2" fill="#FCFAF4">
+          <rect x="180" y="90" width="200" height="100"/>
+          <path d="M 170 90 L 280 30 L 390 90 Z"/>
+        </g>
+        <!-- loft insulation -->
+        <rect x="200" y="78" width="160" height="12" fill="#C8A24A" opacity="0.7"/>
+        <text x="280" y="60" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">loft insulation</text>
+        <!-- cavity walls -->
+        <rect x="180" y="90" width="10" height="100" fill="#C8A24A" opacity="0.7"/>
+        <rect x="370" y="90" width="10" height="100" fill="#C8A24A" opacity="0.7"/>
+        <!-- window double glazing -->
+        <rect x="250" y="120" width="60" height="40" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="280" y1="120" x2="280" y2="160" stroke="#1E2761" stroke-width="1"/>
+        <!-- warmth inside -->
+        <text x="280" y="180" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#B85042" font-weight="700">warm inside</text>
+        <!-- escaping heat (slowed) arrows -->
+        <g stroke="#B85042" stroke-width="2" fill="none" opacity="0.6">
+          <line x1="390" y1="120" x2="420" y2="116"/>
+          <path d="M 414 111 L 423 115 L 416 121" fill="#B85042" stroke="none"/>
+          <line x1="390" y1="150" x2="420" y2="148"/>
+          <path d="M 414 143 L 423 147 L 416 153" fill="#B85042" stroke="none"/>
+        </g>
+        <text x="470" y="125" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="11" fill="#5C6370">heat still leaks,</text>
+        <text x="470" y="142" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="11" fill="#5C6370">but much slower</text>
+        <!-- cold outside left -->
+        <text x="80" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#1E2761">cold outside</text>
+        <text x="280" y="206" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Insulation cannot stop heat loss — it slows it down.</text>
+      </svg>
+      <div class="caption">Why we insulate homes</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A hot drink is left on a table in a cool room. What happens, and why?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Cold from the room flows into the drink, cooling it down</span></li>
+        <li><span class="letter">B</span><span>Energy flows from the hot drink to the cooler room until they reach the same temperature</span></li>
+        <li><span class="letter">C</span><span>Nothing happens — the drink stays hot because heat cannot move through air</span></li>
+        <li><span class="letter">D</span><span>The drink gets hotter, taking energy from the room</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — energy flows from the hot drink to the cooler room until they reach thermal equilibrium.</strong> <em>A is the classic trap — there is no "cold" flowing; energy always travels hot → cold, so the drink loses energy and cools to room temperature.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>Which way does energy flow between a hot object and a cold object?</summary>
+        <div class="ans">Always from the <strong>hotter</strong> object to the <strong>cooler</strong> one — never the other way.</div>
+      </details></li>
+      <li><details>
+        <summary>What is thermal equilibrium?</summary>
+        <div class="ans">When two objects reach the <strong>same temperature</strong>, so there is no overall flow of energy between them.</div>
+      </details></li>
+      <li><details>
+        <summary>"The cold from the ice cube went into my hand." What is the correct way to describe this?</summary>
+        <div class="ans">There is no such thing as cold flowing. <strong>Energy flows out of your warm hand into the cold ice</strong>, which is why your hand feels colder.</div>
+      </details></li>
+      <li><details>
+        <summary>Name the three ways heat energy can travel.</summary>
+        <div class="ans"><strong>Conduction, convection and radiation.</strong></div>
+      </details></li>
+      <li><details>
+        <summary>Which method of heat transfer can travel through empty space, and how does the Sun's energy reach Earth?</summary>
+        <div class="ans"><strong>Radiation</strong> — by infrared waves, which need no particles, so they can cross the empty space between the Sun and the Earth.</div>
+      </details></li>
+      <li><details>
+        <summary>What does an insulator do, and why do we insulate our homes?</summary>
+        <div class="ans">An insulator is a <strong>poor conductor</strong> that <strong>slows down</strong> the transfer of energy. We insulate homes to slow the heat escaping to the cold outside, saving energy and money.</div>
+      </details></li>
+      <li><details>
+        <summary>Does loft insulation stop a house losing heat completely? Explain.</summary>
+        <div class="ans"><strong>No.</strong> Energy still flows from the warm house to the colder outside — insulation only <strong>slows it down</strong>, it cannot stop it entirely.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>Year 8 Physics · Energy resources, generation &amp; heating</p>
+  <p>A revision booklet</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'energy-resources-y8-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+</body>
+</html>

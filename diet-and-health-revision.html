@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diet &amp; Health — Year 8 Revision</title>
+<meta name="description" content="A Year 8 Biology revision booklet on diet and health — five short topics covering a balanced diet and the food groups, energy in food and energy needs, measuring energy by burning food, diet-related problems, and the effects of smoking, vaping, alcohol and drugs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Year 8 · Biology · Diet &amp; Health</div>
+    <h1>Diet &amp; health, <em>but bitesize.</em></h1>
+    <p class="tag">A revision booklet — five short topics, from a balanced plate to how smoking, vaping and alcohol harm the body.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Take it one topic at a time.</strong> There are five topics. Each one is short — about 10 minutes. Do one or two a day.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Balanced diet</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Energy needs</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Measuring energy</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Diet problems</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Smoking &amp; drugs</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — A BALANCED DIET & THE FOOD GROUPS                              -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · Biology · Diet &amp; health</div>
+    <h2 class="lesson-title">A <em>balanced diet</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know the seven things your food needs to give you, what each one does, and a food you'd find it in.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Why "balanced"?</h3>
+    <p>Your body is a bit like a building site. To run properly it needs <strong>fuel</strong> to keep working, <strong>building materials</strong> to grow and mend itself, and a few special <strong>tools</strong> that make everything else run smoothly. No single food gives you all of these. That's why a healthy diet has to be <strong>balanced</strong>.</p>
+    <p>A <strong>balanced diet</strong> means eating the right <strong>amount</strong> of food, with the right <strong>variety</strong> in it, so you get all seven things your body needs. Miss one out, or have too much of another, and something starts to go wrong.</p>
+    <p>There are <strong>seven components</strong> of a balanced diet: <strong>carbohydrates</strong>, <strong>proteins</strong>, <strong>lipids</strong> (fats and oils), <strong>vitamins</strong>, <strong>minerals</strong>, <strong>fibre</strong> and <strong>water</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Plate -->
+        <circle cx="200" cy="150" r="120" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="200" cy="150" r="120" fill="none" stroke="#CFD8E3" stroke-width="6" opacity="0.6"/>
+        <!-- Carbohydrate wedge (biggest) -->
+        <path d="M 200 150 L 200 30 A 120 120 0 0 1 313 191 Z" fill="#F2E6BD" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- Protein wedge -->
+        <path d="M 200 150 L 313 191 A 120 120 0 0 1 150 264 Z" fill="#F4DAD7" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- Fruit & veg / fibre+vitamins wedge -->
+        <path d="M 200 150 L 150 264 A 120 120 0 0 1 200 30 Z" fill="#DDEBDD" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- Wedge labels -->
+        <text x="250" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">CARBS</text>
+        <text x="250" y="108" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8" fill="#5C6370">energy</text>
+        <text x="240" y="210" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">PROTEIN</text>
+        <text x="240" y="223" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8" fill="#5C6370">growth</text>
+        <text x="130" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">FRUIT &amp;</text>
+        <text x="130" y="164" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">VEG</text>
+        <!-- Side list of all 7 -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">
+          <text x="360" y="44" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">THE SEVEN COMPONENTS</text>
+          <circle cx="366" cy="66" r="3" fill="#C8A24A"/><text x="378" y="70">Carbohydrates</text>
+          <circle cx="366" cy="90" r="3" fill="#C8A24A"/><text x="378" y="94">Proteins</text>
+          <circle cx="366" cy="114" r="3" fill="#C8A24A"/><text x="378" y="118">Lipids (fats)</text>
+          <circle cx="366" cy="138" r="3" fill="#C8A24A"/><text x="378" y="142">Vitamins</text>
+          <circle cx="366" cy="162" r="3" fill="#C8A24A"/><text x="378" y="166">Minerals</text>
+          <circle cx="366" cy="186" r="3" fill="#C8A24A"/><text x="378" y="190">Fibre</text>
+          <circle cx="366" cy="210" r="3" fill="#C8A24A"/><text x="378" y="214">Water</text>
+        </g>
+        <text x="200" y="292" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">A balanced plate: lots of carbs and veg, some protein</text>
+      </svg>
+      <div class="caption">The balanced plate and the seven food groups</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>What each group does</h3>
+    <p>You need to know <strong>what each component is for</strong> and <strong>a food you'd find it in</strong>. Here's the lot:</p>
+    <p><strong>Carbohydrates</strong> are your main source of <strong>energy</strong> — they're the fuel that keeps you moving and your body working. Found in bread, rice, pasta and potatoes.</p>
+    <p><strong>Proteins</strong> are for <strong>growth and repair</strong> — building new cells and mending damaged ones (muscle, skin, hair). Found in meat, fish, eggs, beans and cheese.</p>
+    <p><strong>Lipids</strong> (fats and oils) are an <strong>energy store</strong> and also <strong>insulate</strong> you, keeping you warm. Found in butter, oil, nuts and oily fish.</p>
+    <p><strong>Vitamins</strong> are needed in tiny amounts to keep you healthy — for example, vitamin C (in oranges) keeps skin and gums healthy, and vitamin D (in oily fish) helps build strong bones.</p>
+    <p><strong>Minerals</strong> are also needed in small amounts — for example, calcium (in milk) for strong bones and teeth, and iron (in red meat and spinach) for healthy blood.</p>
+    <p><strong>Fibre</strong> can't be digested, but it's still vital: it <strong>keeps food moving through the gut</strong> and stops you getting constipated. Found in wholemeal bread, vegetables and cereals.</p>
+    <p><strong>Water</strong> makes up most of your body and is needed for <strong>every chemical reaction</strong> in your cells. You get it from drinks and from food.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Balanced diet</dt>
+        <dd>Eating the right amount and variety of food so you get all seven components.</dd>
+        <dt>Carbohydrate</dt>
+        <dd>The body's main energy source (bread, rice, pasta).</dd>
+        <dt>Protein</dt>
+        <dd>Used for growth and repair (meat, fish, eggs, beans).</dd>
+        <dt>Lipid (fat)</dt>
+        <dd>An energy store that also insulates the body (butter, oil, nuts).</dd>
+        <dt>Fibre</dt>
+        <dd>Indigestible food that keeps food moving through the gut (wholemeal bread, veg).</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — fat is not "bad for you"</h4>
+      <p>Lots of people think fat is simply unhealthy. It isn't. <strong>Lipids are an essential nutrient</strong> — they're an energy store and they keep you warm. The problem is only when you eat <strong>too much</strong> of them. A diet with <strong>no</strong> fat at all would be unhealthy too. It's about balance, not banning.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A footballer wants to build more muscle after training. Which food group is most important for this?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Carbohydrates — for energy</span></li>
+        <li><span class="letter">B</span><span>Protein — for growth and repair</span></li>
+        <li><span class="letter">C</span><span>Fibre — to keep food moving</span></li>
+        <li><span class="letter">D</span><span>Water — for chemical reactions</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — protein.</strong> Muscle is made of protein, so building and repairing muscle needs protein for <strong>growth and repair</strong>. <em>Carbohydrates matter too — they fuel the training — but the muscle-building itself is the protein's job.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What does a "balanced diet" mean?</summary>
+        <div class="ans">Eating the <strong>right amount</strong> and <strong>right variety</strong> of food so you get all seven components your body needs.</div>
+      </details></li>
+      <li><details>
+        <summary>Name the seven components of a balanced diet.</summary>
+        <div class="ans"><strong>Carbohydrates, proteins, lipids (fats), vitamins, minerals, fibre and water.</strong></div>
+      </details></li>
+      <li><details>
+        <summary>What is the main job of carbohydrates, and where would you find them?</summary>
+        <div class="ans">Carbohydrates are the body's main source of <strong>energy</strong>. Found in <strong>bread, rice, pasta and potatoes</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What are proteins used for, and name a food that contains them.</summary>
+        <div class="ans"><strong>Growth and repair</strong> of cells. Found in <strong>meat, fish, eggs, beans or cheese</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the job of fibre? Is it digested?</summary>
+        <div class="ans">Fibre <strong>keeps food moving through the gut</strong> (and prevents constipation). It is <strong>not digested</strong> — your body can't break it down, but you still need it.</div>
+      </details></li>
+      <li><details>
+        <summary>A student says "fat is always bad for you, so a healthy diet has no fat." Why is this wrong?</summary>
+        <div class="ans"><strong>Lipids are an essential nutrient</strong> — they store energy and insulate the body. The problem is only eating <strong>too much</strong> fat; you still need some. A diet with no fat would be unbalanced.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — ENERGY IN FOOD & ENERGY NEEDS                                  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · Biology · Diet &amp; health</div>
+    <h2 class="lesson-title">Energy <em>needs</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know that food gives you energy, that different people need different amounts, and how to read an energy bar chart.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Food is fuel</h3>
+    <p>Everything your body does — moving, growing, keeping warm, even thinking — needs <strong>energy</strong>. That energy comes from the <strong>food you eat</strong>, mostly from carbohydrates and fats.</p>
+    <p>The energy in food is measured in <strong>kilojoules (kJ)</strong> or <strong>kilocalories (kcal)</strong>. You'll see both on food packets. A kilocalorie is just an older unit — when people say a food has "200 calories" they really mean 200 kcal.</p>
+    <p>If you take in <strong>the same amount</strong> of energy as you use up, your weight stays steady. The trouble starts when these two don't match — but more on that in a moment.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Energy</dt>
+        <dd>What every process in your body needs to run; it comes from food.</dd>
+        <dt>Kilojoule (kJ)</dt>
+        <dd>A unit for measuring the energy in food.</dd>
+        <dt>Kilocalorie (kcal)</dt>
+        <dd>Another (older) unit for food energy — what people usually call a "calorie".</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Different people, different needs</h3>
+    <p>Not everyone needs the same amount of energy. How much you need depends on:</p>
+    <p><strong>Age</strong> — a growing teenager needs more than a young child; needs drop again in older age.<br>
+    <strong>Sex</strong> — on average, men need a bit more energy than women.<br>
+    <strong>Activity level</strong> — a builder or an athlete uses far more energy than someone who sits at a desk all day.<br>
+    <strong>Pregnancy</strong> — a pregnant woman needs extra energy because she is feeding a growing baby too.</p>
+    <p>That's why a recommended daily amount is only a rough guide. The right amount for <em>you</em> depends on who you are and what you do.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — there's no single "correct" amount of energy</h4>
+      <p>It's tempting to think everyone should eat the same amount. They shouldn't. An active teenage athlete genuinely needs <strong>more</strong> energy than an older adult who sits down most of the day — and that's perfectly healthy. <strong>The right amount changes from person to person.</strong></p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Reading a bar chart</h3>
+    <p>In this unit you'll often be given the energy needs of different people as a <strong>bar chart</strong>. Reading one is a key skill, so let's go through it slowly.</p>
+    <p>A bar chart has two axes. The <strong>x-axis</strong> (along the bottom) shows the <strong>different people or groups</strong>. The <strong>y-axis</strong> (up the side) shows the <strong>energy needed</strong>, with a scale and a unit. To read a value: find the top of a bar, then read straight across to the y-axis.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Axes -->
+        <line x1="80" y1="40" x2="80" y2="240" stroke="#1E2761" stroke-width="2"/>
+        <line x1="80" y1="240" x2="520" y2="240" stroke="#1E2761" stroke-width="2"/>
+        <!-- y gridlines & labels (0 to 12000 kJ) -->
+        <g font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370" text-anchor="end">
+          <line x1="80" y1="240" x2="520" y2="240" stroke="#CFD8E3" stroke-width="1"/>
+          <line x1="80" y1="200" x2="520" y2="200" stroke="#CFD8E3" stroke-width="1"/><text x="74" y="204">3000</text>
+          <line x1="80" y1="160" x2="520" y2="160" stroke="#CFD8E3" stroke-width="1"/><text x="74" y="164">6000</text>
+          <line x1="80" y1="120" x2="520" y2="120" stroke="#CFD8E3" stroke-width="1"/><text x="74" y="124">9000</text>
+          <line x1="80" y1="80"  x2="520" y2="80"  stroke="#CFD8E3" stroke-width="1"/><text x="74" y="84">12000</text>
+          <text x="74" y="244">0</text>
+        </g>
+        <!-- Bars: child 4500, woman 8000, man 10500, athlete 14000(capped to 11500 visual) -->
+        <!-- child: 4500 -> height 60 (40px per 3000) -> y=240-60=180 -->
+        <rect x="110" y="180" width="60" height="60" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- woman: 8000 -> height ~107 -> y=133 -->
+        <rect x="210" y="133" width="60" height="107" fill="#F2E6BD" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- man: 10500 -> height 140 -> y=100 -->
+        <rect x="310" y="100" width="60" height="140" fill="#F4DAD7" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- athlete: 14000 -> height ~187 -> y=53 -->
+        <rect x="410" y="53" width="60" height="187" fill="#DDEBDD" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- value labels -->
+        <g font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#1E2761" text-anchor="middle">
+          <text x="140" y="173">4500</text>
+          <text x="240" y="126">8000</text>
+          <text x="340" y="93">10500</text>
+          <text x="440" y="46">14000</text>
+        </g>
+        <!-- x labels -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#1A1A1A" text-anchor="middle">
+          <text x="140" y="256">Child</text>
+          <text x="240" y="256">Woman</text>
+          <text x="340" y="256">Man</text>
+          <text x="440" y="256">Athlete</text>
+        </g>
+        <!-- axis titles -->
+        <text x="300" y="278" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Type of person</text>
+        <text x="26" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761" transform="rotate(-90 26 140)">Energy needed / kJ per day</text>
+      </svg>
+      <div class="caption">Daily energy needs of different people</div>
+    </div>
+
+    <p>From the chart above you can read off, for example, that the <strong>man needs 10 500 kJ</strong> a day, while the <strong>child needs 4500 kJ</strong>. You can also <em>compare</em>: the athlete needs the most, the child the least, and the athlete needs about <strong>three times</strong> what the child needs (14 000 vs 4500).</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Using the bar chart, how much MORE energy does the man need each day than the woman?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>2500 kJ (10 500 − 8000)</span></li>
+        <li><span class="letter">B</span><span>18 500 kJ (10 500 + 8000)</span></li>
+        <li><span class="letter">C</span><span>10 500 kJ (just read the man's bar)</span></li>
+        <li><span class="letter">D</span><span>You can't tell from a bar chart</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — 2500 kJ.</strong> To find how much <em>more</em>, read both bars and subtract: 10 500 − 8000 = 2500 kJ. <em>The word "more" is a clue that you need to find the difference between two bars, not just read one.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What does food give your body, and name a unit it is measured in.</summary>
+        <div class="ans">Food gives your body <strong>energy</strong>. It is measured in <strong>kilojoules (kJ)</strong> or <strong>kilocalories (kcal)</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Give three things that affect how much energy a person needs.</summary>
+        <div class="ans">Any three from: <strong>age, sex, activity level, and pregnancy</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does a pregnant woman need more energy than usual?</summary>
+        <div class="ans">Because she is also providing energy for a <strong>growing baby</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>On a bar chart of energy needs, what goes on the y-axis (up the side)?</summary>
+        <div class="ans">The <strong>energy needed</strong> (with a scale and a unit, e.g. kJ per day).</div>
+      </details></li>
+      <li><details>
+        <summary>Reading the chart in this topic: how much energy does the athlete need, and how much does the child need?</summary>
+        <div class="ans">Athlete: <strong>14 000 kJ</strong> per day. Child: <strong>4500 kJ</strong> per day.</div>
+      </details></li>
+      <li><details>
+        <summary>Why is it wrong to say everyone should eat exactly the same amount of energy?</summary>
+        <div class="ans">Because energy needs depend on <strong>age, sex, activity level and pregnancy</strong> — so the right amount is <strong>different for different people</strong>. An active teenager needs more than an inactive older adult, and that's healthy.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — MEASURING ENERGY IN FOOD                                       -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · Biology · Diet &amp; health</div>
+    <h2 class="lesson-title">Measuring <em>energy in food</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know how the food-burning experiment works, why it must be a fair test, and how to work out the temperature rise.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The idea: burn the food</h3>
+    <p>How do scientists work out how much energy is in a piece of food? They <strong>burn it</strong>. When food burns, the energy stored in it is released as <strong>heat</strong>. If you use that heat to warm up some water, then <strong>the more energy the food contains, the hotter the water gets</strong>.</p>
+    <p>This experiment is called <strong>calorimetry</strong>. The set-up is simple: hold a measured amount of water in a boiling tube, set fire to a food sample underneath it, and watch how much the water's <strong>temperature rises</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Clamp stand -->
+        <rect x="60" y="40" width="14" height="220" fill="#5C6370"/>
+        <rect x="40" y="252" width="120" height="12" fill="#5C6370"/>
+        <!-- Clamp arm -->
+        <rect x="74" y="70" width="70" height="8" fill="#5C6370"/>
+        <!-- Boiling tube of water -->
+        <rect x="150" y="60" width="44" height="120" rx="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="150" y="120" width="44" height="60" rx="0" fill="#C9D7ED" stroke="none"/>
+        <rect x="150" y="60" width="44" height="120" rx="14" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <text x="220" y="150" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">water</text>
+        <text x="220" y="166" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">measure its temp rise</text>
+        <!-- Thermometer -->
+        <line x1="172" y1="40" x2="172" y2="110" stroke="#B85042" stroke-width="3"/>
+        <circle cx="172" cy="112" r="6" fill="#B85042"/>
+        <text x="220" y="60" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#B85042">thermometer</text>
+        <!-- Flame / burning food -->
+        <path d="M 172 215 Q 162 195 172 185 Q 182 195 172 215 Z" fill="#C8A24A"/>
+        <path d="M 172 212 Q 166 200 172 192 Q 178 200 172 212 Z" fill="#B85042"/>
+        <!-- mounted needle holding food -->
+        <line x1="172" y1="230" x2="172" y2="216" stroke="#5C6370" stroke-width="2"/>
+        <rect x="150" y="230" width="44" height="8" rx="2" fill="#5C6370"/>
+        <text x="220" y="210" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">burning food</text>
+        <text x="220" y="226" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">on a mounted needle</text>
+        <!-- arrows: heat rising -->
+        <g stroke="#B85042" stroke-width="1.5" fill="none">
+          <path d="M 160 185 q 4 -6 0 -12"/>
+          <path d="M 184 185 q 4 -6 0 -12"/>
+        </g>
+        <!-- caption arrow -->
+        <text x="420" y="120" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">More energy in</text>
+        <text x="420" y="140" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">the food means</text>
+        <text x="420" y="160" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">a bigger temp rise.</text>
+      </svg>
+      <div class="caption">The food-burning (calorimetry) apparatus</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Calorimetry</dt>
+        <dd>Measuring the energy in food by burning it and using the heat to warm water.</dd>
+        <dt>Temperature rise</dt>
+        <dd>How much the water's temperature goes up (final temperature − start temperature).</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Making it a fair test</h3>
+    <p>To <em>compare</em> two foods fairly, you can only let <strong>one thing</strong> change between them — the food itself. Everything else must be kept the same. So for each food you should keep these the same:</p>
+    <p>· the <strong>same mass of food</strong> burned<br>
+    · the <strong>same amount (volume) of water</strong><br>
+    · the <strong>same starting temperature</strong> of the water<br>
+    · the <strong>same distance</strong> between the flame and the tube</p>
+    <p>If you keep all of those constant, then any difference in temperature rise must be down to the <strong>food</strong> — which is exactly what you want to test. That's what makes it a <strong>fair test</strong>.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — temperature rise, not final temperature</h4>
+      <p>The result you compare is the <strong>rise</strong> in temperature, not just the final reading. If one tube started warmer than another, comparing final temperatures would be unfair. Always work out <strong>final − start</strong>, and make sure both started at the same temperature.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Working out the temperature rise</h3>
+    <p>The maths here is simple. The <strong>temperature rise</strong> is just the difference between the final and starting temperatures:</p>
+    <p style="text-align:center"><span class="formula">temperature rise = final temperature − start temperature</span></p>
+    <p>Whichever food gives the <strong>bigger temperature rise</strong> released the <strong>most energy</strong>.</p>
+
+    <div class="worked">
+      <h4>Worked example 1</h4>
+      <p class="q">A crisp is burned under a tube of water. The water starts at <strong>21 °C</strong> and ends at <strong>58 °C</strong>. What is the temperature rise?</p>
+      <div class="step"><div class="label">Formula</div><div class="v">rise = final − start</div></div>
+      <div class="step"><div class="label">Insert</div><div class="v">rise = 58 − 21</div></div>
+      <div class="step"><div class="label">Fix</div><div class="v">both temperatures already in °C, no conversion needed</div></div>
+      <div class="step answer"><div class="label">Answer</div><div class="v">rise = 37 °C</div></div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example 2 — comparing two foods</h4>
+      <p class="q">Same volume of water, same start temperature of <strong>20 °C</strong>. A piece of <strong>bread</strong> heats the water to <strong>32 °C</strong>; a <strong>peanut</strong> heats the water to <strong>49 °C</strong>. Which food contained more energy?</p>
+      <div class="step"><div class="label">Formula</div><div class="v">rise = final − start</div></div>
+      <div class="step"><div class="label">Insert</div><div class="v">bread: 32 − 20 = 12 °C<br>peanut: 49 − 20 = 29 °C</div></div>
+      <div class="step"><div class="label">Fix</div><div class="v">fair test — water volume and start temp kept the same</div></div>
+      <div class="step answer"><div class="label">Answer</div><div class="v">peanut — bigger rise (29 °C), so more energy</div></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A pasta sample heats water from <strong>19 °C</strong> to <strong>46 °C</strong>. What is the temperature rise?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>65 °C (added the temperatures)</span></li>
+        <li><span class="letter">B</span><span>27 °C (final − start)</span></li>
+        <li><span class="letter">C</span><span>46 °C (just the final reading)</span></li>
+        <li><span class="letter">D</span><span>You need to know the mass of water first</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 27 °C.</strong> rise = final − start = 46 − 19 = 27 °C. <em>A is the trap — adding instead of subtracting. You compare the temperature rise, which is always final minus start.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>How do scientists measure the energy in a food sample?</summary>
+        <div class="ans">They <strong>burn the food</strong> under a tube of water and measure how much the water's <strong>temperature rises</strong>. This is called <strong>calorimetry</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What does a bigger temperature rise tell you about the food?</summary>
+        <div class="ans">The food contained <strong>more energy</strong> — more energy was released as heat to warm the water.</div>
+      </details></li>
+      <li><details>
+        <summary>Name two things you must keep the same to make this a fair test.</summary>
+        <div class="ans">Any two from: <strong>mass of food</strong>, <strong>volume of water</strong>, <strong>starting temperature of water</strong>, and <strong>distance from flame to tube</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Water starts at 22 °C and ends at 60 °C. What is the temperature rise?</summary>
+        <div class="ans">rise = final − start = 60 − 22 = <strong>38 °C</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Two foods are tested with the same volume of water, both starting at 18 °C. Food X reaches 40 °C; food Y reaches 35 °C. Which food has more energy, and what are the two rises?</summary>
+        <div class="ans">Food X rise = 40 − 18 = <strong>22 °C</strong>. Food Y rise = 35 − 18 = <strong>17 °C</strong>. <strong>Food X</strong> has more energy (bigger rise).</div>
+      </details></li>
+      <li><details>
+        <summary>Why do we compare the temperature rise rather than the final temperature?</summary>
+        <div class="ans">Because the tubes might not have started at the same temperature. Comparing the <strong>rise (final − start)</strong> is fair; comparing only final readings could be misleading.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — DIET-RELATED PROBLEMS                                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · Biology · Diet &amp; health</div>
+    <h2 class="lesson-title">Diet-related <em>problems</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what happens when a diet has too much, too little, or the wrong balance of food — including deficiency diseases.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Too much, or too little</h3>
+    <p>From Topic 2 you know that staying healthy means matching the energy you <strong>take in</strong> to the energy you <strong>use up</strong>. When that balance is wrong, problems follow.</p>
+    <p>If you take in <strong>more energy than you use</strong>, the extra is stored as fat. Over time this can lead to <strong>obesity</strong> — being very overweight. Obesity raises the risk of serious health problems such as <strong>type 2 diabetes</strong>, <strong>heart disease</strong> and high blood pressure.</p>
+    <p>If you take in <strong>far too little food</strong>, your body runs out of fuel and breaks down its own stores. This is <strong>starvation</strong>, and it leaves you weak, with no energy, and unable to grow or repair properly.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Balance beam -->
+        <g>
+          <!-- pivot -->
+          <polygon points="280,150 265,190 295,190" fill="#5C6370"/>
+          <!-- balanced beam (level) -->
+          <rect x="120" y="142" width="320" height="8" rx="4" fill="#1E2761"/>
+          <!-- left pan: energy in -->
+          <line x1="160" y1="146" x2="160" y2="180" stroke="#5C6370" stroke-width="1.5"/>
+          <rect x="120" y="180" width="80" height="34" rx="4" fill="#F2E6BD" stroke="#1E2761" stroke-width="1.5"/>
+          <text x="160" y="198" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">ENERGY IN</text>
+          <text x="160" y="209" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8" fill="#5C6370">(food)</text>
+          <!-- right pan: energy out -->
+          <line x1="400" y1="146" x2="400" y2="180" stroke="#5C6370" stroke-width="1.5"/>
+          <rect x="360" y="180" width="80" height="34" rx="4" fill="#DDEBDD" stroke="#1E2761" stroke-width="1.5"/>
+          <text x="400" y="198" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">ENERGY OUT</text>
+          <text x="400" y="209" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8" fill="#5C6370">(activity)</text>
+        </g>
+        <!-- Labels above -->
+        <text x="280" y="40" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="16" fill="#1E2761">Balanced: weight stays steady</text>
+        <text x="160" y="110" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#B85042">too much in → obesity</text>
+        <text x="400" y="110" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#B85042">too little in → starvation</text>
+        <!-- arrows -->
+        <path d="M 160 116 v 18" stroke="#B85042" stroke-width="1.5" marker-end="url(#ar)"/>
+        <path d="M 400 116 v 18" stroke="#B85042" stroke-width="1.5" marker-end="url(#ar)"/>
+        <defs>
+          <marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#B85042"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="caption">Energy in vs energy out: the balance that keeps weight steady</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Deficiency diseases</h3>
+    <p>Some problems come not from <em>how much</em> you eat but from <strong>missing a particular nutrient</strong>. A disease caused by lacking a nutrient is called a <strong>deficiency disease</strong>. Two you need to know:</p>
+    <p><strong>Scurvy</strong> is caused by a lack of <strong>vitamin C</strong>. It leads to bleeding gums, sore joints and slow healing. It's why sailors on long voyages used to fall ill — until they started taking citrus fruit.</p>
+    <p><strong>Rickets</strong> is caused by a lack of <strong>vitamin D</strong> (which helps the body use calcium). Without it, bones grow soft and weak, and a child's legs can bow outwards.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Deficiency disease</dt>
+        <dd>An illness caused by missing a particular nutrient from the diet.</dd>
+        <dt>Scurvy</dt>
+        <dd>Caused by a lack of vitamin C (bleeding gums, slow healing).</dd>
+        <dt>Rickets</dt>
+        <dd>Caused by a lack of vitamin D (soft, weak bones).</dd>
+        <dt>Malnutrition</dt>
+        <dd>Having an unbalanced diet — too little, too much, or the wrong mix.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — malnutrition is NOT just "not enough food"</h4>
+      <p>Many people think malnutrition only means starving. In fact, <strong>malnutrition means an unbalanced diet of any kind</strong>. Someone who eats far too much, or eats plenty but misses a vitamin, is also malnourished. <strong>Too much can be malnutrition too.</strong></p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A child's diet contains plenty of energy but almost no vitamin D. What is the most likely result?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Scurvy — bleeding gums</span></li>
+        <li><span class="letter">B</span><span>Rickets — soft, weak bones</span></li>
+        <li><span class="letter">C</span><span>Starvation — no energy at all</span></li>
+        <li><span class="letter">D</span><span>Nothing — they get enough energy, so they're fine</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — rickets.</strong> A lack of <strong>vitamin D</strong> causes rickets (soft, weak bones). <em>D is the trap: having enough energy does not make a diet balanced. Missing a nutrient is a form of malnutrition even when there's plenty to eat.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What happens if you take in more energy than you use, over a long time?</summary>
+        <div class="ans">The extra energy is stored as fat, which can lead to <strong>obesity</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Name two health risks linked to obesity.</summary>
+        <div class="ans">Any two from: <strong>type 2 diabetes, heart disease, high blood pressure</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What is starvation?</summary>
+        <div class="ans">When the body gets <strong>far too little food</strong>, so it runs out of fuel and breaks down its own stores — leaving the person weak and unable to grow or repair.</div>
+      </details></li>
+      <li><details>
+        <summary>What is a deficiency disease? Give an example.</summary>
+        <div class="ans">An illness caused by <strong>lacking a particular nutrient</strong>. For example, <strong>scurvy</strong> (lack of vitamin C) or <strong>rickets</strong> (lack of vitamin D).</div>
+      </details></li>
+      <li><details>
+        <summary>Which vitamin is missing in someone with scurvy, and which in someone with rickets?</summary>
+        <div class="ans">Scurvy — lack of <strong>vitamin C</strong>. Rickets — lack of <strong>vitamin D</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What does "malnutrition" actually mean?</summary>
+        <div class="ans">Having an <strong>unbalanced diet</strong> — which can mean too little food, too much food, or the wrong mix of nutrients. It is <strong>not</strong> only "not enough food".</div>
+      </details></li>
+      <li><details>
+        <summary>Can a person who eats plenty still be malnourished? Explain.</summary>
+        <div class="ans"><strong>Yes.</strong> If their diet is unbalanced — for example, too much energy (leading to obesity) or missing a vitamin (causing a deficiency disease) — they are malnourished even though they eat plenty.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — SMOKING, VAPING, ALCOHOL & DRUGS                               -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · Biology · Diet &amp; health</div>
+    <h2 class="lesson-title">Smoking, vaping, <em>alcohol &amp; drugs</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what a drug is, and how smoking, vaping, alcohol and other drugs harm the body.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What is a drug?</h3>
+    <p>A <strong>drug</strong> is a substance that changes the way your body or brain works. Some drugs are <strong>medicines</strong> that help you when you're ill. Others are harmful, and some are illegal. Many drugs are <strong>addictive</strong>, which means the body comes to crave them and it's very hard to stop.</p>
+    <p>Smoking, vaping and drinking alcohol all involve taking drugs into the body — <strong>nicotine</strong> in cigarettes and vapes, and <strong>alcohol</strong> in drinks. Let's look at how each one harms you.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Drug</dt>
+        <dd>A substance that changes how the body or brain works.</dd>
+        <dt>Addictive</dt>
+        <dd>When the body craves a drug, making it very hard to stop using it.</dd>
+        <dt>Nicotine</dt>
+        <dd>The addictive drug in cigarettes and most vapes.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>How they harm the body</h3>
+    <p><strong>Smoking.</strong> Cigarette smoke contains <strong>tar</strong>, which coats the lungs and causes <strong>lung damage</strong> and lung cancer. It also contains <strong>carbon monoxide</strong>, a gas that stops the blood carrying oxygen properly, so the heart has to work harder. And it contains <strong>nicotine</strong>, the drug that makes smoking so addictive.</p>
+    <p><strong>Vaping.</strong> Vapes were sold as "safer than smoking", but they are <strong>not harmless</strong>. They still deliver addictive nicotine, and there are real concerns about the effect of the chemicals in vapour on young, growing lungs.</p>
+    <p><strong>Alcohol.</strong> Alcohol slows down the brain. In the short term this <strong>slows your reaction time</strong> and affects judgement (which is why drink-driving is so dangerous). In the long term, heavy drinking damages the <strong>liver</strong> — the organ that breaks alcohol down — and can lead to liver disease.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 270" xmlns="http://www.w3.org/2000/svg">
+        <!-- Body outline (simple) -->
+        <ellipse cx="160" cy="55" rx="30" ry="34" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <path d="M 125 95 Q 160 80 195 95 L 205 200 Q 160 215 115 200 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- Brain dot -->
+        <circle cx="160" cy="50" r="8" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+        <!-- Lungs -->
+        <ellipse cx="143" cy="130" rx="14" ry="22" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+        <ellipse cx="177" cy="130" rx="14" ry="22" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+        <!-- Liver -->
+        <path d="M 150 165 Q 185 160 190 180 Q 170 192 150 185 Z" fill="#F2E6BD" stroke="#B85042" stroke-width="1.5"/>
+        <!-- Heart -->
+        <path d="M 150 150 q -6 -8 -12 0 q -6 8 12 16 q 18 -8 12 -16 q -6 -8 -12 0 Z" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5" transform="translate(8,-6)"/>
+        <!-- Connector lines + labels -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">
+          <line x1="168" y1="50" x2="300" y2="44" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="306" y="42" font-weight="700" fill="#1E2761">Brain</text>
+          <text x="306" y="56" font-size="10" fill="#5C6370">alcohol slows reactions &amp; judgement</text>
+
+          <line x1="143" y1="130" x2="300" y2="100" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="306" y="98" font-weight="700" fill="#1E2761">Lungs</text>
+          <text x="306" y="112" font-size="10" fill="#5C6370">tar → damage; smoking &amp; vaping harm</text>
+
+          <line x1="170" y1="150" x2="300" y2="156" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="306" y="154" font-weight="700" fill="#1E2761">Heart &amp; blood</text>
+          <text x="306" y="168" font-size="10" fill="#5C6370">carbon monoxide cuts oxygen carried</text>
+
+          <line x1="180" y1="178" x2="300" y2="212" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="306" y="210" font-weight="700" fill="#1E2761">Liver</text>
+          <text x="306" y="224" font-size="10" fill="#5C6370">heavy alcohol use → liver damage</text>
+        </g>
+        <text x="160" y="245" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Different drugs harm different organs.</text>
+      </svg>
+      <div class="caption">Effects of smoking, alcohol and drugs on the body</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "vaping is totally safe" is a myth</h4>
+      <p>Because vapes were marketed as an alternative to cigarettes, some people assume they're harmless. They aren't. Vapes still contain <strong>addictive nicotine</strong>, and the long-term effects on growing lungs are still being studied. "Less harmful than smoking" does <strong>not</strong> mean "safe".</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which substance in cigarette smoke stops the blood from carrying oxygen properly?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Tar — it coats the lungs</span></li>
+        <li><span class="letter">B</span><span>Nicotine — it's addictive</span></li>
+        <li><span class="letter">C</span><span>Carbon monoxide — it takes the place of oxygen</span></li>
+        <li><span class="letter">D</span><span>Alcohol — it slows reactions</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — carbon monoxide.</strong> It stops the blood carrying oxygen properly, so the heart has to work harder. <em>Tar damages the lungs and nicotine is the addictive drug — but it's carbon monoxide that affects how the blood carries oxygen.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is a drug?</summary>
+        <div class="ans">A <strong>substance that changes the way the body or brain works</strong>. Some are helpful medicines; others are harmful.</div>
+      </details></li>
+      <li><details>
+        <summary>What does "addictive" mean?</summary>
+        <div class="ans">The body comes to <strong>crave</strong> the drug, making it very hard to stop using it.</div>
+      </details></li>
+      <li><details>
+        <summary>Name two harmful substances in cigarette smoke and what each one does.</summary>
+        <div class="ans">Any two from: <strong>tar</strong> (coats and damages the lungs), <strong>carbon monoxide</strong> (stops blood carrying oxygen properly), <strong>nicotine</strong> (the addictive drug).</div>
+      </details></li>
+      <li><details>
+        <summary>How does alcohol affect the body in the short term?</summary>
+        <div class="ans">It <strong>slows reaction time</strong> and affects judgement (which is why drink-driving is dangerous).</div>
+      </details></li>
+      <li><details>
+        <summary>Which organ is damaged by heavy, long-term alcohol use?</summary>
+        <div class="ans">The <strong>liver</strong> — the organ that breaks alcohol down.</div>
+      </details></li>
+      <li><details>
+        <summary>Is vaping harmless? Explain.</summary>
+        <div class="ans"><strong>No.</strong> Vapes still deliver <strong>addictive nicotine</strong>, and the long-term effects of the vapour on growing lungs are a real concern. "Less harmful than smoking" is not the same as "safe".</div>
+      </details></li>
+      <li><details>
+        <summary>Which substance in smoke makes it so hard to quit, and why?</summary>
+        <div class="ans"><strong>Nicotine</strong>, because it is <strong>addictive</strong> — the body craves it, so stopping is very difficult.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>Year 8 Biology · Diet &amp; Health</p>
+  <p>A revision booklet</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'diet-health-y8-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+</body>
+</html>

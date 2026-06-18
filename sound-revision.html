@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sound &amp; Waves — Year 8 Revision</title>
+<meta name="description" content="A Year 8 revision booklet on sound and waves — six short topics covering what a wave is, measuring waves, why sound needs a medium, pitch and loudness, how we hear, and the speed of sound and ultrasound.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Year 8 · Physics · Sound &amp; Waves</div>
+    <h1>Sound, <em>but bitesize.</em></h1>
+    <p class="tag">A revision booklet — six short topics, from what a wave actually is to the speed of sound and ultrasound.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Take it one topic at a time.</strong> There are six topics. Each one is short — about 10 minutes. Do one or two a day.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">What is a wave?</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Measuring waves</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Sound needs a medium</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Pitch &amp; loudness</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">How we hear</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Speed &amp; ultrasound</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — WHAT IS A WAVE                                                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · Physics · Sound &amp; Waves</div>
+    <h2 class="lesson-title">What is a <em>wave</em>?</h2>
+    <p class="lesson-promise">By the end of this topic you'll know what a wave actually carries, what a transverse wave looks like, and the names of every part of one.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>A wave carries energy, not stuff</h3>
+    <p>Drop a stone into a still pond. Ripples spread out in circles. It looks like the water is travelling outwards — but it isn't. Put a leaf on the surface and watch: the leaf bobs <strong>up and down on the spot</strong>. It doesn't get carried to the edge.</p>
+    <p>That's the big idea. A <strong>wave</strong> transfers <strong>energy</strong> from one place to another <strong>without transferring matter</strong>. The water stays put; only the energy moves through it. The same is true for sound, light, and every other wave you'll meet.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- water surface ripples -->
+        <path d="M 20 120 Q 60 90 100 120 T 180 120 T 260 120 T 340 120 T 420 120 T 500 120 T 540 120"
+              fill="none" stroke="#1E2761" stroke-width="2"/>
+        <!-- stone splash point -->
+        <circle cx="40" cy="120" r="5" fill="#5C6370"/>
+        <text x="40" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">stone in</text>
+        <!-- arrow: energy travels this way -->
+        <line x1="120" y1="170" x2="500" y2="170" stroke="#C8A24A" stroke-width="2"/>
+        <polygon points="500,170 490,165 490,175" fill="#C8A24A"/>
+        <text x="310" y="190" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#C8A24A" letter-spacing="1">ENERGY TRAVELS THIS WAY →</text>
+        <!-- leaf bobbing on the spot -->
+        <g transform="translate(300,95)">
+          <ellipse cx="0" cy="0" rx="14" ry="6" fill="#2C5F2D"/>
+          <line x1="0" y1="-22" x2="0" y2="22" stroke="#B85042" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <polygon points="0,-22 -5,-14 5,-14" fill="#B85042"/>
+          <polygon points="0,22 -5,14 5,14" fill="#B85042"/>
+        </g>
+        <text x="300" y="40" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">the leaf just bobs up &amp; down — it doesn't travel</text>
+      </svg>
+      <div class="caption">A wave moves energy along — the water itself stays put</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Wave</dt>
+        <dd>A disturbance that transfers energy from place to place without transferring matter.</dd>
+        <dt>Transfer of energy</dt>
+        <dd>Energy moving along the wave — for example, the energy that makes your eardrum vibrate when a sound reaches it.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the particles don't travel with the wave</h4>
+      <p>It's tempting to think the wave carries the water (or the air, or the particles) along with it. It doesn't. Each particle <strong>vibrates around its own resting place</strong> and stays roughly where it started. Only the <strong>energy</strong> is passed along. If waves carried the particles, the pond would empty itself every time you dropped a stone in.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Transverse waves and their parts</h3>
+    <p>A <strong>transverse wave</strong> is one where the particles vibrate <strong>up and down</strong>, at right angles to the direction the wave travels. Water ripples are transverse. So is light. The classic "wiggly line" you draw for a wave is a transverse wave.</p>
+    <p>Every transverse wave has the same set of parts, and you need to be able to label them:</p>
+    <p>The <strong>rest position</strong> is the flat middle line — where the water would sit if nothing was disturbing it. The peaks above the line are <strong>crests</strong>; the dips below are <strong>troughs</strong>. The <strong>amplitude</strong> is the height from the rest position up to a crest (how far the particle moves from the middle). The <strong>wavelength</strong> is the length of one complete wave — for example, from one crest to the very next crest.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- rest position line -->
+        <line x1="20" y1="120" x2="540" y2="120" stroke="#5C6370" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="546" y="124" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370" text-anchor="end" dy="20">rest position</text>
+        <!-- the wave: two full wavelengths -->
+        <path d="M 40 120 C 70 50, 130 50, 160 120 S 250 190, 280 120 S 370 50, 400 120 S 490 190, 520 120"
+              fill="none" stroke="#1E2761" stroke-width="2.5"/>
+        <!-- crest label -->
+        <circle cx="100" cy="65" r="3" fill="#B85042"/>
+        <text x="100" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">crest</text>
+        <!-- trough label -->
+        <circle cx="220" cy="175" r="3" fill="#B85042"/>
+        <text x="220" y="200" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">trough</text>
+        <!-- amplitude: from rest line up to crest -->
+        <line x1="100" y1="120" x2="100" y2="65" stroke="#C8A24A" stroke-width="2"/>
+        <polygon points="100,65 96,75 104,75" fill="#C8A24A"/>
+        <text x="118" y="95" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#C8A24A">amplitude</text>
+        <!-- wavelength: crest to crest -->
+        <line x1="100" y1="225" x2="340" y2="225" stroke="#1E2761" stroke-width="1.5"/>
+        <polygon points="100,225 110,221 110,229" fill="#1E2761"/>
+        <polygon points="340,225 330,221 330,229" fill="#1E2761"/>
+        <line x1="100" y1="65" x2="100" y2="225" stroke="#1E2761" stroke-width="0.7" stroke-dasharray="2 3"/>
+        <line x1="340" y1="65" x2="340" y2="225" stroke="#1E2761" stroke-width="0.7" stroke-dasharray="2 3"/>
+        <text x="220" y="219" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761">wavelength (crest to crest)</text>
+      </svg>
+      <div class="caption">A transverse wave, with amplitude and wavelength marked</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Transverse wave</dt>
+        <dd>A wave where the particles vibrate at right angles to the direction the wave travels.</dd>
+        <dt>Crest</dt>
+        <dd>The highest point of a wave, above the rest position.</dd>
+        <dt>Trough</dt>
+        <dd>The lowest point of a wave, below the rest position.</dd>
+        <dt>Amplitude</dt>
+        <dd>The distance from the rest position to a crest (or to a trough). How far the particle moves from the middle.</dd>
+        <dt>Wavelength</dt>
+        <dd>The length of one complete wave — for example, from one crest to the next crest.</dd>
+      </dl>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A wave is drawn on a graph. You measure the distance straight down from the rest line to the bottom of a trough. What have you measured?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The wavelength</span></li>
+        <li><span class="letter">B</span><span>The amplitude</span></li>
+        <li><span class="letter">C</span><span>The frequency</span></li>
+        <li><span class="letter">D</span><span>The crest height</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — the amplitude.</strong> Amplitude is the distance from the rest position to a crest <em>or</em> a trough — they're the same size. Wavelength is measured <em>along</em> the wave (crest to crest), not up and down, so A is the trap.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What does a wave transfer?</summary>
+        <div class="ans"><strong>Energy</strong> — without transferring matter.</div>
+      </details></li>
+      <li><details>
+        <summary>When a wave passes through water, what happens to the water particles?</summary>
+        <div class="ans">They <strong>vibrate up and down around their resting place</strong> and stay roughly where they started. They are not carried along with the wave.</div>
+      </details></li>
+      <li><details>
+        <summary>What is a transverse wave?</summary>
+        <div class="ans">A wave where the particles vibrate <strong>at right angles</strong> to the direction the wave travels (up and down).</div>
+      </details></li>
+      <li><details>
+        <summary>What is the amplitude of a wave?</summary>
+        <div class="ans">The distance from the <strong>rest position to a crest</strong> (or to a trough). It tells you how far a particle moves from the middle.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the wavelength of a wave?</summary>
+        <div class="ans">The length of <strong>one complete wave</strong> — for example, the distance from one crest to the next crest.</div>
+      </details></li>
+      <li><details>
+        <summary>Name the highest and lowest points of a transverse wave.</summary>
+        <div class="ans">The highest point is the <strong>crest</strong>; the lowest point is the <strong>trough</strong>.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — MEASURING WAVES                                                -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · Physics · Sound &amp; Waves</div>
+    <h2 class="lesson-title">Measuring <em>waves</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll be able to read a wave off a diagram, and you'll know what frequency means and how it's measured.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Three things we measure</h3>
+    <p>From the last topic you already know two of the measurements: <strong>amplitude</strong> (how tall the wave is, from rest to crest) and <strong>wavelength</strong> (how long one wave is). There's a third one, and it's the most useful for sound: <strong>frequency</strong>.</p>
+    <p><strong>Frequency</strong> is the number of complete waves that pass a point <strong>every second</strong>. If three full waves go past your finger in one second, the frequency is 3 waves per second. The unit for frequency is the <strong>hertz (Hz)</strong>. So 3 waves per second is written as 3 Hz.</p>
+    <p>That's the whole idea — frequency is just counting. <strong>More waves per second means a higher frequency.</strong> A buzzing mosquito makes a very high-frequency sound; a deep drum makes a low-frequency one.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Frequency</dt>
+        <dd>The number of complete waves that pass a point every second.</dd>
+        <dt>Hertz (Hz)</dt>
+        <dd>The unit of frequency. 1 Hz = 1 wave per second.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Reading and comparing waves</h3>
+    <p>When two waves are drawn side by side, you compare them by looking at the height and the spacing. The diagram below shows two waves drawn over the same length of time.</p>
+    <p>The top wave is <strong>taller</strong> — it has a <strong>bigger amplitude</strong>. The bottom wave is <strong>squashed up</strong> — more waves fit into the same space, so it has a <strong>shorter wavelength and a higher frequency</strong>. Being able to spot these differences at a glance is exactly what exam questions ask for.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- TOP WAVE: big amplitude, low frequency -->
+        <line x1="30" y1="60" x2="540" y2="60" stroke="#5C6370" stroke-width="1" stroke-dasharray="4 4"/>
+        <path d="M 40 60 C 75 0, 145 0, 180 60 S 285 120, 320 60 S 425 0, 460 60 S 525 30, 530 60"
+              fill="none" stroke="#1E2761" stroke-width="2.5"/>
+        <line x1="180" y1="60" x2="180" y2="12" stroke="#C8A24A" stroke-width="2"/>
+        <text x="200" y="35" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#C8A24A">big amplitude</text>
+        <text x="40" y="105" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Wave A — fewer, taller waves (low frequency, loud)</text>
+
+        <!-- BOTTOM WAVE: small amplitude, high frequency -->
+        <line x1="30" y1="180" x2="540" y2="180" stroke="#5C6370" stroke-width="1" stroke-dasharray="4 4"/>
+        <path d="M 40 180 q 18 -30 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0 t 36 0"
+              fill="none" stroke="#B85042" stroke-width="2.5"/>
+        <line x1="58" y1="180" x2="58" y2="165" stroke="#C8A24A" stroke-width="2"/>
+        <text x="72" y="155" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#C8A24A">small amplitude</text>
+        <text x="40" y="225" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">Wave B — many, shorter waves (high frequency, quiet)</text>
+      </svg>
+      <div class="caption">Two waves compared — amplitude and frequency are different</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — short wavelength means high frequency</h4>
+      <p>If the waves are squashed close together, that's a <strong>short wavelength</strong> — and a short wavelength means a <strong>high frequency</strong> (more waves fit into each second). Don't muddle wavelength and frequency: they describe different things, and as one goes down the other goes up.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Five complete waves pass a buoy in one second. What is the frequency?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>5 seconds</span></li>
+        <li><span class="letter">B</span><span>5 Hz</span></li>
+        <li><span class="letter">C</span><span>5 metres</span></li>
+        <li><span class="letter">D</span><span>0.2 Hz</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 5 Hz.</strong> Frequency is the number of waves per second, and the unit is the hertz (Hz). Five waves per second = 5 Hz. <em>A and C use the wrong units (seconds and metres), and D would be the answer if you divided the wrong way round.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is the frequency of a wave?</summary>
+        <div class="ans">The number of complete waves that pass a point <strong>every second</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the unit of frequency, and what does it mean?</summary>
+        <div class="ans">The <strong>hertz (Hz)</strong>. 1 Hz = 1 wave per second.</div>
+      </details></li>
+      <li><details>
+        <summary>Ten complete waves pass a point in one second. State the frequency.</summary>
+        <div class="ans"><strong>10 Hz</strong> (10 waves per second).</div>
+      </details></li>
+      <li><details>
+        <summary>Wave A has more waves squashed into the same space than Wave B. Which has the higher frequency?</summary>
+        <div class="ans"><strong>Wave A</strong>. More waves in the same space means a shorter wavelength and more waves per second — a higher frequency.</div>
+      </details></li>
+      <li><details>
+        <summary>Two waves are drawn. One is much taller than the other. What is different about them?</summary>
+        <div class="ans">They have different <strong>amplitudes</strong>. The taller wave has the bigger amplitude.</div>
+      </details></li>
+      <li><details>
+        <summary>A mosquito makes a high-pitched whine; a bass drum makes a deep boom. Which sound has the higher frequency?</summary>
+        <div class="ans">The <strong>mosquito</strong>. A high-pitched sound is made by a high-frequency wave.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — SOUND NEEDS A MEDIUM                                           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · Physics · Sound &amp; Waves</div>
+    <h2 class="lesson-title">Sound needs a <em>medium</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know how sound is made, why it can travel through solids, liquids and gases — and why it can never travel through a vacuum.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Sound starts with a vibration</h3>
+    <p>Every sound starts with something <strong>vibrating</strong>. Pluck a guitar string and you can see it shaking. Touch your throat while you hum and you can feel it buzzing. Bang a drum and the skin trembles. No vibration, no sound.</p>
+    <p>That vibration pushes against the particles next to it. Those particles bump into the ones beyond them, which bump into the next ones, and so on. The vibration gets <strong>passed along from particle to particle</strong>, spreading out as a wave until it reaches your ear.</p>
+    <p>This is why sound needs something to travel through. The stuff a wave travels through is called the <strong>medium</strong> — it could be air, water, a wall, anything made of particles. Without particles, there's nothing to pass the vibration along.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Vibration</dt>
+        <dd>A fast back-and-forth movement. Every sound is made by something vibrating.</dd>
+        <dt>Medium</dt>
+        <dd>The material a wave travels through — a solid, liquid or gas. Its particles pass the vibration along.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Solids, liquids, gases — and the vacuum</h3>
+    <p>Sound can travel through all three states of matter, but not equally well. It travels <strong>fastest in solids</strong>, a bit slower in liquids, and slowest in gases like air. The reason is how close the particles are: in a solid the particles are packed tightly together, so they pass the vibration on very quickly. In a gas the particles are far apart, so it takes longer for the vibration to be handed along.</p>
+    <p>And here's the crucial one: a <strong>vacuum</strong> is a space with <strong>no particles at all</strong>. With nothing to pass the vibration along, <strong>sound cannot travel through a vacuum</strong>. This is shown by the famous <strong>bell jar</strong> experiment: a ringing bell is placed inside a glass jar, and the air is slowly pumped out. As the air disappears, the ringing fades to silence — even though you can still see the bell hammer moving.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- bell jar -->
+        <path d="M 60 200 L 60 90 Q 60 40 150 40 Q 240 40 240 90 L 240 200 Z"
+              fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- base -->
+        <rect x="40" y="200" width="220" height="14" rx="3" fill="#5C6370"/>
+        <!-- bell inside -->
+        <path d="M 130 150 Q 130 110 150 110 Q 170 110 170 150 Z" fill="#C8A24A" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="150" y1="110" x2="150" y2="98" stroke="#1E2761" stroke-width="1.5"/>
+        <circle cx="150" cy="160" r="4" fill="#1E2761"/>
+        <!-- pump tube -->
+        <line x1="240" y1="185" x2="300" y2="185" stroke="#5C6370" stroke-width="4"/>
+        <text x="305" y="180" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">air pumped out →</text>
+        <!-- crossed-out sound waves -->
+        <g stroke="#B85042" stroke-width="1.5" fill="none">
+          <path d="M 185 130 q 14 12 0 24"/>
+          <path d="M 195 124 q 22 18 0 36"/>
+        </g>
+        <line x1="178" y1="118" x2="218" y2="158" stroke="#B85042" stroke-width="2.5"/>
+        <text x="150" y="30" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042" letter-spacing="1">NO AIR = NO SOUND</text>
+        <!-- comparison: particle chains -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">
+          <text x="400" y="70" font-weight="700">solid — particles touching</text>
+          <text x="400" y="135" font-weight="700">gas — particles far apart</text>
+          <text x="400" y="200" font-weight="700" fill="#B85042">vacuum — no particles</text>
+        </g>
+        <!-- solid dots: tight -->
+        <g fill="#1E2761"><circle cx="405" cy="85" r="4"/><circle cx="417" cy="85" r="4"/><circle cx="429" cy="85" r="4"/><circle cx="441" cy="85" r="4"/><circle cx="453" cy="85" r="4"/><circle cx="465" cy="85" r="4"/></g>
+        <text x="478" y="89" font-family="IBM Plex Mono,monospace" font-size="9" fill="#2C5F2D">fast</text>
+        <!-- gas dots: spread -->
+        <g fill="#1E2761"><circle cx="405" cy="150" r="4"/><circle cx="430" cy="150" r="4"/><circle cx="458" cy="150" r="4"/></g>
+        <text x="478" y="154" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">slower</text>
+        <!-- vacuum: empty box -->
+        <rect x="403" y="178" width="66" height="18" fill="none" stroke="#B85042" stroke-width="1" stroke-dasharray="3 3"/>
+      </svg>
+      <div class="caption">The bell-jar experiment — sound can't cross a vacuum</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — sound can NOT travel through a vacuum</h4>
+      <p>In space there is almost no air, so it's a near-vacuum. That means an explosion in space would be <strong>completely silent</strong> — there are no particles to carry the sound to you. Films get this wrong all the time. Light <em>can</em> cross a vacuum (it doesn't need particles), which is why you can see the stars but never hear them. Sound always needs a medium.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">In which of these would a ringing bell sound the loudest, all else being equal?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Held against a solid steel rail</span></li>
+        <li><span class="letter">B</span><span>In ordinary air</span></li>
+        <li><span class="letter">C</span><span>In a jar with the air pumped out</span></li>
+        <li><span class="letter">D</span><span>On the surface of the Moon</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — against a solid steel rail.</strong> Sound travels fastest and carries best through solids, because the particles are packed tightly and pass the vibration along easily. <em>C and D are vacuums (or near-vacuums) — no particles, so no sound at all.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>How is a sound made?</summary>
+        <div class="ans">By something <strong>vibrating</strong>. The vibration is passed along from particle to particle as a wave.</div>
+      </details></li>
+      <li><details>
+        <summary>What is a medium?</summary>
+        <div class="ans">The <strong>material a wave travels through</strong> — a solid, liquid or gas. Its particles pass the vibration along.</div>
+      </details></li>
+      <li><details>
+        <summary>In which state of matter does sound travel fastest, and why?</summary>
+        <div class="ans"><strong>Solids</strong>. The particles are packed closely together, so they pass the vibration along very quickly.</div>
+      </details></li>
+      <li><details>
+        <summary>Can sound travel through a vacuum? Explain your answer.</summary>
+        <div class="ans"><strong>No.</strong> A vacuum has <strong>no particles</strong>, so there is nothing to pass the vibration along. No particles means no sound.</div>
+      </details></li>
+      <li><details>
+        <summary>Describe what happens in the bell-jar experiment as the air is pumped out.</summary>
+        <div class="ans">The ringing <strong>gets quieter and fades to silence</strong>, even though the bell can still be seen moving. With less air there are fewer particles to carry the sound.</div>
+      </details></li>
+      <li><details>
+        <summary>Why would an explosion in space make no sound?</summary>
+        <div class="ans">Space is a near-<strong>vacuum</strong> with almost no particles, so there is nothing to carry the sound wave to you.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — PITCH AND LOUDNESS                                             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · Physics · Sound &amp; Waves</div>
+    <h2 class="lesson-title">Pitch &amp; <em>loudness</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know exactly which part of a wave controls how high a sound is, and which part controls how loud it is.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Frequency controls pitch</h3>
+    <p><strong>Pitch</strong> is how <strong>high or low</strong> a note sounds. A piccolo plays high notes; a tuba plays low ones. Pitch is controlled by one thing: <strong>frequency</strong>.</p>
+    <p>A <strong>high frequency</strong> (lots of waves per second) makes a <strong>high-pitched</strong> sound. A <strong>low frequency</strong> (few waves per second) makes a <strong>low-pitched</strong> sound. That's the whole rule. When a singer slides up to a higher note, the air is vibrating faster — more waves are reaching your ear each second.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Pitch</dt>
+        <dd>How high or low a sound is. Controlled by frequency.</dd>
+        <dt>High frequency → high pitch</dt>
+        <dd>The more waves per second, the higher the note sounds.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Amplitude controls loudness</h3>
+    <p><strong>Loudness</strong> (also called volume) is how <strong>loud or quiet</strong> a sound is. This is controlled by a completely different part of the wave: the <strong>amplitude</strong>.</p>
+    <p>A <strong>big amplitude</strong> means a <strong>loud</strong> sound; a <strong>small amplitude</strong> means a <strong>quiet</strong> sound. When you turn up the volume, you're making the speaker vibrate further each time, which pushes the air harder and makes a taller wave. The pitch doesn't change — only the loudness.</p>
+    <p>Scientists view sound on a screen called an <strong>oscilloscope</strong>, which draws the wave so you can see it. Below are four traces. Compare them carefully — changing the height (amplitude) changes loudness, and changing the spacing (frequency) changes pitch. They are independent.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- four oscilloscope panels in a 2x2 grid -->
+        <!-- panel boxes -->
+        <rect x="20" y="20" width="250" height="120" rx="4" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="290" y="20" width="250" height="120" rx="4" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="20" y="180" width="250" height="120" rx="4" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="290" y="180" width="250" height="120" rx="4" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- centre lines -->
+        <line x1="20" y1="80" x2="270" y2="80" stroke="#CFD8E3" stroke-width="1"/>
+        <line x1="290" y1="80" x2="540" y2="80" stroke="#CFD8E3" stroke-width="1"/>
+        <line x1="20" y1="240" x2="270" y2="240" stroke="#CFD8E3" stroke-width="1"/>
+        <line x1="290" y1="240" x2="540" y2="240" stroke="#CFD8E3" stroke-width="1"/>
+
+        <!-- Panel 1: QUIET, LOW PITCH (small amp, long wavelength) -->
+        <path d="M 30 80 q 30 -16 60 0 t 60 0 t 60 0 t 60 0" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <text x="145" y="40" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#1E2761">QUIET · LOW PITCH</text>
+        <text x="145" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">small amplitude · low frequency</text>
+
+        <!-- Panel 2: LOUD, LOW PITCH (big amp, long wavelength) -->
+        <path d="M 300 80 q 30 -45 60 0 t 60 0 t 60 0 t 60 0" fill="none" stroke="#B85042" stroke-width="2"/>
+        <text x="415" y="40" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042">LOUD · LOW PITCH</text>
+        <text x="415" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">big amplitude · low frequency</text>
+
+        <!-- Panel 3: QUIET, HIGH PITCH (small amp, short wavelength) -->
+        <path d="M 30 240 q 15 -16 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <text x="145" y="200" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#1E2761">QUIET · HIGH PITCH</text>
+        <text x="145" y="290" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">small amplitude · high frequency</text>
+
+        <!-- Panel 4: LOUD, HIGH PITCH (big amp, short wavelength) -->
+        <path d="M 300 240 q 15 -45 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0 t 30 0" fill="none" stroke="#B85042" stroke-width="2"/>
+        <text x="415" y="200" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042">LOUD · HIGH PITCH</text>
+        <text x="415" y="290" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">big amplitude · high frequency</text>
+      </svg>
+      <div class="caption">Four oscilloscope traces — taller = louder, more squashed = higher pitch</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — louder does NOT mean higher-pitched</h4>
+      <p>This is the classic mix-up. <strong>Loudness and pitch are two separate things.</strong> You can have a loud low note (a tuba played hard) or a quiet high note (a whistle blown gently). Turning the volume up makes a sound louder, not higher. Loudness depends on <strong>amplitude</strong>; pitch depends on <strong>frequency</strong>. Keep them apart.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">On an oscilloscope, one wave is taller than another but they are equally squashed up. How do the two sounds compare?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The taller one is higher-pitched</span></li>
+        <li><span class="letter">B</span><span>The taller one is louder, same pitch</span></li>
+        <li><span class="letter">C</span><span>The taller one is quieter</span></li>
+        <li><span class="letter">D</span><span>They sound identical</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — the taller one is louder, with the same pitch.</strong> Height is amplitude, which controls loudness — so the taller wave is the louder sound. The spacing (frequency) is the same, so the pitch is the same. <em>A is the trap: people assume taller means higher-pitched, but height has nothing to do with pitch.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is pitch?</summary>
+        <div class="ans">How <strong>high or low</strong> a sound is.</div>
+      </details></li>
+      <li><details>
+        <summary>Which property of a wave controls the pitch of a sound?</summary>
+        <div class="ans"><strong>Frequency.</strong> High frequency = high pitch; low frequency = low pitch.</div>
+      </details></li>
+      <li><details>
+        <summary>Which property of a wave controls the loudness of a sound?</summary>
+        <div class="ans"><strong>Amplitude.</strong> Big amplitude = loud; small amplitude = quiet.</div>
+      </details></li>
+      <li><details>
+        <summary>A guitarist plays the same string but plucks it harder. What changes — pitch, loudness, or both?</summary>
+        <div class="ans">Only the <strong>loudness</strong>. Plucking harder gives a bigger amplitude (louder), but the frequency — and so the pitch — stays the same.</div>
+      </details></li>
+      <li><details>
+        <summary>Sketch-describe the oscilloscope trace of a loud, high-pitched sound.</summary>
+        <div class="ans">A <strong>tall</strong> wave (big amplitude = loud) with the waves <strong>squashed close together</strong> (high frequency = high pitch).</div>
+      </details></li>
+      <li><details>
+        <summary>A student says "turning the volume up makes the sound higher." Are they right?</summary>
+        <div class="ans"><strong>No.</strong> Turning the volume up makes the sound <strong>louder</strong> (bigger amplitude), not higher. Pitch is controlled by frequency, which doesn't change.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — MAKING AND HEARING SOUND                                      -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · Physics · Sound &amp; Waves</div>
+    <h2 class="lesson-title">Making &amp; <em>hearing sound</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll be able to name the parts of the ear, explain how they let us hear, and state the range of frequencies a human can detect.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The parts of the ear</h3>
+    <p>Your ear is a machine for turning sound waves in the air into signals your brain can understand. Sound enters from the left and is passed along through several parts, each with its own job.</p>
+    <p>The <strong>pinna</strong> is the flap on the outside of your head — it funnels sound into the ear. The sound travels down the <strong>ear canal</strong> to the <strong>eardrum</strong>, a thin sheet of skin that <strong>vibrates</strong> when the sound hits it. Behind the eardrum are three tiny bones, the <strong>ossicles</strong>, which pick up the vibration and pass it on, making it bigger. They hand it to the <strong>cochlea</strong>, a coiled, fluid-filled tube that turns the vibration into electrical signals. Finally the <strong>auditory nerve</strong> carries those signals to the brain, where they are understood as sound.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg">
+        <!-- pinna -->
+        <path d="M 40 130 Q 30 70 90 60 Q 120 58 120 95 Q 120 130 95 135 Z"
+              fill="#F4DAD7" stroke="#1E2761" stroke-width="2"/>
+        <text x="60" y="180" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">pinna</text>
+        <line x1="65" y1="160" x2="80" y2="135" stroke="#5C6370" stroke-width="0.8"/>
+        <!-- ear canal -->
+        <rect x="115" y="105" width="110" height="30" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="170" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">ear canal</text>
+        <line x1="170" y1="148" x2="170" y2="135" stroke="#5C6370" stroke-width="0.8"/>
+        <!-- eardrum -->
+        <line x1="228" y1="98" x2="240" y2="142" stroke="#B85042" stroke-width="3"/>
+        <text x="234" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#B85042">eardrum</text>
+        <!-- ossicles (three small bones) -->
+        <g fill="#C8A24A" stroke="#1E2761" stroke-width="1">
+          <rect x="250" y="100" width="14" height="10" rx="2"/>
+          <rect x="266" y="108" width="14" height="10" rx="2"/>
+          <rect x="282" y="100" width="14" height="10" rx="2"/>
+        </g>
+        <text x="272" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">ossicles (bones)</text>
+        <line x1="272" y1="88" x2="272" y2="100" stroke="#5C6370" stroke-width="0.8"/>
+        <!-- cochlea (spiral) -->
+        <g transform="translate(360,130)">
+          <path d="M 0 0 m -28 0 a 28 28 0 1 0 56 0 a 28 28 0 1 0 -56 0 M -18 0 a 18 18 0 1 1 36 0 a 18 18 0 1 1 -36 0 M -9 0 a 9 9 0 1 0 18 0"
+                fill="none" stroke="#1E2761" stroke-width="2"/>
+        </g>
+        <text x="360" y="200" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">cochlea</text>
+        <line x1="360" y1="188" x2="360" y2="160" stroke="#5C6370" stroke-width="0.8"/>
+        <!-- auditory nerve -->
+        <path d="M 388 130 Q 440 130 470 110 Q 500 90 520 95" fill="none" stroke="#2C5F2D" stroke-width="2.5"/>
+        <text x="470" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#2C5F2D">auditory nerve</text>
+        <text x="500" y="120" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">→ brain</text>
+        <!-- incoming sound waves -->
+        <g stroke="#5C6370" stroke-width="1.5" fill="none">
+          <path d="M 12 110 q 8 12 0 24"/>
+          <path d="M 22 104 q 12 18 0 36"/>
+        </g>
+        <text x="80" y="30" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">sound in →</text>
+      </svg>
+      <div class="caption">Cross-section of the ear, from pinna to auditory nerve</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Pinna</dt>
+        <dd>The flap on the outside of the ear that funnels sound into the ear canal.</dd>
+        <dt>Eardrum</dt>
+        <dd>A thin sheet of skin that vibrates when sound hits it.</dd>
+        <dt>Ossicles</dt>
+        <dd>Three tiny bones that pick up the eardrum's vibration and pass it on, making it bigger.</dd>
+        <dt>Cochlea</dt>
+        <dd>A coiled, fluid-filled tube that turns vibrations into electrical signals.</dd>
+        <dt>Auditory nerve</dt>
+        <dd>Carries the electrical signals from the cochlea to the brain.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The order of events, and what we can hear</h3>
+    <p>It helps to remember hearing as a chain. Each part passes the energy to the next, in order:</p>
+    <p style="text-align:center"><span class="formula">pinna → ear canal → eardrum → ossicles → cochlea → auditory nerve → brain</span></p>
+    <p>Notice the change at the cochlea: everything before it is a <strong>vibration</strong> being passed along; everything after it is an <strong>electrical signal</strong>. The cochlea is where one becomes the other.</p>
+    <p>Humans can't hear every frequency. The <strong>human hearing range</strong> is roughly <strong>20 Hz to 20 000 Hz</strong>. Below 20 Hz the sound is too low for us; above 20 000 Hz it's too high. Sound that is too high for humans to hear is called <strong>ultrasound</strong> — some animals, like dogs and bats, can hear well into that range.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — get the order right</h4>
+      <p>Exam questions often ask you to put the parts of the ear in order, or to fill in the gaps. A common slip is swapping the <strong>ossicles</strong> and the <strong>cochlea</strong>. Remember: the three little <strong>bones (ossicles) come first</strong> and pass the vibration <em>into</em> the coiled <strong>cochlea</strong>, which is where it becomes an electrical signal. Bones before the coil.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which part of the ear turns vibrations into electrical signals for the brain?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The eardrum</span></li>
+        <li><span class="letter">B</span><span>The ossicles</span></li>
+        <li><span class="letter">C</span><span>The cochlea</span></li>
+        <li><span class="letter">D</span><span>The pinna</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — the cochlea.</strong> It's the coiled, fluid-filled tube that converts the vibration into electrical signals, which the auditory nerve then carries to the brain. <em>The eardrum and ossicles only pass the vibration along — they don't make the electrical signal.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is the job of the pinna?</summary>
+        <div class="ans">To <strong>funnel sound</strong> from outside into the ear canal.</div>
+      </details></li>
+      <li><details>
+        <summary>What does the eardrum do when sound reaches it?</summary>
+        <div class="ans">It <strong>vibrates</strong>. The eardrum is a thin sheet of skin that vibrates when sound hits it.</div>
+      </details></li>
+      <li><details>
+        <summary>What are the ossicles, and what do they do?</summary>
+        <div class="ans">Three tiny <strong>bones</strong> that pick up the eardrum's vibration and pass it on to the cochlea, making it bigger.</div>
+      </details></li>
+      <li><details>
+        <summary>Which part of the ear converts vibrations into electrical signals?</summary>
+        <div class="ans">The <strong>cochlea</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What carries the signal from the cochlea to the brain?</summary>
+        <div class="ans">The <strong>auditory nerve</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Put these in the order sound travels through them: cochlea, eardrum, ear canal, ossicles, pinna.</summary>
+        <div class="ans"><strong>Pinna → ear canal → eardrum → ossicles → cochlea</strong> (then auditory nerve → brain).</div>
+      </details></li>
+      <li><details>
+        <summary>State the approximate range of frequencies a human can hear.</summary>
+        <div class="ans">About <strong>20 Hz to 20 000 Hz</strong>.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — SPEED OF SOUND & ULTRASOUND                                   -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · Physics · Sound &amp; Waves</div>
+    <h2 class="lesson-title">Speed of sound &amp; <em>ultrasound</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know how fast sound travels, why thunder arrives after lightning, how to work out a speed, and what ultrasound is used for.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Sound is fast — but light is much faster</h3>
+    <p>Sound travels through air at about <strong>340 metres every second</strong> (340 m/s). That's fast — roughly the length of three football pitches every second — but it's nothing compared to light, which travels at about <strong>300 million metres per second</strong>. Light is almost a million times faster than sound.</p>
+    <p>You can see this gap for yourself in a thunderstorm. Lightning and thunder happen at the same moment, but you <strong>see the flash first and hear the rumble later</strong>. The light reaches you almost instantly; the sound takes time to travel the same distance. The further away the storm, the longer the gap. Counting the seconds between flash and bang tells you roughly how far away it is.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- cloud -->
+        <ellipse cx="80" cy="55" rx="55" ry="26" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- lightning bolt -->
+        <polygon points="78,75 64,115 80,112 66,150 100,100 84,103 96,75" fill="#C8A24A" stroke="#1E2761" stroke-width="1"/>
+        <!-- person -->
+        <g transform="translate(490,150)">
+          <circle cx="0" cy="-22" r="8" fill="#1E2761"/>
+          <line x1="0" y1="-14" x2="0" y2="10" stroke="#1E2761" stroke-width="3"/>
+          <line x1="0" y1="-6" x2="-10" y2="4" stroke="#1E2761" stroke-width="3"/>
+          <line x1="0" y1="-6" x2="10" y2="4" stroke="#1E2761" stroke-width="3"/>
+          <line x1="0" y1="10" x2="-8" y2="26" stroke="#1E2761" stroke-width="3"/>
+          <line x1="0" y1="10" x2="8" y2="26" stroke="#1E2761" stroke-width="3"/>
+        </g>
+        <!-- light arrow: fast -->
+        <line x1="120" y1="70" x2="470" y2="120" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="470,120 458,116 462,126" fill="#C8A24A"/>
+        <text x="295" y="85" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#C8A24A">LIGHT — seen at once (~300 000 000 m/s)</text>
+        <!-- sound arrow: slow (wavy) -->
+        <path d="M 120 110 q 30 14 60 0 t 60 0 t 60 0 t 60 0 t 60 0 t 50 0" fill="none" stroke="#B85042" stroke-width="2.5"/>
+        <polygon points="470,110 458,106 462,116" fill="#B85042"/>
+        <text x="295" y="185" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042">SOUND — heard later (~340 m/s)</text>
+      </svg>
+      <div class="caption">You see lightning before you hear thunder — light beats sound</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Speed of sound (in air)</dt>
+        <dd>About 340 metres per second (340 m/s).</dd>
+        <dt>Speed of light</dt>
+        <dd>About 300 million metres per second — vastly faster than sound.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Working out a speed</h3>
+    <p>To measure a speed, you time how long something takes to travel a known distance, then use:</p>
+    <p style="text-align:center"><span class="formula">speed = distance ÷ time</span></p>
+    <p>This is how you can measure the speed of sound: stand a measured distance from a big wall, make a sharp sound (a clap), and time how long the echo takes to come back. As always, use the <strong>FIFA</strong> method to lay the working out cleanly — <strong>F</strong>ormula, <strong>I</strong>nsert, <strong>F</strong>ix units, <strong>A</strong>nswer.</p>
+
+    <div class="worked">
+      <h4>Worked example 1</h4>
+      <p class="q">A sound travels <strong>1700 m</strong> in <strong>5 seconds</strong>. Calculate its speed.</p>
+      <div class="step"><div class="label">Formula</div><div class="v">speed = distance ÷ time</div></div>
+      <div class="step"><div class="label">Insert</div><div class="v">speed = 1700 ÷ 5</div></div>
+      <div class="step"><div class="label">Fix</div><div class="v">distance in m, time in s, so speed is in m/s</div></div>
+      <div class="step answer"><div class="label">Answer</div><div class="v">speed = 340 m/s</div></div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example 2</h4>
+      <p class="q">A starting pistol is fired <strong>680 m</strong> away. Using a speed of sound of 340 m/s, how long after the flash is the bang heard?</p>
+      <div class="step"><div class="label">Formula</div><div class="v">time = distance ÷ speed</div></div>
+      <div class="step"><div class="label">Insert</div><div class="v">time = 680 ÷ 340</div></div>
+      <div class="step"><div class="label">Fix</div><div class="v">distance in m, speed in m/s, so time is in s</div></div>
+      <div class="step answer"><div class="label">Answer</div><div class="v">time = 2 s</div></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — divide, and keep the unit m/s</h4>
+      <p>Speed is distance <strong>divided</strong> by time, not multiplied. And the unit gives the calculation away: <strong>m/s</strong> literally means "metres <em>per</em> second" — metres divided by seconds. If your speed of sound in air comes out as anything wildly different from a few hundred m/s, check your working.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Ultrasound and microphones</h3>
+    <p><strong>Ultrasound</strong> is sound that is <strong>too high-pitched for humans to hear</strong> — above 20 000 Hz. We can't hear it, but it's extremely useful because we can send it out and detect the echoes that bounce back.</p>
+    <p><strong>Sonar</strong> uses ultrasound to measure depth and find objects underwater: a ship sends a pulse downwards and times how long the echo takes to return, which tells it how deep the seabed is or where a shoal of fish is. In hospitals, <strong>ultrasound scans</strong> use the same idea to build a picture of a baby inside the womb, safely and without any harmful radiation.</p>
+    <p>Finally, a <strong>microphone</strong> does the reverse of a loudspeaker: it <strong>turns sound into an electrical signal</strong>. Sound waves make a part inside the microphone vibrate, and those vibrations are changed into a changing electrical signal that can be recorded, amplified, or sent down a wire.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 3</h4>
+      <dl>
+        <dt>Ultrasound</dt>
+        <dd>Sound with a frequency above 20 000 Hz — too high for humans to hear.</dd>
+        <dt>Sonar</dt>
+        <dd>Using ultrasound echoes to measure depth or find objects underwater.</dd>
+        <dt>Microphone</dt>
+        <dd>A device that turns sound waves into an electrical signal.</dd>
+      </dl>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A sound wave travels 1020 m in 3 seconds. What is its speed?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>3060 m/s (multiplied)</span></li>
+        <li><span class="letter">B</span><span>340 m/s (divided)</span></li>
+        <li><span class="letter">C</span><span>1023 m/s (added)</span></li>
+        <li><span class="letter">D</span><span>340 m (right number, wrong unit)</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 340 m/s.</strong> speed = distance ÷ time = 1020 ÷ 3 = 340 m/s. That's about the speed of sound in air, so it's a sensible answer. <em>D is the trap — the number is right, but speed must carry the unit m/s, not m.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is the approximate speed of sound in air?</summary>
+        <div class="ans">About <strong>340 m/s</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>In a thunderstorm, why do you see the lightning before you hear the thunder?</summary>
+        <div class="ans">Because <strong>light travels much faster than sound</strong>. The light reaches you almost instantly, but the sound takes time to travel the same distance.</div>
+      </details></li>
+      <li><details>
+        <summary>Write the equation for speed.</summary>
+        <div class="ans"><strong>speed = distance ÷ time</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>A sound travels 1360 m in 4 seconds. Calculate its speed.</summary>
+        <div class="ans">speed = distance ÷ time = 1360 ÷ 4 = <strong>340 m/s</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Thunder is heard 6 seconds after the flash. Using 340 m/s, how far away was the lightning?</summary>
+        <div class="ans">distance = speed × time = 340 × 6 = <strong>2040 m</strong> (just over 2 km away).</div>
+      </details></li>
+      <li><details>
+        <summary>What is ultrasound, and give one use of it.</summary>
+        <div class="ans">Sound with a frequency <strong>above 20 000 Hz</strong> (too high for humans to hear). Uses include <strong>sonar</strong> (finding objects underwater) and <strong>medical scans</strong> (such as imaging a baby).</div>
+      </details></li>
+      <li><details>
+        <summary>What does a microphone do?</summary>
+        <div class="ans">It turns <strong>sound waves into an electrical signal</strong> (the reverse of a loudspeaker).</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>Year 8 Physics · Sound &amp; Waves</p>
+  <p>A revision booklet</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'sound-y8-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+</body>
+</html>

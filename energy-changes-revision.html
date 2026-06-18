@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy changes — Year 8 Revision</title>
+<meta name="description" content="A Year 8 KS3 chemistry revision booklet on energy changes — four short topics covering the heating curve, exothermic reactions, endothermic reactions, and investigating energy changes with temperature measurements.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Year 8 · Chemistry · Energy changes</div>
+    <h1>Energy changes, <em>but bitesize.</em></h1>
+    <p class="tag">A revision booklet — four short topics, from the heating curve to spotting whether a reaction gives out heat or takes it in.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Take it one topic at a time.</strong> There are four topics. Each one is short — about 10 minutes. Do one or two a day.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Heating curve</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Exothermic</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Endothermic</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Investigating</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — HEATING A SUBSTANCE: THE HEATING CURVE                        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · Chemistry · Energy changes</div>
+    <h2 class="lesson-title">Heating a substance — the <em>heating curve</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what happens to temperature when you heat a substance steadily, and why it stops rising while the substance is melting or boiling.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Heat it steadily and watch the temperature</h3>
+    <p>Take some ice straight from the freezer and heat it gently and steadily — say, with a Bunsen burner turned to a constant flame. If you measure the temperature every minute, you might expect it to climb in a straight line all the way up. It doesn't.</p>
+    <p>At first the temperature <strong>rises</strong>. Then, while the ice is melting into water, the temperature <strong>stops climbing and stays flat</strong> for a while — even though you're still heating it. Once it's all melted, the temperature rises again. Then, while the water is boiling into steam, it goes <strong>flat again</strong>.</p>
+    <p>Those flat bits are called <strong>plateaus</strong>. A graph of temperature against time, with these two flat sections, is a <strong>heating curve</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Axes -->
+        <line x1="60" y1="30" x2="60" y2="230" stroke="#1E2761" stroke-width="2"/>
+        <line x1="60" y1="230" x2="520" y2="230" stroke="#1E2761" stroke-width="2"/>
+        <text x="60" y="20" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Temperature</text>
+        <text x="290" y="262" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Time (heating steadily) →</text>
+        <!-- Heating curve: rise, plateau (melting), rise, plateau (boiling), rise -->
+        <polyline points="60,210 130,150 230,150 300,90 420,90 490,50" fill="none" stroke="#B85042" stroke-width="3"/>
+        <!-- Melting plateau marker -->
+        <line x1="130" y1="150" x2="230" y2="150" stroke="#C8A24A" stroke-width="3"/>
+        <text x="180" y="138" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#C8A24A">MELTING</text>
+        <!-- Boiling plateau marker -->
+        <line x1="300" y1="90" x2="420" y2="90" stroke="#C8A24A" stroke-width="3"/>
+        <text x="360" y="78" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#C8A24A">BOILING</text>
+        <!-- State labels along the curve -->
+        <text x="92" y="200" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">solid</text>
+        <text x="265" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">liquid</text>
+        <text x="470" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">gas</text>
+        <!-- Dashed guide lines to the plateaus -->
+        <line x1="60" y1="150" x2="130" y2="150" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+        <line x1="60" y1="90" x2="300" y2="90" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+        <text x="55" y="153" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">m.p.</text>
+        <text x="55" y="93" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">b.p.</text>
+        <text x="290" y="278" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">temperature stays flat while the substance changes state</text>
+      </svg>
+      <div class="caption">A heating curve: two flat plateaus where state is changing</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Heating curve</dt>
+        <dd>A graph of temperature against time as a substance is heated steadily.</dd>
+        <dt>Plateau</dt>
+        <dd>A flat part of the graph where the temperature stays the same even though heating continues.</dd>
+        <dt>Melting point / boiling point</dt>
+        <dd>The temperatures at which a substance melts (solid → liquid) and boils (liquid → gas). For pure water these are 0&nbsp;°C and 100&nbsp;°C.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Why does the temperature go flat?</h3>
+    <p>This is where the <strong>particle model</strong> explains everything. Temperature is a measure of how fast the particles are moving — how much <strong>kinetic energy</strong> they have. When you heat a solid, you're feeding energy in, the particles vibrate faster, and the temperature climbs.</p>
+    <p>But to <strong>melt</strong>, the particles need to break free from their fixed positions. That takes energy — and while the substance is melting, <em>all</em> the energy you put in goes into breaking those bonds between particles, not into making them move faster. So the temperature doesn't change. The same thing happens at the <strong>boiling</strong> plateau: the energy goes into pulling the particles right apart into a gas.</p>
+    <p>In short: during a change of state, the energy goes into <strong>changing state, not raising temperature</strong>. Once the change of state is finished, the temperature starts rising again.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "you've stopped heating it"</h4>
+      <p>A flat plateau does <strong>not</strong> mean you've turned the heat off. You're still heating the substance the whole time. The temperature stays the same because the energy is being used to <strong>change the state</strong> (break the particles apart), not to make the particles move faster. The thermometer only measures particle speed, so it sits still until the change of state is complete.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">An ice cube is being heated steadily. The temperature reads 0&nbsp;°C and stays there for two minutes before rising again. What is happening?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The heating has been switched off</span></li>
+        <li><span class="letter">B</span><span>The ice is melting — energy is going into the change of state</span></li>
+        <li><span class="letter">C</span><span>The thermometer is broken</span></li>
+        <li><span class="letter">D</span><span>The water is boiling</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — the ice is melting.</strong> 0&nbsp;°C is the melting point of water, and the flat plateau means the energy going in is being used to break the particles free from their fixed solid positions, not to raise the temperature. <em>D is wrong because boiling happens at 100&nbsp;°C, not 0&nbsp;°C.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is a heating curve?</summary>
+        <div class="ans">A <strong>graph of temperature against time</strong> as a substance is heated steadily.</div>
+      </details></li>
+      <li><details>
+        <summary>What is a plateau on a heating curve?</summary>
+        <div class="ans">A <strong>flat part</strong> of the graph where the temperature stays the same even though heating is still going on.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does the temperature stay flat while a substance is melting?</summary>
+        <div class="ans">Because the energy being put in is used to <strong>break the particles free from their fixed positions</strong> (change the state), not to make them move faster. The thermometer only measures particle speed, so it doesn't change.</div>
+      </details></li>
+      <li><details>
+        <summary>How many plateaus does a normal heating curve have, and what is happening at each?</summary>
+        <div class="ans"><strong>Two</strong>: one at the <strong>melting point</strong> (solid → liquid) and one at the <strong>boiling point</strong> (liquid → gas).</div>
+      </details></li>
+      <li><details>
+        <summary>What does temperature tell us about the particles?</summary>
+        <div class="ans">How <strong>fast the particles are moving</strong> — that is, how much kinetic energy they have.</div>
+      </details></li>
+      <li><details>
+        <summary>For pure water, what temperatures would the two plateaus be at?</summary>
+        <div class="ans">The melting plateau is at <strong>0&nbsp;°C</strong> and the boiling plateau is at <strong>100&nbsp;°C</strong>.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — EXOTHERMIC REACTIONS                                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · Chemistry · Energy changes</div>
+    <h2 class="lesson-title">Exothermic <em>reactions</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what an exothermic reaction is, why the surroundings get warmer, and be able to name some everyday examples.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Reactions that give out heat</h3>
+    <p>Some chemical reactions <strong>give out energy</strong>. The energy is transferred from the reaction <strong>to the surroundings</strong> — that means everything around the reaction: the test tube, the water it's in, the air, your hand. Because energy is being given to them, the <strong>temperature of the surroundings rises</strong>.</p>
+    <p>A reaction that transfers energy to the surroundings is called <strong>exothermic</strong>. An easy way to remember it: <em>exo</em> sounds like "exit", and the energy <strong>exits</strong> the reaction. We can measure that an exothermic reaction has happened with a simple <strong>thermometer</strong> — the temperature goes <strong>up</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Graph on the left: temperature rises -->
+        <line x1="50" y1="30" x2="50" y2="200" stroke="#1E2761" stroke-width="2"/>
+        <line x1="50" y1="200" x2="280" y2="200" stroke="#1E2761" stroke-width="2"/>
+        <text x="50" y="20" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">Temp</text>
+        <text x="165" y="228" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">Time →</text>
+        <!-- Rising line -->
+        <polyline points="50,170 120,170 200,70 280,55" fill="none" stroke="#B85042" stroke-width="3"/>
+        <!-- Start guide -->
+        <line x1="50" y1="170" x2="120" y2="170" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+        <text x="160" y="55" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">TEMP RISES ↑</text>
+        <text x="85" y="190" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">start</text>
+        <!-- Beaker and thermometer on the right -->
+        <g transform="translate(360,40)">
+          <!-- Beaker -->
+          <path d="M 30 40 L 30 150 Q 30 165 45 165 L 115 165 Q 130 165 130 150 L 130 40" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <line x1="30" y1="40" x2="130" y2="40" stroke="#1E2761" stroke-width="2"/>
+          <!-- Liquid -->
+          <path d="M 33 95 L 33 150 Q 33 162 45 162 L 115 162 Q 127 162 127 150 L 127 95 Z" fill="#F4DAD7"/>
+          <!-- Thermometer -->
+          <rect x="72" y="10" width="10" height="120" rx="5" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
+          <circle cx="77" cy="135" r="9" fill="#B85042"/>
+          <rect x="74" y="55" width="6" height="75" fill="#B85042"/>
+          <!-- Heat arrows leaving the beaker -->
+          <g stroke="#B85042" stroke-width="2" fill="none">
+            <path d="M 10 70 q -8 -8 0 -16"/>
+            <path d="M 14 100 q -8 -8 0 -16"/>
+          </g>
+          <text x="2" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#B85042" transform="rotate(-90 2 135)">HEAT OUT</text>
+        </g>
+        <text x="280" y="270" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">energy leaves the reaction → surroundings warm up</text>
+      </svg>
+      <div class="caption">Exothermic: temperature of the surroundings rises</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Exothermic</dt>
+        <dd>A reaction that transfers energy <em>to</em> the surroundings, so the temperature of the surroundings rises.</dd>
+        <dt>Surroundings</dt>
+        <dd>Everything around the reaction — the solution, the container, the air, your hand.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Everyday examples</h3>
+    <p>Exothermic reactions are all around you. The big ones to remember:</p>
+    <p><strong>Combustion (burning).</strong> Burning a fuel like methane, wood or a candle gives out a lot of heat and light. This is why a fire warms a room.<br>
+    <strong>Neutralisation.</strong> When an acid reacts with an alkali, the mixture gets warmer — you can feel it on the side of the beaker.<br>
+    <strong>Oxidation.</strong> When a substance reacts with oxygen (like iron slowly rusting, or hand-warmer iron filings reacting fast), energy is released.<br>
+    <strong>Respiration.</strong> The reaction in your cells that releases energy from glucose is exothermic — it's part of why your body stays warm.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Combustion</dt>
+        <dd>Burning — a fuel reacting with oxygen, giving out heat and light.</dd>
+        <dt>Neutralisation</dt>
+        <dd>An acid reacting with an alkali (or base) to make a salt and water. It is exothermic.</dd>
+        <dt>Respiration</dt>
+        <dd>The reaction in living cells that releases energy from glucose. It is exothermic.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — exothermic doesn't just mean "explosions"</h4>
+      <p>Lots of pupils think exothermic only means dramatic, violent reactions like explosions or roaring fires. It doesn't. <strong>Any</strong> reaction that releases heat is exothermic — including a gentle <strong>hand-warm neutralisation</strong> where the beaker just feels a few degrees warmer. The test is simple: does the temperature of the surroundings go <strong>up</strong>? If yes, it's exothermic, however small the change.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A student mixes an acid and an alkali in a beaker and notices the beaker feels warm. What kind of reaction is this?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Endothermic — it took heat in from the surroundings</span></li>
+        <li><span class="letter">B</span><span>Exothermic — it gave heat out to the surroundings</span></li>
+        <li><span class="letter">C</span><span>Neither — neutralisation has no energy change</span></li>
+        <li><span class="letter">D</span><span>You can't tell without weighing the chemicals</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — exothermic.</strong> The beaker (part of the surroundings) got warmer, so energy was transferred out of the reaction into the surroundings. Neutralisation is a classic exothermic reaction — you don't need a fire or an explosion for a reaction to count as exothermic. <em>A is the trap — warm surroundings mean heat came OUT, not in.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is an exothermic reaction?</summary>
+        <div class="ans">A reaction that <strong>transfers energy to the surroundings</strong>, so the temperature of the surroundings <strong>rises</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>In an exothermic reaction, does the temperature of the surroundings go up or down?</summary>
+        <div class="ans"><strong>Up</strong> — the surroundings get warmer because energy is given out to them.</div>
+      </details></li>
+      <li><details>
+        <summary>Name two examples of exothermic reactions.</summary>
+        <div class="ans">Any two from: <strong>combustion (burning), neutralisation, oxidation, respiration</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What piece of equipment would you use to show a reaction is exothermic?</summary>
+        <div class="ans">A <strong>thermometer</strong> — you'd see the temperature rise.</div>
+      </details></li>
+      <li><details>
+        <summary>"Exothermic reactions are always explosions." Is this true?</summary>
+        <div class="ans"><strong>No.</strong> Any reaction that releases heat is exothermic, including gentle ones like a hand-warm neutralisation. It doesn't have to be violent.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does a fire warm up a room?</summary>
+        <div class="ans">Burning fuel is a <strong>combustion</strong> reaction, which is exothermic. It <strong>transfers energy to the surroundings</strong> (the air and objects in the room), warming them.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — ENDOTHERMIC REACTIONS                                         -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · Chemistry · Energy changes</div>
+    <h2 class="lesson-title">Endothermic <em>reactions</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what an endothermic reaction is, why the surroundings get colder, and why an endothermic reaction feels cold — not hot.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Reactions that take heat in</h3>
+    <p>Some reactions do the opposite of exothermic ones: they <strong>take in energy</strong> from the surroundings. Because energy is being pulled out of the surroundings, the <strong>temperature of the surroundings falls</strong> — things around the reaction get colder.</p>
+    <p>A reaction that takes in energy from the surroundings is called <strong>endothermic</strong>. The clue is in the name: <em>endo</em> means "into", and the energy goes <strong>into</strong> the reaction. Measure it with a thermometer and you'll see the temperature go <strong>down</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Graph on the left: temperature falls -->
+        <line x1="50" y1="30" x2="50" y2="200" stroke="#1E2761" stroke-width="2"/>
+        <line x1="50" y1="200" x2="280" y2="200" stroke="#1E2761" stroke-width="2"/>
+        <text x="50" y="20" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">Temp</text>
+        <text x="165" y="228" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">Time →</text>
+        <!-- Falling line -->
+        <polyline points="50,60 120,60 200,160 280,175" fill="none" stroke="#1E2761" stroke-width="3"/>
+        <!-- Start guide -->
+        <line x1="50" y1="60" x2="120" y2="60" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+        <text x="170" y="130" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761">TEMP FALLS ↓</text>
+        <text x="85" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">start</text>
+        <!-- Beaker and thermometer on the right -->
+        <g transform="translate(360,40)">
+          <!-- Beaker -->
+          <path d="M 30 40 L 30 150 Q 30 165 45 165 L 115 165 Q 130 165 130 150 L 130 40" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <line x1="30" y1="40" x2="130" y2="40" stroke="#1E2761" stroke-width="2"/>
+          <!-- Liquid (cool, soft-blue) -->
+          <path d="M 33 95 L 33 150 Q 33 162 45 162 L 115 162 Q 127 162 127 150 L 127 95 Z" fill="#D7E3F4"/>
+          <!-- Thermometer -->
+          <rect x="72" y="10" width="10" height="120" rx="5" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
+          <circle cx="77" cy="135" r="9" fill="#1E2761"/>
+          <rect x="74" y="100" width="6" height="30" fill="#1E2761"/>
+          <!-- Heat arrows entering the beaker -->
+          <g stroke="#1E2761" stroke-width="2" fill="none">
+            <path d="M 2 70 q 8 -8 0 -16"/>
+            <path d="M 6 100 q 8 -8 0 -16"/>
+          </g>
+          <text x="2" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#1E2761" transform="rotate(-90 2 135)">HEAT IN</text>
+        </g>
+        <text x="280" y="270" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">energy is taken from the surroundings → they cool down</text>
+      </svg>
+      <div class="caption">Endothermic: temperature of the surroundings falls</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Endothermic</dt>
+        <dd>A reaction that takes in energy <em>from</em> the surroundings, so the temperature of the surroundings falls.</dd>
+        <dt>Thermal decomposition</dt>
+        <dd>Breaking a compound down using heat. You have to keep supplying energy, so it is endothermic.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Everyday examples</h3>
+    <p>Endothermic changes are less obvious than exothermic ones, but here are the ones to know:</p>
+    <p><strong>Thermal decomposition.</strong> Heating a compound to break it apart — like heating copper carbonate or calcium carbonate. It only keeps going while you keep heating it.<br>
+    <strong>Citric acid + sodium bicarbonate.</strong> This is the fizzy reaction in <strong>sherbet</strong>. Mix the two and the temperature drops — that's why sherbet can feel cool on your tongue.<br>
+    <strong>Some dissolving.</strong> Dissolving certain salts (like ammonium nitrate) in water takes in energy and makes the water colder.</p>
+    <p>This is exactly how an <strong>instant cold pack</strong> works. Snap it and a salt mixes with water; the endothermic process pulls heat in, so the pack turns cold and you can use it on a sports injury.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — endothermic reactions feel COLD, not hot</h4>
+      <p>The word "thermic" makes people think endothermic means "hot". It's the opposite. An endothermic reaction <strong>takes heat in</strong> — including heat from your hand and the surroundings — so it feels <strong>cold</strong>. If you hold a beaker where an endothermic reaction is happening, your hand is one of the "surroundings" giving up its heat, which is why your hand feels cold. <strong>Heat in = feels cold.</strong></p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A student dissolves a salt in water and the thermometer reading drops from 21&nbsp;°C to 14&nbsp;°C. What kind of change is this?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Exothermic — the temperature changed</span></li>
+        <li><span class="letter">B</span><span>Endothermic — the temperature fell, so heat was taken in</span></li>
+        <li><span class="letter">C</span><span>Exothermic — dissolving always gives out heat</span></li>
+        <li><span class="letter">D</span><span>Neither — dissolving is not a chemical change so it has no energy change</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — endothermic.</strong> The temperature <em>fell</em> by 7&nbsp;°C, which means the process took energy <strong>in</strong> from the surroundings (the water and beaker). That is the definition of endothermic. <em>This is exactly how an instant cold pack works.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is an endothermic reaction?</summary>
+        <div class="ans">A reaction that <strong>takes in energy from the surroundings</strong>, so the temperature of the surroundings <strong>falls</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>In an endothermic reaction, does the temperature of the surroundings go up or down?</summary>
+        <div class="ans"><strong>Down</strong> — the surroundings get colder because energy is taken from them.</div>
+      </details></li>
+      <li><details>
+        <summary>Name two examples of endothermic changes.</summary>
+        <div class="ans">Any two from: <strong>thermal decomposition, citric acid + sodium bicarbonate (sherbet), some dissolving (e.g. ammonium nitrate)</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Does an endothermic reaction feel hot or cold? Explain.</summary>
+        <div class="ans">It feels <strong>cold</strong>, because it <strong>takes heat in</strong> from the surroundings — including from your hand. Your hand gives up its heat to the reaction, so it feels cold.</div>
+      </details></li>
+      <li><details>
+        <summary>How does an instant cold pack work?</summary>
+        <div class="ans">Snapping it lets a salt mix with water. This is an <strong>endothermic</strong> process that <strong>takes heat in</strong>, so the pack turns cold.</div>
+      </details></li>
+      <li><details>
+        <summary>Why is thermal decomposition endothermic?</summary>
+        <div class="ans">You have to <strong>keep supplying energy (heating)</strong> to break the compound apart. The reaction takes that energy in, so it is endothermic.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — INVESTIGATING ENERGY CHANGES                                  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · Chemistry · Energy changes</div>
+    <h2 class="lesson-title">Investigating <em>energy changes</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll be able to plan a fair test, work out a temperature change, and use the sign of that change to say whether a reaction is exothermic or endothermic.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The practical: before and after</h3>
+    <p>To find out whether a reaction gives out heat or takes it in, you do something beautifully simple: <strong>measure the temperature before and after the reaction</strong>.</p>
+    <p>Measure the starting temperature of the chemicals with a thermometer. Mix them, stir, and read the highest (or lowest) temperature you reach. Then work out the <strong>temperature change</strong>:</p>
+    <p style="text-align:center"><span class="formula">temperature change = final temperature − start temperature</span></p>
+    <p>The <strong>sign</strong> of the answer tells you everything:</p>
+    <p>· A <strong>rise</strong> (the change is positive, the temperature went up) means the reaction is <strong>exothermic</strong> — it gave out heat.<br>
+    · A <strong>fall</strong> (the change is negative, the temperature went down) means the reaction is <strong>endothermic</strong> — it took heat in.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- BEFORE thermometer -->
+        <g transform="translate(90,30)">
+          <text x="0" y="-8" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#5C6370" letter-spacing="2">BEFORE</text>
+          <rect x="-9" y="0" width="18" height="150" rx="9" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+          <circle cx="0" cy="160" r="15" fill="#B85042"/>
+          <rect x="-5" y="60" width="10" height="100" fill="#B85042"/>
+          <text x="32" y="68" font-family="IBM Plex Mono,monospace" font-size="14" font-weight="700" fill="#1E2761">20 °C</text>
+          <text x="32" y="84" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">start temp</text>
+        </g>
+        <!-- Arrow -->
+        <g transform="translate(280,110)">
+          <line x1="-50" y1="0" x2="50" y2="0" stroke="#1E2761" stroke-width="2"/>
+          <path d="M 40 -8 L 55 0 L 40 8 Z" fill="#1E2761"/>
+          <text x="0" y="-14" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">react</text>
+        </g>
+        <!-- AFTER thermometer (warmer) -->
+        <g transform="translate(470,30)">
+          <text x="0" y="-8" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#5C6370" letter-spacing="2">AFTER</text>
+          <rect x="-9" y="0" width="18" height="150" rx="9" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+          <circle cx="0" cy="160" r="15" fill="#B85042"/>
+          <rect x="-5" y="25" width="10" height="135" fill="#B85042"/>
+          <text x="32" y="33" font-family="IBM Plex Mono,monospace" font-size="14" font-weight="700" fill="#B85042">32 °C</text>
+          <text x="32" y="49" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">final temp</text>
+        </g>
+        <text x="280" y="222" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">32 − 20 = +12 °C rise → exothermic</text>
+      </svg>
+      <div class="caption">Compare the thermometer before and after the reaction</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Temperature change</dt>
+        <dd>Final temperature minus start temperature. A rise means exothermic; a fall means endothermic.</dd>
+        <dt>Fair test</dt>
+        <dd>A test where you change one thing and keep everything else the same, so the comparison is valid.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Making it a fair test</h3>
+    <p>To compare reactions fairly, you need to think about your <strong>variables</strong>:</p>
+    <p><strong>The variable you change</strong> (independent variable) — for example, which acid you use, or its concentration.<br>
+    <strong>The variable you measure</strong> (dependent variable) — the temperature change.<br>
+    <strong>The variables you keep the same</strong> (control variables) — the volume of liquid, the starting temperature, the same thermometer, the same type of cup or beaker. Keeping these the same is what makes it a <strong>fair test</strong>.</p>
+    <p>It helps to write your readings in a <strong>results table</strong> so you can compare them at a glance:</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg">
+        <!-- Table outline -->
+        <rect x="20" y="20" width="520" height="130" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+        <!-- Header row -->
+        <rect x="20" y="20" width="520" height="32" fill="#EDF2FA"/>
+        <!-- Vertical column lines -->
+        <line x1="170" y1="20" x2="170" y2="150" stroke="#1E2761" stroke-width="1"/>
+        <line x1="290" y1="20" x2="290" y2="150" stroke="#1E2761" stroke-width="1"/>
+        <line x1="410" y1="20" x2="410" y2="150" stroke="#1E2761" stroke-width="1"/>
+        <!-- Horizontal row lines -->
+        <line x1="20" y1="52" x2="540" y2="52" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="20" y1="85" x2="540" y2="85" stroke="#1E2761" stroke-width="1" opacity="0.5"/>
+        <line x1="20" y1="118" x2="540" y2="118" stroke="#1E2761" stroke-width="1" opacity="0.5"/>
+        <!-- Header text -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761" text-anchor="middle">
+          <text x="95" y="40">Reaction</text>
+          <text x="230" y="40">Start (°C)</text>
+          <text x="350" y="40">Final (°C)</text>
+          <text x="475" y="34">Change</text>
+          <text x="475" y="46">(°C)</text>
+        </g>
+        <!-- Row data -->
+        <g font-family="IBM Plex Mono,monospace" font-size="11" fill="#1A1A1A" text-anchor="middle">
+          <text x="95" y="73">A</text><text x="230" y="73">20</text><text x="350" y="73">32</text><text x="475" y="73" fill="#B85042" font-weight="700">+12</text>
+          <text x="95" y="106">B</text><text x="230" y="106">21</text><text x="350" y="106">14</text><text x="475" y="106" fill="#1E2761" font-weight="700">−7</text>
+          <text x="95" y="139">C</text><text x="230" y="139">20</text><text x="350" y="139">20</text><text x="475" y="139">0</text>
+        </g>
+      </svg>
+      <div class="caption">A results table: a positive change is a rise, a negative change is a fall</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — finding a temperature change</h4>
+      <p class="q">A student mixes an acid and an alkali. The temperature at the start is <strong>20&nbsp;°C</strong>. After mixing, the highest reading is <strong>27&nbsp;°C</strong>. Calculate the temperature change and state whether the reaction is exothermic or endothermic.</p>
+      <div class="step"><div class="label">Formula</div><div class="v">change = final − start</div></div>
+      <div class="step"><div class="label">Insert</div><div class="v">change = 27 − 20</div></div>
+      <div class="step"><div class="label">Fix</div><div class="v">both temperatures in °C, no conversion needed</div></div>
+      <div class="step answer"><div class="label">Answer</div><div class="v">change = +7 °C (a rise) → exothermic</div></div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — a temperature that falls</h4>
+      <p class="q">A student dissolves a salt in water. The start temperature is <strong>22&nbsp;°C</strong> and the lowest reading is <strong>15&nbsp;°C</strong>. Calculate the temperature change and state the type of reaction.</p>
+      <div class="step"><div class="label">Formula</div><div class="v">change = final − start</div></div>
+      <div class="step"><div class="label">Insert</div><div class="v">change = 15 − 22</div></div>
+      <div class="step"><div class="label">Fix</div><div class="v">both temperatures in °C, no conversion needed</div></div>
+      <div class="step answer"><div class="label">Answer</div><div class="v">change = −7 °C (a fall) → endothermic</div></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — get the direction of energy flow the right way round</h4>
+      <p>It's easy to muddle up which way the energy is going. Hold on to this: a <strong>temperature rise</strong> means the surroundings <strong>gained</strong> energy, so the reaction <strong>gave heat out</strong> → <strong>exothermic</strong>. A <strong>temperature fall</strong> means the surroundings <strong>lost</strong> energy, so the reaction <strong>took heat in</strong> → <strong>endothermic</strong>. Warm = heat out; cold = heat in.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A reaction starts at <strong>19&nbsp;°C</strong> and ends at <strong>9&nbsp;°C</strong>. What is the temperature change, and what type of reaction is it?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>+10 °C, exothermic</span></li>
+        <li><span class="letter">B</span><span>−10 °C, endothermic</span></li>
+        <li><span class="letter">C</span><span>−10 °C, exothermic</span></li>
+        <li><span class="letter">D</span><span>+28 °C, exothermic (added the readings)</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — −10 °C, endothermic.</strong> change = final − start = 9 − 19 = −10 °C. The temperature <em>fell</em>, so the reaction took heat in from the surroundings — that's endothermic. <em>C is the trap: the maths is right but a fall is endothermic, not exothermic.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>How do you investigate whether a reaction is exothermic or endothermic?</summary>
+        <div class="ans">Measure the <strong>temperature before and after</strong> the reaction with a thermometer, then work out the temperature change.</div>
+      </details></li>
+      <li><details>
+        <summary>Write the equation for temperature change.</summary>
+        <div class="ans"><strong>temperature change = final temperature − start temperature</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>A temperature rise tells you the reaction is which type?</summary>
+        <div class="ans"><strong>Exothermic</strong> — heat was given out to the surroundings.</div>
+      </details></li>
+      <li><details>
+        <summary>A reaction starts at 18 °C and finishes at 25 °C. Calculate the change and state the type.</summary>
+        <div class="ans">change = 25 − 18 = <strong>+7 °C (a rise) → exothermic</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>A reaction starts at 23 °C and finishes at 16 °C. Calculate the change and state the type.</summary>
+        <div class="ans">change = 16 − 23 = <strong>−7 °C (a fall) → endothermic</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Name two control variables you would keep the same in this practical.</summary>
+        <div class="ans">Any two from: <strong>volume of liquid, starting temperature, same thermometer, same type of cup/beaker</strong>. Keeping these the same makes it a <strong>fair test</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>In a fair test, what is the dependent variable here, and what is one possible independent variable?</summary>
+        <div class="ans">The <strong>dependent variable</strong> (what you measure) is the <strong>temperature change</strong>. An <strong>independent variable</strong> (what you change) could be the <strong>concentration of the acid</strong> (or which acid you use).</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>Year 8 Chemistry · Energy changes</p>
+  <p>A revision booklet</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'energy-changes-y8-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+</body>
+</html>
