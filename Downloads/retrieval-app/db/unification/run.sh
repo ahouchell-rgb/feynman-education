@@ -49,9 +49,9 @@ echo "== step 1/3: load teacher schema+data into the feynman staging schema =="
 # perl (not sed) so it works on macOS BSD as well as GNU. echo prepends the schema
 # create (avoids BSD sed's '1i' quirk). Transforms: public.->feynman., un-qualify the
 # extension fns the first rule over-rewrites, and remap the single teacher identity.
-{ echo "CREATE SCHEMA IF NOT EXISTS feynman;"; \
+{ echo "DROP SCHEMA IF EXISTS feynman CASCADE; CREATE SCHEMA feynman;"; \
   pg_dump "$TEACHER" --schema=public --no-owner --no-privileges -Fp \
-  | perl -pe 's/\bpublic\./feynman./g; s/feynman\.(gen_random_uuid|uuid_generate_v4)/$1/g; s/ab56a97d-b326-434b-bd0f-1a894fb15819/cef87533-7ff1-4f93-bfcf-22feb66f896a/g'; } \
+  | perl -pe 's/\bpublic\./feynman./g; s/CREATE SCHEMA public;/CREATE SCHEMA IF NOT EXISTS feynman;/g; s/\bSCHEMA public\b/SCHEMA feynman/g; s/feynman\.(gen_random_uuid|uuid_generate_v4)/$1/g; s/ab56a97d-b326-434b-bd0f-1a894fb15819/cef87533-7ff1-4f93-bfcf-22feb66f896a/g'; } \
   | psql "$TARGET" -v ON_ERROR_STOP=1 -f -
 
 echo "== step 2/3: reconcile =="
