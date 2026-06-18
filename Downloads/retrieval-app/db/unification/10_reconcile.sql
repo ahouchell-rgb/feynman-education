@@ -164,19 +164,31 @@ alter table public.lesson_retrieval_map drop constraint if exists lesson_retriev
 alter table public.lesson_retrieval_map add  constraint lesson_retrieval_map_retrieval_topic_id_fkey
   foreign key (retrieval_topic_id) references public.topics(id) on delete cascade;
 
--- 7. Expose the teacher homepage RPC under public (PostgREST serves the public schema).
-do $$ begin
-  if exists (select 1 from pg_proc p join pg_namespace n on n.oid=p.pronamespace
-             where n.nspname='feynman' and p.proname='get_teaching_week')
-     and not exists (select 1 from pg_proc p join pg_namespace n on n.oid=p.pronamespace
-             where n.nspname='public' and p.proname='get_teaching_week') then
-    execute 'alter function feynman.get_teaching_week(date) set schema public';
-    execute 'grant execute on function public.get_teaching_week(date) to authenticated';
-  end if;
+-- 7. Recreate the teacher functions in public, rewriting their bodies feynman.->public.
+--    so the homepage RPC (get_teaching_week) and the RLS helpers (is_admin,
+--    is_curriculum_author, has_resource_access, …) the moved tables' policies call all
+--    resolve against the merged tables. Skip any name+args the anchor already defines
+--    (its version wins). The feynman originals are removed by the CASCADE drop in step 8.
+do $$
+declare r record;
+begin
+  for r in
+    select p.oid, p.proname, pg_get_function_identity_arguments(p.oid) as args
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'feynman'
+  loop
+    if exists (select 1 from pg_proc p2 join pg_namespace n2 on n2.oid = p2.pronamespace
+               where n2.nspname='public' and p2.proname = r.proname
+                 and pg_get_function_identity_arguments(p2.oid) = r.args) then
+      continue;
+    end if;
+    execute replace(pg_get_functiondef(r.oid), 'feynman.', 'public.');
+    begin
+      execute format('grant execute on function public.%I(%s) to authenticated', r.proname, r.args);
+    exception when others then null;
+    end;
+  end loop;
 end $$;
--- NOTE: any OTHER feynman.* function the teacher app calls via PostgREST RPC must
--- likewise be moved to public. tg_set_updated_at (trigger fn) may stay in feynman —
--- moved tables' triggers reference it by oid and keep firing.
 
 -- 8. Repoint any remaining FKs that still reference the staging classes/profiles onto
 --    the public ones (several teacher tables FK to profiles — taught_log, lesson_teacher_content,
@@ -210,8 +222,11 @@ do $$ declare r record; ddl text; begin
   end loop;
 end $$;
 
-drop table if exists feynman.classes;
-drop table if exists feynman.profiles;
+-- Drop the whole staging schema. Everything real has been moved/merged/repointed into
+-- public above; CASCADE clears the leftover staging tables + the redundant feynman copies
+-- of functions. Only casualty: the teacher tables' updated_at triggers (they referenced
+-- feynman trigger fns) — cosmetic, recreate against public.tg_set_updated_at in Phase 6.
+drop schema if exists feynman cascade;
 
 -- 9. Assertions — fail loudly if anything important moved or broke.
 do $$ declare v int; begin
