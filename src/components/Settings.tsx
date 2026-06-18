@@ -9,7 +9,7 @@ import { Btn, Inp, Card } from "@/lib/primitives";
 const INPUT_USD_PER_MTOK = 3;
 const OUTPUT_USD_PER_MTOK = 15;
 const GBP_PER_USD = 0.79;
-const DAILY_CAP_GBP = 1.0;
+const DAILY_CAP_GBP = Number(process.env.NEXT_PUBLIC_AI_DAILY_CAP_GBP) || 0; // £/day; 0 = unlimited (set NEXT_PUBLIC_AI_DAILY_CAP_GBP to show a cap)
 
 function costGBP(input, output) {
   return (input / 1e6) * INPUT_USD_PER_MTOK * GBP_PER_USD
@@ -81,7 +81,7 @@ export function Settings({ onClose }) {
   };
 
   const used = usage ? costGBP(usage.input_tokens, usage.output_tokens) : 0;
-  const pct = Math.min(100, (used / DAILY_CAP_GBP) * 100);
+  const pct = DAILY_CAP_GBP > 0 ? Math.min(100, (used / DAILY_CAP_GBP) * 100) : 0;
   const barColor = pct >= 90 ? C.red : pct >= 70 ? C.amb : C.grn;
 
   return (
@@ -106,12 +106,14 @@ export function Settings({ onClose }) {
               Today's Claude usage
             </div>
             <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim }}>
-              £{used.toFixed(3)} / £{DAILY_CAP_GBP.toFixed(2)}
+              {DAILY_CAP_GBP > 0 ? `£${used.toFixed(3)} / £${DAILY_CAP_GBP.toFixed(2)}` : `£${used.toFixed(3)} · no limit`}
             </div>
           </div>
-          <div style={{ height: 6, borderRadius: 3, background: C.border, overflow: "hidden", marginBottom: 8 }}>
-            <div style={{ width: `${pct}%`, height: "100%", background: barColor, transition: "width .2s" }} />
-          </div>
+          {DAILY_CAP_GBP > 0 && (
+            <div style={{ height: 6, borderRadius: 3, background: C.border, overflow: "hidden", marginBottom: 8 }}>
+              <div style={{ width: `${pct}%`, height: "100%", background: barColor, transition: "width .2s" }} />
+            </div>
+          )}
           <div style={{ fontSize: 10, fontFamily: C.mono, color: C.dim, display: "flex", gap: 12 }}>
             <span>{usage?.input_tokens?.toLocaleString() ?? 0} input tok</span>
             <span>{usage?.output_tokens?.toLocaleString() ?? 0} output tok</span>

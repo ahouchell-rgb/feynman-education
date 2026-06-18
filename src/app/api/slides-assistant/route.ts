@@ -34,7 +34,7 @@ const GBP_PER_USD = 0.79;
 // authenticated teacher, not a usage budget — tune freely. It reads the shared
 // daily_token_usage pool, priced at Opus rates (conservative: Sonnet tokens from the
 // chat/feedforward routes in that pool are over-counted, only making the cap stricter).
-const DAILY_CAP_GBP = 5.0;
+const DAILY_CAP_GBP = Number(process.env.AI_DAILY_CAP_GBP) || 0; // £/day per teacher; 0 (default) = unlimited. Set AI_DAILY_CAP_GBP in env to re-enable.
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 const costGBP = (input, output) =>
@@ -186,7 +186,7 @@ export async function POST(req) {
       const rows = await ur.json();
       const u = (rows && rows[0]) || { input_tokens: 0, output_tokens: 0 };
       const usedGBP = costGBP(u.input_tokens || 0, u.output_tokens || 0);
-      if (usedGBP >= DAILY_CAP_GBP) {
+      if (DAILY_CAP_GBP > 0 && usedGBP >= DAILY_CAP_GBP) {
         return json({ error: `Daily AI limit of £${DAILY_CAP_GBP.toFixed(2)} reached (used £${usedGBP.toFixed(2)}). Resets at midnight UTC.` }, 429);
       }
     }

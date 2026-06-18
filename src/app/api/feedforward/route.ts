@@ -28,7 +28,7 @@ const MAX_OUTPUT_TOKENS = 4096;
 const INPUT_USD_PER_MTOK = 3;
 const OUTPUT_USD_PER_MTOK = 15;
 const GBP_PER_USD = 0.79;
-const DAILY_CAP_GBP = 1.0;
+const DAILY_CAP_GBP = Number(process.env.AI_DAILY_CAP_GBP) || 0; // £/day per teacher; 0 (default) = unlimited. Set AI_DAILY_CAP_GBP in env to re-enable.
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 const costGBP = (i: number, o: number) =>
@@ -153,7 +153,7 @@ export async function POST(req: Request) {
 
   // Daily cap — same budget pool as the lesson chat.
   const usedGBP = costGBP(todayUsage.input_tokens || 0, todayUsage.output_tokens || 0);
-  if (usedGBP >= DAILY_CAP_GBP) {
+  if (DAILY_CAP_GBP > 0 && usedGBP >= DAILY_CAP_GBP) {
     return jsonError(`Daily cap of £${DAILY_CAP_GBP.toFixed(2)} reached (used £${usedGBP.toFixed(3)}). Resets at midnight UTC.`, 429);
   }
 
