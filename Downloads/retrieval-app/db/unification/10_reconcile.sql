@@ -178,8 +178,38 @@ end $$;
 -- likewise be moved to public. tg_set_updated_at (trigger fn) may stay in feynman —
 -- moved tables' triggers reference it by oid and keep firing.
 
--- 8. Drop the two staging tables we reconciled by hand. Leave the (now near-empty)
---    feynman schema in place for any retained helper functions; Phase 6 tidies it.
+-- 8. Repoint any remaining FKs that still reference the staging classes/profiles onto
+--    the public ones (several teacher tables FK to profiles — taught_log, lesson_teacher_content,
+--    lesson_retrieval_map.created_by — not auth.users), and rebuild any policy still naming
+--    the feynman schema, then drop the two staging tables.
+do $$ declare r record; begin
+  for r in
+    select con.conname, con.conrelid::regclass::text as tbl, pg_get_constraintdef(con.oid) as def
+    from pg_constraint con
+    where con.contype='f' and con.connamespace = 'public'::regnamespace
+      and con.confrelid in ('feynman.classes'::regclass, 'feynman.profiles'::regclass)
+  loop
+    execute format('alter table %s drop constraint %I', r.tbl, r.conname);
+    execute format('alter table %s add constraint %I %s', r.tbl, r.conname, replace(r.def, 'feynman.', 'public.'));
+  end loop;
+end $$;
+
+do $$ declare r record; ddl text; begin
+  for r in
+    select tablename, policyname, permissive, cmd, qual, with_check, roles
+    from pg_policies
+    where schemaname='public'
+      and (coalesce(qual,'') like '%feynman.%' or coalesce(with_check,'') like '%feynman.%')
+  loop
+    ddl := format('create policy %I on public.%I as %s for %s to %s',
+                  r.policyname, r.tablename, r.permissive, r.cmd, array_to_string(r.roles, ', '));
+    if r.qual       is not null then ddl := ddl || ' using (' || replace(r.qual, 'feynman.', 'public.') || ')'; end if;
+    if r.with_check is not null then ddl := ddl || ' with check (' || replace(r.with_check, 'feynman.', 'public.') || ')'; end if;
+    execute format('drop policy %I on public.%I', r.policyname, r.tablename);
+    execute ddl;
+  end loop;
+end $$;
+
 drop table if exists feynman.classes;
 drop table if exists feynman.profiles;
 
