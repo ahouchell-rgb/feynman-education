@@ -3,11 +3,16 @@ import { createContext, useContext, useEffect, useState, useCallback } from "rea
 import type { ReactNode } from "react";
 import { buildRestUrl, restError } from "./supabaseRest";
 
-/* ─── Config ─── */
-export const SK_URL  = "https://uujbgdwnuspfnvfpdtvr.supabase.co";
-export const SK_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1amJnZHdudXNwZm52ZnBkdHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MjgyODksImV4cCI6MjA5MDIwNDI4OX0.eMMhPSXTsTMEgnXloEnQpcGpQAwHHI-eHCLapRdSOV4";
-export const RET_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-export const RET_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
+/* ─── Config — UNIFIED (Phase 3): one project = the retrieval-app anchor. ───
+   The teacher app's data + auth now live in the anchor, so SK_* point there.
+   RET_* are kept as aliases (retrieval IS the anchor) so existing imports compile.
+   SK_API_KEY (the x-sciencekit-key shared secret) is retained ONLY for the server
+   cron's service path until those RPCs are re-gated by role (Phase 5); client calls
+   no longer send it. */
+export const SK_URL  = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
+export const SK_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
+export const RET_URL = SK_URL;
+export const RET_KEY = SK_KEY;
 export const SK_API_KEY = "MIHy7pb5UoumNqcqxkGfAREqRQkWFP64M1eYPsvc5oo";
 
 const STORAGE_KEY = "sk_auth";
@@ -201,29 +206,23 @@ export const sk = {
   },
 };
 
-/* ─── Retrieval-app helper (separate Supabase, anon-only reads) ─── */
+/* ─── Retrieval data — now the SAME anchor DB (Phase 3). Read through the
+   authenticated `sk` client under the teacher's own JWT + RLS: no separate
+   project, no anon key, no shared secret. (Depends on Phase 5 re-gating
+   class_unit_gaps by role/RLS instead of the x-sciencekit-key header.) ─── */
 export const ret = {
   fetchClasses: async (): Promise<any[]> => {
-    try {
-      const r = await fetch(`${RET_URL}/rest/v1/classes?select=id,name,join_code&order=name.asc`, {
-        headers: { apikey: RET_KEY, Authorization: `Bearer ${RET_KEY}` },
-      });
-      return r.ok ? r.json() : [];
-    } catch { return []; }
+    try { return await sk.q("classes", { params: { select: "id,name,join_code", order: "name.asc" } }); }
+    catch { return []; }
   },
-  // Aggregate weak objectives for one unit across the teacher's linked retrieval
-  // classes. Calls the class_unit_gaps RPC (security-definer; returns only
-  // non-personal aggregates) once per class id and merges the results. Used to
-  // close the loop: surface what a class is weak on right where you plan.
+  // Aggregate weak objectives for one unit across the teacher's linked classes.
+  // Calls the class_unit_gaps RPC (security-definer; non-personal aggregates) once
+  // per class id and merges. Closes the loop: surface what a class is weak on where you plan.
   unitGaps: async (classIds: string[], unitId: string): Promise<any[]> => {
     if (!classIds?.length || !unitId) return [];
     try {
       const per = await Promise.all(classIds.map(cid =>
-        fetch(`${RET_URL}/rest/v1/rpc/class_unit_gaps`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", apikey: RET_KEY, Authorization: `Bearer ${RET_KEY}`, "x-sciencekit-key": SK_API_KEY },
-          body: JSON.stringify({ p_class_id: cid, p_unit_id: unitId }),
-        }).then(r => (r.ok ? r.json() : [])).catch(() => [])
+        sk.rpc("class_unit_gaps", { p_class_id: cid, p_unit_id: unitId }).catch(() => [])
       ));
       // If several linked classes hit the same topic, keep the weakest reading.
       const byTopic = new Map<string, any>();

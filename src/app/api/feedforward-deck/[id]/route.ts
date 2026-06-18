@@ -5,8 +5,8 @@ import { supaRest } from "@/lib/supabaseRest";
 
 export const runtime = "nodejs";
 
-const SK_URL = "https://uujbgdwnuspfnvfpdtvr.supabase.co";
-const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1amJnZHdudXNwZm52ZnBkdHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MjgyODksImV4cCI6MjA5MDIwNDI4OX0.eMMhPSXTsTMEgnXloEnQpcGpQAwHHI-eHCLapRdSOV4";
+const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
+const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const auth = req.headers.get("authorization") || "";

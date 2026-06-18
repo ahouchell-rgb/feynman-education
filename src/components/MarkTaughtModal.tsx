@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { sk, RET_URL, RET_KEY, SK_API_KEY } from "@/lib/sk";
+import { sk, SK_URL, SK_KEY } from "@/lib/sk";
 import { C } from "@/lib/theme";
 import { Btn, Card } from "@/lib/primitives";
 
@@ -28,9 +28,8 @@ export function MarkTaughtModal({ lesson, mapEntry, profile, onClose, onSuccess,
   useEffect(() => {
     (async () => {
       try {
-        const cls = await fetch(`${RET_URL}/rest/v1/classes?select=id,name,join_code&order=name.asc`, {
-          headers: { apikey: RET_KEY, Authorization: `Bearer ${RET_KEY}` }
-        }).then(r => r.json());
+        // Unified anchor: the teacher's own classes via the authenticated client (RLS-scoped).
+        const cls = await sk.q("classes", { params: { select: "id,name,join_code", order: "name.asc" } });
         setClasses(Array.isArray(cls) ? cls : []);
       } catch { setClasses([]); }
       setLoading(false);
@@ -44,9 +43,11 @@ export function MarkTaughtModal({ lesson, mapEntry, profile, onClose, onSuccess,
     setBusy(true); setMsg("");
     try {
       await sk.q("profiles", { method: "PATCH", params: { id: `eq.${profile.id}` }, body: { retrieval_class_ids: [...selected] } });
-      const r = await fetch(`${RET_URL}/functions/v1/set-recency`, {
+      // set-recency edge fn now lives on the same anchor; call it with the teacher's JWT
+      // (Phase 5 re-gates it by role instead of the x-sciencekit-key shared secret).
+      const r = await fetch(`${SK_URL}/functions/v1/set-recency`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", apikey: RET_KEY, "x-sciencekit-key": SK_API_KEY },
+        headers: { "Content-Type": "application/json", apikey: SK_KEY, Authorization: `Bearer ${sk.auth.getToken() || SK_KEY}` },
         body: JSON.stringify({ topic_id: mapEntry.retrieval_topic_id, class_ids: [...selected] }),
       });
       const d = await r.json();
