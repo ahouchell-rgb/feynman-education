@@ -1,5 +1,5 @@
--- STATUS: NOT YET APPLIED — apply to project uvzukwoxqhcxaxtzrziy before the
--- "Export data" (DSAR) button in the Admin panel will work.
+-- STATUS: APPLIED to project uvzukwoxqhcxaxtzrziy — verified 2026-06-18
+-- (export_student_data function present). Powers the Admin "Export data" (DSAR) button.
 --
 -- GDPR data-portability / subject-access support: returns ALL of one pupil's
 -- personal data as JSON, for the school to fulfil a data-subject request.

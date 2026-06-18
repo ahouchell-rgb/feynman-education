@@ -1,5 +1,5 @@
--- STATUS: NOT YET APPLIED — apply to project uvzukwoxqhcxaxtzrziy before the
--- in-app parent report route (/parent/[token]) will return data.
+-- STATUS: APPLIED to project uvzukwoxqhcxaxtzrziy — verified 2026-06-18
+-- (parent_report function present). Powers the in-app /parent/[token] report route.
 --
 -- Brings parent progress reports IN-APP (previously an external parent-hub).
 -- A parent opens a revocable link containing an unguessable token; this

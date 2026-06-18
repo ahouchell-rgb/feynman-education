@@ -1,6 +1,6 @@
--- STATUS: NOT YET APPLIED — apply to project uvzukwoxqhcxaxtzrziy before the
--- in-app "Help & support" feature will work (the AdminPanel Support tab and the
--- Help button both read/write this table).
+-- STATUS: APPLIED to project uvzukwoxqhcxaxtzrziy — verified 2026-06-18
+-- (support_tickets table present). Powers the in-app "Help & support" feature
+-- (the AdminPanel Support tab and the Help button both read/write this table).
 --
 -- In-app support: any signed-in user can file a ticket as themselves; only
 -- moderators can read and resolve them (surfaced in the Admin → Support tab).

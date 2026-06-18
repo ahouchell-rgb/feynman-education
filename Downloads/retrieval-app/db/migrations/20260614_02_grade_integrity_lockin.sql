@@ -1,7 +1,8 @@
--- STATUS: PENDING — do NOT apply until the client that records via the
--- mark-answer edge function is live (e.g. deployed to Vercel). Applying it while
--- the old client is still serving will stop pupils recording answers, because
--- the old client writes responses directly.
+-- STATUS: APPLIED to project uvzukwoxqhcxaxtzrziy — verified 2026-06-18
+-- (authenticated/anon INSERT on responses is revoked). Precondition (now met):
+-- could only be applied once the mark-answer edge-function client was live, since
+-- the old client wrote responses directly; applying earlier would have stopped
+-- pupils recording answers.
 --
 -- Grade-integrity lock-in. The mark-answer edge function is now the authoritative
 -- grader AND writer of public.responses (it verifies the pupil's JWT, checks

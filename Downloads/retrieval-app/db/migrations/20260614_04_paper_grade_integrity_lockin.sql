@@ -1,6 +1,7 @@
--- STATUS: PENDING — apply only AFTER the client that records past-paper answers
--- via the mark-paper-answer function is live (Vercel). Mirrors the retrieval-
--- practice lock-in (migration 02) for exam papers.
+-- STATUS: APPLIED to project uvzukwoxqhcxaxtzrziy — verified 2026-06-18
+-- (paper_responses write + paper_attempts.awarded_marks revoked from the client).
+-- Mirrors the retrieval-practice lock-in (migration 02) for exam papers; could
+-- only be applied once the mark-paper-answer client was live.
 --
 -- mark-paper-answer (v3) now grades from the DB's marking points and writes
 -- paper_responses + recomputes paper_attempts.awarded_marks/total_marks via the
