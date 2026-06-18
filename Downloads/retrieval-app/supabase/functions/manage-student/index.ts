@@ -58,11 +58,28 @@ Deno.serve(async (req: Request) => {
       return new Response(JSON.stringify({ success: true, message: "Thanks — your teacher will review this." }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // Teacher/Moderator: resolve a flag
+    // Teacher/HoD/Moderator: resolve a flag
     if (action === "resolve_flag") {
       if (role !== "teacher" && !isModerator && role !== "hod") return new Response(JSON.stringify({ error: "Not allowed" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const { flag_id } = body;
       if (!flag_id) return new Response(JSON.stringify({ error: "Missing flag_id" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      // Tenant-isolation guard — mirrors the marking_flags_update RLS predicate
+      // (class.teacher_id = caller OR is_moderator OR caller is the HoD of the
+      // class's teacher). Without it, any teacher/HoD could resolve (suppress) ANY
+      // school's flags by enumerating flag_id, since the service role bypasses RLS.
+      // The Teacher/HoD panels resolve via RLS-protected PATCH and were already
+      // safe; this closes the unguarded service-role edge path.
+      if (!isModerator) {
+        const { data: flag } = await supabase.from("marking_flags").select("class_id").eq("id", flag_id).single();
+        if (!flag) return new Response(JSON.stringify({ error: "Flag not found" }), { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        const { data: cls } = await supabase.from("classes").select("teacher_id").eq("id", flag.class_id).single();
+        let allowed = !!cls && cls.teacher_id === caller.id;
+        if (!allowed && role === "hod" && cls) {
+          const { data: tp } = await supabase.from("profiles").select("hod_id").eq("id", cls.teacher_id).single();
+          allowed = !!tp && tp.hod_id === caller.id;
+        }
+        if (!allowed) return new Response(JSON.stringify({ error: "You can only resolve flags for a class you teach or oversee" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
       const { error } = await supabase.from("marking_flags").update({ resolved: true }).eq("id", flag_id);
       if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       return new Response(JSON.stringify({ success: true, message: "Flag resolved" }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
