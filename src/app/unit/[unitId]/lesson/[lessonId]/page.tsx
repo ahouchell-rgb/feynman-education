@@ -15,6 +15,8 @@ import { SetCurrentLessonModal } from "@/components/SetCurrentLessonModal";
 import { SingleFileSlot } from "@/components/SingleFileSlot";
 import { RetrievalAppFrame } from "@/components/RetrievalAppFrame";
 import { UnitGaps } from "@/components/UnitGaps";
+import { PaperGaps } from "@/components/PaperGaps";
+import { FeedforwardFromPaper } from "@/components/FeedforwardFromPaper";
 import { HalftermDecks } from "@/components/HalftermDecks";
 import { UnitResources } from "@/components/UnitResources";
 
@@ -457,6 +459,12 @@ function LessonContent() {
 
       {/* Close the loop: this class's weakest objectives in this unit, + feedforward */}
       <UnitGaps unitId={unitId as string} unitTitle={unit?.title} lessonId={lessonId as string} contextClass={contextClass} />
+
+      {/* Exam-data feedforward: the class's weakest topics by past-paper marks lost */}
+      <PaperGaps lessonId={lessonId as string} contextClass={contextClass} />
+
+      {/* Upload a paper photo/PDF + name the struggled questions -> feedforward (any lesson, no class needed) */}
+      <FeedforwardFromPaper lessonId={lessonId as string} contextClass={contextClass} />
 
       {/* Auto-generated half-term feedforward decks for this class */}
       <HalftermDecks contextClass={contextClass} />
