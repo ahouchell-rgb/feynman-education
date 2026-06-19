@@ -281,12 +281,11 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
           <line x1="234" y1="115" x2="298" y2="115"/>
           <line x1="208" y1="140" x2="298" y2="146"/>
           <line x1="228" y1="205" x2="298" y2="203"/>
-          <line x1="155" y1="130" x2="95" y2="124"/>
-          <line x1="180" y1="245" x2="95" y2="248"/>
+          <line x1="150" y1="135" x2="98" y2="128"/>
+          <line x1="181" y1="243" x2="98" y2="252"/>
         </g>
-        <text x="280" y="304" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">a schematic skeleton — about 206 bones in all</text>
       </svg>
-      <div class="caption">Some bones you should be able to name</div>
+      <div class="caption">Some bones you should be able to name · a schematic skeleton, about 206 bones in all</div>
     </div>
 
     <div class="keywords">
@@ -419,57 +418,72 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p>A <strong>ball-and-socket joint</strong> has a rounded "ball" on one bone that sits in a cup-shaped "socket" on another. This lets the bone <strong>rotate</strong> in almost any direction. Your <strong>shoulder</strong> and your <strong>hip</strong> are ball-and-socket joints — that's why you can swing your arm round in a full circle.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
-        <!-- Hinge joint (left) -->
+      <svg viewBox="0 0 560 392" xmlns="http://www.w3.org/2000/svg">
+        <!-- Divider between the two panels -->
+        <line x1="280" y1="60" x2="280" y2="300" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- ============ HINGE JOINT (left panel) ============ -->
         <g>
-          <text x="140" y="28" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">HINGE JOINT</text>
-          <!-- Upper bone -->
-          <rect x="120" y="40" width="40" height="80" rx="10" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-          <!-- Lower bone, bent -->
-          <rect x="155" y="135" width="80" height="36" rx="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="2" transform="rotate(18 155 135)"/>
-          <!-- Cartilage caps (gold) at the joint -->
-          <path d="M 120 120 q 20 14 40 0" fill="none" stroke="#C8A24A" stroke-width="4"/>
-          <path d="M 150 132 q 20 12 42 6" fill="none" stroke="#C8A24A" stroke-width="4" transform="rotate(18 155 135)"/>
-          <!-- Ligament (accent) wrapping the joint -->
-          <path d="M 118 110 C 108 130 120 150 150 158" fill="none" stroke="#B85042" stroke-width="2.5"/>
-          <path d="M 162 110 C 178 130 172 150 188 156" fill="none" stroke="#B85042" stroke-width="2.5"/>
-          <!-- Bend direction arrow -->
-          <path d="M 200 95 A 40 40 0 0 1 215 130" fill="none" stroke="#5C6370" stroke-width="1.5"/>
-          <path d="M 211 124 L 217 132 L 208 133 Z" fill="#5C6370"/>
-          <text x="140" y="205" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">bends one way</text>
-          <text x="140" y="219" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">(elbow, knee)</text>
+          <text x="140" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">HINGE JOINT</text>
+
+          <!-- Upper bone (vertical) -->
+          <rect x="118" y="70" width="44" height="100" rx="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Lower bone (horizontal, meeting at the joint) -->
+          <rect x="140" y="196" width="110" height="40" rx="16" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+
+          <!-- Cartilage: smooth gold caps on the two bone ends at the joint surface -->
+          <path d="M 122 174 q 18 11 38 0" fill="none" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 152 202 q -10 14 0 28" fill="none" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+
+          <!-- Ligament: red band clearly bridging upper bone to lower bone -->
+          <path d="M 126 150 C 108 182 120 210 170 222" fill="none" stroke="#B85042" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 156 150 C 178 176 188 206 214 220" fill="none" stroke="#B85042" stroke-width="4" stroke-linecap="round"/>
+
+          <!-- Bend-direction arrow (clear of bones & labels) -->
+          <path d="M 232 168 A 34 34 0 0 1 232 230" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+          <path d="M 226 226 L 233 234 L 224 235 Z" fill="#5C6370"/>
+
+          <text x="140" y="324" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">bends one way only</text>
+          <text x="140" y="340" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">(elbow, knee)</text>
         </g>
 
-        <!-- Ball-and-socket joint (right) -->
+        <!-- ============ BALL-AND-SOCKET JOINT (right panel) ============ -->
         <g>
-          <text x="420" y="28" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">BALL &amp; SOCKET JOINT</text>
-          <!-- Socket bone -->
-          <path d="M 360 50 q 40 -6 70 20 q 16 18 6 44 q -6 16 -26 18 l 0 -82 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-          <!-- Ball + lower bone -->
-          <circle cx="404" cy="108" r="24" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-          <rect x="392" y="128" width="26" height="60" rx="10" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-          <!-- Cartilage lining the socket -->
-          <path d="M 382 88 q 24 26 44 8" fill="none" stroke="#C8A24A" stroke-width="4"/>
-          <!-- Ligament -->
-          <path d="M 376 70 C 360 100 380 132 404 136" fill="none" stroke="#B85042" stroke-width="2.5"/>
-          <!-- Rotation arrows -->
-          <path d="M 440 100 A 40 40 0 0 1 432 138" fill="none" stroke="#5C6370" stroke-width="1.5"/>
-          <path d="M 428 132 L 434 140 L 425 140 Z" fill="#5C6370"/>
-          <path d="M 368 100 A 40 40 0 0 0 376 138" fill="none" stroke="#5C6370" stroke-width="1.5"/>
-          <path d="M 380 132 L 374 140 L 383 140 Z" fill="#5C6370"/>
-          <text x="420" y="205" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">rotates many ways</text>
-          <text x="420" y="219" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">(shoulder, hip)</text>
+          <text x="420" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">BALL &amp; SOCKET JOINT</text>
+
+          <!-- Socket bone: a clear cup opening downward over the ball -->
+          <path d="M 360 70 h 120 a 14 14 0 0 1 14 14 v 34 a 74 60 0 0 1 -148 0 v -34 a 14 14 0 0 1 14 -14 Z"
+                fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Ball + lower bone (one piece) sitting in the socket -->
+          <circle cx="420" cy="150" r="30" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <rect x="404" y="176" width="32" height="74" rx="12" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+
+          <!-- Cartilage: gold lining curve along the socket/ball contact surface -->
+          <path d="M 392 138 a 30 30 0 0 0 56 0" fill="none" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+
+          <!-- Ligament: red band bridging socket bone to lower bone, on each side -->
+          <path d="M 372 120 C 360 156 380 196 410 206" fill="none" stroke="#B85042" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 468 120 C 480 156 460 196 430 206" fill="none" stroke="#B85042" stroke-width="4" stroke-linecap="round"/>
+
+          <!-- Rotation arrows (both directions, clear of art) -->
+          <path d="M 350 196 A 60 60 0 0 1 366 240" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+          <path d="M 360 234 L 367 242 L 358 243 Z" fill="#5C6370"/>
+          <path d="M 490 196 A 60 60 0 0 0 474 240" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+          <path d="M 480 234 L 473 242 L 482 243 Z" fill="#5C6370"/>
+
+          <text x="420" y="324" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">rotates many ways</text>
+          <text x="420" y="340" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">(shoulder, hip)</text>
         </g>
 
-        <!-- Mini legend -->
-        <g font-family="IBM Plex Sans,sans-serif" font-size="9.5">
-          <line x1="262" y1="120" x2="278" y2="120" stroke="#C8A24A" stroke-width="4"/>
-          <text x="270" y="135" text-anchor="middle" fill="#5C6370">cartilage</text>
-          <line x1="262" y1="155" x2="278" y2="155" stroke="#B85042" stroke-width="2.5"/>
-          <text x="270" y="170" text-anchor="middle" fill="#5C6370">ligament</text>
+        <!-- Legend: own clear strip at the foot, centred -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">
+          <line x1="158" y1="372" x2="180" y2="372" stroke="#B85042" stroke-width="4" stroke-linecap="round"/>
+          <text x="188" y="376" text-anchor="start">ligament — joins bone to bone</text>
+          <line x1="158" y1="388" x2="180" y2="388" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <text x="188" y="392" text-anchor="start">cartilage — cushions the joint surface</text>
         </g>
       </svg>
-      <div class="caption">Hinge vs ball-and-socket — with ligament &amp; cartilage</div>
+      <div class="caption">Hinge vs ball-and-socket — ligament (red) bridges the bones; cartilage (gold) caps the joint surface</div>
     </div>
 
     <div class="keywords">
@@ -580,51 +594,56 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p>Muscles aren't joined straight onto bone. They're connected by a <strong>tendon</strong> — a tough cord that links the <strong>muscle to the bone</strong>. When the muscle contracts, it pulls the tendon, and the tendon pulls the bone.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
-        <!-- RELAXED state (top) -->
+      <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- ============ ROW 1 — RELAXED ============ -->
         <g>
-          <text x="60" y="48" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">RELAXED — LONG &amp; THIN</text>
-          <!-- Bone (fixed) -->
-          <rect x="40" y="55" width="120" height="14" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-          <!-- Bone (movable) -->
-          <rect x="170" y="55" width="120" height="14" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-          <!-- Muscle (long, relaxed) -->
-          <ellipse cx="150" cy="62" rx="70" ry="14" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
-          <text x="150" y="66" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#B85042">muscle</text>
-          <!-- Tendons (gold) -->
-          <line x1="80" y1="62" x2="55" y2="62" stroke="#C8A24A" stroke-width="4"/>
-          <line x1="220" y1="62" x2="248" y2="62" stroke="#C8A24A" stroke-width="4"/>
+          <!-- Heading above the row, in clear space -->
+          <text x="40" y="34" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#5C6370" letter-spacing="1.5">RELAXED — LONG &amp; THIN</text>
+          <!-- Anchored (fixed) bone, left -->
+          <rect x="40" y="64" width="140" height="16" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Movable bone, right (straight, at rest) -->
+          <rect x="350" y="64" width="170" height="16" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Tendons (gold) joining muscle ends to each bone -->
+          <line x1="180" y1="72" x2="212" y2="72" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <line x1="348" y1="72" x2="316" y2="72" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <!-- Muscle (long, slim) -->
+          <ellipse cx="264" cy="72" rx="56" ry="16" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+          <text x="264" y="76" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">muscle</text>
         </g>
 
-        <!-- CONTRACTED state (bottom) -->
+        <!-- Separator between the two states -->
+        <line x1="40" y1="140" x2="520" y2="140" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- ============ ROW 2 — CONTRACTED ============ -->
         <g>
-          <text x="60" y="118" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">CONTRACTED — SHORT &amp; FAT &#8594; PULLS</text>
-          <!-- Bone (fixed) -->
-          <rect x="40" y="128" width="120" height="14" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-          <!-- Bone (movable, pulled up at an angle) -->
-          <rect x="168" y="120" width="118" height="14" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2" transform="rotate(-20 168 134)"/>
-          <!-- Muscle (short, fat) -->
-          <ellipse cx="135" cy="135" rx="50" ry="20" fill="#B85042" stroke="#B85042" stroke-width="2"/>
-          <text x="135" y="139" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#FCFAF4">muscle</text>
+          <!-- Heading above the row, in clear space -->
+          <text x="40" y="178" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#5C6370" letter-spacing="1.5">CONTRACTED — SHORT &amp; FAT, PULLS</text>
+          <!-- Anchored (fixed) bone, left -->
+          <rect x="40" y="222" width="140" height="16" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Movable bone, right — pulled up to an angle -->
+          <rect x="350" y="222" width="170" height="16" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2" transform="rotate(-26 350 230)"/>
           <!-- Tendons -->
-          <line x1="88" y1="135" x2="55" y2="135" stroke="#C8A24A" stroke-width="4"/>
-          <line x1="182" y1="135" x2="205" y2="128" stroke="#C8A24A" stroke-width="4"/>
-          <!-- Pull arrow -->
-          <path d="M 235 118 A 50 50 0 0 0 215 92" fill="none" stroke="#5C6370" stroke-width="1.5"/>
-          <path d="M 220 96 L 213 90 L 222 88 Z" fill="#5C6370"/>
-          <text x="252" y="110" text-anchor="start" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">bone is pulled</text>
+          <line x1="172" y1="230" x2="208" y2="230" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <line x1="334" y1="216" x2="306" y2="226" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <!-- Muscle (short, fat) -->
+          <ellipse cx="256" cy="230" rx="48" ry="24" fill="#B85042" stroke="#B85042" stroke-width="2"/>
+          <text x="256" y="234" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#FCFAF4">muscle</text>
+          <!-- Pull arrow showing the bone swinging up (clear of bone & label) -->
+          <path d="M 430 196 A 60 60 0 0 0 392 156" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+          <path d="M 398 161 L 390 154 L 399 152 Z" fill="#5C6370"/>
+          <text x="442" y="180" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">bone is</text>
+          <text x="442" y="196" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">pulled up</text>
         </g>
 
-        <!-- Legend -->
-        <g font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">
-          <line x1="380" y1="55" x2="400" y2="55" stroke="#C8A24A" stroke-width="4"/>
-          <text x="406" y="59" text-anchor="start">tendon (muscle &#8594; bone)</text>
-          <rect x="382" y="70" width="16" height="10" rx="3" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
-          <text x="406" y="79" text-anchor="start">bone</text>
+        <!-- Legend in its own clear strip at the foot -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">
+          <line x1="120" y1="296" x2="142" y2="296" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <text x="150" y="300" text-anchor="start">tendon (muscle to bone)</text>
+          <rect x="332" y="290" width="20" height="12" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+          <text x="360" y="300" text-anchor="start">bone</text>
         </g>
-        <text x="280" y="185" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">a contracting muscle shortens and pulls the bone via the tendon</text>
       </svg>
-      <div class="caption">A muscle contracting and pulling a bone</div>
+      <div class="caption">A muscle contracting and pulling a bone via the tendon</div>
     </div>
 
     <div class="keywords">

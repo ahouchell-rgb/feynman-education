@@ -226,32 +226,35 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p>Those flat bits are called <strong>plateaus</strong>. A graph of temperature against time, with these two flat sections, is a <strong>heating curve</strong>.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 560 340" xmlns="http://www.w3.org/2000/svg">
+        <!-- Axis title (top, in clear space) -->
+        <text x="78" y="34" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Temperature</text>
         <!-- Axes -->
-        <line x1="60" y1="30" x2="60" y2="230" stroke="#1E2761" stroke-width="2"/>
-        <line x1="60" y1="230" x2="520" y2="230" stroke="#1E2761" stroke-width="2"/>
-        <text x="60" y="20" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Temperature</text>
-        <text x="290" y="262" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Time (heating steadily) →</text>
+        <line x1="78" y1="48" x2="78" y2="262" stroke="#1E2761" stroke-width="2"/>
+        <line x1="78" y1="262" x2="528" y2="262" stroke="#1E2761" stroke-width="2"/>
+        <path d="M 73 54 L 78 44 L 83 54 Z" fill="#1E2761"/>
+        <path d="M 522 257 L 532 262 L 522 267 Z" fill="#1E2761"/>
+        <!-- Dashed guide lines to the plateaus (drawn first, behind curve) -->
+        <line x1="78" y1="182" x2="140" y2="182" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+        <line x1="78" y1="118" x2="300" y2="118" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+        <text x="70" y="186" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">m.p.</text>
+        <text x="70" y="122" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">b.p.</text>
         <!-- Heating curve: rise, plateau (melting), rise, plateau (boiling), rise -->
-        <polyline points="60,210 130,150 230,150 300,90 420,90 490,50" fill="none" stroke="#B85042" stroke-width="3"/>
+        <polyline points="78,238 140,182 230,182 300,118 420,118 500,74" fill="none" stroke="#B85042" stroke-width="3"/>
         <!-- Melting plateau marker -->
-        <line x1="130" y1="150" x2="230" y2="150" stroke="#C8A24A" stroke-width="3"/>
-        <text x="180" y="138" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#C8A24A">MELTING</text>
+        <line x1="140" y1="182" x2="230" y2="182" stroke="#C8A24A" stroke-width="3"/>
+        <text x="185" y="170" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#C8A24A">MELTING</text>
         <!-- Boiling plateau marker -->
-        <line x1="300" y1="90" x2="420" y2="90" stroke="#C8A24A" stroke-width="3"/>
-        <text x="360" y="78" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#C8A24A">BOILING</text>
-        <!-- State labels along the curve -->
-        <text x="92" y="200" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">solid</text>
-        <text x="265" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">liquid</text>
-        <text x="470" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">gas</text>
-        <!-- Dashed guide lines to the plateaus -->
-        <line x1="60" y1="150" x2="130" y2="150" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
-        <line x1="60" y1="90" x2="300" y2="90" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
-        <text x="55" y="153" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">m.p.</text>
-        <text x="55" y="93" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">b.p.</text>
-        <text x="290" y="278" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">temperature stays flat while the substance changes state</text>
+        <line x1="300" y1="118" x2="420" y2="118" stroke="#C8A24A" stroke-width="3"/>
+        <text x="360" y="106" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#C8A24A">BOILING</text>
+        <!-- State labels in clear space well off the curve -->
+        <text x="100" y="252" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">solid</text>
+        <text x="265" y="155" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">liquid</text>
+        <text x="475" y="105" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">gas</text>
+        <!-- X-axis title (clear space below axis) -->
+        <text x="303" y="296" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Time (heating steadily) →</text>
       </svg>
-      <div class="caption">A heating curve: two flat plateaus where state is changing</div>
+      <div class="caption">Heating curve — temperature stays flat at each plateau while the state changes</div>
     </div>
 
     <div class="keywords">
@@ -345,20 +348,22 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p>A reaction that transfers energy to the surroundings is called <strong>exothermic</strong>. An easy way to remember it: <em>exo</em> sounds like "exit", and the energy <strong>exits</strong> the reaction. We can measure that an exothermic reaction has happened with a simple <strong>thermometer</strong> — the temperature goes <strong>up</strong>.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
         <!-- Graph on the left: temperature rises -->
-        <line x1="50" y1="30" x2="50" y2="200" stroke="#1E2761" stroke-width="2"/>
-        <line x1="50" y1="200" x2="280" y2="200" stroke="#1E2761" stroke-width="2"/>
-        <text x="50" y="20" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">Temp</text>
-        <text x="165" y="228" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">Time →</text>
-        <!-- Rising line -->
-        <polyline points="50,170 120,170 200,70 280,55" fill="none" stroke="#B85042" stroke-width="3"/>
+        <text x="42" y="34" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Temp</text>
+        <line x1="60" y1="48" x2="60" y2="230" stroke="#1E2761" stroke-width="2"/>
+        <line x1="60" y1="230" x2="290" y2="230" stroke="#1E2761" stroke-width="2"/>
+        <path d="M 55 54 L 60 44 L 65 54 Z" fill="#1E2761"/>
+        <path d="M 284 225 L 294 230 L 284 235 Z" fill="#1E2761"/>
         <!-- Start guide -->
-        <line x1="50" y1="170" x2="120" y2="170" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
-        <text x="160" y="55" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">TEMP RISES ↑</text>
-        <text x="85" y="190" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">start</text>
+        <line x1="60" y1="190" x2="130" y2="190" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+        <!-- Rising line -->
+        <polyline points="60,190 130,190 210,90 290,72" fill="none" stroke="#B85042" stroke-width="3"/>
+        <text x="175" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">TEMP RISES &#8593;</text>
+        <text x="95" y="214" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">start</text>
+        <text x="175" y="262" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Time →</text>
         <!-- Beaker and thermometer on the right -->
-        <g transform="translate(360,40)">
+        <g transform="translate(380,52)">
           <!-- Beaker -->
           <path d="M 30 40 L 30 150 Q 30 165 45 165 L 115 165 Q 130 165 130 150 L 130 40" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
           <line x1="30" y1="40" x2="130" y2="40" stroke="#1E2761" stroke-width="2"/>
@@ -368,16 +373,18 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
           <rect x="72" y="10" width="10" height="120" rx="5" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
           <circle cx="77" cy="135" r="9" fill="#B85042"/>
           <rect x="74" y="55" width="6" height="75" fill="#B85042"/>
-          <!-- Heat arrows leaving the beaker -->
-          <g stroke="#B85042" stroke-width="2" fill="none">
-            <path d="M 10 70 q -8 -8 0 -16"/>
-            <path d="M 14 100 q -8 -8 0 -16"/>
+          <!-- Heat arrows leaving the beaker (pointing outward, left) -->
+          <g stroke="#B85042" stroke-width="2" fill="#B85042">
+            <line x1="22" y1="70" x2="2" y2="70"/>
+            <path d="M 8 65 L -2 70 L 8 75 Z"/>
+            <line x1="22" y1="105" x2="2" y2="105"/>
+            <path d="M 8 100 L -2 105 L 8 110 Z"/>
           </g>
-          <text x="2" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#B85042" transform="rotate(-90 2 135)">HEAT OUT</text>
         </g>
-        <text x="280" y="270" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">energy leaves the reaction → surroundings warm up</text>
+        <!-- HEAT OUT label in clear space to the left of the beaker -->
+        <text x="356" y="118" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042" transform="rotate(-90 356 118)">HEAT OUT</text>
       </svg>
-      <div class="caption">Exothermic: temperature of the surroundings rises</div>
+      <div class="caption">Exothermic — energy leaves the reaction, so the surroundings warm up</div>
     </div>
 
     <div class="keywords">
@@ -483,20 +490,22 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p>A reaction that takes in energy from the surroundings is called <strong>endothermic</strong>. The clue is in the name: <em>endo</em> means "into", and the energy goes <strong>into</strong> the reaction. Measure it with a thermometer and you'll see the temperature go <strong>down</strong>.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
         <!-- Graph on the left: temperature falls -->
-        <line x1="50" y1="30" x2="50" y2="200" stroke="#1E2761" stroke-width="2"/>
-        <line x1="50" y1="200" x2="280" y2="200" stroke="#1E2761" stroke-width="2"/>
-        <text x="50" y="20" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">Temp</text>
-        <text x="165" y="228" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">Time →</text>
-        <!-- Falling line -->
-        <polyline points="50,60 120,60 200,160 280,175" fill="none" stroke="#1E2761" stroke-width="3"/>
+        <text x="42" y="34" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Temp</text>
+        <line x1="60" y1="48" x2="60" y2="230" stroke="#1E2761" stroke-width="2"/>
+        <line x1="60" y1="230" x2="290" y2="230" stroke="#1E2761" stroke-width="2"/>
+        <path d="M 55 54 L 60 44 L 65 54 Z" fill="#1E2761"/>
+        <path d="M 284 225 L 294 230 L 284 235 Z" fill="#1E2761"/>
         <!-- Start guide -->
-        <line x1="50" y1="60" x2="120" y2="60" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
-        <text x="170" y="130" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761">TEMP FALLS ↓</text>
-        <text x="85" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">start</text>
+        <line x1="60" y1="72" x2="130" y2="72" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+        <!-- Falling line -->
+        <polyline points="60,72 130,72 210,188 290,206" fill="none" stroke="#1E2761" stroke-width="3"/>
+        <text x="200" y="118" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761">TEMP FALLS &#8595;</text>
+        <text x="95" y="64" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">start</text>
+        <text x="175" y="262" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Time →</text>
         <!-- Beaker and thermometer on the right -->
-        <g transform="translate(360,40)">
+        <g transform="translate(380,52)">
           <!-- Beaker -->
           <path d="M 30 40 L 30 150 Q 30 165 45 165 L 115 165 Q 130 165 130 150 L 130 40" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
           <line x1="30" y1="40" x2="130" y2="40" stroke="#1E2761" stroke-width="2"/>
@@ -506,16 +515,18 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
           <rect x="72" y="10" width="10" height="120" rx="5" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
           <circle cx="77" cy="135" r="9" fill="#1E2761"/>
           <rect x="74" y="100" width="6" height="30" fill="#1E2761"/>
-          <!-- Heat arrows entering the beaker -->
-          <g stroke="#1E2761" stroke-width="2" fill="none">
-            <path d="M 2 70 q 8 -8 0 -16"/>
-            <path d="M 6 100 q 8 -8 0 -16"/>
+          <!-- Heat arrows entering the beaker (pointing inward, right toward beaker) -->
+          <g stroke="#1E2761" stroke-width="2" fill="#1E2761">
+            <line x1="2" y1="70" x2="22" y2="70"/>
+            <path d="M 16 65 L 26 70 L 16 75 Z"/>
+            <line x1="2" y1="105" x2="22" y2="105"/>
+            <path d="M 16 100 L 26 105 L 16 110 Z"/>
           </g>
-          <text x="2" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#1E2761" transform="rotate(-90 2 135)">HEAT IN</text>
         </g>
-        <text x="280" y="270" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">energy is taken from the surroundings → they cool down</text>
+        <!-- HEAT IN label in clear space to the left of the beaker -->
+        <text x="356" y="118" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#1E2761" transform="rotate(-90 356 118)">HEAT IN</text>
       </svg>
-      <div class="caption">Endothermic: temperature of the surroundings falls</div>
+      <div class="caption">Endothermic — energy is taken from the surroundings, so they cool down</div>
     </div>
 
     <div class="keywords">
@@ -613,34 +624,33 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     · A <strong>fall</strong> (the change is negative, the temperature went down) means the reaction is <strong>endothermic</strong> — it took heat in.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
         <!-- BEFORE thermometer -->
-        <g transform="translate(90,30)">
-          <text x="0" y="-8" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#5C6370" letter-spacing="2">BEFORE</text>
+        <g transform="translate(90,46)">
+          <text x="0" y="-16" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#5C6370" letter-spacing="2">BEFORE</text>
           <rect x="-9" y="0" width="18" height="150" rx="9" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
           <circle cx="0" cy="160" r="15" fill="#B85042"/>
           <rect x="-5" y="60" width="10" height="100" fill="#B85042"/>
-          <text x="32" y="68" font-family="IBM Plex Mono,monospace" font-size="14" font-weight="700" fill="#1E2761">20 °C</text>
-          <text x="32" y="84" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">start temp</text>
+          <text x="34" y="66" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="700" fill="#1E2761">20 °C</text>
+          <text x="34" y="84" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">start temp</text>
         </g>
         <!-- Arrow -->
-        <g transform="translate(280,110)">
-          <line x1="-50" y1="0" x2="50" y2="0" stroke="#1E2761" stroke-width="2"/>
-          <path d="M 40 -8 L 55 0 L 40 8 Z" fill="#1E2761"/>
-          <text x="0" y="-14" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">react</text>
+        <g transform="translate(280,120)">
+          <text x="0" y="-18" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">react</text>
+          <line x1="-48" y1="0" x2="40" y2="0" stroke="#1E2761" stroke-width="2"/>
+          <path d="M 38 -8 L 53 0 L 38 8 Z" fill="#1E2761"/>
         </g>
         <!-- AFTER thermometer (warmer) -->
-        <g transform="translate(470,30)">
-          <text x="0" y="-8" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#5C6370" letter-spacing="2">AFTER</text>
+        <g transform="translate(458,46)">
+          <text x="0" y="-16" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#5C6370" letter-spacing="2">AFTER</text>
           <rect x="-9" y="0" width="18" height="150" rx="9" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
           <circle cx="0" cy="160" r="15" fill="#B85042"/>
           <rect x="-5" y="25" width="10" height="135" fill="#B85042"/>
-          <text x="32" y="33" font-family="IBM Plex Mono,monospace" font-size="14" font-weight="700" fill="#B85042">32 °C</text>
-          <text x="32" y="49" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">final temp</text>
+          <text x="34" y="32" font-family="IBM Plex Mono,monospace" font-size="15" font-weight="700" fill="#B85042">32 °C</text>
+          <text x="34" y="50" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">final temp</text>
         </g>
-        <text x="280" y="222" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">32 − 20 = +12 °C rise → exothermic</text>
       </svg>
-      <div class="caption">Compare the thermometer before and after the reaction</div>
+      <div class="caption">Before vs after: 32 − 20 = +12 °C rise → exothermic</div>
     </div>
 
     <div class="keywords">

@@ -227,9 +227,9 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p>So your body does something clever. It breaks the large molecules down into <strong>small</strong>, <strong>soluble</strong> ones — small enough to slip through the gut wall and dissolve into the blood. That breaking-down process is called <strong>digestion</strong>.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
         <!-- Gut wall line -->
-        <line x1="280" y1="20" x2="280" y2="210" stroke="#1E2761" stroke-width="2" stroke-dasharray="4 4"/>
+        <line x1="280" y1="20" x2="280" y2="190" stroke="#1E2761" stroke-width="2" stroke-dasharray="4 4"/>
         <text x="280" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#1E2761" letter-spacing="1">GUT WALL</text>
         <text x="120" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">INSIDE THE GUT</text>
         <text x="430" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#B85042" letter-spacing="1">BLOOD</text>
@@ -260,8 +260,8 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
           <circle cx="330" cy="150" r="7"/>
           <circle cx="370" cy="80" r="7"/>
         </g>
-        <text x="345" y="195" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">SMALL molecules</text>
-        <text x="345" y="211" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">soluble · cross into blood</text>
+        <text x="360" y="210" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">SMALL molecules</text>
+        <text x="360" y="227" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">soluble · cross into blood</text>
 
         <!-- arrow marker def -->
         <defs>
@@ -322,16 +322,13 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
           <rect x="250" y="140" width="150" height="40" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
           <text x="325" y="165" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">fatty acids</text>
         </g>
-        <!-- Side note -->
-        <text x="480" y="90" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#5C6370">big food →</text>
-        <text x="480" y="112" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#5C6370">small blocks</text>
         <defs>
           <marker id="arrowR2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
             <path d="M0,0 L9,4.5 L0,9 Z" fill="#B85042"/>
           </marker>
         </defs>
       </svg>
-      <div class="caption">Each food group breaks into its own small, soluble building blocks</div>
+      <div class="caption">Each food group breaks into its own small, soluble building blocks — big food → small blocks</div>
     </div>
 
     <div class="watch-out">
@@ -405,45 +402,52 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p>It helps to think of it as a journey with stops. At each stop, something different happens to the food.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
-        <!-- Mouth -->
-        <circle cx="120" cy="35" r="20" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-        <text x="120" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">MOUTH</text>
-        <text x="160" y="40" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">chewing &amp; saliva</text>
-        <!-- Oesophagus -->
-        <rect x="110" y="55" width="20" height="55" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-        <text x="160" y="88" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">oesophagus — peristalsis</text>
-        <text x="100" y="85" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">food pipe</text>
-        <!-- Stomach -->
-        <path d="M 120 110 Q 90 120 95 150 Q 100 180 130 175 Q 150 170 145 140 Q 142 118 120 110 Z" fill="#F4DAD7" stroke="#1E2761" stroke-width="2"/>
-        <text x="118" y="148" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">STOMACH</text>
-        <text x="170" y="148" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">churning &amp; acid</text>
-        <!-- Small intestine (coiled) -->
-        <path d="M 130 175 Q 160 200 130 215 Q 95 230 130 245 Q 165 260 125 270" fill="none" stroke="#C8A24A" stroke-width="9" stroke-linecap="round"/>
-        <text x="118" y="292" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">SMALL INTESTINE</text>
-        <text x="200" y="225" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">digestion &amp; absorption</text>
-        <!-- Large intestine (frame) -->
-        <path d="M 70 175 L 70 270 L 125 270" fill="none" stroke="#1E2761" stroke-width="11" stroke-linecap="round"/>
-        <text x="200" y="252" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">large intestine — water absorbed</text>
-        <!-- Rectum / anus -->
-        <text x="200" y="278" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">rectum → anus — faeces leave</text>
+      <svg viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowD3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#B85042"/>
+          </marker>
+        </defs>
 
-        <!-- Pathway list -->
-        <g font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#1A1A1A">
-          <text x="380" y="40" font-weight="700" fill="#1E2761">THE ROUTE</text>
-          <text x="380" y="66">1 · mouth</text>
-          <text x="380" y="88">2 · oesophagus</text>
-          <text x="380" y="110">3 · stomach</text>
-          <text x="380" y="132">4 · small intestine</text>
-          <text x="380" y="154">5 · large intestine</text>
-          <text x="380" y="176">6 · rectum</text>
-          <text x="380" y="198">7 · anus</text>
+        <!-- ============ Left: the tube, drawn as one connected path ============ -->
+        <!-- 1 Mouth -->
+        <circle cx="150" cy="45" r="22" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="150" y="49" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#1E2761">1</text>
+        <!-- 2 Oesophagus -->
+        <rect x="140" y="67" width="20" height="62" rx="8" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="150" y="103" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#1E2761">2</text>
+        <!-- 3 Stomach -->
+        <path d="M 150 129 Q 110 138 112 172 Q 114 206 152 200 Q 184 195 178 160 Q 174 134 150 129 Z" fill="#F4DAD7" stroke="#1E2761" stroke-width="2"/>
+        <text x="143" y="172" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#1E2761">3</text>
+        <!-- 5 Large intestine: navy frame wrapping the coil -->
+        <path d="M 88 200 L 88 340 L 196 340 L 196 215" fill="none" stroke="#1E2761" stroke-width="13" stroke-linecap="round"/>
+        <text x="88" y="291" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#FCFAF4">5</text>
+        <!-- 4 Small intestine: gold coil inside the frame -->
+        <path d="M 152 200 Q 188 218 152 236 Q 116 254 152 272 Q 188 290 152 308 Q 130 318 130 326" fill="none" stroke="#C8A24A" stroke-width="9" stroke-linecap="round"/>
+        <text x="170" y="250" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#1E2761">4</text>
+        <!-- 6 Rectum + 7 Anus -->
+        <rect x="120" y="345" width="20" height="34" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="130" y="367" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761">6</text>
+        <circle cx="130" cy="394" r="11" fill="#F4DAD7" stroke="#1E2761" stroke-width="2"/>
+        <text x="130" y="398" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#1E2761">7</text>
+
+        <!-- direction-of-travel arrow down the tube, in clear space to its left -->
+        <line x1="50" y1="45" x2="50" y2="380" stroke="#B85042" stroke-width="2" marker-end="url(#arrowD3)"/>
+        <text x="42" y="220" text-anchor="middle" transform="rotate(-90 42 220)" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#B85042" letter-spacing="1">ONE DIRECTION</text>
+
+        <!-- ============ Right: numbered route, doubling as the labels ============ -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">
+          <text x="300" y="42" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#1E2761" letter-spacing="1">THE ROUTE</text>
+          <text x="300" y="78"><tspan font-family="IBM Plex Mono,monospace" font-weight="700" fill="#1E2761">1</tspan>  <tspan font-weight="700">Mouth</tspan> — chewing &amp; saliva</text>
+          <text x="300" y="114"><tspan font-family="IBM Plex Mono,monospace" font-weight="700" fill="#1E2761">2</tspan>  <tspan font-weight="700">Oesophagus</tspan> — peristalsis</text>
+          <text x="300" y="150"><tspan font-family="IBM Plex Mono,monospace" font-weight="700" fill="#1E2761">3</tspan>  <tspan font-weight="700">Stomach</tspan> — churning &amp; acid</text>
+          <text x="300" y="186"><tspan font-family="IBM Plex Mono,monospace" font-weight="700" fill="#1E2761">4</tspan>  <tspan font-weight="700">Small intestine</tspan> — absorption</text>
+          <text x="300" y="222"><tspan font-family="IBM Plex Mono,monospace" font-weight="700" fill="#1E2761">5</tspan>  <tspan font-weight="700">Large intestine</tspan> — water back</text>
+          <text x="300" y="258"><tspan font-family="IBM Plex Mono,monospace" font-weight="700" fill="#1E2761">6</tspan>  <tspan font-weight="700">Rectum</tspan> — stores faeces</text>
+          <text x="300" y="294"><tspan font-family="IBM Plex Mono,monospace" font-weight="700" fill="#1E2761">7</tspan>  <tspan font-weight="700">Anus</tspan> — faeces leave</text>
         </g>
-        <text x="430" y="232" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">one tube,</text>
-        <text x="430" y="252" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">one direction,</text>
-        <text x="430" y="272" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">mouth to anus</text>
       </svg>
-      <div class="caption">The digestive system — food travels in one direction through each part</div>
+      <div class="caption">The digestive system — one tube, one direction, mouth to anus; food is broken down and absorbed at each stop</div>
     </div>
   </div>
 
@@ -544,50 +548,48 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p><strong>Chemical digestion</strong> is where the actual molecules get broken apart. Special <strong>digestive juices</strong> contain <strong>enzymes</strong> that break the <strong>bonds</strong> holding big molecules together. Mechanical makes the pieces small; chemical changes what they're made of.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
-        <!-- MECHANICAL side -->
-        <text x="140" y="24" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#1E2761" letter-spacing="1">MECHANICAL</text>
-        <!-- one big block -> several blocks -->
-        <rect x="55" y="55" width="50" height="50" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-        <line x1="115" y1="80" x2="155" y2="80" stroke="#B85042" stroke-width="2.5" marker-end="url(#arrowR3)"/>
-        <g fill="#EDF2FA" stroke="#1E2761" stroke-width="2">
-          <rect x="165" y="55" width="22" height="22" rx="3"/>
-          <rect x="192" y="55" width="22" height="22" rx="3"/>
-          <rect x="165" y="82" width="22" height="22" rx="3"/>
-          <rect x="192" y="82" width="22" height="22" rx="3"/>
-        </g>
-        <text x="140" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">same stuff, smaller pieces</text>
-        <text x="140" y="148" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">teeth · churning → bigger surface area</text>
-
-        <!-- divider -->
-        <line x1="280" y1="40" x2="280" y2="190" stroke="#CFD8E3" stroke-width="1.5"/>
-
-        <!-- CHEMICAL side -->
-        <text x="420" y="24" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042" letter-spacing="1">CHEMICAL</text>
-        <!-- chain of beads -> single beads -->
-        <g fill="#F2E6BD" stroke="#1E2761" stroke-width="2">
-          <circle cx="335" cy="80" r="11"/>
-          <circle cx="357" cy="80" r="11"/>
-          <circle cx="379" cy="80" r="11"/>
-        </g>
-        <text x="357" y="108" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">bonds</text>
-        <line x1="395" y1="80" x2="430" y2="80" stroke="#B85042" stroke-width="2.5" marker-end="url(#arrowR3)"/>
-        <text x="412" y="70" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#B85042">enzyme</text>
-        <g fill="#F2E6BD" stroke="#1E2761" stroke-width="2">
-          <circle cx="450" cy="62" r="11"/>
-          <circle cx="478" cy="80" r="11"/>
-          <circle cx="455" cy="100" r="11"/>
-        </g>
-        <text x="420" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">bonds broken — new molecules</text>
-        <text x="420" y="148" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">enzymes break the bonds</text>
-
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <marker id="arrowR3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
             <path d="M0,0 L9,4.5 L0,9 Z" fill="#B85042"/>
           </marker>
         </defs>
+
+        <!-- ===== MECHANICAL column (heading above its figure) ===== -->
+        <text x="140" y="26" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">MECHANICAL</text>
+        <!-- one big block -> four smaller blocks -->
+        <rect x="55" y="58" width="50" height="50" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="115" y1="83" x2="155" y2="83" stroke="#B85042" stroke-width="2.5" marker-end="url(#arrowR3)"/>
+        <g fill="#EDF2FA" stroke="#1E2761" stroke-width="2">
+          <rect x="165" y="58" width="22" height="22" rx="3"/>
+          <rect x="192" y="58" width="22" height="22" rx="3"/>
+          <rect x="165" y="86" width="22" height="22" rx="3"/>
+          <rect x="192" y="86" width="22" height="22" rx="3"/>
+        </g>
+        <text x="140" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">same stuff, smaller pieces</text>
+
+        <!-- divider -->
+        <line x1="280" y1="40" x2="280" y2="150" stroke="#CFD8E3" stroke-width="1.5"/>
+
+        <!-- ===== CHEMICAL column (heading above its figure) ===== -->
+        <text x="420" y="26" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042" letter-spacing="1">CHEMICAL</text>
+        <!-- joined chain of beads -> separated beads -->
+        <text x="357" y="48" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">bonds joined</text>
+        <g fill="#F2E6BD" stroke="#1E2761" stroke-width="2">
+          <circle cx="335" cy="83" r="11"/>
+          <circle cx="357" cy="83" r="11"/>
+          <circle cx="379" cy="83" r="11"/>
+        </g>
+        <text x="413" y="68" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#B85042">enzyme</text>
+        <line x1="396" y1="83" x2="432" y2="83" stroke="#B85042" stroke-width="2.5" marker-end="url(#arrowR3)"/>
+        <g fill="#F2E6BD" stroke="#1E2761" stroke-width="2">
+          <circle cx="452" cy="64" r="11"/>
+          <circle cx="480" cy="83" r="11"/>
+          <circle cx="457" cy="103" r="11"/>
+        </g>
+        <text x="420" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">bonds broken — new molecules</text>
       </svg>
-      <div class="caption">Mechanical breaks pieces smaller · chemical breaks the bonds inside molecules</div>
+      <div class="caption">Mechanical breaks pieces smaller (more surface area) · chemical uses enzymes to break the bonds inside molecules</div>
     </div>
 
     <div class="keywords">
@@ -711,17 +713,13 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
         <line x1="108" y1="142" x2="128" y2="142" stroke="#1E2761" stroke-width="1.5" marker-end="url(#arrowR4)"/>
         <line x1="217" y1="122" x2="197" y2="124" stroke="#1E2761" stroke-width="1.5" marker-end="url(#arrowR4)"/>
         <text x="160" y="248" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">A VILLUS (cross-section)</text>
-        <!-- short caption text right -->
-        <text x="430" y="175" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">small molecules</text>
-        <text x="430" y="195" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">diffuse through the</text>
-        <text x="430" y="215" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">thin wall into the blood</text>
         <defs>
           <marker id="arrowR4" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
             <path d="M0,0 L8,4 L0,8 Z" fill="#1E2761"/>
           </marker>
         </defs>
       </svg>
-      <div class="caption">A single villus — thin wall, rich blood supply, huge surface area</div>
+      <div class="caption">A single villus — thin wall, rich blood supply, huge surface area; small molecules diffuse through the thin wall into the blood</div>
     </div>
   </div>
 
@@ -823,7 +821,7 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     · It <strong>protects against harmful microbes</strong> by crowding them out — there's no room for the bad bacteria to settle when the good ones are already there.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 560 232" xmlns="http://www.w3.org/2000/svg">
         <!-- HEALTHY balance (left) -->
         <text x="150" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#2C5F2D" letter-spacing="1">HEALTHY BALANCE</text>
         <rect x="40" y="38" width="220" height="120" rx="10" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
@@ -841,8 +839,7 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
         </g>
         <!-- one tiny harmful (red) crowded out -->
         <ellipse cx="160" cy="100" rx="9" ry="5" fill="#B85042"/>
-        <text x="150" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">lots of helpful bacteria</text>
-        <text x="150" y="196" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">harmful ones crowded out</text>
+        <text x="150" y="180" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">lots of helpful bacteria</text>
 
         <!-- UNHEALTHY (right) -->
         <text x="420" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042" letter-spacing="1">OUT OF BALANCE</text>
@@ -861,10 +858,17 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
           <ellipse cx="430" cy="135" rx="11" ry="6"/>
           <ellipse cx="465" cy="120" rx="11" ry="6"/>
         </g>
-        <text x="420" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">harmful bacteria take over</text>
-        <text x="420" y="196" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">more likely to feel ill</text>
+        <text x="420" y="180" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">harmful bacteria take over</text>
+
+        <!-- legend (own row, clear space) -->
+        <g font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">
+          <ellipse cx="190" cy="212" rx="10" ry="6" fill="#2C5F2D"/>
+          <text x="206" y="216">helpful bacteria</text>
+          <ellipse cx="350" cy="212" rx="9" ry="5" fill="#B85042"/>
+          <text x="364" y="216">harmful bacteria</text>
+        </g>
       </svg>
-      <div class="caption">A healthy microbiome keeps helpful bacteria in charge and harmful ones out</div>
+      <div class="caption">A healthy microbiome keeps helpful bacteria in charge and crowds harmful ones out — out of balance, you're more likely to feel ill</div>
     </div>
 
     <div class="keywords">

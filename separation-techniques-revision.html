@@ -523,42 +523,61 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p><strong>Filtration separates an insoluble solid from a liquid.</strong> You pour the mixture through a folded piece of <strong>filter paper</strong> sitting in a funnel. The filter paper is like a very fine sieve — full of tiny holes. The liquid particles are small enough to slip through the holes, but the solid bits are too big and get trapped.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
-        <!-- Funnel -->
+      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Funnel + filter paper (apparatus centred, labels in side margins) -->
         <g>
-          <path d="M 210 40 L 350 40 L 295 130 L 265 130 Z" fill="none" stroke="#1E2761" stroke-width="2"/>
-          <line x1="265" y1="130" x2="265" y2="160" stroke="#1E2761" stroke-width="2"/>
-          <line x1="295" y1="130" x2="295" y2="160" stroke="#1E2761" stroke-width="2"/>
-          <!-- filter paper (cone inside) -->
-          <path d="M 222 48 L 338 48 L 290 120 L 270 120 Z" fill="#FCFAF4" stroke="#5C6370" stroke-width="1"/>
-          <!-- residue on filter paper -->
+          <!-- funnel cone + stem -->
+          <path d="M 215 50 L 345 50 L 295 135 L 265 135 Z" fill="none" stroke="#1E2761" stroke-width="2"/>
+          <line x1="265" y1="135" x2="265" y2="170" stroke="#1E2761" stroke-width="2"/>
+          <line x1="295" y1="135" x2="295" y2="170" stroke="#1E2761" stroke-width="2"/>
+          <!-- filter paper (cone sitting just inside the funnel) -->
+          <path d="M 226 58 L 334 58 L 291 128 L 269 128 Z" fill="#FCFAF4" stroke="#5C6370" stroke-width="1"/>
+          <!-- residue heaped in the filter paper -->
           <g fill="#B85042">
-            <circle cx="272" cy="60" r="4"/>
-            <circle cx="285" cy="64" r="4"/>
-            <circle cx="298" cy="60" r="4"/>
-            <circle cx="280" cy="72" r="4"/>
-            <circle cx="293" cy="74" r="4"/>
+            <circle cx="270" cy="72" r="4.5"/>
+            <circle cx="284" cy="76" r="4.5"/>
+            <circle cx="298" cy="72" r="4.5"/>
+            <circle cx="277" cy="86" r="4.5"/>
+            <circle cx="291" cy="88" r="4.5"/>
           </g>
-          <text x="395" y="58" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">RESIDUE</text>
-          <text x="395" y="74" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">insoluble solid,</text>
-          <text x="395" y="88" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">trapped in paper</text>
-          <text x="120" y="60" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">FILTER PAPER</text>
-          <text x="120" y="76" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">+ funnel</text>
         </g>
 
-        <!-- Drips -->
+        <!-- Drips falling from the funnel stem -->
         <g fill="#1E2761">
-          <circle cx="280" cy="172" r="3"/>
-          <circle cx="280" cy="186" r="3"/>
+          <circle cx="280" cy="182" r="3"/>
+          <circle cx="280" cy="196" r="3"/>
         </g>
 
         <!-- Beaker collecting filtrate -->
         <g>
-          <path d="M 230 195 L 230 235 Q 230 245 240 245 L 320 245 Q 330 245 330 235 L 330 195" fill="none" stroke="#1E2761" stroke-width="2"/>
-          <path d="M 232 212 L 232 235 Q 232 243 240 243 L 320 243 Q 328 243 328 235 L 328 212 Z" fill="#EDF2FA"/>
-          <text x="395" y="222" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">FILTRATE</text>
-          <text x="395" y="238" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">liquid that passes</text>
-          <text x="395" y="252" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">through</text>
+          <path d="M 230 210 L 230 255 Q 230 266 241 266 L 319 266 Q 330 266 330 255 L 330 210" fill="none" stroke="#1E2761" stroke-width="2"/>
+          <path d="M 232 228 L 232 255 Q 232 264 241 264 L 319 264 Q 328 264 328 255 L 328 228 Z" fill="#EDF2FA"/>
+        </g>
+
+        <!-- FILTER PAPER label (left) with leader to the cone -->
+        <g>
+          <text x="40" y="74" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">FILTER PAPER</text>
+          <text x="40" y="90" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">in a funnel</text>
+          <line x1="135" y1="80" x2="226" y2="80" stroke="#C8A24A" stroke-width="1"/>
+          <circle cx="226" cy="80" r="1.8" fill="#C8A24A"/>
+        </g>
+
+        <!-- RESIDUE label (right) with leader to the trapped solid -->
+        <g>
+          <text x="400" y="74" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">RESIDUE</text>
+          <text x="400" y="90" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">insoluble solid,</text>
+          <text x="400" y="105" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">trapped in the paper</text>
+          <line x1="305" y1="80" x2="392" y2="80" stroke="#C8A24A" stroke-width="1"/>
+          <circle cx="305" cy="80" r="1.8" fill="#C8A24A"/>
+        </g>
+
+        <!-- FILTRATE label (right) with leader to the beaker -->
+        <g>
+          <text x="400" y="238" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">FILTRATE</text>
+          <text x="400" y="254" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">liquid that</text>
+          <text x="400" y="269" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">passes through</text>
+          <line x1="333" y1="245" x2="392" y2="245" stroke="#C8A24A" stroke-width="1"/>
+          <circle cx="333" cy="245" r="1.8" fill="#C8A24A"/>
         </g>
       </svg>
       <div class="caption">Filtration apparatus · solid = residue (kept in paper), liquid = filtrate (passes through)</div>
@@ -788,46 +807,63 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p>So distillation = evaporation <em>plus</em> condensing. Evaporation throws the water away; distillation keeps it.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
-        <!-- Flask with solution -->
+      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Round-bottom flask with the solution, on a flame -->
         <g>
-          <circle cx="90" cy="150" r="42" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-          <rect x="80" y="78" width="20" height="35" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-          <text x="90" y="155" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" font-weight="700" fill="#1E2761">SOLUTION</text>
-          <text x="90" y="168" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8" fill="#5C6370">(salt left here)</text>
-          <!-- flame -->
-          <path d="M 82 200 Q 78 188 90 182 Q 102 188 98 200 Q 90 195 82 200 Z" fill="#B85042"/>
-          <text x="90" y="218" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">heat</text>
+          <circle cx="95" cy="180" r="44" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- neck -->
+          <rect x="85" y="108" width="20" height="34" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- flame under flask -->
+          <path d="M 87 232 Q 83 219 95 212 Q 107 219 103 232 Q 95 226 87 232 Z" fill="#B85042"/>
+          <text x="95" y="252" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">heat</text>
+          <!-- label inside flask -->
+          <text x="95" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">SOLUTION</text>
+          <text x="95" y="194" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">salt stays here</text>
         </g>
 
-        <!-- vapour label -->
-        <text x="160" y="72" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370">VAPOUR →</text>
+        <!-- Delivery tube: neck top -> into condenser inlet -->
+        <line x1="95" y1="108" x2="95" y2="92" stroke="#1E2761" stroke-width="2"/>
+        <line x1="95" y1="92" x2="205" y2="92" stroke="#1E2761" stroke-width="2"/>
 
-        <!-- Condenser (slanted tube) -->
+        <!-- Condenser (slanted glass jacket with inner tube) -->
         <g>
-          <line x1="100" y1="80" x2="200" y2="80" stroke="#1E2761" stroke-width="2"/>
-          <!-- outer jacket -->
-          <path d="M 200 65 L 360 130 L 360 150 L 200 95 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
-          <!-- inner tube -->
-          <line x1="205" y1="78" x2="358" y2="138" stroke="#5C6370" stroke-width="1.5"/>
-          <text x="280" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">CONDENSER</text>
-          <text x="280" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">cools vapour → liquid</text>
-          <!-- cold water in/out -->
-          <text x="365" y="120" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">cold water</text>
+          <path d="M 205 80 L 360 150 L 360 170 L 205 100 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- inner delivery tube through the jacket -->
+          <line x1="210" y1="90" x2="356" y2="156" stroke="#5C6370" stroke-width="1.5"/>
+          <!-- cold-water jacket connectors -->
+          <line x1="225" y1="88" x2="225" y2="72" stroke="#1E2761" stroke-width="2"/>
+          <line x1="345" y1="162" x2="345" y2="178" stroke="#1E2761" stroke-width="2"/>
         </g>
 
-        <!-- drips -->
+        <!-- drips of pure liquid from condenser outlet into beaker -->
         <g fill="#1E2761">
-          <circle cx="380" cy="155" r="3"/>
-          <circle cx="385" cy="172" r="3"/>
+          <circle cx="372" cy="182" r="3"/>
+          <circle cx="375" cy="198" r="3"/>
         </g>
 
-        <!-- collecting beaker -->
+        <!-- Collecting beaker for the pure liquid -->
         <g>
-          <path d="M 350 185 L 350 225 Q 350 235 360 235 L 420 235 Q 430 235 430 225 L 430 185" fill="none" stroke="#1E2761" stroke-width="2"/>
-          <path d="M 352 200 L 352 225 Q 352 233 360 233 L 420 233 Q 428 233 428 225 L 428 200 Z" fill="#EDF2FA"/>
-          <text x="475" y="208" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">PURE</text>
-          <text x="475" y="222" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">WATER</text>
+          <path d="M 345 212 L 345 252 Q 345 263 356 263 L 414 263 Q 425 263 425 252 L 425 212" fill="none" stroke="#1E2761" stroke-width="2"/>
+          <path d="M 347 230 L 347 252 Q 347 261 356 261 L 414 261 Q 423 261 423 252 L 423 230 Z" fill="#EDF2FA"/>
+        </g>
+
+        <!-- VAPOUR label above the delivery tube (clear space) -->
+        <text x="120" y="78" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#5C6370">vapour rises</text>
+
+        <!-- CONDENSER label above the jacket, leader down to it -->
+        <g>
+          <text x="250" y="45" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">CONDENSER</text>
+          <text x="250" y="61" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">cools vapour back to liquid</text>
+          <line x1="250" y1="70" x2="270" y2="104" stroke="#C8A24A" stroke-width="1"/>
+          <circle cx="270" cy="104" r="1.8" fill="#C8A24A"/>
+        </g>
+
+        <!-- PURE WATER label, leader to beaker -->
+        <g>
+          <text x="448" y="240" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">PURE</text>
+          <text x="448" y="256" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">WATER</text>
+          <line x1="428" y1="246" x2="442" y2="246" stroke="#C8A24A" stroke-width="1"/>
+          <circle cx="428" cy="246" r="1.8" fill="#C8A24A"/>
         </g>
       </svg>
       <div class="caption">Distillation · heat → vapour → condenser cools it → pure liquid collected</div>

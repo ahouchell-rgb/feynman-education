@@ -227,7 +227,7 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p>There are <strong>seven components</strong> of a balanced diet: <strong>carbohydrates</strong>, <strong>proteins</strong>, <strong>lipids</strong> (fats and oils), <strong>vitamins</strong>, <strong>minerals</strong>, <strong>fibre</strong> and <strong>water</strong>.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
         <!-- Plate -->
         <circle cx="200" cy="150" r="120" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
         <circle cx="200" cy="150" r="120" fill="none" stroke="#CFD8E3" stroke-width="6" opacity="0.6"/>
@@ -255,9 +255,8 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
           <circle cx="366" cy="186" r="3" fill="#C8A24A"/><text x="378" y="190">Fibre</text>
           <circle cx="366" cy="210" r="3" fill="#C8A24A"/><text x="378" y="214">Water</text>
         </g>
-        <text x="200" y="292" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">A balanced plate: lots of carbs and veg, some protein</text>
       </svg>
-      <div class="caption">The balanced plate and the seven food groups</div>
+      <div class="caption">The balanced plate and the seven food groups &mdash; lots of carbs and veg, some protein.</div>
     </div>
   </div>
 
@@ -402,14 +401,15 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
         <!-- Axes -->
         <line x1="80" y1="40" x2="80" y2="240" stroke="#1E2761" stroke-width="2"/>
         <line x1="80" y1="240" x2="520" y2="240" stroke="#1E2761" stroke-width="2"/>
-        <!-- y gridlines & labels (0 to 12000 kJ) -->
+        <!-- y gridlines & labels (0 to 15000 kJ, 200px tall, 13.33px per 1000) -->
         <g font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370" text-anchor="end">
           <line x1="80" y1="240" x2="520" y2="240" stroke="#CFD8E3" stroke-width="1"/>
-          <line x1="80" y1="200" x2="520" y2="200" stroke="#CFD8E3" stroke-width="1"/><text x="74" y="204">3000</text>
-          <line x1="80" y1="160" x2="520" y2="160" stroke="#CFD8E3" stroke-width="1"/><text x="74" y="164">6000</text>
-          <line x1="80" y1="120" x2="520" y2="120" stroke="#CFD8E3" stroke-width="1"/><text x="74" y="124">9000</text>
-          <line x1="80" y1="80"  x2="520" y2="80"  stroke="#CFD8E3" stroke-width="1"/><text x="74" y="84">12000</text>
-          <text x="74" y="244">0</text>
+          <line x1="80" y1="200" x2="520" y2="200" stroke="#CFD8E3" stroke-width="1"/><text x="72" y="204">3000</text>
+          <line x1="80" y1="160" x2="520" y2="160" stroke="#CFD8E3" stroke-width="1"/><text x="72" y="164">6000</text>
+          <line x1="80" y1="120" x2="520" y2="120" stroke="#CFD8E3" stroke-width="1"/><text x="72" y="124">9000</text>
+          <line x1="80" y1="80"  x2="520" y2="80"  stroke="#CFD8E3" stroke-width="1"/><text x="72" y="84">12000</text>
+          <line x1="80" y1="40"  x2="520" y2="40"  stroke="#CFD8E3" stroke-width="1"/><text x="72" y="44">15000</text>
+          <text x="72" y="244">0</text>
         </g>
         <!-- Bars: child 4500, woman 8000, man 10500, athlete 14000(capped to 11500 visual) -->
         <!-- child: 4500 -> height 60 (40px per 3000) -> y=240-60=180 -->
@@ -425,7 +425,7 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
           <text x="140" y="173">4500</text>
           <text x="240" y="126">8000</text>
           <text x="340" y="93">10500</text>
-          <text x="440" y="46">14000</text>
+          <text x="440" y="49">14000</text>
         </g>
         <!-- x labels -->
         <g font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#1A1A1A" text-anchor="middle">
@@ -518,31 +518,35 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
         <rect x="150" y="60" width="44" height="120" rx="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
         <rect x="150" y="120" width="44" height="60" rx="0" fill="#C9D7ED" stroke="none"/>
         <rect x="150" y="60" width="44" height="120" rx="14" fill="none" stroke="#1E2761" stroke-width="2"/>
-        <text x="220" y="150" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">water</text>
-        <text x="220" y="166" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">measure its temp rise</text>
         <!-- Thermometer -->
         <line x1="172" y1="40" x2="172" y2="110" stroke="#B85042" stroke-width="3"/>
         <circle cx="172" cy="112" r="6" fill="#B85042"/>
-        <text x="220" y="60" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#B85042">thermometer</text>
         <!-- Flame / burning food -->
         <path d="M 172 215 Q 162 195 172 185 Q 182 195 172 215 Z" fill="#C8A24A"/>
         <path d="M 172 212 Q 166 200 172 192 Q 178 200 172 212 Z" fill="#B85042"/>
         <!-- mounted needle holding food -->
         <line x1="172" y1="230" x2="172" y2="216" stroke="#5C6370" stroke-width="2"/>
         <rect x="150" y="230" width="44" height="8" rx="2" fill="#5C6370"/>
-        <text x="220" y="210" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">burning food</text>
-        <text x="220" y="226" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">on a mounted needle</text>
         <!-- arrows: heat rising -->
         <g stroke="#B85042" stroke-width="1.5" fill="none">
           <path d="M 160 185 q 4 -6 0 -12"/>
           <path d="M 184 185 q 4 -6 0 -12"/>
         </g>
-        <!-- caption arrow -->
-        <text x="420" y="120" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">More energy in</text>
-        <text x="420" y="140" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">the food means</text>
-        <text x="420" y="160" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">a bigger temp rise.</text>
+        <!-- Leader lines (thin, muted) -->
+        <g stroke="#C8A24A" stroke-width="1" fill="none">
+          <path d="M 178 58 L 300 58"/>
+          <path d="M 194 150 L 300 150"/>
+          <path d="M 184 200 L 300 215"/>
+        </g>
+        <!-- Labels in clear right margin -->
+        <text x="308" y="54" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">Thermometer</text>
+        <text x="308" y="69" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">reads the temperature</text>
+        <text x="308" y="146" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Water</text>
+        <text x="308" y="161" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">measure its temp rise</text>
+        <text x="308" y="211" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Burning food</text>
+        <text x="308" y="226" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">on a mounted needle</text>
       </svg>
-      <div class="caption">The food-burning (calorimetry) apparatus</div>
+      <div class="caption">The food-burning (calorimetry) apparatus &mdash; more energy in the food means a bigger temperature rise.</div>
     </div>
 
     <div class="keywords">
@@ -817,7 +821,7 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
     <p><strong>Alcohol.</strong> Alcohol slows down the brain. In the short term this <strong>slows your reaction time</strong> and affects judgement (which is why drink-driving is so dangerous). In the long term, heavy drinking damages the <strong>liver</strong> — the organ that breaks alcohol down — and can lead to liver disease.</p>
 
     <div class="diagram">
-      <svg viewBox="0 0 560 270" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
         <!-- Body outline (simple) -->
         <ellipse cx="160" cy="55" rx="30" ry="34" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
         <path d="M 125 95 Q 160 80 195 95 L 205 200 Q 160 215 115 200 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
@@ -848,9 +852,8 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
           <text x="306" y="210" font-weight="700" fill="#1E2761">Liver</text>
           <text x="306" y="224" font-size="10" fill="#5C6370">heavy alcohol use → liver damage</text>
         </g>
-        <text x="160" y="245" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Different drugs harm different organs.</text>
       </svg>
-      <div class="caption">Effects of smoking, alcohol and drugs on the body</div>
+      <div class="caption">Effects of smoking, alcohol and drugs on the body &mdash; different drugs harm different organs.</div>
     </div>
 
     <div class="watch-out">
