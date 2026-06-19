@@ -8,6 +8,7 @@ import type {
   ReactNode,
 } from "react";
 import { C } from "./theme";
+import { sanitizeHtml } from "./sanitize";
 
 /* Static style objects are hoisted to module scope so they aren't re-allocated
  * on every render (and so the variants are defined once, not per <Btn>). */
@@ -123,7 +124,7 @@ export function RichEditor({ value, onChange, readOnly, minHeight = 120, placeho
 
   if (readOnly) return (
     <div style={{ fontSize: 14, lineHeight: 1.7, color: C.text }}
-      dangerouslySetInnerHTML={{ __html: value || `<p style="color:${C.dim}">No content yet.</p>` }} />
+      dangerouslySetInnerHTML={{ __html: sanitizeHtml(value) || `<p style="color:${C.dim}">No content yet.</p>` }} />
   );
 
   return (

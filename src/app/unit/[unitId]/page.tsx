@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useAuth, sk } from "@/lib/sk";
 import { C, DISC } from "@/lib/theme";
+import { sanitizeHtml } from "@/lib/sanitize";
 import { Btn, Card, RichEditor } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
 import { FileUpload } from "@/components/FileUpload";
@@ -230,7 +231,7 @@ function UnitContent() {
             </div>
           </div>
         ) : unit.scheme_of_work ? (
-          <div style={{ fontSize: 14, lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: unit.scheme_of_work }} />
+          <div style={{ fontSize: 14, lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: sanitizeHtml(unit.scheme_of_work) }} />
         ) : (
           <div style={{ fontSize: 13, color: C.dim, fontStyle: "italic" }}>{isAdmin ? "No scheme of work yet — click Edit to add." : "No scheme of work added yet."}</div>
         )}

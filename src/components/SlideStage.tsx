@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import { C } from "@/lib/theme";
+import { sanitizeHtml } from "@/lib/sanitize";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 /* The fixed virtual canvas every element is positioned within. */
@@ -92,7 +93,7 @@ export function elStyle(el: any): CSSProperties {
 
 /* Inner content of a box element (static / editor view). */
 export function ElInner({ el }) {
-  if (el.type === "text") return el.rich ? <span className="rt" style={{ display: "block", width: "100%" }} dangerouslySetInnerHTML={{ __html: el.rich }} /> : el.text;
+  if (el.type === "text") return el.rich ? <span className="rt" style={{ display: "block", width: "100%" }} dangerouslySetInnerHTML={{ __html: sanitizeHtml(el.rich) }} /> : el.text;
   if (el.type === "timer") return fmtTime(el.duration ?? 300);
   if (el.type === "image") return <ImageInner el={el} />;
   if (el.type === "table") return <TableView el={el} />;
