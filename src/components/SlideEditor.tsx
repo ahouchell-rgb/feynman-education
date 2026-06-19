@@ -15,6 +15,7 @@ import { CropModal } from "./slideEditor/CropModal";
 import { ChartDataModal } from "./slideEditor/ChartDataModal";
 import { TableEditor } from "./slideEditor/TableEditor";
 import { TextEditor } from "./slideEditor/TextEditor";
+import { DeckQuestionsModal } from "@/components/DeckQuestionsModal";
 
 export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMasterChange, onCurChange }) {
   const [slides, setSlides] = useState(() =>
@@ -34,6 +35,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const [fxOpen, setFxOpen] = useState(false);          // equations palette popover
   const [find, setFind] = useState("");
   const [insertOpen, setInsertOpen] = useState(false);   // "+ Insert" dropdown
+  const [qOpen, setQOpen] = useState(false);             // deck → retrieval questions modal
   const [slideMenu, setSlideMenu] = useState(null);      // { x, y, index } — slide-rail right-click menu
   // Right panel is single-occupancy: opening one view closes the others, and
   // the column is always mounted so toggling never changes canvas width.
@@ -763,6 +765,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
           <Btn v={themeOpen ? "pri" : "soft"} onClick={() => openPanel("theme")} title="Deck theme">🎨 Theme</Btn>
           <Btn v={masterOpen ? "pri" : "soft"} onClick={() => openPanel("brand")} title="Header / footer brand frame">🏷 Brand</Btn>
           <Btn v={aiOpen ? "pri" : "soft"} onClick={() => openPanel("claude")} title="Ask Claude">✦ Claude</Btn>
+          <Btn v={qOpen ? "pri" : "soft"} onClick={() => setQOpen(true)} title="Generate retrieval questions for your class from this deck">❓ Questions</Btn>
           <Btn v="ghost" onClick={delSlide} disabled={slides.length < 2} title="Delete this slide">🗑</Btn>
         </div>
 
@@ -1088,6 +1091,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       return el ? <ChartDataModal el={el} onApply={(patch) => { patchH(charting, patch); setCharting(null); }} onCancel={() => setCharting(null)} /> : null;
     })()}
     {helpOpen && <ShortcutHelp onClose={() => setHelpOpen(false)} />}
+    {qOpen && <DeckQuestionsModal slides={slides} lessonTitle={deck?.title || ""} onClose={() => setQOpen(false)} />}
     {slideMenu && (
       <>
         {/* click/right-click anywhere else dismisses the menu */}
