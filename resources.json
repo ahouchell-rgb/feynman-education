@@ -1,6 +1,7 @@
 {
   "site": {
-    "origin": "https://interactive-science.com"
+    "origin": "https://interactive-science.com",
+    "retrieval_url": "https://retrieval-app.com"
   },
   "sections": [
     {
