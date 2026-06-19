@@ -155,6 +155,13 @@ Deno.serve(async (req: Request) => {
       const { students } = body;
       if (!class_id || !Array.isArray(students) || students.length === 0) return new Response(JSON.stringify({ error: "Missing class_id or students array" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       if (students.length > 60) return new Response(JSON.stringify({ error: "Max 60 students per upload" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      // Stamp created pupils with the class's tenant (school) so plan/usage
+      // attribution follows their real school. The profiles.school_id DEFAULT that
+      // used to backfill this was removed (tier0_drop_school_default_*), so without
+      // this every bulk-created pupil would land tenant-less. The class is already
+      // ownership-checked above (non-moderators pass the class_id teacher guard).
+      const { data: bcCls } = await supabase.from("classes").select("school_id").eq("id", class_id).single();
+      const bcSchool = (bcCls?.school_id as string | null) ?? null;
       const results = [];
       for (const s of students) {
         const email = (s.email || "").trim().toLowerCase();
@@ -165,7 +172,7 @@ Deno.serve(async (req: Request) => {
           const { data: created, error: createErr } = await supabase.auth.admin.createUser({ email, password, email_confirm: true, user_metadata: { display_name: name, role: "student" } });
           if (createErr || !created?.user) { results.push({ email, display_name: name, status: "error", error: createErr?.message || "Create failed" }); continue; }
           const userId = created.user.id;
-          await supabase.from("profiles").upsert({ id: userId, display_name: name, role: "student", email });
+          await supabase.from("profiles").upsert({ id: userId, display_name: name, role: "student", email, school_id: bcSchool });
           const { error: memberErr } = await supabase.from("class_members").upsert({ class_id, student_id: userId }, { onConflict: "class_id,student_id" });
           if (memberErr) results.push({ email, display_name: name, status: "error", error: "Created but failed to add to class: " + memberErr.message, password });
           else results.push({ email, display_name: name, status: "created", password });
