@@ -30,6 +30,7 @@ export function AdminPanel({ user }) {
   const [expandedStudent, setExpandedStudent] = useState(null);
   const [renameDraft, setRenameDraft] = useState("");
   const [pwDraft, setPwDraft] = useState("");
+  const [pwTeacher, setPwTeacher] = useState(null); // {id, pw} — admin password-reset for a teacher
   const [addClassId, setAddClassId] = useState(""); // selected class in the student's "Add to class" dropdown
   const [showCreateTeacher, setShowCreateTeacher] = useState(false);
   const [newTeacher, setNewTeacher] = useState({ email: "", display_name: "", password: "" });
@@ -302,6 +303,24 @@ export function AdminPanel({ user }) {
                             {hods.map(h => <option key={h.id} value={h.id}>{h.display_name}</option>)}
                           </select>
                         ) : null}
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {/* Admin (moderator) actions — reset password / delete the account */}
+                {!isMod && (
+                  <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px dashed ${C.bdr}`, display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                    {pwTeacher?.id === t.id ? (
+                      <>
+                        <Inp placeholder="New password (min 6)" type="text" value={pwTeacher.pw} onChange={e => setPwTeacher({ id: t.id, pw: e.target.value })} style={{ fontSize: 12, padding: "6px 10px", flex: 1, minWidth: 150 }} />
+                        <Btn onClick={() => { callManage("reset_teacher_password", null, { teacher_id: t.id, new_password: pwTeacher.pw }); setPwTeacher(null); }} disabled={busy || (pwTeacher.pw || "").length < 6} style={{ fontSize: 11, padding: "6px 12px" }}>{busy ? "…" : "Set password"}</Btn>
+                        <Btn v="ghost" onClick={() => setPwTeacher(null)} style={{ fontSize: 11, padding: "6px 10px" }}>Cancel</Btn>
+                      </>
+                    ) : (
+                      <>
+                        <Btn v="ghost" onClick={() => setPwTeacher({ id: t.id, pw: "" })} disabled={busy} style={{ fontSize: 11, padding: "5px 10px" }}>Reset password</Btn>
+                        <Btn v="ghost" onClick={() => { if (confirm(`Permanently delete ${t.display_name || t.email}? This deletes their account and ${tClasses.length} class${tClasses.length === 1 ? "" : "es"} (pupils' accounts are kept). This cannot be undone.`)) callManage("delete_teacher", null, { teacher_id: t.id }); }} disabled={busy} style={{ fontSize: 11, padding: "5px 10px", color: C.red, borderColor: "rgba(239,68,68,.3)" }}>Delete account</Btn>
                       </>
                     )}
                   </div>

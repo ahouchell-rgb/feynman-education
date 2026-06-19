@@ -239,6 +239,46 @@ Deno.serve(async (req: Request) => {
       return new Response(JSON.stringify({ success: true, message: "Removed from class" }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
+    // Admin (moderator) only: reset any teacher's / HoD's password.
+    if (action === "reset_teacher_password") {
+      if (!isModerator) return new Response(JSON.stringify({ error: "Only admins can reset teacher passwords" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      const { teacher_id } = body;
+      if (!teacher_id || !new_password) return new Response(JSON.stringify({ error: "Missing teacher_id or new_password" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (String(new_password).length < 6) return new Response(JSON.stringify({ error: "Password must be at least 6 characters" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      const { data: tp } = await supabase.from("profiles").select("role").eq("id", teacher_id).single();
+      if (!tp) return new Response(JSON.stringify({ error: "Account not found" }), { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (tp.role !== "teacher" && tp.role !== "hod") return new Response(JSON.stringify({ error: "That account is not a teacher (role: " + tp.role + ")" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      const { error } = await supabase.auth.admin.updateUser(teacher_id, { password: String(new_password) });
+      if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ success: true, message: "Teacher password updated" }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // Admin (moderator) only: delete a teacher / HoD account and their classes.
+    // classes.teacher_id is NO ACTION, so the teacher's class rows must go first;
+    // deleting a class cascades its class_members + responses (the same path
+    // delete_class uses). Pupil ACCOUNTS are NOT deleted — they may sit in other
+    // classes. Deleting the auth user cascades the profiles row (FK on delete cascade).
+    if (action === "delete_teacher") {
+      if (!isModerator) return new Response(JSON.stringify({ error: "Only admins can delete teacher accounts" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      const { teacher_id } = body;
+      if (!teacher_id) return new Response(JSON.stringify({ error: "Missing teacher_id" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (teacher_id === caller.id) return new Response(JSON.stringify({ error: "You can't delete your own account here" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      const { data: tp } = await supabase.from("profiles").select("role").eq("id", teacher_id).single();
+      if (!tp) return new Response(JSON.stringify({ error: "Account not found" }), { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      if (tp.role !== "teacher" && tp.role !== "hod") return new Response(JSON.stringify({ error: "That account is not a teacher (role: " + tp.role + ")" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      const { data: theirClasses } = await supabase.from("classes").select("id").eq("teacher_id", teacher_id);
+      const classIds = (theirClasses || []).map((c: { id: string }) => c.id);
+      if (classIds.length) {
+        const { error: clsErr } = await supabase.from("classes").delete().in("id", classIds);
+        if (clsErr) return new Response(JSON.stringify({ error: "Could not remove the teacher's classes: " + clsErr.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      // If they led a department, detach their teachers so those rows aren't orphaned.
+      await supabase.from("profiles").update({ hod_id: null, updated_at: new Date().toISOString() }).eq("hod_id", teacher_id);
+      const { error } = await supabase.auth.admin.deleteUser(teacher_id);
+      if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      return new Response(JSON.stringify({ success: true, message: `Teacher account deleted (${classIds.length} class${classIds.length === 1 ? "" : "es"} removed)` }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     return new Response(JSON.stringify({ error: "Unknown action" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (error) {
     return new Response(JSON.stringify({ error: String(error) }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
