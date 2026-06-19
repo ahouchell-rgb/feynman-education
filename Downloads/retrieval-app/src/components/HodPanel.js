@@ -18,6 +18,7 @@ export function HodPanel({ user }) {
   const [expandedFlag, setExpandedFlag] = useState(null);
   const [flagNote, setFlagNote] = useState("");
   const [flagBusy, setFlagBusy] = useState(null);
+  const [drill, setDrill] = useState(null); // {classId, tid, className, topicName} — class-matrix cell drilldown
   // Tier-1.5: HoD self-serve team onboarding (add a teacher to your school/department)
   const [showAddTeacher, setShowAddTeacher] = useState(false);
   const [newTeacher, setNewTeacher] = useState({ email: "", display_name: "", password: "" });
@@ -229,6 +230,19 @@ export function HodPanel({ user }) {
     .sort((a, b) => a.pct - b.pct)
     .slice(0, 12);
 
+  // Drilldown for a clicked matrix cell: pupils in that class, by accuracy on that topic
+  // (weakest first; never-attempted last). Reuses the already-loaded responses + roster.
+  const drillRows = drill ? classMembers
+    .filter(m => m.class_id === drill.classId)
+    .map(m => {
+      const sr = validResps.filter(r => r.class_id === drill.classId && r.student_id === m.student_id && r.questions?.topic_id === drill.tid);
+      const correct = sr.filter(r => r.is_correct).length;
+      const total = sr.length;
+      return { id: m.student_id, name: m.profiles?.display_name || "?", correct, total, pct: total ? Math.round((100 * correct) / total) : null };
+    })
+    .sort((a, b) => (a.pct ?? 999) - (b.pct ?? 999))
+    : null;
+
   const totalStudents = Object.keys(studentAgg).length;
   const totalActiveThisWeek = new Set(weekResps.map(r => r.student_id)).size;
   const deptAccuracy = validResps.length > 0 ? Math.round((validResps.filter(r => r.is_correct).length / validResps.length) * 100) : 0;
@@ -386,9 +400,15 @@ export function HodPanel({ user }) {
                           {row.cells.map((cell, i) => {
                             const bg = cell.pct === null ? C.bdr : cell.pct >= 70 ? C.grn : cell.pct >= 50 ? C.amb : C.red;
                             const fg = cell.pct === null ? C.dim : "#fff";
+                            const clickable = cell.total > 0;
+                            const cls = matrixClasses[i];
+                            const sel = drill && drill.classId === cell.classId && drill.tid === row.tid;
                             return (
                               <td key={i} style={{ padding: 2 }}>
-                                <div title={cell.total > 0 ? `${cell.correct}/${cell.total} correct` : "No data"} style={{ background: bg, color: fg, padding: "4px 6px", borderRadius: 4, textAlign: "center", fontSize: 10, fontWeight: 600, opacity: cell.pct === null ? 0.3 : 1 }}>
+                                <div
+                                  onClick={clickable ? () => setDrill(sel ? null : { classId: cell.classId, tid: row.tid, className: cls?.name || "—", topicName: row.name }) : undefined}
+                                  title={clickable ? `${cell.correct}/${cell.total} correct — click for pupils` : "No data"}
+                                  style={{ background: bg, color: fg, padding: "4px 6px", borderRadius: 4, textAlign: "center", fontSize: 10, fontWeight: 600, opacity: cell.pct === null ? 0.3 : 1, cursor: clickable ? "pointer" : "default", outline: sel ? `2px solid ${C.txt}` : "none", outlineOffset: sel ? "-2px" : 0 }}>
                                   {cell.pct === null ? "—" : `${cell.pct}%`}
                                 </div>
                               </td>
@@ -399,6 +419,39 @@ export function HodPanel({ user }) {
                     </tbody>
                   </table>
                 </div>
+
+                {drill && drillRows && (
+                  <div style={{ marginTop: 14, padding: 14, background: C.card, border: `1px solid ${C.bdr}`, borderLeft: `3px solid ${C.pri}`, borderRadius: "0 10px 10px 0" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 600 }}>{drill.className} · pupil breakdown</div>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: C.txt }}>{drill.topicName}</div>
+                      </div>
+                      <button onClick={() => setDrill(null)} aria-label="Close" style={{ background: "none", border: "none", color: C.dim, fontSize: 18, cursor: "pointer", lineHeight: 1, padding: 2 }}>×</button>
+                    </div>
+                    {drillRows.length === 0 ? (
+                      <div style={{ fontSize: 12, color: C.dim }}>No pupils in this class.</div>
+                    ) : drillRows.map(s => {
+                      const col = s.pct === null ? C.dim : s.pct >= 70 ? C.grn : s.pct >= 50 ? C.amb : C.red;
+                      return (
+                        <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderTop: `1px solid ${C.bdr}` }}>
+                          <div style={{ flex: 1, minWidth: 0, fontSize: 12, color: s.total === 0 ? C.dim : C.txt, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.name}</div>
+                          {s.total === 0 ? (
+                            <div style={{ fontSize: 11, color: C.dim }}>not attempted</div>
+                          ) : (
+                            <>
+                              <div style={{ width: 70, height: 4, background: C.bdr, borderRadius: 99, overflow: "hidden" }}>
+                                <div style={{ width: `${s.pct}%`, height: "100%", background: col }} />
+                              </div>
+                              <div style={{ fontSize: 12, fontWeight: 700, color: col, minWidth: 38, textAlign: "right" }}>{s.pct}%</div>
+                              <div style={{ fontSize: 10, color: C.dim, minWidth: 36, textAlign: "right" }}>{s.correct}/{s.total}</div>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
 
                 {priorityGaps.length > 0 && (
                   <div style={{ marginTop: 20 }}>
