@@ -66,6 +66,21 @@ export default function PresentPage() {
   // clear annotations when the slide changes
   useEffect(() => { setStrokes([]); }, [i]);
 
+  // Enter real browser fullscreen on the teacher's first interaction. It must be
+  // gesture-bound (navigating here from the "Present" click doesn't count), so we
+  // arm a one-shot on the first click/keypress rather than calling it on mount.
+  useEffect(() => {
+    const go = () => {
+      const el = document.documentElement;
+      if (!document.fullscreenElement && el.requestFullscreen) el.requestFullscreen().catch(() => {});
+      window.removeEventListener("pointerdown", go);
+      window.removeEventListener("keydown", go);
+    };
+    window.addEventListener("pointerdown", go);
+    window.addEventListener("keydown", go);
+    return () => { window.removeEventListener("pointerdown", go); window.removeEventListener("keydown", go); };
+  }, []);
+
   // class list for the random name picker (saved in this browser)
   useEffect(() => { try { setNames(JSON.parse(localStorage.getItem("sk_class_names")) || []); } catch {} }, []);
   const saveNames = (text) => {
@@ -108,7 +123,7 @@ export default function PresentPage() {
       else if (k === "Escape") {
         if (blackout) setBlackout("");
         else if (pen) setPen(false);
-        else router.push("/slides");
+        else { if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {}); router.push("/slides"); }
       }
       else if (k === "b" || k === "B") setBlackout((v) => (v === "black" ? "" : "black"));
       else if (k === "w" || k === "W") setBlackout((v) => (v === "white" ? "" : "white"));

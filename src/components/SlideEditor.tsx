@@ -139,8 +139,10 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const [cropping, setCropping] = useState(null); // image id being cropped
   const [charting, setCharting] = useState(null);  // chart id whose data is being edited
   // Click-advance: when on, a click anywhere on the slide jumps to the next slide
-  // (for clicking through an imported deck). Turn off to edit. Remembered per browser.
-  const [clickThru, setClickThru] = useState(() => { try { return localStorage.getItem("sk_click_advance") !== "0"; } catch { return true; } });
+  // (for clicking through an imported deck). Defaults OFF so opening a deck lands
+  // you straight in edit mode — an overlay-on-by-default silently swallows every
+  // edit click. Turn it on to flick through. Remembered per browser.
+  const [clickThru, setClickThru] = useState(() => { try { return localStorage.getItem("sk_click_advance") === "1"; } catch { return false; } });
   const toggleClickThru = () => setClickThru((v) => { const n = !v; try { localStorage.setItem("sk_click_advance", n ? "1" : "0"); } catch {} if (n) { setSel(null); setEditing(null); } return n; });
   const applyCrop = (id, crop, natW, natH) => {
     snapshot(false);
@@ -466,6 +468,33 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }); // re-bound each render so it closes over current sel/slides
+
+  // Paste an image straight from the clipboard (screenshot, copied web image)
+  // onto the current slide. Skipped while editing text, so pasting text into a
+  // text box still works; non-image pastes always fall through to the default.
+  useEffect(() => {
+    const onPaste = async (e) => {
+      if (editing) return;
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      const imgItem = Array.from(items).find((it: any) => it.kind === "file" && it.type.startsWith("image/")) as any;
+      if (!imgItem) return;
+      const file = imgItem.getAsFile();
+      if (!file) return;
+      e.preventDefault();
+      try {
+        const url = onUploadImage
+          ? await onUploadImage(file)
+          : await sk.upload(`slides/${deck.id}/${Math.floor(performance.now())}-paste`, file);
+        const probe = new Image();
+        probe.onload = () => { const w = 420, h = Math.round(w * (probe.naturalHeight / probe.naturalWidth || 0.66)); addEl({ type: "image", x: 140, y: 120, width: w, height: h, src: url }); };
+        probe.onerror = () => addEl({ type: "image", x: 140, y: 120, width: 420, height: 280, src: url });
+        probe.src = url;
+      } catch (err) { alert("Image paste failed: " + err.message); }
+    };
+    window.addEventListener("paste", onPaste);
+    return () => window.removeEventListener("paste", onPaste);
+  }); // re-bound each render so it closes over current slide / editing
 
   const pickImage = async (e) => {
     const file = e.target.files?.[0];
