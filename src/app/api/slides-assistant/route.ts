@@ -212,10 +212,15 @@ export async function POST(req) {
     }),
   }));
 
-  const userText =
+  // Split the prompt so prompt caching can fire: the stable scaffold (tools +
+  // SYSTEM + the deck snapshot) goes in cached blocks; only the volatile
+  // instruction is uncached and trails the breakpoint. On Opus the tools+SYSTEM
+  // alone (~3k tok) sit under the 4096-token cache floor, but tools+SYSTEM+deck
+  // clears it for any real deck — so iterating / retrying against the same deck
+  // state within the 5-min TTL reads the prefix at ~0.1x instead of full price.
+  const deckText =
     `Current slide index: ${currentSlide}\n` +
-    `Current deck (JSON):\n${JSON.stringify(sentSlides)}\n\n` +
-    `Instruction: ${instruction}`;
+    `Current deck (JSON):\n${JSON.stringify(sentSlides)}`;
 
   let res;
   try {
@@ -229,8 +234,14 @@ export async function POST(req) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_OUTPUT_TOKENS,
-        system: SYSTEM,
-        messages: [{ role: "user", content: userText }],
+        system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
+        messages: [{
+          role: "user",
+          content: [
+            { type: "text", text: deckText, cache_control: { type: "ephemeral" } },
+            { type: "text", text: `Instruction: ${instruction}` },
+          ],
+        }],
         tools: [TOOL],
         tool_choice: { type: "tool", name: "edit_deck" },
       }),
@@ -250,6 +261,9 @@ export async function POST(req) {
   // chat-with-lesson). Best-effort: a logging hiccup must not fail the user's edit.
   try {
     const u = data.usage || {};
+    // Count cache reads/writes in the input total so the shared daily pool stays
+    // meaningful now that the scaffold (system + deck) is cached.
+    const inputTotal = (u.input_tokens || 0) + (u.cache_read_input_tokens || 0) + (u.cache_creation_input_tokens || 0);
     await fetch(`${SK_URL}/rest/v1/rpc/increment_token_usage`, {
       method: "POST",
       headers: {
@@ -260,7 +274,7 @@ export async function POST(req) {
       body: JSON.stringify({
         p_teacher_id: userId,
         p_day: todayISO(),
-        p_input: u.input_tokens || 0,
+        p_input: inputTotal,
         p_output: u.output_tokens || 0,
       }),
     });

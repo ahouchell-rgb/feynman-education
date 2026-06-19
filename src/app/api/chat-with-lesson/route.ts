@@ -207,13 +207,19 @@ export async function POST(req) {
   }
 
   // Build Anthropic payload
-  const messages = [
-    ...history.map(m => ({
-      role: m.role === "assistant" ? "assistant" : "user",
-      content: m.content,
-    })),
-    { role: "user", content: userMessage },
-  ];
+  const historyMsgs = history.map(m => ({
+    role: m.role === "assistant" ? "assistant" : "user",
+    content: m.content,
+  }));
+  // Prompt caching: mark the last prior turn so each new message re-reads the
+  // cached conversation prefix (~0.1x) instead of re-billing the whole history.
+  // Holds until the 30-message window slides; the system block (below) is cached
+  // regardless. 5-min TTL — back-to-back chat turns hit it.
+  if (historyMsgs.length) {
+    const last: any = historyMsgs[historyMsgs.length - 1];
+    last.content = [{ type: "text", text: String(last.content ?? ""), cache_control: { type: "ephemeral" } }];
+  }
+  const messages = [...historyMsgs, { role: "user", content: userMessage }];
   const systemPrompt = buildSystemPrompt({ lesson, unit, teacherContent, widgets });
 
   // Call Anthropic with streaming
@@ -229,7 +235,9 @@ export async function POST(req) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_OUTPUT_TOKENS,
-        system: systemPrompt,
+        // Cache the large, lesson-stable system prompt (base instructions +
+        // HOUSE_LESSON_STYLE + lesson context). Re-read on every turn of the chat.
+        system: [{ type: "text", text: systemPrompt, cache_control: { type: "ephemeral" } }],
         messages,
         stream: true,
       }),
@@ -277,7 +285,10 @@ export async function POST(req) {
                 fullText += t;
                 controller.enqueue(sse({ type: "text", content: t }));
               } else if (evt.type === "message_start") {
-                inputTok = evt.message?.usage?.input_tokens || 0;
+                // Count total input volume incl. cache reads/writes so the shared
+                // daily pool stays meaningful once caching is on.
+                const mu = evt.message?.usage || {};
+                inputTok = (mu.input_tokens || 0) + (mu.cache_read_input_tokens || 0) + (mu.cache_creation_input_tokens || 0);
               } else if (evt.type === "message_delta") {
                 outputTok = evt.usage?.output_tokens ?? outputTok;
               } else if (evt.type === "error") {
