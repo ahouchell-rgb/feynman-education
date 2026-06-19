@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chemical Changes (C4) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for C4 Chemical Changes — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Chemistry Paper 1 · C4 Chemical Changes</div>
+    <h1>Chemical changes, <em>for the exam.</em></h1>
+    <p class="tag">The whole of C4 — the reactivity series, extracting and reducing metals, redox, the reactions of acids, the pH scale, making a salt, and electrolysis. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Reactivity series</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Extraction</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Oxidation &amp; reduction</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Reactions of acids</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">pH &amp; neutralisation</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Making salts</a>
+    <a href="#lesson-7" class="nav-pill" data-lesson="7">Electrolysis</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — THE REACTIVITY SERIES (4.4.1.1 / 4.4.1.2)                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.4.1 · Reactivity series</div>
+    <h2 class="lesson-title">The <em>reactivity</em> series</h2>
+    <p class="lesson-promise">By the end you'll order metals by how reactive they are, predict what happens with water and acid, and use displacement to rank an unknown metal.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Ordering the metals</h3>
+    <p>Metals react by <strong>losing electrons</strong> to form positive ions. The more easily a metal loses its electrons, the <strong>more reactive</strong> it is. Putting the metals in order of how readily they react gives the <strong>reactivity series</strong>.</p>
+    <p>You also need two non-metals — <strong>carbon</strong> and <strong>hydrogen</strong> — placed in the series so you can compare them with the metals. Their positions decide which metals can be extracted with carbon, and which react with acids.</p>
+
+    <div class="diagram">
+      <svg viewBox="-40 0 600 320" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE REACTIVITY SERIES</text>
+        <!-- arrow showing direction -->
+        <line x1="40" y1="50" x2="40" y2="290" stroke="#B85042" stroke-width="3"/>
+        <polygon points="40,296 34,282 46,282" fill="#B85042"/>
+        <text x="30" y="48" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">most</text>
+        <text x="30" y="64" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">reactive</text>
+        <text x="30" y="288" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">least</text>
+        <!-- metals list -->
+        <text x="80" y="56" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Potassium</text>
+        <text x="80" y="80" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Sodium</text>
+        <text x="80" y="104" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Lithium</text>
+        <text x="80" y="128" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Calcium</text>
+        <text x="80" y="152" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Magnesium</text>
+        <text x="80" y="176" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Aluminium</text>
+        <text x="80" y="200" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#C8A24A">(CARBON)</text>
+        <text x="80" y="224" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Zinc</text>
+        <text x="80" y="248" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Iron</text>
+        <text x="80" y="272" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#C8A24A">(HYDROGEN)</text>
+        <!-- second column least reactive -->
+        <text x="330" y="200" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Copper</text>
+        <text x="330" y="224" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Silver</text>
+        <text x="330" y="248" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Gold</text>
+        <line x1="320" y1="180" x2="320" y2="256" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="330" y="276" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">below hydrogen:</text>
+        <text x="330" y="294" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">won't react with acid</text>
+      </svg>
+      <div class="caption">Learn the order — carbon and hydrogen are placed in for comparison</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords</h4>
+      <dl>
+        <dt>Reactivity series</dt><dd>Metals (plus carbon &amp; hydrogen) listed in order of how readily they react.</dd>
+        <dt>Oxidised</dt><dd>A metal is oxidised when it loses electrons to form a positive ion.</dd>
+        <dt>Displacement</dt><dd>A more reactive metal pushes a less reactive one out of its compound.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Reactions with water and acid</h3>
+    <p>The reactive metals at the top fizz with cold <strong>water</strong>, giving a metal hydroxide and <strong>hydrogen</strong>. Less reactive metals don't react with water but still react with <strong>dilute acid</strong>, giving a salt and hydrogen. The more reactive the metal, the more vigorous the fizzing.</p>
+    <p>A metal below <strong>hydrogen</strong> in the series (copper, silver, gold) will <strong>not</strong> react with dilute acids at all — that's why copper coins don't dissolve in your hand.</p>
+    <p>The general patterns to remember:</p>
+    <p><strong>metal + water → metal hydroxide + hydrogen</strong> (for the reactive metals). <strong>metal + acid → salt + hydrogen</strong> (for metals above hydrogen).</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — fizzing means hydrogen, not "the metal disappearing"</h4>
+      <p>The bubbles given off are <strong>hydrogen gas</strong> — test with a lit splint for the <strong>squeaky pop</strong>. The metal doesn't vanish; it forms a dissolved <strong>salt</strong>. Don't confuse "reacts with water" (top of the series) with "reacts with acid" (anything above hydrogen).</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">An unknown metal X displaces copper from copper sulfate but does <em>not</em> displace iron from iron sulfate. Where is X?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>More reactive than iron</span></li>
+        <li><span class="letter">B</span><span>Less reactive than copper</span></li>
+        <li><span class="letter">C</span><span>Between iron and copper in reactivity</span></li>
+        <li><span class="letter">D</span><span>The same reactivity as copper</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> X displaces copper, so X is <em>more</em> reactive than copper. X does not displace iron, so X is <em>less</em> reactive than iron. That puts X between iron and copper.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>In terms of electrons, what makes one metal more reactive than another?</summary><div class="ans">A more reactive metal <strong>loses its electrons more easily</strong> to form a positive ion (it is more easily oxidised).</div></details></li>
+      <li><details><summary>Write a word equation for magnesium reacting with dilute hydrochloric acid.</summary><div class="ans">magnesium + hydrochloric acid → <strong>magnesium chloride + hydrogen</strong>.</div></details></li>
+      <li><details><summary>Why does gold not react with dilute acid?</summary><div class="ans">Gold is <strong>below hydrogen</strong> in the reactivity series — it is too unreactive to displace hydrogen from the acid.</div></details></li>
+      <li><details><summary>How could you test the gas given off when a metal reacts with acid?</summary><div class="ans">Hold a lit splint at the mouth of the tube — hydrogen gives a <strong>squeaky pop</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — EXTRACTION OF METALS & REDUCTION (4.4.1.3)                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.4.1.3 · Extraction &amp; reduction</div>
+    <h2 class="lesson-title">Extracting <em>metals</em></h2>
+    <p class="lesson-promise">Why some metals are dug up ready to use, why most are locked in ores, and how carbon pulls the reactive-enough ones out.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Ores and native metals</h3>
+    <p>Most metals are found as <strong>compounds</strong> — usually oxides — in rocks called <strong>ores</strong>. To get the metal out, you have to <strong>remove the oxygen</strong>. Removing oxygen from a compound is called <strong>reduction</strong>.</p>
+    <p>A few very unreactive metals, like <strong>gold</strong>, are found in the Earth as the pure metal — we say they are found <strong>native</strong>. They're so unreactive they never combined with anything in the first place, so no chemistry is needed to extract them.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "found native" only applies to unreactive metals</h4>
+      <p>Only metals <strong>below carbon</strong> and very unreactive (like gold) are found as the pure element. Reactive metals are <em>always</em> found as compounds, because they reacted with oxygen long ago. Don't say iron or aluminium are found native — they aren't.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Extraction with carbon</h3>
+    <p>A metal can be extracted from its oxide by heating with <strong>carbon</strong> — but only if the metal is <strong>less reactive than carbon</strong>. The carbon takes the oxygen, so the metal is reduced. This is how <strong>iron</strong> and <strong>zinc</strong> are extracted cheaply.</p>
+    <p>Metals <strong>more reactive than carbon</strong> (like aluminium) can't be displaced by carbon — they hold onto their oxygen too tightly — so they are extracted by <strong>electrolysis</strong> instead (Topic 7), which is far more expensive.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">REDUCTION WITH CARBON</text>
+        <!-- before box -->
+        <rect x="40" y="60" width="190" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="135" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">BEFORE</text>
+        <text x="135" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" fill="#1A1A1A">iron oxide</text>
+        <text x="135" y="124" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#5C6370">+ carbon</text>
+        <text x="135" y="150" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">heat strongly</text>
+        <!-- arrow -->
+        <line x1="240" y1="115" x2="320" y2="115" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="326,115 312,108 312,122" fill="#C8A24A"/>
+        <!-- after box -->
+        <rect x="330" y="60" width="190" height="110" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="425" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">AFTER</text>
+        <text x="425" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">iron</text>
+        <text x="425" y="124" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#5C6370">+ carbon dioxide</text>
+        <text x="425" y="150" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#2C5F2D">oxygen removed</text>
+      </svg>
+      <div class="caption">Carbon takes the oxygen — the metal oxide is reduced to the metal</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — reading an extraction equation</h4>
+      <p class="q">In 2Fe₂O₃ + 3C → 4Fe + 3CO₂, state which substance is reduced and why.</p>
+      <div class="step"><span class="label">Spot it</span><span class="v">Iron oxide (Fe₂O₃) starts with oxygen, ends without it.</span></div>
+      <div class="step"><span class="label">Reduced</span><span class="v">The iron oxide is reduced — it has lost oxygen.</span></div>
+      <div class="step answer"><span class="label">Oxidised</span><span class="v">The carbon is oxidised — it gains oxygen to form CO₂.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which metal can <em>not</em> be extracted by heating its oxide with carbon?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Iron</span></li>
+        <li><span class="letter">B</span><span>Zinc</span></li>
+        <li><span class="letter">C</span><span>Aluminium</span></li>
+        <li><span class="letter">D</span><span>Copper</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — Aluminium.</strong> It's <em>more</em> reactive than carbon, so carbon can't take its oxygen. Aluminium must be extracted by electrolysis. Iron, zinc and copper are all below carbon, so carbon works for them.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is an ore?</summary><div class="ans">A rock that contains enough of a <strong>metal compound</strong> for it to be worth extracting the metal.</div></details></li>
+      <li><details><summary>Define reduction in terms of oxygen.</summary><div class="ans">Reduction is the <strong>loss of oxygen</strong> from a substance.</div></details></li>
+      <li><details><summary>Why is gold found as the native metal but iron is not?</summary><div class="ans">Gold is so <strong>unreactive</strong> it doesn't combine with oxygen, so it stays as the pure metal. Iron is reactive enough to form an oxide, so it's found as a compound.</div></details></li>
+      <li><details><summary>Which metals can be extracted by reduction with carbon?</summary><div class="ans">Metals <strong>less reactive than carbon</strong> (e.g. iron, zinc, copper). More reactive metals need electrolysis.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — OXIDATION & REDUCTION / REDOX (4.4.1.3 / 4.4.3.6)             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.4.1 · Redox</div>
+    <h2 class="lesson-title">Oxidation &amp; <em>reduction</em></h2>
+    <p class="lesson-promise">Two ways to define the same pair of changes — by oxygen, and (Higher) by electrons. Learn OIL RIG and you'll never mix them up.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>In terms of oxygen</h3>
+    <p>The simplest definition: <strong>oxidation is gaining oxygen</strong>; <strong>reduction is losing oxygen</strong>. When one substance is oxidised, another is reduced in the same reaction — together these are called <strong>redox</strong> reactions.</p>
+    <p>When magnesium burns, magnesium <strong>gains oxygen</strong> (it's oxidised) to form magnesium oxide. When iron oxide is heated with carbon, the iron oxide <strong>loses oxygen</strong> (it's reduced).</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">REDOX — OXYGEN VIEW</text>
+        <!-- oxidation -->
+        <text x="150" y="60" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">OXIDATION</text>
+        <line x1="60" y1="80" x2="240" y2="80" stroke="#B85042" stroke-width="3"/>
+        <polygon points="246,80 232,73 232,87" fill="#B85042"/>
+        <text x="150" y="104" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">gains oxygen</text>
+        <text x="150" y="128" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">Mg → MgO</text>
+        <!-- reduction -->
+        <text x="410" y="60" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">REDUCTION</text>
+        <line x1="500" y1="80" x2="320" y2="80" stroke="#2C5F2D" stroke-width="3"/>
+        <polygon points="314,80 328,73 328,87" fill="#2C5F2D"/>
+        <text x="410" y="104" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">loses oxygen</text>
+        <text x="410" y="128" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">CuO → Cu</text>
+      </svg>
+      <div class="caption">Oxidation = gain of oxygen · Reduction = loss of oxygen</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "reduction" sounds backwards</h4>
+      <p>It feels odd that <strong>reduction</strong> means <em>losing</em> oxygen but <em>gaining</em> electrons. Lean on <strong>OIL RIG</strong>: <em>Oxidation Is Loss, Reduction Is Gain</em> — of electrons. Both happen together in every redox reaction; you can't have one without the other.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>In terms of electrons</h3>
+    <p>There's a deeper definition based on electrons, which you'll use most when metals form ions and in electrolysis.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">OIL RIG</text>
+        <!-- OIL -->
+        <rect x="40" y="40" width="230" height="90" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="155" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#B85042">OIL</text>
+        <text x="155" y="92" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Oxidation</text>
+        <text x="155" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Is Loss of electrons</text>
+        <!-- RIG -->
+        <rect x="290" y="40" width="230" height="90" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="405" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#2C5F2D">RIG</text>
+        <text x="405" y="92" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Reduction</text>
+        <text x="405" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Is Gain of electrons</text>
+      </svg>
+      <div class="caption">The memory aid that fixes the electron definition for good</div>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — oxidation and reduction as loss / gain of electrons</h4>
+      <p>On Higher tier you must define redox in terms of <strong>electrons</strong> and write <strong>ionic half equations</strong>. When a metal reacts it is <strong>oxidised</strong> — it loses electrons:</p>
+      <p style="text-align:center"><span class="formula">Mg → Mg²⁺ + 2e⁻</span></p>
+      <p>The species that gains those electrons is <strong>reduced</strong>. For example, in a displacement reaction the copper ions are reduced:</p>
+      <p style="text-align:center"><span class="formula">Cu²⁺ + 2e⁻ → Cu</span></p>
+      <p>Add the two half equations together and the electrons cancel — that's the full ionic equation.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">In the change Zn → Zn²⁺ + 2e⁻, the zinc has been:</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>reduced, because it gained electrons</span></li>
+        <li><span class="letter">B</span><span>oxidised, because it lost electrons</span></li>
+        <li><span class="letter">C</span><span>reduced, because it lost oxygen</span></li>
+        <li><span class="letter">D</span><span>neither — no oxygen is involved</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — oxidised.</strong> The zinc loses two electrons (they appear on the right). OIL: <em>Oxidation Is Loss</em> of electrons. You don't need oxygen to be present for oxidation to happen.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define oxidation and reduction in terms of oxygen.</summary><div class="ans">Oxidation is the <strong>gain of oxygen</strong>; reduction is the <strong>loss of oxygen</strong>.</div></details></li>
+      <li><details><summary>What does OIL RIG stand for?</summary><div class="ans"><strong>O</strong>xidation <strong>I</strong>s <strong>L</strong>oss, <strong>R</strong>eduction <strong>I</strong>s <strong>G</strong>ain — of <strong>electrons</strong>.</div></details></li>
+      <li><details><summary>In 2Mg + O₂ → 2MgO, which substance is oxidised?</summary><div class="ans">The <strong>magnesium</strong> — it gains oxygen to form magnesium oxide.</div></details></li>
+      <li><details><summary>[HT] Write the half equation for a magnesium atom forming a magnesium ion.</summary><div class="ans">Mg → <strong>Mg²⁺ + 2e⁻</strong> (oxidation — loss of two electrons).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — REACTIONS OF ACIDS (4.4.2.1 / 4.4.2.2)                        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.4.2 · Reactions of acids</div>
+    <h2 class="lesson-title">The reactions of <em>acids</em></h2>
+    <p class="lesson-promise">Four reaction patterns that all make a salt — learn the general equations once, and which acid gives which salt.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Acids make salts</h3>
+    <p>An acid reacts with a base to produce a <strong>salt</strong> and water — this is called <strong>neutralisation</strong>. A <strong>base</strong> is a substance that neutralises an acid; a soluble base is called an <strong>alkali</strong>. Metal oxides and metal hydroxides are bases; metal carbonates also neutralise acids.</p>
+    <p>Which salt you get depends on the acid: <strong>hydrochloric acid</strong> makes <strong>chlorides</strong>, <strong>sulfuric acid</strong> makes <strong>sulfates</strong>, and <strong>nitric acid</strong> makes <strong>nitrates</strong>.</p>
+
+    <div class="keywords">
+      <h4>The four general equations</h4>
+      <dl>
+        <dt>acid + metal</dt><dd>→ salt + hydrogen</dd>
+        <dt>acid + metal oxide</dt><dd>→ salt + water</dd>
+        <dt>acid + metal hydroxide</dt><dd>→ salt + water</dd>
+        <dt>acid + metal carbonate</dt><dd>→ salt + water + carbon dioxide</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WHICH ACID MAKES WHICH SALT</text>
+        <!-- acid column -->
+        <rect x="40" y="50" width="200" height="40" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="140" y="75" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">hydrochloric acid</text>
+        <rect x="40" y="100" width="200" height="40" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="140" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">sulfuric acid</text>
+        <rect x="40" y="150" width="200" height="40" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="140" y="175" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">nitric acid</text>
+        <!-- arrows -->
+        <line x1="245" y1="70" x2="315" y2="70" stroke="#C8A24A" stroke-width="2.5"/><polygon points="321,70 309,64 309,76" fill="#C8A24A"/>
+        <line x1="245" y1="120" x2="315" y2="120" stroke="#C8A24A" stroke-width="2.5"/><polygon points="321,120 309,114 309,126" fill="#C8A24A"/>
+        <line x1="245" y1="170" x2="315" y2="170" stroke="#C8A24A" stroke-width="2.5"/><polygon points="321,170 309,164 309,176" fill="#C8A24A"/>
+        <!-- salt column -->
+        <rect x="325" y="50" width="195" height="40" rx="5" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="422" y="75" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">a chloride</text>
+        <rect x="325" y="100" width="195" height="40" rx="5" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="422" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">a sulfate</text>
+        <rect x="325" y="150" width="195" height="40" rx="5" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="422" y="175" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">a nitrate</text>
+      </svg>
+      <div class="caption">The acid decides the second half of the salt's name</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — carbonates fizz, oxides and hydroxides don't</h4>
+      <p>Only a <strong>carbonate</strong> gives off a gas (<strong>carbon dioxide</strong>) — that's the fizzing, which turns limewater milky. Metal oxides and hydroxides react quietly to give just salt and water. Don't put hydrogen or CO₂ in the products of an acid + oxide reaction.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Naming the salt</h3>
+    <p>To name the salt, take the <strong>metal</strong> from the base and the <strong>ending</strong> from the acid. So copper oxide + sulfuric acid gives <strong>copper sulfate</strong>; sodium hydroxide + hydrochloric acid gives <strong>sodium chloride</strong>.</p>
+
+    <div class="worked">
+      <h4>Worked example — completing a salt equation</h4>
+      <p class="q">Complete: zinc carbonate + hydrochloric acid → ?</p>
+      <div class="step"><span class="label">Pattern</span><span class="v">carbonate + acid → salt + water + carbon dioxide</span></div>
+      <div class="step"><span class="label">Salt name</span><span class="v">metal = zinc, acid = hydrochloric → zinc chloride</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">zinc chloride + water + carbon dioxide</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which products form when sulfuric acid reacts with magnesium oxide?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Magnesium sulfate + hydrogen</span></li>
+        <li><span class="letter">B</span><span>Magnesium chloride + water</span></li>
+        <li><span class="letter">C</span><span>Magnesium sulfate + water</span></li>
+        <li><span class="letter">D</span><span>Magnesium sulfate + water + carbon dioxide</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> Oxide + acid → salt + water (no gas). Sulfuric acid gives a <em>sulfate</em>, so it's magnesium sulfate + water. A wrongly adds hydrogen (that's the metal reaction); D wrongly adds CO₂ (that's a carbonate).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What is a salt and what is neutralisation?</summary><div class="ans">A salt forms when the hydrogen of an acid is replaced by a metal (or ammonium). <strong>Neutralisation</strong> is the reaction of an acid with a base to make a <strong>salt + water</strong>.</div></details></li>
+      <li><details><summary>Name the salt made from nitric acid and potassium hydroxide.</summary><div class="ans"><strong>Potassium nitrate</strong> (nitric acid → nitrate; metal from the hydroxide).</div></details></li>
+      <li><details><summary>Write the general equation for acid + metal carbonate.</summary><div class="ans">acid + metal carbonate → <strong>salt + water + carbon dioxide</strong>.</div></details></li>
+      <li><details><summary>How would you show that the gas from acid + carbonate is carbon dioxide?</summary><div class="ans">Bubble it through <strong>limewater</strong> — it turns <strong>milky/cloudy</strong>.</div></details></li>
+      <li><details><summary>Complete: iron oxide + hydrochloric acid → ?</summary><div class="ans"><strong>Iron chloride + water</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — pH SCALE & NEUTRALISATION (4.4.2.3 / 4.4.2.4)                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.4.2 · pH &amp; neutralisation</div>
+    <h2 class="lesson-title">The <em>pH scale</em></h2>
+    <p class="lesson-promise">What the numbers mean, the ions behind acids and alkalis, and the Higher-tier difference between a strong acid and a concentrated one.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Acids, alkalis and the ions</h3>
+    <p>The <strong>pH scale</strong> runs from 0 to 14 and measures how acidic or alkaline a solution is. <strong>pH 7 is neutral</strong>; below 7 is <strong>acidic</strong>; above 7 is <strong>alkaline</strong>. You can measure pH with <strong>universal indicator</strong> (which gives a colour) or, more precisely, a <strong>pH probe</strong>.</p>
+    <p>When acids dissolve in water they release <strong>hydrogen ions, H⁺</strong>. Alkalis dissolve to release <strong>hydroxide ions, OH⁻</strong>. In neutralisation these combine to make water:</p>
+    <p style="text-align:center"><span class="formula">H⁺ + OH⁻ → H₂O</span></p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE pH SCALE</text>
+        <!-- gradient-style bar approximated with blocks -->
+        <rect x="40" y="40" width="68" height="34" fill="#B85042"/>
+        <rect x="108" y="40" width="68" height="34" fill="#C8714A"/>
+        <rect x="176" y="40" width="68" height="34" fill="#C8A24A"/>
+        <rect x="244" y="40" width="72" height="34" fill="#2C5F2D"/>
+        <rect x="316" y="40" width="68" height="34" fill="#1E7A5E"/>
+        <rect x="384" y="40" width="68" height="34" fill="#2a3478"/>
+        <rect x="452" y="40" width="68" height="34" fill="#1E2761"/>
+        <!-- numbers -->
+        <text x="44" y="92" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">0</text>
+        <text x="276" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#2C5F2D">7</text>
+        <text x="516" y="92" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">14</text>
+        <!-- labels -->
+        <text x="100" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">ACIDIC (H⁺)</text>
+        <text x="280" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">NEUTRAL</text>
+        <text x="460" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">ALKALINE (OH⁻)</text>
+      </svg>
+      <div class="caption">Low pH = more H⁺ ions · High pH = more OH⁻ ions · pH 7 = neutral</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — universal indicator vs litmus</h4>
+      <p><strong>Universal indicator</strong> gives a whole range of colours, so it tells you the <em>approximate pH</em>. <strong>Litmus</strong> only tells you acid (red) or alkali (blue) — it can't give a number. For an exact value, use a <strong>pH probe/meter</strong>.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Strong vs weak acids</h3>
+    <p>A <strong>strong acid</strong> is one that is <strong>fully ionised</strong> in water — every molecule splits up to release H⁺ ions. Hydrochloric, nitric and sulfuric acids are strong. A <strong>weak acid</strong> is only <strong>partially ionised</strong> — most stays as whole molecules. Ethanoic, citric and carbonic acids are weak.</p>
+    <p>The more H⁺ ions in solution, the <strong>lower the pH</strong>. So at the same concentration, a strong acid has a lower pH than a weak one.</p>
+
+    <div class="higher">
+      <h4>Higher tier — concentration vs strength, and the factor of 10</h4>
+      <p>Don't confuse <strong>strength</strong> with <strong>concentration</strong>. <strong>Strength</strong> is about how <em>fully</em> the acid ionises; <strong>concentration</strong> is about how much acid is dissolved in a given volume. You can have a concentrated weak acid or a dilute strong one.</p>
+      <p>As pH <em>decreases by 1 unit</em>, the hydrogen ion concentration goes <strong>up by a factor of 10</strong>. So pH 3 has ten times the H⁺ of pH 4, and a hundred times that of pH 5.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — using the factor of 10</h4>
+      <p class="q">[HT] An acid at pH 5 is diluted until its pH becomes 7. By what factor has the H⁺ concentration changed?</p>
+      <div class="step"><span class="label">Steps</span><span class="v">pH rises by 2 (from 5 to 7).</span></div>
+      <div class="step"><span class="label">Rule</span><span class="v">each pH unit = factor of 10, so 2 units = 10 × 10.</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">H⁺ concentration falls by a factor of 100.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Two solutions have the same concentration. Acid X is strong, acid Y is weak. Which is true?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Y has the lower pH because it's weaker</span></li>
+        <li><span class="letter">B</span><span>X has the lower pH because it ionises fully</span></li>
+        <li><span class="letter">C</span><span>They have the same pH — same concentration</span></li>
+        <li><span class="letter">D</span><span>You can't compare strength and concentration</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Strong acid X ionises fully, so it releases more H⁺ ions at the same concentration — more H⁺ means a <em>lower</em> pH. Strength (how fully it ionises) and concentration (how much is dissolved) are different things.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Which ion makes a solution acidic, and which makes it alkaline?</summary><div class="ans">Acidic: <strong>H⁺</strong> (hydrogen ions). Alkaline: <strong>OH⁻</strong> (hydroxide ions).</div></details></li>
+      <li><details><summary>Write the ionic equation for neutralisation.</summary><div class="ans">H⁺ + OH⁻ → <strong>H₂O</strong>.</div></details></li>
+      <li><details><summary>What is the difference between a strong and a weak acid?</summary><div class="ans">A strong acid is <strong>fully ionised</strong> in water; a weak acid is only <strong>partially ionised</strong>.</div></details></li>
+      <li><details><summary>[HT] If pH falls from 4 to 2, how does the H⁺ concentration change?</summary><div class="ans">It increases by a factor of <strong>100</strong> (2 pH units × factor of 10 each).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — MAKING SOLUBLE SALTS (4.4.2.2)  + REQUIRED PRACTICAL          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.4.2.2 · Making salts</div>
+    <h2 class="lesson-title">Making a <em>soluble salt</em></h2>
+    <p class="lesson-promise">The required practical — react an acid with an insoluble base, then turn the solution into pure, dry crystals.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The plan</h3>
+    <p>To make a pure, dry sample of a soluble salt, react a warm <strong>acid</strong> with an <strong>insoluble base</strong> (a metal oxide or carbonate). Using an insoluble base is the clever bit: add it until <strong>no more dissolves</strong>, and you know all the acid has reacted — the leftover excess base just sits at the bottom and can be filtered off. That guarantees a pure salt with no leftover acid.</p>
+
+    <div class="rp">
+      <h4>Preparing a pure, dry sample of a soluble salt</h4>
+      <p><strong>Aim:</strong> make a pure, dry sample of a soluble salt (e.g. copper sulfate) from an insoluble base and an acid.</p>
+      <ol>
+        <li>Warm some dilute <strong>sulfuric acid</strong> in a beaker (warming speeds up the reaction).</li>
+        <li>Add <strong>copper oxide</strong> (the insoluble base) a little at a time, stirring, until <strong>excess</strong> remains — no more dissolves. This makes sure all the acid is used up.</li>
+        <li><strong>Filter</strong> to remove the unreacted excess copper oxide. The filtrate is copper sulfate solution.</li>
+        <li>Gently <strong>evaporate</strong> the solution to the point of crystallisation (until crystals start to form at the edge), then leave it to <strong>cool</strong> so crystals grow.</li>
+        <li>Filter off the crystals and <strong>pat dry</strong> between filter paper (or leave in a warm place).</li>
+      </ol>
+      <p><strong>Control / improve:</strong> add the base in <strong>excess</strong> so all the acid reacts; do <strong>not</strong> evaporate to dryness over a flame — slow crystallisation gives bigger, purer crystals and avoids decomposing the salt.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>From solution to crystals</h3>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">FROM ACID TO PURE CRYSTALS</text>
+        <!-- step 1 react -->
+        <text x="90" y="48" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">1 · React</text>
+        <path d="M60 70 L120 70 L112 120 L68 120 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="90" y="97" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">acid +</text>
+        <text x="90" y="109" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">base</text>
+        <text x="90" y="145" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">add excess</text>
+        <!-- arrow -->
+        <line x1="135" y1="95" x2="170" y2="95" stroke="#C8A24A" stroke-width="2.5"/><polygon points="176,95 164,89 164,101" fill="#C8A24A"/>
+        <!-- step 2 filter -->
+        <text x="225" y="48" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">2 · Filter</text>
+        <path d="M205 62 L245 62 L225 100 Z" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <line x1="225" y1="100" x2="225" y2="125" stroke="#5C6370" stroke-width="1.5"/>
+        <text x="225" y="145" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">remove excess</text>
+        <!-- arrow -->
+        <line x1="270" y1="95" x2="305" y2="95" stroke="#C8A24A" stroke-width="2.5"/><polygon points="311,95 299,89 299,101" fill="#C8A24A"/>
+        <!-- step 3 evaporate -->
+        <text x="360" y="48" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">3 · Evaporate</text>
+        <path d="M335 62 L385 62 L385 100 L335 100 Z" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <line x1="350" y1="112" x2="350" y2="122" stroke="#B85042" stroke-width="2"/>
+        <line x1="370" y1="112" x2="370" y2="122" stroke="#B85042" stroke-width="2"/>
+        <text x="360" y="145" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">to crystal point</text>
+        <!-- arrow -->
+        <line x1="405" y1="95" x2="440" y2="95" stroke="#C8A24A" stroke-width="2.5"/><polygon points="446,95 434,89 434,101" fill="#C8A24A"/>
+        <!-- step 4 crystals -->
+        <text x="500" y="48" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">4 · Crystals</text>
+        <rect x="478" y="78" width="44" height="34" rx="3" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="500" y="145" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#2C5F2D">cool &amp; dry</text>
+      </svg>
+      <div class="caption">React with excess base → filter → evaporate → cool to crystallise</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — don't evaporate to dryness</h4>
+      <p>Stop heating once crystals <em>start</em> to appear, then let the rest form on cooling. If you boil the solution dry over a flame you get a fine powder, not proper crystals, and you may <strong>decompose</strong> the salt. The excess base is removed by <strong>filtering</strong>, which is why purity depends on adding it in excess.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why is the copper oxide added until some is left over (in excess)?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>To make the reaction faster</span></li>
+        <li><span class="letter">B</span><span>To be sure all the acid has reacted, so no acid is left in the salt</span></li>
+        <li><span class="letter">C</span><span>To increase the yield of carbon dioxide</span></li>
+        <li><span class="letter">D</span><span>So the crystals form a brighter colour</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Adding excess insoluble base guarantees <em>all</em> the acid is used up. The leftover solid is simply filtered out, leaving a pure salt solution with no contaminating acid.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Why is an insoluble base used to make the salt?</summary><div class="ans">You can add it in <strong>excess</strong> until no more reacts, ensuring all the acid is used up, then simply <strong>filter off</strong> the leftover — giving a pure salt.</div></details></li>
+      <li><details><summary>List the four main stages in order.</summary><div class="ans"><strong>React</strong> (acid + excess base) → <strong>filter</strong> off excess → <strong>evaporate</strong> to the crystal point → <strong>cool</strong> to crystallise (then dry).</div></details></li>
+      <li><details><summary>Name the salt made from copper oxide and sulfuric acid.</summary><div class="ans"><strong>Copper sulfate</strong> (+ water).</div></details></li>
+      <li><details><summary>Why should you not evaporate the solution to dryness over a flame?</summary><div class="ans">It gives a poor-quality <strong>powder</strong> instead of crystals and can <strong>decompose</strong> the salt — slow crystallisation on cooling is better.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 7 — ELECTROLYSIS (4.4.3) + REQUIRED PRACTICAL + HT FLAG           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-7">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 07 · 4.4.3 · Electrolysis</div>
+    <h2 class="lesson-title"><em>Electrolysis</em></h2>
+    <p class="lesson-promise">Splitting compounds with electricity — molten and aqueous, the rules for predicting the products, and the Higher-tier half equations.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What electrolysis is</h3>
+    <p><strong>Electrolysis</strong> uses electricity to break down an <strong>ionic compound</strong> into its elements. The liquid that's broken down is the <strong>electrolyte</strong>; it must be molten or dissolved so the ions are <strong>free to move</strong>. The electrodes are usually inert (carbon/graphite).</p>
+    <p>Ions move to the electrode of opposite charge: <strong>positive ions (cations) go to the negative cathode</strong>; <strong>negative ions (anions) go to the positive anode</strong>. There they gain or lose electrons and become neutral atoms or molecules.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">AN ELECTROLYSIS CELL</text>
+        <!-- cell -->
+        <path d="M120 70 L440 70 L420 185 L140 185 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="179" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">electrolyte (ions free to move)</text>
+        <!-- cathode -->
+        <rect x="195" y="55" width="14" height="110" fill="#1E2761"/>
+        <text x="202" y="46" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">– cathode</text>
+        <line x1="202" y1="55" x2="110" y2="55" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="105" y="59" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">attracts + ions</text>
+        <!-- anode -->
+        <rect x="351" y="55" width="14" height="110" fill="#B85042"/>
+        <text x="358" y="46" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">+ anode</text>
+        <line x1="358" y1="55" x2="450" y2="55" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="455" y="59" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">attracts – ions</text>
+        <!-- power supply -->
+        <text x="280" y="208" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1E2761">d.c. power supply</text>
+      </svg>
+      <div class="caption">Cathode is negative (attracts metal/H⁺); anode is positive (attracts non-metals)</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the compound must be molten or dissolved</h4>
+      <p>A <strong>solid</strong> ionic compound won't conduct — its ions are locked in place. Electrolysis only works when the ions are <strong>free to move</strong>, so the electrolyte must be <strong>molten</strong> or <strong>dissolved in water</strong>. Remember: <strong>P</strong>ositive ions to the negative cathode (PINC).</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Predicting the products</h3>
+    <p><strong>Molten compounds</strong> are simplest: the metal forms at the cathode and the non-metal at the anode. So molten lead bromide gives <strong>lead</strong> at the cathode and <strong>bromine</strong> at the anode.</p>
+    <p><strong>Aqueous solutions</strong> are trickier because the water also provides H⁺ and OH⁻ ions. Use these rules:</p>
+    <p><strong>At the cathode:</strong> you get <strong>hydrogen</strong> — unless the metal is <strong>less reactive than hydrogen</strong> (e.g. copper, silver), in which case the metal is deposited.</p>
+    <p><strong>At the anode:</strong> you get <strong>oxygen</strong> — unless a <strong>halide</strong> (Cl⁻, Br⁻, I⁻) is present, in which case the halogen (chlorine, bromine, iodine) is produced.</p>
+
+    <div class="rp">
+      <h4>Investigating the electrolysis of aqueous solutions</h4>
+      <p><strong>Aim:</strong> investigate what is made at each electrode when different aqueous solutions are electrolysed.</p>
+      <ol>
+        <li>Half-fill a small cell with the solution (e.g. copper chloride, then sodium sulfate).</li>
+        <li>Place two <strong>inert carbon (graphite) electrodes</strong> in the solution, not touching.</li>
+        <li>Connect to a <strong>d.c. power supply</strong> (the cathode must stay negative) and switch on.</li>
+        <li>Observe each electrode: look for a <strong>gas</strong> (collect it in a small tube) or a solid <strong>deposit</strong> of metal.</li>
+        <li>Test any gas: hydrogen gives a <strong>squeaky pop</strong>; oxygen <strong>relights a glowing splint</strong>; chlorine <strong>bleaches damp litmus paper</strong>.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> use <strong>inert</strong> electrodes so they don't take part, and keep the <strong>same voltage and time</strong> when comparing solutions, so it's a fair test.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — predicting products</h4>
+      <p class="q">Predict the products of electrolysing aqueous copper chloride.</p>
+      <div class="step"><span class="label">Cathode</span><span class="v">Copper is less reactive than hydrogen → copper metal deposited.</span></div>
+      <div class="step"><span class="label">Anode</span><span class="v">A halide (chloride) is present → chlorine gas.</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">Cathode: copper · Anode: chlorine</span></div>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — half equations at the electrodes</h4>
+      <p>You can show what happens at each electrode with <strong>half equations</strong>, balancing the electrons. At the <strong>cathode</strong> positive ions <strong>gain</strong> electrons (reduction):</p>
+      <p style="text-align:center"><span class="formula">Cu²⁺ + 2e⁻ → Cu</span> &nbsp;or&nbsp; <span class="formula">2H⁺ + 2e⁻ → H₂</span></p>
+      <p>At the <strong>anode</strong> negative ions <strong>lose</strong> electrons (oxidation):</p>
+      <p style="text-align:center"><span class="formula">2Cl⁻ → Cl₂ + 2e⁻</span> &nbsp;or&nbsp; <span class="formula">4OH⁻ → O₂ + 2H₂O + 4e⁻</span></p>
+      <p>Cathode = reduction (gain of electrons); anode = oxidation (loss of electrons). OIL RIG again.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Aqueous sodium chloride is electrolysed. What forms at the cathode?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Sodium metal</span></li>
+        <li><span class="letter">B</span><span>Chlorine</span></li>
+        <li><span class="letter">C</span><span>Hydrogen</span></li>
+        <li><span class="letter">D</span><span>Oxygen</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — Hydrogen.</strong> Sodium is <em>more</em> reactive than hydrogen, so hydrogen is produced at the cathode instead of the metal. (At the anode you'd get chlorine, because a halide is present.)</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 7 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Why must an ionic compound be molten or dissolved for electrolysis?</summary><div class="ans">So the <strong>ions are free to move</strong> and carry charge to the electrodes; in a solid they are fixed in place.</div></details></li>
+      <li><details><summary>Name the products of electrolysing molten zinc chloride.</summary><div class="ans"><strong>Zinc</strong> at the cathode and <strong>chlorine</strong> at the anode.</div></details></li>
+      <li><details><summary>For an aqueous solution, when do you get the metal (not hydrogen) at the cathode?</summary><div class="ans">When the metal is <strong>less reactive than hydrogen</strong> (e.g. copper, silver).</div></details></li>
+      <li><details><summary>How would you test for chlorine gas at the anode?</summary><div class="ans">It <strong>bleaches damp litmus/indicator paper</strong> (turns it white).</div></details></li>
+      <li><details><summary>[HT] Write the cathode half equation for the electrolysis of copper sulfate solution.</summary><div class="ans"><strong>Cu²⁺ + 2e⁻ → Cu</strong> (the copper ion gains electrons and is reduced).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="7">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Chemistry Paper 1 · C4 Chemical Changes</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'c4-chemical-changes-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=c4-chemical-changes-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

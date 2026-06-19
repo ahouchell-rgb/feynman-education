@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infection &amp; Response (B3) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for B3 Infection & Response — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Biology Paper 1 · B3 Infection &amp; Response</div>
+    <h1>Infection, <em>and the response.</em></h1>
+    <p class="tag">The whole of B3 — pathogens and the diseases they cause, how your body fights back, vaccines, antibiotics, and how new drugs are tested. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Pathogens</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Examples of disease</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Human defences</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Vaccination</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Antibiotics</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Developing drugs</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — COMMUNICABLE DISEASE & PATHOGENS (4.3.1.1–4.3.1.2)            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.3.1.1 · Pathogens &amp; spread</div>
+    <h2 class="lesson-title">Communicable disease and <em>pathogens</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll name the four types of pathogen, explain how they make us ill, and describe the ways disease spreads — and how to stop it.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What a pathogen is</h3>
+    <p>A <strong>pathogen</strong> is a microorganism that causes disease. Diseases caused by pathogens can spread from one person (or organism) to another, so they're called <strong>communicable</strong> (infectious) diseases. There are four types you must know: <strong>bacteria</strong>, <strong>viruses</strong>, <strong>fungi</strong> and <strong>protists</strong>.</p>
+    <p><strong>Bacteria</strong> are small living cells that reproduce rapidly inside the body. They make you ill by producing <strong>toxins</strong> (poisons) that damage tissues. <strong>Viruses</strong> are much smaller and are not really cells. They reproduce by getting inside your body's cells and using them to make copies of the virus — the cell then bursts, releasing the new viruses and damaging your tissues.</p>
+    <p><strong>Fungi</strong> can be single cells or have a body made of thread-like <strong>hyphae</strong>; these can grow and spread through tissues, and produce spores. <strong>Protists</strong> are single-celled organisms; many that cause disease are <strong>parasites</strong> spread by a <strong>vector</strong> (an organism that carries the pathogen without getting the disease itself).</p>
+
+    <div class="keywords">
+      <h4>The four types of pathogen</h4>
+      <dl>
+        <dt>Bacteria</dt><dd>Living cells; reproduce fast and release <em>toxins</em> that make you ill.</dd>
+        <dt>Viruses</dt><dd>Tiny; reproduce <em>inside</em> your cells, bursting them.</dd>
+        <dt>Fungi</dt><dd>Can grow through tissue as hyphae and spread by spores.</dd>
+        <dt>Protists</dt><dd>Single-celled; often spread by a <em>vector</em> such as an insect.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE FOUR TYPES OF PATHOGEN</text>
+        <!-- bacterium -->
+        <ellipse cx="90" cy="90" rx="34" ry="18" fill="#B85042"/>
+        <text x="90" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Bacterium</text>
+        <text x="90" y="155" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">a living cell</text>
+        <!-- virus -->
+        <circle cx="230" cy="90" r="14" fill="#1E2761"/>
+        <line x1="230" y1="70" x2="230" y2="62" stroke="#1E2761" stroke-width="2"/>
+        <line x1="230" y1="110" x2="230" y2="118" stroke="#1E2761" stroke-width="2"/>
+        <line x1="210" y1="90" x2="202" y2="90" stroke="#1E2761" stroke-width="2"/>
+        <line x1="250" y1="90" x2="258" y2="90" stroke="#1E2761" stroke-width="2"/>
+        <text x="230" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Virus</text>
+        <text x="230" y="155" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">much smaller</text>
+        <!-- fungus -->
+        <path d="M370 110 q0 -34 18 -34 q18 0 18 34" fill="none" stroke="#2C5F2D" stroke-width="2.5"/>
+        <line x1="388" y1="76" x2="388" y2="110" stroke="#2C5F2D" stroke-width="2.5"/>
+        <text x="388" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Fungus</text>
+        <text x="388" y="155" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">hyphae + spores</text>
+        <!-- protist -->
+        <path d="M470 90 q14 -22 38 -8 q12 22 -10 26 q-26 8 -28 -18 z" fill="#C8A24A"/>
+        <text x="495" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Protist</text>
+        <text x="495" y="155" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">single-celled</text>
+        <text x="280" y="200" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">All four can spread between organisms — that's what "communicable" means.</text>
+      </svg>
+      <div class="caption">Not drawn to scale — viruses are far smaller than bacteria</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — bacteria vs viruses</h4>
+      <p>Don't muddle the two. <strong>Bacteria</strong> make you ill by releasing <strong>toxins</strong>; <strong>viruses</strong> make you ill by <strong>reproducing inside and bursting your cells</strong>. A virus is not a living cell, so it can only copy itself by hijacking <em>your</em> cells. This is exactly why antibiotics (Topic 5) kill bacteria but do nothing to viruses.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">How do bacteria typically make a person feel ill?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>By bursting body cells as they reproduce inside them</span></li>
+        <li><span class="letter">B</span><span>By producing toxins that damage tissues</span></li>
+        <li><span class="letter">C</span><span>By being carried into the body by a mosquito</span></li>
+        <li><span class="letter">D</span><span>By growing hyphae through the skin</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Bacteria reproduce quickly and release <em>toxins</em> that damage cells and tissues, making you feel unwell. A describes viruses; D describes fungi; C describes a vector-spread protist like malaria.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>How disease spreads — and how to stop it</h3>
+    <p>Pathogens spread in a handful of ways. Learn the route, because each one points to a way of stopping the spread.</p>
+    <p><strong>Direct contact</strong> — touching an infected surface, person or plant (e.g. some skin and plant diseases). <strong>Water</strong> — pathogens picked up from dirty drinking water. <strong>Air (droplets)</strong> — breathing in droplets from coughs and sneezes (e.g. measles). To <strong>reduce or prevent spread</strong> you break the route: better <strong>hygiene</strong> (washing hands, disinfecting), <strong>destroying vectors</strong>, <strong>isolating</strong> infected individuals, and <strong>vaccination</strong>.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "prevent" vs "cure"</h4>
+      <p>Questions often ask how to <strong>reduce the spread</strong>, not how to cure someone. Answer with a <em>method</em> (e.g. "isolate infected people so they can't pass it on") and ideally say <em>why</em> it works (it breaks the transmission route). A bare one-word answer rarely gets full marks.</p>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the four types of pathogen.</summary><div class="ans"><strong>Bacteria, viruses, fungi</strong> and <strong>protists</strong>.</div></details></li>
+      <li><details><summary>Explain how a virus damages the body.</summary><div class="ans">It gets inside body cells and uses them to <strong>reproduce</strong>; the cell then <strong>bursts</strong>, releasing new viruses and damaging the tissue.</div></details></li>
+      <li><details><summary>Give three ways pathogens can spread.</summary><div class="ans">Any three of: <strong>direct contact</strong>, contaminated <strong>water</strong>, <strong>air</strong> (droplets in coughs/sneezes), and by a <strong>vector</strong> such as an insect.</div></details></li>
+      <li><details><summary>State two ways to reduce the spread of a communicable disease.</summary><div class="ans">Any two of: improving <strong>hygiene</strong>, <strong>isolating</strong> infected people, <strong>destroying vectors</strong>, and <strong>vaccination</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — EXAMPLES OF DISEASE (4.3.1.2–4.3.1.5)                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.3.1.2 · Disease examples</div>
+    <h2 class="lesson-title">The diseases you <em>must</em> name</h2>
+    <p class="lesson-promise">The exact examples AQA wants — which pathogen, what it does, how it spreads, and how it's controlled.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Viral diseases</h3>
+    <p>Three viral diseases to learn: measles, HIV, and a plant one, tobacco mosaic virus.</p>
+    <p><strong>Measles</strong> spreads by <strong>droplets</strong> from coughs and sneezes. Symptoms are fever and a red skin rash. It can be very serious — even fatal — and most young children are now <strong>vaccinated</strong> against it.</p>
+    <p><strong>HIV</strong> spreads through <strong>sexual contact</strong> or by <strong>exchanging body fluids</strong> (for example sharing needles). At first it causes a flu-like illness. Unless controlled with <strong>antiretroviral drugs</strong>, the virus attacks the body's <strong>immune cells</strong>. Once the immune system is badly damaged the condition is called <strong>AIDS</strong>, and the body can no longer fight off other infections.</p>
+    <p><strong>Tobacco mosaic virus (TMV)</strong> is a plant disease. It gives leaves a <strong>mosaic pattern of discolouration</strong>. Because the affected areas can't photosynthesise well, the plant grows poorly.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TOBACCO MOSAIC VIRUS ON A LEAF</text>
+        <!-- healthy leaf -->
+        <path d="M120 60 q-60 30 0 110 q60 -30 0 -110 z" fill="#2C5F2D"/>
+        <line x1="120" y1="64" x2="120" y2="166" stroke="#1f4720" stroke-width="2"/>
+        <text x="120" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Healthy leaf</text>
+        <!-- infected leaf -->
+        <path d="M420 60 q-60 30 0 110 q60 -30 0 -110 z" fill="#2C5F2D"/>
+        <circle cx="408" cy="95" r="9" fill="#C8A24A"/>
+        <circle cx="432" cy="120" r="11" fill="#C8A24A"/>
+        <circle cx="404" cy="135" r="8" fill="#C8A24A"/>
+        <circle cx="425" cy="80" r="7" fill="#C8A24A"/>
+        <line x1="420" y1="64" x2="420" y2="166" stroke="#1f4720" stroke-width="2"/>
+        <text x="420" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Leaf with TMV</text>
+        <text x="270" y="115" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">mosaic</text>
+        <text x="270" y="133" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">discolouration</text>
+      </svg>
+      <div class="caption">Discoloured patches can't photosynthesise, so the plant grows slowly</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — HIV and AIDS are not the same</h4>
+      <p><strong>HIV is the virus</strong>; <strong>AIDS is the late stage</strong> that develops only if HIV badly damages the immune system. Today, taking <strong>antiretroviral drugs</strong> keeps HIV under control so it often never reaches AIDS. Don't write "HIV is a disease called AIDS".</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Bacterial, fungal &amp; protist diseases</h3>
+    <p><strong>Salmonella</strong> (bacteria) causes <strong>food poisoning</strong> — fever, stomach cramps, vomiting and diarrhoea, caused by the <strong>toxins</strong> the bacteria release. You catch it from food prepared in unhygienic conditions or from infected poultry. In the UK, <strong>poultry are vaccinated</strong> against salmonella to control it.</p>
+    <p><strong>Gonorrhoea</strong> (bacteria) is a <strong>sexually transmitted disease (STD)</strong>. Symptoms include a thick yellow/green discharge and pain when urinating. It was treated with the antibiotic penicillin until <strong>resistant strains</strong> appeared. Spread is controlled by treatment with antibiotics and by using a <strong>barrier method of contraception such as a condom</strong>.</p>
+    <p><strong>Rose black spot</strong> (a fungus) causes purple or black spots on rose leaves; the leaves then turn yellow and drop early, so the plant photosynthesises less and grows badly. It spreads in the <strong>environment by water and wind</strong>. Gardeners treat it with <strong>fungicides</strong> and by <strong>removing and destroying affected leaves</strong>.</p>
+    <p><strong>Malaria</strong> is caused by a <strong>protist</strong>. The protist has a life cycle that includes the <strong>mosquito</strong>, which acts as its <strong>vector</strong> — mosquitoes spread the protist to people when they feed on blood. Malaria causes recurring episodes of fever and can be fatal. Spread is reduced by <strong>stopping the mosquitoes breeding</strong> and by using <strong>mosquito nets</strong> to avoid being bitten.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 190" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">MALARIA — THE MOSQUITO IS A VECTOR</text>
+        <!-- mosquito -->
+        <ellipse cx="130" cy="95" rx="16" ry="7" fill="#1E2761"/>
+        <ellipse cx="150" cy="92" rx="9" ry="5" fill="#1E2761"/>
+        <line x1="166" y1="90" x2="184" y2="86" stroke="#1E2761" stroke-width="1.5"/>
+        <path d="M120 88 q-14 -18 -30 -10" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+        <path d="M120 102 q-14 18 -30 10" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+        <text x="130" y="135" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Mosquito (vector)</text>
+        <text x="130" y="151" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">carries the protist</text>
+        <!-- arrow -->
+        <line x1="220" y1="95" x2="330" y2="95" stroke="#B85042" stroke-width="3"/>
+        <polygon points="336,95 322,89 322,101" fill="#B85042"/>
+        <text x="278" y="84" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">bites &amp; infects</text>
+        <!-- person -->
+        <circle cx="420" cy="78" r="14" fill="#C8A24A"/>
+        <rect x="408" y="94" width="24" height="40" rx="6" fill="#C8A24A"/>
+        <text x="420" y="151" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Person (host)</text>
+      </svg>
+      <div class="caption">A vector carries a pathogen without catching the disease itself</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the mosquito isn't the pathogen</h4>
+      <p>The pathogen that causes malaria is a <strong>protist</strong>, not the mosquito. The mosquito is just the <strong>vector</strong> that carries it. That's why control focuses on the mosquito — kill the vector, or avoid its bite with a net, and you break the chain even though you haven't touched the protist itself.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which disease is caused by a fungus?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Malaria</span></li>
+        <li><span class="letter">B</span><span>Salmonella food poisoning</span></li>
+        <li><span class="letter">C</span><span>Rose black spot</span></li>
+        <li><span class="letter">D</span><span>Measles</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — Rose black spot.</strong> It's a fungal plant disease, spread by water and wind, treated with fungicides. Malaria is a protist, salmonella a bacterium, and measles a virus.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Name the pathogen type and the method of spread for measles.</summary><div class="ans">A <strong>virus</strong>, spread by <strong>droplets</strong> in coughs and sneezes (inhalation).</div></details></li>
+      <li><details><summary>Explain the difference between HIV and AIDS.</summary><div class="ans">HIV is the <strong>virus</strong>; <strong>AIDS</strong> is the late stage that occurs only when HIV has <strong>damaged the immune system</strong> so badly it can't fight other infections. Antiretroviral drugs keep HIV controlled.</div></details></li>
+      <li><details><summary>How is the spread of salmonella controlled in the UK?</summary><div class="ans">Most <strong>poultry are vaccinated</strong> against salmonella, plus good food <strong>hygiene</strong> when preparing and storing food.</div></details></li>
+      <li><details><summary>Gonorrhoea was once easily treated with penicillin. Why is that no longer reliable?</summary><div class="ans"><strong>Antibiotic-resistant strains</strong> of the bacterium have developed, so penicillin no longer kills them.</div></details></li>
+      <li><details><summary>Give two ways to reduce the spread of malaria.</summary><div class="ans">Any two of: <strong>stop mosquitoes breeding</strong> (remove standing water / insecticides), use <strong>mosquito nets</strong>, and use insect repellent to avoid being bitten.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — HUMAN DEFENCE SYSTEMS (4.3.1.6)                                -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.3.1.6 · Human defences</div>
+    <h2 class="lesson-title">Your body's <em>defences</em></h2>
+    <p class="lesson-promise">The barriers that keep pathogens out, and the three jobs white blood cells do once one gets in.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Keeping pathogens out</h3>
+    <p>Your first line of defence stops pathogens entering at all. These are <strong>non-specific</strong> — they work against everything.</p>
+    <p>The <strong>skin</strong> is a physical barrier; it also makes antimicrobial substances and is covered in helpful microbes. If it's cut, the blood <strong>clots</strong> to seal the wound. The <strong>nose</strong> has hairs and <strong>mucus</strong> that trap particles and pathogens in the air you breathe in. The <strong>trachea and bronchi</strong> also make mucus to trap pathogens, and tiny hairs called <strong>cilia</strong> waft that mucus up and out of the lungs. The <strong>stomach</strong> produces <strong>hydrochloric acid</strong>, which kills most pathogens you swallow in food and drink.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE BODY'S NON-SPECIFIC BARRIERS</text>
+        <!-- nose -->
+        <circle cx="150" cy="60" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="170" y1="60" x2="260" y2="60" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="268" y="56" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Nose</text>
+        <text x="268" y="72" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">hairs + mucus trap pathogens</text>
+        <!-- trachea -->
+        <rect x="143" y="95" width="14" height="50" fill="#B85042"/>
+        <line x1="170" y1="115" x2="260" y2="115" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="268" y="111" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Trachea</text>
+        <text x="268" y="127" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">mucus + cilia sweep pathogens out</text>
+        <!-- stomach -->
+        <path d="M138 160 q24 -10 30 12 q4 24 -18 24 q-22 0 -12 -36 z" fill="#C8A24A"/>
+        <line x1="172" y1="178" x2="260" y2="178" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="268" y="174" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Stomach</text>
+        <text x="268" y="190" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">hydrochloric acid kills pathogens</text>
+        <!-- skin -->
+        <text x="268" y="216" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Skin</text>
+        <text x="268" y="232" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">physical barrier; clots to seal cuts</text>
+        <rect x="120" y="205" width="36" height="22" rx="4" fill="#2C5F2D"/>
+      </svg>
+      <div class="caption">First-line defences stop most pathogens before they ever get in</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — name the right substance</h4>
+      <p>It's <strong>hydrochloric acid</strong> in the stomach (not "stomach juice"), and it's <strong>cilia</strong> that move the mucus in the trachea (not "hairs in the throat"). Precise terms score the marks. Remember the skin both <em>blocks</em> pathogens and <em>clots</em> over cuts.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The immune system &amp; white blood cells</h3>
+    <p>If a pathogen gets past the barriers, your <strong>immune system</strong> deals with it. The key cells are <strong>white blood cells</strong>, and they have three jobs:</p>
+    <p><strong>1. Phagocytosis</strong> — some white blood cells <strong>engulf and digest</strong> pathogens. <strong>2. Producing antibodies</strong> — others make <strong>antibodies</strong>, special proteins that lock onto a specific pathogen and mark it for destruction. <strong>3. Producing antitoxins</strong> — others make <strong>antitoxins</strong> that neutralise the toxins released by bacteria.</p>
+    <p>Antibodies are <strong>specific</strong>: a particular antibody only fits one type of pathogen, a bit like a key fitting one lock. That specificity is the basis of how vaccines work (Topic 4).</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PHAGOCYTOSIS — ENGULF AND DIGEST</text>
+        <!-- step 1 -->
+        <circle cx="100" cy="100" r="30" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="138" cy="100" r="9" fill="#B85042"/>
+        <text x="100" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">1 · approaches</text>
+        <!-- step 2 -->
+        <path d="M250 100 m-30 0 a30 30 0 1 1 22 29" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="252" cy="100" r="9" fill="#B85042"/>
+        <text x="250" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">2 · engulfs</text>
+        <!-- step 3 -->
+        <circle cx="410" cy="100" r="30" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="410" cy="100" r="7" fill="#CFD8E3"/>
+        <text x="410" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">3 · digests</text>
+        <!-- arrows -->
+        <line x1="150" y1="100" x2="190" y2="100" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="196,100 184,95 184,105" fill="#C8A24A"/>
+        <line x1="310" y1="100" x2="350" y2="100" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="356,100 344,95 344,105" fill="#C8A24A"/>
+      </svg>
+      <div class="caption">One of three jobs — white blood cells also make antibodies and antitoxins</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — antibody, antitoxin, antibiotic</h4>
+      <p>These three sound alike but are different. <strong>Antibodies</strong> and <strong>antitoxins</strong> are made by <em>your own white blood cells</em>. <strong>Antibiotics</strong> are <em>medicines</em> (Topic 5) — your body does not make them. Mixing them up is one of the most common B3 errors.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A white blood cell surrounds a bacterium and breaks it down. What is this process called?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Producing antibodies</span></li>
+        <li><span class="letter">B</span><span>Producing antitoxins</span></li>
+        <li><span class="letter">C</span><span>Phagocytosis</span></li>
+        <li><span class="letter">D</span><span>Vaccination</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — Phagocytosis.</strong> The white blood cell <em>engulfs and digests</em> the pathogen. Antibodies mark pathogens for destruction; antitoxins neutralise toxins; these are the other two jobs.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name two non-specific defences that stop pathogens entering the body.</summary><div class="ans">Any two of: the <strong>skin</strong> (barrier + clotting), <strong>nose</strong> (hairs and mucus), <strong>trachea</strong> (mucus and cilia), and <strong>stomach acid</strong>.</div></details></li>
+      <li><details><summary>How does the stomach defend against swallowed pathogens?</summary><div class="ans">It produces <strong>hydrochloric acid</strong>, which kills most pathogens in food and drink.</div></details></li>
+      <li><details><summary>State the three roles of white blood cells.</summary><div class="ans"><strong>Phagocytosis</strong> (engulfing pathogens), producing <strong>antibodies</strong>, and producing <strong>antitoxins</strong>.</div></details></li>
+      <li><details><summary>Why is each antibody described as specific?</summary><div class="ans">An antibody only fits <strong>one type of pathogen</strong> — like a key fitting one lock — so a different antibody is needed for each pathogen.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — VACCINATION (4.3.1.7)                                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.3.1.7 · Vaccination</div>
+    <h2 class="lesson-title">How <em>vaccines</em> protect you</h2>
+    <p class="lesson-promise">Training the immune system before you ever meet the real pathogen — and why vaccinating lots of people protects everyone.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The four-step story</h3>
+    <p>A <strong>vaccine</strong> contains <strong>small quantities of dead or inactive forms</strong> of a pathogen. Because the pathogen is dead or inactive, it can't make you ill — but it still carries the markers your immune system recognises. Learn this sequence; it's a classic exam answer.</p>
+    <p><strong>1.</strong> The vaccine puts dead/inactive pathogen into the body. <strong>2.</strong> White blood cells respond by producing the correct <strong>antibodies</strong>. <strong>3.</strong> Some of these become <strong>memory cells</strong> that stay in the body. <strong>4.</strong> If the <strong>live</strong> pathogen ever invades, the memory cells make the right antibodies <strong>quickly and in large amounts</strong>, destroying the pathogen before you become ill. You are now <strong>immune</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">VACCINATION — A FOUR-STEP RESPONSE</text>
+        <!-- step boxes -->
+        <rect x="30" y="55" width="110" height="90" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="85" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">1</text>
+        <text x="85" y="104" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">dead/inactive</text>
+        <text x="85" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">pathogen in</text>
+
+        <rect x="170" y="55" width="110" height="90" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="225" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">2</text>
+        <text x="225" y="104" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">antibodies</text>
+        <text x="225" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">produced</text>
+
+        <rect x="310" y="55" width="110" height="90" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="365" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">3</text>
+        <text x="365" y="104" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">memory cells</text>
+        <text x="365" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">remain</text>
+
+        <rect x="450" y="55" width="100" height="90" rx="4" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="500" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#2C5F2D">4</text>
+        <text x="500" y="104" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">fast response</text>
+        <text x="500" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">= immune</text>
+        <!-- arrows -->
+        <line x1="142" y1="100" x2="168" y2="100" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="174,100 162,95 162,105" fill="#C8A24A"/>
+        <line x1="282" y1="100" x2="308" y2="100" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="314,100 302,95 302,105" fill="#C8A24A"/>
+        <line x1="422" y1="100" x2="448" y2="100" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="454,100 442,95 442,105" fill="#C8A24A"/>
+        <text x="280" y="180" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">Next time the real pathogen invades, you fight it off before you feel ill.</text>
+      </svg>
+      <div class="caption">Memory cells are the key — they make the second response fast and strong</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the vaccine doesn't contain antibodies</h4>
+      <p>A vaccine contains <strong>dead or inactive pathogen</strong>, not antibodies. <em>You</em> make the antibodies in response. Also say "<strong>dead or inactive</strong>" — if you just write "the pathogen", an examiner may think you mean a live one that would make you ill. And it's <strong>memory cells</strong> that give long-term protection.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Herd immunity</h3>
+    <p>If a <strong>large proportion of the population is vaccinated</strong>, the spread of a pathogen is greatly reduced — there are very few people for it to infect and pass between. This is <strong>herd immunity</strong>, and it even protects the few people who aren't vaccinated (for example, those too young or too ill), because the disease can't get a foothold.</p>
+
+    <div class="worked">
+      <h4>How to answer — "Why vaccinate most of the population?"</h4>
+      <p class="q">Explain how vaccinating a large proportion of people protects the whole community.</p>
+      <div class="step"><span class="label">Point 1</span><span class="v">Vaccinated people are immune, so they don't catch or carry the pathogen.</span></div>
+      <div class="step"><span class="label">Point 2</span><span class="v">With few people to infect, the pathogen can't spread easily.</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">Even unvaccinated people are protected — this is herd immunity.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">What does a vaccine actually contain?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Ready-made antibodies against the pathogen</span></li>
+        <li><span class="letter">B</span><span>Antibiotics that kill the pathogen</span></li>
+        <li><span class="letter">C</span><span>Small amounts of dead or inactive pathogen</span></li>
+        <li><span class="letter">D</span><span>Live pathogen at full strength</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> A vaccine has <em>dead or inactive</em> pathogen, so it can't make you ill but still triggers your white blood cells to make antibodies and memory cells. A and B confuse it with the immune response and with antibiotics; D would cause the disease.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is in a vaccine, and why doesn't it make you ill?</summary><div class="ans">A small amount of <strong>dead or inactive pathogen</strong>. Because it's dead/inactive it can't cause the disease, but it still triggers an immune response.</div></details></li>
+      <li><details><summary>Put the steps of the immune response to a vaccine in order.</summary><div class="ans">Dead/inactive pathogen introduced → white blood cells make <strong>antibodies</strong> → some become <strong>memory cells</strong> → on reinfection, antibodies are made <strong>quickly and in large amounts</strong>.</div></details></li>
+      <li><details><summary>Why does a second exposure produce a faster response?</summary><div class="ans"><strong>Memory cells</strong> remain in the body and recognise the pathogen, so the correct antibodies are produced rapidly before you become ill.</div></details></li>
+      <li><details><summary>Explain how herd immunity protects unvaccinated people.</summary><div class="ans">If <strong>most people are vaccinated</strong>, the pathogen has very few hosts to infect, so it can't spread — so even unvaccinated people rarely encounter it.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — ANTIBIOTICS & PAINKILLERS (4.3.1.8)                            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.3.1.8 · Antibiotics &amp; painkillers</div>
+    <h2 class="lesson-title">Antibiotics &amp; <em>painkillers</em></h2>
+    <p class="lesson-promise">What antibiotics treat (and what they don't), why painkillers aren't cures, and why antibiotic resistance is such a worry.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Antibiotics vs painkillers</h3>
+    <p><strong>Antibiotics</strong>, such as penicillin, are medicines that <strong>kill bacteria inside the body</strong> (without harming your own cells). Specific bacteria need specific antibiotics, so the right one has to be used. Antibiotics have hugely reduced deaths from bacterial diseases.</p>
+    <p>But antibiotics <strong>do not kill viruses</strong>. A virus lives and reproduces <em>inside</em> your own cells, so it's very hard to develop a drug that destroys the virus without also damaging your cells. That's why you're not given antibiotics for a cold or flu — they're viral.</p>
+    <p><strong>Painkillers</strong> (and other medicines that treat symptoms) only <strong>relieve symptoms</strong> such as pain — they do <strong>not</strong> kill the pathogen. The illness goes away when your immune system deals with the pathogen, not because of the painkiller.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ANTIBIOTICS KILL BACTERIA — NOT VIRUSES</text>
+        <!-- bacteria panel -->
+        <rect x="40" y="50" width="210" height="120" rx="4" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="145" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Bacterial infection</text>
+        <ellipse cx="110" cy="110" rx="22" ry="11" fill="#B85042"/>
+        <line x1="92" y1="92" x2="128" y2="128" stroke="#1E2761" stroke-width="2.5"/>
+        <text x="145" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">antibiotic works</text>
+        <!-- virus panel -->
+        <rect x="310" y="50" width="210" height="120" rx="4" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="415" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Viral infection</text>
+        <circle cx="385" cy="110" r="13" fill="#1E2761"/>
+        <text x="385" y="115" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="14" font-weight="700" fill="#fff">✕</text>
+        <text x="415" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">antibiotic does nothing</text>
+      </svg>
+      <div class="caption">Antibiotics treat bacterial disease only — viruses are unaffected</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — antibiotics are useless against viruses</h4>
+      <p>A favourite exam question. <strong>Antibiotics kill bacteria, not viruses.</strong> And <strong>painkillers don't kill anything</strong> — they only ease symptoms. Don't say "the painkiller cured the infection". Saying antibiotics treat "all infections" loses the mark.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Antibiotic resistance</h3>
+    <p>Some bacteria have changed (mutated) so that an antibiotic no longer kills them — they are <strong>resistant</strong>. When you take an antibiotic, it kills the non-resistant bacteria but any resistant ones survive, reproduce, and pass on their resistance. Over time, <strong>resistant strains</strong> spread. MRSA is a well-known example.</p>
+    <p>To slow this down: doctors <strong>shouldn't prescribe antibiotics for non-serious or viral infections</strong>, and patients should <strong>complete the whole course</strong> so that all the bacteria — including any partly-resistant ones — are killed. The development of <strong>new antibiotics is slow and costly</strong>, so it isn't keeping pace with resistance.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — bacteria "develop" resistance, you don't</h4>
+      <p>It's the <strong>bacteria</strong> that become resistant, not your body. Resistance spreads because resistant bacteria <strong>survive and reproduce</strong>. Finishing the course matters precisely so no survivors are left to multiply.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A patient with a sore throat caused by a virus asks for antibiotics. Why won't the doctor prescribe them?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Antibiotics only relieve pain, they don't cure</span></li>
+        <li><span class="letter">B</span><span>Antibiotics kill bacteria, not viruses, so they wouldn't help</span></li>
+        <li><span class="letter">C</span><span>Antibiotics would make the immune system weaker</span></li>
+        <li><span class="letter">D</span><span>The patient would become immune to the virus</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The infection is <em>viral</em>, and antibiotics only kill bacteria — so they'd do nothing. Unnecessary prescribing also speeds up <em>antibiotic resistance</em>, another reason to avoid it. A describes painkillers, not antibiotics.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What do antibiotics do, and what can't they treat?</summary><div class="ans">They <strong>kill bacteria</strong> inside the body. They <strong>cannot kill viruses</strong>, so they don't work on viral illnesses like colds and flu.</div></details></li>
+      <li><details><summary>Why is it difficult to make drugs that kill viruses?</summary><div class="ans">Viruses reproduce <strong>inside your own cells</strong>, so a drug that destroys the virus tends to damage your cells too.</div></details></li>
+      <li><details><summary>What is the job of a painkiller?</summary><div class="ans">To <strong>relieve symptoms</strong> such as pain. It does <strong>not</strong> kill the pathogen — your immune system does that.</div></details></li>
+      <li><details><summary>Explain how antibiotic-resistant bacteria spread, and one way to slow it.</summary><div class="ans">Resistant bacteria <strong>survive</strong> treatment, <strong>reproduce</strong> and pass on resistance. Slow it by not over-prescribing antibiotics and by <strong>completing the full course</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — DISCOVERY & DEVELOPMENT OF DRUGS (4.3.1.9)                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.3.1.9 · Developing drugs</div>
+    <h2 class="lesson-title">Where <em>drugs</em> come from &amp; how they're tested</h2>
+    <p class="lesson-promise">Three famous drugs from plants and microbes, and the long testing process every new drug must pass.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Traditional drugs from nature</h3>
+    <p>Many medicines were originally extracted from <strong>plants and microorganisms</strong>. Three examples to learn:</p>
+
+    <div class="keywords">
+      <h4>Three classic drug origins</h4>
+      <dl>
+        <dt>Digitalis</dt><dd>A heart drug — originally from <em>foxglove</em> plants.</dd>
+        <dt>Aspirin</dt><dd>A painkiller — originally from <em>willow</em> (a chemical in willow bark).</dd>
+        <dt>Penicillin</dt><dd>The first antibiotic — from <em>Penicillium mould</em>, discovered by Alexander Fleming.</dd>
+      </dl>
+    </div>
+
+    <p><strong>Penicillin</strong> was discovered by <strong>Alexander Fleming</strong> from the <em>Penicillium</em> mould. Today most new drugs are made by <strong>chemists in the pharmaceutical industry</strong>, but the starting point may still be a chemical found in a plant.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">DRUGS THAT CAME FROM NATURE</text>
+        <!-- foxglove -->
+        <line x1="100" y1="130" x2="100" y2="70" stroke="#2C5F2D" stroke-width="3"/>
+        <ellipse cx="92" cy="78" rx="7" ry="11" fill="#B85042"/>
+        <ellipse cx="108" cy="92" rx="7" ry="11" fill="#B85042"/>
+        <ellipse cx="92" cy="106" rx="7" ry="11" fill="#B85042"/>
+        <text x="100" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Foxglove</text>
+        <text x="100" y="166" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">→ digitalis</text>
+        <!-- willow -->
+        <line x1="280" y1="130" x2="280" y2="60" stroke="#5C6370" stroke-width="3"/>
+        <path d="M280 70 q24 6 30 30" fill="none" stroke="#2C5F2D" stroke-width="2"/>
+        <path d="M280 84 q-24 6 -30 30" fill="none" stroke="#2C5F2D" stroke-width="2"/>
+        <path d="M280 98 q24 6 26 26" fill="none" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="280" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Willow</text>
+        <text x="280" y="166" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">→ aspirin</text>
+        <!-- mould -->
+        <ellipse cx="460" cy="110" rx="34" ry="16" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="446" cy="104" r="6" fill="#2C5F2D"/>
+        <circle cx="462" cy="110" r="7" fill="#2C5F2D"/>
+        <circle cx="476" cy="104" r="5" fill="#2C5F2D"/>
+        <text x="460" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Penicillium mould</text>
+        <text x="460" y="166" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">→ penicillin</text>
+      </svg>
+      <div class="caption">Plant and microbe chemicals were the starting point for many medicines</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — match the source to the drug</h4>
+      <p>Examiners like to mix these up. <strong>Digitalis → foxgloves</strong>, <strong>aspirin → willow</strong>, <strong>penicillin → Penicillium mould (Fleming)</strong>. Aspirin is a painkiller; digitalis treats the heart; penicillin is an antibiotic. Learn the pairs both ways round.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Testing a new drug</h3>
+    <p>Before any new drug reaches patients it must be tested for three things: that it is <strong>safe (low toxicity)</strong>, that it actually works (<strong>efficacy</strong>), and the correct <strong>dose</strong>. Testing happens in two stages.</p>
+    <p><strong>Preclinical testing</strong> is done in a laboratory on <strong>cells, tissues and live animals</strong>. If the drug looks promising, it moves to <strong>clinical trials</strong> using <strong>healthy volunteers and patients</strong>. A <strong>very low dose</strong> is used at first to check it is safe, and the dose is gradually increased to find the <strong>optimum dose</strong>.</p>
+    <p>In a trial, some patients are given the new drug and others are given a <strong>placebo</strong> — a dummy treatment with no active drug — so the real effect of the drug can be compared fairly. Trials are usually <strong>double-blind</strong>: neither the patient <strong>nor the doctor</strong> knows who has the real drug until the end, which stops their expectations biasing the results. New drugs are also <strong>peer reviewed</strong> before publication to check the science.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">HOW A NEW DRUG IS TESTED</text>
+        <!-- preclinical -->
+        <rect x="40" y="55" width="200" height="80" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="140" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">Preclinical</text>
+        <text x="140" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">cells, tissues</text>
+        <text x="140" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">and animals</text>
+        <!-- arrow -->
+        <line x1="245" y1="95" x2="305" y2="95" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="311,95 297,89 297,101" fill="#C8A24A"/>
+        <!-- clinical -->
+        <rect x="320" y="55" width="200" height="80" rx="4" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="420" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">Clinical trials</text>
+        <text x="420" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">healthy volunteers</text>
+        <text x="420" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">then patients</text>
+        <text x="280" y="162" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">Start with a very low dose, then raise it to find the optimum.</text>
+      </svg>
+      <div class="caption">Tested for safety, effectiveness and dose at every stage</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — double-blind means the doctor too</h4>
+      <p>In a <strong>double-blind</strong> trial, <em>neither</em> the patient <em>nor</em> the doctor knows who has the real drug — that's what stops bias. A <strong>placebo</strong> contains no active drug. Don't say a placebo "is a smaller dose" — it has <em>none</em> of the drug at all.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why is one group of patients in a clinical trial given a placebo?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>To give them a lower, safer dose of the drug</span></li>
+        <li><span class="letter">B</span><span>To compare against the real drug and judge its true effect</span></li>
+        <li><span class="letter">C</span><span>To make sure everyone gets some treatment</span></li>
+        <li><span class="letter">D</span><span>To test the drug on animals first</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The placebo group has <em>no active drug</em>, so comparing the two groups shows the drug's <em>true effect</em>. A is wrong — a placebo has none of the drug. In a double-blind trial neither patient nor doctor knows which group they're in.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Where do digitalis, aspirin and penicillin originally come from?</summary><div class="ans"><strong>Digitalis</strong> from foxgloves, <strong>aspirin</strong> from willow, and <strong>penicillin</strong> from <em>Penicillium</em> mould (discovered by Fleming).</div></details></li>
+      <li><details><summary>What three things is a new drug tested for?</summary><div class="ans"><strong>Toxicity</strong> (is it safe?), <strong>efficacy</strong> (does it work?), and the right <strong>dose</strong>.</div></details></li>
+      <li><details><summary>What happens in preclinical testing?</summary><div class="ans">The drug is tested in a laboratory on <strong>cells, tissues and live animals</strong> before any humans are involved.</div></details></li>
+      <li><details><summary>What is a placebo?</summary><div class="ans">A dummy treatment with <strong>no active drug</strong>, used for comparison so the real effect of the drug can be measured.</div></details></li>
+      <li><details><summary>What does double-blind mean, and why is it used?</summary><div class="ans">Neither the <strong>patient nor the doctor</strong> knows who is getting the real drug. This prevents their expectations from <strong>biasing</strong> the results.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Biology Paper 1 · B3 Infection &amp; Response</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'b3-infection-response-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=b3-infection-response-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

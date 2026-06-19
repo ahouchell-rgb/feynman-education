@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chemical Analysis (C8) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for C8 Chemical Analysis — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Chemistry Paper 2 · C8 Chemical Analysis</div>
+    <h1>Chemical analysis, <em>for the exam.</em></h1>
+    <p class="tag">The whole of C8 — what "pure" really means, formulations, reading a chromatogram and calculating R<sub>f</sub>, and the four gas tests you have to recall. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Purity &amp; formulations</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Chromatography</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Tests for gases</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — PURE SUBSTANCES & FORMULATIONS  (4.8.1.1 / 4.8.1.2)           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · C8 · Purity &amp; formulations</div>
+    <h2 class="lesson-title">Pure substances &amp; <em>formulations</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what "pure" means in chemistry (not what it means on a milk bottle), how melting point reveals purity, and why a formulation is a mixture made on purpose.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What "pure" means in chemistry</h3>
+    <p>In everyday language "pure" can mean natural or unspoilt — "pure orange juice", "pure mountain air". In chemistry it means something much stricter. A <strong>pure substance</strong> is a single element or a single compound, not mixed with anything else.</p>
+    <p>So pure orange juice is, to a chemist, a <strong>mixture</strong> — it has water, sugars, acids and more. Pure water, on the other hand, is only H<sub>2</sub>O molecules and nothing else.</p>
+
+    <div class="keywords">
+      <h4>Key words</h4>
+      <dl>
+        <dt>Pure substance</dt><dd>A single element or single compound, with nothing else mixed in.</dd>
+        <dt>Mixture</dt><dd>Two or more substances not chemically joined — they keep their own properties and can be separated physically.</dd>
+        <dt>Formulation</dt><dd>A mixture made to an exact recipe, where each component has a job and a measured amount.</dd>
+      </dl>
+    </div>
+
+    <p>A handy test: a <strong>pure substance melts and boils at one fixed temperature</strong>. A mixture melts and boils over a <strong>range</strong> of temperatures, and the melting point is usually <strong>lower</strong> than that of the pure substance. So measuring the melting point tells you how pure a sample is.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">MELTING: PURE vs IMPURE</text>
+        <!-- pure thermometer block -->
+        <rect x="70" y="55" width="170" height="150" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="155" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">PURE</text>
+        <text x="155" y="120" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="22" font-weight="700" fill="#1E2761">0 °C</text>
+        <text x="155" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">melts at one</text>
+        <text x="155" y="167" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">sharp temperature</text>
+        <!-- impure block -->
+        <rect x="320" y="55" width="170" height="150" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="405" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">IMPURE</text>
+        <text x="405" y="120" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="20" font-weight="700" fill="#B85042">−4 to −1 °C</text>
+        <text x="405" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">melts over a range,</text>
+        <text x="405" y="167" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">and starts lower</text>
+      </svg>
+      <div class="caption">An impurity lowers the melting point and spreads it over a range — salt on icy roads works this way</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "pure" is a trap word</h4>
+      <p>In an exam, "pure" never means "natural" or "clean". It means <strong>one element or one compound only</strong>. If a sample melts over a range of temperatures, it is <strong>not pure</strong> — and the wider the range, the more impurity is present.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A solid melts cleanly at exactly 80 °C every time. What does this tell you?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It must be an element</span></li>
+        <li><span class="letter">B</span><span>It is likely a pure substance</span></li>
+        <li><span class="letter">C</span><span>It is definitely a mixture</span></li>
+        <li><span class="letter">D</span><span>It is a formulation</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> A single, sharp melting point is the signature of a <em>pure</em> substance. It could be an element <em>or</em> a compound, so A is too narrow. A mixture would melt over a range, so C and D are wrong.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Formulations — mixtures by design</h3>
+    <p>A <strong>formulation</strong> is a mixture that has been designed to a precise recipe. Each component is there for a reason and is present in a <strong>carefully measured quantity</strong>, so the product does its job exactly right.</p>
+    <p>Formulations are everywhere: <strong>paints</strong> (pigment, binder, solvent, additives), <strong>medicines</strong> (the active drug plus fillers and coatings), <strong>fuels</strong>, <strong>cleaning products</strong>, <strong>fertilisers</strong>, <strong>alloys</strong> and <strong>foods</strong>. Change the proportions and you change how the product behaves — which is why the recipe matters.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">A PAINT FORMULATION</text>
+        <!-- can -->
+        <rect x="60" y="55" width="120" height="110" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="120" y="115" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">paint</text>
+        <!-- arrow -->
+        <line x1="190" y1="110" x2="245" y2="110" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="251,110 237,104 237,116" fill="#C8A24A"/>
+        <!-- components -->
+        <text x="270" y="70" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">• pigment — gives the colour</text>
+        <text x="270" y="95" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">• binder — sticks it to the wall</text>
+        <text x="270" y="120" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">• solvent — keeps it runny</text>
+        <text x="270" y="145" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">• additives — drying, finish</text>
+      </svg>
+      <div class="caption">Each ingredient has a job and a measured amount — that is what makes it a formulation, not just any mixture</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — is it a formulation?</h4>
+      <p class="q">A pharmacist describes a paracetamol tablet as containing 500 mg of the active drug plus measured amounts of a binder, a filler and a coating. Explain why this is a formulation.</p>
+      <div class="step"><span class="label">Mixture?</span><span class="v">Yes — several substances, not chemically joined.</span></div>
+      <div class="step"><span class="label">Designed?</span><span class="v">Each component has a purpose (drug, binder, filler, coating).</span></div>
+      <div class="step answer"><span class="label">Verdict</span><span class="v">Made to an exact recipe with measured amounts → a formulation.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which of these is best described as a formulation?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Pure copper</span></li>
+        <li><span class="letter">B</span><span>A lump of rock dug from the ground</span></li>
+        <li><span class="letter">C</span><span>An alloy made by mixing measured amounts of metals</span></li>
+        <li><span class="letter">D</span><span>Distilled water</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> An alloy is a mixture made to a precise recipe so it has the properties you want — a formulation. A and D are pure substances; B is a random mixture, not designed to a recipe.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What does "pure substance" mean to a chemist?</summary><div class="ans">A <strong>single element or single compound</strong>, with nothing else mixed in. (Not the everyday meaning of "natural" or "clean".)</div></details></li>
+      <li><details><summary>How can a melting point tell you whether a substance is pure?</summary><div class="ans">A pure substance melts at <strong>one sharp temperature</strong>. An impure substance (a mixture) melts over a <strong>range</strong>, and the melting point is <strong>lower</strong> than the pure value.</div></details></li>
+      <li><details><summary>Define a formulation.</summary><div class="ans">A <strong>mixture made to an exact recipe</strong>, where each component has a particular purpose and is present in a measured amount — e.g. paints, medicines, fuels, alloys.</div></details></li>
+      <li><details><summary>Is sea water a pure substance? Explain.</summary><div class="ans">No. It contains water <strong>plus dissolved salts</strong>, so it is a <strong>mixture</strong> — it would boil and freeze over a range, not at the fixed points of pure water.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — CHROMATOGRAPHY  (4.8.1.3) + REQUIRED PRACTICAL                -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · C8 · Chromatography</div>
+    <h2 class="lesson-title">Chromatography &amp; <em>R<sub>f</sub></em> values</h2>
+    <p class="lesson-promise">How a smudge of ink splits into separate colours, why each spot travels its own distance, and the one calculation you must be able to do.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>How chromatography separates a mixture</h3>
+    <p><strong>Paper chromatography</strong> separates the substances in a mixture and helps you tell them apart. It works because of two "phases":</p>
+    <p>The <strong>stationary phase</strong> is the chromatography paper, which stays put. The <strong>mobile phase</strong> is the solvent (water or ethanol) that moves up through the paper, carrying the substances with it.</p>
+    <p>Each substance in the mixture is attracted to the two phases by different amounts. A substance that is <strong>more attracted to the solvent</strong> (and less to the paper) travels <strong>further</strong> up. One that clings to the paper barely moves. Because they separate, a single spot of a mixture spreads into several spots — one for each component.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">A FINISHED CHROMATOGRAM</text>
+        <!-- paper -->
+        <rect x="200" y="35" width="160" height="180" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+        <!-- solvent front -->
+        <line x1="200" y1="55" x2="360" y2="55" stroke="#1E7A5E" stroke-width="2" stroke-dasharray="5 4"/>
+        <line x1="360" y1="55" x2="455" y2="55" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="461" y="59" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E7A5E">solvent front</text>
+        <!-- baseline (pencil) -->
+        <line x1="200" y1="195" x2="360" y2="195" stroke="#5C6370" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="200" y1="195" x2="105" y2="195" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="99" y="199" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">start line (pencil)</text>
+        <!-- spots -->
+        <circle cx="280" cy="195" r="6" fill="#5C6370" opacity="0.3"/>
+        <circle cx="280" cy="150" r="8" fill="#B85042"/>
+        <circle cx="280" cy="95"  r="8" fill="#C8A24A"/>
+        <!-- distance markers -->
+        <line x1="160" y1="95" x2="160" y2="195" stroke="#B85042" stroke-width="1.5"/>
+        <line x1="155" y1="95" x2="165" y2="95" stroke="#B85042" stroke-width="1.5"/>
+        <line x1="155" y1="195" x2="165" y2="195" stroke="#B85042" stroke-width="1.5"/>
+        <text x="110" y="170" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#B85042">spot moved</text>
+        <line x1="120" y1="55" x2="120" y2="195" stroke="#1E7A5E" stroke-width="1.5"/>
+        <line x1="115" y1="55" x2="125" y2="55" stroke="#1E7A5E" stroke-width="1.5"/>
+        <line x1="115" y1="195" x2="125" y2="195" stroke="#1E7A5E" stroke-width="1.5"/>
+        <text x="110" y="128" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E7A5E">solvent moved</text>
+      </svg>
+      <div class="caption">Measure both distances from the pencil start line — the spot's distance and the solvent's distance</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — pencil, not pen</h4>
+      <p>Always draw the start line in <strong>pencil</strong>. Pencil (graphite) is insoluble, so it won't run up the paper. If you used pen, the ink would dissolve and separate too, ruining the result. And keep the start line <strong>above the solvent</strong> — if the spot sits in the solvent it just washes off.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Pure, impure, and the R<sub>f</sub> value</h3>
+    <p>A chromatogram tells you a lot. A <strong>pure substance produces a single spot</strong> in any solvent. If you see <strong>two or more spots</strong>, the sample is a <strong>mixture</strong>. You can identify substances by comparing their spots with known reference substances run alongside.</p>
+    <p>To put a number on how far a spot travelled, we calculate its <strong>R<sub>f</sub> value</strong> — the ratio of the distance the spot moved to the distance the solvent moved.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>R<sub>f</sub> = distance moved by substance ÷ distance moved by solvent <span class="badge given">given</span></dt>
+        <dd>R<sub>f</sub> has <strong>no units</strong> (it's a ratio of two distances) and is always <strong>between 0 and 1</strong>. Measure both distances from the pencil start line.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — calculating R<sub>f</sub></h4>
+      <p class="q">A spot moves 4.0 cm up the paper. In the same time the solvent front moves 5.0 cm. Calculate the R<sub>f</sub> value.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">R&#8332; = distance of spot ÷ distance of solvent</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 4.0 ÷ 5.0</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">R&#8332; = 0.8  (no units)</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — R<sub>f</sub> is always below 1</h4>
+      <p>The spot can never travel further than the solvent that carries it, so R<sub>f</sub> is <strong>always between 0 and 1</strong>. If you get a value above 1, you've divided the wrong way round — it's <strong>spot ÷ solvent</strong>, not solvent ÷ spot.</p>
+    </div>
+
+    <div class="rp">
+      <h4>Investigating chromatography &amp; R<sub>f</sub> values</h4>
+      <p><strong>Aim:</strong> separate and tell apart the coloured substances in a mixture (e.g. food colourings or inks) and calculate their R<sub>f</sub> values.</p>
+      <ol>
+        <li>Draw a <strong>start line in pencil</strong> about 2 cm from the bottom of the chromatography paper.</li>
+        <li>Add a small <strong>spot of each mixture</strong> (and reference colours) on the line, letting each dry. Keep spots small and well separated.</li>
+        <li>Pour solvent into the beaker so it sits <strong>below the start line</strong>, then stand the paper in it. Cover the beaker to stop the solvent evaporating.</li>
+        <li>Let the solvent rise <strong>most of the way up</strong>, then remove the paper before it reaches the top.</li>
+        <li>Immediately <strong>mark the solvent front in pencil</strong> and leave the paper to dry.</li>
+        <li>Measure the distance moved by each spot and by the solvent, then calculate <span class="formula">R&#8332; = spot ÷ solvent</span> for each colour.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> <strong>cover the beaker</strong> so the solvent doesn't evaporate, and keep spots small so they don't overlap. To compare two samples fairly, run them on the <strong>same paper in the same solvent</strong> — R<sub>f</sub> only matches when conditions are identical.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A spot moves 3 cm while the solvent moves 12 cm. What is the R<sub>f</sub> value?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>4.0</span></li>
+        <li><span class="letter">B</span><span>0.25</span></li>
+        <li><span class="letter">C</span><span>9 cm</span></li>
+        <li><span class="letter">D</span><span>0.36</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 0.25.</strong> R<sub>f</sub> = 3 ÷ 12 = 0.25 (no units). Answer A divides the wrong way (12 ÷ 3) and gives an impossible value above 1.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Name the stationary phase and the mobile phase in paper chromatography.</summary><div class="ans">Stationary phase = the <strong>paper</strong> (it stays still). Mobile phase = the <strong>solvent</strong> (it moves up, carrying the substances).</div></details></li>
+      <li><details><summary>Why is the start line drawn in pencil, not pen?</summary><div class="ans">Pencil (graphite) is <strong>insoluble</strong>, so it won't run up the paper. Pen ink would dissolve and separate, spoiling the chromatogram.</div></details></li>
+      <li><details><summary>How can you tell from a chromatogram that a substance is pure?</summary><div class="ans">A pure substance gives <strong>one spot only</strong>. Two or more spots means it's a <strong>mixture</strong>.</div></details></li>
+      <li><details><summary>Write the equation for R<sub>f</sub> and state its range.</summary><div class="ans">R<sub>f</sub> = distance moved by substance ÷ distance moved by solvent. It has <strong>no units</strong> and is always <strong>between 0 and 1</strong>.</div></details></li>
+      <li><details><summary>A spot travels 6 cm and the solvent travels 8 cm. Calculate the R<sub>f</sub> value.</summary><div class="ans">R<sub>f</sub> = 6 ÷ 8 = <strong>0.75</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — TESTS FOR GASES  (4.8.1.4)                                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · C8 · Tests for gases</div>
+    <h2 class="lesson-title">The four <em>gas tests</em></h2>
+    <p class="lesson-promise">Four gases, four tests, four results — learn them as matched pairs and you'll never lose these easy marks.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The tests you must recall</h3>
+    <p>You need to recall the test <em>and</em> the positive result for four gases. These are guaranteed marks if you've learned them — get them word-perfect.</p>
+
+    <div class="keywords">
+      <h4>The four gas tests</h4>
+      <dl>
+        <dt>Hydrogen — H<sub>2</sub></dt><dd>Hold a <strong>lit splint</strong> at the mouth of the tube. A positive result is a <strong>squeaky pop</strong>.</dd>
+        <dt>Oxygen — O<sub>2</sub></dt><dd>Put a <strong>glowing splint</strong> into the tube. Oxygen <strong>relights</strong> the glowing splint.</dd>
+        <dt>Carbon dioxide — CO<sub>2</sub></dt><dd>Bubble the gas through <strong>limewater</strong>. It turns the limewater <strong>cloudy / milky</strong>.</dd>
+        <dt>Chlorine — Cl<sub>2</sub></dt><dd>Hold <strong>damp litmus paper</strong> in the gas. It <strong>bleaches the paper white</strong> (it may turn red first).</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">FOUR TESTS, FOUR RESULTS</text>
+        <!-- Hydrogen -->
+        <rect x="30" y="40" width="240" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="50" y="65" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">Hydrogen</text>
+        <text x="50" y="90" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">test: lit splint</text>
+        <text x="50" y="112" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">result:</text>
+        <text x="50" y="134" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">squeaky pop</text>
+        <!-- Oxygen -->
+        <rect x="290" y="40" width="240" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="310" y="65" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">Oxygen</text>
+        <text x="310" y="90" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">test: glowing splint</text>
+        <text x="310" y="112" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">result:</text>
+        <text x="310" y="134" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">splint relights</text>
+        <!-- Carbon dioxide -->
+        <rect x="30" y="165" width="240" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="50" y="190" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">Carbon dioxide</text>
+        <text x="50" y="215" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">test: bubble through limewater</text>
+        <text x="50" y="237" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">result:</text>
+        <text x="50" y="259" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">limewater goes cloudy</text>
+        <!-- Chlorine -->
+        <rect x="290" y="165" width="240" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="310" y="190" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">Chlorine</text>
+        <text x="310" y="215" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">test: damp litmus paper</text>
+        <text x="310" y="237" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">result:</text>
+        <text x="310" y="259" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">litmus bleaches white</text>
+      </svg>
+      <div class="caption">Learn each test paired with its result — examiners want both halves</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — don't swap the splints</h4>
+      <p>The two splint tests are easy to mix up. <strong>Hydrogen = lit splint → squeaky pop.</strong> <strong>Oxygen = glowing splint → relights.</strong> A lit splint in oxygen just keeps burning (not a "pop"), and a glowing splint won't pop in hydrogen. For chlorine, the litmus must be <strong>damp</strong> — dry litmus won't show the bleaching.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — identifying an unknown gas</h4>
+      <p class="q">A colourless gas turns damp blue litmus paper red and then bleaches it white. Name the gas and justify your answer.</p>
+      <div class="step"><span class="label">Clue</span><span class="v">It bleaches damp litmus paper white.</span></div>
+      <div class="step"><span class="label">Match</span><span class="v">Only chlorine bleaches litmus (it's also acidic, hence red first).</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">The gas is chlorine (Cl₂).</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A glowing splint is lowered into a test tube of gas and it relights. Which gas is present?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Hydrogen</span></li>
+        <li><span class="letter">B</span><span>Carbon dioxide</span></li>
+        <li><span class="letter">C</span><span>Oxygen</span></li>
+        <li><span class="letter">D</span><span>Chlorine</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — Oxygen.</strong> A <em>glowing</em> splint that <em>relights</em> is the oxygen test. Hydrogen needs a <em>lit</em> splint and gives a squeaky pop; carbon dioxide would put the splint <em>out</em>; chlorine would bleach litmus.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Describe the test for hydrogen and the positive result.</summary><div class="ans">Hold a <strong>lit splint</strong> at the mouth of the tube — hydrogen gives a <strong>squeaky pop</strong>.</div></details></li>
+      <li><details><summary>How do you test for oxygen?</summary><div class="ans">Put a <strong>glowing splint</strong> into the gas — oxygen <strong>relights</strong> it.</div></details></li>
+      <li><details><summary>What is the test for carbon dioxide and what do you see?</summary><div class="ans">Bubble the gas through <strong>limewater</strong> — it turns <strong>cloudy / milky</strong>.</div></details></li>
+      <li><details><summary>How is chlorine identified?</summary><div class="ans"><strong>Damp litmus paper</strong> is held in the gas — chlorine <strong>bleaches it white</strong> (it may go red first).</div></details></li>
+      <li><details><summary>A gas turns limewater cloudy. What is it, and why must the limewater be involved rather than a splint?</summary><div class="ans">It is <strong>carbon dioxide</strong>. CO₂ doesn't pop or relight a splint — it actually <strong>puts a splint out</strong> — so the limewater test is the one that identifies it.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Chemistry Paper 2 · C8 Chemical Analysis</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'c8-chemical-analysis-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=c8-chemical-analysis-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

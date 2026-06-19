@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantitative Chemistry (C3) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for C3 Quantitative Chemistry — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Chemistry Paper 1 · C3 Quantitative Chemistry</div>
+    <h1>Quantitative chemistry, <em>made countable.</em></h1>
+    <p class="tag">The whole of C3 — conservation of mass, relative formula mass, concentration, and (for Higher) the mole, reacting masses and limiting reactants. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong> (there are none in this topic). Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Conservation &amp; M&#8341;</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Mass &amp; gases</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">% mass &amp; concentration</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">The mole</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Reacting masses</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Limiting reactants</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — CONSERVATION OF MASS & BALANCED EQUATIONS (4.3.1.1 / 4.3.1.2) -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.3.1 · Conservation &amp; M&#8341;</div>
+    <h2 class="lesson-title">Conservation of mass &amp; <em>balanced</em> equations</h2>
+    <p class="lesson-promise">By the end of this topic you'll know why mass never changes in a reaction, you'll balance equations confidently, and you'll work out the relative formula mass of any compound.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Mass is conserved</h3>
+    <p>In a chemical reaction, <strong>no atoms are created or destroyed</strong> — they're just rearranged into new substances. So the <strong>total mass of the products equals the total mass of the reactants</strong>. This is the <strong>conservation of mass</strong>.</p>
+    <p>Because the atoms are only swapped around, a balanced symbol equation must have the <strong>same number of each type of atom on both sides</strong>. That's exactly what "balanced" means.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SAME ATOMS, REARRANGED</text>
+        <!-- reactants pan -->
+        <rect x="40" y="60" width="170" height="70" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="125" y="86" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">reactants</text>
+        <text x="125" y="110" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" fill="#1A1A1A">100 g</text>
+        <!-- equals -->
+        <text x="280" y="100" text-anchor="middle" font-family="Instrument Serif,serif" font-size="34" fill="#B85042">=</text>
+        <!-- products pan -->
+        <rect x="350" y="60" width="170" height="70" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="435" y="86" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">products</text>
+        <text x="435" y="110" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" fill="#1A1A1A">100 g</text>
+        <text x="280" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">Nothing is gained or lost — the atoms are just regrouped.</text>
+      </svg>
+      <div class="caption">Total mass of reactants = total mass of products</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — finding a missing mass</h4>
+      <p class="q">12 g of carbon reacts completely with oxygen to make 44 g of carbon dioxide. What mass of oxygen reacted?</p>
+      <div class="step"><span class="label">Idea</span><span class="v">mass of reactants = mass of products</span></div>
+      <div class="step"><span class="label">Set up</span><span class="v">12 + (oxygen) = 44</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">oxygen = 44 − 12 = 32 g</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — you can't change formulae to balance</h4>
+      <p>You balance an equation by putting <strong>big numbers in front</strong> (the balancing numbers), <em>never</em> by changing a formula. H₂O is water; writing H₂O₂ to "make it balance" turns it into hydrogen peroxide — a different substance. Only the front numbers may change.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Relative formula mass, M&#8341;</h3>
+    <p>The <strong>relative atomic mass (A&#8341;)</strong> of an element is the number under its symbol on the periodic table. The <strong>relative formula mass (M&#8341;)</strong> of a compound is just the A&#8341; values of all its atoms <strong>added together</strong>.</p>
+    <p>A useful check: the <strong>total M&#8341; of the reactants equals the total M&#8341; of the products</strong> in a balanced equation — another way of seeing conservation of mass.</p>
+
+    <div class="eqbox">
+      <h4>What to add up</h4>
+      <dl>
+        <dt>M&#8341; = sum of all the A&#8341; values in the formula <span class="badge recall">recall</span></dt>
+        <dd>Count every atom, including those multiplied by a small subscript number. Remember a bracket multiplies everything inside it, e.g. Ca(OH)₂ has two O and two H.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — M&#8341; of calcium hydroxide</h4>
+      <p class="q">Calculate the M&#8341; of Ca(OH)₂. (A&#8341;: Ca = 40, O = 16, H = 1)</p>
+      <div class="step"><span class="label">Count</span><span class="v">1 × Ca, 2 × O, 2 × H (the bracket means ×2)</span></div>
+      <div class="step"><span class="label">Add</span><span class="v">40 + (2 × 16) + (2 × 1) = 40 + 32 + 2</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">M&#8341; = 74</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">What is the relative formula mass (M&#8341;) of sodium carbonate, Na₂CO₃? (A&#8341;: Na = 23, C = 12, O = 16)</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>83</span></li>
+        <li><span class="letter">B</span><span>106</span></li>
+        <li><span class="letter">C</span><span>51</span></li>
+        <li><span class="letter">D</span><span>96</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 106.</strong> (2 × 23) + 12 + (3 × 16) = 46 + 12 + 48 = 106. Answer A forgets to double the sodium; D leaves out the carbon and one sodium.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>State the law of conservation of mass.</summary><div class="ans">No atoms are <strong>created or destroyed</strong> in a chemical reaction, so the total mass of the products <strong>equals</strong> the total mass of the reactants.</div></details></li>
+      <li><details><summary>Calculate the M&#8341; of water, H₂O. (A&#8341;: H = 1, O = 16)</summary><div class="ans">(2 × 1) + 16 = <strong>18</strong>.</div></details></li>
+      <li><details><summary>When balancing an equation, what is the one thing you are allowed to change?</summary><div class="ans">Only the <strong>big balancing numbers in front</strong> of the formulae. You must never change a chemical formula (its subscripts).</div></details></li>
+      <li><details><summary>4 g of hydrogen reacts with 32 g of oxygen to form water. What mass of water is made?</summary><div class="ans">Mass is conserved, so 4 + 32 = <strong>36 g</strong> of water.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — MASS CHANGES WHEN A GAS IS INVOLVED (4.3.1.3)                  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.3.1.3 · Mass &amp; gases</div>
+    <h2 class="lesson-title">Mass changes when a <em>gas</em> is involved</h2>
+    <p class="lesson-promise">Mass is always conserved — so why does a reaction on a balance seem to get heavier or lighter? The answer is always a gas entering or leaving.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Open systems and escaping gas</h3>
+    <p>Mass is <em>always</em> conserved. But if you do a reaction in an <strong>open container</strong> — one a gas can get in or out of — the mass on the balance can appear to change. The atoms haven't vanished; a gas has simply crossed the boundary of what you're weighing.</p>
+    <p>Two patterns to recognise:</p>
+    <p>The mass <strong>decreases</strong> when a <strong>gas is given off</strong> and escapes into the air. Example: heating a metal carbonate releases carbon dioxide, which floats away, so the solid left behind weighs less.</p>
+    <p>The mass <strong>increases</strong> when a <strong>gas from the air is a reactant</strong> and gets added in. Example: a metal heated in air combines with oxygen, so the solid oxide formed weighs more than the metal you started with.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TWO OPEN SYSTEMS</text>
+        <!-- LEFT PANEL: gas escapes -->
+        <text x="150" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">mass falls</text>
+        <rect x="100" y="120" width="100" height="50" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="150" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">carbonate</text>
+        <!-- gas out arrows -->
+        <line x1="130" y1="118" x2="120" y2="70" stroke="#B85042" stroke-width="2"/>
+        <polygon points="120,64 114,78 126,78" fill="#B85042"/>
+        <line x1="170" y1="118" x2="180" y2="70" stroke="#B85042" stroke-width="2"/>
+        <polygon points="180,64 174,78 186,78" fill="#B85042"/>
+        <text x="150" y="200" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">CO₂ escapes</text>
+        <!-- divider -->
+        <line x1="280" y1="40" x2="280" y2="210" stroke="#CFD8E3" stroke-width="1"/>
+        <!-- RIGHT PANEL: gas added -->
+        <text x="410" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">mass rises</text>
+        <rect x="360" y="120" width="100" height="50" rx="4" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="410" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#2C5F2D">metal</text>
+        <!-- gas in arrows -->
+        <line x1="390" y1="70" x2="380" y2="118" stroke="#2C5F2D" stroke-width="2"/>
+        <polygon points="380,124 374,110 386,110" fill="#2C5F2D"/>
+        <line x1="430" y1="70" x2="440" y2="118" stroke="#2C5F2D" stroke-width="2"/>
+        <polygon points="440,124 434,110 446,110" fill="#2C5F2D"/>
+        <text x="410" y="200" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">O₂ added from air</text>
+      </svg>
+      <div class="caption">Left: a gas leaves, balance reads less. Right: a gas joins, balance reads more.</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — mass is NOT really lost or gained</h4>
+      <p>The total mass of <em>everything</em>, including the gas, is unchanged. The balance only shows what sits on the pan. To prove mass is conserved, do the reaction in a <strong>sealed (closed) container</strong> — then no gas can enter or leave and the reading stays exactly the same.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — explaining a mass decrease</h4>
+      <p class="q">A student heats copper carbonate in an open crucible. The mass on the balance falls. Explain why.</p>
+      <div class="step"><span class="label">Reaction</span><span class="v">copper carbonate → copper oxide + carbon dioxide</span></div>
+      <div class="step"><span class="label">Why</span><span class="v">CO₂ gas is produced and escapes into the air from the open crucible.</span></div>
+      <div class="step answer"><span class="label">So</span><span class="v">The solid left weighs less, but total mass (solid + gas) is unchanged.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A piece of magnesium ribbon is heated in an open crucible and the mass increases. Why?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Mass is created in the reaction</span></li>
+        <li><span class="letter">B</span><span>Oxygen from the air joins the magnesium to form magnesium oxide</span></li>
+        <li><span class="letter">C</span><span>A gas escapes, taking mass with it</span></li>
+        <li><span class="letter">D</span><span>The heat adds energy, which has mass</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Magnesium reacts with <em>oxygen from the air</em> — that oxygen is now part of the solid weighed, so the mass rises. A breaks conservation of mass; C would make it fall, not rise.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Why can the mass on a balance fall during a reaction in an open container?</summary><div class="ans">A <strong>gas is produced and escapes</strong> into the air, so it's no longer being weighed — but total mass is still conserved.</div></details></li>
+      <li><details><summary>Why can the mass on a balance rise during a reaction in an open container?</summary><div class="ans">A <strong>gas from the air (e.g. oxygen) reacts and is added</strong> to the substance, so the solid being weighed gains mass.</div></details></li>
+      <li><details><summary>How could you show that mass is actually conserved when a gas is given off?</summary><div class="ans">Carry out the reaction in a <strong>sealed/closed container</strong> so no gas can escape — the total mass then stays the same.</div></details></li>
+      <li><details><summary>Iron rusts slowly in air and the mass increases. Which gas has been added?</summary><div class="ans"><strong>Oxygen</strong> (and water) from the air combines with the iron to form iron oxide.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — % BY MASS & CONCENTRATION OF SOLUTIONS (4.3.1.2 / 4.3.2.2)     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.3.2 · % mass &amp; concentration</div>
+    <h2 class="lesson-title">Percentage by mass &amp; <em>concentration</em></h2>
+    <p class="lesson-promise">Two everyday calculations — how much of a compound is a useful element, and how strong a solution is in g/dm³.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Percentage by mass of an element</h3>
+    <p>The <strong>percentage by mass</strong> of an element in a compound tells you what fraction of the compound's mass comes from that element. Farmers use it to compare fertilisers; metallurgists use it to compare ores.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>% mass = (A&#8341; × number of atoms of that element) ÷ M&#8341; × 100 <span class="badge recall">recall</span></dt>
+        <dd>The "A&#8341; × number of atoms" is the total mass of that element in one formula unit; M&#8341; is the mass of the whole compound.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — % nitrogen in ammonium nitrate</h4>
+      <p class="q">Find the percentage by mass of nitrogen in NH₄NO₃. (A&#8341;: N = 14, H = 1, O = 16)</p>
+      <div class="step"><span class="label">M&#8341;</span><span class="v">(2 × 14) + (4 × 1) + (3 × 16) = 28 + 4 + 48 = 80</span></div>
+      <div class="step"><span class="label">N mass</span><span class="v">2 nitrogen atoms = 2 × 14 = 28</span></div>
+      <div class="step"><span class="label">Divide</span><span class="v">% N = 28 ÷ 80 × 100</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 35%</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — count every atom of the element</h4>
+      <p>If the element appears more than once in the formula, add <strong>all</strong> of it. NH₄NO₃ has nitrogen in two places — that's <strong>2 × 14</strong>, not 14. Forgetting the second nitrogen is the classic slip here.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Concentration of a solution</h3>
+    <p>The <strong>concentration</strong> of a solution measures how much solute is dissolved in a given volume. For combined science you work in <strong>grams per cubic decimetre, g/dm³</strong>. The more solute in the same volume, or the smaller the volume for the same solute, the <strong>more concentrated</strong> the solution.</p>
+    <p>Two volume facts you must know: <strong>1 dm³ = 1000 cm³</strong> (one litre), so to change cm³ into dm³ you <strong>divide by 1000</strong>.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>concentration (g/dm³) = mass of solute (g) ÷ volume of solution (dm³) <span class="badge recall">recall</span></dt>
+        <dd>Volume must be in dm³. If you're given cm³, divide by 1000 first.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SAME SOLUTE, DIFFERENT VOLUME</text>
+        <!-- dilute beaker -->
+        <path d="M70 70 L70 180 Q70 190 80 190 L180 190 Q190 190 190 180 L190 70" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="100" cy="160" r="4" fill="#1E2761"/>
+        <circle cx="160" cy="150" r="4" fill="#1E2761"/>
+        <circle cx="130" cy="175" r="4" fill="#1E2761"/>
+        <text x="130" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">dilute</text>
+        <text x="130" y="208" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">spread out</text>
+        <!-- concentrated beaker -->
+        <path d="M370 70 L370 180 Q370 190 380 190 L480 190 Q490 190 490 180 L490 70" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <circle cx="395" cy="160" r="4" fill="#B85042"/>
+        <circle cx="420" cy="170" r="4" fill="#B85042"/>
+        <circle cx="445" cy="155" r="4" fill="#B85042"/>
+        <circle cx="465" cy="175" r="4" fill="#B85042"/>
+        <circle cx="410" cy="178" r="4" fill="#B85042"/>
+        <circle cx="455" cy="172" r="4" fill="#B85042"/>
+        <text x="430" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">concentrated</text>
+        <text x="430" y="208" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">packed close</text>
+      </svg>
+      <div class="caption">More solute particles in the same volume means a higher concentration</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — concentration in g/dm³</h4>
+      <p class="q">25 g of sodium chloride is dissolved to make 500 cm³ of solution. Calculate the concentration.</p>
+      <div class="step"><span class="label">Volume</span><span class="v">500 cm³ ÷ 1000 = 0.5 dm³</span></div>
+      <div class="step"><span class="label">Equation</span><span class="v">concentration = mass ÷ volume = 25 ÷ 0.5</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 50 g/dm³</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">20 g of solute is dissolved in 250 cm³ of solution. What is the concentration in g/dm³?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>0.08 g/dm³</span></li>
+        <li><span class="letter">B</span><span>5 g/dm³</span></li>
+        <li><span class="letter">C</span><span>80 g/dm³</span></li>
+        <li><span class="letter">D</span><span>5000 g/dm³</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 80 g/dm³.</strong> Convert volume first: 250 ÷ 1000 = 0.25 dm³. Then 20 ÷ 0.25 = 80 g/dm³. Answer A divides by 250 cm³ without converting; B forgets to convert and divides by 4.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Write the equation for percentage by mass of an element in a compound.</summary><div class="ans">% mass = (total A&#8341; of that element ÷ M&#8341; of the compound) <strong>× 100</strong>.</div></details></li>
+      <li><details><summary>Calculate the % by mass of oxygen in water, H₂O. (A&#8341;: H = 1, O = 16)</summary><div class="ans">M&#8341; = 18. % O = 16 ÷ 18 × 100 = <strong>88.9%</strong> (to 3 s.f.).</div></details></li>
+      <li><details><summary>How many cm³ are there in 1 dm³, and how do you convert cm³ to dm³?</summary><div class="ans"><strong>1 dm³ = 1000 cm³.</strong> To convert cm³ to dm³, <strong>divide by 1000</strong>.</div></details></li>
+      <li><details><summary>40 g of sugar is dissolved to make 2 dm³ of solution. Find the concentration.</summary><div class="ans">concentration = mass ÷ volume = 40 ÷ 2 = <strong>20 g/dm³</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — THE MOLE (HT) (4.3.2.1)                                        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.3.2.1 · The mole (HT)</div>
+    <h2 class="lesson-title">The <em>mole</em></h2>
+    <p class="lesson-promise">Higher tier only. A way to count atoms by weighing them — Avogadro's constant, and the one equation that links mass, moles and M&#8341;.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Counting by weighing</h3>
+    <p>Atoms are far too small and too many to count one by one, so chemists count them in batches called <strong>moles</strong>. One mole of any substance contains the same huge number of particles.</p>
+    <p>The clever part: <strong>the mass of one mole, in grams, is equal to the relative formula mass (M&#8341;)</strong>. So one mole of carbon (A&#8341; = 12) is 12 g; one mole of water (M&#8341; = 18) is 18 g. Weigh out the M&#8341; in grams and you've counted out exactly one mole of particles.</p>
+
+    <div class="higher">
+      <h4>Higher tier — the mole and Avogadro's constant</h4>
+      <p>One <strong>mole</strong> of a substance contains <strong>6.02 × 10²³ particles</strong> (atoms, molecules, ions or formula units). This number, <strong>6.02 × 10²³ per mole</strong>, is the <strong>Avogadro constant</strong>.</p>
+      <p>So one mole of carbon atoms is 6.02 × 10²³ carbon atoms, and one mole of water molecules is 6.02 × 10²³ water molecules. Different substances, same number of particles per mole.</p>
+    </div>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>moles = mass (g) ÷ M&#8341; <span class="badge recall">recall</span></dt>
+        <dd>Rearranges to <strong>mass = M&#8341; × moles</strong>. M&#8341; is the relative formula mass; mass is in grams.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE FORMULA TRIANGLE</text>
+        <!-- triangle -->
+        <polygon points="280,45 200,150 360,150" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- horizontal divider -->
+        <line x1="232" y1="105" x2="328" y2="105" stroke="#1E2761" stroke-width="2"/>
+        <!-- vertical divider in lower half -->
+        <line x1="280" y1="105" x2="280" y2="150" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" font-weight="700" fill="#B85042">mass</text>
+        <text x="256" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#1E2761">M&#8341;</text>
+        <text x="306" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#1E2761">mol</text>
+        <text x="430" y="100" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">cover what you want</text>
+        <text x="430" y="120" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">to find it</text>
+      </svg>
+      <div class="caption">mass = M&#8341; × moles, or moles = mass ÷ M&#8341;</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — mass to moles</h4>
+      <p class="q">How many moles are there in 36 g of water, H₂O? (M&#8341; = 18)</p>
+      <div class="step"><span class="label">Equation</span><span class="v">moles = mass ÷ M&#8341;</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 36 ÷ 18</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 2.0 mol</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — moles, mass and number aren't the same thing</h4>
+      <p>"Moles" is a <strong>count of particles</strong>, not a mass. 1 mol of hydrogen and 1 mol of lead contain the <em>same number</em> of particles but very different masses. To turn a mass into a number of particles you go <strong>mass → moles → × Avogadro constant</strong>.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">How many moles are in 80 g of sodium hydroxide, NaOH? (M&#8341; = 40)</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>0.5 mol</span></li>
+        <li><span class="letter">B</span><span>2 mol</span></li>
+        <li><span class="letter">C</span><span>3200 mol</span></li>
+        <li><span class="letter">D</span><span>40 mol</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 2 mol.</strong> moles = mass ÷ M&#8341; = 80 ÷ 40 = 2. Answer A divides the wrong way round (40 ÷ 80); C multiplies instead of dividing.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>[HT] How many particles are in one mole, and what is this number called?</summary><div class="ans"><strong>6.02 × 10²³</strong> particles — the <strong>Avogadro constant</strong>.</div></details></li>
+      <li><details><summary>[HT] Write the equation linking moles, mass and M&#8341;.</summary><div class="ans">moles = <strong>mass ÷ M&#8341;</strong> (so mass = M&#8341; × moles).</div></details></li>
+      <li><details><summary>[HT] What is the mass of 0.5 mol of carbon dioxide, CO₂? (M&#8341; = 44)</summary><div class="ans">mass = M&#8341; × moles = 44 × 0.5 = <strong>22 g</strong>.</div></details></li>
+      <li><details><summary>[HT] How many moles are in 56 g of nitrogen gas, N₂? (M&#8341; = 28)</summary><div class="ans">moles = 56 ÷ 28 = <strong>2 mol</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — MOLES TO BALANCE EQUATIONS & REACTING MASSES (HT) (4.3.2.3/4)  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.3.2.3 · Reacting masses (HT)</div>
+    <h2 class="lesson-title">Moles, equations &amp; <em>reacting masses</em></h2>
+    <p class="lesson-promise">Higher tier only. Use moles to read a balanced equation as a recipe — and to work out exactly how much product a mass of reactant will make.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The balancing numbers are mole ratios</h3>
+    <p>The big numbers in front of a balanced equation aren't just there to make the atoms match — they tell you the <strong>ratio of moles</strong> that react. The equation is a recipe written in moles.</p>
+    <p>For example, in <strong>2H₂ + O₂ → 2H₂O</strong>, two moles of hydrogen react with one mole of oxygen to make two moles of water. If you have the moles of one substance, the ratio gives you the moles of any other.</p>
+
+    <div class="higher">
+      <h4>Higher tier — using moles to balance equations</h4>
+      <p>You can work the other way too: if an experiment tells you the masses that reacted, convert each to moles (<strong>moles = mass ÷ M&#8341;</strong>), then simplify the mole numbers to the <strong>smallest whole-number ratio</strong>. Those whole numbers are the <strong>balancing numbers</strong> of the equation.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">READ THE EQUATION AS A RATIO</text>
+        <text x="280" y="62" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="18" font-weight="700" fill="#1E2761">2H₂  +  O₂  →  2H₂O</text>
+        <!-- ratio labels under each -->
+        <text x="150" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">2 mol</text>
+        <text x="270" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">1 mol</text>
+        <text x="420" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">2 mol</text>
+        <line x1="80" y1="115" x2="480" y2="115" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="280" y="140" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">the front numbers are the mole ratio</text>
+      </svg>
+      <div class="caption">Balancing numbers = the ratio in which substances react, in moles</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Calculating reacting masses</h3>
+    <p>Putting it together gives the most important Higher-tier calculation in C3. Whenever you're given the mass of one substance and asked for the mass of another, follow the <strong>same four steps every time</strong>: mass → moles → ratio → mass.</p>
+
+    <div class="higher">
+      <h4>Higher tier — calculating reacting masses</h4>
+      <p>The reliable method:</p>
+      <p><strong>1.</strong> Write the balanced equation. <strong>2.</strong> Turn the known mass into moles (÷ its M&#8341;). <strong>3.</strong> Use the equation's ratio to find the moles of the substance you want. <strong>4.</strong> Turn those moles back into a mass (× its M&#8341;).</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — mass of product</h4>
+      <p class="q">What mass of magnesium oxide forms when 6 g of magnesium burns? 2Mg + O₂ → 2MgO. (A&#8341;: Mg = 24, O = 16)</p>
+      <div class="step"><span class="label">Moles Mg</span><span class="v">= mass ÷ A&#8341; = 6 ÷ 24 = 0.25 mol</span></div>
+      <div class="step"><span class="label">Ratio</span><span class="v">2 Mg : 2 MgO is 1 : 1, so moles MgO = 0.25 mol</span></div>
+      <div class="step"><span class="label">M&#8341; MgO</span><span class="v">24 + 16 = 40</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">mass = M&#8341; × moles = 40 × 0.25 = 10 g</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — don't skip the ratio step</h4>
+      <p>It's tempting to convert mass to moles and straight back to mass — but you <strong>must apply the balancing ratio</strong> in between, or you'll get the wrong answer whenever the ratio isn't 1 : 1. Always check the front numbers of <em>both</em> substances.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">For 2H₂ + O₂ → 2H₂O, how many moles of water are made from 4 mol of hydrogen (with plenty of oxygen)?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>2 mol</span></li>
+        <li><span class="letter">B</span><span>8 mol</span></li>
+        <li><span class="letter">C</span><span>4 mol</span></li>
+        <li><span class="letter">D</span><span>1 mol</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 4 mol.</strong> The ratio of H₂ to H₂O is 2 : 2, i.e. 1 : 1. So 4 mol of hydrogen makes 4 mol of water. Answer B wrongly doubles it.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>[HT] What do the big balancing numbers in an equation tell you?</summary><div class="ans">The <strong>ratio of moles</strong> in which the substances react and are produced.</div></details></li>
+      <li><details><summary>[HT] List the four steps for a reacting-mass calculation.</summary><div class="ans"><strong>Mass → moles</strong> (÷ M&#8341;) → <strong>use the equation ratio</strong> → <strong>moles → mass</strong> (× M&#8341;).</div></details></li>
+      <li><details><summary>[HT] In 2Mg + O₂ → 2MgO, how many moles of MgO come from 0.5 mol of Mg?</summary><div class="ans">The ratio Mg : MgO is 2 : 2 = 1 : 1, so <strong>0.5 mol</strong> of MgO.</div></details></li>
+      <li><details><summary>[HT] What mass of MgO forms from 0.5 mol of MgO? (M&#8341; MgO = 40)</summary><div class="ans">mass = M&#8341; × moles = 40 × 0.5 = <strong>20 g</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — LIMITING REACTANTS (HT) (4.3.2.5)                              -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.3.2.5 · Limiting reactants (HT)</div>
+    <h2 class="lesson-title">Limiting <em>reactants</em></h2>
+    <p class="lesson-promise">Higher tier only. When two reactants are mixed, one usually runs out first — and that one decides how much product you get.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The reactant that runs out</h3>
+    <p>In most reactions one reactant is used up before the others. That reactant is the <strong>limiting reactant</strong> — once it's gone, the reaction stops, no matter how much of the other reactants is left over. The reactant left spare is said to be <strong>in excess</strong>.</p>
+    <p>The key consequence: the <strong>amount of product is controlled by the limiting reactant</strong>. Add more of the limiting reactant and you make more product; adding more of the excess reactant does nothing once the limiting one is gone.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ONE REACTANT RUNS OUT FIRST</text>
+        <!-- reactant A (limiting) -->
+        <text x="120" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">reactant A</text>
+        <circle cx="100" cy="80" r="9" fill="#B85042"/>
+        <circle cx="140" cy="80" r="9" fill="#B85042"/>
+        <text x="120" y="115" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#B85042">only 2 — runs out</text>
+        <text x="120" y="132" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">LIMITING</text>
+        <!-- plus -->
+        <text x="210" y="90" text-anchor="middle" font-family="Instrument Serif,serif" font-size="26" fill="#5C6370">+</text>
+        <!-- reactant B (excess) -->
+        <text x="320" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">reactant B</text>
+        <circle cx="285" cy="80" r="9" fill="#1E2761"/>
+        <circle cx="320" cy="80" r="9" fill="#1E2761"/>
+        <circle cx="355" cy="80" r="9" fill="#1E2761"/>
+        <circle cx="305" cy="105" r="9" fill="#1E2761"/>
+        <circle cx="340" cy="105" r="9" fill="#1E2761"/>
+        <text x="320" y="132" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">spare left over</text>
+        <!-- arrow -->
+        <line x1="400" y1="90" x2="445" y2="90" stroke="#2C5F2D" stroke-width="3"/>
+        <polygon points="452,90 440,84 440,96" fill="#2C5F2D"/>
+        <!-- product -->
+        <text x="500" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">product</text>
+        <text x="500" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#2C5F2D">set by A</text>
+        <text x="280" y="178" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">A is used up; the leftover B is "in excess".</text>
+      </svg>
+      <div class="caption">The limiting reactant (A) is used up first and fixes the amount of product</div>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — limiting reactants and moles</h4>
+      <p>To find the limiting reactant by calculation: convert the mass of <strong>each</strong> reactant to moles, then compare those moles against the <strong>ratio in the balanced equation</strong>. The reactant you have <strong>too few</strong> moles of, relative to the ratio, is the limiting reactant — and you base the product calculation on it.</p>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — limiting isn't just "the smaller mass"</h4>
+      <p>The limiting reactant is <strong>not</strong> simply whichever has the smaller mass or the fewer moles. You must compare the moles <em>against the equation's ratio</em>. A reactant present in a larger amount can still be limiting if the equation demands even more of it.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Working it out</h3>
+
+    <div class="worked">
+      <h4>Worked example — which reactant is limiting?</h4>
+      <p class="q">0.3 mol of magnesium is added to 0.1 mol of oxygen molecules: 2Mg + O₂ → 2MgO. Which is limiting, and how many moles of MgO form?</p>
+      <div class="step"><span class="label">Ratio</span><span class="v">2 Mg react with 1 O₂ (a 2 : 1 ratio)</span></div>
+      <div class="step"><span class="label">Mg needs</span><span class="v">0.3 mol Mg needs 0.15 mol O₂ — but only 0.1 mol O₂ is present</span></div>
+      <div class="step"><span class="label">So</span><span class="v">O₂ runs out first → oxygen is the limiting reactant (Mg is in excess)</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">0.1 mol O₂ makes 0.2 mol MgO (ratio O₂ : MgO = 1 : 2)</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Hydrogen and chlorine react: H₂ + Cl₂ → 2HCl. You mix 5 mol of H₂ with 3 mol of Cl₂. Which is the limiting reactant?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Hydrogen — there's more of it</span></li>
+        <li><span class="letter">B</span><span>Chlorine — there's less of it (a 1 : 1 ratio)</span></li>
+        <li><span class="letter">C</span><span>Neither — they react fully</span></li>
+        <li><span class="letter">D</span><span>You can't tell without the masses</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — chlorine.</strong> The ratio is 1 : 1, so 5 mol H₂ would need 5 mol Cl₂, but only 3 mol is present. Chlorine runs out first; 2 mol of hydrogen is left in excess. (Here the smaller amount <em>is</em> limiting because the ratio is 1 : 1 — but always check the ratio.)</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>[HT] Define the limiting reactant.</summary><div class="ans">The reactant that is <strong>completely used up</strong> first, stopping the reaction. It controls the amount of product formed.</div></details></li>
+      <li><details><summary>[HT] What name is given to the reactant left over at the end?</summary><div class="ans">It is said to be <strong>in excess</strong>.</div></details></li>
+      <li><details><summary>[HT] How do you find the limiting reactant by calculation?</summary><div class="ans">Convert each reactant's mass to <strong>moles</strong>, then compare against the <strong>equation's mole ratio</strong>; the one you have too few moles of (relative to the ratio) is limiting.</div></details></li>
+      <li><details><summary>[HT] Why does adding more of the excess reactant not make more product?</summary><div class="ans">Once the <strong>limiting reactant is used up</strong> the reaction stops, so extra excess reactant has nothing left to react with.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Chemistry Paper 1 · C3 Quantitative Chemistry</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'c3-quantitative-chemistry-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=c3-quantitative-chemistry-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

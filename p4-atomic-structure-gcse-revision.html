@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atomic Structure (P4) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for P4 Atomic Structure — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Physics Paper 1 · P4 Atomic Structure</div>
+    <h1>Atomic structure, <em>for the exam.</em></h1>
+    <p class="tag">The whole of P4 — what's inside an atom, how the model was discovered, isotopes and ions, the three radiations, nuclear equations and half-life. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">The atom</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Nuclear model</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Isotopes &amp; ions</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Radiation</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Nuclear equations</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Half-life</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — THE STRUCTURE OF THE ATOM (4.4.1.1)                           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.4.1.1 · Structure of the atom</div>
+    <h2 class="lesson-title">The structure of the <em>atom</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what's inside an atom, just how tiny and how empty it is, and what electrons do when an atom absorbs or releases energy.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Size, scale and what's inside</h3>
+    <p>An atom is unimaginably small. Its <strong>radius is about 1 × 10⁻¹⁰ m</strong> (0.1 nanometres). You could line up about a million of them across the width of a human hair.</p>
+    <p>Nearly all of that tiny atom is empty space. In the middle sits the <strong>nucleus</strong>, made of <strong>protons</strong> and <strong>neutrons</strong>. The nucleus is where almost all the <strong>mass</strong> is concentrated, yet its <strong>radius is around 10 000 times smaller</strong> than the atom — less than 1/10 000 of the atomic radius. Around the nucleus, <strong>electrons</strong> orbit at different distances.</p>
+
+    <div class="keywords">
+      <h4>The three sub-atomic particles</h4>
+      <dl>
+        <dt>Proton</dt><dd>In the nucleus. Relative charge <strong>+1</strong>, relative mass 1.</dd>
+        <dt>Neutron</dt><dd>In the nucleus. Relative charge <strong>0</strong>, relative mass 1.</dd>
+        <dt>Electron</dt><dd>Orbits the nucleus. Relative charge <strong>−1</strong>, relative mass very small (≈ 1/1840 — treat as negligible).</dd>
+      </dl>
+    </div>
+
+    <p>Atoms have <strong>no overall charge</strong> — they are neutral. That's because every atom has the <strong>same number of protons as electrons</strong>, so the +1 and −1 charges cancel exactly. The <strong>number of protons</strong> (the atomic number) is what makes an atom a particular element.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">INSIDE A LITHIUM ATOM</text>
+        <!-- electron shells -->
+        <circle cx="200" cy="135" r="50" fill="none" stroke="#CFD8E3" stroke-width="1.2"/>
+        <circle cx="200" cy="135" r="95" fill="none" stroke="#CFD8E3" stroke-width="1.2"/>
+        <!-- nucleus -->
+        <circle cx="200" cy="135" r="16" fill="#B85042"/>
+        <!-- inner electrons (2) -->
+        <circle cx="200" cy="85" r="6" fill="#1E2761"/>
+        <circle cx="200" cy="185" r="6" fill="#1E2761"/>
+        <!-- outer electron (1) -->
+        <circle cx="105" cy="135" r="6" fill="#1E2761"/>
+        <!-- labels with leaders -->
+        <line x1="216" y1="135" x2="330" y2="120" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="338" y="116" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">nucleus</text>
+        <text x="338" y="132" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">3 protons + 4 neutrons</text>
+        <line x1="206" y1="185" x2="330" y2="200" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="338" y="196" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">electrons</text>
+        <text x="338" y="212" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">in shells (energy levels)</text>
+      </svg>
+      <div class="caption">Not to scale — if the nucleus were this size, the atom would be the size of a football stadium</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — mass vs charge live in different places</h4>
+      <p>Almost all the atom's <strong>mass</strong> is in the nucleus, but the nucleus is a <strong>tiny fraction</strong> of the atom's size — the rest is mostly empty space with electrons in it. Don't say electrons "have no mass" — they have a very small mass that we treat as negligible. And remember the atom is neutral because protons = electrons, <em>not</em> because of the neutrons.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Electron energy levels</h3>
+    <p>Electrons don't sit just anywhere — they occupy <strong>energy levels</strong> (shells) at set distances from the nucleus. If an atom <strong>absorbs electromagnetic radiation</strong>, an electron can jump to a <strong>higher energy level</strong> (further out). When it falls back, the atom <strong>emits</strong> radiation again.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="160" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ABSORB → JUMP UP</text>
+        <text x="420" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">EMIT → DROP DOWN</text>
+        <!-- panel 1 -->
+        <circle cx="160" cy="115" r="10" fill="#B85042"/>
+        <circle cx="160" cy="115" r="30" fill="none" stroke="#CFD8E3" stroke-width="1.2"/>
+        <circle cx="160" cy="115" r="60" fill="none" stroke="#CFD8E3" stroke-width="1.2"/>
+        <circle cx="160" cy="85" r="5" fill="#1E2761"/>
+        <line x1="160" y1="80" x2="160" y2="58" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="160,52 155,64 165,64" fill="#C8A24A"/>
+        <text x="160" y="178" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">absorbs radiation</text>
+        <!-- panel 2 -->
+        <circle cx="420" cy="115" r="10" fill="#B85042"/>
+        <circle cx="420" cy="115" r="30" fill="none" stroke="#CFD8E3" stroke-width="1.2"/>
+        <circle cx="420" cy="115" r="60" fill="none" stroke="#CFD8E3" stroke-width="1.2"/>
+        <circle cx="420" cy="145" r="5" fill="#1E2761"/>
+        <line x1="420" y1="58" x2="420" y2="80" stroke="#2C5F2D" stroke-width="2.5"/>
+        <polygon points="420,86 415,74 425,74" fill="#2C5F2D"/>
+        <text x="420" y="178" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">emits radiation</text>
+      </svg>
+      <div class="caption">Absorbing EM radiation lifts an electron to a higher level; falling back emits it again</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Roughly how many times smaller is the radius of the nucleus than the radius of the whole atom?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>About 10 times smaller</span></li>
+        <li><span class="letter">B</span><span>About 100 times smaller</span></li>
+        <li><span class="letter">C</span><span>About 10 000 times smaller</span></li>
+        <li><span class="letter">D</span><span>The same size</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — about 10 000 times smaller.</strong> The atom is roughly 1 × 10⁻¹⁰ m across, the nucleus around 1 × 10⁻¹⁴ m — so the nucleus is tiny, but it holds almost all the mass. <em>The atom is mostly empty space.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Where is most of the mass of an atom, and where is most of its volume?</summary><div class="ans">Most of the <strong>mass</strong> is in the tiny <strong>nucleus</strong>; most of the <strong>volume</strong> is empty space where the electrons orbit.</div></details></li>
+      <li><details><summary>Why does a neutral atom have no overall charge?</summary><div class="ans">It has an <strong>equal number of protons (+1) and electrons (−1)</strong>, so the charges cancel out.</div></details></li>
+      <li><details><summary>State the approximate radius of an atom.</summary><div class="ans">About <strong>1 × 10⁻¹⁰ m</strong> (0.1 nm).</div></details></li>
+      <li><details><summary>What happens to an electron when an atom absorbs electromagnetic radiation?</summary><div class="ans">It moves to a <strong>higher energy level</strong> (a shell further from the nucleus). Falling back down causes the atom to <strong>emit</strong> radiation.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — DEVELOPING THE NUCLEAR MODEL (4.4.1.2)                        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.4.1.2 · Developing the model</div>
+    <h2 class="lesson-title">Developing the <em>nuclear</em> model</h2>
+    <p class="lesson-promise">How the picture of the atom changed as new evidence came in — from a solid sphere, to plum pudding, to a tiny dense nucleus.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The story so far</h3>
+    <p>The model of the atom is a great example of how science changes when <strong>new experimental evidence</strong> appears. It happened in stages:</p>
+    <p><strong>Before the electron</strong> — atoms were thought to be tiny solid spheres that couldn't be divided. Then the <strong>electron was discovered</strong>, which changed everything: atoms must contain even smaller charged particles.</p>
+    <p><strong>The plum pudding model</strong> — this suggested the atom was a <strong>ball of positive charge</strong> with negative <strong>electrons embedded</strong> in it, like fruit in a pudding. There was no nucleus in this model.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="150" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PLUM PUDDING</text>
+        <text x="410" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">NUCLEAR MODEL</text>
+        <!-- plum pudding -->
+        <circle cx="150" cy="115" r="65" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <circle cx="120" cy="95" r="6" fill="#1E2761"/>
+        <circle cx="178" cy="100" r="6" fill="#1E2761"/>
+        <circle cx="135" cy="140" r="6" fill="#1E2761"/>
+        <circle cx="170" cy="145" r="6" fill="#1E2761"/>
+        <circle cx="150" cy="115" r="6" fill="#1E2761"/>
+        <text x="150" y="195" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">positive "dough", electrons embedded</text>
+        <!-- nuclear -->
+        <circle cx="410" cy="115" r="65" fill="none" stroke="#CFD8E3" stroke-width="1.2"/>
+        <circle cx="410" cy="115" r="40" fill="none" stroke="#CFD8E3" stroke-width="1.2"/>
+        <circle cx="410" cy="115" r="11" fill="#B85042"/>
+        <circle cx="410" cy="75" r="5" fill="#1E2761"/>
+        <circle cx="450" cy="115" r="5" fill="#1E2761"/>
+        <circle cx="385" cy="148" r="5" fill="#1E2761"/>
+        <text x="410" y="195" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">tiny dense nucleus, electrons orbit</text>
+      </svg>
+      <div class="caption">Two competing pictures — the scattering experiment decided between them</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The alpha-scattering experiment</h3>
+    <p>To test the plum pudding model, alpha particles (positive) were fired at a very <strong>thin sheet of gold foil</strong>. If plum pudding were right, the alpha particles should all pass almost straight through with only tiny deflections.</p>
+    <p>But that's not what happened. The results were:</p>
+    <p><strong>Most</strong> alpha particles passed <strong>straight through</strong> — so the atom is <strong>mostly empty space</strong>. <strong>Some</strong> were <strong>deflected</strong> — so the centre must be <strong>positively charged</strong> (it repelled the positive alphas). A <strong>few</strong> bounced almost <strong>straight back</strong> — so the centre must be very <strong>small, very dense and hold most of the mass</strong>.</p>
+    <p>This led to the <strong>nuclear model</strong>: a tiny, dense, positive <strong>nucleus</strong> at the centre, with electrons orbiting it. Later, Niels Bohr corrected the model by proposing that electrons orbit at <strong>specific distances</strong> (energy levels), and the nucleus was found to contain positive <strong>protons</strong>. Later still, <strong>neutrons</strong> were discovered in the nucleus.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ALPHA SCATTERING BY GOLD FOIL</text>
+        <!-- foil -->
+        <rect x="300" y="50" width="8" height="130" fill="#C8A24A"/>
+        <text x="304" y="200" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">gold foil</text>
+        <!-- nucleus marker -->
+        <circle cx="304" cy="115" r="6" fill="#B85042"/>
+        <!-- straight through -->
+        <line x1="60" y1="80" x2="470" y2="80" stroke="#2C5F2D" stroke-width="2"/>
+        <polygon points="476,80 464,75 464,85" fill="#2C5F2D"/>
+        <text x="388" y="100" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#2C5F2D">most: straight through</text>
+        <!-- deflected -->
+        <line x1="60" y1="115" x2="304" y2="115" stroke="#1E2761" stroke-width="2"/>
+        <line x1="304" y1="115" x2="470" y2="150" stroke="#1E2761" stroke-width="2"/>
+        <polygon points="476,152 463,150 466,140" fill="#1E2761"/>
+        <text x="430" y="172" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#1E2761">some: deflected</text>
+        <!-- bounced back -->
+        <line x1="60" y1="150" x2="298" y2="119" stroke="#B85042" stroke-width="2"/>
+        <line x1="298" y1="119" x2="90" y2="190" stroke="#B85042" stroke-width="2"/>
+        <polygon points="84,192 97,191 94,181" fill="#B85042"/>
+        <text x="120" y="205" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#B85042">few: bounce back</text>
+      </svg>
+      <div class="caption">Most pass through (empty space); a few bounce back (small, dense, positive nucleus)</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — match the result to the conclusion</h4>
+      <p>Exam questions love asking what each result <em>tells you</em>. Most passing straight through ⇒ <strong>mostly empty space</strong>. A few bouncing back ⇒ the nucleus is <strong>tiny, dense and positively charged</strong>. Don't muddle them up — "deflected" alphas show the charge is positive; "bounced back" alphas show it's small and dense.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A few alpha particles bounced almost straight back off the gold foil. What did this show?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The atom is mostly empty space</span></li>
+        <li><span class="letter">B</span><span>Electrons are negatively charged</span></li>
+        <li><span class="letter">C</span><span>The nucleus is small, very dense and has most of the mass</span></li>
+        <li><span class="letter">D</span><span>Atoms are solid spheres</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> Only a very dense, concentrated mass could repel a fast positive alpha straight back. A says what the <em>majority passing through</em> showed, not the bounce-back. <em>The deflections showed the charge was positive; the bounce-backs showed it was tiny and dense.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Describe the plum pudding model of the atom.</summary><div class="ans">A <strong>ball of positive charge</strong> with negative <strong>electrons embedded</strong> in it. There is no nucleus in this model.</div></details></li>
+      <li><details><summary>In the alpha-scattering experiment, what did most alpha particles do, and what did that show?</summary><div class="ans">Most passed <strong>straight through</strong> with little or no deflection, showing the atom is <strong>mostly empty space</strong>.</div></details></li>
+      <li><details><summary>What did the deflection of some alpha particles show about the centre of the atom?</summary><div class="ans">The centre carries a <strong>concentrated positive charge</strong> (it repelled the positive alpha particles).</div></details></li>
+      <li><details><summary>What change did Bohr make to the nuclear model?</summary><div class="ans">He proposed that electrons orbit the nucleus at <strong>specific distances (energy levels)</strong>, rather than anywhere.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — ISOTOPES & IONS (4.4.1.1)                                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.4.1.1 · Isotopes &amp; ions</div>
+    <h2 class="lesson-title">Isotopes &amp; <em>ions</em></h2>
+    <p class="lesson-promise">Reading the two numbers next to an element symbol — and the difference between an atom that's gained neutrons and one that's lost electrons.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Atomic number and mass number</h3>
+    <p>Every element is defined by its <strong>atomic number</strong> — the number of <strong>protons</strong>. Change the number of protons and you've changed the element. The two numbers written by a symbol tell you what's in the nucleus:</p>
+    <p>The <strong>atomic number</strong> (bottom) = number of <strong>protons</strong>. The <strong>mass number</strong> (top) = number of <strong>protons + neutrons</strong>. So <strong>neutrons = mass number − atomic number</strong>. In a neutral atom, the number of electrons equals the atomic number.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">READING THE SYMBOL</text>
+        <!-- numbers -->
+        <text x="220" y="95" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="34" font-weight="500" fill="#B85042">23</text>
+        <text x="220" y="150" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="34" font-weight="500" fill="#1E2761">11</text>
+        <text x="240" y="135" font-family="Instrument Serif,serif" font-size="58" fill="#1A1A1A">Na</text>
+        <!-- leader lines -->
+        <line x1="230" y1="85" x2="360" y2="70" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="368" y="66" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">mass number = 23</text>
+        <text x="368" y="82" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">protons + neutrons</text>
+        <line x1="230" y1="140" x2="360" y2="150" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="368" y="146" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">atomic number = 11</text>
+        <text x="368" y="162" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">protons (= electrons)</text>
+        <text x="200" y="185" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">neutrons = 23 − 11 = 12</text>
+      </svg>
+      <div class="caption">Mass number on top, atomic number below — subtract to get the neutrons</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — counting particles</h4>
+      <p class="q">An atom of chlorine is written ³⁷₁₇Cl. State its number of protons, neutrons and electrons.</p>
+      <div class="step"><span class="label">Protons</span><span class="v">= atomic number = 17</span></div>
+      <div class="step"><span class="label">Neutrons</span><span class="v">= mass − atomic = 37 − 17 = 20</span></div>
+      <div class="step answer"><span class="label">Electrons</span><span class="v">= protons = 17 (neutral atom)</span></div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Isotopes vs ions</h3>
+    <p>These two words sound similar but mean very different things.</p>
+    <p><strong>Isotopes</strong> are atoms of the <strong>same element</strong> (same number of protons) with <strong>different numbers of neutrons</strong>. They have the same atomic number but a different mass number. Because they have the same number of protons and electrons, isotopes of an element react in <strong>exactly the same way chemically</strong>.</p>
+    <p>An <strong>ion</strong> is an atom (or group of atoms) that has <strong>lost or gained electrons</strong>, so it now has an <strong>overall charge</strong>. Losing electrons makes a <strong>positive</strong> ion; gaining electrons makes a <strong>negative</strong> ion. Crucially, forming an ion does <strong>not</strong> change the nucleus — the number of protons and neutrons stays the same.</p>
+
+    <div class="keywords">
+      <h4>Keywords</h4>
+      <dl>
+        <dt>Isotope</dt><dd>Same protons, different neutrons (same element, different mass number).</dd>
+        <dt>Ion</dt><dd>An atom that has lost or gained electrons, giving it an overall charge.</dd>
+        <dt>Atomic number</dt><dd>Number of protons — fixes which element it is.</dd>
+        <dt>Mass number</dt><dd>Number of protons + neutrons.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="140" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TWO ISOTOPES OF CARBON</text>
+        <text x="430" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">FORMING AN ION</text>
+        <!-- carbon-12 -->
+        <circle cx="90" cy="100" r="22" fill="#B85042"/>
+        <text x="90" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#fff">6 p</text>
+        <text x="90" y="110" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#fff">6 n</text>
+        <text x="90" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1E2761">carbon-12</text>
+        <!-- carbon-14 -->
+        <circle cx="200" cy="100" r="22" fill="#B85042"/>
+        <text x="200" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#fff">6 p</text>
+        <text x="200" y="110" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#fff">8 n</text>
+        <text x="200" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1E2761">carbon-14</text>
+        <text x="145" y="178" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">same protons, different neutrons</text>
+        <!-- ion: atom loses electron -->
+        <circle cx="400" cy="100" r="40" fill="none" stroke="#CFD8E3" stroke-width="1.2"/>
+        <circle cx="400" cy="100" r="12" fill="#1E2761"/>
+        <text x="400" y="104" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#fff">atom</text>
+        <circle cx="400" cy="60" r="5" fill="#2C5F2D"/>
+        <line x1="406" y1="56" x2="470" y2="45" stroke="#C8A24A" stroke-width="2"/>
+        <polygon points="476,44 464,42 466,52" fill="#C8A24A"/>
+        <text x="455" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">loses e⁻</text>
+        <text x="430" y="160" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">becomes a positive ion</text>
+      </svg>
+      <div class="caption">Isotopes differ in the nucleus (neutrons); ions differ in their electrons</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — isotopes change neutrons, ions change electrons</h4>
+      <p>An <strong>isotope</strong> is about the <strong>nucleus</strong> — different neutrons, same protons. An <strong>ion</strong> is about the <strong>electrons</strong> — gained or lost, giving a charge. Don't say an isotope "has a charge" (it doesn't) and don't say an ion "is a different element" (it isn't — same protons).</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Two atoms both have 8 protons. Atom X has 8 neutrons; atom Y has 10 neutrons. They are:</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Different elements</span></li>
+        <li><span class="letter">B</span><span>Ions of the same element</span></li>
+        <li><span class="letter">C</span><span>Isotopes of the same element</span></li>
+        <li><span class="letter">D</span><span>Impossible — atoms can't differ like that</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — isotopes.</strong> Same number of protons (8 ⇒ both oxygen) but a different number of neutrons. They have the same chemistry. They are <em>not</em> ions because neither has gained or lost electrons.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define an isotope.</summary><div class="ans">Atoms of the <strong>same element</strong> (same number of protons) with <strong>different numbers of neutrons</strong> — same atomic number, different mass number.</div></details></li>
+      <li><details><summary>An atom is ⁴⁰₁₉K. How many protons, neutrons and electrons does it have?</summary><div class="ans">Protons = 19, neutrons = 40 − 19 = <strong>21</strong>, electrons = 19 (neutral atom).</div></details></li>
+      <li><details><summary>How is an ion different from an atom?</summary><div class="ans">An ion has <strong>lost or gained electrons</strong>, giving it an <strong>overall charge</strong>. Losing electrons → positive; gaining → negative. The nucleus is unchanged.</div></details></li>
+      <li><details><summary>Why do isotopes of an element react in the same way?</summary><div class="ans">They have the <strong>same number of protons and electrons</strong> — and it's the electrons that determine chemical reactions. The extra neutrons make no difference to chemistry.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — RADIOACTIVE DECAY & NUCLEAR RADIATION (4.4.2.1)               -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.4.2.1 · Nuclear radiation</div>
+    <h2 class="lesson-title">Radioactive decay &amp; <em>radiation</em></h2>
+    <p class="lesson-promise">Why some nuclei are unstable, the four types of radiation they give out, and which ones are stopped by paper, aluminium or lead.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Unstable nuclei and the four radiations</h3>
+    <p>Some atoms have <strong>unstable nuclei</strong>. To become more stable they give out radiation — this is <strong>radioactive decay</strong>. Decay is completely <strong>random</strong>: you can't predict <em>which</em> nucleus will decay next, or <em>when</em>. The <strong>activity</strong> of a source is the rate at which nuclei decay, measured in <strong>becquerels (Bq)</strong>, where 1 Bq = 1 decay per second. We measure it with a <strong>Geiger–Müller tube</strong> as a <strong>count-rate</strong> (counts per second).</p>
+    <p>There are four kinds of nuclear radiation you need to know:</p>
+
+    <div class="keywords">
+      <h4>The four nuclear radiations</h4>
+      <dl>
+        <dt>Alpha (α)</dt><dd>A helium nucleus — 2 protons + 2 neutrons. Heavy, +2 charge.</dd>
+        <dt>Beta (β)</dt><dd>A fast-moving electron emitted from the nucleus when a neutron turns into a proton. Charge −1.</dd>
+        <dt>Gamma (γ)</dt><dd>An electromagnetic wave from the nucleus. No mass, no charge.</dd>
+        <dt>Neutron (n)</dt><dd>A neutron emitted from the nucleus. No charge.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Penetration and ionising power</h3>
+    <p>The radiations differ in how far they travel and how strongly they knock electrons off atoms (how <strong>ionising</strong> they are). There's a neat rule: the <strong>more ionising a radiation is, the less penetrating</strong> it is, because it gives up its energy quickly.</p>
+    <p><strong>Alpha</strong> is the <strong>most ionising</strong> but <strong>least penetrating</strong> — stopped by a sheet of <strong>paper</strong> or a few cm of air. <strong>Beta</strong> is moderately ionising and penetrating — stopped by a few mm of <strong>aluminium</strong>. <strong>Gamma</strong> is the <strong>least ionising</strong> but <strong>most penetrating</strong> — only reduced by thick <strong>lead</strong> or metres of concrete.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WHAT STOPS EACH RADIATION</text>
+        <!-- barriers -->
+        <rect x="180" y="55" width="10" height="150" fill="#C8A24A"/>
+        <text x="185" y="225" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">paper</text>
+        <rect x="320" y="55" width="16" height="150" fill="#5C6370"/>
+        <text x="328" y="225" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">aluminium</text>
+        <rect x="460" y="55" width="26" height="150" fill="#1E2761"/>
+        <text x="473" y="225" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">lead</text>
+        <!-- alpha stops at paper -->
+        <line x1="50" y1="90" x2="178" y2="90" stroke="#B85042" stroke-width="3"/>
+        <polygon points="178,90 168,85 168,95" fill="#B85042"/>
+        <text x="40" y="94" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#B85042">α</text>
+        <!-- beta stops at aluminium -->
+        <line x1="50" y1="130" x2="318" y2="130" stroke="#2C5F2D" stroke-width="3"/>
+        <polygon points="318,130 308,125 308,135" fill="#2C5F2D"/>
+        <text x="40" y="134" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#2C5F2D">β</text>
+        <!-- gamma stops (reduced) at lead -->
+        <line x1="50" y1="170" x2="458" y2="170" stroke="#1E2761" stroke-width="3"/>
+        <polygon points="458,170 448,165 448,175" fill="#1E2761"/>
+        <text x="40" y="174" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#1E2761">γ</text>
+      </svg>
+      <div class="caption">Alpha → paper · beta → a few mm aluminium · gamma → thick lead (only reduced, not fully stopped)</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — most ionising ≠ most dangerous in every case</h4>
+      <p>Alpha is the <strong>most ionising</strong> but the <strong>least penetrating</strong> — it can't even get through your skin or paper. So <strong>outside</strong> the body, alpha is fairly harmless, but if a source is <strong>swallowed or breathed in</strong>, alpha is the <em>most</em> dangerous because all that ionising energy is deposited right inside your cells. Don't write that gamma is "the most ionising" — it's the <em>least</em>.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A radiation passes through paper but is stopped by a few mm of aluminium. What is it?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Alpha</span></li>
+        <li><span class="letter">B</span><span>Beta</span></li>
+        <li><span class="letter">C</span><span>Gamma</span></li>
+        <li><span class="letter">D</span><span>Neutron</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — beta.</strong> Alpha would be stopped by the paper; gamma would pass through the aluminium. Only beta passes the paper but is stopped by a few millimetres of aluminium.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What is an alpha particle made of?</summary><div class="ans">Two protons and two neutrons — <strong>the same as a helium nucleus</strong>. Charge +2.</div></details></li>
+      <li><details><summary>What is a beta particle, and where does it come from?</summary><div class="ans">A <strong>fast-moving electron</strong> emitted from the nucleus when a <strong>neutron changes into a proton</strong>. Charge −1.</div></details></li>
+      <li><details><summary>List the three main radiations in order of penetrating power, lowest first.</summary><div class="ans"><strong>Alpha (lowest) → beta → gamma (highest)</strong>. Ionising power is the reverse order.</div></details></li>
+      <li><details><summary>What is meant by the "activity" of a source, and what unit is it measured in?</summary><div class="ans">The <strong>rate at which nuclei decay</strong>, measured in <strong>becquerels (Bq)</strong> — 1 Bq = 1 decay per second.</div></details></li>
+      <li><details><summary>Why is radioactive decay described as random?</summary><div class="ans">You <strong>cannot predict which nucleus will decay next, or when</strong> — but with a large number you can predict the overall rate.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — NUCLEAR EQUATIONS (4.4.2.2)                                   -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.4.2.2 · Nuclear equations</div>
+    <h2 class="lesson-title">Nuclear <em>equations</em></h2>
+    <p class="lesson-promise">How to write down what happens to a nucleus during alpha and beta decay — and the simple "balance both numbers" trick that gets the marks.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The two decays</h3>
+    <p>When a nucleus decays it can change. In a nuclear equation, the totals must <strong>balance</strong>: the mass numbers (top) on each side must be equal, and the atomic numbers (bottom) on each side must be equal.</p>
+    <p><strong>Alpha decay</strong> emits an alpha particle (a helium nucleus, ⁴₂He). The nucleus loses 2 protons and 2 neutrons, so the <strong>mass number falls by 4</strong> and the <strong>atomic number falls by 2</strong>. Because the number of protons changes, it becomes a <strong>different element</strong>.</p>
+    <p><strong>Beta decay</strong> emits a beta particle (an electron, written ⁰₋₁e). Inside the nucleus a <strong>neutron turns into a proton</strong>. So the <strong>mass number does not change</strong>, but the <strong>atomic number rises by 1</strong> — again, a new element.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">HOW THE NUMBERS CHANGE</text>
+        <!-- alpha row -->
+        <text x="40" y="80" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">Alpha decay</text>
+        <text x="200" y="80" font-family="IBM Plex Mono,monospace" font-size="13" fill="#1E2761">mass number −4</text>
+        <text x="400" y="80" font-family="IBM Plex Mono,monospace" font-size="13" fill="#1E2761">atomic number −2</text>
+        <line x1="40" y1="95" x2="520" y2="95" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="3 3"/>
+        <!-- beta row -->
+        <text x="40" y="135" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">Beta decay</text>
+        <text x="200" y="135" font-family="IBM Plex Mono,monospace" font-size="13" fill="#1E2761">mass number same</text>
+        <text x="400" y="135" font-family="IBM Plex Mono,monospace" font-size="13" fill="#1E2761">atomic number +1</text>
+        <line x1="40" y1="150" x2="520" y2="150" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="3 3"/>
+        <!-- gamma row -->
+        <text x="40" y="190" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#5C6370">Gamma only</text>
+        <text x="200" y="190" font-family="IBM Plex Mono,monospace" font-size="13" fill="#5C6370">mass number same</text>
+        <text x="400" y="190" font-family="IBM Plex Mono,monospace" font-size="13" fill="#5C6370">atomic number same</text>
+        <text x="280" y="218" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">gamma carries away energy only — no change to the particles</text>
+      </svg>
+      <div class="caption">Gamma emission alone does not change the mass or atomic number</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Writing and balancing the equations</h3>
+    <p>You write a decay like a chemistry equation, with the parent nucleus on the left and the products on the right. The alpha particle is written as a helium nucleus; the beta particle as an electron.</p>
+
+    <div class="worked">
+      <h4>Worked example — alpha decay of radium</h4>
+      <p class="q">Radium-226 (atomic number 88) decays by emitting an alpha particle. Complete the equation: ²²⁶₈₈Ra → ?  +  ⁴₂He</p>
+      <div class="step"><span class="label">Mass no.</span><span class="v">new mass = 226 − 4 = 222</span></div>
+      <div class="step"><span class="label">Atomic no.</span><span class="v">new atomic = 88 − 2 = 86 (this is radon, Rn)</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">²²⁶₈₈Ra → ²²²₈₆Rn + ⁴₂He</span></div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — beta decay of carbon</h4>
+      <p class="q">Carbon-14 (atomic number 6) decays by emitting a beta particle. Complete: ¹⁴₆C → ?  +  ⁰₋₁e</p>
+      <div class="step"><span class="label">Mass no.</span><span class="v">unchanged: 14 (beta has mass number 0)</span></div>
+      <div class="step"><span class="label">Atomic no.</span><span class="v">6 − (−1) = 7 (this is nitrogen, N)</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">¹⁴₆C → ¹⁴₇N + ⁰₋₁e</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — balance BOTH numbers</h4>
+      <p>The top numbers must add up to the same on both sides, and so must the bottom numbers. For <strong>beta</strong>, the electron's atomic number is <strong>−1</strong>, so the daughter nucleus's atomic number goes <strong>up</strong> by 1 (because subtracting −1 adds 1). A common error is making it go down — check by adding up the bottom row.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A nucleus ²³⁸₉₂U emits an alpha particle. What is the mass number and atomic number of the new nucleus?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Mass 238, atomic 90</span></li>
+        <li><span class="letter">B</span><span>Mass 234, atomic 90</span></li>
+        <li><span class="letter">C</span><span>Mass 234, atomic 91</span></li>
+        <li><span class="letter">D</span><span>Mass 240, atomic 94</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — mass 234, atomic 90.</strong> Alpha decay drops the mass number by 4 (238 − 4 = 234) and the atomic number by 2 (92 − 2 = 90). <em>The new element is thorium.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>How is an alpha particle written in a nuclear equation?</summary><div class="ans">As a helium nucleus: <strong>⁴₂He</strong> (mass number 4, atomic number 2).</div></details></li>
+      <li><details><summary>In beta decay, what happens to the mass number and atomic number of the nucleus?</summary><div class="ans">Mass number stays the <strong>same</strong>; atomic number <strong>increases by 1</strong> (a neutron becomes a proton).</div></details></li>
+      <li><details><summary>Complete: ²¹⁰₈₂Pb → ?  + ⁰₋₁e (beta decay).</summary><div class="ans">Mass stays 210, atomic number 82 + 1 = 83 → <strong>²¹⁰₈₃Bi</strong> (bismuth).</div></details></li>
+      <li><details><summary>Why doesn't emitting a gamma ray change the mass or atomic number?</summary><div class="ans">A gamma ray is an <strong>electromagnetic wave</strong> with no mass and no charge — it carries away energy only, leaving the protons and neutrons unchanged.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — HALF-LIFE (4.4.2.3 / 4.4.2.4)                                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.4.2.3 · Half-life</div>
+    <h2 class="lesson-title">Half-life &amp; <em>exposure</em></h2>
+    <p class="lesson-promise">What half-life means, how to read it off a graph or a table, and the difference between being irradiated and being contaminated.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What half-life means</h3>
+    <p>Because decay is random, we can't say when one nucleus will decay — but with billions of nuclei we can describe the <strong>average</strong> behaviour. The <strong>half-life</strong> is the <strong>time taken for the number of unstable (radioactive) nuclei in a sample to halve</strong>. It is also the time for the <strong>activity (count-rate)</strong> to fall to half its starting value.</p>
+    <p>After each half-life, the activity halves again: from 100% it goes to 50%, then 25%, then 12.5%, and so on. It never quite reaches zero.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ACTIVITY HALVES EACH HALF-LIFE</text>
+        <!-- axes -->
+        <line x1="70" y1="40" x2="70" y2="205" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="70" y1="205" x2="520" y2="205" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="40" y="60" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">100</text>
+        <text x="40" y="125" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">50</text>
+        <text x="40" y="167" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">25</text>
+        <text x="36" y="222" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">time →</text>
+        <text x="30" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370" transform="rotate(-90 30 130)">activity</text>
+        <!-- decay curve -->
+        <path d="M70 55 Q140 75 190 120 T330 165 Q400 180 460 192 L520 197" fill="none" stroke="#B85042" stroke-width="2.5"/>
+        <!-- half-life markers -->
+        <line x1="190" y1="120" x2="190" y2="205" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="70" y1="120" x2="190" y2="120" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="190" y="222" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E2761">1 half-life</text>
+        <line x1="310" y1="163" x2="310" y2="205" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="310" y="222" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E2761">2 half-lives</text>
+      </svg>
+      <div class="caption">A decay curve — read the half-life as the time for activity to fall from 100% to 50%</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — finding half-life from data</h4>
+      <p class="q">A source has an activity of 800 Bq. After 30 minutes the activity has fallen to 100 Bq. Find the half-life.</p>
+      <div class="step"><span class="label">Halvings</span><span class="v">800 → 400 → 200 → 100 = 3 halvings</span></div>
+      <div class="step"><span class="label">Time</span><span class="v">3 half-lives = 30 min</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">half-life = 30 ÷ 3 = 10 minutes</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — count the halvings, not the steps in the question</h4>
+      <p>To find a half-life from data, keep <strong>halving the activity</strong> until you reach the final value, and count how many halvings that took. Then divide the total time by that number. Don't just divide the time by 2 — work out how many times the activity actually halved.</p>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — net decline as a ratio</h4>
+      <p>On Higher tier you may be asked for the <strong>net decline in activity as a ratio</strong> after a given number of half-lives, instead of a percentage.</p>
+      <p>After <em>n</em> half-lives, the remaining fraction is <strong>(½)ⁿ</strong>. So after 3 half-lives, ⅛ of the activity remains. The <strong>ratio of decline</strong> compares what's left to the start — here, <strong>1 : 8</strong> (remaining : original). Equivalently, 7/8 of the original activity has been lost.</p>
+      <p><strong>Example:</strong> after 4 half-lives, remaining = (½)⁴ = 1/16. Net decline ratio = <strong>1 : 16</strong> (15/16 of the activity has decayed away).</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A sample's count-rate falls from 240 to 30 counts/s in 12 hours. What is the half-life?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>3 hours</span></li>
+        <li><span class="letter">B</span><span>4 hours</span></li>
+        <li><span class="letter">C</span><span>6 hours</span></li>
+        <li><span class="letter">D</span><span>12 hours</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 4 hours.</strong> 240 → 120 → 60 → 30 is 3 halvings, in 12 hours. Half-life = 12 ÷ 3 = 4 hours.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Contamination vs irradiation</h3>
+    <p>Two words that examiners deliberately test, because they're easy to confuse.</p>
+    <p><strong>Irradiation</strong> means being <strong>exposed to radiation</strong> from a source <em>outside</em> the body. The object or person does <strong>not</strong> become radioactive — once the source is removed or shielded, the exposure stops.</p>
+    <p><strong>Contamination</strong> is when <strong>radioactive atoms get onto or into</strong> an object (e.g. dust on the skin, or breathing in a radioactive gas). Now the source is <em>with</em> the person and keeps emitting radiation until it's removed or has decayed — which can be a serious hazard.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="150" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">IRRADIATION</text>
+        <text x="410" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">CONTAMINATION</text>
+        <!-- irradiation: source outside, beams to person -->
+        <circle cx="70" cy="110" r="14" fill="#B85042"/>
+        <text x="70" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">source</text>
+        <line x1="86" y1="105" x2="150" y2="95" stroke="#C8A24A" stroke-width="2"/>
+        <line x1="86" y1="115" x2="150" y2="120" stroke="#C8A24A" stroke-width="2"/>
+        <circle cx="180" cy="100" r="12" fill="#1E2761"/>
+        <rect x="172" y="112" width="16" height="34" rx="4" fill="#1E2761"/>
+        <text x="180" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">exposed from outside</text>
+        <!-- contamination: source ON the person -->
+        <circle cx="430" cy="100" r="12" fill="#1E2761"/>
+        <rect x="422" y="112" width="16" height="34" rx="4" fill="#1E2761"/>
+        <circle cx="430" cy="95" r="5" fill="#B85042"/>
+        <circle cx="424" cy="128" r="5" fill="#B85042"/>
+        <circle cx="440" cy="120" r="5" fill="#B85042"/>
+        <text x="430" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">radioactive atoms on/in the body</text>
+      </svg>
+      <div class="caption">Irradiation: the source stays outside. Contamination: the source is on or inside you.</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — irradiation does NOT make you radioactive</h4>
+      <p>Being irradiated does <strong>not</strong> make an object radioactive — a banana left near a gamma source doesn't become a source itself. Only <strong>contamination</strong> means radioactive material is actually present on or in you. Also: scientists' findings on radiation hazards are <strong>checked by peer review</strong> before being accepted.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A worker breathes in some radioactive dust. This is an example of:</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Irradiation — they were exposed to radiation</span></li>
+        <li><span class="letter">B</span><span>Contamination — radioactive atoms are now inside them</span></li>
+        <li><span class="letter">C</span><span>Neither — breathing dust is harmless</span></li>
+        <li><span class="letter">D</span><span>Both contamination and a change of element</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — contamination.</strong> Radioactive atoms are now <em>inside</em> the body and will keep emitting radiation until removed or decayed. Irradiation would mean exposure from a source <em>outside</em> the body that doesn't stay with them.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Define the half-life of a radioactive isotope.</summary><div class="ans">The <strong>time taken for the number of radioactive nuclei (or the activity) of a sample to halve</strong>.</div></details></li>
+      <li><details><summary>A source falls from 600 Bq to 75 Bq in 18 days. Find the half-life.</summary><div class="ans">600 → 300 → 150 → 75 is <strong>3 halvings</strong> in 18 days, so half-life = 18 ÷ 3 = <strong>6 days</strong>.</div></details></li>
+      <li><details><summary>What fraction of the original activity remains after 4 half-lives?</summary><div class="ans">(½)⁴ = <strong>1/16</strong> of the original activity.</div></details></li>
+      <li><details><summary>Explain the difference between irradiation and contamination.</summary><div class="ans"><strong>Irradiation</strong> = exposed to radiation from a source <strong>outside</strong> the body (you don't become radioactive). <strong>Contamination</strong> = radioactive atoms get <strong>onto or into</strong> you and keep emitting.</div></details></li>
+      <li><details><summary>Why can't we predict exactly when a particular nucleus will decay, yet half-life is still useful?</summary><div class="ans">Decay is <strong>random</strong> for a single nucleus, but with a <strong>very large number</strong> of nuclei the average behaviour is predictable — so the half-life is reliable.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Physics Paper 1 · P4 Atomic Structure</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'p4-atomic-structure-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=p4-atomic-structure-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

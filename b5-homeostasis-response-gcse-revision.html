@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homeostasis &amp; Response (B5) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for B5 Homeostasis & Response — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Biology Paper 2 · B5 Homeostasis &amp; Response</div>
+    <h1>Homeostasis, <em>under control.</em></h1>
+    <p class="tag">The whole of B5 — receptors, the nervous system and reflexes, hormones, blood glucose and diabetes, the menstrual cycle, contraception and fertility treatment. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Homeostasis</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Nervous system</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Hormones</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Blood glucose</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Reproduction</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Contraception</a>
+    <a href="#lesson-7" class="nav-pill" data-lesson="7">Infertility</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — HOMEOSTASIS  (4.5.1)                                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.5.1 · Homeostasis</div>
+    <h2 class="lesson-title">Keeping things <em>steady</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what homeostasis is, the three parts of every control system, and how to spot receptors, coordination centres and effectors in any example.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What homeostasis means</h3>
+    <p><strong>Homeostasis</strong> is the regulation of the internal conditions of a cell or organism to keep them roughly constant, in response to internal and external change. Your cells only work well within narrow limits, so the body holds conditions steady.</p>
+    <p>In humans, homeostasis keeps three things under control: <strong>blood glucose concentration</strong>, <strong>body temperature</strong> and <strong>water levels</strong>. Keeping them stable means enzymes and other cell reactions can work at their best.</p>
+
+    <div class="keywords">
+      <h4>The three parts of a control system</h4>
+      <dl>
+        <dt>Receptors</dt><dd>Cells that detect a change in the environment — a stimulus.</dd>
+        <dt>Coordination centre</dt><dd>Receives and processes information, then organises a response. Examples: the brain, spinal cord and pancreas.</dd>
+        <dt>Effectors</dt><dd>Muscles or glands that bring about the response to restore the optimum level.</dd>
+      </dl>
+    </div>
+
+    <p>These automatic control systems may involve <strong>nervous</strong> responses or <strong>chemical (hormonal)</strong> responses. Either way, the order is the same: a receptor detects the change, a coordination centre decides what to do, and an effector carries it out.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE CONTROL SYSTEM</text>
+        <!-- receptor -->
+        <rect x="30" y="55" width="120" height="50" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="90" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">receptor</text>
+        <text x="90" y="95" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">detects change</text>
+        <!-- coordination centre -->
+        <rect x="220" y="55" width="120" height="50" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">coordination</text>
+        <text x="280" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">centre</text>
+        <!-- effector -->
+        <rect x="410" y="55" width="120" height="50" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="470" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">effector</text>
+        <text x="470" y="95" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">muscle or gland</text>
+        <!-- arrows -->
+        <line x1="150" y1="80" x2="212" y2="80" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="218,80 206,74 206,86" fill="#C8A24A"/>
+        <line x1="340" y1="80" x2="402" y2="80" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="408,80 396,74 396,86" fill="#C8A24A"/>
+      </svg>
+      <div class="caption">Stimulus → receptor → coordination centre → effector → response</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — receptor vs effector</h4>
+      <p>A <strong>receptor</strong> <em>detects</em> the change; an <strong>effector</strong> <em>does something about it</em>. Effectors are only ever <strong>muscles</strong> (which contract) or <strong>glands</strong> (which release hormones). Don't write that the brain is an effector — the brain is a coordination centre.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">You touch something hot and pull your hand away. What is the effector?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The temperature receptors in the skin</span></li>
+        <li><span class="letter">B</span><span>The spinal cord</span></li>
+        <li><span class="letter">C</span><span>The muscle in your arm</span></li>
+        <li><span class="letter">D</span><span>The hot object</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — the muscle in your arm.</strong> The effector carries out the response by contracting. A is the receptor (detects the heat); B is the coordination centre; D is just the stimulus.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define homeostasis.</summary><div class="ans">The <strong>regulation of the internal conditions</strong> of a cell or organism to maintain optimum conditions for function, in response to internal and external changes.</div></details></li>
+      <li><details><summary>Name the three internal conditions homeostasis controls in humans.</summary><div class="ans">Blood <strong>glucose</strong> concentration, body <strong>temperature</strong>, and <strong>water</strong> levels.</div></details></li>
+      <li><details><summary>List the three components of a control system in order.</summary><div class="ans"><strong>Receptor</strong> (detects the change) → <strong>coordination centre</strong> (processes it) → <strong>effector</strong> (brings about the response).</div></details></li>
+      <li><details><summary>Why does the body keep internal conditions constant?</summary><div class="ans">So <strong>enzymes</strong> and cell reactions work at their optimum — cells only function within narrow ranges of temperature, pH, glucose and water.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — THE NERVOUS SYSTEM & REFLEXES  (4.5.2.1)  + REQUIRED PRACTICAL -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.5.2 · Nervous system &amp; reflexes</div>
+    <h2 class="lesson-title">The <em>nervous</em> system &amp; reflexes</h2>
+    <p class="lesson-promise">How electrical signals race round your body, why a synapse slows things slightly, and the reflex arc that protects you before you've even thought.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The CNS and neurones</h3>
+    <p>The <strong>nervous system</strong> lets you react to your surroundings and coordinate your behaviour. Information travels as <strong>electrical impulses</strong> along cells called <strong>neurones</strong>.</p>
+    <p>The <strong>central nervous system (CNS)</strong> is the <strong>brain and spinal cord</strong>. The basic pathway is: a stimulus is detected by a <strong>receptor</strong>; an impulse passes along a <strong>sensory neurone</strong> to the CNS; the CNS coordinates a response; an impulse passes along a <strong>motor neurone</strong> to an <strong>effector</strong> (a muscle or gland), which carries out the response.</p>
+
+    <div class="keywords">
+      <h4>Keywords</h4>
+      <dl>
+        <dt>Sensory neurone</dt><dd>Carries impulses from receptors to the CNS.</dd>
+        <dt>Relay neurone</dt><dd>Carries impulses within the CNS (links sensory to motor).</dd>
+        <dt>Motor neurone</dt><dd>Carries impulses from the CNS to an effector.</dd>
+        <dt>Synapse</dt><dd>The tiny gap between two neurones.</dd>
+      </dl>
+    </div>
+
+    <p>Where two neurones meet there's a small gap called a <strong>synapse</strong>. The electrical impulse can't jump the gap, so a <strong>chemical</strong> (a neurotransmitter) is released, diffuses across the gap, and sets off a new electrical impulse in the next neurone. This chemical step is why a synapse slows the signal very slightly.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 140" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ACROSS A SYNAPSE</text>
+        <!-- neurone A -->
+        <rect x="40" y="55" width="180" height="22" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="50" cy="66" r="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="130" y="46" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">electrical impulse →</text>
+        <!-- gap -->
+        <text x="280" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">synapse (gap)</text>
+        <circle cx="248" cy="72" r="3" fill="#B85042"/>
+        <circle cx="263" cy="66" r="3" fill="#B85042"/>
+        <circle cx="278" cy="74" r="3" fill="#B85042"/>
+        <circle cx="293" cy="66" r="3" fill="#B85042"/>
+        <text x="280" y="110" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">chemical diffuses across</text>
+        <!-- neurone B -->
+        <rect x="320" y="55" width="180" height="22" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="510" cy="66" r="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="430" y="46" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">new impulse →</text>
+      </svg>
+      <div class="caption">At a synapse the signal switches from electrical to chemical and back to electrical</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Reflexes</h3>
+    <p><strong>Reflex actions</strong> are automatic and rapid — they do not involve the conscious part of the brain. This makes them fast, and they're important because they protect you from danger (like pulling your hand off a hot pan).</p>
+    <p>The pathway is the <strong>reflex arc</strong>: stimulus → receptor → sensory neurone → <strong>relay neurone</strong> (in the spinal cord) → motor neurone → effector → response. Because the signal goes through the spinal cord and not the conscious brain, it's quicker.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE REFLEX ARC</text>
+        <!-- spinal cord -->
+        <rect x="240" y="40" width="80" height="120" rx="10" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">spinal</text>
+        <text x="280" y="110" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">cord</text>
+        <text x="280" y="124" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">relay neurone</text>
+        <!-- receptor -->
+        <circle cx="55" cy="70" r="16" fill="#B85042"/>
+        <text x="55" y="105" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">receptor</text>
+        <text x="55" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">(skin)</text>
+        <!-- sensory in -->
+        <line x1="71" y1="70" x2="238" y2="70" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="238,70 226,64 226,76" fill="#C8A24A"/>
+        <text x="150" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">sensory neurone</text>
+        <!-- motor out -->
+        <line x1="322" y1="130" x2="489" y2="130" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="489,130 477,124 477,136" fill="#C8A24A"/>
+        <text x="405" y="122" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">motor neurone</text>
+        <!-- effector -->
+        <rect x="490" y="116" width="50" height="30" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="515" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">effector</text>
+        <text x="515" y="173" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">(muscle)</text>
+      </svg>
+      <div class="caption">In a reflex, the impulse passes through the spinal cord — not the conscious brain</div>
+    </div>
+
+    <div class="rp">
+      <h4>Reaction time — the ruler-drop test</h4>
+      <p><strong>Aim:</strong> investigate the effect of a factor (e.g. caffeine, or which hand) on human reaction time.</p>
+      <ol>
+        <li>The person sits with their arm resting on a table, hand over the edge, thumb and finger open.</li>
+        <li>Hold a <strong>ruler</strong> vertically so the zero mark is between their open thumb and finger.</li>
+        <li>Without warning, <strong>drop the ruler</strong>. The person catches it as quickly as they can.</li>
+        <li>Record the <strong>distance the ruler fell</strong> (the cm reading where they caught it). A shorter distance = a faster reaction time.</li>
+        <li>Repeat several times, calculate a <strong>mean</strong>, then change one factor and compare.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> control variables — same person, same hand, same ruler, no warning each time. Repeat and take a mean to reduce the effect of random error. Only change <strong>one variable</strong> at a time so the comparison is fair.</p>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — reflexes skip the brain</h4>
+      <p>The key point about a reflex is that it does <strong>not</strong> involve the conscious part of the brain — that's why it's so fast and automatic. Also: it's the <strong>relay</strong> neurone in the spinal cord that links the sensory and motor neurones, not the brain.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Put the reflex arc in the correct order.</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Receptor → motor → relay → sensory → effector</span></li>
+        <li><span class="letter">B</span><span>Stimulus → receptor → sensory → relay → motor → effector</span></li>
+        <li><span class="letter">C</span><span>Stimulus → effector → relay → receptor → response</span></li>
+        <li><span class="letter">D</span><span>Receptor → brain → motor → effector</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Stimulus → receptor → <em>sensory</em> neurone → <em>relay</em> neurone → <em>motor</em> neurone → effector → response. D is wrong because a reflex goes through the spinal cord, <em>not</em> the conscious brain.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What two organs make up the central nervous system?</summary><div class="ans">The <strong>brain</strong> and the <strong>spinal cord</strong>.</div></details></li>
+      <li><details><summary>Name the three types of neurone and what each does.</summary><div class="ans"><strong>Sensory</strong> — receptor to CNS; <strong>relay</strong> — within the CNS; <strong>motor</strong> — CNS to effector.</div></details></li>
+      <li><details><summary>Describe how a signal crosses a synapse.</summary><div class="ans">A <strong>chemical</strong> (neurotransmitter) is released, <strong>diffuses</strong> across the gap, and triggers a <strong>new electrical impulse</strong> in the next neurone.</div></details></li>
+      <li><details><summary>Why are reflex actions fast?</summary><div class="ans">They are <strong>automatic</strong> and do <strong>not involve the conscious brain</strong>, so there's less distance and processing — the response happens quickly.</div></details></li>
+      <li><details><summary>In the ruler-drop practical, why must you repeat and take a mean?</summary><div class="ans">To reduce the effect of <strong>random error</strong> and give a more <strong>reliable</strong> result you can compare fairly.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — HORMONES & THE ENDOCRINE SYSTEM  (4.5.3.1)                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.5.3 · Endocrine system</div>
+    <h2 class="lesson-title">Hormones &amp; the <em>endocrine</em> system</h2>
+    <p class="lesson-promise">The body's slower, chemical messaging service — the main glands, why the pituitary is the boss, and how this differs from the nervous system.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Chemical messengers</h3>
+    <p>The <strong>endocrine system</strong> is made of <strong>glands</strong> that secrete chemicals called <strong>hormones</strong> directly into the <strong>bloodstream</strong>. The blood carries the hormone to a <strong>target organ</strong>, where it produces an effect.</p>
+    <p>Compared with the nervous system, hormonal effects are <strong>slower</strong> but generally act for <strong>longer</strong>. Nervous responses are fast and short-lived; hormonal responses are slower to start but more lasting.</p>
+
+    <div class="keywords">
+      <h4>The main endocrine glands</h4>
+      <dl>
+        <dt>Pituitary</dt><dd>The "master gland" in the brain — secretes hormones that act on other glands.</dd>
+        <dt>Thyroid</dt><dd>Secretes thyroxine, which controls metabolic rate.</dd>
+        <dt>Pancreas</dt><dd>Controls blood glucose (insulin and glucagon).</dd>
+        <dt>Adrenal glands</dt><dd>Secrete adrenaline (the "fight or flight" response).</dd>
+        <dt>Ovaries / Testes</dt><dd>Secrete oestrogen / testosterone.</dd>
+      </dl>
+    </div>
+
+    <p>The <strong>pituitary gland</strong> is called the <strong>master gland</strong> because it secretes several hormones into the blood in response to body conditions. Many of these hormones act on <em>other</em> glands, telling them to release the hormones the body needs.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">MAIN ENDOCRINE GLANDS</text>
+        <!-- body outline -->
+        <rect x="240" y="35" width="80" height="180" rx="38" fill="#EDF2FA" stroke="#CFD8E3" stroke-width="2"/>
+        <circle cx="280" cy="55" r="22" fill="#EDF2FA" stroke="#CFD8E3" stroke-width="2"/>
+        <!-- pituitary -->
+        <circle cx="280" cy="52" r="6" fill="#B85042"/>
+        <line x1="288" y1="52" x2="400" y2="52" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="406" y="49" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">pituitary</text>
+        <text x="406" y="64" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">master gland</text>
+        <!-- thyroid -->
+        <circle cx="280" cy="88" r="6" fill="#C8A24A"/>
+        <line x1="272" y1="88" x2="160" y2="88" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="154" y="92" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">thyroid</text>
+        <!-- adrenal -->
+        <circle cx="280" cy="128" r="6" fill="#C8A24A"/>
+        <line x1="288" y1="128" x2="400" y2="128" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="406" y="132" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">adrenal glands</text>
+        <!-- pancreas -->
+        <circle cx="280" cy="150" r="6" fill="#2C5F2D"/>
+        <line x1="272" y1="150" x2="160" y2="150" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="154" y="154" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">pancreas</text>
+        <!-- ovaries/testes -->
+        <circle cx="280" cy="190" r="6" fill="#B85042"/>
+        <line x1="288" y1="190" x2="400" y2="190" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="406" y="194" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">ovaries / testes</text>
+      </svg>
+      <div class="caption">Glands secrete hormones into the blood, which carries them to target organs</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — hormones travel in the blood</h4>
+      <p>Hormones are carried in the <strong>bloodstream</strong>, not along nerves. So the nervous system uses <strong>electrical impulses</strong> (fast, short); the endocrine system uses <strong>chemical hormones in the blood</strong> (slower, longer-lasting). Don't say a hormone "travels along a neurone".</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why is the pituitary gland called the "master gland"?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It is the largest gland in the body</span></li>
+        <li><span class="letter">B</span><span>It secretes hormones that act on other glands, controlling them</span></li>
+        <li><span class="letter">C</span><span>It makes all the hormones in the body</span></li>
+        <li><span class="letter">D</span><span>It controls the nervous system</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The pituitary secretes hormones that act on <em>other</em> glands, making them release their own hormones — so it coordinates the whole endocrine system. It doesn't make every hormone (C is wrong).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is a hormone, and how does it travel to its target?</summary><div class="ans">A <strong>chemical messenger</strong> secreted by a gland into the <strong>blood</strong>, which carries it to a <strong>target organ</strong>.</div></details></li>
+      <li><details><summary>Give two differences between nervous and hormonal responses.</summary><div class="ans">Nervous: <strong>fast</strong> and <strong>short-lived</strong>, electrical impulses along neurones. Hormonal: <strong>slower</strong> but <strong>longer-lasting</strong>, chemicals carried in the blood.</div></details></li>
+      <li><details><summary>Which gland is the "master gland" and where is it?</summary><div class="ans">The <strong>pituitary gland</strong>, in the <strong>brain</strong>. It controls other glands.</div></details></li>
+      <li><details><summary>Name the hormone-secreting role of the pancreas, thyroid and adrenal glands.</summary><div class="ans">Pancreas — controls <strong>blood glucose</strong>; thyroid — <strong>thyroxine</strong> (metabolic rate); adrenal — <strong>adrenaline</strong> (fight or flight).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — CONTROLLING BLOOD GLUCOSE  (4.5.3.2)  + HT FLAG               -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.5.3 · Blood glucose</div>
+    <h2 class="lesson-title">Controlling <em>blood glucose</em></h2>
+    <p class="lesson-promise">How insulin keeps your blood sugar in check, what goes wrong in type 1 and type 2 diabetes — and, on Higher tier, how glucagon completes the loop.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Insulin lowers blood glucose</h3>
+    <p>The blood glucose concentration is monitored and controlled by the <strong>pancreas</strong>. After you eat, glucose from digested food is absorbed into the blood and the concentration <strong>rises</strong>.</p>
+    <p>If blood glucose is <strong>too high</strong>, the pancreas secretes the hormone <strong>insulin</strong>. Insulin causes glucose to move from the blood into the <strong>liver and muscle cells</strong>. In the liver and muscles, excess glucose is stored as <strong>glycogen</strong>. This lowers the blood glucose concentration back to normal.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WHEN BLOOD GLUCOSE IS TOO HIGH</text>
+        <!-- high glucose -->
+        <rect x="30" y="55" width="120" height="50" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="90" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">glucose too</text>
+        <text x="90" y="94" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">high</text>
+        <!-- pancreas -->
+        <rect x="220" y="55" width="120" height="50" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">pancreas</text>
+        <text x="280" y="94" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">releases insulin</text>
+        <!-- liver -->
+        <rect x="410" y="55" width="120" height="50" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="470" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">liver &amp; muscles</text>
+        <text x="470" y="90" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">store glycogen</text>
+        <!-- arrows -->
+        <line x1="150" y1="80" x2="212" y2="80" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="218,80 206,74 206,86" fill="#C8A24A"/>
+        <line x1="340" y1="80" x2="402" y2="80" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="408,80 396,74 396,86" fill="#C8A24A"/>
+        <text x="280" y="138" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">insulin → glucose moves into cells → blood glucose falls</text>
+      </svg>
+      <div class="caption">Insulin lowers blood glucose by moving it into cells, stored as glycogen</div>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — glucagon and negative feedback</h4>
+      <p>If blood glucose gets <strong>too low</strong>, the pancreas secretes a different hormone, <strong>glucagon</strong>. Glucagon causes <strong>glycogen</strong> stored in the liver to be converted back into <strong>glucose</strong>, which is released into the blood. This raises the blood glucose concentration.</p>
+      <p>Insulin and glucagon work as an opposing pair in a <strong>negative feedback</strong> cycle: a change in one direction triggers a response that brings the level back the other way, holding blood glucose steady.</p>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — glycogen vs glucose vs glucagon</h4>
+      <p>Three similar words: <strong>glucose</strong> is the sugar in the blood; <strong>glycogen</strong> is the storage molecule in the liver and muscles; <strong>glucagon</strong> is the hormone that converts glycogen back to glucose. Mixing them up is one of the most common exam slips here.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Diabetes</h3>
+    <p><strong>Type 1 diabetes</strong> is a disorder where the <strong>pancreas fails to produce enough insulin</strong>, so blood glucose can rise dangerously high. It is normally controlled with <strong>insulin injections</strong>.</p>
+    <p><strong>Type 2 diabetes</strong> is where the <strong>body cells no longer respond properly to insulin</strong>. <strong>Obesity</strong> is a risk factor. It is commonly treated with a <strong>carbohydrate-controlled diet</strong> and an <strong>exercise regime</strong>.</p>
+
+    <div class="keywords">
+      <h4>Type 1 vs type 2</h4>
+      <dl>
+        <dt>Type 1</dt><dd>Pancreas doesn't make enough insulin. Treated with insulin injections.</dd>
+        <dt>Type 2</dt><dd>Cells stop responding to insulin. Risk factor: obesity. Treated by diet and exercise.</dd>
+      </dl>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A person's pancreas no longer makes insulin. Which condition is this, and how is it usually treated?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Type 2 — treated by diet only</span></li>
+        <li><span class="letter">B</span><span>Type 1 — treated with insulin injections</span></li>
+        <li><span class="letter">C</span><span>Type 2 — treated with insulin injections</span></li>
+        <li><span class="letter">D</span><span>Type 1 — treated with exercise only</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — Type 1, treated with insulin injections.</strong> Type 1 is when the pancreas fails to make enough insulin. Type 2 (where cells stop responding to insulin) is usually managed by diet and exercise.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Which organ monitors and controls blood glucose?</summary><div class="ans">The <strong>pancreas</strong>.</div></details></li>
+      <li><details><summary>What does insulin do when blood glucose is too high?</summary><div class="ans">It causes glucose to move from the blood into <strong>liver and muscle cells</strong>, where it's stored as <strong>glycogen</strong>, lowering blood glucose.</div></details></li>
+      <li><details><summary>[HT] What does glucagon do when blood glucose is too low?</summary><div class="ans">It causes <strong>glycogen</strong> in the liver to be converted back into <strong>glucose</strong>, which is released into the blood to raise the concentration.</div></details></li>
+      <li><details><summary>State the cause of type 1 diabetes and its treatment.</summary><div class="ans">The <strong>pancreas doesn't make enough insulin</strong>; treated with <strong>insulin injections</strong>.</div></details></li>
+      <li><details><summary>Give one risk factor for type 2 diabetes and how it's treated.</summary><div class="ans">Risk factor: <strong>obesity</strong>. Treated with a <strong>carbohydrate-controlled diet</strong> and <strong>exercise</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — HORMONES IN REPRODUCTION  (4.5.3.4 / 4.5.3.5)  + HT FLAG      -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.5.3 · Reproduction</div>
+    <h2 class="lesson-title">Hormones in <em>reproduction</em></h2>
+    <p class="lesson-promise">The hormones behind puberty and the monthly menstrual cycle — the four you must name, and on Higher tier how they interact to control it.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Puberty &amp; the main sex hormones</h3>
+    <p>During puberty, reproductive hormones cause secondary sex characteristics to develop. <strong>Testosterone</strong> is the main male reproductive hormone, produced by the <strong>testes</strong>; it stimulates sperm production. <strong>Oestrogen</strong> is the main female reproductive hormone, produced by the <strong>ovaries</strong>.</p>
+    <p>At puberty, eggs begin to mature and one is released about every 28 days — this is <strong>ovulation</strong>. The monthly release of an egg and the build-up and breakdown of the uterus lining is the <strong>menstrual cycle</strong>.</p>
+
+    <div class="keywords">
+      <h4>The four menstrual-cycle hormones</h4>
+      <dl>
+        <dt>FSH (follicle stimulating hormone)</dt><dd>From the pituitary — causes an egg to mature in the ovary.</dd>
+        <dt>LH (luteinising hormone)</dt><dd>From the pituitary — triggers the release of the egg (ovulation).</dd>
+        <dt>Oestrogen</dt><dd>From the ovaries — builds up the lining of the uterus.</dd>
+        <dt>Progesterone</dt><dd>From the ovaries — maintains the lining of the uterus.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ONE 28-DAY CYCLE</text>
+        <!-- timeline -->
+        <line x1="50" y1="100" x2="510" y2="100" stroke="#CFD8E3" stroke-width="2"/>
+        <text x="50" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">day 1</text>
+        <text x="510" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">day 28</text>
+        <!-- menstruation -->
+        <rect x="50" y="92" width="65" height="16" fill="#B85042"/>
+        <text x="82" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#B85042">period</text>
+        <!-- ovulation marker -->
+        <circle cx="280" cy="100" r="9" fill="#C8A24A"/>
+        <line x1="280" y1="91" x2="280" y2="55" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="280" y="48" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">ovulation (~day 14)</text>
+        <!-- lining build -->
+        <text x="400" y="135" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#2C5F2D">lining maintained</text>
+      </svg>
+      <div class="caption">Ovulation is around day 14; the uterus lining builds up, ready for a fertilised egg</div>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — how the four hormones interact</h4>
+      <p><strong>FSH</strong> (from the pituitary) makes an egg mature and <strong>stimulates the ovaries to produce oestrogen</strong>. Rising <strong>oestrogen</strong> builds the uterus lining and <strong>inhibits FSH</strong> while <strong>stimulating the release of LH</strong>. <strong>LH</strong> (from the pituitary) then triggers <strong>ovulation</strong> at around day 14. After ovulation, <strong>progesterone</strong> is produced, which <strong>maintains the lining</strong> and <strong>inhibits both FSH and LH</strong>. When progesterone falls, the lining breaks down and the cycle begins again.</p>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — which gland makes which hormone</h4>
+      <p>A classic trap: <strong>FSH and LH come from the pituitary gland</strong>; <strong>oestrogen and progesterone come from the ovaries</strong>. Remember the meaning: <strong>FSH</strong> = <em>Follicle</em> (matures the egg); <strong>LH</strong> = the one that triggers re<em>L</em>ease (ovulation).</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which hormone triggers the release of an egg (ovulation)?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>FSH</span></li>
+        <li><span class="letter">B</span><span>Oestrogen</span></li>
+        <li><span class="letter">C</span><span>LH</span></li>
+        <li><span class="letter">D</span><span>Progesterone</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — LH.</strong> Luteinising hormone triggers ovulation. FSH matures the egg; oestrogen builds the uterus lining; progesterone maintains it.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the main male and female reproductive hormones and where each is made.</summary><div class="ans"><strong>Testosterone</strong> from the <strong>testes</strong>; <strong>oestrogen</strong> from the <strong>ovaries</strong>.</div></details></li>
+      <li><details><summary>State the role of FSH and the role of LH.</summary><div class="ans"><strong>FSH</strong> — matures an egg in the ovary; <strong>LH</strong> — triggers ovulation (release of the egg).</div></details></li>
+      <li><details><summary>What do oestrogen and progesterone do to the uterus lining?</summary><div class="ans"><strong>Oestrogen</strong> builds it up; <strong>progesterone</strong> maintains it.</div></details></li>
+      <li><details><summary>[HT] How does oestrogen affect FSH and LH?</summary><div class="ans">Rising oestrogen <strong>inhibits FSH</strong> and <strong>stimulates the release of LH</strong>, which then causes ovulation.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — CONTRACEPTION  (4.5.3.5)                                      -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.5.3 · Contraception</div>
+    <h2 class="lesson-title"><em>Contraception</em></h2>
+    <p class="lesson-promise">How fertility can be reduced — the hormonal methods that work on the menstrual cycle, and the non-hormonal methods that simply block the sperm.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Hormonal methods</h3>
+    <p>Fertility can be controlled by a variety of methods of <strong>contraception</strong>. <strong>Hormonal methods</strong> use hormones to stop eggs maturing or being released.</p>
+    <p>Oral contraceptives (the "pill") contain hormones such as <strong>oestrogen</strong> and/or <strong>progesterone</strong>. Oestrogen, taken every day, can <strong>inhibit FSH</strong> so that no eggs mature. <strong>Progesterone</strong> reduces fertility too — for example by causing the production of thick mucus that stops sperm reaching an egg.</p>
+
+    <div class="keywords">
+      <h4>Hormonal methods</h4>
+      <dl>
+        <dt>The pill</dt><dd>Oral hormones (oestrogen/progesterone) that stop eggs maturing.</dd>
+        <dt>Injection, implant or patch</dt><dd>Slow-release progesterone that lasts months to years.</dd>
+        <dt>How they work</dt><dd>Inhibit FSH so eggs don't mature; thicken mucus to block sperm.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">HOW THE PILL WORKS</text>
+        <!-- oestrogen -->
+        <rect x="40" y="55" width="130" height="50" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="105" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">oestrogen daily</text>
+        <text x="105" y="94" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">in the pill</text>
+        <!-- inhibits FSH -->
+        <rect x="225" y="55" width="130" height="50" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="290" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">FSH inhibited</text>
+        <text x="290" y="94" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">no egg matures</text>
+        <!-- no ovulation -->
+        <rect x="410" y="55" width="130" height="50" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="475" y="84" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">no ovulation</text>
+        <!-- arrows -->
+        <line x1="170" y1="80" x2="217" y2="80" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="223,80 211,74 211,86" fill="#C8A24A"/>
+        <line x1="355" y1="80" x2="402" y2="80" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="408,80 396,74 396,86" fill="#C8A24A"/>
+      </svg>
+      <div class="caption">Oestrogen inhibits FSH, so no egg matures and ovulation is prevented</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Non-hormonal methods</h3>
+    <p><strong>Non-hormonal methods</strong> don't change the menstrual cycle — they physically stop the sperm and egg meeting.</p>
+    <p>These include <strong>barrier methods</strong> such as condoms and diaphragms, which stop sperm reaching an egg (a condom also helps prevent the spread of sexually transmitted infections). <strong>Intrauterine devices (IUDs)</strong> are placed in the uterus to prevent implantation; some also release a hormone. <strong>Spermicides</strong> kill or disable sperm. <strong>Surgical sterilisation</strong> cuts or ties the tubes that carry sperm or eggs. <strong>Abstinence</strong> — not having intercourse, especially around ovulation — also avoids pregnancy.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — hormonal vs barrier</h4>
+      <p>A common exam trap: only <strong>condoms (and other barriers used properly)</strong> protect against <strong>STIs</strong> — the pill does not. And remember hormonal methods <em>change the menstrual cycle</em>, whereas barrier methods simply <em>block the sperm physically</em>. Be ready to evaluate (advantages vs disadvantages), not just list.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which of these is a non-hormonal method of contraception?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The contraceptive pill</span></li>
+        <li><span class="letter">B</span><span>A progesterone implant</span></li>
+        <li><span class="letter">C</span><span>A condom</span></li>
+        <li><span class="letter">D</span><span>A contraceptive injection</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — a condom.</strong> It's a barrier method that physically stops sperm reaching the egg (and helps prevent STIs). The pill, implant and injection are all hormonal methods.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>How does oestrogen in the pill prevent pregnancy?</summary><div class="ans">Taken daily it <strong>inhibits FSH</strong>, so no eggs mature — there is no ovulation.</div></details></li>
+      <li><details><summary>Give two non-hormonal methods of contraception.</summary><div class="ans">Any two of: <strong>condom</strong>, diaphragm, <strong>IUD</strong>, spermicide, sterilisation, abstinence.</div></details></li>
+      <li><details><summary>Which method also protects against sexually transmitted infections?</summary><div class="ans">A <strong>condom</strong> (a barrier method) — the hormonal pill does not.</div></details></li>
+      <li><details><summary>State one advantage and one disadvantage of the contraceptive pill.</summary><div class="ans">Advantage: very <strong>effective</strong> at preventing pregnancy. Disadvantage: can have <strong>side effects</strong> and gives <strong>no protection against STIs</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 7 — TREATING INFERTILITY  (4.5.3.6)                              -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-7">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 07 · 4.5.3 · Infertility</div>
+    <h2 class="lesson-title">Treating <em>infertility</em></h2>
+    <p class="lesson-promise">How hormones can help people who can't conceive — fertility drugs and IVF — and how to weigh up the benefits against the drawbacks.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Fertility drugs &amp; IVF</h3>
+    <p>If a woman doesn't produce enough <strong>FSH</strong>, eggs may not mature, so she can't get pregnant. <strong>FSH and LH</strong> can be given as a <strong>fertility drug</strong> to stimulate eggs to mature and be released — this can help her become pregnant naturally.</p>
+    <p><strong>IVF (in vitro fertilisation)</strong> is used when other treatments don't work. The steps are:</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE IVF PROCESS</text>
+        <!-- step 1 -->
+        <rect x="20" y="55" width="120" height="55" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="80" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">FSH + LH</text>
+        <text x="80" y="94" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">mature eggs</text>
+        <!-- step 2 -->
+        <rect x="160" y="55" width="120" height="55" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="220" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">collect eggs</text>
+        <text x="220" y="94" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">fertilise in lab</text>
+        <!-- step 3 -->
+        <rect x="300" y="55" width="120" height="55" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="360" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">grow embryos</text>
+        <text x="360" y="94" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">to small ball</text>
+        <!-- step 4 -->
+        <rect x="440" y="55" width="110" height="55" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="495" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">insert into</text>
+        <text x="495" y="92" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">uterus</text>
+        <!-- arrows -->
+        <line x1="140" y1="82" x2="156" y2="82" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="160,82 150,77 150,87" fill="#C8A24A"/>
+        <line x1="280" y1="82" x2="296" y2="82" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="300,82 290,77 290,87" fill="#C8A24A"/>
+        <line x1="420" y1="82" x2="436" y2="82" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="440,82 430,77 430,87" fill="#C8A24A"/>
+      </svg>
+      <div class="caption">IVF: hormones mature eggs → eggs collected and fertilised → embryos grown → inserted into the uterus</div>
+    </div>
+
+    <div class="worked">
+      <h4>The IVF steps, in order</h4>
+      <p class="q">A six-mark question often asks you to "describe the stages of IVF". Use this order.</p>
+      <div class="step"><span class="label">Step 1</span><span class="v">The mother is given FSH and LH to stimulate the maturation of several eggs.</span></div>
+      <div class="step"><span class="label">Step 2</span><span class="v">The eggs are collected and fertilised by sperm from the father in the laboratory.</span></div>
+      <div class="step"><span class="label">Step 3</span><span class="v">The fertilised eggs develop into embryos (small balls of cells).</span></div>
+      <div class="step answer"><span class="label">Step 4</span><span class="v">One or two embryos are inserted into the mother's uterus (womb).</span></div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Evaluating IVF</h3>
+    <p>IVF is a good example of where you're asked to <strong>evaluate</strong> a treatment — give the benefits, the drawbacks, and a justified conclusion.</p>
+
+    <div class="worked">
+      <h4>How to evaluate IVF</h4>
+      <p class="q">"Evaluate the use of IVF as a fertility treatment." (How to structure it.)</p>
+      <div class="step"><span class="label">For</span><span class="v">Gives infertile couples the chance of a baby of their own.</span></div>
+      <div class="step"><span class="label">Against</span><span class="v">Emotionally and physically stressful; success rates are often low; can lead to multiple births (a risk to mother and babies); expensive. Some people have ethical objections to discarding unused embryos.</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">Give a justified judgement — e.g. worthwhile for many couples, but the low success rate and risks must be weighed up.</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "evaluate" needs both sides</h4>
+      <p>An <strong>evaluate</strong> question wants <strong>advantages and disadvantages</strong> <em>and</em> a conclusion. Listing only the good points won't get full marks. Useful drawbacks to remember: <strong>low success rate</strong>, <strong>multiple births</strong>, emotional/physical stress, and the <strong>ethical</strong> issue of unused embryos.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A woman doesn't make enough FSH, so her eggs don't mature. Which is the simplest treatment to try first?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>A full course of IVF</span></li>
+        <li><span class="letter">B</span><span>A fertility drug containing FSH (and LH)</span></li>
+        <li><span class="letter">C</span><span>The contraceptive pill</span></li>
+        <li><span class="letter">D</span><span>An insulin injection</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — a fertility drug with FSH (and LH).</strong> This stimulates her own eggs to mature and be released, so she may conceive naturally. IVF is used only if simpler treatments don't work.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 7 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>How can a fertility drug help a woman who isn't producing enough FSH?</summary><div class="ans">Giving <strong>FSH and LH</strong> stimulates eggs to <strong>mature and be released</strong>, so she may become pregnant naturally.</div></details></li>
+      <li><details><summary>What do the letters IVF stand for?</summary><div class="ans"><strong>In vitro fertilisation</strong> — eggs are fertilised outside the body, in the lab.</div></details></li>
+      <li><details><summary>Describe the four main steps of IVF.</summary><div class="ans">1) Give FSH/LH to mature eggs; 2) collect eggs and fertilise with sperm in the lab; 3) grow into <strong>embryos</strong>; 4) insert one or two into the <strong>uterus</strong>.</div></details></li>
+      <li><details><summary>Give two disadvantages of IVF.</summary><div class="ans">Any two of: <strong>low success rate</strong>, risk of <strong>multiple births</strong>, emotionally/physically stressful, expensive, ethical concerns over unused embryos.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="7">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Biology Paper 2 · B5 Homeostasis &amp; Response</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'b5-homeostasis-response-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=b5-homeostasis-response-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

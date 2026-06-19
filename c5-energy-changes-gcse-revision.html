@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Changes (C5) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for C5 Energy Changes — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Chemistry Paper 1 · C5 Energy Changes</div>
+    <h1>Energy changes, <em>for the exam.</em></h1>
+    <p class="tag">The whole of C5 — exothermic and endothermic reactions, measuring temperature change, reaction profiles and bond energies. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Exo &amp; endothermic</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Measuring ΔT</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Reaction profiles</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Bond energies</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — EXOTHERMIC & ENDOTHERMIC REACTIONS (5.5.1.1)                  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · C5 · Exothermic &amp; endothermic</div>
+    <h2 class="lesson-title">Exothermic &amp; <em>endothermic</em> reactions</h2>
+    <p class="lesson-promise">By the end of this topic you'll tell the two types apart from a temperature change, give real examples of each, and stop muddling up which way the heat goes.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Two ways energy can move</h3>
+    <p>Every chemical reaction involves an <strong>energy change</strong> with the surroundings — almost always you notice it as a <strong>temperature change</strong>. There are only two possibilities, and the names tell you everything.</p>
+    <p>An <strong>exothermic</strong> reaction <strong>transfers energy to the surroundings</strong>, so the temperature of the surroundings goes <strong>up</strong>. ("Exo" = exit — energy exits the reaction.) An <strong>endothermic</strong> reaction <strong>takes in energy from the surroundings</strong>, so the temperature of the surroundings goes <strong>down</strong>. ("Endo" = into — energy goes into the reaction.)</p>
+
+    <div class="keywords">
+      <h4>Know these examples</h4>
+      <dl>
+        <dt>Exothermic</dt><dd>Combustion (burning), neutralisation (acid + alkali), most oxidation reactions, and many displacement reactions. The mixture gets warmer.</dd>
+        <dt>Endothermic</dt><dd>Thermal decomposition (e.g. heating a metal carbonate) and the reaction of citric acid with sodium hydrogencarbonate. The mixture gets colder.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WHICH WAY DOES THE HEAT GO?</text>
+        <!-- exothermic panel -->
+        <rect x="40" y="44" width="220" height="150" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+        <text x="150" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">EXOTHERMIC</text>
+        <circle cx="150" cy="120" r="30" fill="#fff" stroke="#B85042" stroke-width="2"/>
+        <text x="150" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">reaction</text>
+        <!-- arrows out -->
+        <line x1="180" y1="105" x2="222" y2="90" stroke="#B85042" stroke-width="2.5"/>
+        <polygon points="226,88 214,87 219,97" fill="#B85042"/>
+        <line x1="180" y1="135" x2="222" y2="150" stroke="#B85042" stroke-width="2.5"/>
+        <polygon points="226,152 214,153 219,143" fill="#B85042"/>
+        <text x="150" y="180" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">surroundings warm UP</text>
+        <!-- endothermic panel -->
+        <rect x="300" y="44" width="220" height="150" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="410" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">ENDOTHERMIC</text>
+        <circle cx="410" cy="120" r="30" fill="#fff" stroke="#1E2761" stroke-width="2"/>
+        <text x="410" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">reaction</text>
+        <!-- arrows in -->
+        <line x1="338" y1="90" x2="380" y2="105" stroke="#1E2761" stroke-width="2.5"/>
+        <polygon points="383,107 371,104 377,114" fill="#1E2761"/>
+        <line x1="338" y1="150" x2="380" y2="135" stroke="#1E2761" stroke-width="2.5"/>
+        <polygon points="383,133 371,136 377,126" fill="#1E2761"/>
+        <text x="410" y="180" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761">surroundings cool DOWN</text>
+      </svg>
+      <div class="caption">Exothermic gives energy out (warms up); endothermic takes energy in (cools down)</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "surroundings", not "the reaction"</h4>
+      <p>The temperature you measure is the <strong>surroundings</strong> (the solution, the test tube, the air). In an <strong>exothermic</strong> reaction the surroundings get <strong>hotter</strong>; in an <strong>endothermic</strong> one they get <strong>colder</strong>. Don't say "the reaction gets hot" — say energy is transferred <strong>to the surroundings</strong>. And note: exothermic does <em>not</em> mean fast, and endothermic does <em>not</em> mean slow — that's a different idea.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A student mixes two solutions and the thermometer reading <em>falls</em> from 21 °C to 14 °C. The reaction is:</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Exothermic — it gave out energy</span></li>
+        <li><span class="letter">B</span><span>Endothermic — it took in energy from the surroundings</span></li>
+        <li><span class="letter">C</span><span>Exothermic — combustion always warms up</span></li>
+        <li><span class="letter">D</span><span>Neither — no energy changed</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The temperature <em>fell</em>, so energy was taken <strong>in</strong> from the surroundings — that's <strong>endothermic</strong>. A falling temperature can never be exothermic, which rules out A and C. <em>The reading dropped by 7 °C — energy clearly moved.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Everyday uses</h3>
+    <p>These energy changes are genuinely useful. We package them up into <strong>hand warmers</strong> and <strong>cold packs</strong>.</p>
+    <p>A <strong>self-heating hand warmer</strong> uses an <strong>exothermic</strong> reaction (for example the oxidation of iron) to release energy and warm your hands. A <strong>sports cold pack</strong> (instant ice pack) uses an <strong>endothermic</strong> process — a salt such as ammonium nitrate dissolving in water takes in energy, so the pack goes cold and can be pressed onto an injury.</p>
+
+    <div class="worked">
+      <h4>Worked example — naming the type from a use</h4>
+      <p class="q">An instant cold pack is squeezed; the chemicals mix and it turns icy cold. State whether the change is exothermic or endothermic and explain how you know.</p>
+      <div class="step"><span class="label">Observe</span><span class="v">The pack gets colder — its surroundings lose energy.</span></div>
+      <div class="step"><span class="label">Reason</span><span class="v">Energy is taken IN from the surroundings to drive the change.</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">Endothermic — energy is absorbed, so the temperature falls.</span></div>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define an exothermic reaction in terms of energy and the surroundings.</summary><div class="ans">A reaction that <strong>transfers energy to the surroundings</strong>, so the temperature of the surroundings <strong>increases</strong>.</div></details></li>
+      <li><details><summary>Give two examples of exothermic reactions.</summary><div class="ans">Any two of: <strong>combustion</strong> (burning), <strong>neutralisation</strong>, oxidation reactions, many displacement reactions.</div></details></li>
+      <li><details><summary>Name an everyday use of an endothermic process and the type of substance involved.</summary><div class="ans">A <strong>sports cold pack</strong> (instant ice pack) — a salt such as ammonium nitrate dissolving in water takes in energy, so it goes cold.</div></details></li>
+      <li><details><summary>A neutralisation reaction warms the beaker from 18 °C to 27 °C. Is it exothermic or endothermic?</summary><div class="ans"><strong>Exothermic</strong> — the temperature rose, so energy was transferred <strong>out</strong> to the surroundings.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — MEASURING TEMPERATURE CHANGE (5.5.1.1) + REQUIRED PRACTICAL   -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · C5 · Measuring temperature change</div>
+    <h2 class="lesson-title">Measuring the <em>temperature</em> change</h2>
+    <p class="lesson-promise">The required practical — how to measure an energy change and which variables you can fairly investigate.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The idea behind the experiment</h3>
+    <p>To find out how much energy a reaction releases or takes in, you measure the <strong>temperature change</strong> of the solution. A bigger temperature rise means a more <strong>exothermic</strong> reaction; a temperature fall means an <strong>endothermic</strong> one.</p>
+    <p>You can investigate what <strong>affects</strong> the size of the temperature change — for example the <strong>concentration</strong> of an acid, the <strong>type of metal</strong> in a displacement reaction, the <strong>mass</strong> or <strong>type of substance</strong> used, or the <strong>volume</strong> of solution. To keep it a fair test, you change <strong>one variable</strong> at a time and keep the others the same.</p>
+
+    <div class="keywords">
+      <h4>Variables for this practical</h4>
+      <dl>
+        <dt>Independent</dt><dd>The one you change — e.g. acid concentration, or which metal you add.</dd>
+        <dt>Dependent</dt><dd>What you measure — the temperature change (Δθ) of the solution.</dd>
+        <dt>Control</dt><dd>Kept the same — volume of solution, starting temperature, same cup and insulation.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — record the change, not just the highest reading</h4>
+      <p>The result you want is the <strong>temperature change</strong>: highest (or lowest) temperature <strong>minus</strong> the starting temperature. Always take the <strong>starting temperature first</strong>. A polystyrene cup with a lid is used because it's a good <strong>insulator</strong> — it cuts down energy transferred to the surroundings, so your reading is more accurate.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The required practical</h3>
+
+    <div class="rp">
+      <h4>Temperature changes in reacting solutions</h4>
+      <p><strong>Aim:</strong> investigate the variables that affect the temperature change in reacting solutions, e.g. neutralisation (acid + alkali) or a displacement reaction.</p>
+      <ol>
+        <li>Use a measuring cylinder to add a known <strong>volume</strong> of one solution (e.g. 30 cm³ of hydrochloric acid) to a <strong>polystyrene cup standing in a beaker</strong> for support.</li>
+        <li>Measure and record the <strong>starting temperature</strong> with a thermometer.</li>
+        <li>Add the second reactant (e.g. sodium hydroxide solution), put on the <strong>lid</strong>, and stir gently.</li>
+        <li>Record the <strong>highest</strong> temperature reached (or lowest, if endothermic).</li>
+        <li>Calculate the temperature change: <span class="formula">Δθ = highest − starting</span></li>
+        <li><strong>Repeat</strong>, changing only your chosen variable (e.g. a higher acid concentration), keeping everything else the same.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> use a <strong>lid</strong> and an insulated <strong>polystyrene cup</strong> to reduce energy lost to the surroundings, and <strong>repeat</strong> each measurement to spot anomalies and find a mean. Keep the volume of solution constant so the comparison is fair.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">INSULATED CUP CALORIMETER</text>
+        <!-- outer beaker support -->
+        <path d="M170 90 L180 200 L380 200 L390 90" fill="none" stroke="#CFD8E3" stroke-width="2"/>
+        <!-- polystyrene cup -->
+        <path d="M200 96 L210 188 L350 188 L360 96 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- liquid -->
+        <path d="M208 130 L214 184 L346 184 L352 130 Z" fill="#F4DAD7"/>
+        <text x="280" y="165" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">reacting solutions</text>
+        <!-- lid -->
+        <rect x="196" y="88" width="168" height="10" rx="3" fill="#1E2761"/>
+        <!-- thermometer -->
+        <rect x="276" y="40" width="8" height="100" fill="#2C5F2D"/>
+        <circle cx="280" cy="144" r="6" fill="#2C5F2D"/>
+        <!-- leaders -->
+        <line x1="364" y1="93" x2="450" y2="80" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="456" y="84" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">lid (cuts heat loss)</text>
+        <line x1="360" y1="130" x2="450" y2="130" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="456" y="134" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">polystyrene cup</text>
+        <line x1="284" y1="60" x2="395" y2="50" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="401" y="54" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">thermometer</text>
+      </svg>
+      <div class="caption">A polystyrene cup with a lid keeps energy in, so the temperature change is measured fairly</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why is the reaction carried out in a polystyrene cup with a lid rather than a glass beaker?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Polystyrene reacts with the acid to speed things up</span></li>
+        <li><span class="letter">B</span><span>It's a good insulator, so less energy is transferred to the surroundings</span></li>
+        <li><span class="letter">C</span><span>It makes the reaction more exothermic</span></li>
+        <li><span class="letter">D</span><span>Glass is too heavy to put on a balance</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Polystyrene is a good <strong>thermal insulator</strong>, so less energy escapes to the surroundings — the temperature change you measure is closer to the true value. The cup doesn't change how exothermic the reaction is (rules out A and C).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What do you measure to find the energy change of a reaction in solution?</summary><div class="ans">The <strong>temperature change</strong> of the solution — highest (or lowest) temperature minus the starting temperature.</div></details></li>
+      <li><details><summary>Give the independent and dependent variables when investigating the effect of acid concentration.</summary><div class="ans">Independent: the <strong>acid concentration</strong> (what you change). Dependent: the <strong>temperature change</strong> (what you measure).</div></details></li>
+      <li><details><summary>State two things you should keep the same to make it a fair test.</summary><div class="ans">Any two of: <strong>volume of solution</strong>, starting temperature, the same cup/insulation, and the same way of stirring.</div></details></li>
+      <li><details><summary>The acid starts at 19 °C and reaches a highest reading of 31 °C. State the temperature change and the type of reaction.</summary><div class="ans">Δθ = 31 − 19 = <strong>12 °C</strong> rise — the reaction is <strong>exothermic</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — REACTION PROFILES (5.5.1.2)                                   -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · C5 · Reaction profiles</div>
+    <h2 class="lesson-title">Reaction <em>profiles</em></h2>
+    <p class="lesson-promise">Reading energy-level diagrams, finding the overall energy change, and what activation energy really is.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Drawing the energy of a reaction</h3>
+    <p>A <strong>reaction profile</strong> is a diagram showing the energy of the reactants and products as a reaction goes from start to finish. The energy of the <strong>reactants</strong> is on the left, the <strong>products</strong> on the right.</p>
+    <p>In an <strong>exothermic</strong> reaction the products have <strong>less</strong> energy than the reactants — energy has been released to the surroundings, so the line goes <strong>down</strong>. In an <strong>endothermic</strong> reaction the products have <strong>more</strong> energy than the reactants — energy has been taken in, so the line ends <strong>higher</strong> up.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">EXOTHERMIC vs ENDOTHERMIC PROFILE</text>
+        <!-- exothermic panel -->
+        <line x1="45" y1="40" x2="45" y2="210" stroke="#5C6370" stroke-width="1.5"/>
+        <line x1="45" y1="210" x2="255" y2="210" stroke="#5C6370" stroke-width="1.5"/>
+        <text x="30" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370" transform="rotate(-90 30 130)">energy</text>
+        <text x="150" y="45" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">EXOTHERMIC</text>
+        <!-- exo curve: high reactants, hump, low products -->
+        <path d="M60 120 Q120 60 150 70 Q180 80 240 175" fill="none" stroke="#B85042" stroke-width="2.5"/>
+        <line x1="60" y1="120" x2="95" y2="120" stroke="#1E2761" stroke-width="2.5"/>
+        <line x1="205" y1="175" x2="240" y2="175" stroke="#1E2761" stroke-width="2.5"/>
+        <text x="77" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#1E2761">reactants</text>
+        <text x="222" y="194" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#1E2761">products</text>
+        <!-- overall change arrow -->
+        <line x1="248" y1="120" x2="248" y2="175" stroke="#2C5F2D" stroke-width="1.5"/>
+        <text x="252" y="150" font-family="IBM Plex Mono,monospace" font-size="9" fill="#2C5F2D">energy out</text>
+        <!-- endothermic panel -->
+        <line x1="305" y1="40" x2="305" y2="210" stroke="#5C6370" stroke-width="1.5"/>
+        <line x1="305" y1="210" x2="515" y2="210" stroke="#5C6370" stroke-width="1.5"/>
+        <text x="410" y="45" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">ENDOTHERMIC</text>
+        <!-- endo curve: low reactants, hump, higher products -->
+        <path d="M320 170 Q380 55 410 65 Q440 75 500 110" fill="none" stroke="#1E2761" stroke-width="2.5"/>
+        <line x1="320" y1="170" x2="355" y2="170" stroke="#1E2761" stroke-width="2.5"/>
+        <line x1="465" y1="110" x2="500" y2="110" stroke="#1E2761" stroke-width="2.5"/>
+        <text x="337" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#1E2761">reactants</text>
+        <text x="482" y="128" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#1E2761">products</text>
+        <line x1="508" y1="110" x2="508" y2="170" stroke="#B85042" stroke-width="1.5"/>
+        <text x="512" y="145" font-family="IBM Plex Mono,monospace" font-size="9" fill="#B85042">energy in</text>
+      </svg>
+      <div class="caption">Exothermic: products lower than reactants. Endothermic: products higher than reactants</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Activation energy</h3>
+    <p>Even an exothermic reaction needs a little energy to get going. The <strong>activation energy</strong> is the <strong>minimum energy</strong> that reacting particles must have to react — it's the energy needed to break the bonds and start the reaction. On the profile it's the size of the <strong>"hump"</strong>: the gap from the reactants up to the top of the curve.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ACTIVATION ENERGY ON A PROFILE</text>
+        <line x1="55" y1="40" x2="55" y2="200" stroke="#5C6370" stroke-width="1.5"/>
+        <line x1="55" y1="200" x2="510" y2="200" stroke="#5C6370" stroke-width="1.5"/>
+        <text x="38" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370" transform="rotate(-90 38 120)">energy</text>
+        <text x="280" y="218" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">progress of reaction →</text>
+        <!-- curve -->
+        <path d="M75 120 Q200 30 260 50 Q330 75 470 165" fill="none" stroke="#1E2761" stroke-width="2.5"/>
+        <line x1="75" y1="120" x2="125" y2="120" stroke="#B85042" stroke-width="2.5"/>
+        <line x1="430" y1="165" x2="475" y2="165" stroke="#B85042" stroke-width="2.5"/>
+        <text x="100" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">reactants</text>
+        <text x="452" y="184" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">products</text>
+        <!-- activation energy bracket -->
+        <line x1="150" y1="120" x2="150" y2="48" stroke="#C8A24A" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="142" y1="120" x2="158" y2="120" stroke="#C8A24A" stroke-width="1.5"/>
+        <line x1="142" y1="48" x2="225" y2="48" stroke="#C8A24A" stroke-width="1.5"/>
+        <text x="120" y="84" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#C8A24A">activation</text>
+        <text x="120" y="98" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#C8A24A">energy</text>
+        <!-- overall change -->
+        <line x1="490" y1="120" x2="490" y2="165" stroke="#2C5F2D" stroke-width="1.5"/>
+        <line x1="482" y1="120" x2="498" y2="120" stroke="#2C5F2D" stroke-width="1.5"/>
+        <line x1="482" y1="165" x2="498" y2="165" stroke="#2C5F2D" stroke-width="1.5"/>
+        <text x="502" y="146" font-family="IBM Plex Mono,monospace" font-size="9" fill="#2C5F2D">overall</text>
+      </svg>
+      <div class="caption">Activation energy is the hump from the reactants up to the peak; the overall change is reactants to products</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — two different gaps</h4>
+      <p>Don't confuse the two measurements on a profile. The <strong>activation energy</strong> is from the reactants up to the <strong>top of the hump</strong>. The <strong>overall energy change</strong> is from the reactants straight across to the <strong>products</strong>. They are <em>not</em> the same gap. Every reaction has a hump — even exothermic ones — so the line always goes <strong>up first</strong>, then to its final level.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">On a reaction profile, the products are drawn <em>higher</em> than the reactants. What does this tell you?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The reaction is exothermic — energy was released</span></li>
+        <li><span class="letter">B</span><span>The reaction is endothermic — energy was taken in</span></li>
+        <li><span class="letter">C</span><span>There is no activation energy</span></li>
+        <li><span class="letter">D</span><span>The reaction cannot happen</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Products higher than reactants means the products store <strong>more energy</strong>, so energy was <strong>taken in</strong> from the surroundings — <strong>endothermic</strong>. There's still an activation-energy hump (rules out C).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>On an exothermic reaction profile, are the products higher or lower than the reactants?</summary><div class="ans"><strong>Lower</strong> — the products have less energy because energy has been transferred to the surroundings.</div></details></li>
+      <li><details><summary>Define activation energy.</summary><div class="ans">The <strong>minimum energy</strong> that reacting particles must have for a reaction to happen (the energy needed to start breaking bonds).</div></details></li>
+      <li><details><summary>Where is the activation energy shown on a reaction profile?</summary><div class="ans">It's the gap from the <strong>reactants up to the top of the hump</strong> (the peak of the curve).</div></details></li>
+      <li><details><summary>How can you tell from a profile whether a reaction is endothermic?</summary><div class="ans">The <strong>products are higher</strong> than the reactants, so the overall energy change is an increase — energy was taken in.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — BOND ENERGIES (HT) (5.5.1.2)                                  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · C5 · Bond energies (HT)</div>
+    <h2 class="lesson-title">Bond <em>energies</em></h2>
+    <p class="lesson-promise">Higher tier — why breaking bonds takes energy, why making them gives it back, and how to work out the overall energy change.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Breaking takes in, making gives out</h3>
+    <p>A chemical reaction is really just a rearranging of bonds: old bonds in the reactants <strong>break</strong>, and new bonds in the products <strong>form</strong>. Each step involves energy.</p>
+    <p><strong>Breaking bonds is endothermic</strong> — energy must be <strong>supplied</strong> to pull bonded atoms apart. <strong>Making bonds is exothermic</strong> — energy is <strong>released</strong> when new bonds form. Whether the whole reaction is exothermic or endothermic just depends on which of these is bigger.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ENERGY IN TO BREAK · ENERGY OUT TO MAKE</text>
+        <!-- breaking panel -->
+        <text x="150" y="56" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Breaking bonds</text>
+        <circle cx="115" cy="100" r="18" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="185" cy="100" r="18" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="133" y1="100" x2="167" y2="100" stroke="#1E2761" stroke-width="2" stroke-dasharray="4 3"/>
+        <line x1="115" y1="135" x2="185" y2="135" stroke="#B85042" stroke-width="2"/>
+        <polygon points="115,128 108,138 122,138" fill="#B85042"/>
+        <polygon points="185,128 178,138 192,138" fill="#B85042"/>
+        <text x="150" y="165" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042">energy IN (endothermic)</text>
+        <!-- divider -->
+        <line x1="280" y1="50" x2="280" y2="170" stroke="#CFD8E3" stroke-width="1"/>
+        <!-- making panel -->
+        <text x="410" y="56" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Making bonds</text>
+        <circle cx="375" cy="100" r="18" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <circle cx="445" cy="100" r="18" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <line x1="393" y1="100" x2="427" y2="100" stroke="#2C5F2D" stroke-width="2.5"/>
+        <line x1="375" y1="135" x2="445" y2="135" stroke="#2C5F2D" stroke-width="2"/>
+        <polygon points="410,135 403,128 403,142" fill="#2C5F2D"/>
+        <text x="410" y="165" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#2C5F2D">energy OUT (exothermic)</text>
+      </svg>
+      <div class="caption">Energy must be put in to break bonds; energy is released when new bonds form</div>
+    </div>
+
+    <div class="eqbox">
+      <h4>The calculation</h4>
+      <dl>
+        <dt>overall = (energy to break bonds) − (energy to make bonds) <span class="badge recall">recall</span></dt>
+        <dd>"break minus make" — energy in to break the bonds of the reactants, minus energy out when the bonds of the products form. A <strong>negative</strong> answer means exothermic; a <strong>positive</strong> answer means endothermic. (Bond energies are always provided in the question.)</dd>
+      </dl>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — energy change from bond energies</h4>
+      <p>You may be given the <strong>bond energies</strong> (in kJ/mol) and asked to calculate the overall energy change. The method is always the same: add up the energy needed to <strong>break</strong> all the bonds in the reactants, add up the energy <strong>released</strong> when all the bonds in the products form, then do <strong>break − make</strong>.</p>
+      <p>If <strong>more energy is released</strong> making bonds than is used breaking them, the answer is <strong>negative</strong> and the reaction is <strong>exothermic</strong>. If breaking the bonds costs more than making them gives back, the answer is <strong>positive</strong> and the reaction is <strong>endothermic</strong>.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Working it out</h3>
+
+    <div class="worked">
+      <h4>Worked example — H₂ + Cl₂ → 2HCl</h4>
+      <p class="q">Calculate the overall energy change. Bond energies (kJ/mol): H–H = 436, Cl–Cl = 242, H–Cl = 431.</p>
+      <div class="step"><span class="label">Bonds broken</span><span class="v">1 × (H–H) + 1 × (Cl–Cl) = 436 + 242 = 678 kJ/mol</span></div>
+      <div class="step"><span class="label">Bonds made</span><span class="v">2 × (H–Cl) = 2 × 431 = 862 kJ/mol</span></div>
+      <div class="step"><span class="label">Break − make</span><span class="v">overall = 678 − 862 = −184 kJ/mol</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">−184 kJ/mol → exothermic (negative)</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — count every bond, and watch the sign</h4>
+      <p>Multiply each bond energy by <strong>how many of that bond</strong> there are (look at the balanced equation — "2HCl" means two H–Cl bonds). Do <strong>break − make</strong> in that order. A <strong>negative</strong> overall value is <strong>exothermic</strong>; a <strong>positive</strong> value is <strong>endothermic</strong>. Getting the sign the wrong way round is the most common mistake here.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A reaction needs 950 kJ to break the reactant bonds and releases 1100 kJ making the product bonds. The overall energy change is:</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>+150 kJ, endothermic</span></li>
+        <li><span class="letter">B</span><span>−150 kJ, exothermic</span></li>
+        <li><span class="letter">C</span><span>+2050 kJ, endothermic</span></li>
+        <li><span class="letter">D</span><span>−1100 kJ, exothermic</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — −150 kJ, exothermic.</strong> overall = break − make = 950 − 1100 = −150 kJ. More energy was released making bonds than was used breaking them, so it's <strong>exothermic</strong> (negative). Answer A flips the sign.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Is breaking bonds exothermic or endothermic, and why?</summary><div class="ans"><strong>Endothermic</strong> — energy must be <strong>supplied</strong> (taken in) to break bonds and pull the atoms apart.</div></details></li>
+      <li><details><summary>Is making bonds exothermic or endothermic?</summary><div class="ans"><strong>Exothermic</strong> — energy is <strong>released</strong> (given out) when new bonds form.</div></details></li>
+      <li><details><summary>Write the rule for calculating the overall energy change from bond energies.</summary><div class="ans">overall = <strong>energy to break bonds − energy to make bonds</strong> (break − make). Negative = exothermic; positive = endothermic.</div></details></li>
+      <li><details><summary>Breaking bonds needs 600 kJ; making bonds releases 540 kJ. Find the overall change and state the type.</summary><div class="ans">overall = 600 − 540 = <strong>+60 kJ</strong> → <strong>endothermic</strong> (positive, more energy used breaking than released making).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Chemistry Paper 1 · C5 Energy Changes</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'c5-energy-changes-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=c5-energy-changes-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atomic Structure &amp; the Periodic Table (C1) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for C1 Atomic Structure & the Periodic Table — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Chemistry Paper 1 · C1 Atomic Structure &amp; the Periodic Table</div>
+    <h1>Atoms, <em>for the exam.</em></h1>
+    <p class="tag">The whole of C1 — what atoms are made of, how the model was built, isotopes and electron shells, and the patterns that run down Groups 0, 1 and 7. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Atoms &amp; mixtures</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Atomic model</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Sub-atomic particles</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Electronic structure</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">The periodic table</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Group 0</a>
+    <a href="#lesson-7" class="nav-pill" data-lesson="7">Group 1</a>
+    <a href="#lesson-8" class="nav-pill" data-lesson="8">Group 7</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — ATOMS, ELEMENTS, COMPOUNDS & MIXTURES (4.1.1)                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · C1 · Atoms &amp; mixtures</div>
+    <h2 class="lesson-title">Atoms, compounds &amp; <em>mixtures</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll tell the difference between an element, a compound and a mixture — and pick the right method to separate one.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The building blocks</h3>
+    <p>All substances are made of <strong>atoms</strong> — the smallest part of an element that can exist. An atom is tiny: its radius is about <strong>0.1 nm</strong> (1 × 10⁻¹⁰ m), and the nucleus is around 1/10 000 of that.</p>
+    <p>An <strong>element</strong> is a substance made of only <em>one</em> type of atom — there are about 100, each shown by a symbol on the periodic table. A <strong>compound</strong> is two or more different elements <strong>chemically bonded</strong> together, in fixed proportions; you can only split a compound up by a chemical reaction. A <strong>mixture</strong> is two or more substances <em>not</em> chemically joined, so they keep their own properties and can be separated by physical methods.</p>
+
+    <div class="keywords">
+      <h4>Element, compound or mixture?</h4>
+      <dl>
+        <dt>Element</dt><dd>One type of atom only, e.g. oxygen (O₂), copper (Cu).</dd>
+        <dt>Compound</dt><dd>Different elements chemically bonded in fixed ratios, e.g. water (H₂O), carbon dioxide (CO₂).</dd>
+        <dt>Mixture</dt><dd>Substances physically together but not bonded, e.g. air, sea water, crude oil.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ELEMENT · COMPOUND · MIXTURE</text>
+        <!-- element -->
+        <rect x="30" y="50" width="150" height="120" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="80" cy="100" r="11" fill="#1E2761"/>
+        <circle cx="125" cy="100" r="11" fill="#1E2761"/>
+        <circle cx="105" cy="135" r="11" fill="#1E2761"/>
+        <text x="105" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">element</text>
+        <!-- compound -->
+        <rect x="205" y="50" width="150" height="120" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="255" cy="100" r="11" fill="#1E2761"/>
+        <circle cx="285" cy="100" r="8" fill="#B85042"/>
+        <line x1="266" y1="100" x2="277" y2="100" stroke="#5C6370" stroke-width="2"/>
+        <circle cx="290" cy="138" r="11" fill="#1E2761"/>
+        <circle cx="320" cy="138" r="8" fill="#B85042"/>
+        <line x1="301" y1="138" x2="312" y2="138" stroke="#5C6370" stroke-width="2"/>
+        <text x="280" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">compound</text>
+        <!-- mixture -->
+        <rect x="380" y="50" width="150" height="120" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="420" cy="95" r="11" fill="#1E2761"/>
+        <circle cx="470" cy="105" r="8" fill="#B85042"/>
+        <circle cx="445" cy="140" r="11" fill="#1E2761"/>
+        <circle cx="495" cy="138" r="8" fill="#B85042"/>
+        <text x="455" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">mixture</text>
+      </svg>
+      <div class="caption">In a compound the atoms are bonded; in a mixture they are just mixed</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — bonded vs just mixed</h4>
+      <p>A <strong>compound</strong> can only be split by a <strong>chemical</strong> reaction; a <strong>mixture</strong> is separated by <strong>physical</strong> methods (no new substances are made). Air is a mixture of elements and compounds — it is <em>not</em> a compound. And a chemical reaction changes substances, so the properties of a compound are usually very different from the elements it's made from.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which of these is a compound?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Air</span></li>
+        <li><span class="letter">B</span><span>Carbon dioxide (CO₂)</span></li>
+        <li><span class="letter">C</span><span>Oxygen gas (O₂)</span></li>
+        <li><span class="letter">D</span><span>Sea water</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — carbon dioxide.</strong> It has two different elements (carbon and oxygen) chemically bonded. Air and sea water are <em>mixtures</em>; oxygen gas is an <em>element</em> (only one type of atom, even though there are two atoms in the molecule).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Separating mixtures</h3>
+    <p>Because the parts of a mixture aren't bonded, you can separate them by <strong>physical</strong> methods that exploit a difference in their properties.</p>
+
+    <div class="keywords">
+      <h4>Four methods to know</h4>
+      <dl>
+        <dt>Filtration</dt><dd>Separates an <strong>insoluble solid</strong> from a liquid (e.g. sand from water). The solid stays in the filter paper; the liquid (filtrate) passes through.</dd>
+        <dt>Crystallisation</dt><dd>Gets a <strong>soluble solid</strong> back from its solution by evaporating the water slowly so crystals form (e.g. salt from salt solution).</dd>
+        <dt>Distillation</dt><dd>Separates a liquid from a solution (<em>simple</em>), or two liquids by their boiling points (<em>fractional</em>). The vapour is cooled and condensed back to a liquid.</dd>
+        <dt>Chromatography</dt><dd>Separates substances in a solution (e.g. coloured dyes in an ink) by how far they travel up the paper.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PAPER CHROMATOGRAPHY</text>
+        <!-- beaker -->
+        <rect x="170" y="60" width="220" height="150" rx="4" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <!-- solvent -->
+        <rect x="172" y="180" width="216" height="28" fill="#EDF2FA"/>
+        <line x1="172" y1="180" x2="388" y2="180" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="410" y="200" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">solvent</text>
+        <line x1="395" y1="190" x2="388" y2="190" stroke="#CFD8E3" stroke-width="1"/>
+        <!-- paper -->
+        <rect x="265" y="72" width="30" height="130" fill="#FCFAF4" stroke="#CFD8E3" stroke-width="1"/>
+        <!-- start line -->
+        <line x1="265" y1="190" x2="295" y2="190" stroke="#5C6370" stroke-width="1" stroke-dasharray="2 2"/>
+        <text x="245" y="194" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">start line</text>
+        <line x1="248" y1="190" x2="258" y2="190" stroke="#CFD8E3" stroke-width="1"/>
+        <!-- spots -->
+        <circle cx="280" cy="120" r="5" fill="#B85042"/>
+        <circle cx="280" cy="150" r="5" fill="#2C5F2D"/>
+        <circle cx="280" cy="178" r="5" fill="#C8A24A"/>
+        <text x="320" y="100" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">dyes travel</text>
+        <text x="320" y="116" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">different distances</text>
+      </svg>
+      <div class="caption">More soluble dyes travel further up the paper — that's how the colours separate</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — pick the right method</h4>
+      <p>If the solid <strong>dissolved</strong>, filtration won't work — use <strong>crystallisation</strong> or <strong>distillation</strong>. Use <strong>filtration</strong> only for an <em>insoluble</em> solid. And the start line in chromatography is drawn in <strong>pencil</strong>, not pen — pencil won't dissolve and run up the paper.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">You want to get pure water from a salt solution. Which method?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Filtration</span></li>
+        <li><span class="letter">B</span><span>Crystallisation</span></li>
+        <li><span class="letter">C</span><span>Simple distillation</span></li>
+        <li><span class="letter">D</span><span>Chromatography</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — simple distillation.</strong> The water boils off, is cooled and condensed, and you collect pure water — the salt is left behind. Crystallisation would give you the <em>salt</em> back, not the water; filtration can't separate a dissolved solid.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define a compound.</summary><div class="ans">Two or more <strong>different elements chemically bonded</strong> together in fixed proportions. It can only be split up by a chemical reaction.</div></details></li>
+      <li><details><summary>Which separation method removes an insoluble solid from a liquid?</summary><div class="ans"><strong>Filtration.</strong> The solid is trapped by the filter paper; the liquid (filtrate) passes through.</div></details></li>
+      <li><details><summary>Why is the start line in chromatography drawn in pencil?</summary><div class="ans">Pencil is <strong>insoluble</strong>, so it won't dissolve in the solvent and travel up the paper with the dyes (which would ruin the result).</div></details></li>
+      <li><details><summary>Give the difference between a mixture and a compound in terms of bonding.</summary><div class="ans">In a <strong>mixture</strong> the substances are <strong>not chemically bonded</strong> (separable by physical methods); in a <strong>compound</strong> the elements <strong>are</strong> chemically bonded.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — DEVELOPMENT OF THE MODEL OF THE ATOM (4.1.1.6)                -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · C1 · The atomic model</div>
+    <h2 class="lesson-title">How the <em>atom model</em> was built</h2>
+    <p class="lesson-promise">A story of evidence: each experiment forced scientists to change the model. Get the order — and what each step added.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>From solid spheres to a nucleus</h3>
+    <p><strong>Dalton</strong> (early 1800s) pictured atoms as tiny, solid, indivisible <strong>spheres</strong> — different for each element. Then <strong>J. J. Thomson</strong> discovered the <strong>electron</strong> (a tiny negative particle), which meant atoms <em>aren't</em> indivisible. His <strong>plum pudding model</strong> showed the atom as a ball of positive charge with electrons dotted through it.</p>
+    <p>Next, <strong>Rutherford's</strong> team fired positive <strong>alpha particles</strong> at thin gold foil. Most passed straight through, but a few bounced back. This <strong>alpha scattering experiment</strong> disproved the plum pudding model and led to the <strong>nuclear model</strong>: the mass and positive charge are concentrated in a tiny central <strong>nucleus</strong>, with most of the atom being empty space.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="150" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#1E2761" letter-spacing="1">PLUM PUDDING</text>
+        <!-- plum pudding -->
+        <circle cx="150" cy="110" r="60" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <circle cx="125" cy="90" r="6" fill="#1E2761"/>
+        <circle cx="175" cy="100" r="6" fill="#1E2761"/>
+        <circle cx="140" cy="135" r="6" fill="#1E2761"/>
+        <circle cx="170" cy="140" r="6" fill="#1E2761"/>
+        <text x="150" y="190" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">positive ball + electrons</text>
+        <!-- arrow -->
+        <line x1="230" y1="110" x2="300" y2="110" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="306,110 292,104 292,116" fill="#C8A24A"/>
+        <text x="265" y="100" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">scattering</text>
+        <text x="410" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#1E2761">NUCLEAR MODEL</text>
+        <!-- nuclear model -->
+        <circle cx="410" cy="110" r="60" fill="none" stroke="#1E2761" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <circle cx="410" cy="110" r="8" fill="#B85042"/>
+        <circle cx="410" cy="60" r="4" fill="#1E2761"/>
+        <circle cx="460" cy="110" r="4" fill="#1E2761"/>
+        <circle cx="410" cy="160" r="4" fill="#1E2761"/>
+        <text x="410" y="190" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">tiny nucleus, mostly space</text>
+      </svg>
+      <div class="caption">Alpha scattering replaced the plum pudding model with a tiny central nucleus</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — what the gold-foil results showed</h4>
+      <p>Two observations, two conclusions: <strong>most alpha particles passed straight through</strong> → the atom is mostly <strong>empty space</strong>. <strong>A few were deflected or bounced back</strong> → the centre is small, <strong>positively charged</strong> and holds most of the <strong>mass</strong>. Don't muddle which observation gives which conclusion.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Bohr and Chadwick finish the picture</h3>
+    <p><strong>Niels Bohr</strong> refined the model: electrons orbit the nucleus at fixed distances in <strong>energy levels</strong> (shells). His calculations agreed with experiment. Later work showed the positive charge of the nucleus is made of smaller particles — <strong>protons</strong>. Finally, <strong>James Chadwick</strong> provided evidence for the <strong>neutron</strong>, a particle in the nucleus with mass but no charge.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE ORDER OF DISCOVERY</text>
+        <line x1="40" y1="100" x2="520" y2="100" stroke="#CFD8E3" stroke-width="2"/>
+        <!-- nodes -->
+        <circle cx="60" cy="100" r="6" fill="#1E2761"/>
+        <text x="60" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Dalton</text>
+        <text x="60" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">spheres</text>
+        <circle cx="170" cy="100" r="6" fill="#1E2761"/>
+        <text x="170" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Thomson</text>
+        <text x="170" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">plum pudding</text>
+        <circle cx="290" cy="100" r="6" fill="#B85042"/>
+        <text x="290" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">Rutherford</text>
+        <text x="290" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">nucleus</text>
+        <circle cx="400" cy="100" r="6" fill="#1E2761"/>
+        <text x="400" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Bohr</text>
+        <text x="400" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">shells</text>
+        <circle cx="500" cy="100" r="6" fill="#1E2761"/>
+        <text x="500" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">Chadwick</text>
+        <text x="500" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">neutron</text>
+      </svg>
+      <div class="caption">Each new piece of evidence changed the accepted model</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">The alpha scattering experiment is most associated with which change to the model?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Discovering the electron</span></li>
+        <li><span class="letter">B</span><span>Replacing the plum pudding model with the nuclear model</span></li>
+        <li><span class="letter">C</span><span>Discovering the neutron</span></li>
+        <li><span class="letter">D</span><span>Showing atoms are solid spheres</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Rutherford's alpha scattering disproved the plum pudding model and gave the <em>nuclear</em> model — a tiny, dense, positive nucleus. The electron was Thomson (A); the neutron was Chadwick (C).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What did Thomson's plum pudding model say an atom looked like?</summary><div class="ans">A <strong>ball of positive charge</strong> with tiny <strong>negative electrons</strong> dotted through it.</div></details></li>
+      <li><details><summary>State the two main results of the alpha scattering experiment and what each shows.</summary><div class="ans">Most particles passed <strong>straight through</strong> → atom is mostly empty space. A few <strong>bounced back</strong> → a small, dense, positively charged nucleus holds most of the mass.</div></details></li>
+      <li><details><summary>What did Bohr add to the nuclear model?</summary><div class="ans">Electrons orbit the nucleus in <strong>fixed energy levels (shells)</strong> at set distances.</div></details></li>
+      <li><details><summary>Which scientist provided evidence for the neutron?</summary><div class="ans"><strong>James Chadwick.</strong></div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — SUB-ATOMIC PARTICLES (4.1.1.2 / 4.1.1.3)                      -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · C1 · Sub-atomic particles</div>
+    <h2 class="lesson-title">Protons, neutrons &amp; <em>electrons</em></h2>
+    <p class="lesson-promise">Read an atom's symbol like a label: how many of each particle, what isotopes are, and how to work out relative atomic mass.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Inside the atom</h3>
+    <p>Atoms contain three sub-atomic particles. <strong>Protons</strong> and <strong>neutrons</strong> sit in the <strong>nucleus</strong>; <strong>electrons</strong> orbit it in shells. Atoms have <strong>no overall charge</strong> because the number of protons (positive) equals the number of electrons (negative).</p>
+
+    <div class="keywords">
+      <h4>Relative mass and charge</h4>
+      <dl>
+        <dt>Proton</dt><dd>Relative mass <strong>1</strong>, charge <strong>+1</strong>. In the nucleus.</dd>
+        <dt>Neutron</dt><dd>Relative mass <strong>1</strong>, charge <strong>0</strong>. In the nucleus.</dd>
+        <dt>Electron</dt><dd>Relative mass <strong>very small</strong> (≈ 1/1835), charge <strong>−1</strong>. In shells around the nucleus.</dd>
+      </dl>
+    </div>
+
+    <p>Two numbers describe an atom. The <strong>atomic number</strong> (bottom) is the number of <strong>protons</strong> — it defines the element. The <strong>mass number</strong> (top) is the total number of <strong>protons + neutrons</strong>. So:</p>
+    <p><span class="formula">neutrons = mass number − atomic number</span></p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">READING THE SYMBOL</text>
+        <!-- symbol -->
+        <text x="250" y="70" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="22" font-weight="700" fill="#B85042">23</text>
+        <text x="250" y="150" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="22" font-weight="700" fill="#1E2761">11</text>
+        <text x="262" y="115" font-family="Instrument Serif,serif" font-size="46" fill="#1A1A1A">Na</text>
+        <!-- leaders -->
+        <line x1="258" y1="62" x2="360" y2="62" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="368" y="58" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">mass number = 23</text>
+        <text x="368" y="74" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">protons + neutrons</text>
+        <line x1="258" y1="142" x2="360" y2="142" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="368" y="138" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">atomic number = 11</text>
+        <text x="368" y="154" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">protons (= electrons)</text>
+        <text x="285" y="180" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">neutrons = 23 − 11 = 12</text>
+      </svg>
+      <div class="caption">Bottom number = protons; top number = protons + neutrons</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — which number is which</h4>
+      <p>The <strong>bigger</strong> number (on top) is the mass number; the <strong>smaller</strong> one (below) is the atomic number. Neutrons are <em>not</em> written on the symbol — you have to <strong>subtract</strong> to find them. In a neutral atom, electrons = protons = the atomic number.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — counting particles</h4>
+      <p class="q">An atom of chlorine is written as mass number 35, atomic number 17. How many protons, electrons and neutrons does it have?</p>
+      <div class="step"><span class="label">Protons</span><span class="v">= atomic number = 17</span></div>
+      <div class="step"><span class="label">Electrons</span><span class="v">= protons (neutral atom) = 17</span></div>
+      <div class="step answer"><span class="label">Neutrons</span><span class="v">= 35 − 17 = 18</span></div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Isotopes &amp; relative atomic mass</h3>
+    <p><strong>Isotopes</strong> are atoms of the <strong>same element</strong> (same number of protons) with <strong>different numbers of neutrons</strong> — so they have the same atomic number but different mass numbers. Because chemistry depends on electrons, isotopes of an element react the same way.</p>
+    <p>The <strong>relative atomic mass (A<sub>r</sub>)</strong> of an element is the <strong>average mass</strong> of its atoms, taking into account the abundance (how common) each isotope is.</p>
+
+    <div class="worked">
+      <h4>Worked example — relative atomic mass</h4>
+      <p class="q">Chlorine is 75% chlorine-35 and 25% chlorine-37. Calculate its relative atomic mass.</p>
+      <div class="step"><span class="label">Method</span><span class="v">A&#7523; = Σ (mass × abundance) ÷ 100</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= (35 × 75) + (37 × 25), all ÷ 100</span></div>
+      <div class="step"><span class="label">Work</span><span class="v">= (2625 + 925) ÷ 100 = 3550 ÷ 100</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">A&#7523; = 35.5</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Two atoms have the same number of protons but different numbers of neutrons. They are:</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Different elements</span></li>
+        <li><span class="letter">B</span><span>Ions of the same element</span></li>
+        <li><span class="letter">C</span><span>Isotopes of the same element</span></li>
+        <li><span class="letter">D</span><span>Identical atoms</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — isotopes.</strong> Same protons = same element; different neutrons = different mass number. (Ions differ in <em>electrons</em>, not neutrons.)</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Give the relative mass and relative charge of a proton, a neutron and an electron.</summary><div class="ans">Proton: mass <strong>1</strong>, charge <strong>+1</strong>. Neutron: mass <strong>1</strong>, charge <strong>0</strong>. Electron: mass <strong>very small</strong>, charge <strong>−1</strong>.</div></details></li>
+      <li><details><summary>An atom has atomic number 8 and mass number 16. How many neutrons?</summary><div class="ans">Neutrons = mass − atomic = 16 − 8 = <strong>8</strong>.</div></details></li>
+      <li><details><summary>Why does an atom have no overall charge?</summary><div class="ans">It has <strong>equal numbers of protons (+) and electrons (−)</strong>, so the charges cancel.</div></details></li>
+      <li><details><summary>Define an isotope.</summary><div class="ans">Atoms of the <strong>same element</strong> (same number of protons) with <strong>different numbers of neutrons</strong> (different mass numbers).</div></details></li>
+      <li><details><summary>An element is 60% mass-20 and 40% mass-22. Find its relative atomic mass.</summary><div class="ans">A<sub>r</sub> = (20 × 60 + 22 × 40) ÷ 100 = (1200 + 880) ÷ 100 = <strong>20.8</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — ELECTRONIC STRUCTURE (4.1.1.5)                                -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · C1 · Electronic structure</div>
+    <h2 class="lesson-title">Electron <em>shells</em></h2>
+    <p class="lesson-promise">Where the electrons go, the 2, 8, 8 rule, and why the outer shell decides everything about an element.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Filling the shells</h3>
+    <p>Electrons occupy the lowest available <strong>energy level</strong> (shell) first, filling inner shells before outer ones. The shells hold a maximum number of electrons:</p>
+    <p><strong>First shell: up to 2.</strong> <strong>Second shell: up to 8.</strong> <strong>Third shell: up to 8</strong> (for the elements you need). So the pattern is <strong>2, 8, 8</strong>.</p>
+    <p>We write the <strong>electronic structure</strong> as the number in each shell, e.g. sodium (11 electrons) is <strong>2, 8, 1</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SODIUM · 2, 8, 1</text>
+        <!-- shells -->
+        <circle cx="230" cy="130" r="30" fill="none" stroke="#CFD8E3" stroke-width="1.5"/>
+        <circle cx="230" cy="130" r="60" fill="none" stroke="#CFD8E3" stroke-width="1.5"/>
+        <circle cx="230" cy="130" r="90" fill="none" stroke="#CFD8E3" stroke-width="1.5"/>
+        <!-- nucleus -->
+        <circle cx="230" cy="130" r="12" fill="#B85042"/>
+        <text x="230" y="134" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#fff">+11</text>
+        <!-- shell 1: 2 -->
+        <circle cx="230" cy="100" r="5" fill="#1E2761"/>
+        <circle cx="230" cy="160" r="5" fill="#1E2761"/>
+        <!-- shell 2: 8 -->
+        <circle cx="230" cy="70" r="5" fill="#1E2761"/>
+        <circle cx="230" cy="190" r="5" fill="#1E2761"/>
+        <circle cx="170" cy="130" r="5" fill="#1E2761"/>
+        <circle cx="290" cy="130" r="5" fill="#1E2761"/>
+        <circle cx="188" cy="88" r="5" fill="#1E2761"/>
+        <circle cx="272" cy="88" r="5" fill="#1E2761"/>
+        <circle cx="188" cy="172" r="5" fill="#1E2761"/>
+        <circle cx="272" cy="172" r="5" fill="#1E2761"/>
+        <!-- shell 3: 1 -->
+        <circle cx="230" cy="40" r="5" fill="#C8A24A"/>
+        <!-- labels -->
+        <line x1="232" y1="40" x2="380" y2="40" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="388" y="44" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#C8A24A">3rd shell: 1 electron</text>
+        <text x="388" y="60" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">the outer (reactive) one</text>
+        <line x1="290" y1="130" x2="380" y2="115" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="388" y="115" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">2nd shell: 8</text>
+        <line x1="230" y1="160" x2="380" y2="170" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="388" y="173" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">1st shell: 2</text>
+      </svg>
+      <div class="caption">Inner shells fill first; the outer-shell electron is what reacts</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — fill inner shells first</h4>
+      <p>You can't put electrons in the outer shell while inner ones have room. For magnesium (12 electrons) it's <strong>2, 8, 2</strong>, not 2, 2, 8. And the numbers must <strong>add up to the total electrons</strong>, which equals the atomic number.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The outer shell decides behaviour</h3>
+    <p>The number of electrons in the <strong>outer shell</strong> equals the <strong>group number</strong> in the periodic table (for the main groups). It controls how an element reacts. This is why elements in the same group behave alike — they have the same number of outer-shell electrons.</p>
+
+    <div class="worked">
+      <h4>Worked example — writing electronic structure</h4>
+      <p class="q">Chlorine has atomic number 17. Write its electronic structure.</p>
+      <div class="step"><span class="label">Electrons</span><span class="v">= atomic number = 17</span></div>
+      <div class="step"><span class="label">Fill shells</span><span class="v">2 (full), then 8 (full), then 7 left</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">2, 8, 7  (so 7 outer electrons → Group 7)</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">An atom has the electronic structure 2, 8, 2. What is its atomic number, and which group is it in?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Atomic number 10, Group 2</span></li>
+        <li><span class="letter">B</span><span>Atomic number 12, Group 2</span></li>
+        <li><span class="letter">C</span><span>Atomic number 12, Group 8</span></li>
+        <li><span class="letter">D</span><span>Atomic number 2, Group 2</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — atomic number 12, Group 2.</strong> Add the electrons: 2 + 8 + 2 = 12. The outer shell has 2 electrons, so it's in Group 2 (it's magnesium).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>How many electrons can the first, second and third shells hold?</summary><div class="ans"><strong>2, 8, 8</strong> — first shell 2, second 8, third 8 (for the elements you study).</div></details></li>
+      <li><details><summary>Write the electronic structure of oxygen (atomic number 8).</summary><div class="ans"><strong>2, 6.</strong></div></details></li>
+      <li><details><summary>How does the outer-shell electron count relate to the group?</summary><div class="ans">The number of <strong>outer-shell electrons equals the group number</strong> (for the main groups).</div></details></li>
+      <li><details><summary>Write the electronic structure of calcium (atomic number 20).</summary><div class="ans"><strong>2, 8, 8, 2.</strong> (After the third shell takes 8, the remaining 2 start a fourth shell.)</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — THE PERIODIC TABLE & ITS DEVELOPMENT (4.1.1.7 / 4.1.1.8)      -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · C1 · The periodic table</div>
+    <h2 class="lesson-title">The <em>periodic table</em></h2>
+    <p class="lesson-promise">How it's arranged, why Mendeleev was so clever, and the simple split between metals and non-metals.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>How it's organised</h3>
+    <p>The modern periodic table arranges elements in order of <strong>atomic number</strong> (number of protons). Elements with similar properties line up in vertical <strong>groups</strong>; horizontal rows are <strong>periods</strong>. Elements in the same group have the <strong>same number of outer-shell electrons</strong>, which is why they react in similar ways.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">GROUPS &amp; PERIODS</text>
+        <!-- grid -->
+        <g stroke="#CFD8E3" stroke-width="1">
+          <rect x="120" y="40" width="40" height="36" fill="#EDF2FA"/>
+          <rect x="320" y="40" width="40" height="36" fill="#EDF2FA"/>
+          <rect x="360" y="40" width="40" height="36" fill="#EDF2FA"/>
+          <rect x="400" y="40" width="40" height="36" fill="#EDF2FA"/>
+          <rect x="120" y="76" width="40" height="36" fill="#EDF2FA"/>
+          <rect x="320" y="76" width="40" height="36" fill="#EDF2FA"/>
+          <rect x="360" y="76" width="40" height="36" fill="#EDF2FA"/>
+          <rect x="400" y="76" width="40" height="36" fill="#EDF2FA"/>
+        </g>
+        <!-- group arrow -->
+        <line x1="140" y1="124" x2="140" y2="150" stroke="#B85042" stroke-width="2"/>
+        <text x="140" y="166" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">group (column)</text>
+        <!-- period arrow -->
+        <line x1="450" y1="58" x2="490" y2="58" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="496" y="62" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">period</text>
+        <text x="240" y="62" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">···</text>
+        <text x="240" y="98" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">···</text>
+      </svg>
+      <div class="caption">Same group = same outer electrons = similar properties</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — order by protons, not mass</h4>
+      <p>The modern table is ordered by <strong>atomic number (protons)</strong>, not atomic mass. That fixed a problem in the old mass-ordered tables, where a few pairs (like iodine and tellurium) seemed out of place.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Mendeleev, and metals vs non-metals</h3>
+    <p><strong>Mendeleev</strong> (1869) arranged the known elements mainly by <strong>atomic mass</strong>, but he did two clever things: he <strong>left gaps</strong> for undiscovered elements and even <strong>predicted their properties</strong>, and he <strong>swapped the order</strong> of a few elements so they fell into groups with similar properties. When the missing elements were later found and matched his predictions, his table was accepted. We now know the gaps and swaps make sense because the table really follows <strong>atomic number</strong>.</p>
+    <p>The table splits into <strong>metals</strong> (on the left and centre) and <strong>non-metals</strong> (top right). <strong>Metals</strong> form positive ions by <em>losing</em> electrons; <strong>non-metals</strong> tend not to. Most elements are metals.</p>
+
+    <div class="keywords">
+      <h4>Metals vs non-metals</h4>
+      <dl>
+        <dt>Metals</dt><dd>Left and centre of the table. Shiny, conduct heat and electricity, malleable; form <strong>positive ions</strong>.</dd>
+        <dt>Non-metals</dt><dd>Top right. Often dull, poor conductors, brittle if solid; gain or share electrons.</dd>
+      </dl>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why did Mendeleev leave gaps in his periodic table?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>He made mistakes counting the elements</span></li>
+        <li><span class="letter">B</span><span>For elements not yet discovered, whose properties he predicted</span></li>
+        <li><span class="letter">C</span><span>To make the table look symmetrical</span></li>
+        <li><span class="letter">D</span><span>To separate metals from non-metals</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> He left gaps for <em>undiscovered</em> elements and even predicted their properties. When those elements were found and matched his predictions, his table was accepted.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is the modern periodic table arranged by?</summary><div class="ans"><strong>Atomic number</strong> (the number of protons), in order.</div></details></li>
+      <li><details><summary>Why do elements in the same group have similar properties?</summary><div class="ans">They have the <strong>same number of electrons in their outer shell</strong>.</div></details></li>
+      <li><details><summary>Give two things Mendeleev did that made his table successful.</summary><div class="ans">He <strong>left gaps</strong> for undiscovered elements (and predicted their properties), and <strong>changed the order</strong> of a few elements so they fitted their group.</div></details></li>
+      <li><details><summary>How do metals form ions?</summary><div class="ans">Metals <strong>lose electrons</strong> to form <strong>positive ions</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — GROUP 0, THE NOBLE GASES (4.1.1.9)                            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · C1 · Group 0</div>
+    <h2 class="lesson-title">Group 0 — the <em>noble gases</em></h2>
+    <p class="lesson-promise">Why these gases do almost nothing, and the one clear trend you need going down the group.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Unreactive by design</h3>
+    <p>The <strong>noble gases</strong> in Group 0 (helium, neon, argon and so on) are <strong>very unreactive</strong>. The reason is their electron arrangement: they have a <strong>full outer shell</strong> of electrons (helium has 2; the rest have 8). A full outer shell is stable, so they don't easily gain, lose or share electrons. This is why they're often called <em>inert</em>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">NEON · 2, 8 · FULL OUTER SHELL</text>
+        <circle cx="220" cy="110" r="28" fill="none" stroke="#CFD8E3" stroke-width="1.5"/>
+        <circle cx="220" cy="110" r="55" fill="none" stroke="#2C5F2D" stroke-width="2"/>
+        <circle cx="220" cy="110" r="11" fill="#B85042"/>
+        <!-- inner 2 -->
+        <circle cx="220" cy="82" r="4.5" fill="#1E2761"/>
+        <circle cx="220" cy="138" r="4.5" fill="#1E2761"/>
+        <!-- outer 8 -->
+        <circle cx="220" cy="55" r="4.5" fill="#2C5F2D"/>
+        <circle cx="220" cy="165" r="4.5" fill="#2C5F2D"/>
+        <circle cx="165" cy="110" r="4.5" fill="#2C5F2D"/>
+        <circle cx="275" cy="110" r="4.5" fill="#2C5F2D"/>
+        <circle cx="181" cy="71" r="4.5" fill="#2C5F2D"/>
+        <circle cx="259" cy="71" r="4.5" fill="#2C5F2D"/>
+        <circle cx="181" cy="149" r="4.5" fill="#2C5F2D"/>
+        <circle cx="259" cy="149" r="4.5" fill="#2C5F2D"/>
+        <line x1="275" y1="110" x2="370" y2="110" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="378" y="106" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">8 in outer shell</text>
+        <text x="378" y="124" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">full = stable = unreactive</text>
+      </svg>
+      <div class="caption">A full outer shell is why noble gases barely react</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "full shell", not "no electrons"</h4>
+      <p>Noble gases are unreactive because their outer shell is <strong>full</strong>, not because it's empty. Say "<strong>full outer shell of electrons</strong>" in the exam. Also: Group 0 is on the <em>far right</em>, and helium sits there too even though it only has 2 electrons (a full first shell).</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The boiling-point trend</h3>
+    <p>As you go <strong>down</strong> Group 0, the <strong>boiling points increase</strong>. The atoms get bigger and heavier, so the forces between the atoms (intermolecular forces) get stronger and need more energy to overcome. That's why helium (top) is the lowest-boiling and the gases lower down boil at higher temperatures.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">BOILING POINT RISES DOWN THE GROUP</text>
+        <line x1="60" y1="150" x2="520" y2="150" stroke="#CFD8E3" stroke-width="1.5"/>
+        <line x1="60" y1="48" x2="60" y2="150" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="40" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370" transform="rotate(-90 40 100)">boiling point →</text>
+        <rect x="90" y="135" width="50" height="15" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="115" y="168" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">He</text>
+        <rect x="200" y="115" width="50" height="35" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="225" y="168" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">Ne</text>
+        <rect x="310" y="85" width="50" height="65" fill="#B85042" opacity="0.7"/>
+        <text x="335" y="168" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">Ar</text>
+        <rect x="420" y="50" width="50" height="100" fill="#B85042"/>
+        <text x="445" y="168" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">Kr</text>
+        <text x="300" y="40" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">bigger atoms → higher boiling point</text>
+      </svg>
+      <div class="caption">Going down: heavier atoms, stronger forces, higher boiling points</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why are the noble gases so unreactive?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>They have empty outer shells</span></li>
+        <li><span class="letter">B</span><span>They have a full (stable) outer shell of electrons</span></li>
+        <li><span class="letter">C</span><span>They have no electrons at all</span></li>
+        <li><span class="letter">D</span><span>They are very heavy</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> A <em>full outer shell</em> is stable, so they have no tendency to gain, lose or share electrons — hence very unreactive.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 3 questions</div>
+    <ol>
+      <li><details><summary>Why are the Group 0 elements called inert / unreactive?</summary><div class="ans">They have a <strong>full outer shell of electrons</strong>, which is stable, so they don't easily react.</div></details></li>
+      <li><details><summary>What happens to boiling point going down Group 0?</summary><div class="ans">It <strong>increases</strong> — the atoms get bigger and the forces between them get stronger.</div></details></li>
+      <li><details><summary>How many electrons are in the outer shell of neon and argon?</summary><div class="ans"><strong>8.</strong> (Helium is the exception with a full first shell of 2.)</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 7 — GROUP 1, THE ALKALI METALS (4.1.1.10)                         -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-7">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 07 · C1 · Group 1</div>
+    <h2 class="lesson-title">Group 1 — the <em>alkali metals</em></h2>
+    <p class="lesson-promise">Soft metals that fizz in water, the trend in reactivity, and the Higher-tier reason behind it.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>One outer electron</h3>
+    <p>The <strong>alkali metals</strong> (lithium, sodium, potassium…) are in Group 1. They each have <strong>one electron in their outer shell</strong>, which they <strong>lose</strong> when they react to form a <strong>+1 ion</strong>. They are soft (you can cut them with a knife) and react readily — so they're stored under oil to keep air and water away.</p>
+    <p>With <strong>water</strong>, they react to make a <strong>metal hydroxide</strong> (an alkali — hence the name) and <strong>hydrogen gas</strong>. The metal fizzes and floats, moving across the surface. With <strong>oxygen</strong> they tarnish quickly, forming a metal oxide.</p>
+    <p><span class="formula">sodium + water → sodium hydroxide + hydrogen</span></p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 190" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ALKALI METAL + WATER</text>
+        <!-- trough -->
+        <path d="M120 90 Q120 160 180 160 H380 Q440 160 440 90" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="120" y1="90" x2="440" y2="90" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="400" y="110" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">water</text>
+        <!-- metal -->
+        <circle cx="250" cy="86" r="13" fill="#B85042"/>
+        <line x1="160" y1="74" x2="237" y2="84" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="150" y="72" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">metal floats</text>
+        <!-- bubbles -->
+        <circle cx="270" cy="78" r="3" fill="#1E2761"/>
+        <circle cx="282" cy="70" r="2.5" fill="#1E2761"/>
+        <circle cx="235" cy="74" r="3" fill="#1E2761"/>
+        <circle cx="225" cy="66" r="2.5" fill="#1E2761"/>
+        <line x1="290" y1="70" x2="380" y2="55" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="388" y="52" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">hydrogen given off</text>
+      </svg>
+      <div class="caption">The metal fizzes, floats and moves; hydrogen gas bubbles off</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — hydroxide, not just "hydrogen"</h4>
+      <p>The reaction makes <strong>two</strong> products: a metal <strong>hydroxide</strong> (which makes the solution <em>alkaline</em>) <em>and</em> <strong>hydrogen</strong> gas. Don't forget the hydroxide. And the metals form <strong>+1</strong> ions because they lose their single outer electron.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Reactivity increases down the group</h3>
+    <p>Going <strong>down</strong> Group 1, the metals get <strong>more reactive</strong>. Lithium fizzes gently; sodium reacts faster and melts into a ball; potassium reacts so vigorously the hydrogen ignites with a lilac flame. This is the opposite of the trend you might expect, and there's a clear reason behind it.</p>
+
+    <div class="higher">
+      <h4>Higher tier — why reactivity rises down Group 1</h4>
+      <p>Each atom reacts by <strong>losing its one outer electron</strong>. Going down the group, atoms have <strong>more electron shells</strong>, so the outer electron is <strong>further from the nucleus</strong> and is <strong>shielded</strong> by the inner shells. The attraction between the nucleus and the outer electron is therefore <strong>weaker</strong>, so the electron is <strong>lost more easily</strong> — making the metal <strong>more reactive</strong> as you go down.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which is the most reactive, and what are the products with water?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Lithium; products are lithium oxide + water</span></li>
+        <li><span class="letter">B</span><span>Potassium; products are potassium hydroxide + hydrogen</span></li>
+        <li><span class="letter">C</span><span>Lithium; products are lithium hydroxide + oxygen</span></li>
+        <li><span class="letter">D</span><span>Potassium; products are potassium chloride + hydrogen</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Reactivity increases down the group, so potassium (below lithium and sodium) is the most reactive of these. With water it gives the <em>hydroxide</em> plus <em>hydrogen</em>.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 7 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>How many outer-shell electrons do Group 1 metals have, and what ion do they form?</summary><div class="ans"><strong>One</strong> outer electron; they lose it to form a <strong>+1 ion</strong>.</div></details></li>
+      <li><details><summary>Name the two products when sodium reacts with water.</summary><div class="ans"><strong>Sodium hydroxide</strong> and <strong>hydrogen</strong>.</div></details></li>
+      <li><details><summary>What happens to reactivity going down Group 1?</summary><div class="ans">It <strong>increases</strong> (lithium &lt; sodium &lt; potassium).</div></details></li>
+      <li><details><summary>[HT] Explain in terms of electrons why potassium is more reactive than lithium.</summary><div class="ans">Potassium's outer electron is in a shell <strong>further from the nucleus</strong> and is more <strong>shielded</strong> by inner shells, so the attraction is <strong>weaker</strong> and the electron is <strong>lost more easily</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="7">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 8 — GROUP 7, THE HALOGENS (4.1.1.11)                              -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-8">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 08 · C1 · Group 7</div>
+    <h2 class="lesson-title">Group 7 — the <em>halogens</em></h2>
+    <p class="lesson-promise">The trends that run down the group, displacement reactions, and the Higher-tier explanation of reactivity.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Seven outer electrons</h3>
+    <p>The <strong>halogens</strong> (fluorine, chlorine, bromine, iodine) are in Group 7. They each have <strong>seven electrons in the outer shell</strong>, so they <strong>gain one electron</strong> when they react, forming a <strong>−1 ion</strong>. They exist as <strong>molecules of two atoms</strong> (e.g. Cl₂, Br₂).</p>
+    <p>Going <strong>down</strong> the group the halogens get <strong>less reactive</strong>, and their <strong>melting and boiling points increase</strong> — so at room temperature chlorine is a gas, bromine a liquid and iodine a solid.</p>
+
+    <div class="keywords">
+      <h4>Trends down Group 7</h4>
+      <dl>
+        <dt>Reactivity</dt><dd><strong>Decreases</strong> going down (chlorine &gt; bromine &gt; iodine).</dd>
+        <dt>Melting / boiling point</dt><dd><strong>Increases</strong> going down (gas → liquid → solid).</dd>
+        <dt>Colour / state at room temp</dt><dd>Chlorine: green gas. Bromine: orange/brown liquid. Iodine: grey solid.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — opposite trend to Group 1</h4>
+      <p>In Group 7 reactivity <strong>decreases</strong> down the group — the <em>opposite</em> of Group 1. That's because the halogens react by <strong>gaining</strong> an electron, not losing one. Mixing these two trends up is a classic exam slip.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Displacement reactions</h3>
+    <p>A <strong>more reactive halogen displaces a less reactive halogen</strong> from a solution of its salt. For example, chlorine (more reactive) displaces bromine from potassium bromide solution, turning it orange as bromine is released:</p>
+    <p><span class="formula">chlorine + potassium bromide → potassium chloride + bromine</span></p>
+    <p>Iodine could not displace chlorine or bromine, because iodine is the least reactive of the three.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">DISPLACEMENT: Cl PUSHES OUT Br</text>
+        <!-- before tube -->
+        <rect x="120" y="50" width="40" height="100" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="122" y="95" width="36" height="53" rx="2" fill="#EDF2FA"/>
+        <text x="140" y="168" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">KBr (clear)</text>
+        <text x="140" y="44" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#1E2761">+ chlorine</text>
+        <!-- arrow -->
+        <line x1="190" y1="100" x2="290" y2="100" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="296,100 282,94 282,106" fill="#C8A24A"/>
+        <text x="240" y="90" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">reacts</text>
+        <!-- after tube -->
+        <rect x="320" y="50" width="40" height="100" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="322" y="95" width="36" height="53" rx="2" fill="#C8A24A" opacity="0.6"/>
+        <text x="340" y="168" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">turns orange</text>
+        <line x1="362" y1="120" x2="450" y2="120" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="458" y="116" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">bromine</text>
+        <text x="458" y="132" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">displaced</text>
+      </svg>
+      <div class="caption">Chlorine is more reactive, so it displaces bromine from the bromide</div>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — why reactivity falls down Group 7</h4>
+      <p>Each atom reacts by <strong>gaining one electron</strong> into its outer shell. Going down the group, atoms have <strong>more shells</strong>, so the outer shell is <strong>further from the nucleus</strong> and more <strong>shielded</strong> by inner shells. The nucleus therefore attracts an incoming electron <strong>less strongly</strong>, so the electron is gained <strong>less easily</strong> — making the halogen <strong>less reactive</strong> as you go down.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which displacement reaction will happen?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Iodine added to potassium chloride solution</span></li>
+        <li><span class="letter">B</span><span>Bromine added to potassium chloride solution</span></li>
+        <li><span class="letter">C</span><span>Chlorine added to potassium iodide solution</span></li>
+        <li><span class="letter">D</span><span>Iodine added to potassium bromide solution</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> Chlorine is more reactive than iodine, so it displaces iodine from the iodide. The others all try to displace a <em>more</em> reactive halogen, which can't happen.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 8 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>How many outer-shell electrons do halogens have, and what ion do they form?</summary><div class="ans"><strong>Seven</strong>; they gain one electron to form a <strong>−1 ion</strong>.</div></details></li>
+      <li><details><summary>What happens to reactivity and to boiling point going down Group 7?</summary><div class="ans">Reactivity <strong>decreases</strong>; melting and boiling points <strong>increase</strong>.</div></details></li>
+      <li><details><summary>Will bromine displace chlorine from potassium chloride? Explain.</summary><div class="ans"><strong>No.</strong> Chlorine is <strong>more reactive</strong> than bromine, and only a <em>more</em> reactive halogen can displace a less reactive one.</div></details></li>
+      <li><details><summary>[HT] Explain why chlorine is more reactive than iodine.</summary><div class="ans">Chlorine's outer shell is <strong>closer to the nucleus</strong> and <strong>less shielded</strong>, so it attracts an incoming electron <strong>more strongly</strong> and gains it <strong>more easily</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="8">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Chemistry Paper 1 · C1 Atomic Structure &amp; the Periodic Table</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'c1-atomic-structure-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=c1-atomic-structure-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

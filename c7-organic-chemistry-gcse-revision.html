@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organic Chemistry (C7) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for C7 Organic Chemistry — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Chemistry Paper 2 · C7 Organic Chemistry</div>
+    <h1>Organic chemistry, <em>for the exam.</em></h1>
+    <p class="tag">The whole of C7 — crude oil and the alkanes, fractional distillation, the trends down a fraction, combustion, and cracking to make the alkenes we actually want. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Crude oil &amp; alkanes</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Fractional distillation</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Properties &amp; combustion</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Cracking &amp; alkenes</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — CRUDE OIL, HYDROCARBONS & ALKANES  (4.7.1.1)                  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.7.1.1 · Crude oil &amp; alkanes</div>
+    <h2 class="lesson-title">Crude oil &amp; the <em>alkanes</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what crude oil is, what a hydrocarbon is, the first four alkanes, and how to use the general formula C<sub>n</sub>H<sub>2n+2</sub>.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What crude oil is</h3>
+    <p><strong>Crude oil</strong> is a <strong>finite resource</strong> found in rocks. It formed over millions of years from the remains of ancient <strong>plankton</strong> (tiny sea creatures) buried in mud, under high pressure and temperature. Because it takes that long to form, we are using it up far faster than it is replaced — that's what "finite" means.</p>
+    <p>Crude oil is a <strong>mixture</strong> of a very large number of different compounds. Most of them are <strong>hydrocarbons</strong>.</p>
+
+    <div class="keywords">
+      <h4>Two words to be precise about</h4>
+      <dl>
+        <dt>Hydrocarbon</dt><dd>A compound made of <strong>hydrogen and carbon only</strong> — nothing else.</dd>
+        <dt>Alkane</dt><dd>The simplest type of hydrocarbon, where the carbon atoms are joined by single bonds. They are <strong>saturated</strong>.</dd>
+      </dl>
+    </div>
+
+    <p>Most of the hydrocarbons in crude oil are <strong>alkanes</strong>. An alkane is <strong>saturated</strong>, which means every carbon–carbon bond is a single bond — there are no spare bonds and no double bonds.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "hydrocarbon" has a strict meaning</h4>
+      <p>A hydrocarbon contains <strong>only hydrogen and carbon</strong>. If a molecule also contains oxygen, chlorine or anything else, it is <strong>not</strong> a hydrocarbon — even if it has lots of H and C in it. Examiners use this to catch you out, so check the formula has only H and C.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The first four alkanes</h3>
+    <p>You need to recall the first four alkanes — their names, formulae and that they go up by one carbon each time. Notice the names all end in <strong>-ane</strong>.</p>
+
+    <div class="keywords">
+      <h4>The first four alkanes (learn these)</h4>
+      <dl>
+        <dt>Methane — CH<sub>4</sub></dt><dd>1 carbon. The main gas in natural gas.</dd>
+        <dt>Ethane — C<sub>2</sub>H<sub>6</sub></dt><dd>2 carbons.</dd>
+        <dt>Propane — C<sub>3</sub>H<sub>8</sub></dt><dd>3 carbons. Bottled gas for camping/heating.</dd>
+        <dt>Butane — C<sub>4</sub>H<sub>10</sub></dt><dd>4 carbons. Lighter fuel.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">METHANE — CH₄</text>
+        <!-- central carbon -->
+        <circle cx="280" cy="115" r="22" fill="#1E2761"/>
+        <text x="280" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="15" font-weight="700" fill="#FCFAF4">C</text>
+        <!-- four single bonds -->
+        <line x1="280" y1="93" x2="280" y2="58" stroke="#5C6370" stroke-width="2"/>
+        <line x1="280" y1="137" x2="280" y2="172" stroke="#5C6370" stroke-width="2"/>
+        <line x1="258" y1="115" x2="210" y2="115" stroke="#5C6370" stroke-width="2"/>
+        <line x1="302" y1="115" x2="350" y2="115" stroke="#5C6370" stroke-width="2"/>
+        <!-- four hydrogens -->
+        <circle cx="280" cy="48" r="15" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="53" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1E2761">H</text>
+        <circle cx="280" cy="182" r="15" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="187" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1E2761">H</text>
+        <circle cx="200" cy="115" r="15" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="200" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1E2761">H</text>
+        <circle cx="360" cy="115" r="15" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="360" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1E2761">H</text>
+      </svg>
+      <div class="caption">Methane: one carbon, four single bonds, four hydrogens — fully saturated</div>
+    </div>
+
+    <p>Every bond in an alkane is a <strong>single bond</strong>, and every carbon has formed four bonds in total. That is what "saturated" looks like on paper.</p>
+
+    <div class="eqbox">
+      <h4>General formula</h4>
+      <dl>
+        <dt>C<sub>n</sub>H<sub>2n+2</sub> <span class="badge given">given</span></dt>
+        <dd>For an alkane with <em>n</em> carbon atoms, the number of hydrogen atoms is (2 × <em>n</em>) + 2. This isn't on the AQA equation sheet, but you are <strong>given</strong> the formula in the question — you don't have to recall it from memory.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — using the general formula</h4>
+      <p class="q">An alkane has 5 carbon atoms. Work out its molecular formula.</p>
+      <div class="step"><span class="label">Carbons</span><span class="v">n = 5, so C₅</span></div>
+      <div class="step"><span class="label">Hydrogens</span><span class="v">2n + 2 = (2 × 5) + 2 = 12</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">C₅H₁₂ (pentane)</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — alkanes vs alkenes</h4>
+      <p>It's easy to mix up the <strong>names</strong>. <strong>Alkanes</strong> (-<strong>ane</strong>) are <em>saturated</em> with only single bonds, formula C<sub>n</sub>H<sub>2n+2</sub>. <strong>Alkenes</strong> (-<strong>ene</strong>) — coming in Topic 4 — have a C=C <em>double</em> bond and a different formula. One letter, completely different molecules.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which of these is the formula of an alkane with 3 carbon atoms?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>C<sub>3</sub>H<sub>6</sub></span></li>
+        <li><span class="letter">B</span><span>C<sub>3</sub>H<sub>8</sub></span></li>
+        <li><span class="letter">C</span><span>C<sub>3</sub>H<sub>4</sub></span></li>
+        <li><span class="letter">D</span><span>C<sub>3</sub>O<sub>8</sub></span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — C<sub>3</sub>H<sub>8</sub> (propane).</strong> Using C<sub>n</sub>H<sub>2n+2</sub>: hydrogens = (2 × 3) + 2 = 8. Answer A is the <em>alkene</em> propene. D contains oxygen, so it isn't even a hydrocarbon.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What is a hydrocarbon?</summary><div class="ans">A compound made from <strong>hydrogen and carbon only</strong> (no other elements).</div></details></li>
+      <li><details><summary>Name the first four alkanes in order.</summary><div class="ans"><strong>Methane, ethane, propane, butane</strong> (CH<sub>4</sub>, C<sub>2</sub>H<sub>6</sub>, C<sub>3</sub>H<sub>8</sub>, C<sub>4</sub>H<sub>10</sub>).</div></details></li>
+      <li><details><summary>What does it mean to say an alkane is "saturated"?</summary><div class="ans">All of its carbon–carbon bonds are <strong>single bonds</strong> — there are no double bonds.</div></details></li>
+      <li><details><summary>An alkane has 8 carbon atoms. Use C<sub>n</sub>H<sub>2n+2</sub> to find its formula.</summary><div class="ans">H = (2 × 8) + 2 = 18, so the formula is <strong>C<sub>8</sub>H<sub>18</sub></strong> (octane).</div></details></li>
+      <li><details><summary>How did crude oil form, and why is it called finite?</summary><div class="ans">From the remains of ancient <strong>plankton</strong> buried in mud over <strong>millions of years</strong> under heat and pressure. It's <strong>finite</strong> because it's being used up far faster than it forms.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — FRACTIONAL DISTILLATION  (4.7.1.2)                            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.7.1.2 · Fractional distillation</div>
+    <h2 class="lesson-title">Fractional <em>distillation</em></h2>
+    <p class="lesson-promise">How we split crude oil into useful fractions — using boiling point and a tall tower — and what each fraction is for.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Splitting the mixture</h3>
+    <p>Crude oil straight from the ground isn't much use — it's a mixture of hundreds of hydrocarbons. We separate it by <strong>fractional distillation</strong>. The separation works because hydrocarbons of <strong>different chain lengths</strong> have <strong>different boiling points</strong>.</p>
+    <p>Here is the process, step by step:</p>
+    <p>The oil is <strong>heated</strong> until it <strong>evaporates</strong> (turns to vapour). The vapour rises up a tall <strong>fractionating column</strong> which is <strong>hot at the bottom and cool at the top</strong>. As each vapour rises and cools, it reaches a level where it is at its <strong>boiling point</strong>, so it <strong>condenses</strong> back to a liquid and is collected. We call each liquid that's collected a <strong>fraction</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 340" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE FRACTIONATING COLUMN</text>
+        <!-- column body -->
+        <rect x="150" y="40" width="120" height="250" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- temperature labels (kept to the LEFT, clear of the column) -->
+        <text x="138" y="66" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761" font-weight="700">COOL (top)</text>
+        <text x="138" y="248" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#B85042" font-weight="700">HOT (bottom)</text>
+        <!-- internal level lines -->
+        <line x1="150" y1="90" x2="270" y2="90" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="150" y1="140" x2="270" y2="140" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="150" y1="190" x2="270" y2="190" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="150" y1="240" x2="270" y2="240" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3"/>
+        <!-- fraction outlets and labels (to the RIGHT, clear space) -->
+        <line x1="270" y1="70" x2="320" y2="70" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="326" y="74" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">Petrol — short chains</text>
+        <line x1="270" y1="115" x2="320" y2="115" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="326" y="119" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">Kerosene</text>
+        <line x1="270" y1="165" x2="320" y2="165" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="326" y="169" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">Diesel oil</text>
+        <line x1="270" y1="215" x2="320" y2="215" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="326" y="219" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">Fuel oil</text>
+        <line x1="270" y1="265" x2="320" y2="265" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="326" y="269" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">Bitumen — long chains</text>
+        <!-- inlet arrow (enters column base) -->
+        <line x1="70" y1="282" x2="148" y2="282" stroke="#B85042" stroke-width="3"/>
+        <polygon points="150,282 138,276 138,288" fill="#B85042"/>
+        <text x="70" y="312" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">heated</text>
+        <text x="70" y="328" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">crude oil</text>
+      </svg>
+      <div class="caption">Hot at the bottom, cool at the top — short chains rise highest before condensing</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — it's a physical separation</h4>
+      <p>Fractional distillation does <strong>not</strong> make new substances — it only <strong>separates</strong> the molecules already in the oil. No bonds are broken or made, so it's a <strong>physical</strong> process. Each fraction is still a <em>mixture</em>, just of hydrocarbons with a <strong>similar number of carbon atoms</strong> and similar boiling points.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>What the fractions are used for</h3>
+    <p>The fractions are processed into the fuels and materials we use every day. Most of the oil ends up as <strong>fuels</strong> — petrol, diesel, kerosene and fuel oil — which is why oil matters so much to modern life.</p>
+
+    <div class="keywords">
+      <h4>Fractions and their uses</h4>
+      <dl>
+        <dt>Petrol</dt><dd>Fuel for cars. Short chains, near the top.</dd>
+        <dt>Kerosene</dt><dd>Fuel for aircraft (jet fuel).</dd>
+        <dt>Diesel oil</dt><dd>Fuel for some cars, lorries and trains.</dd>
+        <dt>Fuel oil</dt><dd>Fuel for large ships and some power stations.</dd>
+        <dt>Bitumen</dt><dd>Surfacing roads and roofs. Very long chains, at the bottom.</dd>
+      </dl>
+    </div>
+
+    <p>Crude oil is also the main source of useful <strong>feedstock</strong> (raw materials) for the <strong>petrochemical industry</strong>. Many useful materials — such as <strong>solvents, lubricants, polymers and detergents</strong> — are made from compounds in crude oil.</p>
+    <p>It works as a feedstock because of the huge number of hydrocarbons it contains, and because <strong>carbon atoms can form families of similar compounds</strong>. The alkanes are one such family — a group of compounds with the same general formula whose properties change gradually as the chain grows.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A fraction condenses high up the column, where it is coolest. What can you say about it?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It has long chains and a high boiling point</span></li>
+        <li><span class="letter">B</span><span>It has short chains and a low boiling point</span></li>
+        <li><span class="letter">C</span><span>It is bitumen, used for roads</span></li>
+        <li><span class="letter">D</span><span>It is a pure compound, not a mixture</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Only molecules with a <em>low boiling point</em> stay as vapour long enough to rise to the cool top — these are the <strong>short-chain</strong> hydrocarbons (e.g. petrol). Long chains (A, bitumen) condense low down where it's hot. D is wrong: every fraction is still a mixture.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What property of the hydrocarbons allows crude oil to be separated by fractional distillation?</summary><div class="ans">Hydrocarbons of different chain length have <strong>different boiling points</strong>.</div></details></li>
+      <li><details><summary>Describe what happens to the crude oil in the fractionating column.</summary><div class="ans">It is <strong>heated</strong> so it evaporates; the vapours rise up the column; each vapour <strong>condenses</strong> when it reaches the level at its boiling point (cool at the top, hot at the bottom) and is collected as a fraction.</div></details></li>
+      <li><details><summary>Give the use of (a) petrol and (b) bitumen.</summary><div class="ans">(a) <strong>Fuel for cars.</strong> (b) <strong>Surfacing roads</strong> (and roofs).</div></details></li>
+      <li><details><summary>Other than fuels, give one type of useful material made from crude-oil feedstock.</summary><div class="ans">Any one of: <strong>solvents, lubricants, polymers, detergents</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — PROPERTIES OF HYDROCARBONS & COMBUSTION  (4.7.1.3)            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.7.1.3 · Properties &amp; combustion</div>
+    <h2 class="lesson-title">Properties &amp; <em>burning</em> hydrocarbons</h2>
+    <p class="lesson-promise">How the properties change as the chain gets longer, and the difference between complete and incomplete combustion.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Trends with chain length</h3>
+    <p>As the hydrocarbon molecules get <strong>longer</strong>, four properties change in a predictable way. Learn the direction of each trend.</p>
+    <p>As chain length <strong>increases</strong>: the <strong>boiling point increases</strong>, the liquid becomes <strong>more viscous</strong> (thicker, flows less easily), it is <strong>less flammable</strong> (harder to ignite), and it is <strong>less volatile</strong> (evaporates less easily).</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">LONGER CHAINS → THE TRENDS</text>
+        <!-- short chain panel -->
+        <rect x="40" y="45" width="210" height="160" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="145" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">SHORT chains</text>
+        <text x="145" y="98" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Low boiling point</text>
+        <text x="145" y="122" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Runny (low viscosity)</text>
+        <text x="145" y="146" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Very flammable</text>
+        <text x="145" y="170" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Very volatile</text>
+        <text x="145" y="194" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">e.g. petrol</text>
+        <!-- long chain panel -->
+        <rect x="310" y="45" width="210" height="160" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="415" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">LONG chains</text>
+        <text x="415" y="98" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">High boiling point</text>
+        <text x="415" y="122" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Thick (high viscosity)</text>
+        <text x="415" y="146" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Hard to ignite</text>
+        <text x="415" y="170" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Not volatile</text>
+        <text x="415" y="194" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">e.g. bitumen</text>
+      </svg>
+      <div class="caption">Four trends to learn — all change in the same direction as the chain grows</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "flammable" and "volatile" go DOWN</h4>
+      <p>Boiling point and viscosity go <strong>up</strong> with chain length, but <strong>flammability and volatility go down</strong>. A common slip is to assume everything increases. Short chains are the runny, easily-ignited fuels (petrol); long chains are thick and hard to light (bitumen).</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Combustion</h3>
+    <p>Burning a hydrocarbon is an <strong>oxidation</strong> reaction — the hydrogen and carbon in the fuel are oxidised, and energy is <strong>released</strong> (it's <strong>exothermic</strong>). That released energy is why we use these as fuels.</p>
+    <p>In <strong>complete combustion</strong> there is <strong>plenty of oxygen</strong>. The only products are <strong>carbon dioxide</strong> and <strong>water</strong>.</p>
+
+    <div class="eqbox">
+      <h4>Complete combustion (word equation)</h4>
+      <dl>
+        <dt>hydrocarbon + oxygen → carbon dioxide + water <span class="badge recall">recall</span></dt>
+        <dd>Both the carbon and the hydrogen are fully oxidised. e.g. methane: CH<sub>4</sub> + 2O<sub>2</sub> → CO<sub>2</sub> + 2H<sub>2</sub>O.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — products of complete combustion</h4>
+      <p class="q">Propane is burned in plenty of oxygen. Name the two products and write the word equation.</p>
+      <div class="step"><span class="label">Type</span><span class="v">Plenty of oxygen → complete combustion</span></div>
+      <div class="step"><span class="label">Products</span><span class="v">Carbon dioxide + water (only)</span></div>
+      <div class="step answer"><span class="label">Equation</span><span class="v">propane + oxygen → carbon dioxide + water</span></div>
+    </div>
+
+    <p>If there is <strong>not enough oxygen</strong>, you get <strong>incomplete combustion</strong>. This is dangerous: as well as water, it can produce <strong>carbon monoxide</strong> (CO) — a toxic gas — and <strong>carbon</strong> (soot, particulates).</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — carbon monoxide is the silent killer</h4>
+      <p><strong>Carbon monoxide</strong> is colourless and odourless, and it stops your blood carrying oxygen — that's why faulty gas appliances are deadly. <strong>Carbon dioxide</strong> (from complete combustion) is the greenhouse gas; <strong>carbon monoxide</strong> (from incomplete combustion) is the <em>toxic</em> one. Don't swap them.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A gas heater in a poorly ventilated room burns with a yellow, sooty flame. What does this tell you, and what dangerous gas may form?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Complete combustion; carbon dioxide</span></li>
+        <li><span class="letter">B</span><span>Incomplete combustion; carbon monoxide</span></li>
+        <li><span class="letter">C</span><span>Complete combustion; only water</span></li>
+        <li><span class="letter">D</span><span>Incomplete combustion; hydrogen</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> A yellow, sooty flame and poor ventilation mean a <em>shortage of oxygen</em> → <strong>incomplete combustion</strong>. This can produce <strong>carbon monoxide</strong> (toxic) and carbon (soot). Plenty of oxygen gives a clean blue flame and only CO<sub>2</sub> + water.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>As chain length increases, what happens to boiling point and viscosity?</summary><div class="ans">Both <strong>increase</strong> — longer chains have higher boiling points and are more viscous (thicker).</div></details></li>
+      <li><details><summary>As chain length increases, what happens to flammability and volatility?</summary><div class="ans">Both <strong>decrease</strong> — longer chains are harder to ignite and evaporate less easily.</div></details></li>
+      <li><details><summary>Name the two products of the complete combustion of a hydrocarbon.</summary><div class="ans"><strong>Carbon dioxide</strong> and <strong>water</strong>.</div></details></li>
+      <li><details><summary>Why is incomplete combustion dangerous?</summary><div class="ans">It can produce <strong>carbon monoxide</strong> (a toxic gas) and <strong>carbon</strong> (soot/particulates), because there isn't enough oxygen.</div></details></li>
+      <li><details><summary>Is combustion endothermic or exothermic, and why is that useful?</summary><div class="ans"><strong>Exothermic</strong> — it releases energy, which is why hydrocarbons are used as <strong>fuels</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — CRACKING & ALKENES  (4.7.2.1)                                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.7.2.1 · Cracking &amp; alkenes</div>
+    <h2 class="lesson-title">Cracking &amp; the <em>alkenes</em></h2>
+    <p class="lesson-promise">Breaking long chains into the short, useful ones we want — and the bromine-water test that proves you've made an alkene.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Why we crack</h3>
+    <p>Fractional distillation gives us too much of the <strong>long-chain</strong> fractions and not enough of the <strong>short-chain</strong> ones that people want (like petrol). <strong>Cracking</strong> fixes this mismatch: it breaks long-chain hydrocarbons into <strong>smaller, more useful</strong> molecules.</p>
+    <p>Cracking always produces a <strong>shorter alkane</strong> <em>and</em> an <strong>alkene</strong>. Both supply and demand drive it: there is high demand for short-chain hydrocarbons as fuels, and the alkenes produced are valuable raw materials too.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">CRACKING: ONE LONG → TWO SHORTER</text>
+        <!-- long chain -->
+        <rect x="40" y="75" width="170" height="30" rx="4" fill="#1E2761"/>
+        <text x="125" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#FCFAF4">long-chain alkane</text>
+        <!-- arrow -->
+        <line x1="215" y1="90" x2="285" y2="90" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="292,90 278,83 278,97" fill="#C8A24A"/>
+        <text x="250" y="78" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">heat</text>
+        <!-- products -->
+        <rect x="300" y="55" width="150" height="28" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="375" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">shorter alkane</text>
+        <rect x="300" y="97" width="150" height="28" rx="4" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="375" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">an alkene</text>
+      </svg>
+      <div class="caption">Every cracking reaction makes a shorter alkane plus at least one alkene</div>
+    </div>
+
+    <p>There are two ways to provide the energy to break the bonds. In <strong>catalytic cracking</strong>, the long-chain hydrocarbon vapour is passed over a <strong>hot catalyst</strong>. In <strong>steam cracking</strong> (a type of thermal cracking), the vapour is mixed with steam and heated to a <strong>very high temperature</strong>.</p>
+
+    <div class="keywords">
+      <h4>Two methods of cracking</h4>
+      <dl>
+        <dt>Catalytic cracking</dt><dd>Heat the long-chain vapour and pass it over a <strong>hot catalyst</strong>.</dd>
+        <dt>Steam cracking</dt><dd>Mix the vapour with <strong>steam</strong> and heat to a very high temperature.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — cracking is the opposite of distillation</h4>
+      <p>Fractional distillation only <em>separates</em> molecules — no bonds change. <strong>Cracking is a chemical reaction</strong>: it <em>breaks covalent bonds</em> to make new, smaller molecules. So cracking always needs heat (and often a catalyst), and the products are different substances from what you started with.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Alkenes &amp; the bromine test</h3>
+    <p><strong>Alkenes</strong> are hydrocarbons that contain a carbon–carbon <strong>double bond</strong> (C=C). Because a double bond means two carbons are sharing more than a single bond — and could bond to more atoms — alkenes are described as <strong>unsaturated</strong>. That double bond makes them <strong>more reactive</strong> than alkanes.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ETHENE — C₂H₄ (the C=C double bond)</text>
+        <!-- two carbons -->
+        <circle cx="230" cy="110" r="20" fill="#1E2761"/>
+        <text x="230" y="115" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#FCFAF4">C</text>
+        <circle cx="330" cy="110" r="20" fill="#1E2761"/>
+        <text x="330" y="115" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#FCFAF4">C</text>
+        <!-- double bond (two lines) -->
+        <line x1="250" y1="104" x2="310" y2="104" stroke="#B85042" stroke-width="2.5"/>
+        <line x1="250" y1="116" x2="310" y2="116" stroke="#B85042" stroke-width="2.5"/>
+        <text x="280" y="150" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#B85042">C=C double bond</text>
+        <!-- hydrogens on left C -->
+        <line x1="216" y1="96" x2="190" y2="70" stroke="#5C6370" stroke-width="2"/>
+        <line x1="216" y1="124" x2="190" y2="150" stroke="#5C6370" stroke-width="2"/>
+        <circle cx="180" cy="62" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="180" y="66" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">H</text>
+        <circle cx="180" cy="158" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="180" y="162" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">H</text>
+        <!-- hydrogens on right C -->
+        <line x1="344" y1="96" x2="370" y2="70" stroke="#5C6370" stroke-width="2"/>
+        <line x1="344" y1="124" x2="370" y2="150" stroke="#5C6370" stroke-width="2"/>
+        <circle cx="380" cy="62" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="380" y="66" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">H</text>
+        <circle cx="380" cy="158" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="380" y="162" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">H</text>
+      </svg>
+      <div class="caption">Ethene — the simplest alkene; the C=C makes it unsaturated and reactive</div>
+    </div>
+
+    <p>We test for an alkene using <strong>bromine water</strong>. Add the substance to orange bromine water and shake:</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE BROMINE WATER TEST</text>
+        <!-- alkene tube -->
+        <rect x="120" y="55" width="50" height="120" rx="0 0 8 8" fill="#C8A24A" opacity="0.85" stroke="#1E2761" stroke-width="2"/>
+        <text x="145" y="195" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">alkene</text>
+        <!-- before -> after transition arrow -->
+        <line x1="176" y1="115" x2="240" y2="115" stroke="#5C6370" stroke-width="2"/>
+        <polygon points="248,115 238,110 238,120" fill="#5C6370"/>
+        <rect x="250" y="55" width="50" height="120" rx="0 0 8 8" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+        <text x="275" y="195" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">colourless</text>
+        <text x="210" y="50" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#2C5F2D">decolourises ✓</text>
+        <!-- alkane tube -->
+        <rect x="390" y="55" width="50" height="120" rx="0 0 8 8" fill="#C8A24A" opacity="0.85" stroke="#1E2761" stroke-width="2"/>
+        <text x="415" y="195" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">alkane</text>
+        <text x="415" y="40" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#B85042">stays orange ✗</text>
+      </svg>
+      <div class="caption">Alkene turns orange bromine water colourless; an alkane leaves it orange</div>
+    </div>
+
+    <div class="eqbox">
+      <h4>Test result to learn</h4>
+      <dl>
+        <dt>Alkene + bromine water → orange goes colourless <span class="badge recall">recall</span></dt>
+        <dd>An <strong>alkene</strong> <em>decolourises</em> bromine water (orange → colourless). An <strong>alkane</strong> does <em>not</em> — it stays orange. This is how you tell them apart.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — identifying a gas</h4>
+      <p class="q">A student bubbles an unknown hydrocarbon gas through bromine water. The orange colour disappears. What is the gas, and what does this prove about its bonds?</p>
+      <div class="step"><span class="label">Observation</span><span class="v">Bromine water decolourises (orange → colourless)</span></div>
+      <div class="step"><span class="label">Meaning</span><span class="v">Only alkenes do this</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">It's an alkene — it contains a C=C double bond (unsaturated)</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — which way round the colour change goes</h4>
+      <p>Bromine water starts <strong>orange</strong> and an alkene turns it <strong>colourless</strong>. Don't write "turns brown" or "goes orange" — and don't say the alkene "changes colour". It's the bromine water that loses its colour. The alkane leaves it unchanged.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Two test tubes of bromine water are tested with two gases. Tube 1 stays orange; tube 2 goes colourless. What are the gases?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Tube 1 = alkene, Tube 2 = alkane</span></li>
+        <li><span class="letter">B</span><span>Tube 1 = alkane, Tube 2 = alkene</span></li>
+        <li><span class="letter">C</span><span>Both are alkenes</span></li>
+        <li><span class="letter">D</span><span>Both are alkanes</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The gas that <em>decolourises</em> bromine water (Tube 2) is the <strong>alkene</strong> — it has a reactive C=C bond. The one that leaves it <strong>orange</strong> (Tube 1) is the <strong>alkane</strong>, which is saturated and far less reactive.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Why is cracking carried out?</summary><div class="ans">To turn surplus <strong>long-chain</strong> hydrocarbons into <strong>shorter, more useful</strong> ones (high demand for short chains as fuels), and to make <strong>alkenes</strong>.</div></details></li>
+      <li><details><summary>Name the two products always formed when a long-chain alkane is cracked.</summary><div class="ans">A <strong>shorter alkane</strong> and an <strong>alkene</strong>.</div></details></li>
+      <li><details><summary>Describe the two methods of cracking.</summary><div class="ans"><strong>Catalytic cracking:</strong> pass the heated vapour over a hot <strong>catalyst</strong>. <strong>Steam cracking:</strong> mix the vapour with <strong>steam</strong> and heat to a very high temperature.</div></details></li>
+      <li><details><summary>What is the difference between an alkane and an alkene?</summary><div class="ans">Alkanes are <strong>saturated</strong> (single bonds only); alkenes are <strong>unsaturated</strong> — they contain a carbon–carbon <strong>double bond (C=C)</strong> and are more reactive.</div></details></li>
+      <li><details><summary>State the test for an alkene and the result.</summary><div class="ans">Add <strong>bromine water</strong>: an alkene turns it from <strong>orange to colourless</strong> (it decolourises it). An alkane leaves it orange.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Chemistry Paper 2 · C7 Organic Chemistry</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'c7-organic-chemistry-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=c7-organic-chemistry-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

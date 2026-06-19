@@ -955,6 +955,438 @@
           "level": "Key Stage 3",
           "type": "revision",
           "about": "Year 8"
+        },
+        {
+          "href": "b1-cell-biology-gcse-revision.html",
+          "accent": "#C84A6D",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · B1 Cell Biology",
+          "name": "Cell Biology, <em>for the exam</em>",
+          "tag": "7 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science B1 Cell Biology in bitesize topics — cells and organelles, microscopy and magnification, cell specialisation, mitosis and stem cells, diffusion, osmosis and active transport. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Biology"
+        },
+        {
+          "href": "b2-organisation-gcse-revision.html",
+          "accent": "#C84A6D",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · B2 Organisation",
+          "name": "Organisation, <em>for the exam</em>",
+          "tag": "8 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science B2 Organisation in bitesize topics — enzymes, the digestive system and food tests, the heart, blood and blood vessels, the lungs, non-communicable disease, and transport in plants. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Biology"
+        },
+        {
+          "href": "b3-infection-response-gcse-revision.html",
+          "accent": "#C84A6D",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · B3 Infection and Response",
+          "name": "Infection and Response, <em>for the exam</em>",
+          "tag": "6 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science B3 Infection and Response in bitesize topics — pathogens and disease, the body&#x27;s defences, vaccination, antibiotics, and how new drugs are developed. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Biology"
+        },
+        {
+          "href": "b4-bioenergetics-gcse-revision.html",
+          "accent": "#C84A6D",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · B4 Bioenergetics",
+          "name": "Bioenergetics, <em>for the exam</em>",
+          "tag": "6 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science B4 Bioenergetics in bitesize topics — photosynthesis and its limiting factors, the uses of glucose, aerobic and anaerobic respiration, exercise and metabolism. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Biology"
+        },
+        {
+          "href": "b5-homeostasis-response-gcse-revision.html",
+          "accent": "#C84A6D",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · B5 Homeostasis and Response",
+          "name": "Homeostasis and Response, <em>for the exam</em>",
+          "tag": "7 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science B5 Homeostasis and Response in bitesize topics — the nervous system and reflexes, hormones and the endocrine system, controlling blood glucose and diabetes, and hormones in reproduction. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Biology"
+        },
+        {
+          "href": "b6-inheritance-variation-evolution-gcse-revision.html",
+          "accent": "#C84A6D",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · B6 Inheritance, Variation and Evolution",
+          "name": "Inheritance, Variation and Evolution, <em>for the exam</em>",
+          "tag": "8 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science B6 Inheritance, Variation and Evolution in bitesize topics — reproduction and meiosis, DNA, genetic crosses and inherited disorders, variation, evolution by natural selection, and classification. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Biology"
+        },
+        {
+          "href": "b7-ecology-gcse-revision.html",
+          "accent": "#C84A6D",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · B7 Ecology",
+          "name": "Ecology, <em>for the exam</em>",
+          "tag": "7 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science B7 Ecology in bitesize topics — communities and adaptations, sampling with quadrats and transects, the carbon and water cycles, and human impact on biodiversity. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Biology"
+        },
+        {
+          "href": "c1-atomic-structure-gcse-revision.html",
+          "accent": "#3672C2",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · C1 Atomic Structure and the Periodic Table",
+          "name": "Atomic Structure and the Periodic Table, <em>for the exam</em>",
+          "tag": "8 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science C1 Atomic Structure and the Periodic Table in bitesize topics — atoms and the history of the atomic model, isotopes and relative atomic mass, electronic structure, the periodic table, and groups 0, 1 and 7. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Chemistry"
+        },
+        {
+          "href": "c2-bonding-structure-gcse-revision.html",
+          "accent": "#3672C2",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · C2 Bonding, Structure and Properties",
+          "name": "Bonding, Structure and Properties, <em>for the exam</em>",
+          "tag": "7 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science C2 Bonding, Structure and Properties in bitesize topics — ionic, covalent and metallic bonding, the properties of each structure, giant covalent structures, graphene and fullerenes, and nanoparticles. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Chemistry"
+        },
+        {
+          "href": "c3-quantitative-chemistry-gcse-revision.html",
+          "accent": "#3672C2",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · C3 Quantitative Chemistry",
+          "name": "Quantitative Chemistry, <em>for the exam</em>",
+          "tag": "6 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science C3 Quantitative Chemistry in bitesize topics — conservation of mass and relative formula mass, percentage by mass and concentration, and (Higher) moles, reacting masses and limiting reactants. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Chemistry"
+        },
+        {
+          "href": "c4-chemical-changes-gcse-revision.html",
+          "accent": "#3672C2",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · C4 Chemical Changes",
+          "name": "Chemical Changes, <em>for the exam</em>",
+          "tag": "7 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science C4 Chemical Changes in bitesize topics — the reactivity series, extracting metals, redox, the reactions of acids, the pH scale, making salts, and electrolysis. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Chemistry"
+        },
+        {
+          "href": "c5-energy-changes-gcse-revision.html",
+          "accent": "#3672C2",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · C5 Energy Changes",
+          "name": "Energy Changes, <em>for the exam</em>",
+          "tag": "4 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science C5 Energy Changes in bitesize topics — exothermic and endothermic reactions, reaction profiles and activation energy, and (Higher) bond-energy calculations. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Chemistry"
+        },
+        {
+          "href": "c6-rate-of-reaction-gcse-revision.html",
+          "accent": "#3672C2",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · C6 Rate and Extent of Chemical Change",
+          "name": "Rate and Extent of Chemical Change, <em>for the exam</em>",
+          "tag": "5 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science C6 Rate and Extent of Chemical Change in bitesize topics — measuring rate, the factors that affect rate and collision theory, catalysts, and reversible reactions and equilibrium. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Chemistry"
+        },
+        {
+          "href": "c7-organic-chemistry-gcse-revision.html",
+          "accent": "#3672C2",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · C7 Organic Chemistry",
+          "name": "Organic Chemistry, <em>for the exam</em>",
+          "tag": "4 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science C7 Organic Chemistry in bitesize topics — crude oil and alkanes, fractional distillation, the properties of hydrocarbons, and cracking and alkenes. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Chemistry"
+        },
+        {
+          "href": "c8-chemical-analysis-gcse-revision.html",
+          "accent": "#3672C2",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · C8 Chemical Analysis",
+          "name": "Chemical Analysis, <em>for the exam</em>",
+          "tag": "3 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science C8 Chemical Analysis in bitesize topics — pure substances and formulations, chromatography and Rf values, and the tests for common gases. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Chemistry"
+        },
+        {
+          "href": "c9-atmosphere-gcse-revision.html",
+          "accent": "#3672C2",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · C9 Chemistry of the Atmosphere",
+          "name": "Chemistry of the Atmosphere, <em>for the exam</em>",
+          "tag": "4 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science C9 Chemistry of the Atmosphere in bitesize topics — the evolution of the Earth&#x27;s atmosphere, greenhouse gases and climate change, and the pollutants from burning fuels. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Chemistry"
+        },
+        {
+          "href": "c10-using-resources-gcse-revision.html",
+          "accent": "#3672C2",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · C10 Using Resources",
+          "name": "Using Resources, <em>for the exam</em>",
+          "tag": "5 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science C10 Using Resources in bitesize topics — finite and renewable resources, potable and waste water treatment, life cycle assessment and recycling, and corrosion. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Chemistry"
+        },
+        {
+          "href": "energy-gcse-revision.html",
+          "accent": "#C77A1E",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · P1 Energy",
+          "name": "Energy, <em>for the exam</em>",
+          "tag": "8 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science P1 Energy in bitesize topics — energy stores and transfers, kinetic and gravitational energy, elastic energy, specific heat capacity, power, dissipation, efficiency and energy resources. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Physics"
+        },
+        {
+          "href": "p2-electricity-gcse-revision.html",
+          "accent": "#C77A1E",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · P2 Electricity",
+          "name": "Electricity, <em>for the exam</em>",
+          "tag": "6 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science P2 Electricity in bitesize topics — charge and current, resistance and potential difference, series and parallel circuits, I-V characteristics, mains electricity, and power in circuits. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Physics"
+        },
+        {
+          "href": "p3-particle-model-gcse-revision.html",
+          "accent": "#C77A1E",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · P3 Particle Model of Matter",
+          "name": "Particle Model of Matter, <em>for the exam</em>",
+          "tag": "5 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science P3 Particle Model of Matter in bitesize topics — density, changes of state, internal energy and specific heat capacity, specific latent heat, and particle motion in gases. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Physics"
+        },
+        {
+          "href": "p4-atomic-structure-gcse-revision.html",
+          "accent": "#C77A1E",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · P4 Atomic Structure",
+          "name": "Atomic Structure, <em>for the exam</em>",
+          "tag": "6 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science P4 Atomic Structure in bitesize topics — the nuclear model and how it developed, isotopes, radioactive decay and the three radiations, nuclear equations, and half-life. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Physics"
+        },
+        {
+          "href": "p5-forces-gcse-revision.html",
+          "accent": "#C77A1E",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · P5 Forces",
+          "name": "Forces, <em>for the exam</em>",
+          "tag": "8 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science P5 Forces in bitesize topics — scalars and vectors, resultant forces, work done, springs, motion graphs, acceleration, Newton&#x27;s laws, and stopping distances. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Physics"
+        },
+        {
+          "href": "p6-waves-gcse-revision.html",
+          "accent": "#C77A1E",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · P6 Waves",
+          "name": "Waves, <em>for the exam</em>",
+          "tag": "5 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science P6 Waves in bitesize topics — transverse and longitudinal waves, the wave-speed equation, the electromagnetic spectrum, and the uses and dangers of EM waves. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Physics"
+        },
+        {
+          "href": "p7-magnetism-electromagnetism-gcse-revision.html",
+          "accent": "#C77A1E",
+          "cat": "revision",
+          "tokens": "gcse combined revision",
+          "spec": "GCSE · P7 Magnetism and Electromagnetism",
+          "name": "Magnetism and Electromagnetism, <em>for the exam</em>",
+          "tag": "4 bitesize topics · Foundation and Higher",
+          "desc": "The whole of AQA Combined Science P7 Magnetism and Electromagnetism in bitesize topics — permanent and induced magnets, the magnetic field of a current, the motor effect, and the electric motor. With worked examples, required practicals, Higher-tier content clearly flagged, hinge questions and hide-and-reveal quizzes. Foundation and Higher.",
+          "tags": [
+            "GCSE",
+            "Combined",
+            "Foundation/Higher"
+          ],
+          "level": "GCSE",
+          "type": "revision",
+          "about": "GCSE Physics"
         }
       ]
     },
