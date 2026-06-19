@@ -227,6 +227,31 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ghost silhouette: faint real human body outline behind the schematic -->
+        <g fill="#C9806A" fill-opacity="0.15" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- head -->
+          <ellipse cx="200" cy="40" rx="22" ry="26"/>
+          <!-- neck + torso: shoulders, chest, waist, hips -->
+          <path d="M 188 62 C 187 70 186 74 184 78
+                   C 162 82 150 96 148 118
+                   C 147 138 152 158 158 178
+                   C 162 192 161 200 170 210
+                   C 162 224 162 244 168 252
+                   C 178 256 222 256 232 252
+                   C 238 244 238 224 230 210
+                   C 239 200 238 192 242 178
+                   C 248 158 253 138 252 118
+                   C 250 96 238 82 216 78
+                   C 214 74 213 70 212 62 Z"/>
+          <!-- left arm -->
+          <path d="M 152 110 C 138 128 130 162 124 198 C 121 214 119 222 122 224 C 130 226 134 218 137 204 C 144 168 152 138 162 122 Z"/>
+          <!-- right arm -->
+          <path d="M 248 110 C 262 128 270 162 276 198 C 279 214 281 222 278 224 C 270 226 266 218 263 204 C 256 168 248 138 238 122 Z"/>
+          <!-- left leg -->
+          <path d="M 196 250 C 190 272 182 296 178 314 C 176 318 168 318 167 314 C 168 290 172 266 178 248 Z"/>
+          <!-- right leg -->
+          <path d="M 204 250 C 210 272 218 296 222 314 C 224 318 232 318 233 314 C 232 290 228 266 222 248 Z"/>
+        </g>
         <!-- Schematic human skeleton -->
         <g stroke="#1E2761" stroke-width="2" fill="#EDF2FA">
           <!-- Skull -->
@@ -419,6 +444,24 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 392" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ghost silhouettes: faint real bone-ends (knobbly epiphyses) behind each schematic joint -->
+        <g fill="#C9806A" fill-opacity="0.16" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- HINGE: upper bone with knobbly lower end -->
+          <path d="M 120 64 C 112 64 110 80 112 110 C 113 138 116 158 122 170
+                   C 116 176 110 184 112 192 C 116 200 128 202 138 198
+                   C 146 196 152 188 152 178 C 162 162 164 138 164 110
+                   C 165 80 163 64 154 64 C 145 64 145 74 137 74 C 129 74 130 64 120 64 Z"/>
+          <!-- HINGE: lower bone with knobbly proximal (joint) end -->
+          <path d="M 150 196 C 142 192 134 196 132 206 C 130 216 134 226 144 230
+                   C 156 234 172 234 198 234 C 226 234 248 232 254 226
+                   C 258 220 256 210 250 208 C 240 206 226 208 200 208
+                   C 178 208 164 206 158 200 C 156 198 154 196 150 196 Z"/>
+          <!-- BALL & SOCKET: rounded ball-head bulging slightly beyond the schematic ball -->
+          <circle cx="420" cy="148" r="36" fill-opacity="0.22"/>
+          <!-- BALL & SOCKET: shaft of the lower bone -->
+          <path d="M 401 178 C 397 200 397 228 403 246 C 409 252 431 252 437 246
+                   C 443 228 443 200 439 178 C 433 172 407 172 401 178 Z"/>
+        </g>
         <!-- Divider between the two panels -->
         <line x1="280" y1="60" x2="280" y2="300" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="4 4"/>
 
@@ -595,6 +638,27 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ghost silhouettes: faint real muscle bellies + knobbly long-bone behind each row -->
+        <g fill-opacity="0.16" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- RELAXED row: slim spindle muscle belly behind the schematic muscle -->
+          <path d="M 196 72 C 216 56 312 56 332 72 C 312 88 216 88 196 72 Z"
+                fill="#C9806A" stroke="#C9806A"/>
+          <!-- RELAXED row: knobbly long-bone behind the movable bone -->
+          <path d="M 352 72 C 348 64 350 60 358 60 C 366 60 366 66 374 67
+                   C 470 67 506 67 512 64 C 520 62 524 66 524 72 C 524 78 520 82 512 80
+                   C 506 77 470 77 374 77 C 366 78 366 84 358 84 C 350 84 348 80 352 72 Z"
+                fill="#E7B7A8" stroke="#C9806A"/>
+          <!-- CONTRACTED row: fat teardrop muscle belly behind the schematic muscle -->
+          <path d="M 196 230 C 214 198 298 198 316 230 C 298 262 214 262 196 230 Z"
+                fill="#C9806A" stroke="#C9806A"/>
+          <!-- CONTRACTED row: knobbly long-bone behind the raised movable bone -->
+          <g transform="rotate(-26 350 230)">
+            <path d="M 350 230 C 346 222 348 218 356 218 C 364 218 364 224 372 225
+                     C 470 225 506 225 512 222 C 520 220 524 224 524 230 C 524 236 520 240 512 238
+                     C 506 235 470 235 372 235 C 364 236 364 242 356 242 C 348 242 346 238 350 230 Z"
+                  fill="#E7B7A8" stroke="#C9806A"/>
+          </g>
+        </g>
         <!-- ============ ROW 1 — RELAXED ============ -->
         <g>
           <!-- Heading above the row, in clear space -->
@@ -759,6 +823,29 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ghost silhouettes: faint real bent/straight arm with biceps & triceps bellies -->
+        <g fill="#C9806A" fill-opacity="0.15" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- BENDING: bent-arm flesh silhouette (upper arm down, forearm angled up to the right) -->
+          <path d="M 92 46 C 82 64 82 100 92 130
+                   C 100 152 116 168 138 176
+                   C 168 188 210 200 240 208
+                   C 250 211 256 206 252 198
+                   C 246 188 214 176 188 166
+                   C 168 158 156 146 150 128
+                   C 144 102 144 66 138 48
+                   C 132 40 100 40 92 46 Z"/>
+          <!-- BENDING: biceps belly bulge (front of upper arm) -->
+          <ellipse cx="103" cy="98" rx="17" ry="38"/>
+          <!-- STRAIGHTENING: straight-arm flesh silhouette (upper arm + forearm in line) -->
+          <path d="M 360 46 C 350 64 350 104 358 138
+                   C 360 168 360 196 366 214
+                   C 372 220 420 220 426 214
+                   C 432 196 432 168 434 138
+                   C 442 104 442 64 432 46
+                   C 424 40 368 40 360 46 Z"/>
+          <!-- STRAIGHTENING: triceps belly bulge (back of upper arm) -->
+          <ellipse cx="416" cy="96" rx="17" ry="38"/>
+        </g>
         <!-- ARM BENDING (left) -->
         <g>
           <text x="150" y="26" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">BENDING THE ARM</text>

@@ -822,9 +822,77 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- ===== Realistic body silhouette (FAR BEHIND schematic) ===== -->
+        <path d="M 160 14
+                 C 142 14 130 28 130 47
+                 C 130 60 137 71 147 77
+                 C 142 82 138 87 130 90
+                 C 108 96 92 106 84 124
+                 C 96 121 110 119 120 120
+                 C 116 150 114 182 116 214
+                 C 138 222 182 222 204 214
+                 C 206 182 204 150 200 120
+                 C 210 119 224 121 236 124
+                 C 228 106 212 96 190 90
+                 C 182 87 178 82 173 77
+                 C 183 71 190 60 190 47
+                 C 190 28 178 14 160 14 Z"
+              fill="#C9806A" fill-opacity="0.15" stroke="#B85042" stroke-opacity="0.28" stroke-width="1.5"/>
+        <!-- ===== Clean schematic body shells (opaque) ===== -->
         <!-- Body outline (simple) -->
         <ellipse cx="160" cy="55" rx="30" ry="34" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
         <path d="M 125 95 Q 160 80 195 95 L 205 200 Q 160 215 115 200 Z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- ===== Realistic organ ghosts (on top of body shells, UNDER schematic organs) ===== -->
+        <g>
+          <!-- real brain ghost (folded outline) -->
+          <path d="M 160 35
+                   C 148 35 140 42 142 51
+                   C 137 53 138 59 143 60
+                   C 144 65 150 67 155 64
+                   C 158 67 162 67 165 64
+                   C 170 67 176 65 177 60
+                   C 182 59 183 53 178 51
+                   C 180 42 172 35 160 35 Z"
+                fill="#B85042" fill-opacity="0.18" stroke="#B85042" stroke-opacity="0.32" stroke-width="1"/>
+          <path d="M 160 37 V 65 M 151 41 Q 156 50 151 62 M 169 41 Q 164 50 169 62"
+                fill="none" stroke="#B85042" stroke-opacity="0.26" stroke-width="0.8"/>
+          <!-- real lungs ghost (two lobes, notched toward heart) -->
+          <path d="M 150 105
+                   C 135 105 126 118 124 137
+                   C 123 151 128 162 138 166
+                   C 147 168 152 161 153 149
+                   C 154 134 154 116 153 107
+                   C 153 106 151 105 150 105 Z"
+                fill="#C9806A" fill-opacity="0.18" stroke="#B85042" stroke-opacity="0.32" stroke-width="1"/>
+          <path d="M 170 105
+                   C 185 105 194 118 196 137
+                   C 197 151 192 162 182 166
+                   C 173 168 168 161 167 149
+                   C 166 134 166 116 167 107
+                   C 167 106 169 105 170 105 Z"
+                fill="#C9806A" fill-opacity="0.18" stroke="#B85042" stroke-opacity="0.32" stroke-width="1"/>
+          <!-- trachea hint -->
+          <path d="M 160 95 V 110" fill="none" stroke="#B85042" stroke-opacity="0.26" stroke-width="1.4"/>
+          <!-- real heart ghost (anatomical, apex down-left) -->
+          <path d="M 158 136
+                   C 151 131 142 135 141 145
+                   C 140 153 145 160 153 165
+                   C 157 169 162 172 165 178
+                   C 168 172 174 165 178 158
+                   C 182 150 181 140 174 137
+                   C 168 134 162 136 160 141
+                   C 160 139 159 137 158 136 Z"
+                fill="#B85042" fill-opacity="0.22" stroke="#B85042" stroke-opacity="0.34" stroke-width="1"/>
+          <!-- real liver ghost (right-side wedge low under the lungs) -->
+          <path d="M 130 172
+                   C 150 166 182 166 197 174
+                   C 204 178 203 186 196 190
+                   C 180 198 154 199 138 194
+                   C 130 191 127 182 129 175
+                   C 129 174 129 173 130 172 Z"
+                fill="#B85042" fill-opacity="0.18" stroke="#B85042" stroke-opacity="0.32" stroke-width="1"/>
+        </g>
+        <!-- ===== Clean schematic organs (ON TOP) ===== -->
         <!-- Brain dot -->
         <circle cx="160" cy="50" r="8" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
         <!-- Lungs -->

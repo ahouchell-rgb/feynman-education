@@ -250,6 +250,18 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 185" xmlns="http://www.w3.org/2000/svg">
+        <!-- realistic ghosts (BEHIND schematic): real sperm cell + real egg with corona halo -->
+        <g opacity="0.16" fill="#C9806A">
+          <!-- real sperm: rounded head + long whipping tail -->
+          <path d="M 58 78 q 18 -6 22 12 q 2 18 -16 18 q -20 0 -20 -16 q 0 -10 14 -14 z"/>
+          <path d="M 82 90 q 26 -16 54 0 q 26 16 52 0 q 22 -12 40 0 q 4 4 0 8 q -20 -10 -40 2 q -26 16 -52 0 q -26 -16 -54 0 q -4 -4 0 -10 z"/>
+        </g>
+        <g>
+          <!-- real egg: faint jelly corona halo + round ovum -->
+          <circle cx="280" cy="90" r="56" fill="#E7B7A8" fill-opacity="0.13"/>
+          <circle cx="280" cy="90" r="56" fill="none" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5" stroke-dasharray="3 5"/>
+          <circle cx="280" cy="90" r="40" fill="#C9806A" fill-opacity="0.16"/>
+        </g>
         <!-- Sperm -->
         <g>
           <ellipse cx="70" cy="90" rx="22" ry="15" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
@@ -405,6 +417,13 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
       <svg viewBox="0 0 560 640" xmlns="http://www.w3.org/2000/svg">
         <!-- ============ MALE (top half) ============ -->
         <text x="280" y="26" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#1E2761">MALE SYSTEM</text>
+        <!-- realistic ghost (BEHIND schematic): rough real external anatomy — penis shaft wrapping the urethra tube, scrotum sac wrapping the testis -->
+        <g fill="#C9806A" fill-opacity="0.15" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- penis shaft + rounded glans, wrapping the schematic urethra (x386-470, y160) -->
+          <path d="M 360 134 q 30 -6 70 -4 q 60 2 88 22 q 14 12 0 24 q -28 20 -88 22 q -40 2 -70 -4 q -16 -14 0 -36 z"/>
+          <!-- scrotum sac, wrapping the testis circle (cx250 cy240 r26) -->
+          <path d="M 250 196 q -52 6 -52 56 q 0 50 52 56 q 52 -6 52 -56 q 0 -50 -52 -56 z"/>
+        </g>
         <g>
           <!-- sperm duct: from testis up and across to urethra -->
           <path d="M 250 230 q 0 -70 70 -70 l 70 0" fill="none" stroke="#1E2761" stroke-width="3"/>
@@ -433,6 +452,14 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
         <!-- ============ FEMALE (bottom half) ============ -->
         <text x="280" y="392" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#1E2761">FEMALE SYSTEM</text>
         <g transform="translate(0,40)">
+          <!-- realistic ghost (BEHIND schematic): rough real pear-shaped womb with oviducts curving out to the ovaries -->
+          <g fill="#C9806A" fill-opacity="0.16" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+            <!-- pear-shaped uterus body, fuller and rounder than the schematic -->
+            <path d="M 280 404 q 60 4 64 70 q 0 60 -64 64 q -64 -4 -64 -64 q 4 -66 64 -70 z"/>
+            <!-- oviducts/horns sweeping out to wrap each ovary -->
+            <path d="M 232 416 q -54 -14 -74 40 q -8 22 8 30 q 12 -4 8 -22 q -6 -40 58 -32 z"/>
+            <path d="M 328 416 q 54 -14 74 40 q 8 22 -8 30 q -12 -4 -8 -22 q 6 -40 -58 -32 z"/>
+          </g>
           <!-- uterus (pear shaped) -->
           <path d="M 232 420 q 48 -16 96 0 l -14 100 q -34 16 -68 0 z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2.5"/>
           <!-- oviducts curling out to ovaries -->
@@ -543,6 +570,11 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- realistic ghost (BEHIND schematic): rough real sperm cell — teardrop head + long whipping tail -->
+        <g opacity="0.15" fill="#C9806A">
+          <path d="M 100 110 q 4 -30 36 -30 q 30 0 32 30 q -2 30 -32 30 q -32 0 -36 -30 z"/>
+          <path d="M 196 110 q 30 -22 60 0 q 30 22 60 0 q 30 -22 56 0 q 16 12 28 0 q 4 4 0 9 q -16 12 -32 0 q -26 -20 -52 0 q -30 22 -60 0 q -30 -22 -60 0 q -4 -4 0 -9 z"/>
+        </g>
         <!-- Sperm cell, drawn left-to-right with room above and below for labels -->
         <g>
           <!-- acrosome cap (over the front of the head) -->
@@ -596,6 +628,12 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <!-- realistic ghost (BEHIND schematic): rough real ovum — round cell with a soft jelly-coat halo -->
+        <g>
+          <circle cx="160" cy="115" r="100" fill="#E7B7A8" fill-opacity="0.12"/>
+          <circle cx="160" cy="115" r="100" fill="none" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5" stroke-dasharray="2 6"/>
+          <circle cx="160" cy="115" r="72" fill="#C9806A" fill-opacity="0.15"/>
+        </g>
         <g>
           <!-- jelly coat -->
           <circle cx="160" cy="115" r="80" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2" stroke-dasharray="3 4"/>
@@ -729,6 +767,20 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 330" xmlns="http://www.w3.org/2000/svg">
+        <!-- realistic ghosts (BEHIND schematic): real pear-shaped womb around the chamber, and a real curled foetus behind the schematic baby -->
+        <g fill="#C9806A" fill-opacity="0.15" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- pear-shaped womb hugging the rounded-square chamber, narrowing to a cervix below -->
+          <path d="M 280 44 q 150 8 150 130 q 0 120 -110 132 q -16 18 -40 18 q -24 0 -40 -18 q -110 -12 -110 -132 q 0 -122 150 -130 z"/>
+        </g>
+        <g fill="#C9806A" fill-opacity="0.2" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- curled real foetus behind the schematic baby: big round head top, curved back, curled legs tucked up -->
+          <!-- head -->
+          <circle cx="372" cy="120" r="30"/>
+          <!-- curled body + tucked legs, spine arcing round to the right and down -->
+          <path d="M 392 138 q 40 6 44 50 q 4 44 -38 58 q -34 12 -52 -10 q 14 4 26 -6 q -26 -2 -34 -28 q 10 12 24 10 q -18 -14 -12 -38 q 8 16 22 16 q -14 -16 -4 -34 q 6 18 22 22 q -12 -16 0 -36 q 4 16 22 18 q -14 -14 -10 -34 z"/>
+          <!-- arm curled across the chest -->
+          <path d="M 368 150 q 24 -2 32 20 q -6 14 -22 12 q 8 -10 -2 -18 q -8 -8 -22 -2 q 4 -10 14 -12 z" fill-opacity="0.14"/>
+        </g>
         <!-- uterus wall (thick outline, centred with wide margins for labels) -->
         <path d="M 170 60 q 110 -26 220 0 q 30 110 0 200 q -110 28 -220 0 q -30 -100 0 -200 z" fill="#D9E4F2" stroke="#1E2761" stroke-width="8"/>
         <!-- amniotic fluid region (inner pale area) -->
@@ -965,6 +1017,23 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 380" xmlns="http://www.w3.org/2000/svg">
+        <!-- realistic ghost (BEHIND schematic): rough real flower — a ring of soft petals around the bloom on a leafy stem -->
+        <g fill="#C9806A" fill-opacity="0.13" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- five rounded petals fanned around the flower head -->
+          <ellipse cx="280" cy="74" rx="34" ry="54"/>
+          <ellipse cx="200" cy="118" rx="34" ry="54" transform="rotate(-58 200 118)"/>
+          <ellipse cx="360" cy="118" rx="34" ry="54" transform="rotate(58 360 118)"/>
+          <ellipse cx="214" cy="206" rx="34" ry="50" transform="rotate(-26 214 206)"/>
+          <ellipse cx="346" cy="206" rx="34" ry="50" transform="rotate(26 346 206)"/>
+          <!-- soft round flower centre -->
+          <circle cx="280" cy="150" r="42" fill="#E7B7A8" fill-opacity="0.2" stroke="none"/>
+        </g>
+        <g fill="#2C5F2D" fill-opacity="0.12" stroke="#2C5F2D" stroke-opacity="0.25" stroke-width="1.5">
+          <!-- stem + a leaf either side, behind the schematic stalk -->
+          <path d="M 274 250 l 0 120 l 12 0 l 0 -120 z" stroke="none"/>
+          <path d="M 276 300 q -46 -8 -70 -40 q 40 -4 70 26 z"/>
+          <path d="M 284 320 q 46 -8 70 -40 q -40 -4 -70 26 z"/>
+        </g>
         <!-- ===== petals: a distinct pale backdrop, up near the top corners ===== -->
         <g fill="#FBEAE7" stroke="#B85042" stroke-width="1.5">
           <ellipse cx="214" cy="120" rx="40" ry="17" transform="rotate(-32 214 120)"/>

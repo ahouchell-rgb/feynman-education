@@ -409,6 +409,23 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
           </marker>
         </defs>
 
+        <!-- ============ Realistic anatomical ghost (BEHIND the schematic) ============ -->
+        <!-- faint real-shape silhouettes so the schematic numbers map onto real organs -->
+        <g opacity="0.9" stroke-linejoin="round" stroke-linecap="round">
+          <!-- rough human torso outline framing the whole tube -->
+          <path d="M 118 30 Q 92 34 82 70 Q 74 100 86 150 Q 70 170 70 210 Q 70 250 80 300 Q 84 345 96 380 L 188 380 Q 200 345 204 300 Q 214 250 214 210 Q 214 170 198 150 Q 210 100 202 70 Q 192 34 166 30 Q 142 26 118 30 Z"
+                fill="#C9806A" fill-opacity="0.10" stroke="#B85042" stroke-opacity="0.22" stroke-width="2"/>
+          <!-- real J-shaped stomach bag (behind schematic part 3) -->
+          <path d="M 150 128 Q 116 134 106 162 Q 98 188 116 204 Q 138 222 168 210 Q 192 200 190 172 Q 188 150 170 148 Q 158 147 156 158 Q 156 168 168 172 Q 176 175 176 168"
+                fill="#C9806A" fill-opacity="0.16" stroke="#B85042" stroke-opacity="0.30" stroke-width="2.2"/>
+          <!-- real coiled small intestine (soft loops, behind schematic part 4) -->
+          <path d="M 150 206 Q 196 214 192 240 Q 188 264 146 262 Q 110 260 116 286 Q 122 310 168 306 Q 200 303 196 326 Q 192 344 150 342 Q 122 341 128 326"
+                fill="none" stroke="#C9806A" stroke-opacity="0.30" stroke-width="9"/>
+          <!-- real large intestine frame (broad colon arch, behind schematic part 5) -->
+          <path d="M 92 320 Q 84 244 88 206 Q 90 188 104 188 Q 118 188 118 204 Q 116 246 122 304 M 200 320 Q 208 244 204 206 Q 202 188 188 188 Q 176 188 176 204 Q 178 246 174 304"
+                fill="none" stroke="#C9806A" stroke-opacity="0.26" stroke-width="11"/>
+        </g>
+
         <!-- ============ Left: the tube, drawn as one connected path ============ -->
         <!-- 1 Mouth -->
         <circle cx="150" cy="45" r="22" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
@@ -685,6 +702,19 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <!-- ============ Realistic anatomical ghost (BEHIND the schematic) ============ -->
+        <!-- faint row of real finger-like villi (the gut lining) behind the clean villus -->
+        <g opacity="0.9">
+          <path d="M 60 232
+                   L 60 120 Q 60 96 74 96 Q 88 96 88 120 L 88 232
+                   M 96 232 L 96 100 Q 96 74 110 74 Q 124 74 124 100 L 124 232
+                   M 132 232 L 132 84 Q 132 56 147 56 Q 162 56 162 84 L 162 232
+                   M 170 232 L 170 100 Q 170 74 184 74 Q 198 74 198 100 L 198 232
+                   M 206 232 L 206 118 Q 206 94 220 94 Q 234 94 234 118 L 234 232
+                   M 242 232 L 242 128 Q 242 106 255 106 Q 268 106 268 128 L 268 232"
+                fill="#E7B7A8" fill-opacity="0.16" stroke="#C9806A" stroke-opacity="0.28" stroke-width="1.8" stroke-linejoin="round"/>
+        </g>
+
         <!-- A single villus, cross-section -->
         <!-- gut interior label -->
         <text x="160" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">FOOD IN THE GUT</text>

@@ -668,6 +668,16 @@ footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:va
 
     <div class="diagram">
       <svg viewBox="0 0 560 380" xmlns="http://www.w3.org/2000/svg">
+        <!-- GHOST: faint realistic silhouette of a real eyeball + eyelid/socket, sits UNDER the schematic -->
+        <g opacity="0.85">
+          <!-- round globe of the real eye (slightly larger than the schematic so it haloes it) -->
+          <circle cx="298" cy="190" r="132" fill="#E7B7A8" fill-opacity="0.15" stroke="#C9806A" stroke-opacity="0.3" stroke-width="2"/>
+          <!-- cornea bulge at the front of the real globe -->
+          <path d="M 168 132 Q 122 190 168 248" fill="#E7B7A8" fill-opacity="0.13" stroke="#C9806A" stroke-opacity="0.28" stroke-width="1.5"/>
+          <!-- hint of upper and lower eyelid sweeping over the globe -->
+          <path d="M 150 150 Q 300 70 452 158" fill="none" stroke="#C9806A" stroke-opacity="0.26" stroke-width="2"/>
+          <path d="M 150 230 Q 300 312 452 224" fill="none" stroke="#C9806A" stroke-opacity="0.26" stroke-width="2"/>
+        </g>
         <!-- Eyeball -->
         <ellipse cx="290" cy="190" rx="150" ry="110" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
         <!-- Cornea: clear domed bulge on the front (left) -->
