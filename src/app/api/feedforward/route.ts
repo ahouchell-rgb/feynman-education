@@ -71,11 +71,9 @@ function buildPrompt({ lesson, unit, gaps, className, source }: any) {
   const boxSpec = isExam
     ? `  1. A short "Remember" line: 2-3 sentences of the core idea in plain language.
   2. Two exam-style questions with their mark allocations shown, e.g. (3 marks), ramping from a 1-2 mark recall item to a higher-tariff explain/describe question. Show the command word.
-  3. A faint "Mark scheme" line listing the creditworthy points, so pupils see exactly how the marks are awarded.
-  4. Ruled working space.`
+  3. A faint "Mark scheme" line listing the creditworthy points, so pupils see exactly how the marks are awarded.`
     : `  1. A short "Remember" line: 2-3 sentences of the core idea in plain language.
-  2. Three questions that ramp easy -> exam-style: the first heavily scaffolded (sentence starter or word bank), the last an unscaffolded exam-style question with its mark allocation shown, e.g. (3 marks).
-  3. Faint ruled lines / working space for pupils to write.`;
+  2. Three questions that ramp easy -> exam-style: the first heavily scaffolded (sentence starter or word bank), the last an unscaffolded exam-style question with its mark allocation shown, e.g. (3 marks).`;
   return `${intro}
 
 ${gapHeading}
@@ -88,7 +86,7 @@ Keywords: ${(lesson?.keywords || []).join(", ") || "none"}
 
 Produce ONE complete, self-contained HTML document that prints cleanly on A4 in black on white. For EACH ${isExam ? "exam topic" : "weak objective"} above, in order, include a clearly bordered box containing:
 ${boxSpec}
-Start with a title${isExam ? " (make clear it is exam practice)" : ""} and a line for the class name and date. Use UK spelling and GCSE/KS3 command words (state, describe, explain, calculate). Inline all CSS; use NO external resources (no CDNs, fonts, or images). Return ONLY the HTML inside a single \`\`\`html ... \`\`\` code block.`;
+Start with a title${isExam ? " (make clear it is exam practice)" : ""} and a line for the class name and date. Pupils answer in their exercise books, so do NOT add answer lines, ruled writing space, or blank gaps — keep every box compact so the whole sheet stays as short as possible. Use UK spelling and GCSE/KS3 command words (state, describe, explain, calculate). Inline all CSS; use NO external resources (no CDNs, fonts, or images). Return ONLY the HTML inside a single \`\`\`html ... \`\`\` code block.`;
 }
 
 // Prompt for the UPLOADED-PAPER mode: the model is given image(s)/PDF of a real
@@ -103,13 +101,12 @@ Build the sheet around EXACTLY those questions. For each, work out the topic and
   1. A short "Remember" line — 2-3 sentences of the core idea the question needed, in plain language.
   2. Two FRESH exam-style questions on the same topic/skill with mark allocations shown, e.g. (3 marks), ramping from a 1-2 mark recall item to a higher-tariff explain/describe/calculate question; show the command word. Write PARALLEL questions — do NOT copy the paper's wording.
   3. A faint "Mark scheme" line listing the creditworthy points, so pupils see how the marks are awarded.
-  4. Ruled working space.
 
 LESSON / UNIT CONTEXT (use only to pitch the level and vocabulary):
 Unit: ${unit?.title || "(unit)"} · ${unit?.discipline || ""} · ${unit?.year_group || ""}
 Lesson: ${lesson?.title || "(lesson)"}
 
-Start with a title that makes clear it is exam feedback practice, and a line for the class name and date. Use UK spelling and GCSE/KS3 command words. Inline all CSS; use NO external resources. Return ONLY the HTML inside a single \`\`\`html ... \`\`\` code block.`;
+Start with a title that makes clear it is exam feedback practice, and a line for the class name and date. Pupils answer in their exercise books, so do NOT add answer lines, ruled writing space, or blank gaps — keep every box compact so the whole sheet stays as short as possible. Use UK spelling and GCSE/KS3 command words. Inline all CSS; use NO external resources. Return ONLY the HTML inside a single \`\`\`html ... \`\`\` code block.`;
 }
 
 export async function POST(req: Request) {
