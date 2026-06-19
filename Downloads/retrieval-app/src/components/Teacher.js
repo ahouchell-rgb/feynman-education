@@ -8,6 +8,7 @@ import { STAR_INTERVAL, WEEKLY_TARGET, getWeekBounds } from "../lib/week";
 import { AdminPanel } from "./AdminPanel";
 import { BulkUpload } from "./BulkUpload";
 import { ClassGaps } from "./ClassGaps";
+import { Misconceptions } from "./Misconceptions";
 import { HodPanel } from "./HodPanel";
 import { MarkReview } from "./MarkReview";
 import { LessonStarter } from "./LessonStarter";
@@ -906,6 +907,9 @@ export function Teacher({ user }) {
 
               {/* Class gaps — weakest objectives from the mastery spine, mapped to planning units */}
               <ClassGaps cls={cls} />
+
+              {/* Misconceptions — the specific faulty ideas behind the wrong answers, + one-click targeted reteach */}
+              <Misconceptions cls={cls} userId={user.id} />
 
               {/* ── Insights: detailed analytics, collapsed by default so the dashboard leads with headlines ── */}
               <div style={{ marginTop: 26, marginBottom: 2, fontSize: 10, fontWeight: 700, letterSpacing: ".16em", textTransform: "uppercase", color: C.dim }}>Insights</div>

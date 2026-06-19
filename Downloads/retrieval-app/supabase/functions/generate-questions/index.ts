@@ -53,7 +53,7 @@ Deno.serve(async (req: Request) => {
       return json({ error: "Only staff can generate questions" }, 403);
     }
 
-    const { topic_name, count, key_stage, existing } = await req.json();
+    const { topic_name, count, key_stage, existing, focus } = await req.json();
     const topic = String(topic_name || "").trim();
     if (!topic) return json({ error: "Missing topic_name" }, 400);
     const n = Math.max(1, Math.min(10, Number(count) || 5));
@@ -61,8 +61,15 @@ Deno.serve(async (req: Request) => {
     const avoid = Array.isArray(existing) && existing.length
       ? `\n\nDo NOT duplicate or closely paraphrase these existing questions:\n- ${existing.slice(0, 25).map((s: unknown) => String(s).slice(0, 200)).join("\n- ")}`
       : "";
+    // Optional: target a specific misconception (used by the misconception miner's
+    // reteach action). These become REMEDIAL questions aimed at the exact confusion,
+    // not generic topic recall. Absent → behaves exactly as before.
+    const focusText = String(focus || "").trim().slice(0, 300);
+    const focusLine = focusText
+      ? `\n\nThese are REMEDIAL questions. Every one must directly re-test and correct this specific misconception the class showed: "${focusText}". Probe the exact distinction or step pupils got wrong head-on — do not drift to easier or unrelated facts.`
+      : "";
 
-    const userMsg = `Write ${n} ${stage} science retrieval questions for the topic: "${topic}".${avoid}`;
+    const userMsg = `Write ${n} ${stage} science retrieval questions for the topic: "${topic}".${focusLine}${avoid}`;
 
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
