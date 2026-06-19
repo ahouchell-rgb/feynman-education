@@ -36,14 +36,14 @@ const PRST_CLR = {
 // Default theme→slot mapping used when a master omits its own clrMap.
 const DEFAULT_CLRMAP = { bg1: "lt1", tx1: "dk1", bg2: "lt2", tx2: "dk2", accent1: "accent1", accent2: "accent2", accent3: "accent3", accent4: "accent4", accent5: "accent5", accent6: "accent6", hlink: "hlink", folHlink: "folHlink" };
 
-const clampByte = (n) => Math.max(0, Math.min(255, Math.round(n)));
-const hexToRgb = (h) => { const m = /^#?([0-9a-f]{6})$/i.exec(h || ""); if (!m) return null; const n = parseInt(m[1], 16); return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }; };
-const rgbToHex = ({ r, g, b }) => "#" + [r, g, b].map((v) => clampByte(v).toString(16).padStart(2, "0")).join("");
+export const clampByte = (n) => Math.max(0, Math.min(255, Math.round(n)));
+export const hexToRgb = (h) => { const m = /^#?([0-9a-f]{6})$/i.exec(h || ""); if (!m) return null; const n = parseInt(m[1], 16); return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }; };
+export const rgbToHex = ({ r, g, b }) => "#" + [r, g, b].map((v) => clampByte(v).toString(16).padStart(2, "0")).join("");
 function rgbToHsl({ r, g, b }) { r /= 255; g /= 255; b /= 255; const mx = Math.max(r, g, b), mn = Math.min(r, g, b); let h = 0, s = 0; const l = (mx + mn) / 2; const d = mx - mn; if (d) { s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn); h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h /= 6; } return { h, s, l }; }
 function hslToRgb({ h, s, l }) { const f = (n) => { const k = (n + h * 12) % 12; const a = s * Math.min(l, 1 - l); return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)); }; return { r: f(0) * 255, g: f(8) * 255, b: f(4) * 255 }; }
 
 // Apply OOXML colour modifiers (children of the colour element).
-function applyMods(hex, clrEl) {
+export function applyMods(hex, clrEl) {
   let rgb = hexToRgb(hex); if (!rgb) return hex;
   const frac = (el) => (numA(el, "val") || 0) / 100000;
   for (const ch of elKids(clrEl)) {
@@ -91,7 +91,7 @@ const loadRels = async (zip, partPath) => {
   return { map, entries };
 };
 // Resolve a relationship target (which may be relative, ../, or absolute) to a part path.
-const resolve = (base, target) => {
+export const resolve = (base, target) => {
   if (!target) return null;
   if (target.startsWith("/")) return target.slice(1);
   const parts = base.split("/"); parts.pop();

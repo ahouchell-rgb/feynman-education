@@ -12,6 +12,8 @@
 //   SUPABASE_SERVICE_ROLE_KEY    — optional; only used to log token usage
 
 import { supaRest } from "@/lib/supabaseRest";
+import { costGBP as costGBP_, RATES, todayISO } from "@/lib/pricing";
+import { extractHtml } from "@/lib/htmlExtract";
 
 // Node runtime (not edge): the edge ~25s cap was returning 504s on the longer Sonnet
 // generations (especially the multimodal paper-upload path). Node + maxDuration gives the
@@ -28,28 +30,11 @@ const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION = "2023-06-01";
 const MAX_OUTPUT_TOKENS = 4096;
 
-// Rough Sonnet pricing — kept in step with chat-with-lesson.
-const INPUT_USD_PER_MTOK = 3;
-const OUTPUT_USD_PER_MTOK = 15;
-const GBP_PER_USD = 0.79;
 const DAILY_CAP_GBP = Number(process.env.AI_DAILY_CAP_GBP) || 0; // £/day per teacher; 0 (default) = unlimited. Set AI_DAILY_CAP_GBP in env to re-enable.
-
-const todayISO = () => new Date().toISOString().slice(0, 10);
-const costGBP = (i: number, o: number) =>
-  (i / 1e6) * INPUT_USD_PER_MTOK * GBP_PER_USD + (o / 1e6) * OUTPUT_USD_PER_MTOK * GBP_PER_USD;
+const costGBP = (i: number, o: number) => costGBP_(i, o, RATES.sonnet);
 
 function jsonError(message: string, status = 500) {
   return new Response(JSON.stringify({ error: message }), { status, headers: { "content-type": "application/json" } });
-}
-
-// Pull the HTML doc out of the model's reply: prefer a ```html block, then a
-// raw <html>…</html>, else fall back to the whole reply.
-function extractHtml(text: string): string {
-  const fenced = text.match(/```html\s*([\s\S]*?)```/i);
-  if (fenced) return fenced[1].trim();
-  const doc = text.match(/<!doctype[\s\S]*<\/html>|<html[\s\S]*<\/html>/i);
-  if (doc) return doc[0].trim();
-  return text.trim();
 }
 
 interface SbOpts { method?: string; body?: any; token?: string; params?: Record<string, string>; single?: boolean; }

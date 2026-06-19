@@ -10,6 +10,7 @@
 // Required env: ANTHROPIC_API_KEY (set in .env.local for local dev, Vercel for prod).
 
 import { HOUSE_LESSON_STYLE } from "@/lib/lessonStyle";
+import { costGBP as costGBP_, RATES, todayISO } from "@/lib/pricing";
 
 export const runtime = "edge";
 
@@ -26,10 +27,6 @@ const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 // alongside the caller's bearer for the auth check and the RLS usage read.
 const SK_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 
-// Opus pricing (claude-opus-4-8): $5 in / $25 out per Mtok.
-const INPUT_USD_PER_MTOK = 5;
-const OUTPUT_USD_PER_MTOK = 25;
-const GBP_PER_USD = 0.79;
 // Dedicated daily ceiling for Opus deck-generation, separate from the £1 chat cap:
 // whole-deck Opus edits are the core authoring action and cost more per call, so a
 // flat £1 would block real lesson-building. This is an abuse / runaway backstop per
@@ -38,9 +35,7 @@ const GBP_PER_USD = 0.79;
 // chat/feedforward routes in that pool are over-counted, only making the cap stricter).
 const DAILY_CAP_GBP = Number(process.env.AI_DAILY_CAP_GBP) || 0; // £/day per teacher; 0 (default) = unlimited. Set AI_DAILY_CAP_GBP in env to re-enable.
 
-const todayISO = () => new Date().toISOString().slice(0, 10);
-const costGBP = (input, output) =>
-  (input / 1e6) * INPUT_USD_PER_MTOK * GBP_PER_USD + (output / 1e6) * OUTPUT_USD_PER_MTOK * GBP_PER_USD;
+const costGBP = (input: number, output: number) => costGBP_(input, output, RATES.opus);
 
 const json = (obj, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json" } });

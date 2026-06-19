@@ -11,6 +11,7 @@
 
 import { supaRest } from "@/lib/supabaseRest";
 import { HOUSE_LESSON_STYLE } from "@/lib/lessonStyle";
+import { costGBP as costGBP_, RATES, todayISO } from "@/lib/pricing";
 
 export const runtime = "edge";
 
@@ -24,10 +25,6 @@ const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION = "2023-06-01";
 const MAX_OUTPUT_TOKENS = 4096;
 
-// Rough Sonnet pricing. Tune if Anthropic publishes new numbers.
-const INPUT_USD_PER_MTOK = 3;
-const OUTPUT_USD_PER_MTOK = 15;
-const GBP_PER_USD = 0.79;
 const DAILY_CAP_GBP = Number(process.env.AI_DAILY_CAP_GBP) || 0; // £/day per teacher; 0 (default) = unlimited. Set AI_DAILY_CAP_GBP in env to re-enable.
 
 // How much chat history to send back to Claude as context.
@@ -36,12 +33,8 @@ const HISTORY_LIMIT = 30;
 // ─── Helpers ───────────────────────────────────────────────────────────
 const enc = new TextEncoder();
 const sse = (obj) => enc.encode(`data: ${JSON.stringify(obj)}\n\n`);
-const todayISO = () => new Date().toISOString().slice(0, 10);
 
-function costGBP(input, output) {
-  return (input / 1e6) * INPUT_USD_PER_MTOK * GBP_PER_USD
-       + (output / 1e6) * OUTPUT_USD_PER_MTOK * GBP_PER_USD;
-}
+const costGBP = (input: number, output: number) => costGBP_(input, output, RATES.sonnet);
 
 function jsonError(message, status = 500) {
   return new Response(JSON.stringify({ error: message }), {
