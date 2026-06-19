@@ -21,8 +21,16 @@ export default function PresentPage() {
   const [blackout, setBlackout] = useState("");   // "" | "black" | "white"
   const [grid, setGrid] = useState(false);
   const [presenter, setPresenter] = useState(false);
-  const [pen, setPen] = useState(false);
-  const [strokes, setStrokes] = useState([]);     // per-slide freehand annotations
+  const [pen, setPen] = useState(false);          // "any pointer draws" mode (laptop mouse/trackpad annotation)
+  const [penDraw, setPenDraw] = useState(true);   // Apple Pencil inks live without toggling a mode
+  const [penColor, setPenColor] = useState("#e23b2e");
+  const [penWidth, setPenWidth] = useState(5);
+  const [highlight, setHighlight] = useState(false); // highlighter: translucent + wide
+  const [strokes, setStrokes] = useState([]);     // per-slide freehand annotations: {color,width,opacity,pts}
+  const [touchCapable, setTouchCapable] = useState(false); // iPad / touchscreen → show on-screen ink controls
+  const [penSeen, setPenSeen] = useState(false);  // an Apple Pencil / stylus has been used
+  const drawingId = useRef(null);                 // pointerId of the in-progress ink stroke (palm rejection)
+  const navStart = useRef(null);                  // a non-drawing pointer, for tap-to-advance
   const [picker, setPicker] = useState(false);    // random name picker
   const [editNames, setEditNames] = useState(false);
   const [names, setNames] = useState([]);
@@ -65,6 +73,14 @@ export default function PresentPage() {
 
   // clear annotations when the slide changes
   useEffect(() => { setStrokes([]); }, [i]);
+
+  // Detect a touch / pen device (iPad, Surface, touchscreen). On a tablet there's
+  // no keyboard for the P/C/arrow shortcuts, so we surface on-screen ink controls.
+  useEffect(() => {
+    const coarse = typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)")?.matches;
+    const touch = typeof navigator !== "undefined" && (navigator.maxTouchPoints || 0) > 0;
+    setTouchCapable(Boolean(coarse || touch));
+  }, []);
 
   // Enter real browser fullscreen on the teacher's first interaction. It must be
   // gesture-bound (navigating here from the "Present" click doesn't count), so we
@@ -131,6 +147,7 @@ export default function PresentPage() {
       else if (k === "s" || k === "S") setPresenter((v) => !v);
       else if (k === "p" || k === "P") setPen((v) => !v);
       else if (k === "c" || k === "C") setStrokes([]);
+      else if (k === "u" || k === "U" || ((e.metaKey || e.ctrlKey) && k === "z")) { e.preventDefault(); setStrokes((s) => s.slice(0, -1)); }
       else if (k === "n" || k === "N") { setPicker(true); setTimeout(spin, 0); }
     };
     window.addEventListener("keydown", onKey);
@@ -147,13 +164,51 @@ export default function PresentPage() {
   const height = width * (VH / VW);
   const scale = width / VW;
 
-  // pen handlers (draw in virtual 960×540 coords)
+  // ── Live inking (draw in virtual 960×540 coords) ─────────────────────────
+  // Route by pointer type: an Apple Pencil always draws; a finger / mouse tap
+  // still navigates. So on an iPad the teacher annotates with the pencil and
+  // advances with a finger — no mode switch. The `pen` toggle (P key / ✎ button)
+  // additionally lets a mouse / finger draw, for laptop annotation.
+  const inkInteractive = pen || (penDraw && (touchCapable || penSeen));
+  const shouldDraw = (e) => (e.pointerType === "pen" ? (penDraw || pen) : pen);
+  const newStroke = () => (highlight
+    ? { color: "#ffe14d", width: 22, opacity: 0.35 }
+    : { color: penColor, width: penWidth, opacity: 1 });
+
   const penPoint = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
     return [Math.round((e.clientX - r.left) / scale), Math.round((e.clientY - r.top) / scale)];
   };
-  const penDown = (e) => { e.stopPropagation(); e.currentTarget.setPointerCapture?.(e.pointerId); setStrokes((s) => [...s, { color: "#e23b2e", pts: [penPoint(e)] }]); };
-  const penMove = (e) => { if (e.buttons !== 1) return; setStrokes((s) => { if (!s.length) return s; const last = s[s.length - 1]; const np = { ...last, pts: [...last.pts, penPoint(e)] }; return [...s.slice(0, -1), np]; }); };
+  const onDown = (e) => {
+    if (e.pointerType === "pen") setPenSeen(true);
+    // palm rejection: once a pencil stroke is in progress, ignore stray touches
+    if (drawingId.current != null && e.pointerType !== "pen") return;
+    if (shouldDraw(e)) {
+      e.stopPropagation();
+      drawingId.current = e.pointerId;
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+      const st = newStroke();
+      setStrokes((s) => [...s, { ...st, pts: [penPoint(e)] }]);
+    } else {
+      navStart.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+    }
+  };
+  const onMove = (e) => {
+    if (drawingId.current !== e.pointerId) return;
+    const p = penPoint(e);
+    setStrokes((s) => { if (!s.length) return s; const last = s[s.length - 1]; return [...s.slice(0, -1), { ...last, pts: [...last.pts, p] }]; });
+  };
+  const onUp = (e) => {
+    if (drawingId.current === e.pointerId) { drawingId.current = null; return; }
+    const ns = navStart.current;
+    if (ns && ns.id === e.pointerId) {
+      navStart.current = null;
+      if (Math.hypot(e.clientX - ns.x, e.clientY - ns.y) < 12) {  // a tap, not a drag
+        const r = e.currentTarget.getBoundingClientRect();
+        ((e.clientX - r.left) / r.width < 0.28 ? back : advance)();   // tap left edge = back
+      }
+    }
+  };
 
   return (
     <div onClick={() => { if (!pen) advance(); }}
@@ -165,12 +220,16 @@ export default function PresentPage() {
             master={deck?.master} index={i} total={slides.length} title={deck?.title} />
           <svg viewBox={`0 0 ${VW} ${VH}`} width={width} height={height}
             onClick={(e) => e.stopPropagation()}
-            onPointerDown={pen ? penDown : undefined} onPointerMove={pen ? penMove : undefined}
+            onPointerDown={inkInteractive ? onDown : undefined}
+            onPointerMove={inkInteractive ? onMove : undefined}
+            onPointerUp={inkInteractive ? onUp : undefined}
+            onPointerCancel={inkInteractive ? onUp : undefined}
             style={{ position: "absolute", top: 0, left: 0, touchAction: "none",
-                     pointerEvents: pen ? "auto" : "none", cursor: pen ? "crosshair" : "default" }}>
+                     pointerEvents: inkInteractive ? "auto" : "none", cursor: pen ? "crosshair" : "default" }}>
             {strokes.map((st, idx) => (
               <polyline key={idx} points={st.pts.map((p) => p.join(",")).join(" ")}
-                fill="none" stroke={st.color} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />
+                fill="none" stroke={st.color} strokeOpacity={st.opacity ?? 1}
+                strokeWidth={st.width || 5} strokeLinecap="round" strokeLinejoin="round" />
             ))}
           </svg>
         </div>
@@ -257,13 +316,45 @@ export default function PresentPage() {
         </div>
       )}
 
+      {/* on-screen ink + nav controls — shown on touch / pen devices (iPad), where
+          there's no keyboard, and whenever a draw mode is active. */}
+      {(touchCapable || penSeen || pen) && (
+        <div onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}
+          style={{ position: "fixed", bottom: 14, left: "50%", transform: "translateX(-50%)", zIndex: 30,
+                   display: "flex", alignItems: "center", flexWrap: "wrap", justifyContent: "center", gap: 7,
+                   padding: "8px 12px", background: "rgba(20,20,20,0.88)", border: "1px solid #2f2f2f",
+                   borderRadius: 16, backdropFilter: "blur(6px)" }}>
+          <TBtn onClick={back} title="Previous slide">◀</TBtn>
+          <TBtn onClick={advance} title="Next slide">▶</TBtn>
+          <Sep />
+          <TBtn onClick={() => setPenDraw((v) => !v)} active={penDraw} title="Pencil ink on/off">✎</TBtn>
+          {[["#e23b2e", "Red"], ["#1a1714", "Black"], ["#2e6fd6", "Blue"], ["#2f9e44", "Green"]].map(([c, label]) => (
+            <Swatch key={c} color={c} title={label} active={!highlight && penColor === c}
+              onClick={() => { setHighlight(false); setPenColor(c); if (!penDraw) setPenDraw(true); }} />
+          ))}
+          <Swatch color="#ffe14d" hl title="Highlighter" active={highlight}
+            onClick={() => { setHighlight((v) => !v); if (!penDraw) setPenDraw(true); }} />
+          <TBtn onClick={() => setPenWidth((w) => (w >= 11 ? 3 : w + 4))} title="Pen width">
+            <span style={{ display: "inline-block", width: Math.min(penWidth + 3, 16), height: Math.min(penWidth + 3, 16), borderRadius: "50%", background: "#eee" }} />
+          </TBtn>
+          <Sep />
+          <TBtn onClick={() => setStrokes((s) => s.slice(0, -1))} title="Undo">↶</TBtn>
+          <TBtn onClick={() => setStrokes([])} title="Clear annotations">✕</TBtn>
+          <TBtn onClick={() => setBlackout((v) => (v === "black" ? "" : "black"))} active={blackout === "black"} title="Blank screen">⬛</TBtn>
+          <Sep />
+          <TBtn onClick={() => { if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {}); router.push("/slides"); }} title="Exit">⤬</TBtn>
+        </div>
+      )}
+
       {/* status / hint bar */}
       <div style={{ position: "fixed", bottom: 12, right: 16, fontFamily: "monospace", fontSize: 12, color: "#777" }}>
-        {i + 1} / {slides.length}{pen ? " · ✎ pen (C clears)" : ""}
+        {i + 1} / {slides.length}{(pen || (penDraw && (touchCapable || penSeen))) ? " · ✎" : ""}
       </div>
+      {!touchCapable && (
       <div style={{ position: "fixed", bottom: 12, left: 16, fontFamily: "monospace", fontSize: 11, color: "#555" }}>
-        ← → move · S notes · G grid · B/W blank · P pen · N names · Esc exit
+        ← → move · S notes · G grid · B/W blank · P pen · U undo · C clear · N names · Esc exit
       </div>
+      )}
     </div>
   );
 }
@@ -274,3 +365,24 @@ function Center({ children }) {
                   alignItems: "center", justifyContent: "center", fontFamily: "monospace", fontSize: 13 }}>{children}</div>
   );
 }
+
+// On-screen present-mode controls (touch / pen devices have no keyboard).
+function TBtn({ onClick, children, active = false, title = "" }) {
+  return (
+    <button onClick={onClick} title={title}
+      style={{ minWidth: 42, height: 42, padding: "0 10px", fontSize: 18, lineHeight: 1,
+               color: active ? "#1a1714" : "#e8e8e8", background: active ? "#ffd166" : "#242424",
+               border: "1px solid #3a3a3a", borderRadius: 11, cursor: "pointer",
+               display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+      {children}
+    </button>
+  );
+}
+function Swatch({ color, active = false, onClick, hl = false, title = "" }) {
+  return (
+    <button onClick={onClick} title={title || color} aria-label={title || color}
+      style={{ width: 30, height: 30, borderRadius: hl ? 7 : "50%", background: color,
+               border: active ? "3px solid #fff" : "2px solid #666", cursor: "pointer", padding: 0 }} />
+  );
+}
+function Sep() { return <span style={{ width: 1, height: 26, background: "#3a3a3a", margin: "0 3px" }} />; }
