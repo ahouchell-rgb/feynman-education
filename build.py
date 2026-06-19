@@ -270,9 +270,58 @@ html = ld_re.sub(
 with open(INDEX, "w", encoding="utf-8") as f:
     f.write(html)
 
+# ---------------------------------------------------------------------------
+# 3. sitemap.xml + robots.txt — homepage + every internal, non-coming resource.
+#    (External companion links and "coming soon" cards are excluded.)
+# ---------------------------------------------------------------------------
+import datetime
+
+
+def lastmod_for(href):
+    fp = os.path.join(HERE, href)
+    if os.path.exists(fp):
+        return datetime.date.fromtimestamp(os.path.getmtime(fp)).isoformat()
+    return None
+
+
+sm_urls = [(origin + "/", lastmod_for("index.html"))]
+_seen = set()
+for sec in sections:
+    for it in sec["items"]:
+        if it.get("coming") or it.get("external"):
+            continue
+        href = it["href"]
+        if href in _seen:
+            continue
+        _seen.add(href)
+        sm_urls.append((origin + "/" + href, lastmod_for(href)))
+
+
+def _url_entry(loc, lm):
+    s = "  <url>\n    <loc>%s</loc>\n" % loc
+    if lm:
+        s += "    <lastmod>%s</lastmod>\n" % lm
+    return s + "  </url>"
+
+
+sitemap = (
+    '<?xml version="1.0" encoding="UTF-8"?>\n'
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + "\n".join(_url_entry(loc, lm) for loc, lm in sm_urls)
+    + "\n</urlset>\n"
+)
+with open(os.path.join(HERE, "sitemap.xml"), "w", encoding="utf-8") as f:
+    f.write(sitemap)
+
+robots = "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % origin
+with open(os.path.join(HERE, "robots.txt"), "w", encoding="utf-8") as f:
+    f.write(robots)
+
 n_internal_ext = pos
 print("Rebuilt index.html")
 print("  grid sections:", [(s["id"], len(s["items"])) for s in grid_secs])
 print("  companion sections:", [(s["id"], len(s["items"])) for s in comp_secs])
 print("  hero stats: tools=%d booklets=%d" % (tools_count, booklets_count))
 print("  JSON-LD numberOfItems:", n_internal_ext)
+print("  sitemap.xml URLs:", len(sm_urls))
+print("  robots.txt -> %s/sitemap.xml" % origin)

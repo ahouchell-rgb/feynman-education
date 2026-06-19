@@ -8,17 +8,24 @@
 <link rel="canonical" href="https://interactive-science.com/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#F5EFE3">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Interactive Science">
 <meta property="og:title" content="Interactive Science — tools, revision &amp; retrieval">
 <meta property="og:description" content="Free interactive science tools, revision booklets and retrieval practice for AQA GCSE and KS3. Made by a teacher.">
 <meta property="og:url" content="https://interactive-science.com/">
 <meta property="og:image" content="https://interactive-science.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Interactive Science — free AQA GCSE &amp; KS3 science tools, revision and retrieval practice.">
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Interactive Science — tools, revision &amp; retrieval">
 <meta name="twitter:description" content="Free interactive science tools, revision booklets and retrieval practice for AQA GCSE and KS3.">
 <meta name="twitter:image" content="https://interactive-science.com/og-image.png">
+<meta name="twitter:image:alt" content="Interactive Science — free AQA GCSE &amp; KS3 science tools.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -178,14 +185,6 @@ section[data-group="environmental"] .group-head h2{border-left:3px solid var(--e
 .empty b{display:block;font-size:18px;color:var(--ink);font-weight:600;margin-bottom:6px}
 .empty button{margin-top:14px;font:inherit;font-size:14px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:9px;padding:9px 18px}
 
-/* Email */
-.signup{margin:36px 0 8px;background:var(--bg-warm);border:1px solid var(--rule);border-radius:14px;padding:24px 26px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
-.signup-copy b{display:block;font-size:16px;font-weight:600;margin-bottom:3px}
-.signup-copy span{font-size:13px;color:var(--ink-mute)}
-.signup form{display:flex;gap:9px;flex-wrap:wrap}
-.signup input{font:inherit;font-size:14px;border:1px solid var(--rule);background:var(--paper);border-radius:9px;padding:10px 14px;min-width:200px;color:var(--ink)}
-.signup button{font:inherit;font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:9px;padding:10px 18px}
-
 /* Footer */
 .footer{border-top:1px solid var(--rule);margin-top:40px;padding:30px 0 60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:18px;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-mute);line-height:1.9}
 .footer a{border-bottom:1px solid transparent}
@@ -195,8 +194,6 @@ section[data-group="environmental"] .group-head h2{border-left:3px solid var(--e
 @media (max-width:560px){
   .masthead{padding:18px 0 12px}
   .count{width:100%;margin-left:0;order:5}
-  .signup{flex-direction:column;align-items:flex-start}
-  .signup input{min-width:0;flex:1}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -288,17 +285,6 @@ section[data-group="environmental"] .group-head h2{border-left:3px solid var(--e
   <!--COMPANION:START-->
 <section class="companion" aria-label="Companion sites"><div class="comp-head"><div class="eyebrow mono">Companion sites</div><p class="comp-blurb">Separate web apps that pair with the tools — they open in a new tab.</p></div><div class="comp-grid"><a class="comp-tile" href="https://retrieval-app.com" target="_blank" rel="noopener noreferrer" style="--accent:#2E7D4F"><div class="comp-icon"><i class="ti ti-world" aria-hidden="true"></i></div><div class="comp-body"><span class="comp-domain mono">retrieval-app.com</span><h3 class="comp-name">Retrieval <em>App</em></h3><p class="comp-tag">daily quizzes · spaced just right</p><p class="comp-desc">Short daily quizzes covering everything you&#x27;ve studied. Questions return at the right intervals so the things you nearly forgot get strengthened — and the things you know well don&#x27;t waste your time.</p></div><span class="comp-visit mono">Visit site <i class="ti ti-arrow-up-right" aria-hidden="true"></i></span></a><a class="comp-tile" href="https://science-kit.vercel.app/" target="_blank" rel="noopener noreferrer" style="--accent:#A0463A"><div class="comp-icon"><i class="ti ti-world" aria-hidden="true"></i></div><div class="comp-body"><span class="comp-domain mono">science-kit.vercel.app</span><h3 class="comp-name">Science <em>Kit</em></h3><p class="comp-tag">a shared base of lessons · access, edit, copy</p><p class="comp-desc">A growing library of science lessons that any teacher can browse, copy into their own bank, or adapt for their class. The aim is a shared starting point — open, fork, edit — rather than building every lesson from scratch.</p></div><span class="comp-visit mono">Visit site <i class="ti ti-arrow-up-right" aria-hidden="true"></i></span></a></div></section>
   <!--COMPANION:END-->
-
-  <section class="signup" aria-label="Email updates">
-    <div class="signup-copy">
-      <b>New tools every month</b>
-      <span>One short email when something new lands. For science teachers. No spam, unsubscribe anytime.</span>
-    </div>
-    <form action="https://buttondown.com/api/emails/embed-subscribe/YOUR-USERNAME" method="post" target="_blank">
-      <input type="email" name="email" required placeholder="you@school.uk" aria-label="Your email address">
-      <button type="submit">Subscribe</button>
-    </form>
-  </section>
 </main>
 
 <footer class="wrap footer">

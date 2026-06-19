@@ -142,5 +142,9 @@ select:focus-visible{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px 
   update();
 })();
 </script>
+<!--ISCI-RESIZE-SENDER:START (auto-injected by add_resize.py; do not edit)-->
+<script>/* interactive-science: report our height so a host iframe can auto-fit */
+(function(){if(window.parent===window)return;var last=0,t=0;function H(){var d=document.documentElement,b=document.body;return Math.ceil(Math.max(d.scrollHeight,b?b.scrollHeight:0,b?b.offsetHeight:0,d.getBoundingClientRect().height));}function send(){var h=H();if(h>0&&h!==last){last=h;try{parent.postMessage({type:'iscience:resize',height:h},'*');}catch(e){}}}function schedule(){clearTimeout(t);t=setTimeout(send,50);}if(document.readyState!=='loading')schedule();document.addEventListener('DOMContentLoaded',schedule);window.addEventListener('load',function(){[0,200,600,1200,2500].forEach(function(ms){setTimeout(send,ms);});});window.addEventListener('resize',schedule);['click','input','change','transitionend'].forEach(function(ev){document.addEventListener(ev,schedule,true);});if(window.ResizeObserver){try{var ro=new ResizeObserver(schedule);ro.observe(document.documentElement);if(document.body)ro.observe(document.body);}catch(e){}}if(window.MutationObserver){try{new MutationObserver(schedule).observe(document.documentElement,{subtree:true,childList:true,attributes:true,characterData:true});}catch(e){}}})();</script>
+<!--ISCI-RESIZE-SENDER:END-->
 </body>
 </html>
