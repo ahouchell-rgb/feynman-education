@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { C } from "@/lib/theme";
+import { sanitizeHtml } from "@/lib/sanitize";
 import { Btn, RichEditor } from "@/lib/primitives";
 
 export function LessonSection({ title, sysValue, teacherValue, fieldKey, isAdmin, isTeacher, onSaveSystem, onSaveTeacher }) {
@@ -64,7 +65,7 @@ export function LessonSection({ title, sysValue, teacherValue, fieldKey, isAdmin
       ) : (
         <div style={{ padding: "12px 14px", borderRadius: 6, background: viewMode === "mine" ? "rgba(6,95,70,0.04)" : C.bg, border: `1px solid ${viewMode === "mine" ? "rgba(6,95,70,0.15)" : C.border}`, fontSize: 14, lineHeight: 1.7 }}>
           {displayValue
-            ? <div dangerouslySetInnerHTML={{ __html: displayValue }} />
+            ? <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(displayValue) }} />
             : <span style={{ color: C.dim, fontStyle: "italic" }}>{isAdmin || isTeacher ? "No content yet — click edit to add." : "Not set."}</span>}
         </div>
       )}
