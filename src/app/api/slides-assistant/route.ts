@@ -234,11 +234,16 @@ export async function POST(req) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_OUTPUT_TOKENS,
-        system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
+        // 1-hour TTL (write 2x, read 0.1x). Authoring is bursty: a teacher fires
+        // several edits at the SAME deck with review/think-time between them, which
+        // routinely exceeds the default 5-min cache. The hour-long window keeps the
+        // SYSTEM scaffold AND the deck snapshot warm across the whole editing session,
+        // so repeated whole-deck Opus edits read the prefix at 0.1x instead of re-writing.
+        system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral", ttl: "1h" } }],
         messages: [{
           role: "user",
           content: [
-            { type: "text", text: deckText, cache_control: { type: "ephemeral" } },
+            { type: "text", text: deckText, cache_control: { type: "ephemeral", ttl: "1h" } },
             { type: "text", text: `Instruction: ${instruction}` },
           ],
         }],

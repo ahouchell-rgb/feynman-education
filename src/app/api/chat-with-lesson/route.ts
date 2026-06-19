@@ -214,10 +214,13 @@ export async function POST(req) {
   // Prompt caching: mark the last prior turn so each new message re-reads the
   // cached conversation prefix (~0.1x) instead of re-billing the whole history.
   // Holds until the 30-message window slides; the system block (below) is cached
-  // regardless. 5-min TTL — back-to-back chat turns hit it.
+  // regardless. 1-hour TTL (write 2x, read 0.1x): a teacher iterating on a lesson
+  // plan leaves minutes of think-time between turns, so the default 5-min cache
+  // expires mid-session and each turn re-pays the prefix at a 1.25x write. The 1h
+  // window spans a realistic planning session, turning those writes into 0.1x reads.
   if (historyMsgs.length) {
     const last: any = historyMsgs[historyMsgs.length - 1];
-    last.content = [{ type: "text", text: String(last.content ?? ""), cache_control: { type: "ephemeral" } }];
+    last.content = [{ type: "text", text: String(last.content ?? ""), cache_control: { type: "ephemeral", ttl: "1h" } }];
   }
   const messages = [...historyMsgs, { role: "user", content: userMessage }];
   const systemPrompt = buildSystemPrompt({ lesson, unit, teacherContent, widgets });
@@ -236,8 +239,11 @@ export async function POST(req) {
         model: MODEL,
         max_tokens: MAX_OUTPUT_TOKENS,
         // Cache the large, lesson-stable system prompt (base instructions +
-        // HOUSE_LESSON_STYLE + lesson context). Re-read on every turn of the chat.
-        system: [{ type: "text", text: systemPrompt, cache_control: { type: "ephemeral" } }],
+        // HOUSE_LESSON_STYLE + lesson context) on a 1-hour TTL so it survives the
+        // gaps between a teacher's chat turns. NOTE: Sonnet's cache floor is 2048
+        // tokens — base + HOUSE_LESSON_STYLE is ~1.2k, so this only actually caches
+        // once the lesson carries real content; sparse lessons silently skip it.
+        system: [{ type: "text", text: systemPrompt, cache_control: { type: "ephemeral", ttl: "1h" } }],
         messages,
         stream: true,
       }),
