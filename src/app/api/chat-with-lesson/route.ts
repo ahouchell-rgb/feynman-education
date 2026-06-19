@@ -10,6 +10,7 @@
 //   SUPABASE_SERVICE_ROLE_KEY    — secret, from Supabase dashboard
 
 import { supaRest } from "@/lib/supabaseRest";
+import { HOUSE_LESSON_STYLE } from "@/lib/lessonStyle";
 
 export const runtime = "edge";
 
@@ -27,7 +28,7 @@ const MAX_OUTPUT_TOKENS = 4096;
 const INPUT_USD_PER_MTOK = 3;
 const OUTPUT_USD_PER_MTOK = 15;
 const GBP_PER_USD = 0.79;
-const DAILY_CAP_GBP = 1.0;
+const DAILY_CAP_GBP = Number(process.env.AI_DAILY_CAP_GBP) || 0; // £/day per teacher; 0 (default) = unlimited. Set AI_DAILY_CAP_GBP in env to re-enable.
 
 // How much chat history to send back to Claude as context.
 const HISTORY_LIMIT = 30;
@@ -97,6 +98,10 @@ function buildSystemPrompt({ lesson, unit, teacherContent, widgets }) {
 When the teacher asks for an interactive activity (sorter, simulator, drag-and-drop, quiz, animation, diagram explorer, retrieval starter, etc.), return it as ONE complete self-contained HTML document inside a single \`\`\`html ... \`\`\` code block. Include all HTML, CSS, and JavaScript inline. NO external resources — no CDNs, no remote fonts, no remote images. The widget renders inside a sandboxed iframe with sandbox="allow-scripts" only: NO cookies, NO localStorage, NO parent-page access, NO network requests. Design accordingly. Target ~700×480 but make it responsive and pleasant on a projector.
 
 When proposing rewrites of lesson sections (objectives, starter, etc.), use clear markdown headings like "## Suggested objectives" so the teacher can identify what you're proposing.
+
+When the teacher asks for a starter, hook, retrieval question, MCQ, written task, model answer, scaffold, plenary or a whole lesson, MATCH the house style below — reuse its named beats, exact on-screen labels and conventions (etymology vocab, whiteboard MCQs with misconception-mapped distractors, "in full sentences" writing, green-pen model answers with mark schemes, sentence-starter scaffolds, 60-second oracy plenaries). Adapt the content to THIS lesson's topic.
+
+${HOUSE_LESSON_STYLE}
 
 ═══════════ LESSON CONTEXT ═══════════
 Unit: ${unit.title || "(untitled unit)"} · ${unit.discipline || ""} · ${unit.year_group || ""}
@@ -184,7 +189,7 @@ export async function POST(req) {
 
   // Daily cap check
   const usedGBP = costGBP(todayUsage.input_tokens || 0, todayUsage.output_tokens || 0);
-  if (usedGBP >= DAILY_CAP_GBP) {
+  if (DAILY_CAP_GBP > 0 && usedGBP >= DAILY_CAP_GBP) {
     return jsonError(
       `Daily cap of £${DAILY_CAP_GBP.toFixed(2)} reached (used £${usedGBP.toFixed(3)}). Resets at midnight UTC.`,
       429
@@ -202,13 +207,22 @@ export async function POST(req) {
   }
 
   // Build Anthropic payload
-  const messages = [
-    ...history.map(m => ({
-      role: m.role === "assistant" ? "assistant" : "user",
-      content: m.content,
-    })),
-    { role: "user", content: userMessage },
-  ];
+  const historyMsgs = history.map(m => ({
+    role: m.role === "assistant" ? "assistant" : "user",
+    content: m.content,
+  }));
+  // Prompt caching: mark the last prior turn so each new message re-reads the
+  // cached conversation prefix (~0.1x) instead of re-billing the whole history.
+  // Holds until the 30-message window slides; the system block (below) is cached
+  // regardless. 1-hour TTL (write 2x, read 0.1x): a teacher iterating on a lesson
+  // plan leaves minutes of think-time between turns, so the default 5-min cache
+  // expires mid-session and each turn re-pays the prefix at a 1.25x write. The 1h
+  // window spans a realistic planning session, turning those writes into 0.1x reads.
+  if (historyMsgs.length) {
+    const last: any = historyMsgs[historyMsgs.length - 1];
+    last.content = [{ type: "text", text: String(last.content ?? ""), cache_control: { type: "ephemeral", ttl: "1h" } }];
+  }
+  const messages = [...historyMsgs, { role: "user", content: userMessage }];
   const systemPrompt = buildSystemPrompt({ lesson, unit, teacherContent, widgets });
 
   // Call Anthropic with streaming
@@ -224,7 +238,12 @@ export async function POST(req) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_OUTPUT_TOKENS,
-        system: systemPrompt,
+        // Cache the large, lesson-stable system prompt (base instructions +
+        // HOUSE_LESSON_STYLE + lesson context) on a 1-hour TTL so it survives the
+        // gaps between a teacher's chat turns. NOTE: Sonnet's cache floor is 2048
+        // tokens — base + HOUSE_LESSON_STYLE is ~1.2k, so this only actually caches
+        // once the lesson carries real content; sparse lessons silently skip it.
+        system: [{ type: "text", text: systemPrompt, cache_control: { type: "ephemeral", ttl: "1h" } }],
         messages,
         stream: true,
       }),
@@ -272,7 +291,10 @@ export async function POST(req) {
                 fullText += t;
                 controller.enqueue(sse({ type: "text", content: t }));
               } else if (evt.type === "message_start") {
-                inputTok = evt.message?.usage?.input_tokens || 0;
+                // Count total input volume incl. cache reads/writes so the shared
+                // daily pool stays meaningful once caching is on.
+                const mu = evt.message?.usage || {};
+                inputTok = (mu.input_tokens || 0) + (mu.cache_read_input_tokens || 0) + (mu.cache_creation_input_tokens || 0);
               } else if (evt.type === "message_delta") {
                 outputTok = evt.usage?.output_tokens ?? outputTok;
               } else if (evt.type === "error") {

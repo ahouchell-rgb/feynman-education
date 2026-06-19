@@ -251,7 +251,13 @@ export function revealFrames(elements) {
   return frames;
 }
 
-export async function exportDeck(deck) {
+/* A safe-ish filename stem from the deck title (no extension). */
+export const deckFileStem = (deck) => (deck?.title || "deck").replace(/[^\w\- ]/g, "").trim() || "deck";
+
+/* Build the PptxGenJS document for a deck. Shared by the local download
+   (exportDeck) and the Drive save-back (exportDeckBlob) paths so the two can
+   never drift. */
+export async function buildDeckPptx(deck) {
   const pptx = new PptxGenJS();
   pptx.defineLayout({ name: "SK", width: W_IN, height: H_IN });
   pptx.layout = "SK";
@@ -267,7 +273,17 @@ export async function exportDeck(deck) {
       if (!s.hideMaster) drawMaster(slide, deck.master, si, all.length, deck.title);
     }
   }
+  return pptx;
+}
 
-  const name = (deck.title || "deck").replace(/[^\w\- ]/g, "").trim() || "deck";
-  await pptx.writeFile({ fileName: `${name}.pptx` });
+/* Download the deck as a .pptx in the browser. */
+export async function exportDeck(deck) {
+  const pptx = await buildDeckPptx(deck);
+  await pptx.writeFile({ fileName: `${deckFileStem(deck)}.pptx` });
+}
+
+/* Render the deck to a .pptx Blob (for uploading to Drive / OneDrive). */
+export async function exportDeckBlob(deck): Promise<Blob> {
+  const pptx = await buildDeckPptx(deck);
+  return (await pptx.write({ outputType: "blob" })) as Blob;
 }

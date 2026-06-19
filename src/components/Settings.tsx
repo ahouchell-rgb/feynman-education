@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useAuth, sk } from "@/lib/sk";
 import { ms } from "@/lib/ms";
+import { google } from "@/lib/google";
 import { C } from "@/lib/theme";
 import { Btn, Inp, Card } from "@/lib/primitives";
 
@@ -9,7 +10,7 @@ import { Btn, Inp, Card } from "@/lib/primitives";
 const INPUT_USD_PER_MTOK = 3;
 const OUTPUT_USD_PER_MTOK = 15;
 const GBP_PER_USD = 0.79;
-const DAILY_CAP_GBP = 1.0;
+const DAILY_CAP_GBP = Number(process.env.NEXT_PUBLIC_AI_DAILY_CAP_GBP) || 0; // £/day; 0 = unlimited (set NEXT_PUBLIC_AI_DAILY_CAP_GBP to show a cap)
 
 function costGBP(input, output) {
   return (input / 1e6) * INPUT_USD_PER_MTOK * GBP_PER_USD
@@ -24,6 +25,8 @@ export function Settings({ onClose }) {
   const [usage, setUsage] = useState(null);
   const [msStatus, setMsStatus] = useState(null); // null = loading, {connected:false} = not, {connected:true,...} = yes
   const [msBusy, setMsBusy] = useState(false);
+  const [gStatus, setGStatus] = useState(null); // Google Drive connection status (same shape as msStatus)
+  const [gBusy, setGBusy] = useState(false);
 
   useEffect(() => {
     if (!profile?.id) return;
@@ -71,6 +74,35 @@ export function Settings({ onClose }) {
     setMsBusy(false);
   };
 
+  // Google Drive connection status
+  useEffect(() => {
+    if (!profile?.id) return;
+    let alive = true;
+    (async () => {
+      const s = await google.getStatus(profile.id);
+      if (alive) setGStatus(s || { connected: false });
+    })();
+    return () => { alive = false; };
+  }, [profile?.id]);
+
+  const connectGoogle = () => {
+    if (!profile?.id) return;
+    window.location.href = google.startUrl(profile.id);
+  };
+
+  const disconnectGoogle = async () => {
+    if (!profile?.id) return;
+    if (!confirm("Disconnect your Google account? Your files in Drive stay there, but you won't be able to import from or save to Drive inside Feynman until you reconnect.")) return;
+    setGBusy(true);
+    try {
+      await google.disconnect(profile.id);
+      setGStatus({ connected: false });
+    } catch (e) {
+      alert("Couldn't disconnect: " + (e.message || "unknown error"));
+    }
+    setGBusy(false);
+  };
+
   const save = async () => {
     setBusy(true); setMsg("");
     try {
@@ -81,7 +113,7 @@ export function Settings({ onClose }) {
   };
 
   const used = usage ? costGBP(usage.input_tokens, usage.output_tokens) : 0;
-  const pct = Math.min(100, (used / DAILY_CAP_GBP) * 100);
+  const pct = DAILY_CAP_GBP > 0 ? Math.min(100, (used / DAILY_CAP_GBP) * 100) : 0;
   const barColor = pct >= 90 ? C.red : pct >= 70 ? C.amb : C.grn;
 
   return (
@@ -106,12 +138,14 @@ export function Settings({ onClose }) {
               Today's Claude usage
             </div>
             <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim }}>
-              £{used.toFixed(3)} / £{DAILY_CAP_GBP.toFixed(2)}
+              {DAILY_CAP_GBP > 0 ? `£${used.toFixed(3)} / £${DAILY_CAP_GBP.toFixed(2)}` : `£${used.toFixed(3)} · no limit`}
             </div>
           </div>
-          <div style={{ height: 6, borderRadius: 3, background: C.border, overflow: "hidden", marginBottom: 8 }}>
-            <div style={{ width: `${pct}%`, height: "100%", background: barColor, transition: "width .2s" }} />
-          </div>
+          {DAILY_CAP_GBP > 0 && (
+            <div style={{ height: 6, borderRadius: 3, background: C.border, overflow: "hidden", marginBottom: 8 }}>
+              <div style={{ width: `${pct}%`, height: "100%", background: barColor, transition: "width .2s" }} />
+            </div>
+          )}
           <div style={{ fontSize: 10, fontFamily: C.mono, color: C.dim, display: "flex", gap: 12 }}>
             <span>{usage?.input_tokens?.toLocaleString() ?? 0} input tok</span>
             <span>{usage?.output_tokens?.toLocaleString() ?? 0} output tok</span>
@@ -151,7 +185,39 @@ export function Settings({ onClose }) {
           )}
         </div>
 
-        {msg && <div style={{ padding: "8px 10px", borderRadius: 6, background: msg.startsWith("Error") ? C.redS : C.grnS, color: msg.startsWith("Error") ? C.red : C.grn, fontSize: 12, fontFamily: C.mono, marginBottom: 12 }}>{msg}</div>}
+        {/* Google Drive connection */}
+        <div style={{ marginBottom: 16, padding: 12, background: C.bg, borderRadius: 6, border: `1px solid ${C.border}` }}>
+          <div style={{ fontSize: 12, fontFamily: C.mono, color: C.muted, letterSpacing: "0.04em", marginBottom: 8 }}>
+            Google Drive (import Slides / save .pptx)
+          </div>
+          {gStatus === null ? (
+            <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim }}>Loading…</div>
+          ) : gStatus.connected ? (
+            <>
+              <div style={{ fontSize: 13, color: C.text, marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: C.grn }} />
+                {gStatus.name || "Connected"}
+              </div>
+              {gStatus.email && (
+                <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim, marginBottom: 10 }}>{gStatus.email}</div>
+              )}
+              <Btn v="ghost" disabled={gBusy} onClick={disconnectGoogle} style={{ fontSize: 11, padding: "4px 10px", color: C.red, borderColor: "rgba(185,90,60,0.25)" }}>
+                {gBusy ? "Disconnecting…" : "Disconnect"}
+              </Btn>
+            </>
+          ) : (
+            <>
+              <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim, lineHeight: 1.5, marginBottom: 10 }}>
+                Connect your Google account to import Google Slides (and PowerPoint files) straight from Drive, and save decks back as .pptx. Feynman only ever sees the files you pick.
+              </div>
+              <Btn v="ghost" onClick={connectGoogle} style={{ fontSize: 12, padding: "6px 12px" }}>
+                Connect Google account →
+              </Btn>
+            </>
+          )}
+        </div>
+
+        {msg &&<div style={{ padding: "8px 10px", borderRadius: 6, background: msg.startsWith("Error") ? C.redS : C.grnS, color: msg.startsWith("Error") ? C.red : C.grn, fontSize: 12, fontFamily: C.mono, marginBottom: 12 }}>{msg}</div>}
 
         <div style={{ display: "flex", gap: 8 }}>
           <Btn onClick={save} disabled={busy} style={{ flex: 1 }}>{busy ? "Saving..." : "Save"}</Btn>

@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { C } from "@/lib/theme";
 import { Btn } from "@/lib/primitives";
 
@@ -62,6 +62,41 @@ function wrapHtmlForSandbox(html) {
   <small>This widget threw an error. Edit or remove it from the lesson page.</small>
 </div></div>
 ${safeHtml}
+<script>
+  /* iscience-embed relay: auto-fit the sandbox to its content and bubble height up
+     to the React WidgetBlock. Covers two cases: (a) self-contained widgets (measure
+     this document); (b) nested interactive-science.com iframes (size the inner frame
+     on its iscience:resize message, then re-measure). Sandbox is allow-scripts only,
+     so this posts to parent with an opaque "null" origin — the host matches by source. */
+  (function () {
+    function ownHeight() {
+      var d = document.documentElement, b = document.body;
+      return Math.ceil(Math.max(d.scrollHeight, b ? b.scrollHeight : 0,
+        b ? b.offsetHeight : 0, d.getBoundingClientRect().height));
+    }
+    var last = 0, t = 0;
+    function pushUp() {
+      var h = ownHeight();
+      if (h > 0 && h !== last) { last = h; try { parent.postMessage({ type: "iscience:resize", height: h }, "*"); } catch (e) {} }
+    }
+    function schedule() { clearTimeout(t); t = setTimeout(pushUp, 50); }
+    window.addEventListener("message", function (e) {
+      var m = e.data;
+      if (m && m.type === "iscience:resize" && typeof m.height === "number" && m.height > 0 && m.height < 20000) {
+        var f = document.getElementsByTagName("iframe");
+        for (var i = 0; i < f.length; i++) { if (f[i].contentWindow === e.source) { f[i].style.height = Math.ceil(m.height) + "px"; break; } }
+        schedule();
+      }
+    });
+    if (document.readyState !== "loading") schedule();
+    document.addEventListener("DOMContentLoaded", schedule);
+    window.addEventListener("load", function () { [0, 200, 600, 1200, 2500].forEach(function (ms) { setTimeout(pushUp, ms); }); });
+    window.addEventListener("resize", schedule);
+    ["click", "input", "change", "transitionend"].forEach(function (ev) { document.addEventListener(ev, schedule, true); });
+    if (window.ResizeObserver) { try { var ro = new ResizeObserver(schedule); ro.observe(document.documentElement); if (document.body) ro.observe(document.body); } catch (e) {} }
+    if (window.MutationObserver) { try { new MutationObserver(schedule).observe(document.documentElement, { subtree: true, childList: true, attributes: true, characterData: true }); } catch (e) {} }
+  })();
+</script>
 </body>
 </html>`;
 }
@@ -69,7 +104,20 @@ ${safeHtml}
 /* ─── Inline widget renderer (used on the lesson page). */
 export function WidgetBlock({ widget, onEdit, onDelete, onMoveUp, onMoveDown, onFullscreen, canMoveUp, canMoveDown, isAdmin }) {
   const srcDoc = useMemo(() => wrapHtmlForSandbox(widget.html), [widget.html]);
-  const height = widget.default_height || 480;
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [height, setHeight] = useState(widget.default_height || 480);
+  useEffect(() => {
+    function onMsg(e: MessageEvent) {
+      const d = e.data;
+      if (d && d.type === "iscience:resize" && typeof d.height === "number" &&
+          d.height > 0 && d.height < 20000 &&
+          iframeRef.current && e.source === iframeRef.current.contentWindow) {
+        setHeight(Math.ceil(d.height));
+      }
+    }
+    window.addEventListener("message", onMsg);
+    return () => window.removeEventListener("message", onMsg);
+  }, []);
 
   return (
     <div style={{
@@ -105,6 +153,7 @@ export function WidgetBlock({ widget, onEdit, onDelete, onMoveUp, onMoveDown, on
         </div>
       </div>
       <iframe
+        ref={iframeRef}
         title={widget.title || "Widget"}
         srcDoc={srcDoc}
         sandbox="allow-scripts"
