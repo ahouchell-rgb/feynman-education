@@ -250,6 +250,23 @@ export const ret = {
       return [...byTopic.values()].sort((a, b) => a.pct_correct - b.pct_correct);
     } catch { return []; }
   },
+  // A class's weakest topics across ALL its retrieval responses — not unit-scoped, not
+  // exam-only (class_weak_topics RPC, role-gated). For a whole-class "reteach the topics
+  // they've done poorly on" feedforward. Merged across linked classes, weakest per topic.
+  weakTopics: async (classIds: string[], limit = 6, minMarked = 5): Promise<any[]> => {
+    if (!classIds?.length) return [];
+    try {
+      const per = await Promise.all(classIds.map(cid =>
+        sk.rpc("class_weak_topics", { p_class_id: cid, p_limit: limit, p_min_marked: minMarked }).catch(() => [])
+      ));
+      const byTopic = new Map<string, any>();
+      for (const row of per.flat()) {
+        const prev = byTopic.get(row.topic_id);
+        if (!prev || row.pct_correct < prev.pct_correct) byTopic.set(row.topic_id, row);
+      }
+      return [...byTopic.values()].sort((a, b) => a.pct_correct - b.pct_correct).slice(0, limit);
+    } catch { return []; }
+  },
 };
 
 /* ─── Misc helpers ─── */

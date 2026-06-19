@@ -13,7 +13,11 @@
 
 import { supaRest } from "@/lib/supabaseRest";
 
-export const runtime = "edge";
+// Node runtime (not edge): the edge ~25s cap was returning 504s on the longer Sonnet
+// generations (especially the multimodal paper-upload path). Node + maxDuration gives the
+// Claude call room to finish.
+export const runtime = "nodejs";
+export const maxDuration = 60;
 
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 // Same anon key as src/lib/sk — public, used for the apikey header alongside the user's bearer.
