@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { detectFakeAnswer } from "../lib/marking";
-import { sb } from "../lib/supabase";
+import { sb, SUPA_URL, SUPA_KEY } from "../lib/supabase";
 import { C } from "../lib/theme";
-import { Btn, Card, Dateline, Deck, Headline, Kicker, Pill, TA } from "./ui";
+import { Btn, Card, Dateline, Deck, Headline, Inp, Kicker, Pill, TA } from "./ui";
 
 export function HodPanel({ user }) {
   const [loading, setLoading] = useState(true);
@@ -18,6 +18,11 @@ export function HodPanel({ user }) {
   const [expandedFlag, setExpandedFlag] = useState(null);
   const [flagNote, setFlagNote] = useState("");
   const [flagBusy, setFlagBusy] = useState(null);
+  // Tier-1.5: HoD self-serve team onboarding (add a teacher to your school/department)
+  const [showAddTeacher, setShowAddTeacher] = useState(false);
+  const [newTeacher, setNewTeacher] = useState({ email: "", display_name: "", password: "" });
+  const [addBusy, setAddBusy] = useState(false);
+  const [addMsg, setAddMsg] = useState("");
 
   useEffect(() => { loadAll(); }, []);
 
@@ -45,6 +50,35 @@ export function HodPanel({ user }) {
       setTopics(topicMap);
     } catch (e) { console.error(e); setError(e.message); }
     setLoading(false);
+  };
+
+  // Tier-1.5 self-serve team onboarding: a HoD creates a teacher account in their own
+  // school. The edge fn (manage-student create_teacher) stamps the new teacher's
+  // school_id (the HoD's school) and hod_id (this HoD), so they are tenant-isolated and
+  // appear in this panel after the reload.
+  const addTeacher = async () => {
+    const { email, display_name, password } = newTeacher;
+    if (!email.trim() || !display_name.trim() || !password.trim()) { setAddMsg("All fields are required."); return; }
+    if (password.trim().length < 6) { setAddMsg("Temporary password must be at least 6 characters."); return; }
+    setAddBusy(true); setAddMsg("");
+    try {
+      const jwt = sb.auth.getToken();
+      const r = await fetch(`${SUPA_URL}/functions/v1/manage-student`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", apikey: SUPA_KEY, Authorization: `Bearer ${jwt || SUPA_KEY}` },
+        body: JSON.stringify({ action: "create_teacher", new_email: email, new_display_name: display_name, new_password: password }),
+      });
+      const d = await r.json();
+      if (d.success) {
+        setAddMsg(`✓ Account created. Tell ${display_name.trim()} to sign in with ${email.trim().toLowerCase()} and change their password.`);
+        setNewTeacher({ email: "", display_name: "", password: "" });
+        setShowAddTeacher(false);
+        await loadAll();
+      } else {
+        setAddMsg("Error: " + (d.error || "Unknown error"));
+      }
+    } catch (e) { setAddMsg("Error: " + e.message); }
+    setAddBusy(false);
   };
 
   // Resolve a marking appeal for a department class (now permitted by RLS:
@@ -300,6 +334,27 @@ export function HodPanel({ user }) {
           {/* TEACHERS: full table + topic x teacher heatmap */}
           {view === "teachers" && (
             <>
+              {/* Tier-1.5: invite a teacher into your school + department */}
+              <div style={{ marginBottom: 14 }}>
+                {!showAddTeacher ? (
+                  <Btn v="ghost" onClick={() => { setShowAddTeacher(true); setAddMsg(""); }} style={{ width: "100%", fontSize: 12, padding: "10px" }}>+ Add a teacher to your department</Btn>
+                ) : (
+                  <div style={{ padding: 14, background: C.card, border: `1px solid ${C.pri}33`, borderRadius: 10 }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: C.pri, marginBottom: 10 }}>Add a teacher</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 10 }}>
+                      <Inp placeholder="Full name" value={newTeacher.display_name} onChange={e => setNewTeacher(p => ({ ...p, display_name: e.target.value }))} style={{ fontSize: 13, padding: "8px 10px" }} />
+                      <Inp placeholder="Email" type="email" value={newTeacher.email} onChange={e => setNewTeacher(p => ({ ...p, email: e.target.value }))} style={{ fontSize: 13, padding: "8px 10px" }} />
+                      <Inp placeholder="Temporary password (min 6)" type="text" value={newTeacher.password} onChange={e => setNewTeacher(p => ({ ...p, password: e.target.value }))} style={{ fontSize: 13, padding: "8px 10px" }} />
+                    </div>
+                    <div style={{ fontSize: 11, color: C.dim, marginBottom: 10 }}>They join your school and department, can sign in immediately, and change the password in their own settings. Share the password only in person or a trusted channel.</div>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      <Btn onClick={addTeacher} disabled={addBusy} style={{ flex: 1, fontSize: 12 }}>{addBusy ? "Creating…" : "Create account"}</Btn>
+                      <Btn v="ghost" onClick={() => { setShowAddTeacher(false); setAddMsg(""); }} disabled={addBusy} style={{ fontSize: 12 }}>Cancel</Btn>
+                    </div>
+                  </div>
+                )}
+                {addMsg && <div style={{ fontSize: 12, marginTop: 8, color: addMsg.startsWith("✓") ? C.grn : C.red }}>{addMsg}</div>}
+              </div>
               <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Full breakdown</div>
               {perTeacher.map(pt => (
                 <div key={pt.teacher.id} style={{ padding: "14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, marginBottom: 8 }}>

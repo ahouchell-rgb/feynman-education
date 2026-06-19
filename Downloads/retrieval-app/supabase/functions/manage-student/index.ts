@@ -122,7 +122,12 @@ Deno.serve(async (req: Request) => {
     }
 
     if (action === "create_teacher") {
-      if (!isModerator) return new Response(JSON.stringify({ error: "Only moderators can create teacher accounts" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      // Moderators create teachers platform-wide; a HoD (school lead) may create
+      // teachers IN THEIR OWN SCHOOL — self-serve team onboarding (Tier-1.5). The
+      // invitee is stamped with the HoD's school (tenant) and department (hod_id) so
+      // they are correctly tenant-isolated and appear in the HoD's panel immediately.
+      // Plain teachers cannot create accounts.
+      if (!isModerator && role !== "hod") return new Response(JSON.stringify({ error: "Only school leads or admins can create teacher accounts" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const { new_email, new_display_name } = body;
       const email = String(new_email || "").trim().toLowerCase();
       const name = String(new_display_name || "").trim();
@@ -130,10 +135,22 @@ Deno.serve(async (req: Request) => {
       if (!email || !name || !password) return new Response(JSON.stringify({ error: "Missing email, name, or temporary password" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       if (password.length < 6) return new Response(JSON.stringify({ error: "Temporary password must be at least 6 characters" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return new Response(JSON.stringify({ error: "Invalid email format" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      // Resolve the new teacher's tenant. A HoD's invitee joins the HoD's school +
+      // department; a moderator may optionally target a school via body.school_id.
+      let newSchoolId: string | null = null;
+      let newHodId: string | null = null;
+      if (!isModerator) {
+        const { data: me } = await supabase.from("profiles").select("school_id").eq("id", caller.id).single();
+        if (!me?.school_id) return new Response(JSON.stringify({ error: "You need to belong to a school before adding teachers" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        newSchoolId = me.school_id as string;
+        newHodId = caller.id;
+      } else {
+        newSchoolId = (body.school_id as string | null) ?? null;
+      }
       const { data: created, error: createErr } = await supabase.auth.admin.createUser({ email, password, email_confirm: true, user_metadata: { display_name: name, role: "teacher" } });
       if (createErr || !created?.user) return new Response(JSON.stringify({ error: createErr?.message || "Create failed" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const userId = created.user.id;
-      const { error: profErr } = await supabase.from("profiles").upsert({ id: userId, display_name: name, role: "teacher", email });
+      const { error: profErr } = await supabase.from("profiles").upsert({ id: userId, display_name: name, role: "teacher", email, school_id: newSchoolId, hod_id: newHodId });
       if (profErr) return new Response(JSON.stringify({ error: "Account created but profile setup failed: " + profErr.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       return new Response(JSON.stringify({ success: true, message: `Teacher account created for ${email}`, teacher_id: userId, email, display_name: name }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
