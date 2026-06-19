@@ -16,7 +16,7 @@ export const runtime = "edge";
 const MODEL = "claude-opus-4-8";
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION = "2023-06-01";
-const MAX_OUTPUT_TOKENS = 8000;
+const MAX_OUTPUT_TOKENS = 16000; // slide-scoped edits keep output to the change size; the higher ceiling is only for whole-lesson builds (stays under non-streaming HTTP timeouts)
 
 // ─── Auth + cost backstop (mirrors chat-with-lesson) ─────────────────────
 // This route drives Opus, so it MUST require an authenticated teacher and meter
@@ -45,7 +45,9 @@ const costGBP = (input, output) =>
 const json = (obj, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json" } });
 
-const SYSTEM = `You edit a slide deck for a UK secondary science teacher. The deck is a JSON array of slides on a FIXED 960×540 canvas (16:9, pixels). You always return the COMPLETE updated deck via the edit_deck tool.
+const SYSTEM = `You edit a slide deck for a UK secondary science teacher. The deck is a JSON array of slides on a FIXED 960×540 canvas (16:9, pixels), 0-indexed by array position. You return the updated deck via the apply_edits tool.
+
+RETURN FORMAT — call apply_edits with an "order" array describing the WHOLE deck after your change, in order. Each item is EITHER {"keep": i} (reuse existing slide i unchanged — use this for every slide you are NOT changing, and NEVER re-describe a kept slide) OR {"slide": { ...full slide object... }} (a new slide, or the full replacement of a slide you edited). To tweak one slide: emit {"keep": i} for all the others and one {"slide": {...}} in its place. To insert: add a {"slide": {...}} at the right position. To delete a slide: omit that index. To reorder: change the order of the {"keep": i} items. This keeps your output small — only spell out the slides you actually create or change.
 
 COORDINATES: x,y is the top-left of an element in pixels, 0–960 across and 0–540 down. Keep elements inside the canvas with ~60px margins. Never overlap text blocks.
 
@@ -84,7 +86,7 @@ RULES:
 - Palette when sensible: biology green #5e7c4b, chemistry orange/red #b95a3c, physics blue #2e3a5f, dark text #1a1714 on light backgrounds. Soft tinted backgrounds (e.g. #f3eee2) read well on a projector.
 - For labelled diagrams, draw arrows from a text label to the part it points at.
 - Keep all content scientifically accurate and pitched at KS3–GCSE.
-- Return EVERY slide in the deck, in order — not just the ones you changed.
+- Your "order" must cover the WHOLE deck, in final order — every slide appears exactly once, as {keep:i} or {slide:{...}} (omit an index only to delete that slide). Reuse unchanged slides as {keep:i}; never re-emit their contents.
 - Put a one-sentence plain-English description of what you did in "summary".`;
 
 const ELEMENT_SCHEMA = {
@@ -120,28 +122,37 @@ const ELEMENT_SCHEMA = {
   required: ["type"],
 };
 
+const SLIDE_SCHEMA = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+    background: { type: "string" },
+    notes: { type: "string" },
+    elements: { type: "array", items: ELEMENT_SCHEMA },
+  },
+  required: ["elements"],
+};
+
 const TOOL = {
-  name: "edit_deck",
-  description: "Replace the deck with the full updated set of slides.",
+  name: "apply_edits",
+  description: "Return the updated deck as an ordered list. For each position output either {keep:<index>} to reuse an existing slide unchanged, or {slide:{...}} for a new or edited slide. Only spell out the slides you create or change.",
   input_schema: {
     type: "object",
     properties: {
       summary: { type: "string", description: "One short sentence describing what changed." },
-      slides: {
+      order: {
         type: "array",
+        description: "The whole deck after the edit, in final order. Each item is EITHER {keep:<existing 0-based slide index>} for an unchanged slide, OR {slide:{...}} for a new/edited slide.",
         items: {
           type: "object",
           properties: {
-            id: { type: "string" },
-            background: { type: "string" },
-            notes: { type: "string" },
-            elements: { type: "array", items: ELEMENT_SCHEMA },
+            keep: { type: "integer", description: "Index of an existing slide to reuse unchanged." },
+            slide: SLIDE_SCHEMA,
           },
-          required: ["elements"],
         },
       },
     },
-    required: ["summary", "slides"],
+    required: ["summary", "order"],
   },
 };
 
@@ -198,9 +209,9 @@ export async function POST(req) {
     }
   } catch { /* fail open */ }
 
-  // Imported HTML templates can be tens of KB each — far too large for Claude to
-  // echo back inside the 8K output budget. Strip the markup (keyed by element id)
-  // before the call and splice it back into the result afterwards.
+  // Imported HTML templates can be tens of KB each — too large to round-trip through
+  // the model. Strip the markup (keyed by element id) before the call and splice it
+  // back into any slide the model re-emits afterwards (kept slides never round-trip).
   const htmlById = {};
   const richById = {}; // id → { rich, text } so we can restore inline formatting Claude can't see
   const sentSlides = slides.map((s) => ({
@@ -248,7 +259,7 @@ export async function POST(req) {
           ],
         }],
         tools: [TOOL],
-        tool_choice: { type: "tool", name: "edit_deck" },
+        tool_choice: { type: "tool", name: "apply_edits" },
       }),
     });
   } catch (e) {
@@ -285,16 +296,18 @@ export async function POST(req) {
     });
   } catch { /* best-effort */ }
 
-  const toolBlock = (data.content || []).find((b) => b.type === "tool_use" && b.name === "edit_deck");
-  if (!toolBlock?.input?.slides) {
+  const toolBlock = (data.content || []).find((b) => b.type === "tool_use" && b.name === "apply_edits");
+  const order = toolBlock?.input?.order;
+  if (!Array.isArray(order) || !order.length) {
     return json({ error: "Claude did not return a deck. Try rephrasing." }, 502);
   }
 
-  // Map font labels → the CSS/face the editor uses.
+  // Map font labels → the CSS/face the editor uses, and restore the html/rich we
+  // stripped before the call. Applied ONLY to model-emitted slides.
   const FONT_CSS = { Sans: "'IBM Plex Sans', sans-serif", Serif: "Georgia, 'Instrument Serif', serif", Mono: "'IBM Plex Mono', monospace", Friendly: "'Comic Sans MS', 'Chalkboard SE', sans-serif", Classic: "'Times New Roman', serif", Verdana: "Verdana, sans-serif" };
   const FONT_FACE = { Sans: "Arial", Serif: "Georgia", Mono: "Consolas", Friendly: "Comic Sans MS", Classic: "Times New Roman", Verdana: "Verdana" };
   const usesFont = (t) => t === "text" || t === "table";
-  const slidesOut = (toolBlock.input.slides || []).map((s) => ({
+  const restoreSlide = (s) => ({
     ...s,
     elements: (s.elements || []).map((e) => {
       if (e.type === "html") return { ...e, html: htmlById[e.id] ?? (e.html === "[html omitted]" ? "" : e.html) };
@@ -303,7 +316,23 @@ export async function POST(req) {
       if (e.type === "text" && richById[e.id]) out = e.text === richById[e.id].text ? { ...out, rich: richById[e.id].rich } : out;
       return out;
     }),
-  }));
+  });
+
+  // Reconstruct the full deck from the order list: {keep:i} reuses the ORIGINAL
+  // (full-fidelity, never-round-tripped) slide; {slide:{...}} is a new/edited slide
+  // we restore. Unchanged slides can't be corrupted because the model never re-emits
+  // them. An out-of-range keep or a malformed item is skipped rather than trusted.
+  const slidesOut = [];
+  for (const item of order) {
+    if (item && item.slide && Array.isArray(item.slide.elements)) {
+      slidesOut.push(restoreSlide(item.slide));
+    } else if (item && Number.isInteger(item.keep) && slides[item.keep]) {
+      slidesOut.push(slides[item.keep]);
+    }
+  }
+  if (!slidesOut.length) {
+    return json({ error: "Claude did not return any slides. Try rephrasing." }, 502);
+  }
 
   return json({ slides: slidesOut, summary: toolBlock.input.summary || "Done." });
 }
