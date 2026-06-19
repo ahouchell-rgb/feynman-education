@@ -14,6 +14,8 @@
 //
 // Required env: ANTHROPIC_API_KEY. Optional: SUPABASE_SERVICE_ROLE_KEY (usage log).
 
+import { costGBP as costGBP_, RATES, todayISO } from "@/lib/pricing";
+
 export const runtime = "edge";
 
 const MODEL = "claude-sonnet-4-6"; // matches the feynman content routes (chat / feedforward)
@@ -25,15 +27,8 @@ const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 // Public anon key (same as src/lib/sk) — used as the apikey header alongside the caller's bearer.
 const SK_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 
-// Sonnet pricing — kept in step with chat-with-lesson / feedforward.
-const INPUT_USD_PER_MTOK = 3;
-const OUTPUT_USD_PER_MTOK = 15;
-const GBP_PER_USD = 0.79;
 const DAILY_CAP_GBP = Number(process.env.AI_DAILY_CAP_GBP) || 0; // £/day per teacher; 0 = unlimited.
-
-const todayISO = () => new Date().toISOString().slice(0, 10);
-const costGBP = (input: number, output: number) =>
-  (input / 1e6) * INPUT_USD_PER_MTOK * GBP_PER_USD + (output / 1e6) * OUTPUT_USD_PER_MTOK * GBP_PER_USD;
+const costGBP = (input: number, output: number) => costGBP_(input, output, RATES.sonnet);
 
 const json = (obj: unknown, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json" } });

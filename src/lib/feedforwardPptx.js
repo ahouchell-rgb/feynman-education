@@ -66,4 +66,6 @@ async function buildFeedforwardPptx({ classLabel, halfTerm, topics }) {
   return pptx.write({ outputType: "nodebuffer" });
 }
 
-module.exports = { buildFeedforwardPptx };
+// estLines/boxHeight exported for unit tests — the layout maths is the fragile bit
+// (overflow warnings above prove it) and is pure, so it can be checked in isolation.
+module.exports = { buildFeedforwardPptx, estLines, boxHeight, CPI };
