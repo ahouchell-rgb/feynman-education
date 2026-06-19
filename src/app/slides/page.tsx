@@ -7,6 +7,8 @@ import { Btn } from "@/lib/primitives";
 import { SlideEditor } from "@/components/SlideEditor";
 import { StaticSlide } from "@/components/SlideStage";
 import { guestRead, guestWrite, GUEST_KEY } from "@/lib/guestDecks";
+import { google, PPTX_MIME } from "@/lib/google";
+import { openDrivePicker } from "@/components/GoogleDrivePicker";
 
 function newSlide() { return { id: "s" + Math.floor(performance.now() * 1000), elements: [] }; }
 function nowISO() { return new Date().toISOString(); }
@@ -107,6 +109,8 @@ function SlidesContent() {
   const [err, setErr] = useState("");
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [savingDrive, setSavingDrive] = useState(false);
+  const [driveMsg, setDriveMsg] = useState("");
   const [hovId, setHovId] = useState(null);     // card under the cursor
   const [confirmId, setConfirmId] = useState(null); // deck awaiting a 2nd delete click
   const [curSlide, setCurSlide] = useState(0);  // slide selected in the editor rail (for "present from here")
@@ -233,6 +237,51 @@ function SlidesContent() {
       setActive(created); setSave("saved");
     } catch (e) { setErr("Import failed: " + e.message); }
     finally { setImporting(false); }
+  };
+
+  // Pick a Google Slides / .pptx file from Drive, convert to .pptx, and import
+  // it with the existing PPTX importer. Native Slides are exported to pptx by
+  // Drive; an existing .pptx is fetched as-is. Signed-in only.
+  const onImportFromDrive = async () => {
+    if (guest || !user?.id) return;
+    setImporting(true); setErr("");
+    try {
+      const file = await openDrivePicker(user.id);
+      if (!file) return; // teacher cancelled the picker
+      const blob = await google.fetchAsPptxBlob(user.id, file);
+      const { importPptx } = await import("@/lib/importPptx");
+      const folder = "import-" + Math.floor(performance.now());
+      const slides = await importPptx(blob, { uploadImage: (f) => store.uploadImage(f, folder) });
+      const title = (file.name || "Imported deck").replace(/\.pptx$/i, "");
+      const created = await store.create({ title, slides });
+      setActive(created); setSave("saved");
+      // Link back only when the source is a .pptx we can safely overwrite later;
+      // native Slides imports stay unlinked so save-back makes a fresh export.
+      // Best-effort: a deck still imports fine if the drive_* columns are absent.
+      if (file.mimeType === PPTX_MIME) {
+        store.update(created.id, { drive_file_id: file.id, drive_file_name: file.name })
+          .then(() => setActive((a) => (a && a.id === created.id ? { ...a, drive_file_id: file.id, drive_file_name: file.name } : a)))
+          .catch(() => {});
+      }
+    } catch (e) { setErr("Drive import failed: " + e.message); }
+    finally { setImporting(false); }
+  };
+
+  // Save the open deck back to Drive as a .pptx — updating the linked file in
+  // place when there is one, otherwise creating a new file. Signed-in only.
+  const saveToDrive = async () => {
+    if (guest || !active || !user?.id) return;
+    setSavingDrive(true); setErr(""); setDriveMsg("");
+    try {
+      const { exportDeckBlob, deckFileStem } = await import("@/lib/exportPptx");
+      const blob = await exportDeckBlob(active);
+      const res = await google.saveDeckPptx(user.id, { name: deckFileStem(active), blob, fileId: active.drive_file_id || null });
+      setActive((a) => ({ ...a, drive_file_id: res.id, drive_file_name: res.name }));
+      store.update(active.id, { drive_file_id: res.id, drive_file_name: res.name }).then(bumpBase).catch(() => {});
+      setDriveMsg(active.drive_file_id ? "updated in Drive ✓" : "saved to Drive ✓");
+      setTimeout(() => setDriveMsg(""), 4000);
+    } catch (e) { setErr("Save to Drive failed: " + e.message); }
+    finally { setSavingDrive(false); }
   };
 
   const openDeck = (d) => { setActive(d); setSave("saved"); setCurSlide(0); };
@@ -380,6 +429,13 @@ function SlidesContent() {
               {save === "saving" ? "saving…" : save === "error" ? "save failed" : "saved"}
             </span>
             <Btn v="soft" onClick={exportPptx} disabled={exporting}>{exporting ? "exporting…" : "Export .pptx"}</Btn>
+            {!guest && (
+              <Btn v="soft" onClick={saveToDrive} disabled={savingDrive}
+                title={active.drive_file_id ? "Update the linked .pptx in your Google Drive" : "Save this deck as a .pptx in your Google Drive"}>
+                {savingDrive ? "saving to Drive…" : active.drive_file_id ? "↻ Save to Drive" : "Save to Drive"}
+              </Btn>
+            )}
+            {driveMsg && <span style={{ fontFamily: C.mono, fontSize: 11, color: C.grn }}>{driveMsg}</span>}
             <Btn v="soft" title="Printable handout / PDF" onClick={() => window.open(`/slides/${active.id}/print`, "_blank")}>Print / PDF</Btn>
             <div style={{ position: "relative" }}>
               <Btn onClick={() => setPresentOpen((o) => !o)} title="Start the slideshow">▶ Present ▾</Btn>
@@ -453,6 +509,7 @@ function SlidesContent() {
           <input ref={importHtmlRef} type="file" accept=".html,.htm,text/html" multiple onChange={onImportHtml} style={{ display: "none" }} />
           <Btn v="soft" onClick={() => importRef.current?.click()} disabled={importing}>{importing ? "Importing…" : "Import .pptx"}</Btn>
           <Btn v="soft" onClick={() => importHtmlRef.current?.click()} disabled={importing}>{importing ? "Importing…" : "Import .html"}</Btn>
+          {!guest && <Btn v="soft" onClick={onImportFromDrive} disabled={importing} title="Import a Google Slides or PowerPoint file from your Google Drive">{importing ? "Importing…" : "Import from Drive"}</Btn>}
           <Btn onClick={createDeck}>+ New deck</Btn>
         </div>
       </div>
