@@ -195,6 +195,40 @@ export function HodPanel({ user }) {
     return row;
   });
 
+  // ── Class × topic (the folded-in pulse-hub HoD surfaces, native to the anchor) ──
+  // One pass over the department's valid responses: accuracy per (class, topic).
+  const ctAgg = {};
+  validResps.forEach(r => {
+    const tid = r.questions?.topic_id;
+    if (!tid) return;
+    const k = r.class_id + "|" + tid;
+    if (!ctAgg[k]) ctAgg[k] = { t: 0, c: 0 };
+    ctAgg[k].t++;
+    if (r.is_correct) ctAgg[k].c++;
+  });
+  const ctCell = (classId, tid) => {
+    const a = ctAgg[classId + "|" + tid];
+    return a ? { total: a.t, correct: a.c, pct: Math.round((100 * a.c) / a.t) } : { total: 0, correct: 0, pct: null };
+  };
+  const classesWithData = new Set(Object.keys(ctAgg).map(k => k.split("|")[0]));
+  const matrixClasses = classes.filter(c => classesWithData.has(c.id));
+  // Rows = the department's most-answered topics; columns = each class. RAG by accuracy.
+  const classMatrix = topTopicIds.map(tid => ({
+    tid,
+    name: topics[tid] || "Unknown",
+    cells: matrixClasses.map(c => ({ classId: c.id, ...ctCell(c.id, tid) })),
+  }));
+  // Priority gaps = the weakest class×topic cells (>=5 answers, <50%) — suggested reteach actions.
+  const priorityGaps = Object.entries(ctAgg)
+    .filter(([, a]) => a.t >= 5 && (100 * a.c) / a.t < 50)
+    .map(([k, a]) => {
+      const [classId, tid] = k.split("|");
+      const cls = classes.find(c => c.id === classId);
+      return { className: cls?.name || "—", teacherId: cls?.teacher_id, topic: topics[tid] || "Unknown", pct: Math.round((100 * a.c) / a.t), attempts: a.t };
+    })
+    .sort((a, b) => a.pct - b.pct)
+    .slice(0, 12);
+
   const totalStudents = Object.keys(studentAgg).length;
   const totalActiveThisWeek = new Set(weekResps.map(r => r.student_id)).size;
   const deptAccuracy = validResps.length > 0 ? Math.round((validResps.filter(r => r.is_correct).length / validResps.length) * 100) : 0;
@@ -287,7 +321,7 @@ export function HodPanel({ user }) {
 
           {/* View tabs */}
           <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>
-            {[{ k: "overview", l: "Overview" }, { k: "flags", l: `Flags${flags.length > 0 ? ` (${flags.length})` : ""}` }, { k: "teachers", l: "Teachers" }, { k: "topics", l: "Weak topics" }, { k: "lowacc", l: `Low accuracy${lowAccuracyStudents.length > 0 ? ` (${lowAccuracyStudents.length})` : ""}` }, { k: "inactive", l: `Inactive${inactiveStudents.length > 0 ? ` (${inactiveStudents.length})` : ""}` }].map(t => (
+            {[{ k: "overview", l: "Overview" }, { k: "matrix", l: "Class matrix" }, { k: "flags", l: `Flags${flags.length > 0 ? ` (${flags.length})` : ""}` }, { k: "teachers", l: "Teachers" }, { k: "topics", l: "Weak topics" }, { k: "lowacc", l: `Low accuracy${lowAccuracyStudents.length > 0 ? ` (${lowAccuracyStudents.length})` : ""}` }, { k: "inactive", l: `Inactive${inactiveStudents.length > 0 ? ` (${inactiveStudents.length})` : ""}` }].map(t => (
               <Pill key={t.k} on={view === t.k} onClick={() => setView(t.k)} style={{ fontSize: 12, padding: "6px 12px" }}>{t.l}</Pill>
             ))}
           </div>
@@ -329,6 +363,60 @@ export function HodPanel({ user }) {
                 </div>
               )}
             </>
+          )}
+
+          {/* CLASS MATRIX: topic strength by class + priority gaps (folded in from pulse-hub, native) */}
+          {view === "matrix" && (
+            matrixClasses.length === 0 ? (
+              <Card style={{ padding: 28, textAlign: "center", color: C.mid, fontSize: 13 }}>No retrieval answers across your department's classes yet.</Card>
+            ) : (
+              <>
+                <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Topic strength by class</div>
+                <div style={{ overflowX: "auto", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 10, padding: 10 }}>
+                  <table style={{ fontSize: 11, borderCollapse: "collapse", width: "100%" }}>
+                    <thead>
+                      <tr><th style={{ textAlign: "left", padding: "6px 8px", color: C.dim, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.3, fontSize: 10 }}>Topic</th>
+                        {matrixClasses.map(c => <th key={c.id} style={{ padding: "6px 4px", color: C.dim, fontWeight: 600, fontSize: 10, minWidth: 46, textAlign: "center" }}>{c.name}</th>)}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {classMatrix.map(row => (
+                        <tr key={row.tid}>
+                          <td style={{ padding: "5px 8px", color: C.txt, fontWeight: 500, maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.name}</td>
+                          {row.cells.map((cell, i) => {
+                            const bg = cell.pct === null ? C.bdr : cell.pct >= 70 ? C.grn : cell.pct >= 50 ? C.amb : C.red;
+                            const fg = cell.pct === null ? C.dim : "#fff";
+                            return (
+                              <td key={i} style={{ padding: 2 }}>
+                                <div title={cell.total > 0 ? `${cell.correct}/${cell.total} correct` : "No data"} style={{ background: bg, color: fg, padding: "4px 6px", borderRadius: 4, textAlign: "center", fontSize: 10, fontWeight: 600, opacity: cell.pct === null ? 0.3 : 1 }}>
+                                  {cell.pct === null ? "—" : `${cell.pct}%`}
+                                </div>
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {priorityGaps.length > 0 && (
+                  <div style={{ marginTop: 20 }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: C.dim, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>Priority gaps — reteach first</div>
+                    {priorityGaps.map((g, i) => (
+                      <div key={i} style={{ padding: "10px 12px", background: C.card, border: `1px solid ${C.bdr}`, borderLeft: `3px solid ${g.pct < 35 ? C.red : C.amb}`, borderRadius: "0 8px 8px 0", marginBottom: 4, display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 12, color: C.txt, fontWeight: 600 }}>{g.topic}</div>
+                          <div style={{ fontSize: 11, color: C.dim }}>{g.className} · {teachers.find(t => t.id === g.teacherId)?.display_name || "—"}</div>
+                        </div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: g.pct < 35 ? C.red : C.amb, minWidth: 40, textAlign: "right" }}>{g.pct}%</div>
+                        <div style={{ fontSize: 10, color: C.dim, minWidth: 44, textAlign: "right" }}>{g.attempts} ans</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )
           )}
 
           {/* TEACHERS: full table + topic x teacher heatmap */}
