@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { sk, useAuth } from "@/lib/sk";
 import { C, DISC } from "@/lib/theme";
+import { Btn, Inp } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
 
 // SLT / Head-of-Department dashboard (strategy Build 2). Cohort mastery across
@@ -10,7 +11,57 @@ import { AppShell } from "@/components/AppShell";
 
 interface WeakRow { topic_id: string; topic_name: string; pct_correct: number; marked: number | null; students: number | null; }
 interface ClassRow { class_id: string; name: string; year_group: number; discipline: string; tier: string; teacher_name: string; linked: boolean; weak: WeakRow[]; }
-interface Overview { enabled: boolean; role: string; school?: { name: string }; years?: number[]; classes?: ClassRow[]; }
+interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; years?: number[]; classes?: ClassRow[]; }
+
+// Self-serve onboarding shown when the teacher isn't linked to a school yet.
+function SchoolOnboarding({ onDone }: { onDone: () => void }) {
+  const [name, setName] = useState("");
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState("");
+  const [err, setErr] = useState("");
+
+  const create = async () => {
+    if (!name.trim()) { setErr("Enter a school name."); return; }
+    setBusy("create"); setErr("");
+    try { await sk.rpc("create_school", { p_name: name.trim() }); onDone(); }
+    catch (e: any) { setErr(e.message || "Couldn't create the school."); setBusy(""); }
+  };
+  const join = async () => {
+    if (!code.trim()) { setErr("Enter a join code."); return; }
+    setBusy("join"); setErr("");
+    try { await sk.rpc("join_school", { p_code: code.trim() }); onDone(); }
+    catch (e: any) { setErr(e.message?.includes("invalid") ? "That join code wasn't recognised." : (e.message || "Couldn't join.")); setBusy(""); }
+  };
+
+  return (
+    <div>
+      <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 14, display: "flex", alignItems: "center", gap: 12 }}>
+        <span style={{ width: 24, height: 1, background: C.dim }} /><span>School</span>
+      </div>
+      <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
+        See your <em style={{ fontStyle: "italic", color: C.grn }}>whole school</em>.
+      </h1>
+      <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>
+        Set up your school to see cohort mastery across every class, or join your colleagues' school with a code.
+      </p>
+      {err && <div style={{ padding: "10px 14px", background: C.redS, border: `1px solid ${C.red}`, borderRadius: 6, color: C.red, fontSize: 13, marginBottom: 18 }}>{err}</div>}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, padding: 20, background: C.surface }}>
+          <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 4 }}>Create a school</div>
+          <p style={{ fontSize: 12, color: C.dim, marginBottom: 14, lineHeight: 1.5 }}>You become the senior leader and get a code to invite your team.</p>
+          <Inp placeholder="School name" value={name} onChange={(e) => setName(e.target.value)} style={{ marginBottom: 10 }} />
+          <Btn onClick={create} disabled={busy === "create"}>{busy === "create" ? "Creating…" : "Create school"}</Btn>
+        </div>
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, padding: 20, background: C.surface }}>
+          <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 4 }}>Join a school</div>
+          <p style={{ fontSize: 12, color: C.dim, marginBottom: 14, lineHeight: 1.5 }}>Enter the code a colleague shared with you.</p>
+          <Inp placeholder="Join code" value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} style={{ marginBottom: 10, letterSpacing: "0.1em" }} />
+          <Btn v="soft" onClick={join} disabled={busy === "join"}>{busy === "join" ? "Joining…" : "Join school"}</Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Colour a 0–100% mastery reading: red (weak) → amber → green (secure).
 function heat(pct: number) {
@@ -29,25 +80,36 @@ function Bar({ pct }: { pct: number }) {
 }
 
 function SchoolContent() {
-  const { profile } = useAuth();
+  const { profile, setProfile } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
+  const [members, setMembers] = useState<{ id: string; full_name: string; school_role: string }[]>([]);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(true);
   const [yearFilter, setYearFilter] = useState<number | "all">("all");
   const [discFilter, setDiscFilter] = useState<string>("all");
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const token = sk.auth.getToken();
-        const r = await fetch("/api/school/overview", { headers: { authorization: `Bearer ${token}` } });
-        const d = await r.json();
-        if (!r.ok) throw new Error(d.error || "Failed to load");
-        setData(d);
-      } catch (e: any) { setErr(e.message); }
-      setLoading(false);
-    })();
-  }, []);
+  const load = async () => {
+    try {
+      const r = await fetch("/api/school/overview", { headers: { authorization: `Bearer ${sk.auth.getToken()}` } });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "Failed to load");
+      setData(d);
+      if (d.enabled && d.role === "slt") {
+        sk.rpc("school_members", {}).then(setMembers).catch(() => {});
+      }
+    } catch (e: any) { setErr(e.message); }
+    setLoading(false);
+  };
+  useEffect(() => { load(); /* eslint-disable-next-line */ }, []);
+
+  // After self-serve create/join, refresh the profile (role/nav) and reload.
+  const onboarded = async () => {
+    try {
+      const p = await sk.q("profiles", { params: { id: `eq.${profile.id}`, select: "*" }, single: true });
+      setProfile(p);
+    } catch { /* non-fatal */ }
+    setLoading(true); await load();
+  };
 
   const filtered = useMemo(() => {
     const cs = data?.classes || [];
@@ -71,17 +133,7 @@ function SchoolContent() {
   if (loading) return <div style={{ padding: 40, color: C.dim, fontFamily: C.mono, fontSize: 12, letterSpacing: "0.08em" }}>Loading school data…</div>;
   if (err) return <div style={{ padding: 40, color: C.red, fontFamily: C.mono, fontSize: 12 }}>Error: {err}</div>;
 
-  if (!data?.enabled) {
-    return (
-      <div>
-        <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 40, lineHeight: 1.05, marginBottom: 10 }}>School dashboard</h1>
-        <p style={{ fontSize: 14, color: C.muted, maxWidth: "54ch", lineHeight: 1.6 }}>
-          This view is for Heads of Department and senior leaders. Your account isn't enabled for a school yet
-          {profile?.full_name ? `, ${profile.full_name}` : ""}. Ask an administrator to link you to your school.
-        </p>
-      </div>
-    );
-  }
+  if (!data?.enabled) return <SchoolOnboarding onDone={onboarded} />;
 
   const years = data.years || [];
 
@@ -99,6 +151,20 @@ function SchoolContent() {
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 24, maxWidth: "54ch", lineHeight: 1.55 }}>
         Aggregated across every class — to target support, not to rank teachers. {filtered.length} classes shown.
       </p>
+
+      {data.role === "slt" && data.joinCode && (
+        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", padding: "12px 16px", border: `1px solid ${C.rule}`, borderRadius: 8, background: C.surface, marginBottom: 24 }}>
+          <div style={{ fontSize: 13, color: C.muted }}>
+            Invite your science team — share this join code:
+            <span style={{ fontFamily: C.mono, fontSize: 16, fontWeight: 600, color: C.text, letterSpacing: "0.12em", marginLeft: 10, padding: "3px 10px", background: C.bg, borderRadius: 6, border: `1px solid ${C.border}` }}>{data.joinCode}</span>
+          </div>
+          {members.length > 0 && (
+            <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim, marginLeft: "auto" }}>
+              {members.length} staff · {members.filter((m) => m.school_role !== "member").length} leader{members.filter((m) => m.school_role !== "member").length === 1 ? "" : "s"}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* filters */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24, paddingBottom: 18, borderBottom: `1px solid ${C.rule}` }}>

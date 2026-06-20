@@ -59,9 +59,14 @@ export async function GET(req: Request) {
     return j({ enabled: false, role });
   }
 
-  // School name (RLS lets a member read their own school).
+  // School name + join code (RLS lets a member read their own school).
   let schoolName = "Your school";
-  try { schoolName = (await rest(`schools?id=eq.${profile.school_id}&select=name`, token))?.[0]?.name || schoolName; } catch { /* keep default */ }
+  let joinCode: string | null = null;
+  try {
+    const s = (await rest(`schools?id=eq.${profile.school_id}&select=name,join_code`, token))?.[0];
+    if (s?.name) schoolName = s.name;
+    if (role === "slt") joinCode = s?.join_code || null;
+  } catch { /* keep defaults */ }
 
   // School-wide classes (security-definer RPC; returns [] unless hod/slt).
   let classes: any[] = [];
@@ -88,7 +93,7 @@ export async function GET(req: Request) {
 
   const years = [...new Set(enriched.map((c) => c.year_group).filter(Boolean))].sort((a, b) => a - b);
   return j({
-    enabled: true, role, school: { name: schoolName },
+    enabled: true, role, school: { name: schoolName }, joinCode,
     years, classes: enriched,
     generatedAt: new Date().toISOString(),
   });

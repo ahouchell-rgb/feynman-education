@@ -33,25 +33,22 @@ The dashboard rolls the per-class weak objectives into a **cohort leaderboard** 
 **by-class grid**, with year-group + discipline filters — all client-side from that one
 payload, so filtering is instant and no per-pupil data leaves the server.
 
-## Enabling it (pilot)
+## Enabling it — self-serve (shipped)
 
-Roles are assigned **out-of-band** for now — there is deliberately no self-serve policy
-to grant yourself SLT. To enable a pilot school:
+`supabase/migrations/20260620_school_onboarding.sql` makes setup self-serve via
+`SECURITY DEFINER` RPCs — **no hand-run SQL**. The **School** nav item now shows for every
+teacher; `/school` renders an onboarding panel when you're not yet in a school:
 
-```sql
--- 1. create the school
-insert into public.schools (name) values ('Pilot High School') returning id;
--- 2. link staff + grant the role (slt = whole school, hod = department lead)
-update public.profiles set school_id = '<school-uuid>', school_role = 'slt'
-where id = '<your-auth-uid>';
--- 3. link the teachers whose classes should roll up
-update public.profiles set school_id = '<school-uuid>'
-where id in ('<teacher-uid>', ...);
-```
+- **Create a school** → `create_school(name)` makes the school + a join code and sets you
+  as `slt`.
+- **Join a school** → `join_school(code)` attaches you as a `member`.
+- `leave_school()` detaches; `school_members()` gives an slt/hod the roster.
 
-Then the **School** nav item appears and `/school` populates. `SK_API_KEY` must be set
-(same secret the cron uses) for the retrieval aggregation; without it the grid shows
-classes but no mastery.
+There is deliberately **no client-writable path** to set your own `school_role`, so nobody
+can grant themselves slt on a school they didn't create. An slt only sees aggregates of
+teachers who opted in with the code, which is what makes self-serve safe. The slt sees the
+join code + staff count on the dashboard. `SK_API_KEY` must be set for the retrieval
+aggregation; without it the grid shows classes but no mastery.
 
 ## Intervention export (shipped, SLT-only)
 
