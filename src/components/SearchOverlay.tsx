@@ -20,6 +20,7 @@ export function SearchOverlay({ onClose }: { onClose: () => void }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const unitMap = useRef<Record<string, string>>({});
   const reqId = useRef(0);
+  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -59,6 +60,11 @@ export function SearchOverlay({ onClose }: { onClose: () => void }) {
     return () => clearTimeout(t);
   }, [q, user?.id]);
 
+  // Keep the keyboard-highlighted result visible: the list scrolls (52vh) but the
+  // ↑↓ handlers only move the active index, so without this the highlight slides
+  // under the fold once you arrow past the visible rows.
+  useEffect(() => { itemRefs.current[active]?.scrollIntoView({ block: "nearest" }); }, [active]);
+
   const go = (h?: Hit) => { if (!h) return; onClose(); router.push(h.href); };
 
   const onKey = (e: React.KeyboardEvent) => {
@@ -96,7 +102,7 @@ export function SearchOverlay({ onClose }: { onClose: () => void }) {
               <div key={g.kind}>
                 <div style={{ padding: "10px 16px 4px", fontFamily: C.mono, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: C.dim }}>{KIND_LABEL[g.kind]}</div>
                 {g.items.map(({ h, i }) => (
-                  <button key={h.kind + h.id} onMouseEnter={() => setActive(i)} onClick={() => go(h)}
+                  <button key={h.kind + h.id} ref={(el) => { itemRefs.current[i] = el; }} onMouseEnter={() => setActive(i)} onClick={() => go(h)}
                     style={{ width: "100%", textAlign: "left", display: "flex", alignItems: "baseline", gap: 10, padding: "9px 16px", border: "none", cursor: "pointer", background: i === active ? C.bg : "transparent", fontFamily: C.sans }}>
                     <span style={{ flex: 1, fontSize: 14, color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{h.title}</span>
                     {h.sub && <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim, whiteSpace: "nowrap", maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis" }}>{h.sub}</span>}
