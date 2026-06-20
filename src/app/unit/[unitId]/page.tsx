@@ -25,6 +25,7 @@ function UnitContent() {
   const [decks, setDecks] = useState([]);
   const [generating, setGenerating] = useState(false);
   const [practicalBusy, setPracticalBusy] = useState(false);
+  const [revisionBusy, setRevisionBusy] = useState(false);
   const [viewingResource, setViewingResource] = useState(null);
   const [editingSOW, setEditingSOW] = useState(false);
   const [sowDraft, setSowDraft] = useState("");
@@ -144,6 +145,23 @@ function UnitContent() {
     finally { setPracticalBusy(false); }
   };
 
+  // Generate a printable revision booklet for the unit and open it in a new tab.
+  const revisionPack = async () => {
+    if (revisionBusy) return;
+    setRevisionBusy(true);
+    const w = window.open("", "_blank");
+    if (w) w.document.write("<p style='font-family:system-ui;padding:24px;color:#666'>Writing revision pack…</p>");
+    try {
+      const token = sk.auth.getToken();
+      if (!token) throw new Error("Sign in first.");
+      const r = await fetch("/api/revision-pack", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify({ unitId }) });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || "Generation failed");
+      if (w) { w.document.open(); w.document.write(data.html); w.document.close(); }
+    } catch (e) { if (w) w.close(); alert("Revision pack failed: " + e.message); }
+    finally { setRevisionBusy(false); }
+  };
+
   const lessonHref = (lessonId) => {
     const q = classId ? `?class=${classId}` : "";
     return `/unit/${unitId}/lesson/${lessonId}${q}`;
@@ -246,6 +264,7 @@ function UnitContent() {
               {unit.required_practical ? stripTags(unit.required_practical).slice(0, 120) : "Generate apparatus, method & a risk assessment for this topic's practical."}
             </div>
           </div>
+          <Btn v="soft" onClick={revisionPack} disabled={revisionBusy} style={{ fontSize: 11, padding: "6px 12px", whiteSpace: "nowrap" }}>{revisionBusy ? "Writing…" : "📖 Revision pack"}</Btn>
           <Btn onClick={practicalSheet} disabled={practicalBusy} style={{ fontSize: 11, padding: "6px 12px", whiteSpace: "nowrap" }}>{practicalBusy ? "Writing…" : "🧪 Practical sheet"}</Btn>
         </div>
       </Card>
