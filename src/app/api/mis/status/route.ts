@@ -23,23 +23,25 @@ export async function GET(req: Request) {
   const token = auth.slice(7);
 
   let connection: any = null, runs: any[] = [], students = 0, contacts = 0, withEmail = 0;
+  const wb = { pending: 0, sent: 0, error: 0 };
+  // Counts via Content-Range (head requests with count=exact).
+  const count = async (table: string, filter = "") => {
+    const r = await fetch(`${SK_URL}/rest/v1/${table}?select=id${filter}`, { headers: { apikey: SK_ANON, Authorization: `Bearer ${token}`, Prefer: "count=exact", Range: "0-0" } });
+    const cr = r.headers.get("content-range") || "*/0";
+    return Number(cr.split("/")[1] || 0);
+  };
   try {
     connection = (await rest(`mis_connections?select=mis_school_id,status,last_full_sync_at,last_error&limit=1`, token))?.[0] || null;
     if (connection) {
       [runs] = await Promise.all([
         rest(`mis_sync_runs?select=kind,status,counts,error,started_at,finished_at&order=started_at.desc&limit=5`, token),
       ]);
-      // Counts via Content-Range (head requests with count=exact).
-      const count = async (table: string, filter = "") => {
-        const r = await fetch(`${SK_URL}/rest/v1/${table}?select=id${filter}`, { headers: { apikey: SK_ANON, Authorization: `Bearer ${token}`, Prefer: "count=exact", Range: "0-0" } });
-        const cr = r.headers.get("content-range") || "*/0";
-        return Number(cr.split("/")[1] || 0);
-      };
-      [students, contacts, withEmail] = await Promise.all([
+      [students, contacts, withEmail, wb.pending, wb.sent, wb.error] = await Promise.all([
         count("mis_students"), count("mis_contacts"), count("mis_contacts", "&email=not.is.null"),
+        count("mis_writeback_queue", "&status=eq.pending"), count("mis_writeback_queue", "&status=eq.sent"), count("mis_writeback_queue", "&status=eq.error"),
       ]);
     }
   } catch { /* tolerate — show what we have */ }
 
-  return j({ configured: wondeConfigured(), connection, counts: { students, contacts, contactsWithEmail: withEmail }, runs });
+  return j({ configured: wondeConfigured(), connection, counts: { students, contacts, contactsWithEmail: withEmail }, writeback: wb, runs });
 }

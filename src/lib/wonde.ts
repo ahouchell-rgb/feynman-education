@@ -132,6 +132,71 @@ export async function runMisSync(schoolId: string, misSchoolId: string, kind: "f
   }
 }
 
+// ── Attainment write-back (Build 3, phase 2) ───────────────────────────────
+
+export interface WritebackItem { student_mis_id: string; value: string; }
+
+/** Insert pending write-back rows (service role). Returns the count enqueued. */
+export async function enqueueWriteback(opts: {
+  schoolId: string; createdBy: string | null; aspect: string; source: string; items: WritebackItem[];
+}): Promise<number> {
+  const rows = opts.items
+    .filter((i) => i && i.student_mis_id && String(i.value).trim() !== "")
+    .map((i) => ({
+      school_id: opts.schoolId, student_mis_id: String(i.student_mis_id), aspect: opts.aspect,
+      value: String(i.value), source: opts.source, created_by: opts.createdBy,
+    }));
+  if (!rows.length) return 0;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  for (let i = 0; i < rows.length; i += 500) {
+    const r = await fetch(`${SK_URL}/rest/v1/mis_writeback_queue`, {
+      method: "POST",
+      headers: { apikey: key, Authorization: `Bearer ${key}`, "content-type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify(rows.slice(i, i + 500)),
+    });
+    if (!r.ok) throw new Error(`enqueue: ${r.status} ${(await r.text().catch(() => "")).slice(0, 200)}`);
+  }
+  return rows.length;
+}
+
+/** Push one attainment value to Wonde's write-back endpoint. Provider-gated and
+ *  best-effort: the exact endpoint/payload is MIS-specific and must be confirmed
+ *  with Wonde for the school, so a non-2xx is returned as an error, not thrown. */
+async function pushOne(misSchoolId: string, row: any): Promise<{ ok: boolean; ref?: string; error?: string }> {
+  try {
+    const r = await fetch(`${WONDE_BASE}/schools/${misSchoolId}/writeback/assessment`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${process.env.WONDE_TOKEN}`, "content-type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ student: row.student_mis_id, aspect: row.aspect, result: row.value }),
+    });
+    if (!r.ok) return { ok: false, error: `Wonde ${r.status}: ${(await r.text().catch(() => "")).slice(0, 160)}` };
+    const d = await r.json().catch(() => ({}));
+    return { ok: true, ref: d?.data?.id ? String(d.data.id) : undefined };
+  } catch (e: any) {
+    return { ok: false, error: e?.message || "write failed" };
+  }
+}
+
+/** Drain up to `limit` pending write-back rows for a school. */
+export async function runWriteback(schoolId: string, misSchoolId: string, limit = 200): Promise<{ sent: number; failed: number }> {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const pending: any[] = await admin("GET", `mis_writeback_queue?school_id=eq.${schoolId}&status=eq.pending&order=created_at.asc&limit=${limit}`).catch(() => []);
+  let sent = 0, failed = 0;
+  for (const row of pending || []) {
+    const res = await pushOne(misSchoolId, row);
+    const patch = res.ok
+      ? { status: "sent", sent_at: new Date().toISOString(), external_ref: res.ref || null, attempts: (row.attempts || 0) + 1, last_error: null }
+      : { status: (row.attempts || 0) + 1 >= 3 ? "error" : "pending", attempts: (row.attempts || 0) + 1, last_error: res.error };
+    await fetch(`${SK_URL}/rest/v1/mis_writeback_queue?id=eq.${row.id}`, {
+      method: "PATCH",
+      headers: { apikey: key, Authorization: `Bearer ${key}`, "content-type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify(patch),
+    }).catch(() => {});
+    if (res.ok) sent++; else failed++;
+  }
+  return { sent, failed };
+}
+
 /** Ensure a connection row exists for the school, seeded from env (pilot). */
 export async function ensureConnection(schoolId: string): Promise<any> {
   const existing = await admin("GET", `mis_connections?school_id=eq.${schoolId}&limit=1`).catch(() => []);

@@ -13,7 +13,20 @@ interface Status {
   configured: boolean;
   connection: { mis_school_id: string; status: string; last_full_sync_at: string | null; last_error: string | null } | null;
   counts: { students: number; contacts: number; contactsWithEmail: number };
+  writeback?: { pending: number; sent: number; error: number };
   runs: { kind: string; status: string; counts: any; error: string | null; started_at: string; finished_at: string | null }[];
+}
+
+// Parse a simple CSV of (student_mis_id, value) — skips a header row if present.
+function parseWritebackCsv(text: string): { student_mis_id: string; value: string }[] {
+  const out: { student_mis_id: string; value: string }[] = [];
+  text.split(/\r?\n/).forEach((line, i) => {
+    const cols = line.split(",").map((c) => c.trim().replace(/^"|"$/g, ""));
+    if (cols.length < 2 || !cols[0]) return;
+    if (i === 0 && /[a-z]/i.test(cols[1]) && /id|student|upn/i.test(cols[0])) return; // header
+    out.push({ student_mis_id: cols[0], value: cols[1] });
+  });
+  return out;
 }
 
 function IntegrationsContent() {
@@ -25,6 +38,7 @@ function IntegrationsContent() {
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState("");
   const [importClass, setImportClass] = useState("");
+  const [wbAspect, setWbAspect] = useState("Science predicted grade");
 
   const token = () => sk.auth.getToken();
   const load = async () => {
@@ -47,6 +61,38 @@ function IntegrationsContent() {
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || "Sync failed");
       setMsg(`Synced ${d.counts?.students ?? 0} pupils and ${d.counts?.contacts ?? 0} contacts.`);
+      await load();
+    } catch (e: any) { setErr(e.message); }
+    setBusy("");
+  };
+
+  const onWbCsv = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; e.target.value = "";
+    if (!file) return;
+    if (!wbAspect.trim()) { setErr("Enter the MIS aspect (marksheet column) first."); return; }
+    setBusy("wbqueue"); setMsg(""); setErr("");
+    try {
+      const items = parseWritebackCsv(await file.text());
+      if (!items.length) throw new Error("No (student id, value) rows found in that CSV.");
+      const r = await fetch("/api/mis/writeback/enqueue", {
+        method: "POST", headers: { authorization: `Bearer ${token()}`, "content-type": "application/json" },
+        body: JSON.stringify({ aspect: wbAspect.trim(), source: "csv", items }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "Enqueue failed");
+      setMsg(`Queued ${d.enqueued} value${d.enqueued === 1 ? "" : "s"} for "${wbAspect.trim()}". Push them to the MIS below.`);
+      await load();
+    } catch (e: any) { setErr(e.message); }
+    setBusy("");
+  };
+
+  const runWriteback = async () => {
+    setBusy("wbrun"); setMsg(""); setErr("");
+    try {
+      const r = await fetch("/api/mis/writeback/run", { method: "POST", headers: { authorization: `Bearer ${token()}` } });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "Push failed");
+      setMsg(`Pushed ${d.sent} value${d.sent === 1 ? "" : "s"} to the MIS${d.failed ? `, ${d.failed} failed` : ""}.`);
       await load();
     } catch (e: any) { setErr(e.message); }
     setBusy("");
@@ -127,6 +173,33 @@ function IntegrationsContent() {
             </div>
           </Card>
 
+          {isSlt && (
+            <>
+              <div style={{ height: 18 }} />
+              <Card>
+                <H>Attainment write-back</H>
+                <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>
+                  Push grades back to the MIS marksheet. Upload a CSV of <Code>student_mis_id,value</Code> for an aspect, then push. Write-back is provider-gated — confirm your MIS supports it with Wonde.
+                </p>
+                <div style={{ display: "flex", gap: 24, marginBottom: 16 }}>
+                  <Stat n={status.writeback?.pending ?? 0} label="queued" />
+                  <Stat n={status.writeback?.sent ?? 0} label="sent" />
+                  <Stat n={status.writeback?.error ?? 0} label="errors" />
+                </div>
+                <label style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.08em", textTransform: "uppercase", color: C.dim }}>MIS aspect (marksheet column)</label>
+                <input value={wbAspect} onChange={(e) => setWbAspect(e.target.value)} placeholder="e.g. Science predicted grade"
+                  style={{ width: "100%", margin: "6px 0 14px", padding: "9px 12px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 13, background: C.bg, color: C.text, outline: "none" }} />
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+                  <label style={{ ...labelBtn(busy === "wbqueue") }}>
+                    {busy === "wbqueue" ? "Queuing…" : "Upload grades CSV"}
+                    <input type="file" accept=".csv,text/csv" onChange={onWbCsv} disabled={busy === "wbqueue"} style={{ display: "none" }} />
+                  </label>
+                  <Btn onClick={runWriteback} disabled={busy === "wbrun" || !(status.writeback?.pending)}>{busy === "wbrun" ? "Pushing…" : "Push pending to MIS"}</Btn>
+                </div>
+              </Card>
+            </>
+          )}
+
           {status.runs.length > 0 && (
             <>
               <div style={{ height: 28 }} />
@@ -160,6 +233,11 @@ const H = ({ children }: { children: React.ReactNode }) => (
 const Code = ({ children }: { children: React.ReactNode }) => (
   <code style={{ fontFamily: C.mono, fontSize: 12, background: C.bg, padding: "1px 5px", borderRadius: 3, margin: "0 3px" }}>{children}</code>
 );
+// A file-input <label> styled like the soft button variant.
+const labelBtn = (disabled: boolean): React.CSSProperties => ({
+  display: "inline-block", padding: "8px 16px", borderRadius: 6, fontFamily: C.mono, fontSize: 12, fontWeight: 500,
+  background: C.bg, color: C.text, border: `1px solid ${C.border}`, cursor: disabled ? "default" : "pointer", opacity: disabled ? 0.5 : 1,
+});
 const Note = ({ children, color, bg }: { children: React.ReactNode; color: string; bg: string }) => (
   <div style={{ padding: "10px 14px", background: bg, border: `1px solid ${color}`, borderRadius: 6, color, fontSize: 13, marginBottom: 18 }}>{children}</div>
 );
