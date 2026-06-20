@@ -57,6 +57,8 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             { href: "/curriculum", label: "Curriculum" },
             { href: "/slides", label: "Slides" },
             { href: "/parents", label: "Parents" },
+            // School dashboard is only meaningful for Heads of Dept / SLT.
+            ...(profile?.school_role === "hod" || profile?.school_role === "slt" ? [{ href: "/school", label: "School" }] : []),
             { href: "/manage", label: "Manage" },
             { href: "/setup", label: "Setup" },
           ].map(item => {
