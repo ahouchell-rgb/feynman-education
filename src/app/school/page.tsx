@@ -13,6 +13,57 @@ interface WeakRow { topic_id: string; topic_name: string; pct_correct: number; m
 interface ClassRow { class_id: string; name: string; year_group: number; discipline: string; tier: string; teacher_name: string; linked: boolean; weak: WeakRow[]; }
 interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; trust?: { linked: boolean; name?: string }; years?: number[]; classes?: ClassRow[]; }
 
+// Staff roster with role + remove controls (slt only).
+const ROLE_LABEL: Record<string, string> = { member: "Teacher", hod: "Head of Dept", slt: "Senior leader" };
+function StaffRoster({ members, selfId, reload }: { members: { id: string; full_name: string; school_role: string }[]; selfId?: string; reload: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState("");
+  const [err, setErr] = useState("");
+
+  const setRole = async (id: string, role: string) => {
+    setBusy(id); setErr("");
+    try { await sk.rpc("set_school_member_role", { p_target: id, p_role: role }); await reload(); }
+    catch (e: any) { setErr(e.message); }
+    setBusy("");
+  };
+  const remove = async (id: string, name: string) => {
+    if (!confirm(`Remove ${name} from the school?`)) return;
+    setBusy(id); setErr("");
+    try { await sk.rpc("remove_school_member", { p_target: id }); await reload(); }
+    catch (e: any) { setErr(e.message); }
+    setBusy("");
+  };
+
+  return (
+    <div style={{ marginBottom: 32 }}>
+      <button onClick={() => setOpen((o) => !o)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.muted, padding: 0 }}>
+        {open ? "▾" : "▸"} Staff · {members.length}
+      </button>
+      {open && (
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden", background: C.surface, marginTop: 12 }}>
+          {err && <div style={{ padding: "8px 16px", color: C.red, fontSize: 12, fontFamily: C.mono }}>{err}</div>}
+          {members.map((m, i) => (
+            <div key={m.id} style={{ display: "grid", gridTemplateColumns: "1fr 150px 70px", gap: 12, alignItems: "center", padding: "10px 16px", borderTop: i === 0 ? "none" : `1px solid ${C.rule}` }}>
+              <span style={{ fontSize: 13, color: C.text }}>{m.full_name || "—"}{m.id === selfId && <span style={{ color: C.dim, fontFamily: C.mono, fontSize: 11 }}> · you</span>}</span>
+              {m.id === selfId ? (
+                <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>{ROLE_LABEL[m.school_role]}</span>
+              ) : (
+                <select value={m.school_role} disabled={busy === m.id} onChange={(e) => setRole(m.id, e.target.value)}
+                  style={{ fontFamily: C.mono, fontSize: 11, padding: "4px 8px", borderRadius: 6, border: `1px solid ${C.border}`, background: C.bg, color: C.text, cursor: "pointer" }}>
+                  {Object.entries(ROLE_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                </select>
+              )}
+              {m.id !== selfId && (
+                <button onClick={() => remove(m.id, m.full_name)} disabled={busy === m.id} title="Remove from school" style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14, textAlign: "right" }}>×</button>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Trust (MAT) membership management for a school's slt.
 function TrustManage({ trust, onDone }: { trust?: { linked: boolean; name?: string }; onDone: () => void }) {
   const [open, setOpen] = useState(false);
@@ -142,15 +193,14 @@ function SchoolContent() {
   const [yearFilter, setYearFilter] = useState<number | "all">("all");
   const [discFilter, setDiscFilter] = useState<string>("all");
 
+  const loadMembers = () => sk.rpc("school_members", {}).then(setMembers).catch(() => {});
   const load = async () => {
     try {
       const r = await fetch("/api/school/overview", { headers: { authorization: `Bearer ${sk.auth.getToken()}` } });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || "Failed to load");
       setData(d);
-      if (d.enabled && d.role === "slt") {
-        sk.rpc("school_members", {}).then(setMembers).catch(() => {});
-      }
+      if (d.enabled && d.role === "slt") loadMembers();
     } catch (e: any) { setErr(e.message); }
     setLoading(false);
   };
@@ -221,6 +271,7 @@ function SchoolContent() {
       )}
 
       {data.role === "slt" && <TrustManage trust={data.trust} onDone={onboarded} />}
+      {data.role === "slt" && members.length > 0 && <StaffRoster members={members} selfId={profile?.id} reload={loadMembers} />}
 
       {/* filters */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24, paddingBottom: 18, borderBottom: `1px solid ${C.rule}` }}>
