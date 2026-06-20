@@ -14,6 +14,7 @@ interface Status {
   connection: { mis_school_id: string; status: string; last_full_sync_at: string | null; last_error: string | null } | null;
   counts: { students: number; contacts: number; contactsWithEmail: number };
   writeback?: { pending: number; sent: number; error: number };
+  misClasses?: { mis_id: string; name: string | null; subject: string | null }[];
   runs: { kind: string; status: string; counts: any; error: string | null; started_at: string; finished_at: string | null }[];
 }
 
@@ -38,6 +39,7 @@ function IntegrationsContent() {
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState("");
   const [importClass, setImportClass] = useState("");
+  const [importMisClass, setImportMisClass] = useState("");
   const [wbAspect, setWbAspect] = useState("Science predicted grade");
 
   const token = () => sk.auth.getToken();
@@ -102,7 +104,7 @@ function IntegrationsContent() {
     if (!importClass) { setErr("Choose a class to import into."); return; }
     setBusy("import"); setMsg(""); setErr("");
     try {
-      const r = await fetch("/api/mis/import-guardians", { method: "POST", headers: { authorization: `Bearer ${token()}`, "content-type": "application/json" }, body: JSON.stringify({ classId: importClass }) });
+      const r = await fetch("/api/mis/import-guardians", { method: "POST", headers: { authorization: `Bearer ${token()}`, "content-type": "application/json" }, body: JSON.stringify({ classId: importClass, misClassId: importMisClass || null }) });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || "Import failed");
       setMsg(d.note || `Imported ${d.imported} guardian link${d.imported === 1 ? "" : "s"} into ${d.className} (${d.skipped} skipped). Set consent on the Parents screen.`);
@@ -160,13 +162,18 @@ function IntegrationsContent() {
           <Card>
             <H>Import parents into a class</H>
             <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.6, marginBottom: 14 }}>
-              Creates guardian links (consent <strong>pending</strong>) from the synced contacts for that class's year group. Set consent and send on the Parents screen.
+              Creates guardian links (consent <strong>pending</strong>) from the synced contacts. Pick a <strong>MIS class</strong> for the exact roster, or leave it on year-group matching. Set consent and send on the Parents screen.
             </p>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
               <select value={importClass} onChange={(e) => setImportClass(e.target.value)}
-                style={{ fontFamily: C.mono, fontSize: 13, padding: "9px 12px", borderRadius: 6, border: `1px solid ${C.border}`, background: C.surface, color: C.text, minWidth: 200 }}>
-                <option value="">Choose a class…</option>
+                style={{ fontFamily: C.mono, fontSize: 13, padding: "9px 12px", borderRadius: 6, border: `1px solid ${C.border}`, background: C.surface, color: C.text, minWidth: 180 }}>
+                <option value="">Your class…</option>
                 {classes.map((c) => <option key={c.id} value={c.id}>{c.name}{c.year_group ? ` · Y${c.year_group}` : ""}</option>)}
+              </select>
+              <select value={importMisClass} onChange={(e) => setImportMisClass(e.target.value)}
+                style={{ fontFamily: C.mono, fontSize: 13, padding: "9px 12px", borderRadius: 6, border: `1px solid ${C.border}`, background: C.surface, color: C.text, minWidth: 180 }}>
+                <option value="">MIS class (year-group if blank)</option>
+                {(status.misClasses || []).map((mc) => <option key={mc.mis_id} value={mc.mis_id}>{mc.name || mc.mis_id}{mc.subject ? ` · ${mc.subject}` : ""}</option>)}
               </select>
               <Btn onClick={runImport} disabled={busy === "import" || !importClass}>{busy === "import" ? "Importing…" : "Import guardians"}</Btn>
               <a href="/parents" style={{ fontFamily: C.mono, fontSize: 12, color: C.muted, textDecoration: "none" }}>Go to Parents →</a>

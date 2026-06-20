@@ -80,6 +80,18 @@ export async function fetchSchool(misSchoolId: string): Promise<NormalisedSync> 
   return { students, contacts };
 }
 
+/** Pull the school's classes with their pupil membership, normalised. */
+export async function fetchClasses(misSchoolId: string): Promise<{ classes: any[]; memberships: any[] }> {
+  const rows = await wondeAll(`schools/${misSchoolId}/classes`, { include: "students,subject" });
+  const classes: any[] = [];
+  const memberships: any[] = [];
+  for (const c of rows) {
+    classes.push({ mis_id: String(c.id), name: c?.name ?? null, subject: c?.subject?.data?.name ?? null, year_group: null, raw: c });
+    for (const s of c?.students?.data ?? []) memberships.push({ class_mis_id: String(c.id), student_mis_id: String(s.id) });
+  }
+  return { classes, memberships };
+}
+
 // ── Service-role upsert into staging ───────────────────────────────────────
 async function upsert(table: string, onConflict: string, rows: any[]): Promise<number> {
   if (!rows.length) return 0;
@@ -107,7 +119,7 @@ async function admin(method: string, path: string, body?: any) {
   return r.status === 204 ? null : r.json();
 }
 
-export interface SyncResult { ok: boolean; counts: { students: number; contacts: number }; error?: string; }
+export interface SyncResult { ok: boolean; counts: { students: number; contacts: number; classes?: number }; error?: string; }
 
 /** Full sync for one school: pull from Wonde → upsert staging → log the run +
  *  update the connection. Safe to call from a cron or a manual trigger. */
@@ -115,13 +127,16 @@ export async function runMisSync(schoolId: string, misSchoolId: string, kind: "f
   const startedAt = new Date().toISOString();
   try {
     const { students, contacts } = await fetchSchool(misSchoolId);
+    const { classes, memberships } = await fetchClasses(misSchoolId).catch(() => ({ classes: [], memberships: [] }));
     const tagged = (arr: any[]) => arr.map((x) => ({ ...x, school_id: schoolId, synced_at: new Date().toISOString() }));
     const ns = await upsert("mis_students", "school_id,mis_id", tagged(students));
     const nc = await upsert("mis_contacts", "school_id,mis_id,student_mis_id", tagged(contacts));
+    const ncl = await upsert("mis_classes", "school_id,mis_id", tagged(classes));
+    await upsert("mis_class_students", "school_id,class_mis_id,student_mis_id", tagged(memberships));
 
-    await admin("POST", "mis_sync_runs", { school_id: schoolId, kind, status: "ok", counts: { students: ns, contacts: nc }, started_at: startedAt, finished_at: new Date().toISOString() });
+    await admin("POST", "mis_sync_runs", { school_id: schoolId, kind, status: "ok", counts: { students: ns, contacts: nc, classes: ncl }, started_at: startedAt, finished_at: new Date().toISOString() });
     await admin("PATCH", `mis_connections?school_id=eq.${schoolId}`, { status: "active", last_full_sync_at: new Date().toISOString(), last_error: null });
-    return { ok: true, counts: { students: ns, contacts: nc } };
+    return { ok: true, counts: { students: ns, contacts: nc, classes: ncl } };
   } catch (e: any) {
     const msg = e?.message || "sync failed";
     try {

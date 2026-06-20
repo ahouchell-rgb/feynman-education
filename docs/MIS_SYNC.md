@@ -73,9 +73,12 @@ supports write-back with Wonde before relying on it.**
 
 ## Known limitations / next steps
 
-- **Year-group heuristic for import.** Contacts are matched to a class by its year group.
-  Precise rostering via **MIS class membership** (a `mis_classes` mirror + class mapping)
-  is the natural follow-up.
+- **Precise class rostering (shipped).** The sync now also mirrors MIS **classes** +
+  **membership** (`mis_classes`, `mis_class_students`, migration `20260620_mis_classes.sql`).
+  Guardian import takes an optional `misClassId` — pick a MIS class on the Integrations
+  screen to import the exact roster's parents; leaving it blank falls back to the
+  year-group heuristic. (Wonde class payloads vary, so `year_group` on a MIS class is left
+  null for now and rostering is by membership.)
 - **Email extraction is best-effort** — Wonde's contact-detail shape varies by MIS, so the
   full payload is kept in `raw` for reconciliation; verify against your pilot MIS.
 - **Write-back endpoint is unverified** against a live MIS (no Wonde credentials here);

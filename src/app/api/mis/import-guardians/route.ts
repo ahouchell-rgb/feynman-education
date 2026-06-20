@@ -29,6 +29,7 @@ export async function POST(req: Request) {
   let body: any;
   try { body = await req.json(); } catch { return j({ error: "Invalid JSON body" }, 400); }
   const classId = body?.classId;
+  const misClassId = body?.misClassId ? String(body.misClassId) : null;
   const limit = Math.min(Number(body?.limit) || 200, 500);
   if (!classId) return j({ error: "classId is required" }, 400);
 
@@ -36,15 +37,22 @@ export async function POST(req: Request) {
   let cls: any;
   try { cls = await sb("classes", { params: { id: `eq.${classId}`, select: "id,name,year_group" }, single: true }, token); }
   catch { return j({ error: "Class not found" }, 404); }
-  if (cls.year_group == null) return j({ error: "This class has no year group, needed to match pupils." }, 400);
+  if (!misClassId && cls.year_group == null) return j({ error: "This class has no year group; pick a MIS class instead, or set the year group." }, 400);
 
-  // Staged pupils in that year + their contacts with an email.
+  // Pupils to pull contacts for: the exact MIS class roster if given, else the
+  // year-group heuristic.
   let students: any[] = [], contacts: any[] = [];
   try {
-    students = await sb("mis_students", { params: { year_group: `eq.${cls.year_group}`, select: "mis_id,full_name" } }, token);
-    if (!students.length) return j({ imported: 0, skipped: 0, candidates: 0, note: "No staged MIS pupils for this year group — run a sync first." });
+    if (misClassId) {
+      const mem = await sb("mis_class_students", { params: { class_mis_id: `eq.${misClassId}`, select: "student_mis_id" } }, token);
+      const ids = mem.map((m: any) => m.student_mis_id);
+      if (!ids.length) return j({ imported: 0, skipped: 0, candidates: 0, note: "That MIS class has no pupils staged — run a sync first." });
+      students = await sb("mis_students", { params: { mis_id: `in.(${ids.join(",")})`, select: "mis_id,full_name" } }, token);
+    } else {
+      students = await sb("mis_students", { params: { year_group: `eq.${cls.year_group}`, select: "mis_id,full_name" } }, token);
+      if (!students.length) return j({ imported: 0, skipped: 0, candidates: 0, note: "No staged MIS pupils for this year group — run a sync first." });
+    }
     const ids = students.map((s) => s.mis_id);
-    // PostgREST in.() list
     contacts = await sb("mis_contacts", { params: { student_mis_id: `in.(${ids.join(",")})`, email: "not.is.null", select: "student_mis_id,full_name,email,priority", order: "priority.asc" } }, token);
   } catch (e: any) { return j({ error: `Couldn't read staged MIS data: ${e.message}` }, 500); }
 

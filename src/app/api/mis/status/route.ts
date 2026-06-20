@@ -23,6 +23,7 @@ export async function GET(req: Request) {
   const token = auth.slice(7);
 
   let connection: any = null, runs: any[] = [], students = 0, contacts = 0, withEmail = 0;
+  let misClasses: any[] = [];
   const wb = { pending: 0, sent: 0, error: 0 };
   // Counts via Content-Range (head requests with count=exact).
   const count = async (table: string, filter = "") => {
@@ -36,12 +37,13 @@ export async function GET(req: Request) {
       [runs] = await Promise.all([
         rest(`mis_sync_runs?select=kind,status,counts,error,started_at,finished_at&order=started_at.desc&limit=5`, token),
       ]);
-      [students, contacts, withEmail, wb.pending, wb.sent, wb.error] = await Promise.all([
+      [students, contacts, withEmail, wb.pending, wb.sent, wb.error, misClasses] = await Promise.all([
         count("mis_students"), count("mis_contacts"), count("mis_contacts", "&email=not.is.null"),
         count("mis_writeback_queue", "&status=eq.pending"), count("mis_writeback_queue", "&status=eq.sent"), count("mis_writeback_queue", "&status=eq.error"),
+        rest(`mis_classes?select=mis_id,name,subject&order=name.asc&limit=300`, token).catch(() => []),
       ]);
     }
   } catch { /* tolerate — show what we have */ }
 
-  return j({ configured: wondeConfigured(), connection, counts: { students, contacts, contactsWithEmail: withEmail }, writeback: wb, runs });
+  return j({ configured: wondeConfigured(), connection, counts: { students, contacts, contactsWithEmail: withEmail }, writeback: wb, misClasses, runs });
 }
