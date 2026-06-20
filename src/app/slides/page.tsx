@@ -131,6 +131,7 @@ function SlidesContent() {
   const [genLesson, setGenLesson] = useState("");
   const [genFocus, setGenFocus] = useState("");
   const [genBusy, setGenBusy] = useState(false);
+  const [autoQDeckId, setAutoQDeckId] = useState(null); // deck just AI-generated → auto-open questions
 
   const load = async () => {
     try { setDecks(await store.list()); }
@@ -227,6 +228,7 @@ function SlidesContent() {
       if (!res.ok) throw new Error(d.error || "Generation failed");
       const deck = await sk.q("decks", { params: { id: `eq.${d.deckId}`, select: "*" }, single: true });
       setGenOpen(false); setGenFocus(""); setGenLesson("");
+      setAutoQDeckId(d.deckId); // open the retrieval-questions modal once the editor mounts
       openDeck(deck);
     } catch (e) { setErr("Lesson generation failed: " + e.message); }
     finally { setGenBusy(false); }
@@ -321,7 +323,7 @@ function SlidesContent() {
         else await saveSupabaseSlides(active.slides);
       } catch (e) { setErr(e.message); }
     }
-    setActive(null); load();
+    setActive(null); setAutoQDeckId(null); load();
   };
 
   // Pull the latest version after a conflict so the teacher continues from the
@@ -509,7 +511,8 @@ function SlidesContent() {
           <div style={{ flex: 1, minHeight: 0 }}>
             <SlideEditor deck={active} onChange={onSlidesChange} onCurChange={setCurSlide}
               onUploadImage={(file) => store.uploadImage(file, active.id)}
-              onThemeChange={onThemeChange} onMasterChange={onMasterChange} />
+              onThemeChange={onThemeChange} onMasterChange={onMasterChange}
+              autoQuestions={autoQDeckId === active.id} />
           </div>
         </div>
       </Shell>

@@ -36,13 +36,20 @@ Slides → **✨ Generate lesson** → pick a unit (optionally a specific lesson
 focus like "exam technique on the required practical") → **Generate**. ~20–40s later the
 deck opens in the editor.
 
+## Lesson → practice in one flow
+
+After a generated deck opens, the editor **auto-opens the existing retrieval-questions
+modal** (`DeckQuestionsModal`) so the teacher goes straight from "lesson made" to
+"draft + save retrieval questions" — closing the loop back to the mastery graph in a
+single sitting. Implemented with an `autoQuestions` prop on `SlideEditor` (fires once on
+mount); the slides page sets it only for the just-generated deck and clears it on close.
+The save path is unchanged — it writes to the same `questions` bank as the in-app flow,
+governed by the same RLS / plan-gate.
+
 ## Notes / next steps
 
 - **No new env.** Uses `ANTHROPIC_API_KEY` + `SUPABASE_SERVICE_ROLE_KEY` (consumed by
-  slides-assistant) and the per-teacher daily spend cap already enforced there.
-- **Chain to retrieval (next).** A natural follow-up is to also call `deck-to-questions`
-  on the generated deck to seed a retrieval set — turning one click into *lesson + practice*
-  (closing the loop back to the mastery graph).
+  slides-assistant / deck-to-questions) and the per-teacher daily spend cap enforced there.
 - **From a unit page.** The entry point is on Slides today; adding the same action to the
   unit page would put it exactly where teachers plan.
 - Generation time is bounded by slides-assistant (Opus); the instruction targets ~8–14
