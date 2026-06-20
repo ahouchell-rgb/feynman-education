@@ -53,10 +53,28 @@ Then the **School** nav item appears and `/school` populates. `SK_API_KEY` must 
 (same secret the cron uses) for the retrieval aggregation; without it the grid shows
 classes but no mastery.
 
+## Intervention export (shipped, SLT-only)
+
+`/school/intervention` (`src/app/school/intervention/page.tsx` + `/api/school/intervention`)
+lists pupils **below a mastery threshold** (40/50/65%) per objective, grouped by objective,
+and exports a **CSV** for intervention groups / disadvantaged-gap tracking.
+
+This is **pupil-level personal data**, so it is restricted to `slt` (not `hod`). It reads a
+retrieval-side RPC — the per-pupil analogue of `class_weak_topics`:
+
+```
+class_intervention_list(p_class_id uuid, p_threshold int) RETURNS TABLE(
+  student_id uuid, student_name text, topic_id uuid, topic_name text,
+  pct_correct numeric, marked int)
+```
+
+Same `x-sciencekit-key` gating; lives in the retrieval repo. Until it ships the page loads
+with an empty list + a note. **Data protection:** the school's lawful basis for intervention
+applies; surface this only to senior leaders and handle exports per the school DPA / UK GDPR
+(see the strategy risks section).
+
 ## Deliberately out of scope (next)
 
-- **Intervention export** (pupils below threshold per objective) — needs a per-pupil,
-  consent-aware RPC; the current dashboard is aggregate-only by design.
 - **HOD scoping by discipline** — `hod` currently sees the whole school's science (the
   product is science-only). Split by department when multi-subject lands.
 - **Self-serve school setup + invites**, MAT/multi-school benchmarking — Build 4.
