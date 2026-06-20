@@ -89,7 +89,8 @@ function SchoolContent() {
     <div>
       <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 14, display: "flex", alignItems: "center", gap: 12 }}>
         <span style={{ width: 24, height: 1, background: C.dim }} />
-        <span>{data.school?.name} · {data.role === "slt" ? "Leadership" : "Department"}</span>
+        <span style={{ flex: 1 }}>{data.school?.name} · {data.role === "slt" ? "Leadership" : "Department"}</span>
+        <a href="/school/integrations" style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.1em", color: C.muted, textDecoration: "none" }}>Integrations →</a>
       </div>
       <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
         Where the cohort is <em style={{ fontStyle: "italic", color: C.red }}>weakest</em>.

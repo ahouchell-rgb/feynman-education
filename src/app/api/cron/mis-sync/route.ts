@@ -1,0 +1,35 @@
+// Feynman Education — nightly MIS sync (Vercel Cron).
+// GET /api/cron/mis-sync   (?force=1 to bypass nothing; it always runs)
+//
+// Iterates every active mis_connection and runs a Wonde sync. Env-gated.
+//   CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, WONDE_TOKEN, WONDE_SCHOOL_ID
+
+import { wondeConfigured, runMisSync } from "@/lib/wonde";
+
+export const runtime = "nodejs";
+export const maxDuration = 300;
+
+const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
+const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });
+
+export async function GET(req: Request) {
+  const authed = req.headers.get("x-vercel-cron") != null ||
+    (process.env.CRON_SECRET && req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`);
+  if (!authed) return j({ error: "unauthorized" }, 401);
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return j({ error: "SUPABASE_SERVICE_ROLE_KEY missing" }, 500);
+  if (!wondeConfigured()) return j({ skipped: "MIS not configured" });
+
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  let conns: any[] = [];
+  try {
+    const r = await fetch(`${SK_URL}/rest/v1/mis_connections?status=in.(pending,active)&select=school_id,mis_school_id`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
+    conns = await r.json();
+  } catch (e: any) { return j({ error: `load connections: ${e.message}` }, 500); }
+
+  const results: any[] = [];
+  for (const c of conns || []) {
+    const res = await runMisSync(c.school_id, c.mis_school_id, "full");
+    results.push({ school_id: c.school_id, ...res });
+  }
+  return j({ synced: results.filter((r) => r.ok).length, results });
+}

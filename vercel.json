@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/weekly-parent-report",
       "schedule": "0 16 * * 5"
+    },
+    {
+      "path": "/api/cron/mis-sync",
+      "schedule": "0 3 * * *"
     }
   ]
 }
