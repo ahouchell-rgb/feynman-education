@@ -108,6 +108,7 @@ function SlidesContent() {
   const [save, setSave] = useState("saved");    // saved | saving | error
   const [err, setErr] = useState("");
   const [exporting, setExporting] = useState(false);
+  const [coverBusy, setCoverBusy] = useState(false);
   const [importing, setImporting] = useState(false);
   const [savingDrive, setSavingDrive] = useState(false);
   const [driveMsg, setDriveMsg] = useState("");
@@ -382,6 +383,24 @@ function SlidesContent() {
     finally { setExporting(false); }
   };
 
+  // Generate a printable cover/non-specialist teaching script from the deck and
+  // open it in a new tab to read/print.
+  const coverScript = async () => {
+    setCoverBusy(true); setErr("");
+    const w = window.open("", "_blank"); // open synchronously so it isn't popup-blocked
+    if (w) w.document.write("<p style='font-family:system-ui;padding:24px;color:#666'>Writing cover script…</p>");
+    try {
+      const r = await fetch("/api/cover-sheet", {
+        method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${sk.auth.getToken()}` },
+        body: JSON.stringify({ slides: active.slides, title: active.title }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "Generation failed");
+      if (w) { w.document.open(); w.document.write(d.html); w.document.close(); }
+    } catch (e) { if (w) w.close(); setErr("Cover script failed: " + e.message); }
+    finally { setCoverBusy(false); }
+  };
+
   const deleteDeck = async (id, e) => {
     e.stopPropagation();
     if (confirmId !== id) { setConfirmId(id); return; }  // first click arms, second confirms
@@ -475,6 +494,7 @@ function SlidesContent() {
               </Btn>
             )}
             {driveMsg && <span style={{ fontFamily: C.mono, fontSize: 11, color: C.grn }}>{driveMsg}</span>}
+            {!guest && <Btn v="soft" title="Printable teaching script for a cover teacher / non-specialist" onClick={coverScript} disabled={coverBusy}>{coverBusy ? "scripting…" : "📋 Cover script"}</Btn>}
             <Btn v="soft" title="Printable handout / PDF" onClick={() => window.open(`/slides/${active.id}/print`, "_blank")}>Print / PDF</Btn>
             <div style={{ position: "relative" }}>
               <Btn onClick={() => setPresentOpen((o) => !o)} title="Start the slideshow">▶ Present ▾</Btn>
