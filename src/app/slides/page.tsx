@@ -285,7 +285,18 @@ function SlidesContent() {
   };
 
   const openDeck = (d) => { setActive(d); setSave("saved"); setCurSlide(0); };
-  const closeDeck = () => { clearTimeout(timer.current); setActive(null); load(); };
+  const closeDeck = async () => {
+    clearTimeout(timer.current);
+    // Flush a pending debounced save first — otherwise a change made within the
+    // last ~600ms is dropped when we clear the timer and reload the list.
+    if (save === "saving" && active && !conflict) {
+      try {
+        if (guest) await store.update(active.id, { slides: active.slides, updated_at: nowISO() });
+        else await saveSupabaseSlides(active.slides);
+      } catch (e) { setErr(e.message); }
+    }
+    setActive(null); load();
+  };
 
   // Pull the latest version after a conflict so the teacher continues from the
   // colleague's saved copy instead of overwriting it.

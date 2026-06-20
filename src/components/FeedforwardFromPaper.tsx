@@ -4,6 +4,9 @@ import { sk, SK_URL, SK_KEY } from "@/lib/sk";
 import { C } from "@/lib/theme";
 import { Btn, Card } from "@/lib/primitives";
 
+// Placeholder shown in the freshly-opened print tab while the sheet loads.
+const SHEET_LOADING_HTML = "<!doctype html><meta charset=utf-8><title>Feedforward</title><body style='margin:0;font:16px/1.5 system-ui,sans-serif;color:#555;display:flex;align-items:center;justify-content:center;height:100vh'>Generating your sheet…</body>";
+
 interface Props {
   lessonId: string;
   contextClass?: { name?: string } | null;
@@ -60,6 +63,10 @@ export function FeedforwardFromPaper({ lessonId, contextClass }: Props) {
 
   const generate = async () => {
     if (!picked.length && !notes.trim()) { setErr("Add a paper image/PDF or describe the questions."); return; }
+    // Open the print window now, inside the click — window.open after an await is
+    // blocked by browsers (notably iPad Safari), so the sheet would never appear.
+    const w = window.open("", "_blank");
+    if (w) w.document.write(SHEET_LOADING_HTML);
     setBusy(true); setErr("");
     try {
       const token = sk.auth.getSession()?.access_token;
@@ -75,10 +82,9 @@ export function FeedforwardFromPaper({ lessonId, contextClass }: Props) {
       });
       const j = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
-      const w = window.open("", "_blank");
       if (w) { w.document.open(); w.document.write(j.html); w.document.close(); }
       else setErr("Allow pop-ups to open the printable sheet.");
-    } catch (e: any) { setErr(e.message || "Couldn't generate the sheet."); }
+    } catch (e: any) { w?.close(); setErr(e.message || "Couldn't generate the sheet."); }
     setBusy(false);
   };
 

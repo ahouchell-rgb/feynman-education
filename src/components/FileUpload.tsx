@@ -46,7 +46,8 @@ export function FileUpload({ unitId, lessonId, onUploaded }) {
       onDrop={e => { e.preventDefault(); setDragging(false); handleFiles(e.dataTransfer.files); }}
       onClick={() => document.getElementById(inputId).click()}
       style={{ border: `1.5px dashed ${dragging ? C.accent : C.border}`, borderRadius: 6, padding: "16px 20px", textAlign: "center", cursor: "pointer", background: dragging ? C.bg : "transparent", transition: "all .15s" }}>
-      <input id={inputId} type="file" multiple style={{ display: "none" }} onChange={e => handleFiles(e.target.files)} />
+      <input id={inputId} type="file" multiple style={{ display: "none" }}
+        onChange={e => { handleFiles(Array.from(e.target.files)); e.target.value = ""; }} />
       <div style={{ fontSize: 12, fontFamily: C.mono, color: C.muted }}>{uploading ? "Uploading..." : "Drop files here or click to upload"}</div>
       <div style={{ fontSize: 11, color: C.dim, marginTop: 4 }}>PPTX, DOCX, PDF, images</div>
       {err && <div style={{ marginTop: 8, fontSize: 11, color: C.red }}>{err}</div>}

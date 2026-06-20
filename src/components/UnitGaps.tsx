@@ -4,6 +4,9 @@ import { ret, sk } from "@/lib/sk";
 import { C } from "@/lib/theme";
 import { Btn, Card } from "@/lib/primitives";
 
+// Placeholder shown in the freshly-opened print tab while the sheet loads.
+const SHEET_LOADING_HTML = "<!doctype html><meta charset=utf-8><title>Feedforward</title><body style='margin:0;font:16px/1.5 system-ui,sans-serif;color:#555;display:flex;align-items:center;justify-content:center;height:100vh'>Generating your sheet…</body>";
+
 interface UnitGapsProps {
   unitId: string;
   unitTitle?: string;
@@ -54,11 +57,15 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
   }, [unitId]);
 
   const openSheet = async (id: string) => {
+    // Open synchronously, inside the click — window.open called after an await is
+    // blocked by browsers (notably iPad Safari), so the sheet would never appear.
+    const w = window.open("", "_blank");
+    if (w) w.document.write(SHEET_LOADING_HTML);
     try {
       const row: any = await sk.q("feedforward_sheets", { params: { id: `eq.${id}`, select: "html" }, single: true });
-      const w = window.open("", "_blank");
       if (w && row?.html) { w.document.open(); w.document.write(row.html); w.document.close(); }
-    } catch { /* ignore */ }
+      else w?.close();
+    } catch { w?.close(); }
   };
 
   useEffect(() => {
@@ -77,6 +84,10 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
 
   const genFeedforward = async () => {
     if (!gaps) return;
+    // Open the print window now, inside the click — window.open after an await is
+    // blocked by browsers (notably iPad Safari), so the sheet would never appear.
+    const w = window.open("", "_blank");
+    if (w) w.document.write(SHEET_LOADING_HTML);
     setBusy(true); setErr("");
     try {
       const token = sk.auth.getSession()?.access_token;
@@ -92,11 +103,11 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
       });
       const j = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
-      const w = window.open("", "_blank");
       if (w) { w.document.open(); w.document.write(j.html); w.document.close(); }
       else { setErr("Allow pop-ups to open the printable sheet."); }
       loadSheets(); // the route saved it server-side — refresh the saved list
     } catch (e: any) {
+      w?.close();
       setErr(e.message || "Couldn't generate the sheet.");
     } finally {
       setBusy(false);
