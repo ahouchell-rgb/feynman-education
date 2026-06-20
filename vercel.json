@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/halfterm-feedforward",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-parent-report",
+      "schedule": "0 16 * * 5"
     }
   ]
 }
