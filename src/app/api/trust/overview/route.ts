@@ -51,7 +51,12 @@ export async function GET(req: Request) {
   if (!profile?.trust_id || profile.trust_role !== "trust_lead") return j({ enabled: false });
 
   let trustName = "Your trust";
-  try { trustName = (await rest(`trusts?id=eq.${profile.trust_id}&select=name`, token))?.[0]?.name || trustName; } catch { /* default */ }
+  let joinCode: string | null = null;
+  try {
+    const t = (await rest(`trusts?id=eq.${profile.trust_id}&select=name,join_code`, token))?.[0];
+    if (t?.name) trustName = t.name;
+    joinCode = t?.join_code || null;
+  } catch { /* default */ }
 
   let classes: any[] = [];
   try { classes = await rpc("trust_classes", {}, token); } catch { classes = []; }
@@ -69,5 +74,5 @@ export async function GET(req: Request) {
   });
 
   const { schools, cohort, trustAvg } = rollupTrust(enriched);
-  return j({ enabled: true, trust: { name: trustName }, trustAvg, schools, cohort, generatedAt: new Date().toISOString() });
+  return j({ enabled: true, trust: { name: trustName }, joinCode, trustAvg, schools, cohort, generatedAt: new Date().toISOString() });
 }

@@ -59,13 +59,18 @@ export async function GET(req: Request) {
     return j({ enabled: false, role });
   }
 
-  // School name + join code (RLS lets a member read their own school).
+  // School name + join code + trust link (RLS lets a member read their own school).
   let schoolName = "Your school";
   let joinCode: string | null = null;
+  let trust: { linked: boolean; name?: string } = { linked: false };
   try {
-    const s = (await rest(`schools?id=eq.${profile.school_id}&select=name,join_code`, token))?.[0];
+    const s = (await rest(`schools?id=eq.${profile.school_id}&select=name,join_code,trust_id`, token))?.[0];
     if (s?.name) schoolName = s.name;
     if (role === "slt") joinCode = s?.join_code || null;
+    if (s?.trust_id) {
+      trust.linked = true;
+      try { trust.name = (await rest(`trusts?id=eq.${s.trust_id}&select=name`, token))?.[0]?.name; } catch { /* RLS may hide it */ }
+    }
   } catch { /* keep defaults */ }
 
   // School-wide classes (security-definer RPC; returns [] unless hod/slt).
@@ -93,7 +98,7 @@ export async function GET(req: Request) {
 
   const years = [...new Set(enriched.map((c) => c.year_group).filter(Boolean))].sort((a, b) => a - b);
   return j({
-    enabled: true, role, school: { name: schoolName }, joinCode,
+    enabled: true, role, school: { name: schoolName }, joinCode, trust,
     years, classes: enriched,
     generatedAt: new Date().toISOString(),
   });

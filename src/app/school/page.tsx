@@ -11,7 +11,61 @@ import { AppShell } from "@/components/AppShell";
 
 interface WeakRow { topic_id: string; topic_name: string; pct_correct: number; marked: number | null; students: number | null; }
 interface ClassRow { class_id: string; name: string; year_group: number; discipline: string; tier: string; teacher_name: string; linked: boolean; weak: WeakRow[]; }
-interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; years?: number[]; classes?: ClassRow[]; }
+interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; trust?: { linked: boolean; name?: string }; years?: number[]; classes?: ClassRow[]; }
+
+// Trust (MAT) membership management for a school's slt.
+function TrustManage({ trust, onDone }: { trust?: { linked: boolean; name?: string }; onDone: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState("");
+  const [err, setErr] = useState("");
+
+  if (trust?.linked) {
+    return (
+      <div style={{ fontFamily: C.mono, fontSize: 12, color: C.dim, marginBottom: 24 }}>
+        Part of <span style={{ color: C.text }}>{trust.name || "a trust"}</span>. <a href="/trust" style={{ color: C.muted }}>Open trust dashboard →</a>
+      </div>
+    );
+  }
+
+  const create = async () => {
+    if (!name.trim()) { setErr("Enter a trust name."); return; }
+    setBusy("create"); setErr("");
+    try { await sk.rpc("create_trust", { p_name: name.trim() }); onDone(); }
+    catch (e: any) { setErr(e.message || "Couldn't create the trust."); setBusy(""); }
+  };
+  const link = async () => {
+    if (!code.trim()) { setErr("Enter a trust code."); return; }
+    setBusy("link"); setErr("");
+    try { await sk.rpc("link_school_to_trust", { p_code: code.trim() }); onDone(); }
+    catch (e: any) { setErr(e.message?.includes("invalid") ? "That trust code wasn't recognised." : (e.message || "Couldn't link.")); setBusy(""); }
+  };
+
+  if (!open) {
+    return (
+      <div style={{ marginBottom: 24 }}>
+        <button onClick={() => setOpen(true)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: C.mono, fontSize: 12, color: C.muted, padding: 0 }}>+ Add this school to a trust (MAT)</button>
+      </div>
+    );
+  }
+  return (
+    <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, padding: 16, background: C.surface, marginBottom: 24 }}>
+      <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 12 }}>Trust (MAT)</div>
+      {err && <div style={{ padding: "8px 12px", background: C.redS, border: `1px solid ${C.red}`, borderRadius: 6, color: C.red, fontSize: 12, marginBottom: 12 }}>{err}</div>}
+      <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flex: 1, minWidth: 240 }}>
+          <Inp placeholder="New trust name" value={name} onChange={(e) => setName(e.target.value)} />
+          <Btn onClick={create} disabled={busy === "create"} style={{ whiteSpace: "nowrap" }}>{busy === "create" ? "…" : "Create"}</Btn>
+        </div>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flex: 1, minWidth: 240 }}>
+          <Inp placeholder="…or join code" value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} style={{ letterSpacing: "0.1em" }} />
+          <Btn v="soft" onClick={link} disabled={busy === "link"} style={{ whiteSpace: "nowrap" }}>{busy === "link" ? "…" : "Link"}</Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Self-serve onboarding shown when the teacher isn't linked to a school yet.
 function SchoolOnboarding({ onDone }: { onDone: () => void }) {
@@ -165,6 +219,8 @@ function SchoolContent() {
           )}
         </div>
       )}
+
+      {data.role === "slt" && <TrustManage trust={data.trust} onDone={onboarded} />}
 
       {/* filters */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24, paddingBottom: 18, borderBottom: `1px solid ${C.rule}` }}>

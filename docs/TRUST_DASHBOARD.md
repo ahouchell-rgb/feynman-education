@@ -29,20 +29,19 @@ retrieval calls. Only non-personal per-objective aggregates roll up.
   └─ rollup → schools[] (avgMastery, weakest[]) + cohort[] (trust-wide) + trustAvg
 ```
 
-## Enabling it (pilot)
+## Enabling it — self-serve (shipped)
 
-Roles/links are assigned **out-of-band** (no self-serve), as in Build 2:
+`supabase/migrations/20260620_trust_onboarding.sql` adds self-serve setup via
+`SECURITY DEFINER` RPCs (no hand-run SQL), mirroring school onboarding:
 
-```sql
-insert into public.trusts (name) values ('Example Multi-Academy Trust') returning id;
--- put schools under the trust
-update public.schools set trust_id = '<trust-uuid>' where id in ('<school-a>','<school-b>');
--- make yourself the trust lead
-update public.profiles set trust_id = '<trust-uuid>', trust_role = 'trust_lead' where id = '<your-uid>';
-```
+- A school's **slt** opens **School → "Add this school to a trust (MAT)"** and either
+  **creates** a trust (`create_trust` → becomes `trust_lead`, links their own school) or
+  **links** to one with a code (`link_school_to_trust`).
+- The **Trust** nav item then appears (profile refreshes) and `/trust` populates, showing
+  the trust's **join code** so the lead can invite more schools' SLTs.
 
-The **Trust** nav item then appears and `/trust` populates. `SK_API_KEY` must be set for
-the mastery aggregation.
+`trust_lead` is only ever granted by creating a trust — never self-assignable. `SK_API_KEY`
+must be set for the mastery aggregation.
 
 ## Benchmark snapshots + trend (shipped)
 

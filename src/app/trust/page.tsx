@@ -10,7 +10,7 @@ import { AppShell } from "@/components/AppShell";
 
 interface SchoolRow { school_id: string; name: string; classes: number; linked: number; avgMastery: number | null; weakest: { topic_name: string; avg: number }[]; }
 interface CohortRow { topic_name: string; avg: number; schools: number; }
-interface Overview { enabled: boolean; trust?: { name: string }; trustAvg?: number | null; schools?: SchoolRow[]; cohort?: CohortRow[]; }
+interface Overview { enabled: boolean; trust?: { name: string }; joinCode?: string | null; trustAvg?: number | null; schools?: SchoolRow[]; cohort?: CohortRow[]; }
 
 function heat(pct: number) {
   if (pct < 40) return C.red; if (pct < 65) return C.amb; return C.grn;
@@ -80,6 +80,14 @@ function TrustContent() {
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 24, maxWidth: "54ch", lineHeight: 1.55 }}>
         {schools.length} schools on the same mastery graph. {trustAvg != null && <>Trust average mastery <strong style={{ color: heat(trustAvg) }}>{trustAvg}%</strong>.</>} For consistency and support — not ranking.
       </p>
+
+      {data.joinCode && (
+        <div style={{ fontSize: 13, color: C.muted, marginBottom: 24 }}>
+          Invite schools to this trust — share this code:
+          <span style={{ fontFamily: C.mono, fontSize: 16, fontWeight: 600, color: C.text, letterSpacing: "0.12em", marginLeft: 10, padding: "3px 10px", background: C.surface, borderRadius: 6, border: `1px solid ${C.border}` }}>{data.joinCode}</span>
+          <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim, marginLeft: 10 }}>(a school's senior leader enters it under School → Trust)</span>
+        </div>
+      )}
 
       {trend.length >= 2 && (
         <div style={{ display: "flex", alignItems: "center", gap: 16, padding: "14px 16px", border: `1px solid ${C.rule}`, borderRadius: 8, background: C.surface, marginBottom: 28 }}>
