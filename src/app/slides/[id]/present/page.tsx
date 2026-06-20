@@ -126,6 +126,11 @@ export default function PresentPage() {
   useEffect(() => {
     const onKey = (e) => {
       const k = e.key;
+      // Don't hijack keys while the teacher is typing in a field (the cold-call
+      // "Edit class" textarea): otherwise Space/Enter respin and "n" closes the
+      // overlay, so names with spaces or on new lines can't be entered.
+      const t = e.target;
+      if (t && (t.isContentEditable || t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT")) return;
       // when an overlay owns the keyboard, handle it there and stop
       if (picker) {
         if (k === "Escape" || k === "n" || k === "N") setPicker(false);
