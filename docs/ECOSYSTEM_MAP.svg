@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040" font-family="'IBM Plex Sans','Segoe UI',Helvetica,Arial,sans-serif">
+  <defs>
+    <style>
+      .t  { fill:#1a1714; }
+      .mut{ fill:#4d4940; }
+      .dim{ fill:#8c8678; }
+      .mono{ font-family:'IBM Plex Mono',monospace; }
+      .h  { font-weight:700; }
+      .card{ fill:#faf6ec; stroke:#dcd5c0; }
+      .new{ fill:#1a7f5a; }
+      tspan,text{ }
+    </style>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#a8a191"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="1040" fill="#f3eee2"/>
+
+  <!-- Header -->
+  <text x="40" y="50" class="t h" font-size="34">Feynman Education — ecosystem &amp; what we built</text>
+  <text x="40" y="78" class="mut" font-size="16">Secondary-ed infrastructure on one data spine. <tspan class="new" font-weight="700">●</tspan> = built this session · plain = pre-existing.</text>
+
+  <!-- Sources row -->
+  <g font-size="13">
+    <rect x="40"   y="100" width="470" height="74" rx="8" class="card"/>
+    <text x="58" y="126" class="t h" font-size="15">Feynman / ScienceKit</text>
+    <text x="58" y="150" class="mut">Curriculum · SoW · timetable · slide editor · present</text>
+    <text x="58" y="167" class="dim mono" font-size="11">PLAN → DELIVER</text>
+
+    <rect x="540"  y="100" width="470" height="74" rx="8" class="card" stroke="#5e7c4b" stroke-width="2"/>
+    <text x="558" y="126" class="t h" font-size="15">retrieval-app.com  ·  the anchor</text>
+    <text x="558" y="150" class="mut">Spaced retrieval practice · weak-topic analytics</text>
+    <text x="558" y="167" class="dim mono" font-size="11">PRACTICE → feeds the graph</text>
+
+    <rect x="1040" y="100" width="520" height="74" rx="8" class="card"/>
+    <text x="1058" y="126" class="t h" font-size="15">interactive-science.com</text>
+    <text x="1058" y="150" class="mut">Interactive tools · widgets · revision booklets (resource_map)</text>
+    <text x="1058" y="167" class="dim mono" font-size="11">CONTENT</text>
+  </g>
+
+  <!-- spine -->
+  <line x1="275" y1="174" x2="775" y2="205" stroke="#a8a191" marker-end="url(#arr)"/>
+  <line x1="775" y1="174" x2="800" y2="205" stroke="#a8a191" marker-end="url(#arr)"/>
+  <line x1="1300" y1="174" x2="830" y2="205" stroke="#a8a191" marker-end="url(#arr)"/>
+  <rect x="300" y="208" width="1000" height="64" rx="10" fill="#1a1714"/>
+  <text x="800" y="240" text-anchor="middle" fill="#f3eee2" class="h" font-size="20">THE MASTERY GRAPH</text>
+  <text x="800" y="260" text-anchor="middle" fill="#cdbfae" font-size="13" class="mono">pupil × objective × confidence × recency  —  one spine, sold as a view to each buyer</text>
+
+  <!-- flows to columns -->
+  <line x1="450" y1="272" x2="220" y2="312" stroke="#a8a191" marker-end="url(#arr)"/>
+  <line x1="650" y1="272" x2="610" y2="312" stroke="#a8a191" marker-end="url(#arr)"/>
+  <line x1="950" y1="272" x2="1000" y2="312" stroke="#a8a191" marker-end="url(#arr)"/>
+  <line x1="1150" y1="272" x2="1390" y2="312" stroke="#a8a191" marker-end="url(#arr)"/>
+
+  <!-- ============ Buyer columns ============ -->
+  <!-- TEACHER -->
+  <g>
+    <rect x="40" y="312" width="370" height="392" rx="8" fill="#fff" stroke="#5e7c4b" stroke-width="1.5"/>
+    <rect x="40" y="312" width="370" height="40" rx="8" fill="#5e7c4b"/>
+    <text x="58" y="338" fill="#fff" class="h" font-size="16">TEACHER  ·  bottom-up PLG</text>
+    <g font-size="13.5" transform="translate(58,378)">
+      <text class="mut" y="0">Lesson page · widgets · chat-with-lesson</text>
+      <text class="mut" y="24">Feedforward (gaps → reteach) · exam upload</text>
+      <text class="t" y="52"><tspan class="new" font-weight="700">● </tspan>One-click lesson generator</text>
+      <text class="t" y="76"><tspan class="new" font-weight="700">● </tspan>→ chained retrieval questions</text>
+      <text class="t" y="100"><tspan class="new" font-weight="700">● </tspan>Cover / non-specialist script</text>
+      <text class="t" y="124"><tspan class="new" font-weight="700">● </tspan>Required-practical sheet (risk assmt)</text>
+      <text class="t" y="148"><tspan class="new" font-weight="700">● </tspan>Revision pack (+ interactive links)</text>
+      <text class="dim mono" font-size="11" y="184">free wedge → generates the data → pulls</text>
+      <text class="dim mono" font-size="11" y="200">schools &amp; parents in</text>
+      <text class="dim" font-size="12" y="236">↓ every action writes the mastery graph</text>
+    </g>
+  </g>
+
+  <!-- PARENT -->
+  <g>
+    <rect x="430" y="312" width="370" height="392" rx="8" fill="#fff" stroke="#6b4f7a" stroke-width="1.5"/>
+    <rect x="430" y="312" width="370" height="40" rx="8" fill="#6b4f7a"/>
+    <text x="448" y="338" fill="#fff" class="h" font-size="16">PARENT  ·  D2C</text>
+    <g font-size="13.5" transform="translate(448,378)">
+      <text class="t" y="0"><tspan class="new" font-weight="700">● </tspan>Weekly progress report</text>
+      <text class="dim" font-size="12" y="20">cron · AI tone + template fallback · email</text>
+      <text class="t" y="48"><tspan class="new" font-weight="700">● </tspan>Teacher consent UI (Parents page)</text>
+      <text class="dim" font-size="12" y="68">pending / consented / revoked</text>
+      <text class="t" y="96"><tspan class="new" font-weight="700">● </tspan>Parent portal (token magic-link)</text>
+      <text class="dim" font-size="12" y="116">children · reports · practise link</text>
+      <text class="t" y="144"><tspan class="new" font-weight="700">● </tspan>Unsubscribe (confirm-then-POST)</text>
+      <text class="mut" font-size="12.5" y="184">consent-gated · UK GDPR / AADC posture</text>
+      <text class="dim" font-size="12" y="212">future: per-child revision pack in portal</text>
+    </g>
+  </g>
+
+  <!-- SCHOOL -->
+  <g>
+    <rect x="820" y="312" width="370" height="392" rx="8" fill="#fff" stroke="#2e3a5f" stroke-width="1.5"/>
+    <rect x="820" y="312" width="370" height="40" rx="8" fill="#2e3a5f"/>
+    <text x="838" y="338" fill="#fff" class="h" font-size="16">SCHOOL  ·  B2B (the moat)</text>
+    <g font-size="13.5" transform="translate(838,378)">
+      <text class="t" y="0"><tspan class="new" font-weight="700">● </tspan>SLT / Dept dashboard</text>
+      <text class="dim" font-size="12" y="20">cohort heatmaps · weakest objectives</text>
+      <text class="t" y="48"><tspan class="new" font-weight="700">● </tspan>Intervention list + CSV export</text>
+      <text class="t" y="76"><tspan class="new" font-weight="700">● </tspan>Self-serve onboarding (create / join)</text>
+      <text class="t" y="104"><tspan class="new" font-weight="700">● </tspan>Staff roster management (roles)</text>
+      <text class="mut mono" font-size="11.5" y="140">SECURITY DEFINER school_classes()</text>
+      <text class="mut mono" font-size="11.5" y="158">base-table RLS stays owner-scoped</text>
+      <text class="dim" font-size="12" y="196">aggregates only — support, not ranking</text>
+    </g>
+  </g>
+
+  <!-- TRUST -->
+  <g>
+    <rect x="1210" y="312" width="350" height="392" rx="8" fill="#fff" stroke="#a06520" stroke-width="1.5"/>
+    <rect x="1210" y="312" width="350" height="40" rx="8" fill="#a06520"/>
+    <text x="1228" y="338" fill="#fff" class="h" font-size="16">TRUST / MAT</text>
+    <g font-size="13.5" transform="translate(1228,378)">
+      <text class="t" y="0"><tspan class="new" font-weight="700">● </tspan>Cross-school benchmarking</text>
+      <text class="dim" font-size="12" y="20">every school on one graph</text>
+      <text class="t" y="48"><tspan class="new" font-weight="700">● </tspan>Trend snapshots (weekly cron)</text>
+      <text class="dim" font-size="12" y="68">trust-average over time</text>
+      <text class="t" y="96"><tspan class="new" font-weight="700">● </tspan>Self-serve trust onboarding</text>
+      <text class="dim" font-size="12" y="116">create MAT / link school by code</text>
+      <text class="mut mono" font-size="11.5" y="152">SECURITY DEFINER trust_classes()</text>
+      <text class="dim" font-size="12" y="188">central, multi-school contracts</text>
+    </g>
+  </g>
+
+  <!-- ============ System of record band ============ -->
+  <rect x="40" y="728" width="1520" height="150" rx="10" fill="#efe7d6" stroke="#dcd5c0"/>
+  <text x="58" y="758" class="t h" font-size="16">SYSTEM OF RECORD  ·  MIS integration (Wonde)  —  in &amp; out</text>
+  <g font-size="13.5">
+    <text x="58"  y="792" class="t"><tspan class="new" font-weight="700">● </tspan>Nightly sync → staging</text>
+    <text x="78"  y="812" class="dim" font-size="12">students · parent contacts · classes · membership</text>
+    <text x="430" y="792" class="t"><tspan class="new" font-weight="700">● </tspan>Import parents → guardian links</text>
+    <text x="450" y="812" class="dim" font-size="12">precise class roster (feeds the parent report)</text>
+    <text x="820" y="792" class="t"><tspan class="new" font-weight="700">● </tspan>Attainment write-back queue → MIS</text>
+    <text x="840" y="812" class="dim" font-size="12">predicted-grades CSV · retry · provider-gated</text>
+    <text x="1190" y="792" class="t"><tspan class="new" font-weight="700">● </tspan>Status / audit UI</text>
+    <text x="1210" y="812" class="dim" font-size="12">counts · sync log · errors</text>
+    <text x="58" y="852" class="mut mono" font-size="11.5">crons:  halfterm-feedforward · weekly-parent-report · mis-sync · trust-snapshots · mis-writeback</text>
+  </g>
+
+  <!-- footer stats -->
+  <g font-size="13">
+    <text x="40" y="918" class="t h" font-size="15">Build totals</text>
+    <text x="40" y="944" class="mut">~12 migrations · ~26 API routes · 9 strategy docs · 5 crons · 8 SECURITY DEFINER RPCs</text>
+    <text x="40" y="968" class="mut">Every layer degrades gracefully without its dependency — <tspan class="mono" font-size="12">Anthropic · Resend · Wonde · retrieval RPCs</tspan> — and roles are never client-self-assignable.</text>
+    <text x="40" y="998" class="dim" font-size="12.5">Pending (yours): run migrations on the anchor · set env · ship retrieval RPCs (student_weak_topics, class_intervention_list) · confirm GDPR/AADC consent.</text>
+  </g>
+
+  <text x="1560" y="1024" text-anchor="end" class="dim mono" font-size="11">PR #5 · feynman-education</text>
+</svg>
