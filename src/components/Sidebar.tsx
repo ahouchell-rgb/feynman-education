@@ -59,6 +59,8 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             { href: "/parents", label: "Parents" },
             // School dashboard is only meaningful for Heads of Dept / SLT.
             ...(profile?.school_role === "hod" || profile?.school_role === "slt" ? [{ href: "/school", label: "School" }] : []),
+            // Trust dashboard is only for MAT leaders.
+            ...(profile?.trust_role === "trust_lead" ? [{ href: "/trust", label: "Trust" }] : []),
             { href: "/manage", label: "Manage" },
             { href: "/setup", label: "Setup" },
           ].map(item => {
