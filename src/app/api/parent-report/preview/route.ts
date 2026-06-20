@@ -23,6 +23,7 @@ export const maxDuration = 60;
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 const RET_ORIGIN = process.env.NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN || "https://retrieval-app.com";
+const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_ORIGIN || "";
 
 const err = (m: string, s = 500) => new Response(JSON.stringify({ error: m }), { status: s, headers: { "content-type": "application/json" } });
 
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
     if (linkId) {
       link = await supaRest(SK_URL, "guardian_student", {
         apikey: SK_ANON, bearer: token, single: true,
-        params: { id: `eq.${linkId}`, select: "id,student_name,student_id,unsubscribe_token,class:classes(id,name,retrieval_class_ids),guardian:guardians(email)" },
+        params: { id: `eq.${linkId}`, select: "id,student_name,student_id,unsubscribe_token,class:classes(id,name,retrieval_class_ids),guardian:guardians(email,access_token)" },
       });
       studentName = link.student_name;
       classId = link.class?.id;
@@ -74,12 +75,15 @@ export async function POST(req: Request) {
     fetchWeakTopics({ retUrl: SK_URL, retKey: SK_ANON, skApiKey: process.env.SK_API_KEY!, studentId, retrievalClassId: retId }),
   ]);
 
-  const unsubscribeUrl = link?.unsubscribe_token
-    ? `${RET_ORIGIN}/parent/unsubscribe?t=${encodeURIComponent(link.unsubscribe_token)}`
+  const unsubscribeUrl = link?.unsubscribe_token && APP_ORIGIN
+    ? `${APP_ORIGIN}/parent/unsubscribe?t=${encodeURIComponent(link.unsubscribe_token)}`
+    : undefined;
+  const portalUrl = link?.guardian?.access_token && APP_ORIGIN
+    ? `${APP_ORIGIN}/parent?t=${encodeURIComponent(link.guardian.access_token)}`
     : undefined;
   const { html, ai } = await generateParentReportHtml({
     studentName, classLabel: cls?.name || "Science", weekStart, taught, weak,
-    retrievalOrigin: RET_ORIGIN, retrievalClassId: retId, unsubscribeUrl,
+    retrievalOrigin: RET_ORIGIN, retrievalClassId: retId, unsubscribeUrl, portalUrl,
   });
 
   // Optional send (link mode only — we need a guardian email).

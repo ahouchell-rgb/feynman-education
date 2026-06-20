@@ -90,7 +90,7 @@ export async function fetchWeakTopics(opts: {
 
 function fallbackHtml(p: {
   studentName: string; classLabel: string; weekStart: string;
-  taught: TaughtItem[]; weak: WeakTopic[]; practiseUrl: string | null; unsubscribeUrl?: string;
+  taught: TaughtItem[]; weak: WeakTopic[]; practiseUrl: string | null; unsubscribeUrl?: string; portalUrl?: string;
 }): string {
   const taughtList = p.taught.length
     ? p.taught.map(t => `<li>${esc(t.lessonTitle)}${t.unitTitle ? ` <span style="color:#888">· ${esc(t.unitTitle)}</span>` : ""}</li>`).join("")
@@ -115,6 +115,7 @@ function fallbackHtml(p: {
     ${cta}
   </div>
   <p style="font-size:11px;color:#999;text-align:center;margin:16px 0 0">
+    ${p.portalUrl ? `<a href="${esc(p.portalUrl)}" style="color:#1a7f5a">See all of ${esc(firstName(p.studentName))}'s reports</a> · ` : ""}
     You're receiving this because you asked for weekly updates about ${esc(p.studentName)}.
     ${p.unsubscribeUrl ? `<a href="${esc(p.unsubscribeUrl)}" style="color:#999">Unsubscribe</a>.` : ""}
   </p>
@@ -126,7 +127,7 @@ const firstName = (s: string) => String(s || "").trim().split(/\s+/)[0] || s;
 
 function buildPrompt(p: {
   studentName: string; classLabel: string; weekStart: string;
-  taught: TaughtItem[]; weak: WeakTopic[]; practiseUrl: string | null; unsubscribeUrl?: string;
+  taught: TaughtItem[]; weak: WeakTopic[]; practiseUrl: string | null; unsubscribeUrl?: string; portalUrl?: string;
 }): string {
   const taught = p.taught.length ? p.taught.map(t => `- ${t.lessonTitle}${t.unitTitle ? ` (${t.unitTitle})` : ""}`).join("\n") : "(no lessons logged this week)";
   const weak = p.weak.length ? p.weak.map(w => `- ${w.topic_name} — ${Math.round(Number(w.pct_correct))}% correct`).join("\n") : "(no weak areas flagged)";
@@ -144,7 +145,7 @@ Write ONE self-contained, inline-styled, mobile-friendly HTML email (A 560px cen
 3. "Where a little practice would help" — the weak topics, framed positively and concretely.
 4. "Three questions to ask at dinner" — three short, specific questions a parent can ask about the topics above to prompt recall.
 5. A single clear call-to-action button${p.practiseUrl ? ` linking to ${p.practiseUrl}` : " (omit if no link)"} labelled like "Practise tonight".
-6. A small footer noting they get this because they asked for updates about ${p.studentName}${p.unsubscribeUrl ? `, with an unsubscribe link to ${p.unsubscribeUrl}` : ""}.
+6. A small footer noting they get this because they asked for updates about ${p.studentName}${p.portalUrl ? `, with a link to ${p.portalUrl} to see all of ${firstName(p.studentName)}'s reports` : ""}${p.unsubscribeUrl ? `, and an unsubscribe link to ${p.unsubscribeUrl}` : ""}.
 
 Be encouraging and brief. UK spelling. Do NOT invent topics, marks, or lessons beyond those given. Return ONLY the HTML inside a single \`\`\`html ... \`\`\` code block.`;
 }
@@ -160,7 +161,7 @@ function extractHtml(text: string): string {
 export interface ReportInput {
   studentName: string; classLabel: string; weekStart: string;
   taught: TaughtItem[]; weak: WeakTopic[];
-  retrievalOrigin?: string; retrievalClassId?: string; unsubscribeUrl?: string;
+  retrievalOrigin?: string; retrievalClassId?: string; unsubscribeUrl?: string; portalUrl?: string;
 }
 export interface ReportResult { html: string; usage?: { inputTokens: number; outputTokens: number }; ai: boolean; }
 

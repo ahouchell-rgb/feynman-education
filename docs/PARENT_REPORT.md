@@ -16,6 +16,9 @@ retrieval-app. It reuses the existing feedforward generation pattern and the
 | Weekly cron | `src/app/api/cron/weekly-parent-report/route.ts` | Fri 16:00 UTC (`vercel.json`). Loops consented links, generates, persists, emails. Idempotent per link+week. |
 | On-demand preview | `src/app/api/parent-report/preview/route.ts` | Teacher JWT; generate/QA one report (optionally send). Testable without cron/email. |
 | Teacher UI | `src/app/parents/page.tsx` (nav: **Parents**) | Per class: add guardian↔pupil links, capture consent (pending/consented/revoked), preview a report in a sandboxed iframe, send now (consented links only), and browse recent reports. |
+| Parent portal | `src/app/parent/page.tsx` + `src/app/api/parent/portal` | Password-less, token magic-link (`/parent?t=…`). Lists the parent's **consented** children, latest report + history (sandboxed iframe), and a "practise" deep-link. Public (outside AuthGate). |
+| Unsubscribe | `src/app/parent/unsubscribe/page.tsx` + `src/app/api/parent/unsubscribe` | Confirm-then-POST (so email prefetchers can't auto-revoke). Sets the link's `consent_status='revoked'` by `unsubscribe_token`. |
+| Portal schema | `supabase/migrations/20260620_parent_portal.sql` | Adds `guardians.access_token` (the magic-link token). |
 
 ## Data flow
 
@@ -32,13 +35,16 @@ guardian_student (consent=granted)
 
 ## Required before turning it on
 
-1. **Run the migration** on the anchor (`20260620_parent_reports.sql`).
+1. **Run the migrations** on the anchor (`20260620_parent_reports.sql`, then
+   `20260620_parent_portal.sql`).
 2. **Retrieval-side RPC `student_weak_topics(p_student_id uuid, p_limit int)`** — same
    shape/gating as `class_weak_topics`, in the retrieval-app repo. *Until it exists the
    report gracefully falls back to class-level weak topics, so this is non-blocking for a
    first pilot.*
 3. **Env (Vercel):** `SUPABASE_SERVICE_ROLE_KEY`, `SK_API_KEY`, optionally
-   `ANTHROPIC_API_KEY`, `RESEND_API_KEY` + `PARENT_REPORT_FROM`, `CRON_SECRET`.
+   `ANTHROPIC_API_KEY`, `RESEND_API_KEY` + `PARENT_REPORT_FROM`, `CRON_SECRET`, and
+   `NEXT_PUBLIC_APP_ORIGIN` (this app's URL — enables the portal + unsubscribe links
+   in emails; omitted gracefully if unset).
 4. **Consent + compliance (mandatory — see strategy §7):** only `consent_status =
    'granted'` links are ever sent; every email carries an unsubscribe link
    (`/parent/unsubscribe?t=<token>`, to be handled on retrieval-app). Confirm UK GDPR
@@ -59,7 +65,7 @@ curl -s "https://<app>/api/cron/weekly-parent-report?force=1" \
 
 ## Deliberately out of scope (next steps)
 
-- **Parent portal + auth** (`/parent`) — reports are email-first for now; the portal
-  (list children, latest report, deep-link to home practice) is the follow-up.
 - **Bulk guardian import** (CSV / MIS) — the teacher UI adds links one at a time today.
+- **Self-serve parent consent** (double opt-in) — consent is currently teacher-captured;
+  a parent-confirms-via-email flow would strengthen the GDPR lawful basis.
 - **`student_weak_topics`** itself lives in the retrieval-app repo.
