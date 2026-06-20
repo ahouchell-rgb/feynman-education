@@ -15,6 +15,7 @@ retrieval-app. It reuses the existing feedforward generation pattern and the
 | Email | `src/lib/email.ts` | Resend via `fetch`, **env-gated** — no key ⇒ persist-only, no failure. |
 | Weekly cron | `src/app/api/cron/weekly-parent-report/route.ts` | Fri 16:00 UTC (`vercel.json`). Loops consented links, generates, persists, emails. Idempotent per link+week. |
 | On-demand preview | `src/app/api/parent-report/preview/route.ts` | Teacher JWT; generate/QA one report (optionally send). Testable without cron/email. |
+| Teacher UI | `src/app/parents/page.tsx` (nav: **Parents**) | Per class: add guardian↔pupil links, capture consent (pending/consented/revoked), preview a report in a sandboxed iframe, send now (consented links only), and browse recent reports. |
 
 ## Data flow
 
@@ -60,6 +61,5 @@ curl -s "https://<app>/api/cron/weekly-parent-report?force=1" \
 
 - **Parent portal + auth** (`/parent`) — reports are email-first for now; the portal
   (list children, latest report, deep-link to home practice) is the follow-up.
-- **Guardian management UI** for teachers (add/import contacts, capture consent) — the
-  tables + RLS exist; the screen does not yet.
+- **Bulk guardian import** (CSV / MIS) — the teacher UI adds links one at a time today.
 - **`student_weak_topics`** itself lives in the retrieval-app repo.

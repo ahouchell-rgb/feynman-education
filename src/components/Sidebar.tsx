@@ -56,6 +56,7 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             { href: "/", label: "This week" },
             { href: "/curriculum", label: "Curriculum" },
             { href: "/slides", label: "Slides" },
+            { href: "/parents", label: "Parents" },
             { href: "/manage", label: "Manage" },
             { href: "/setup", label: "Setup" },
           ].map(item => {
