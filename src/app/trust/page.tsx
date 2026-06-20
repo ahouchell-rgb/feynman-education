@@ -23,9 +23,12 @@ function Bar({ pct }: { pct: number }) {
   );
 }
 
+interface Snapshot { taken_on: string; trust_avg: number | null; }
+
 function TrustContent() {
   const { profile } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
+  const [trend, setTrend] = useState<Snapshot[]>([]);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -38,6 +41,11 @@ function TrustContent() {
         setData(d);
       } catch (e: any) { setErr(e.message); }
       setLoading(false);
+      // Trend from saved snapshots (RLS scopes to the caller's trust). Best-effort.
+      try {
+        const snaps = await sk.q("trust_benchmark_snapshots", { params: { select: "taken_on,trust_avg", order: "taken_on.asc", limit: "16" } });
+        setTrend((snaps || []).filter((s: Snapshot) => s.trust_avg != null));
+      } catch { /* table may not exist yet */ }
     })();
   }, []);
 
@@ -72,6 +80,25 @@ function TrustContent() {
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 24, maxWidth: "54ch", lineHeight: 1.55 }}>
         {schools.length} schools on the same mastery graph. {trustAvg != null && <>Trust average mastery <strong style={{ color: heat(trustAvg) }}>{trustAvg}%</strong>.</>} For consistency and support — not ranking.
       </p>
+
+      {trend.length >= 2 && (
+        <div style={{ display: "flex", alignItems: "center", gap: 16, padding: "14px 16px", border: `1px solid ${C.rule}`, borderRadius: 8, background: C.surface, marginBottom: 28 }}>
+          <div>
+            <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: C.dim }}>Trust average · trend</div>
+            <div style={{ fontFamily: C.serif, fontSize: 30, color: heat(trend[trend.length - 1].trust_avg || 0), lineHeight: 1.1 }}>
+              {trend[trend.length - 1].trust_avg}%
+              {trend.length >= 2 && (() => {
+                const delta = (trend[trend.length - 1].trust_avg || 0) - (trend[0].trust_avg || 0);
+                return <span style={{ fontFamily: C.mono, fontSize: 12, color: delta >= 0 ? C.grn : C.red, marginLeft: 8 }}>{delta >= 0 ? "▲" : "▼"} {Math.abs(delta)} pts</span>;
+              })()}
+            </div>
+          </div>
+          <Sparkline points={trend.map((s) => s.trust_avg || 0)} />
+          <div style={{ fontFamily: C.mono, fontSize: 10, color: C.faint, marginLeft: "auto", textAlign: "right" }}>
+            {trend.length} snapshots<br />since {new Date(trend[0].taken_on + "T00:00:00").toLocaleDateString("en-GB", { month: "short", year: "2-digit" })}
+          </div>
+        </div>
+      )}
 
       {/* school benchmark */}
       <SectionLabel>Schools — benchmarked</SectionLabel>
@@ -126,6 +153,23 @@ const SectionLabel = ({ children }: { children: React.ReactNode }) => (
 const Empty = ({ children }: { children: React.ReactNode }) => (
   <div style={{ padding: "20px", color: C.dim, fontFamily: C.mono, fontSize: 12, marginBottom: 24 }}>{children}</div>
 );
+
+// Tiny inline trend line of the trust average over recent snapshots.
+function Sparkline({ points, w = 220, h = 40 }: { points: number[]; w?: number; h?: number }) {
+  if (points.length < 2) return null;
+  const min = Math.min(...points), max = Math.max(...points);
+  const span = Math.max(1, max - min);
+  const xs = (i: number) => (i / (points.length - 1)) * (w - 4) + 2;
+  const ys = (v: number) => h - 4 - ((v - min) / span) * (h - 8);
+  const d = points.map((v, i) => `${i === 0 ? "M" : "L"}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(" ");
+  const last = points[points.length - 1];
+  return (
+    <svg width={w} height={h} style={{ display: "block" }}>
+      <path d={d} fill="none" stroke={heat(last)} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={xs(points.length - 1)} cy={ys(last)} r={3} fill={heat(last)} />
+    </svg>
+  );
+}
 
 export default function TrustPage() {
   return <AppShell><TrustContent /></AppShell>;

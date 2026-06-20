@@ -44,11 +44,20 @@ update public.profiles set trust_id = '<trust-uuid>', trust_role = 'trust_lead' 
 The **Trust** nav item then appears and `/trust` populates. `SK_API_KEY` must be set for
 the mastery aggregation.
 
+## Benchmark snapshots + trend (shipped)
+
+`supabase/migrations/20260620_trust_snapshots.sql` adds `trust_benchmark_snapshots`
+(trust-member RLS read). A weekly cron `/api/cron/trust-snapshots` (Sun 04:00) gathers
+each trust's classes via the service role, aggregates with the **same shared `rollupTrust`**
+(`src/lib/trustBenchmark.ts`) the live route uses, and upserts one row per trust per day.
+The dashboard reads recent snapshots to draw a **trust-average trend sparkline** (with the
+points-change since the first snapshot). The live overview still computes the current
+numbers; snapshots add history and make future "instant load" possible.
+
 ## Out of scope (next)
 
-- **Precompute / caching.** The rollup fans out across every class on each load; at MAT
-  scale this should move to a scheduled snapshot (a `trust_benchmark_snapshots` table) so
-  the page is instant and trend-over-time becomes possible.
+- **Serve the dashboard from the latest snapshot** for instant first paint (currently the
+  live route always recomputes; the snapshot powers the trend only).
 - **Year-group / discipline filters** on the trust view (the per-school dashboard already has them).
 - **Curriculum consistency view** — which schools teach which SoW (the other half of the MAT pitch).
 - **Per-trust MIS-token store** so each school's Wonde connection rolls up centrally (Build 3 is single-school env today).
