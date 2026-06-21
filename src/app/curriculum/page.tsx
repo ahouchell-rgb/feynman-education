@@ -21,7 +21,16 @@ function CurriculumContent() {
       const gs = await sk.q("groups", { params: { order: "sort_order.asc" } });
       setGroups(gs);
       sk.q("subjects", { params: { select: "slug,name", order: "sort_order.asc" } }).then(setSubjects).catch(() => {});
-      const all = await sk.q("units", { params: { select: "*,subject:subjects(name,slug)", order: "sort_order.asc" } });
+      // Embed the subject for the subject filter, but degrade gracefully: if the
+      // units->subjects relationship or columns are unavailable, fall back to plain
+      // units (the filter below already infers "science" from u.discipline) so the
+      // whole curriculum never blanks on a schema gap.
+      let all;
+      try {
+        all = await sk.q("units", { params: { select: "*,subject:subjects(name,slug)", order: "sort_order.asc" } });
+      } catch {
+        all = await sk.q("units", { params: { select: "*", order: "sort_order.asc" } });
+      }
       const byGroup = {};
       gs.forEach(g => { byGroup[g.id] = all.filter(u => u.group_id === g.id); });
       setUnits(byGroup);
