@@ -38,6 +38,9 @@ export function DeckQuestionsModal({ slides, lessonTitle = "", onClose }: { slid
   const [topicId, setTopicId] = useState("");
   const [newTopic, setNewTopic] = useState("");
   const [creatingTopic, setCreatingTopic] = useState(false);
+  // Topics created in this session aren't yet in the topic→objective crosswalk,
+  // so questions saved to them join the leadership blend by name only (not id).
+  const [unmappedTopics, setUnmappedTopics] = useState<Set<string>>(new Set());
 
   const [count, setCount] = useState(6);
   const [drafts, setDrafts] = useState<Draft[] | null>(null);
@@ -83,6 +86,7 @@ export function DeckQuestionsModal({ slides, lessonTitle = "", onClose }: { slid
     try {
       const [t]: Topic[] = await sk.q("topics", { method: "POST", body: { subject_id: subjectId, name, sort_order: topics.length } });
       setTopics(p => [...p, t]); setTopicId(t.id); setNewTopic("");
+      setUnmappedTopics(p => new Set(p).add(t.id));
     } catch (e: any) {
       setErr(e?.message || "Couldn't create the topic — your plan may not allow custom topics.");
     }
@@ -185,10 +189,19 @@ export function DeckQuestionsModal({ slides, lessonTitle = "", onClose }: { slid
                 </select>
               </div>
             </div>
-            <div style={{ display: "flex", gap: 8, marginBottom: booklet ? 10 : 16 }}>
+            <div style={{ display: "flex", gap: 8, marginBottom: topicId && unmappedTopics.has(topicId) ? 8 : (booklet ? 10 : 16) }}>
               <Inp placeholder="…or a new topic (e.g. lesson title)" value={newTopic} onChange={e => setNewTopic(e.target.value)} onKeyDown={e => e.key === "Enter" && createTopic()} style={{ fontFamily: C.sans }} />
               <Btn v="soft" onClick={createTopic} disabled={creatingTopic || !newTopic.trim()} style={{ whiteSpace: "nowrap" }}>{creatingTopic ? "Adding…" : "＋ Topic"}</Btn>
             </div>
+
+            {/* Data-quality hint: a brand-new topic isn't yet in the curriculum
+                crosswalk, so its retrieval won't merge into leadership mastery by
+                objective id. Doesn't block saving — pupils still get the questions. */}
+            {topicId && unmappedTopics.has(topicId) && (
+              <div style={{ fontFamily: C.mono, fontSize: 11, color: C.amb, marginBottom: booklet ? 10 : 16, lineHeight: 1.4 }}>
+                Not linked to a curriculum objective — this won't show in leadership mastery dashboards until it's mapped.
+              </div>
+            )}
 
             {/* One pipeline, two surfaces: this topic also has a public revision booklet,
                 so questions published to the shared bank go live there too. */}
