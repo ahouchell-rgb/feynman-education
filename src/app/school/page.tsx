@@ -65,6 +65,53 @@ function StaffRoster({ members, selfId, reload }: { members: { id: string; full_
   );
 }
 
+// Admin activity trail for a school's slt — who changed roles / membership, when.
+// Lazy-loaded on open from the slt-gated school_audit() RPC.
+const AUDIT_LABEL: Record<string, string> = {
+  "role.change": "Role changed", "member.remove": "Member removed",
+  "school.create": "School created", "school.join": "Joined school", "school.leave": "Left school",
+  "trust.create": "Trust created", "trust.link": "Linked to trust",
+};
+function AuditTrail() {
+  const [open, setOpen] = useState(false);
+  const [rows, setRows] = useState<any[] | null>(null);
+  const [err, setErr] = useState("");
+
+  const toggle = async () => {
+    const next = !open; setOpen(next);
+    if (next && rows === null) {
+      try { setRows(await sk.rpc("school_audit", { p_limit: 50 }) || []); }
+      catch (e: any) { setErr(e.message); setRows([]); }
+    }
+  };
+
+  return (
+    <div style={{ marginBottom: 32 }}>
+      <button onClick={toggle} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.muted, padding: 0 }}>
+        {open ? "▾" : "▸"} Admin activity
+      </button>
+      {open && (
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden", background: C.surface, marginTop: 12 }}>
+          {err && <div style={{ padding: "8px 16px", color: C.red, fontSize: 12, fontFamily: C.mono }}>{err}</div>}
+          {rows === null ? (
+            <div style={{ padding: "12px 16px", color: C.dim, fontFamily: C.mono, fontSize: 12 }}>Loading…</div>
+          ) : rows.length === 0 ? (
+            <div style={{ padding: "12px 16px", color: C.dim, fontFamily: C.mono, fontSize: 12 }}>No recorded admin actions yet.</div>
+          ) : rows.map((r, i) => (
+            <div key={i} style={{ display: "grid", gridTemplateColumns: "120px 1fr 150px", gap: 12, alignItems: "center", padding: "9px 16px", borderTop: i === 0 ? "none" : `1px solid ${C.rule}` }}>
+              <span style={{ fontFamily: C.mono, fontSize: 11, color: C.text, fontWeight: 500 }}>{AUDIT_LABEL[r.action] || r.action}</span>
+              <span style={{ fontSize: 12, color: C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                by {r.actor_name || "—"}{r.detail?.to ? ` → ${r.detail.to}` : ""}{r.detail?.name ? ` · ${r.detail.name}` : ""}
+              </span>
+              <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textAlign: "right" }}>{r.at ? new Date(r.at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : ""}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Trust (MAT) membership management for a school's slt.
 function TrustManage({ trust, onDone }: { trust?: { linked: boolean; name?: string }; onDone: () => void }) {
   const [open, setOpen] = useState(false);
@@ -333,6 +380,7 @@ function SchoolContent() {
 
       {data.role === "slt" && <TrustManage trust={data.trust} onDone={onboarded} />}
       {data.role === "slt" && members.length > 0 && <StaffRoster members={members} selfId={profile?.id} reload={loadMembers} />}
+      {data.role === "slt" && <AuditTrail />}
 
       {/* filters */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24, paddingBottom: 18, borderBottom: `1px solid ${C.rule}` }}>
