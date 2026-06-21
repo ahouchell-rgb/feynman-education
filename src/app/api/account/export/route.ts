@@ -3,6 +3,8 @@
 // Returns a JSON bundle of the caller's own owner-scoped data (RLS guarantees
 // it's only theirs). A simple GDPR access-request path.
 
+import { audit } from "@/lib/audit";
+
 export const runtime = "nodejs";
 
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
@@ -44,6 +46,8 @@ export async function GET(req: Request) {
     classes, guardians, guardian_links: links, parent_reports: reports, assessments,
     subscription: subscription?.[0] || null,
   };
+
+  await audit(uid, "data.export", uid, { tables: ["profile", "classes", "guardians", "parent_reports", "assessments"] });
 
   return new Response(JSON.stringify(bundle, null, 2), {
     headers: { "content-type": "application/json", "content-disposition": `attachment; filename="feynman-data-export.json"`, "cache-control": "no-store" },

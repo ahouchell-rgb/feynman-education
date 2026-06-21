@@ -5,6 +5,7 @@
 // returns a clear message if WONDE_TOKEN / WONDE_SCHOOL_ID aren't configured.
 
 import { wondeConfigured, wondeSchoolId, ensureConnection, runMisSync } from "@/lib/wonde";
+import { audit } from "@/lib/audit";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -37,5 +38,6 @@ export async function POST(req: Request) {
 
   await ensureConnection(profile.school_id);
   const result = await runMisSync(profile.school_id, wondeSchoolId(), "manual");
+  await audit(uid, "mis.sync", profile.school_id, { counts: result.counts });
   return j(result, result.ok ? 200 : 502);
 }

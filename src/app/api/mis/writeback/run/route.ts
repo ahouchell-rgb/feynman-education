@@ -3,6 +3,7 @@
 // Drains the caller's school's pending write-back queue to Wonde. SLT only.
 
 import { wondeConfigured, wondeSchoolId, ensureConnection, runWriteback } from "@/lib/wonde";
+import { audit } from "@/lib/audit";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -34,5 +35,6 @@ export async function POST(req: Request) {
 
   await ensureConnection(profile.school_id);
   const res = await runWriteback(profile.school_id, wondeSchoolId());
+  await audit(uid, "mis.writeback", profile.school_id, res);
   return j(res);
 }
