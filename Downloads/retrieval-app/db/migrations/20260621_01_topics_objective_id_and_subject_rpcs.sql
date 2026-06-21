@@ -1,4 +1,8 @@
--- STATUS: NOT APPLIED. Branch feat/retrieval-multisubject-objective-wiring. Target project
+-- STATUS: APPLIED to uvzukwoxqhcxaxtzrziy on 2026-06-21 (after the feynman
+-- mastery_graph_objectives migration, so §2's objectives FK + §3's crosswalk mirror
+-- ACTIVATED). Verified: topics.objective_id present + FK live, 74 topics carry an
+-- objective_id, all 3 RPCs at the new signatures. Additive + idempotent; safe to replay.
+-- Branch feat/retrieval-multisubject-objective-wiring. Target project
 -- uvzukwoxqhcxaxtzrziy (the shared anchor). Additive + idempotent throughout;
 -- safe to replay. Apply with:  psql "$DATABASE_URL" -f db/migrations/20260621_01_topics_objective_id_and_subject_rpcs.sql
 --
