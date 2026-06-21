@@ -11,7 +11,7 @@ import { ObjectiveMasteryPanel, type BlendedObjectiveRow } from "@/components/Ob
 
 interface SchoolRow { school_id: string; name: string; classes: number; linked: number; avgMastery: number | null; weakest: { topic_name: string; avg: number }[]; }
 interface CohortRow { topic_name: string; avg: number; schools: number; }
-interface Overview { enabled: boolean; trust?: { name: string }; joinCode?: string | null; trustAvg?: number | null; schools?: SchoolRow[]; cohort?: CohortRow[]; objectiveMastery?: BlendedObjectiveRow[]; meta?: { source: "snapshot" | "live"; takenOn?: string }; }
+interface Overview { enabled: boolean; trust?: { name: string }; joinCode?: string | null; trustAvg?: number | null; schools?: SchoolRow[]; cohort?: CohortRow[]; objectiveMastery?: BlendedObjectiveRow[]; meta?: { source: "snapshot" | "live"; takenOn?: string; staleDays?: number | null }; }
 
 function heat(pct: number) {
   if (pct < 40) return C.red; if (pct < 65) return C.amb; return C.grn;
@@ -86,6 +86,14 @@ function TrustContent() {
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 24, maxWidth: "54ch", lineHeight: 1.55 }}>
         {schools.length} schools on the same mastery graph. {trustAvg != null && <>Trust average mastery <strong style={{ color: heat(trustAvg) }}>{trustAvg}%</strong>.</>} For consistency and support — not ranking.
       </p>
+
+      {data.meta?.source === "snapshot" && data.meta.staleDays != null && (
+        <p style={{ fontFamily: C.mono, fontSize: 11, color: data.meta.staleDays > 9 ? C.red : C.faint, marginTop: -16, marginBottom: 24 }}>
+          {data.meta.staleDays > 9 ? "⚠ Snapshot stale — " : "Updated "}
+          {data.meta.staleDays === 0 ? "today" : `${data.meta.staleDays} day${data.meta.staleDays === 1 ? "" : "s"} ago`}
+          {data.meta.staleDays > 9 ? " (the weekly snapshot may have stopped running)" : ""}
+        </p>
+      )}
 
       {data.joinCode && (
         <div style={{ fontSize: 13, color: C.muted, marginBottom: 24 }}>

@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Fail the build if a service-role JWT or an obvious live secret was
+      # committed anywhere except .env.example (the anon key is intentionally in
+      # source, so we match the service_role payload specifically, not any JWT).
+      - name: Scan for committed secrets
+        run: |
+          set -uo pipefail
+          # base64url of '"role":"service_role"' — the giveaway inside a service-role JWT.
+          SERVICE_ROLE_B64='InJvbGUiOiJzZXJ2aWNlX3JvbGUi'
+          PATTERNS=(
+            "$SERVICE_ROLE_B64"      # Supabase service_role JWT
+            'sk_live_[0-9A-Za-z]+'   # Stripe live secret key
+            'whsec_[0-9A-Za-z]+'     # Stripe webhook signing secret
+            'sk-ant-[0-9A-Za-z_-]+'  # Anthropic API key
+          )
+          status=0
+          for pat in "${PATTERNS[@]}"; do
+            # Search tracked files only; exclude .env.example and this workflow.
+            if git grep -nIE "$pat" -- . ':(exclude).env.example' ':(exclude).github/workflows/ci.yml' ; then
+              echo "::error::Possible committed secret matching /$pat/ — remove it and rotate the key."
+              status=1
+            fi
+          done
+          if [ "$status" -ne 0 ]; then
+            echo "Secret scan failed. See matches above."
+            exit 1
+          fi
+          echo "Secret scan clean."

@@ -12,7 +12,7 @@ import { ObjectiveMasteryPanel, type BlendedObjectiveRow } from "@/components/Ob
 
 interface WeakRow { topic_id: string; topic_name: string; pct_correct: number; marked: number | null; students: number | null; }
 interface ClassRow { class_id: string; name: string; year_group: number; discipline: string; tier: string; teacher_name: string; linked: boolean; weak: WeakRow[]; }
-interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; homeSponsored?: boolean; trust?: { linked: boolean; name?: string }; years?: number[]; classes?: ClassRow[]; objectiveMastery?: BlendedObjectiveRow[]; cohort?: { topic_name: string; avg: number; classes?: number }[]; meta?: { source: "snapshot" | "live"; takenOn?: string }; }
+interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; homeSponsored?: boolean; trust?: { linked: boolean; name?: string }; years?: number[]; classes?: ClassRow[]; objectiveMastery?: BlendedObjectiveRow[]; cohort?: { topic_name: string; avg: number; classes?: number }[]; meta?: { source: "snapshot" | "live"; takenOn?: string; staleDays?: number | null }; }
 
 // Staff roster with role + remove controls (slt only).
 const ROLE_LABEL: Record<string, string> = { member: "Teacher", hod: "Head of Dept", slt: "Senior leader" };
@@ -337,6 +337,14 @@ function SchoolContent() {
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 24, maxWidth: "54ch", lineHeight: 1.55 }}>
         Aggregated across every class — to target support, not to rank teachers. {filtered.length} classes shown.
       </p>
+
+      {data.meta?.source === "snapshot" && data.meta.staleDays != null && (
+        <p style={{ fontFamily: C.mono, fontSize: 11, color: data.meta.staleDays > 9 ? C.red : C.faint, marginTop: -16, marginBottom: 24 }}>
+          {data.meta.staleDays > 9 ? "⚠ Snapshot stale — " : "Updated "}
+          {data.meta.staleDays === 0 ? "today" : `${data.meta.staleDays} day${data.meta.staleDays === 1 ? "" : "s"} ago`}
+          {data.meta.staleDays > 9 ? " (the weekly snapshot may have stopped running)" : ""}
+        </p>
+      )}
 
       {trend.length >= 2 && (
         <div style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 16px", border: `1px solid ${C.rule}`, borderRadius: 8, background: C.surface, marginBottom: 24 }}>

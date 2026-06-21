@@ -5,7 +5,10 @@
 //   CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, SK_API_KEY
 
 import { mapPool } from "@/lib/trustBenchmark";
-import { cronAuthorized } from "@/lib/serverHelpers";
+import { cronAuthorized, recordCronRun } from "@/lib/serverHelpers";
+import { reportError } from "@/lib/observe";
+
+const JOB = "school-snapshots";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -34,8 +37,15 @@ export async function GET(req: Request) {
     return r.ok ? r.json() : [];
   };
 
+  const startedAt = new Date().toISOString();
+
   let schools: any[];
-  try { schools = await admin("schools?select=id,name"); } catch (e: any) { return j({ error: `load schools: ${e.message}` }, 500); }
+  try { schools = await admin("schools?select=id,name"); }
+  catch (e: any) {
+    await reportError(e, { route: JOB, phase: "load schools" });
+    await recordCronRun(JOB, { startedAt, ok: false, processed: 0, failed: 0, notes: `load schools: ${e.message}` });
+    return j({ error: `load schools: ${e.message}` }, 500);
+  }
 
   const today = new Date().toISOString().slice(0, 10);
   const results: any[] = [];
@@ -73,7 +83,14 @@ export async function GET(req: Request) {
       });
       if (!r.ok) throw new Error(`write: ${r.status}`);
       results.push({ school: s.name, schoolAvg, ok: true });
-    } catch (e: any) { results.push({ school: s.name, error: e.message }); }
+    } catch (e: any) {
+      await reportError(e, { route: JOB, school: s.name });
+      results.push({ school: s.name, error: e.message });
+    }
   }
-  return j({ date: today, snapshotted: results.filter((r) => r.ok).length, results });
+
+  const processed = results.filter((r) => r.ok).length;
+  const failed = results.filter((r) => r.error).length;
+  await recordCronRun(JOB, { startedAt, ok: failed === 0, processed, failed, notes: `${processed} snapshotted, ${failed} failed of ${results.length}` });
+  return j({ date: today, snapshotted: processed, results });
 }
