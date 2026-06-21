@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { sk } from "@/lib/sk";
-import { C, DISC, TERM_ORDER } from "@/lib/theme";
+import { C, DISC, TERM_ORDER, unitAccent } from "@/lib/theme";
 import { AppShell } from "@/components/AppShell";
 
 function CurriculumContent() {
@@ -16,7 +16,7 @@ function CurriculumContent() {
     (async () => {
       const gs = await sk.q("groups", { params: { order: "sort_order.asc" } });
       setGroups(gs);
-      const all = await sk.q("units", { params: { select: "*", order: "sort_order.asc" } });
+      const all = await sk.q("units", { params: { select: "*,subject:subjects(name,slug)", order: "sort_order.asc" } });
       const byGroup = {};
       gs.forEach(g => { byGroup[g.id] = all.filter(u => u.group_id === g.id); });
       setUnits(byGroup);
@@ -105,7 +105,7 @@ function CurriculumContent() {
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 1, background: C.rule, border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden" }}>
               {byTerm[t].map(u => {
-                const d = DISC[u.discipline] || DISC.combined;
+                const d = unitAccent(u);
                 const termCap = u.term ? u.term.charAt(0).toUpperCase() + u.term.slice(1) : "";
                 return (
                   <button key={u.id} onClick={() => router.push(`/unit/${u.id}`)}

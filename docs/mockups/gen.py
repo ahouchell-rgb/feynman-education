@@ -203,8 +203,76 @@ def parent():
     c+=t(cx,cardy+390,"Reports reflect Alex's class lessons and practice.",11,DIM,SANS,anchor="start")
     return frame(c,None,"feynman.education/parent?t=…",app=False)
 
+def maths_curric():
+    c=label(TOP+50,"CURRICULUM OVERVIEW")
+    c+=h1(TOP+96,[("A shared ",TEXT,False),("base",GRN,True),(" for every subject.",TEXT,False)])
+    c+=t(CX,TOP+122,"Browse, copy, edit — now multi-subject. Maths shown.",13,MUTED)
+    # year tabs
+    ty=TOP+158; tabs=[("Year 8","ks3",False),("Year 9","ks3",False),("Maths · Y9","ks3",True),("Year 10","ks4",False)]; tx=CX
+    for lab,ks,act in tabs:
+        c+=t(tx,ty,lab,22,TEXT if act else DIM,SERIF)+t(tx+len(lab)*11,ty-10,ks.upper(),9,DIM,MONO)
+        if act: c+=f'<line x1="{tx}" y1="{ty+10}" x2="{tx+len(lab)*12}" y2="{ty+10}" stroke="{TEXT}" stroke-width="2"/>'
+        tx+=len(lab)*12+44
+    c+=f'<line x1="{CX}" y1="{ty+10}" x2="{W-44}" y2="{ty+10}" stroke="{RULE}"/>'
+    # subject filter pills
+    py=ty+44; px=CX
+    for lab,on in [("All",True),("Algebra",False),("Geometry",False),("Number",False)]:
+        w=len(lab)*8+28; c+=rect(px,py-16,w,26,ACCENT if on else "transparent",BORDER if not on else None,999)+t(px+w/2,py+1,lab,11,ACCFG if on else DIM,MONO,anchor="middle")
+        px+=w+8
+    # term + units
+    sy=py+46; c+=sec(sy,"SPRING")
+    units=[("Quadratic graphs","6 hrs · Y9",6),("Simultaneous equations","5 hrs · Y9",5)]
+    gw=(CW-14)//2
+    for i,(ti,meta,h) in enumerate(units):
+        gx=CX+i*(gw+14); gy=sy+14
+        c+=rect(gx,gy,gw,150,SURF,BORDER)+rect(gx,gy,3,150,BLU,rx=0)
+        c+=t(gx+24,gy+30,"MATHEMATICS · SPRING",10,BLU,MONO,600,ls="1.4")
+        c+=t(gx+24,gy+66,ti,26,TEXT,SERIF)
+        c+=f'<line x1="{gx+24}" y1="{gy+118}" x2="{gx+gw-24}" y2="{gy+118}" stroke="{RULE}" stroke-dasharray="3 3"/>'
+        c+=t(gx+24,gy+138,meta,10,DIM,MONO)
+    return frame(c,"Curriculum","app.feynman.education/curriculum")
+
+def maths_lesson():
+    c=t(CX,TOP+44,"← Decks",11,MUTED,MONO,ls="1")
+    c+=t(CX,TOP+82,"Quadratic graphs — generated",24,TEXT,SERIF)+t(CX+CW,TOP+78,"AI · 12 slides",11,GRN,MONO,anchor="end")
+    # big slide (16:9)
+    sx=CX; sy=TOP+104; sw=CW; sh=int(sw*9/16*0.74)
+    c+=rect(sx,sy,sw,sh,"#ffffff",BORDER,10)
+    c+=rect(sx+30,sy+26,4,30,BLU,rx=0)+t(sx+46,sy+50,"Roots & the turning point",30,TEXT,SERIF)
+    # bullets
+    bl=["A quadratic y = x² + bx + c makes a parabola.","Roots = where the curve cuts the x-axis (y = 0).","Turning point sits on the line of symmetry, halfway between the roots.","Factorise to find the roots: x² − 2x − 3 = (x−3)(x+1)."]
+    for i,b in enumerate(bl):
+        c+=f'<circle cx="{sx+52}" cy="{sy+98+i*34}" r="3" fill="{BLU}"/>'+t(sx+66,sy+103+i*34,b,15,MUTED)
+    # parabola panel
+    px,py,pw,ph=sx+sw-330,sy+90,290,210
+    c+=rect(px,py,pw,ph,"#faf6ec",BORDER,8)
+    ox,oy=px+pw/2,py+ph-40; scale=26
+    pts=[]
+    xv=-2.4
+    while xv<=2.4:
+        yv=xv*xv
+        pts.append((ox+xv*52, oy-yv*scale)); xv+=0.2
+    path="M"+" L".join(f"{x:.0f},{y:.0f}" for x,y in pts)
+    c+=f'<line x1="{px+20}" y1="{oy}" x2="{px+pw-20}" y2="{oy}" stroke="{FAINT}"/>'  # x axis
+    c+=f'<line x1="{ox}" y1="{py+16}" x2="{ox}" y2="{py+ph-16}" stroke="{FAINT}"/>'  # y axis (symmetry)
+    c+=f'<path d="{path}" fill="none" stroke="{BLU}" stroke-width="2.5"/>'
+    for rx_ in (-1,3):
+        c+=f'<circle cx="{ox+rx_*52*0+ (rx_)*0}" cy="0" r="0" fill="none"/>'
+    # roots at x where x^2 plotted? use simple marks at x=-1.4 and 1.4 on axis for illustration
+    for mx in (ox-1.4*52, ox+1.4*52):
+        c+=f'<circle cx="{mx:.0f}" cy="{oy:.0f}" r="4" fill="{RED}"/>'
+    c+=f'<circle cx="{ox:.0f}" cy="{oy:.0f}" r="4" fill="{GRN}"/>'
+    c+=t(px+pw/2,py+ph-8,"roots (red) · vertex (green)",9,DIM,MONO,anchor="middle")
+    # filmstrip
+    fy=sy+sh+16
+    for i in range(6):
+        fx=sx+i*((sw-50)/6+10)
+        c+=rect(fx,fy,(sw-50)/6,((sw-50)/6)*9/16,"#fff",BLU if i==1 else BORDER,6)
+    return frame(c,"Slides","app.feynman.education/slides")
+
 OUT=os.path.dirname(__file__)
-screens={"01-home-this-week":home,"02-school-dashboard":school,"03-assessments-qla":assess,"04-trust-benchmark":trust,"05-slides-generate":slides,"06-parent-home":parent}
+screens={"01-home-this-week":home,"02-school-dashboard":school,"03-assessments-qla":assess,"04-trust-benchmark":trust,"05-slides-generate":slides,"06-parent-home":parent,
+         "07-maths-curriculum":maths_curric,"08-maths-lesson-generated":maths_lesson}
 for name,fn in screens.items():
     svg=fn(); open(os.path.join(OUT,name+".svg"),"w").write(svg)
     cairosvg.svg2png(bytestring=svg.encode(),write_to=os.path.join(OUT,name+".png"),output_width=1280)

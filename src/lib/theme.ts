@@ -21,6 +21,28 @@ export const DISC = {
   combined:  { color: "#6b4f7a", bg: "rgba(107,79,122,0.10)",  label: "Combined" },
 };
 
+// Subject palette (multi-subject). Keyed by subject slug; science keeps using
+// the per-discipline DISC map above.
+export const SUBJECTS = {
+  maths:      { color: "#2e3a5f", label: "Mathematics" },
+  english:    { color: "#b95a3c", label: "English" },
+  humanities: { color: "#6b4f7a", label: "Humanities" },
+  mfl:        { color: "#a06520", label: "Languages" },
+  computing:  { color: "#3a6b6b", label: "Computing" },
+};
+
+// Resolve a unit's accent + label. Prefers an embedded subject:subjects(name,slug);
+// falls back to the legacy science discipline, then "combined" — so existing
+// science content is unchanged.
+export function unitAccent(u) {
+  const slug = u?.subject?.slug;
+  if (slug && slug !== "science" && SUBJECTS[slug]) {
+    const s = SUBJECTS[slug];
+    return { color: s.color, label: u?.subject?.name || s.label, bg: s.color + "1a" };
+  }
+  return DISC[u?.discipline] || DISC.combined;
+}
+
 export const TERM_ORDER = { autumn: 0, spring: 1, summer: 2 };
 
 export const DAYS = [

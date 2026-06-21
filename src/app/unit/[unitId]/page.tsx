@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useAuth, sk } from "@/lib/sk";
-import { C, DISC } from "@/lib/theme";
+import { C, DISC, unitAccent } from "@/lib/theme";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { Btn, Card, RichEditor } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
@@ -39,7 +39,7 @@ function UnitContent() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const u = await sk.q("units", { params: { id: `eq.${unitId}` }, single: true });
+      const u = await sk.q("units", { params: { id: `eq.${unitId}`, select: "*,subject:subjects(name,slug)" }, single: true });
       if (!u) { setNotFound(true); setLoading(false); return; }
       setUnit(u); setSowDraft(u.scheme_of_work || "");
       const [ls, rs, dk] = await Promise.all([
@@ -170,7 +170,7 @@ function UnitContent() {
   if (loading) return <div style={{ color: C.dim, fontFamily: C.mono, fontSize: 12, padding: 40 }}>Loading unit…</div>;
   if (notFound || !unit) return <div style={{ color: C.red, fontFamily: C.mono, fontSize: 12, padding: 40 }}>Unit not found.</div>;
 
-  const d = DISC[unit.discipline] || DISC.combined;
+  const d = unitAccent(unit);
   const termLabel = unit.term ? unit.term.charAt(0).toUpperCase() + unit.term.slice(1) : "";
 
   // Split decks into the three tiers.
