@@ -43,7 +43,11 @@ export async function GET(req: Request) {
   if (!auth.startsWith("Bearer ")) return j({ error: "Missing bearer token" }, 401);
   const token = auth.slice(7);
   const secret = process.env.SK_API_KEY || undefined;
-  const threshold = Math.max(10, Math.min(90, Number(new URL(req.url).searchParams.get("threshold")) || 50));
+  const params = new URL(req.url).searchParams;
+  const threshold = Math.max(10, Math.min(90, Number(params.get("threshold")) || 50));
+  // Optional drill-down: an SLT clicks a weak objective in the dashboard and
+  // jumps straight to the pupils on THAT objective (case-insensitive match).
+  const topicFilter = (params.get("topic") || "").trim().toLowerCase();
 
   let uid: string;
   try {
@@ -73,7 +77,8 @@ export async function GET(req: Request) {
       pct_correct: Math.round(Number(r.pct_correct)), marked: r.marked ?? null,
     }));
   });
-  const rows = perClass.flat();
+  let rows = perClass.flat();
+  if (topicFilter) rows = rows.filter((r) => (r.topic_name || "").toLowerCase().includes(topicFilter));
 
   // Group by objective for the on-screen summary.
   const byObjMap = new Map<string, { topic_name: string; pupils: number; sum: number }>();
@@ -86,7 +91,7 @@ export async function GET(req: Request) {
     .sort((a, b) => b.pupils - a.pupils);
 
   return j({
-    enabled: true, threshold, total: rows.length, byObjective, rows,
+    enabled: true, threshold, topic: topicFilter || undefined, total: rows.length, byObjective, rows,
     note: rows.length ? undefined : "No pupils below threshold yet (or the class_intervention_list RPC isn't deployed).",
   });
 }

@@ -11,7 +11,7 @@ import { AppShell } from "@/components/AppShell";
 
 interface Row { class_name: string; teacher_name: string; year_group: number; student_name: string; topic_name: string; pct_correct: number; marked: number | null; }
 interface ByObj { topic_name: string; pupils: number; avg: number; }
-interface Data { enabled: boolean; threshold?: number; total?: number; byObjective?: ByObj[]; rows?: Row[]; note?: string; }
+interface Data { enabled: boolean; threshold?: number; topic?: string; total?: number; byObjective?: ByObj[]; rows?: Row[]; note?: string; }
 
 const THRESHOLDS = [40, 50, 65];
 
@@ -24,28 +24,36 @@ function toCsv(rows: Row[]): string {
 
 function InterventionContent() {
   const [threshold, setThreshold] = useState(50);
+  const [topic, setTopic] = useState("");
   const [data, setData] = useState<Data | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
 
-  const load = async (t: number) => {
+  // Pick up ?topic= when drilling in from a dashboard's weak objective.
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("topic");
+    if (t) setTopic(t);
+  }, []);
+
+  const load = async (t: number, topicQ: string) => {
     setLoading(true); setErr("");
     try {
-      const r = await fetch(`/api/school/intervention?threshold=${t}`, { headers: { authorization: `Bearer ${sk.auth.getToken()}` } });
+      const qs = `threshold=${t}${topicQ ? `&topic=${encodeURIComponent(topicQ)}` : ""}`;
+      const r = await fetch(`/api/school/intervention?${qs}`, { headers: { authorization: `Bearer ${sk.auth.getToken()}` } });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || "Failed to load");
       setData(d);
     } catch (e: any) { setErr(e.message); }
     setLoading(false);
   };
-  useEffect(() => { load(threshold); /* eslint-disable-next-line */ }, [threshold]);
+  useEffect(() => { load(threshold, topic); /* eslint-disable-next-line */ }, [threshold, topic]);
 
   const downloadCsv = () => {
     if (!data?.rows?.length) return;
     const blob = new Blob([toCsv(data.rows)], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = `intervention-below-${threshold}pct.csv`; a.click();
+    a.href = url; a.download = `intervention-below-${threshold}pct${topic ? `-${topic.replace(/[^a-z0-9]+/gi, "-")}` : ""}.csv`; a.click();
     URL.revokeObjectURL(url);
   };
 
@@ -83,6 +91,12 @@ function InterventionContent() {
             </button>
           );
         })}
+        {topic && (
+          <button onClick={() => setTopic("")}
+            style={{ background: C.redS, color: C.red, border: `1px solid ${C.red}`, cursor: "pointer", padding: "6px 12px", fontFamily: C.mono, fontSize: 11, borderRadius: 999, display: "flex", alignItems: "center", gap: 6 }}>
+            {topic} ✕
+          </button>
+        )}
         <span style={{ flex: 1 }} />
         <Btn v="soft" onClick={downloadCsv} disabled={!data?.rows?.length}>⬇ Export CSV</Btn>
       </div>
@@ -91,7 +105,7 @@ function InterventionContent() {
       {loading ? <div style={{ color: C.dim, fontFamily: C.mono, fontSize: 12 }}>Loading…</div> : data && (
         <>
           <div style={{ fontFamily: C.mono, fontSize: 12, color: C.muted, marginBottom: 18 }}>
-            <strong style={{ color: C.text }}>{data.total}</strong> pupil-objective flags below {threshold}%.
+            <strong style={{ color: C.text }}>{data.total}</strong> pupil-objective flags below {threshold}%{topic ? <> on <strong style={{ color: C.text }}>{topic}</strong></> : ""}.
           </div>
 
           {data.note && <div style={{ padding: "10px 14px", background: C.ambS, border: `1px solid ${C.amb}`, borderRadius: 6, color: C.amb, fontSize: 13, marginBottom: 20 }}>{data.note}</div>}

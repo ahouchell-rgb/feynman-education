@@ -33,7 +33,7 @@ function SourceChip({ kind }: { kind: "retrieval" | "assessment" }) {
   );
 }
 
-export function ObjectiveMasteryPanel({ rows, limit = 14 }: { rows?: BlendedObjectiveRow[]; limit?: number }) {
+export function ObjectiveMasteryPanel({ rows, limit = 14, drillBase }: { rows?: BlendedObjectiveRow[]; limit?: number; drillBase?: string }) {
   const list = (rows || []).slice(0, limit);
   if (list.length === 0) {
     return <div style={{ padding: "20px", color: C.dim, fontFamily: C.mono, fontSize: 12, marginBottom: 24 }}>No objective-level data yet — tag assessment questions to objectives or link retrieval classes.</div>;
@@ -44,7 +44,12 @@ export function ObjectiveMasteryPanel({ rows, limit = 14 }: { rows?: BlendedObje
         <div key={o.key + i} style={{ display: "grid", gridTemplateColumns: "1fr 150px 110px", gap: 14, alignItems: "center", padding: "11px 16px", borderTop: i === 0 ? "none" : `1px solid ${C.rule}` }}>
           <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: 14, color: C.text, display: "flex", alignItems: "center", gap: 7 }}>
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.label}</span>
+              {drillBase ? (
+                <a href={`${drillBase}?topic=${encodeURIComponent(o.label)}`} title="See the pupils below threshold on this objective"
+                  style={{ color: C.text, textDecoration: "none", borderBottom: `1px dotted ${C.dim}`, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.label}</a>
+              ) : (
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{o.label}</span>
+              )}
               {o.sources.map((s) => <SourceChip key={s} kind={s} />)}
             </div>
             <div style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, marginTop: 3 }}>

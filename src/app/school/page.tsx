@@ -362,7 +362,7 @@ function SchoolContent() {
       {(data.objectiveMastery || []).length > 0 && (
         <>
           <SectionLabel>Per-objective mastery — retrieval + assessment</SectionLabel>
-          <ObjectiveMasteryPanel rows={data.objectiveMastery} />
+          <ObjectiveMasteryPanel rows={data.objectiveMastery} drillBase={data.role === "slt" ? "/school/intervention" : undefined} />
         </>
       )}
 
