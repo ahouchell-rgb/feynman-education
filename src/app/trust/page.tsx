@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { sk, useAuth } from "@/lib/sk";
 import { C } from "@/lib/theme";
 import { AppShell } from "@/components/AppShell";
+import { ObjectiveMasteryPanel, type BlendedObjectiveRow } from "@/components/ObjectiveMasteryPanel";
 
 // MAT / Trust dashboard (strategy Build 4). Every school in the trust, benchmarked
 // on the same mastery graph: average mastery, weakest objectives, and how each
@@ -10,7 +11,7 @@ import { AppShell } from "@/components/AppShell";
 
 interface SchoolRow { school_id: string; name: string; classes: number; linked: number; avgMastery: number | null; weakest: { topic_name: string; avg: number }[]; }
 interface CohortRow { topic_name: string; avg: number; schools: number; }
-interface Overview { enabled: boolean; trust?: { name: string }; joinCode?: string | null; trustAvg?: number | null; schools?: SchoolRow[]; cohort?: CohortRow[]; }
+interface Overview { enabled: boolean; trust?: { name: string }; joinCode?: string | null; trustAvg?: number | null; schools?: SchoolRow[]; cohort?: CohortRow[]; objectiveMastery?: BlendedObjectiveRow[]; }
 
 function heat(pct: number) {
   if (pct < 40) return C.red; if (pct < 65) return C.amb; return C.grn;
@@ -132,6 +133,14 @@ function TrustContent() {
           );
         })}
       </div>
+
+      {/* per-objective mastery, blended across retrieval + assessment */}
+      {(data.objectiveMastery || []).length > 0 && (
+        <>
+          <SectionLabel>Per-objective mastery — retrieval + assessment</SectionLabel>
+          <ObjectiveMasteryPanel rows={data.objectiveMastery} />
+        </>
+      )}
 
       {/* trust-wide weakest objectives */}
       <SectionLabel>Weakest objectives — trust-wide</SectionLabel>

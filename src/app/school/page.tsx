@@ -4,6 +4,7 @@ import { sk, useAuth } from "@/lib/sk";
 import { C, DISC } from "@/lib/theme";
 import { Btn, Inp } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
+import { ObjectiveMasteryPanel, type BlendedObjectiveRow } from "@/components/ObjectiveMasteryPanel";
 
 // SLT / Head-of-Department dashboard (strategy Build 2). Cohort mastery across
 // every class in the school: the objectives the cohort is weakest on, and a
@@ -11,7 +12,7 @@ import { AppShell } from "@/components/AppShell";
 
 interface WeakRow { topic_id: string; topic_name: string; pct_correct: number; marked: number | null; students: number | null; }
 interface ClassRow { class_id: string; name: string; year_group: number; discipline: string; tier: string; teacher_name: string; linked: boolean; weak: WeakRow[]; }
-interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; homeSponsored?: boolean; trust?: { linked: boolean; name?: string }; years?: number[]; classes?: ClassRow[]; }
+interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; homeSponsored?: boolean; trust?: { linked: boolean; name?: string }; years?: number[]; classes?: ClassRow[]; objectiveMastery?: BlendedObjectiveRow[]; }
 
 // Staff roster with role + remove controls (slt only).
 const ROLE_LABEL: Record<string, string> = { member: "Teacher", hod: "Head of Dept", slt: "Senior leader" };
@@ -342,6 +343,14 @@ function SchoolContent() {
           );
         })}
       </div>
+
+      {/* per-objective mastery, blended across retrieval + assessment QLA */}
+      {(data.objectiveMastery || []).length > 0 && (
+        <>
+          <SectionLabel>Per-objective mastery — retrieval + assessment</SectionLabel>
+          <ObjectiveMasteryPanel rows={data.objectiveMastery} />
+        </>
+      )}
 
       {/* cohort weakest objectives */}
       <SectionLabel>Weakest objectives — cohort</SectionLabel>

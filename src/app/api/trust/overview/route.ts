@@ -14,6 +14,7 @@ export const maxDuration = 300;
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 import { rollupTrust, mapPool, type EnrichedClass } from "@/lib/trustBenchmark";
+import { rollupRetrieval, blendObjectiveMastery, type AssessmentObjective } from "@/lib/mastery";
 
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 
@@ -74,5 +75,18 @@ export async function GET(req: Request) {
   });
 
   const { schools, cohort, trustAvg } = rollupTrust(enriched);
-  return j({ enabled: true, trust: { name: trustName }, joinCode, trustAvg, schools, cohort, generatedAt: new Date().toISOString() });
+
+  // Per-objective assessment mastery across the trust, blended with the
+  // retrieval rollup into one weakest-first per-objective view.
+  let assessObjectives: AssessmentObjective[] = [];
+  try {
+    const rows = await rpc("trust_objective_mastery", { p_min_marked: 5 }, token);
+    if (Array.isArray(rows)) assessObjectives = rows;
+  } catch { /* assessment data optional */ }
+  const objectiveMastery = blendObjectiveMastery(
+    rollupRetrieval(enriched.map((c) => c.weak)),
+    assessObjectives,
+  );
+
+  return j({ enabled: true, trust: { name: trustName }, joinCode, trustAvg, schools, cohort, objectiveMastery, generatedAt: new Date().toISOString() });
 }

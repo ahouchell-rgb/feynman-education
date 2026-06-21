@@ -18,6 +18,7 @@ export const maxDuration = 60;
 
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
+import { rollupRetrieval, blendObjectiveMastery, type AssessmentObjective } from "@/lib/mastery";
 
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 
@@ -98,10 +99,22 @@ export async function GET(req: Request) {
     };
   }));
 
+  // Per-objective assessment mastery (security-definer RPC; hod/slt + own school)
+  // blended with the retrieval rollup into ONE weakest-first per-objective view.
+  let assessObjectives: AssessmentObjective[] = [];
+  try {
+    const rows = await rpc("school_objective_mastery", { p_min_marked: 5 }, token);
+    if (Array.isArray(rows)) assessObjectives = rows;
+  } catch { /* assessment data optional */ }
+  const objectiveMastery = blendObjectiveMastery(
+    rollupRetrieval(enriched.map((c) => c.weak)),
+    assessObjectives,
+  );
+
   const years = [...new Set(enriched.map((c) => c.year_group).filter(Boolean))].sort((a, b) => a - b);
   return j({
     enabled: true, role, school: { name: schoolName }, joinCode, homeSponsored, trust,
-    years, classes: enriched,
+    years, classes: enriched, objectiveMastery,
     generatedAt: new Date().toISOString(),
   });
 }
