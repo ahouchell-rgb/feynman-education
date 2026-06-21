@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { SUPA_KEY, SUPA_URL, sb } from "../lib/supabase";
 import { C } from "../lib/theme";
+import { MathInput } from "./MathInput";
 import { PaperManager } from "./PaperManager";
 import { Btn, Card, TA } from "./ui";
 
@@ -22,7 +23,7 @@ export function StudentPaperAttempt({ user, cls, paperId, onExit, forceNewAttemp
     setLoading(true);
     try {
       const [p, qs] = await Promise.all([
-        sb.q("papers", { params: { id: `eq.${paperId}`, select: "*" } }),
+        sb.q("papers", { params: { id: `eq.${paperId}`, select: "*,subjects(marker_profile)" } }),
         sb.q("paper_questions", { params: { paper_id: `eq.${paperId}`, select: "*", order: "sort_order.asc" } }),
       ]);
       if (!p[0] || !qs?.length) { setLoading(false); return; }
@@ -65,6 +66,10 @@ export function StudentPaperAttempt({ user, cls, paperId, onExit, forceNewAttemp
 
   const currentQ = questions[qi];
   const existingResp = currentQ ? responses[currentQ.id] : null;
+  // Maths papers get the working-friendly input (symbol pad + live preview).
+  // Keyed off the paper's subject marker_profile — the field the server resolves
+  // to choose the maths marking overlay, so input and marking stay in step.
+  const isMaths = paper?.subjects?.marker_profile === "maths";
 
   const submitAnswer = async () => {
     if (!ans.trim() || marking || !currentQ) return;
@@ -257,7 +262,11 @@ export function StudentPaperAttempt({ user, cls, paperId, onExit, forceNewAttemp
         {!lastResult && (
           <>
             <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: C.mid, marginBottom: 8 }}>Your answer</div>
-            <TA value={ans} onChange={e => setAns(e.target.value)} rows={Math.max(3, Math.min(8, currentQ.marks * 2))} placeholder="Write your answer here…" disabled={marking} style={{ fontFamily: C.serif, fontSize: 15, lineHeight: 1.5 }} />
+            {isMaths ? (
+              <MathInput value={ans} onChange={setAns} rows={Math.max(3, Math.min(8, currentQ.marks * 2))} placeholder="Write your working here — press Enter for a new line" disabled={marking} />
+            ) : (
+              <TA value={ans} onChange={e => setAns(e.target.value)} rows={Math.max(3, Math.min(8, currentQ.marks * 2))} placeholder="Write your answer here…" disabled={marking} style={{ fontFamily: C.serif, fontSize: 15, lineHeight: 1.5 }} />
+            )}
             <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
               <Btn onClick={submitAnswer} disabled={!ans.trim() || marking} style={{ flex: 1 }}>{marking ? "Marking…" : "Submit answer"}</Btn>
               {qi < questions.length - 1 && (

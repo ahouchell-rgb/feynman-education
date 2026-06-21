@@ -198,8 +198,13 @@ export const sb = (() => {
   // queued:true when saved to retry. The grade always comes from the server.
   const submitAnswer = async (payload) => {
     flushAnswers().catch(() => {});      // opportunistically drain earlier failures
-    const fake = detectFakeAnswer(payload.student_answer);
-    const body = { ...payload, prejudged_flagged: fake || undefined };
+    // The non-attempt heuristic is science-shaped (short words, no-vowel mashing).
+    // Maths working is too varied for it — multi-line working, symbolic and very
+    // short answers are all legitimate — so skip the client pre-flag for maths and
+    // let the maths marking overlay judge. (skipFakeCheck never reaches the wire.)
+    const { skipFakeCheck, ...rest } = payload;
+    const fake = skipFakeCheck ? null : detectFakeAnswer(payload.student_answer);
+    const body = { ...rest, prejudged_flagged: fake || undefined };
     try {
       const d = await callMarkAnswer(body);
       const verdict = { correct: !!d.correct, marks_awarded: d.marks_awarded ?? 0, feedback: d.feedback, flagged: !!d.flagged, source: d.source };

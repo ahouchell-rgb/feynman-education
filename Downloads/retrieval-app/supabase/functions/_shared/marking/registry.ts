@@ -8,6 +8,7 @@
 // mark, it just marks as science.
 
 import { SCIENCE_RETRIEVAL_OVERLAY, SCIENCE_PAPER_OVERLAY } from "./overlays/science.ts";
+import { MATHS_RETRIEVAL_OVERLAY, MATHS_PAPER_OVERLAY } from "./overlays/maths.ts";
 
 export const DEFAULT_PROFILE = "science";
 
@@ -20,6 +21,7 @@ interface Overlays {
 
 const OVERLAYS: Record<string, Overlays> = {
   science: { retrieval: SCIENCE_RETRIEVAL_OVERLAY, paper: SCIENCE_PAPER_OVERLAY },
+  maths: { retrieval: MATHS_RETRIEVAL_OVERLAY, paper: MATHS_PAPER_OVERLAY },
 };
 
 // Return the overlay text for a (profile, kind). Unknown/empty profile -> default.

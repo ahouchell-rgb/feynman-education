@@ -6,6 +6,7 @@ import { nextSR } from "../lib/sr";
 import { sb } from "../lib/supabase";
 import { C } from "../lib/theme";
 import { STAR_INTERVAL, WEEKLY_TARGET, getWeekBounds } from "../lib/week";
+import { MathInput } from "./MathInput";
 import { StudentPaperAttempt } from "./StudentPaperAttempt";
 import { Badge, Btn, Card, Dateline, Deck, Headline, Inp, Kicker, Pill, TA } from "./ui";
 
@@ -210,7 +211,7 @@ export function Student({ user }) {
       const mems = await sb.q("class_members", { params: { student_id: `eq.${user.id}`, select: "class_id" } });
       if (mems.length) {
         const ids = mems.map(m => m.class_id);
-        const c = await sb.q("classes", { params: { id: `in.(${ids.join(",")})`, select: "*,subjects(name)" } });
+        const c = await sb.q("classes", { params: { id: `in.(${ids.join(",")})`, select: "*,subjects(name,marker_profile)" } });
         setClasses(c);
       }
     } catch (e) { console.error(e); }
@@ -230,7 +231,7 @@ export function Student({ user }) {
       const joined = rows[0];
       // Now enrolled, so classes_select lets us read the full row for the UI.
       let full = joined;
-      try { full = await sb.q("classes", { params: { id: `eq.${joined.id}`, select: "*,subjects(name)" }, single: true }); } catch { /* fall back to id+name */ }
+      try { full = await sb.q("classes", { params: { id: `eq.${joined.id}`, select: "*,subjects(name,marker_profile)" }, single: true }); } catch { /* fall back to id+name */ }
       setClasses(p => p.some(x => x.id === joined.id) ? p : [...p, full]);
       setJoinCode("");
     } catch (e) { setJoinErr(e.message); }
@@ -425,7 +426,7 @@ export function Student({ user }) {
     // One authoritative call: the edge function marks AND records the response
     // server-side, so the grade can't be forged client-side. It still returns a
     // verdict for the UI and queues itself if the network is down.
-    const r = await sb.submitAnswer({ question: q.question_text, model_answer: q.model_answer, student_answer: ans, marks: q.marks, question_id: q.id, class_id: cls.id, student_id: user.id });
+    const r = await sb.submitAnswer({ question: q.question_text, model_answer: q.model_answer, student_answer: ans, marks: q.marks, question_id: q.id, class_id: cls.id, student_id: user.id, skipFakeCheck: cls?.subjects?.marker_profile === "maths" });
     setRes(r);
     const prev = sr[q.id] || {};
     const nxt = nextSR(r.correct, prev);
@@ -578,6 +579,10 @@ export function Student({ user }) {
     ? qs.filter(qq => mistakeQIds.has(qq.id))
     : (studyMode && studyTopicId ? qs.filter(qq => qq.topic_id === studyTopicId) : qs);
   const q = activeQs[qi];
+  // Maths subjects get the working-friendly input (Enter = new line, symbol pad,
+  // live preview). Keyed off the subject's marker_profile — the same field the
+  // server resolves to pick the maths marking overlay, so input and marking agree.
+  const isMaths = cls?.subjects?.marker_profile === "maths";
   // Derived session breakdown for the intro screen
   const introBreakdown = (() => {
     const upcoming = activeQs.slice(0, sessionTarget);
@@ -1212,19 +1217,28 @@ export function Student({ user }) {
             <div style={{ fontSize: 16, color: C.txt, lineHeight: 1.55, marginBottom: 20, fontWeight: 500 }}>{q?.question_text}</div>
             {!res ? (
               <>
-                <div style={{ position: "relative" }}>
-                  <TA value={ans} onChange={e => setAns(e.target.value)} placeholder={isRecording ? "Listening… speak naturally" : "Type your answer… or tap the mic"} rows={3} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); } }} style={{ paddingRight: speechSupported ? 52 : undefined }} />
-                  {speechSupported && (
-                    <button type="button" onClick={toggleMic} aria-label={isRecording ? "Stop recording" : "Start voice input"}
-                      style={{ position: "absolute", right: 10, bottom: 10, width: 36, height: 36, borderRadius: 99, border: `1px solid ${isRecording ? C.red : C.bdr}`, background: isRecording ? C.red : C.card, color: isRecording ? "#fff" : C.mid, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, padding: 0, boxShadow: isRecording ? `0 0 0 4px ${C.redS}` : "none", transition: "all .15s ease" }}>
-                      {isRecording
-                        ? <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><rect x="5" y="5" width="14" height="14" rx="2" /></svg>
-                        : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.mid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0M12 19v3" /></svg>}
-                    </button>
-                  )}
-                </div>
-                {isRecording && <div style={{ fontSize: 11, color: C.red, marginTop: 6, textAlign: "center", fontWeight: 500 }}>● Recording — tap mic again to stop</div>}
-                {speechError && <div style={{ fontSize: 11, color: C.red, marginTop: 6, textAlign: "center" }}>{speechError}</div>}
+                {isMaths ? (
+                  // Maths: working-friendly input. Enter makes a new line, a symbol
+                  // pad + ⌘. insert powers/roots/etc., and a live preview shows x².
+                  // No mic — equations aren't dictated. Submit is button-only below.
+                  <MathInput value={ans} onChange={setAns} rows={4} disabled={marking} />
+                ) : (
+                  <>
+                    <div style={{ position: "relative" }}>
+                      <TA value={ans} onChange={e => setAns(e.target.value)} placeholder={isRecording ? "Listening… speak naturally" : "Type your answer… or tap the mic"} rows={3} onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); } }} style={{ paddingRight: speechSupported ? 52 : undefined }} />
+                      {speechSupported && (
+                        <button type="button" onClick={toggleMic} aria-label={isRecording ? "Stop recording" : "Start voice input"}
+                          style={{ position: "absolute", right: 10, bottom: 10, width: 36, height: 36, borderRadius: 99, border: `1px solid ${isRecording ? C.red : C.bdr}`, background: isRecording ? C.red : C.card, color: isRecording ? "#fff" : C.mid, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, padding: 0, boxShadow: isRecording ? `0 0 0 4px ${C.redS}` : "none", transition: "all .15s ease" }}>
+                          {isRecording
+                            ? <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><rect x="5" y="5" width="14" height="14" rx="2" /></svg>
+                            : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.mid} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10a7 7 0 0 0 14 0M12 19v3" /></svg>}
+                        </button>
+                      )}
+                    </div>
+                    {isRecording && <div style={{ fontSize: 11, color: C.red, marginTop: 6, textAlign: "center", fontWeight: 500 }}>● Recording — tap mic again to stop</div>}
+                    {speechError && <div style={{ fontSize: 11, color: C.red, marginTop: 6, textAlign: "center" }}>{speechError}</div>}
+                  </>
+                )}
                 <Btn onClick={submit} disabled={!ans.trim() || marking} style={{ width: "100%", marginTop: 12, padding: "14px 20px" }}>{marking ? "Marking..." : "Submit"}</Btn>
               </>
             ) : (

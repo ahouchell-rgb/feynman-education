@@ -31,16 +31,23 @@ const MAX_AGE_DAYS_BEFORE_REVERIFY = 90; // entries older than this re-verify ne
 const MIN_ANSWER_WORDS = 3;             // never cache anything shorter than this in absolute terms
 const MIN_LENGTH_RATIO = 0.6;           // OR at least 60% of model answer length
 
-function extractNumbers(text: string): string[] {
+function extractNumbers(text: string): number[] {
+  // Keep the sign: "-5" must stay -5, not 5. (A leading minus is only captured
+  // when it is NOT preceded by a word char or "." — so a true negative sign is
+  // kept, while a hyphen mid-word is not.)
   const matches = text.match(/(?<![\w.])-?\d+(?:\.\d+)?(?![\w.])/g);
-  return matches ? matches.map(m => m.replace(/^-/, "")) : [];
+  return matches ? matches.map(Number) : [];
 }
 
 function checkNumericalMatch(modelAnswer: string, studentAnswer: string): boolean {
   const modelNums = extractNumbers(modelAnswer);
   if (modelNums.length !== 1) return false;
-  const studentNums = extractNumbers(studentAnswer);
-  return studentNums.includes(modelNums[0]);
+  const target = modelNums[0];
+  // Compare by VALUE, so "-5" only matches "-5" (never "5"), and "5" never
+  // matches "-5". Previously both sides had their sign stripped, which silently
+  // auto-marked a positive answer correct for a negative model answer (and vice
+  // versa) — wrong for directed numbers, coordinates, temperatures, etc.
+  return extractNumbers(studentAnswer).some(n => n === target);
 }
 
 // Normalise an answer for cache lookup. Conservative: lowercase, strip
