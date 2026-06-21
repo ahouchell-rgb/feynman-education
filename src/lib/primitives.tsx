@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import type {
   ButtonHTMLAttributes,
   CSSProperties,
@@ -78,9 +78,12 @@ const CARD_BASE: CSSProperties = {
   border: `1px solid ${C.border}`,
   borderRadius: 8,
 };
-export const Card = ({ children, style, ...p }: HTMLAttributes<HTMLDivElement>) => (
-  <div {...p} style={{ ...CARD_BASE, ...style }}>{children}</div>
+export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ children, style, ...p }, ref) => (
+    <div ref={ref} {...p} style={{ ...CARD_BASE, ...style }}>{children}</div>
+  ),
 );
+Card.displayName = "Card";
 
 interface ToolbarBtn {
   label: string;

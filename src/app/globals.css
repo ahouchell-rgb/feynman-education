@@ -46,6 +46,62 @@ input, textarea, select, button { font-family: inherit; }
   }
 }
 
+/* --- SEND / dyslexia accessibility toggles ------------------------------- */
+/* Opt-in adjustments applied via data-attributes on <html>, persisted to
+   localStorage by <AccessibilityMenu>. Each is invisible unless the pupil/
+   parent/teacher turns it on, so sighted defaults are unchanged.
+
+   The font stack favours readers shipped with the OS (Comic Sans MS is the
+   most widely available dyslexia-friendlier face; Atkinson Hyperlegible /
+   OpenDyslexic are used when present) and never blocks on a web download. */
+html[data-a11y-font="dyslexic"],
+html[data-a11y-font="dyslexic"] body {
+  font-family: "OpenDyslexic", "Atkinson Hyperlegible", "Comic Sans MS",
+    "Trebuchet MS", Verdana, sans-serif !important;
+  letter-spacing: 0.02em;
+  word-spacing: 0.08em;
+  line-height: 1.7;
+}
+/* Force the dyslexia stack onto inline-styled text too (the app uses inline
+   fontFamily heavily); covers everything except deliberately monospaced UI
+   labels which stay legible. */
+html[data-a11y-font="dyslexic"] * {
+  font-family: "OpenDyslexic", "Atkinson Hyperlegible", "Comic Sans MS",
+    "Trebuchet MS", Verdana, sans-serif !important;
+}
+
+/* Larger text: scale the root font and bump small inline text up to a floor so
+   10–12px labels stop being sub-minimum. Uses a multiplier custom property. */
+html[data-a11y-text="large"] {
+  font-size: 118%;
+}
+html[data-a11y-text="large"] body {
+  line-height: 1.65;
+}
+
+/* High contrast: darken muted greys / borders toward AAA and add an underline
+   affordance to links. Variables let callers (and future themed surfaces) read
+   the same values; here we mostly tighten the inline palette via filters that
+   stay visually faithful. */
+html[data-a11y-contrast="high"] body {
+  background: #ffffff;
+  color: #000000;
+}
+html[data-a11y-contrast="high"] a {
+  text-decoration: underline;
+}
+html[data-a11y-contrast="high"] :focus-visible {
+  outline: 3px solid #000000;
+  outline-offset: 2px;
+}
+
+/* The accessibility menu itself. Pinned trigger + popover; deliberately small. */
+.sk-a11y-trigger {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; cursor: pointer;
+  min-width: 24px; min-height: 24px;
+}
+
 /* Rich text boxes (el.rich): restore list rendering the global reset strips. */
 .rt ul, .rt ol { padding-left: 1.3em; margin: 0; }
 .rt ul { list-style: disc; }

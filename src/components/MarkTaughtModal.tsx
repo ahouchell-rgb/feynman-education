@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { sk, SK_URL, SK_KEY } from "@/lib/sk";
 import { C } from "@/lib/theme";
 import { Btn, Card } from "@/lib/primitives";
+import { useDialog } from "@/lib/useDialog";
 
 /**
  * Mark-as-taught modal.
@@ -24,6 +25,7 @@ export function MarkTaughtModal({ lesson, mapEntry, profile, onClose, onSuccess,
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(true);
   const [showPicker, setShowPicker] = useState(!confirmOnly);
+  const dialogRef = useDialog<HTMLDivElement>(onClose);
 
   useEffect(() => {
     (async () => {
@@ -62,9 +64,9 @@ export function MarkTaughtModal({ lesson, mapEntry, profile, onClose, onSuccess,
   const selectedClasses = classes.filter(c => selected.has(c.id));
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(28,25,23,0.5)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <Card style={{ width: "100%", maxWidth: 440, padding: 24 }}>
-        <div style={{ fontFamily: C.mono, fontWeight: 600, fontSize: 14, marginBottom: 4 }}>Mark as taught</div>
+    <div onMouseDown={onClose} style={{ position: "fixed", inset: 0, background: "rgba(28,25,23,0.5)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <Card ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="mark-taught-title" onMouseDown={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 440, padding: 24, outline: "none" }}>
+        <div id="mark-taught-title" style={{ fontFamily: C.mono, fontWeight: 600, fontSize: 14, marginBottom: 4 }}>Mark as taught</div>
         <div style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>{lesson.title}</div>
         {mapEntry?.retrieval_topic_name && (
           <div style={{ padding: "8px 10px", borderRadius: 6, background: C.grnS, color: C.grn, fontSize: 12, fontFamily: C.mono, marginBottom: 14 }}>

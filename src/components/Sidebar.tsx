@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth, sk } from "@/lib/sk";
 import { C, DISC } from "@/lib/theme";
 import { Settings } from "./Settings";
+import { AccessibilityMenu } from "./AccessibilityMenu";
 
 export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
   const { profile, logout } = useAuth();
@@ -120,6 +121,7 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             <div style={{ fontSize: 12, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{profile?.full_name || "Teacher"}</div>
             <div style={{ fontSize: 10, color: C.dim, fontFamily: C.mono }}>{profile?.role}</div>
           </div>
+          <AccessibilityMenu />
           <button onClick={() => onOpenVisualiser?.()} title="Visualiser (camera)" aria-label="Open the visualiser" style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14, padding: 2 }}><span aria-hidden>📷</span></button>
           <button onClick={() => setShowSettings(true)} title="Settings" aria-label="Open settings" style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14, padding: 2 }}><span aria-hidden>⚙</span></button>
           <button onClick={() => { logout(); router.push("/login"); }} title="Sign out" aria-label="Sign out" style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 12, fontFamily: C.mono, padding: 2 }}><span aria-hidden>↪</span></button>

@@ -4,11 +4,13 @@ import { Sidebar } from "@/components/Sidebar";
 import { AuthGate } from "@/components/AuthGate";
 import { VisualiserOverlay } from "@/components/VisualiserOverlay";
 import { SearchOverlay } from "@/components/SearchOverlay";
+import { useApplyAccessibilityPrefs } from "@/components/AccessibilityMenu";
 import { C } from "@/lib/theme";
 
 export function AppShell({ children }) {
   const [showVis, setShowVis] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  useApplyAccessibilityPrefs();
 
   // Global triggers: ⌘K / Ctrl-K opens search; ⌘⇧V opens the visualiser. Both
   // also respond to a custom event so any descendant can open them without
