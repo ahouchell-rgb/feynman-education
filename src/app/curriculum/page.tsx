@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { sk } from "@/lib/sk";
 import { C, DISC, TERM_ORDER } from "@/lib/theme";
@@ -9,23 +9,40 @@ function CurriculumContent() {
   const router = useRouter();
   const [groups, setGroups] = useState([]);
   const [units, setUnits] = useState({});
-  const [selectedYearId, setSelectedYearId] = useState(null);
+  const [selectedYearId, setSelectedYearId] = useState<string | null>(null);
   const [subjectFilter, setSubjectFilter] = useState("all");
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    (async () => {
+  const load = useCallback(async () => {
+    setStatus("loading");
+    setError(null);
+    try {
+      // Years/subjects first, and pick the active year off these ALONE — so a
+      // later failure (e.g. a transient units fetch) can never blank the page
+      // structure or clear the selected year.
       const gs = await sk.q("groups", { params: { order: "sort_order.asc" } });
       setGroups(gs);
+      if (gs.length) {
+        setSelectedYearId(prev => {
+          if (prev && gs.some(g => g.id === prev)) return prev; // keep selection across retries
+          const y9 = gs.find(g => /y9|year\s*9/i.test(g.label || g.id));
+          return y9?.id || gs[0].id;
+        });
+      }
+      // Units second. Recoverable on its own without losing the years above.
       const all = await sk.q("units", { params: { select: "*", order: "sort_order.asc" } });
       const byGroup = {};
       gs.forEach(g => { byGroup[g.id] = all.filter(u => u.group_id === g.id); });
       setUnits(byGroup);
-      if (gs.length) {
-        const y9 = gs.find(g => /y9|year\s*9/i.test(g.label || g.id));
-        setSelectedYearId(y9?.id || gs[0].id);
-      }
-    })();
+      setStatus("ready");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn't load the curriculum.");
+      setStatus("error");
+    }
   }, []);
+
+  useEffect(() => { load(); }, [load]);
 
   return (
     <div>
@@ -74,8 +91,30 @@ function CurriculumContent() {
       </div>
 
       {(() => {
+        if (status === "error") {
+          return (
+            <div style={{ padding: "60px 0", textAlign: "center" }}>
+              <div style={{ fontFamily: C.mono, fontSize: 12, letterSpacing: "0.06em", color: C.text, marginBottom: 6 }}>
+                Couldn&apos;t load the curriculum.
+              </div>
+              <div style={{ fontFamily: C.mono, fontSize: 11, letterSpacing: "0.04em", color: C.dim, marginBottom: 18, maxWidth: "44ch", marginLeft: "auto", marginRight: "auto", lineHeight: 1.5 }}>
+                {error || "Please try again."} Your data is safe — this is a temporary connection issue, not lost work.
+              </div>
+              <button onClick={load}
+                style={{ fontFamily: C.mono, fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", padding: "9px 20px", borderRadius: 999, border: "none", background: C.accent, color: C.accentFg, cursor: "pointer" }}>
+                Retry
+              </button>
+            </div>
+          );
+        }
         const year = groups.find(g => g.id === selectedYearId);
-        if (!year) return null;
+        if (!year) {
+          return (
+            <div style={{ padding: "60px 0", textAlign: "center", color: C.dim, fontFamily: C.mono, fontSize: 12, letterSpacing: "0.06em" }}>
+              {status === "loading" ? "Loading curriculum…" : "No year groups found."}
+            </div>
+          );
+        }
         const yearUnits = (units[year.id] || []).filter(u =>
           subjectFilter === "all" || u.discipline === subjectFilter
         );
