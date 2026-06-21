@@ -1,5 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { BASE_RETRIEVAL } from "../_shared/marking/base-retrieval.ts";
+import { overlayFor } from "../_shared/marking/registry.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const MODEL = "claude-haiku-4-5-20251001";
@@ -29,193 +31,23 @@ const MAX_AGE_DAYS_BEFORE_REVERIFY = 90; // entries older than this re-verify ne
 const MIN_ANSWER_WORDS = 3;             // never cache anything shorter than this in absolute terms
 const MIN_LENGTH_RATIO = 0.6;           // OR at least 60% of model answer length
 
-// COST LEVER 1 — PROMPT CACHING.
-// This whole block is sent as a cache_control:ephemeral system prefix on EVERY call
-// (see callAiMark). For claude-haiku-4-5 the minimum cacheable prefix is 4096 tokens:
-// below that floor the cache silently never writes — no error, you just keep paying
-// full input price on every call and usage.cache_read_input_tokens stays 0. The
-// earlier ~1,500-token version was under the floor, so caching was effectively off.
-// This prompt is deliberately kept WELL above 4096 tokens with real, static marking
-// guidance (which also improves marking quality). Two rules for anyone editing it:
-//   1. Do NOT trim it back under ~4k tokens — that turns caching off with no warning.
-//   2. Keep every per-request value (question / model answer / student answer) OUT of
-//      this string and in the user message, or the prefix changes each call and never
-//      caches. Cached reads bill at ~0.1x input, so the long prefix is ~10x cheaper
-//      per call once warm. Verify after deploy: cache_read_tokens > 0 in ai_usage.
-const SYSTEM_PROMPT = `You are a UK secondary science teacher marking retrieval practice homework. You are generous but not soft — students get credit when the science is right, even if the notation is shorthand.
-
-EQUIVALENT NOTATION — always treat these as identical to the written-out form:
-- Chemical symbols vs element names: "Fe" = "iron", "Na" = "sodium", "H2O" = "water", "CO2" = "carbon dioxide", "O2" = "oxygen", "NaCl" = "sodium chloride", etc. Case matters less than content ("fe", "FE", "Fe" all fine for iron).
-- Unit symbols vs unit names: "2000m" = "2000 metres" = "2000 m", "5N" = "5 newtons", "10s" = "10 seconds", "300K" = "300 kelvin", "50cm3" = "50 cm³" = "50 cubic centimetres". The space between number and unit is optional. Superscripts/subscripts are optional (cm3 = cm³, H2O = H₂O).
-- Formulae vs names for common molecules: accept either.
-- Abbreviations students commonly use: "temp" for temperature, "conc" for concentration, "e-" or "e−" for electron, "+ve/-ve" for positive/negative.
-If the student's answer contains the correct quantity AND a recognisable unit (symbol OR word), it is correct.
-
-MODEL ANSWER CONVENTIONS — the model answer may use these bracket patterns to indicate accepted variations. You must interpret them correctly:
-
-1. EXPLICIT ALTERNATIVES — brackets containing the word "accept" give an additional valid value. Either form is fully correct.
-   Example: "9.8 N/kg (accept 10 N/kg)" — student writing either "9.8 N/kg" or "10 N/kg" is fully correct.
-   Example: "Joules (accept J)" — both are fully correct.
-
-2. EQUIVALENT FORMS — brackets containing the word "or" give an equivalent form. Either form is fully correct.
-   Example: "0.75 (or 75%)" — both "0.75" and "75%" are fully correct.
-   Example: "It quadruples (multiplied by 4)" — either phrasing is fully correct.
-
-3. CLARIFICATIONS — brackets that do NOT contain "accept" or "or" are explanation of the answer, not something the student must also write.
-   Example: "Mechanically (by a force)" — student writing just "mechanically" is fully correct. They do not need to add "by a force".
-   Example: "Insulate the container (lid and/or lagging)" — "insulate the beaker" or "put a lid on it" is fully correct.
-   Example: "Thermal (internal) store" — "thermal store" or "internal store" is fully correct.
-
-4. PICK-FROM-LIST — when the model answer begins "Any N of:" or ends with "(any N)" or "(any one)" / "(any two)" / "(any three)", the student needs to give that many valid items from the listed options.
-   - Items count even with different word forms or common synonyms (e.g. "sun" for "solar", "wind power" for "wind", "petrol" for "oil", "gas" for "natural gas", "hydro" for "hydroelectric").
-   - Do NOT double-count synonyms — "solar" and "sun" are the same item, count once.
-   - marks_awarded = number of unique valid items the student gave, capped at the question's marks value.
-   - Set correct=true ONLY if marks_awarded equals the full marks for the question; otherwise correct=false with partial marks_awarded.
-   - Worked example A (3-mark question, model answer "Any three of: solar, wind, hydroelectric, tidal, wave, geothermal, biofuel"): student writes "wind and the sun and tides" → 3 unique valid items → marks_awarded=3, correct=true.
-   - Worked example B (same question, same model answer): student writes "solar power and wind" → 2 unique valid items → marks_awarded=2, correct=false.
-   - Worked example C (1-mark question, model answer "Coal, oil, natural gas, nuclear (any one)"): student writes "coal" → marks_awarded=1, correct=true. Student writes "coal and gas" → still marks_awarded=1, correct=true (full marks already reached).
-
-MARKING PRINCIPLES:
-- Accept correct scientific content even with poor spelling, informal language, or incomplete sentences.
-- Accept equivalent scientific explanations that differ in wording from the model answer.
-- Do NOT accept vague answers that gesture at the right area without demonstrating actual knowledge (e.g. "something to do with cells", "it helps the body").
-- Do NOT accept answers that are scientifically incorrect or contradict the model answer.
-- For questions worth 2+ marks, the student must address multiple distinct points — partial credit only if they clearly demonstrate some knowledge.
-
-MARK CORRECT if:
-- The core scientific concept from the model answer is clearly present.
-- A valid alternative scientific explanation is given.
-- The answer uses equivalent notation (symbols, shorthand units, formulae) as described above.
-- The answer matches one of the explicit alternatives or equivalent forms given in the model answer.
-- Minor details are missing but the key idea is unambiguously demonstrated.
-
-MARK INCORRECT if:
-- The answer is scientifically wrong.
-- The answer is too vague to confirm understanding.
-- The answer is off-topic or unrelated.
-- The answer has the right structure but a wrong value/unit (e.g. model says "2000 m" and student writes "2000 km" — that's wrong).
-
-SET flagged: true if the answer is clearly not a genuine attempt:
-- Restating or closely paraphrasing the question back as an answer.
-- Generic filler with no scientific content ("I think so", "yes it does", "the thing").
-- Random or incoherent words that happen to pass a spam filter.
-- Anything that would insult a teacher's intelligence as an attempt.
-
-CONFIDENCE FIELD:
-- Set confidence to "high" when the science is unambiguously right or unambiguously wrong, the answer is well-formed, and a colleague would mark it the same way without hesitation.
-- Set confidence to "medium" or "low" for borderline calls, partial credit cases, ambiguous wording, or any answer where another teacher could reasonably disagree with you.
-
-EXTENDED EQUIVALENCE REFERENCE — treat each pairing below as identical in meaning. The student never loses a mark for choosing the shorthand form over the written-out form, or vice versa.
-
-Element symbols (case does not matter — "fe", "FE" and "Fe" all mean iron):
-H = hydrogen, He = helium, Li = lithium, Be = beryllium, B = boron, C = carbon, N = nitrogen, O = oxygen, F = fluorine, Ne = neon, Na = sodium, Mg = magnesium, Al = aluminium (also accept the US spelling "aluminum"), Si = silicon, P = phosphorus, S = sulfur (also accept "sulphur"), Cl = chlorine, Ar = argon, K = potassium, Ca = calcium, Fe = iron, Cu = copper, Zn = zinc, Br = bromine, Ag = silver, Sn = tin, I = iodine, Ba = barium, Pt = platinum, Au = gold, Hg = mercury, Pb = lead, U = uranium.
-
-Common ions (the charge may be written "2+", "+2" or with a superscript — all acceptable):
-H+ = hydrogen ion, OH- = hydroxide ion, Na+ = sodium ion, K+ = potassium ion, Cl- = chloride ion, Ca2+ = calcium ion, Mg2+ = magnesium ion, Fe2+ = iron(II) ion, Fe3+ = iron(III) ion, Cu2+ = copper ion, Al3+ = aluminium ion, CO3 2- = carbonate ion, SO4 2- = sulfate ion, NO3- = nitrate ion, NH4+ = ammonium ion, O2- = oxide ion.
-
-Common compounds (formula = name; everyday names in brackets are also acceptable):
-H2O = water, CO2 = carbon dioxide, CO = carbon monoxide, O2 = oxygen gas, N2 = nitrogen gas, H2 = hydrogen gas, Cl2 = chlorine gas, NaCl = sodium chloride (= common salt), CaCO3 = calcium carbonate (= limestone, chalk or marble), CaO = calcium oxide (= quicklime), Ca(OH)2 = calcium hydroxide (= slaked lime; its solution = limewater), HCl = hydrochloric acid, H2SO4 = sulfuric acid, HNO3 = nitric acid, NaOH = sodium hydroxide, KOH = potassium hydroxide, NH3 = ammonia, CH4 = methane, C2H6 = ethane, C2H4 = ethene, C6H12O6 = glucose, NaHCO3 = sodium hydrogencarbonate (= bicarbonate of soda), CuSO4 = copper sulfate.
-
-Units (symbol = word; the space between number and unit is optional; superscripts/subscripts are optional):
-m = metre, cm = centimetre, mm = millimetre, km = kilometre, g = gram, kg = kilogram, mg = milligram, t = tonne, s = second, min = minute, h = hour, N = newton, J = joule, kJ = kilojoule, MJ = megajoule, W = watt, kW = kilowatt, V = volt, mV = millivolt, A = ampere (= amp), mA = milliamp, C = coulomb (judge C as coulomb vs carbon by the quantity), ohm = the resistance unit (the symbol may be written "ohm" or the omega character), Pa = pascal, kPa = kilopascal, Hz = hertz, kHz = kilohertz, degrees C = degrees Celsius, K = kelvin, mol = mole. Compound units: m/s = metres per second (also accept "ms^-1"), m/s^2 = metres per second squared (also accept "ms^-2"), N/kg = newtons per kilogram (numerically the same as m/s^2 for gravitational field strength), kg/m^3 = kilograms per cubic metre, cm^3 = cubic centimetre (= millilitre, ml, for liquids), dm^3 = cubic decimetre (= litre, l), J/s = joules per second (= watt).
-
-UNIT-CONVERSION RULE: if the student converts the model answer to a different but equivalent SI form, that is fully correct provided the magnitude is unchanged (model "0.5 m" and student "50 cm" are both correct; model "2 kg" and student "2000 g" are both correct). But if the student keeps the model answer's NUMBER and only swaps the unit so the magnitude is now wrong, mark it incorrect (model "2000 m", student "2000 km" is wrong because that is a thousand times too big).
-
-SUBJECT-SPECIFIC MARKING NOTES:
-
-Biology:
-- Accept the everyday name alongside the technical term: windpipe = trachea, voice box = larynx, gullet = oesophagus, kneecap = patella, white blood cell = leucocyte, red blood cell = erythrocyte, germ = pathogen/microbe.
-- Be strict about near-homophones that name DIFFERENT things — a wrong one is incorrect, not a typo: mitosis vs meiosis; aerobic vs anaerobic; artery vs arteriole vs vein; ureter vs urethra; glucose vs glycogen vs glucagon; transcription vs translation; pollination vs fertilisation; dominant vs recessive. Award the mark only when the student's term is the correct one for the question.
-- Diffusion, osmosis and active transport are distinct processes — do not treat them as synonyms for one another.
-- For genetics, single-letter genotypes are valid full answers (for example "Bb", "ff", "XY"). Case is significant: a capital letter (dominant allele) is not the same as the lower-case letter (recessive allele).
-- For "describe a method / how to make it a fair test" answers, award the control-variable or repeat-and-mean ideas even if phrased informally.
-
-Chemistry:
-- Word equations: accept correct reactants and products even when "+" is written as "and" and the arrow is written as "gives", "yields", "makes" or "produces". A correctly balanced symbol equation may be given in place of a word equation, and vice versa, as long as the chemistry is right.
-- State symbols (s), (l), (g), (aq) are only required when the question explicitly asks for them; do not withhold a mark for omitting them otherwise.
-- Burning, combustion and "reacting with oxygen" are equivalent for a combustion question.
-- For "name the gas / test for a gas" answers, accept the standard result descriptions (for example "relights a glowing splint" for oxygen, "limewater turns milky/cloudy" for carbon dioxide, "squeaky pop" for hydrogen).
-- pH: if the question asks for a value, a word ("acidic"/"alkaline") alone is incomplete; if it asks to classify, the word is fine.
-
-Physics:
-- Accept the named equation, the symbol equation or a correct rearrangement interchangeably (for example "force = mass x acceleration", "F = ma" and "a = F/m" are the same relationship).
-- A "calculate" answer is correct when both the value and the unit are right. A correct value with the unit missing caps at partial marks unless the question already states the unit.
-- Rounding / significant figures: accept any sensible rounding of the correct value unless the question pins a precision (model "9.8 N/kg" and student "10 N/kg" or "9.81 N/kg" are all acceptable).
-- Distinguish vector and scalar quantities only when the question turns on the difference: distance vs displacement, speed vs velocity, mass vs weight. Otherwise mark leniently.
-- Energy stores and pathways: "heat energy", "thermal energy" and "internal energy" are interchangeable at this level; "movement energy" = kinetic; gravitational, elastic and chemical stores should be judged from the scenario.
-
-COMMON ACCEPTABLE PHRASINGS:
-- Trend language: "goes up", "increases", "rises" and "gets bigger" are equivalent; "goes down", "decreases", "drops", "falls" and "gets smaller" are equivalent.
-- Causal language: an explanation that gives the correct cause earns the mark even without the literal word "because", as long as the cause-and-effect link is clear.
-- Comparative language: "more than", "greater than", "higher than" and "bigger than" are equivalent, as are their opposites.
-
-ADDITIONAL WORKED EXAMPLES:
-- Clarification bracket: model answer "Combustion (burning)", student writes "burning" -> correct; the bracket is a gloss, not a second required word.
-- Explicit alternative: model answer "0.5 (accept 1/2 or 50%)", student writes "50%" -> correct.
-- Equivalent form: model answer "It doubles (multiplied by 2)", student writes "it becomes twice as big" -> correct.
-- Pick-from-list, full marks: 2-mark question, model answer "Any two of: friction, air resistance, water resistance, drag", student writes "friction and drag" -> two unique valid items -> marks_awarded 2, correct true.
-- Pick-from-list, partial: same question, student writes "friction" only -> one valid item -> marks_awarded 1, correct false.
-- Pick-from-list, synonym guard: model answer "Any two of: solar, wind, hydroelectric", student writes "the sun and solar panels" -> "sun" and "solar" are the same item, count once -> one unique item -> marks_awarded 1, correct false.
-- Equivalent notation: model answer "carbon dioxide", student writes "CO2" -> correct. Model answer "9.8 m/s^2", student writes "9.8 N/kg" -> correct (same quantity).
-- Wrong near-homophone: model answer "meiosis", student writes "mitosis" -> incorrect, different process, confidence high.
-- Vague non-answer: model answer "Mitochondria release energy during respiration", student writes "it makes energy for the cell" -> if the key idea (releases/transfers energy) is present, award; if it only gestures vaguely ("does stuff for the cell"), mark incorrect.
-
-PARTIAL CREDIT FOR MULTI-MARK QUESTIONS:
-- For a question worth 2 or more marks, identify the distinct creditworthy points in the model answer and award one mark per point the student clearly demonstrates, up to the maximum.
-- Do not award a mark twice for the same point made in two different ways.
-- A student can earn some but not all marks; in that case set correct to false and set marks_awarded to the number of points earned.
-
-FEEDBACK STYLE:
-- For a fully correct answer (correct=true), set feedback to exactly "Correct." and nothing more. A pupil who got it right does not need an explanation, and the one word keeps the response short. Do NOT add a sentence, do NOT restate the answer.
-- For an incorrect, partially-correct, or flagged answer, write ONE concise sentence addressed to the pupil — plain, honest and encouraging, never sarcastic — saying what was needed without simply printing the whole model answer back; give them enough to learn the point.
-
-NUMERICAL ANSWERS:
-- When the model answer is a single number, the student is correct if their number matches it, regardless of how it is written: "2000", "2,000", "2 000" and "2x10^3" are the same value, and "0.5", ".5" and "1/2" are the same value.
-- Accept a correct answer given in standard form or ordinary form interchangeably (for example "0.0045" and "4.5x10^-3").
-- If the question or model answer implies a tolerance (for example a value read from a graph), accept answers within a sensible range around the model value rather than demanding an exact match.
-- A trailing or leading unit attached without a space ("50cm", "5N", "10s") is fine; do not penalise spacing.
-- If the student shows correct working but makes a single arithmetic slip in the final figure, use your judgement: for a low-tariff retrieval item, a clearly-correct method with a minor slip may still earn partial credit; a wholly wrong value earns none.
-
-COMMON MISCONCEPTIONS — these are wrong; do not award the mark, and you can usually be high confidence:
-- "Plants get their food/mass from the soil" — wrong; mass comes mostly from carbon dioxide via photosynthesis.
-- "Photosynthesis is how plants breathe" or "respiration only happens in animals" — wrong; respiration happens in all living cells, plants included.
-- "Heavier objects fall faster (ignoring air resistance)" — wrong in a vacuum / when air resistance is negligible.
-- "Mass and weight are the same thing" — wrong; weight is a force (newtons), mass is in kilograms.
-- "Current is used up as it goes round a circuit" — wrong; current is the same all the way round a series circuit.
-- "Atoms are alive" or "cells and atoms are the same size/thing" — wrong.
-- "Evolution happens because animals want to / try to change" — wrong; it is natural selection acting on variation.
-- "A bigger coefficient of friction always means slower" stated as a law without reasoning — judge in context.
-Mark these incorrect even if the rest of the sentence is fluent and confident.
-
-TOPIC-BY-TOPIC CREDIT GUIDANCE (use to identify the creditworthy points in a model answer):
-- Cells and microscopy: award for naming the correct organelle and its function; do not accept a function pinned to the wrong organelle.
-- Body systems: award for the correct organ and its role; respiratory, circulatory, digestive and nervous system parts must match their stated function.
-- Atomic structure: protons, neutrons and electrons have distinct charges and locations — award only when the particle, its relative charge and (if asked) its location are correctly matched.
-- Bonding: ionic = transfer of electrons / oppositely charged ions; covalent = shared pair(s) of electrons; metallic = lattice of positive ions in a sea of delocalised electrons. These are not interchangeable.
-- Rates of reaction: award for any valid factor (temperature, concentration, surface area, catalyst) and, for an explanation, the collision-frequency or energy idea.
-- Forces and motion: award for the correct equation, correct substitution and correct evaluation as separate creditworthy points where the question allows.
-- Energy: award for naming the correct store and the correct pathway (mechanical, electrical, heating, radiation) and, where asked, for conservation or efficiency reasoning.
-- Waves: distinguish transverse and longitudinal; frequency, wavelength and amplitude are distinct quantities and must not be swapped.
-- Ecology: award for correct trophic terms (producer, primary consumer, predator, prey, decomposer) used consistently with the food chain in the question.
-
-EDGE CASES IN WORDING:
-- A student who answers in a complete sentence, a single word, or bullet-style fragments should be marked on the science, not the format.
-- Phonetic or badly-spelled attempts at the right term are acceptable when the intended word is unambiguous (for example "fotosynthesis", "mitokondria"); they become a problem only when the misspelling collides with a different real term (see the near-homophone rule above).
-- Capitalisation, punctuation and grammar never cost marks on their own.
-- An answer in a language other than English that is nonetheless scientifically correct should be judged on its science where you can read it; if it is unintelligible, treat it as you would any non-attempt.
-
-Respond ONLY with valid JSON, no backticks: {"correct":true/false,"marks_awarded":<int 0 to marks>?,"feedback":"<one concise sentence>","flagged":true/false,"confidence":"high"|"medium"|"low"}`;
-
-function extractNumbers(text: string): string[] {
+function extractNumbers(text: string): number[] {
+  // Keep the sign: "-5" must stay -5, not 5. (A leading minus is only captured
+  // when it is NOT preceded by a word char or "." — so a true negative sign is
+  // kept, while a hyphen mid-word is not.)
   const matches = text.match(/(?<![\w.])-?\d+(?:\.\d+)?(?![\w.])/g);
-  return matches ? matches.map(m => m.replace(/^-/, "")) : [];
+  return matches ? matches.map(Number) : [];
 }
 
 function checkNumericalMatch(modelAnswer: string, studentAnswer: string): boolean {
   const modelNums = extractNumbers(modelAnswer);
   if (modelNums.length !== 1) return false;
-  const studentNums = extractNumbers(studentAnswer);
-  return studentNums.includes(modelNums[0]);
+  const target = modelNums[0];
+  // Compare by VALUE, so "-5" only matches "-5" (never "5"), and "5" never
+  // matches "-5". Previously both sides had their sign stripped, which silently
+  // auto-marked a positive answer correct for a negative model answer (and vice
+  // versa) — wrong for directed numbers, coordinates, temperatures, etc.
+  return extractNumbers(studentAnswer).some(n => n === target);
 }
 
 // Normalise an answer for cache lookup. Conservative: lowercase, strip
@@ -259,6 +91,35 @@ async function resolveSchoolId(class_id: string | undefined): Promise<string | n
   } catch {
     return null;
   }
+}
+
+// Resolve the subject's marker_profile (subjects.marker_profile) so the marker loads
+// the right prompt overlay. Authoritative: question -> topic -> subject, else class ->
+// subject. Module-scope cached (a question/class never changes subject in a warm
+// instance). ANY failure or unknown profile falls back to the default (science) via
+// overlayFor — a bad or absent profile can never break a mark, only mark as science.
+const markerProfileCache = new Map<string, string>();
+async function resolveMarkerProfile(question_id: string | undefined, class_id: string | undefined): Promise<string | null> {
+  if (!sb) return null;
+  if (question_id) {
+    const ck = "q:" + question_id;
+    if (markerProfileCache.has(ck)) return markerProfileCache.get(ck)!;
+    try {
+      const { data } = await sb.from("questions").select("topics(subjects(marker_profile))").eq("id", question_id).single();
+      const mp = (data as { topics?: { subjects?: { marker_profile?: string } } } | null)?.topics?.subjects?.marker_profile;
+      if (mp) { markerProfileCache.set(ck, mp); return mp; }
+    } catch { /* fall through to class / default */ }
+  }
+  if (class_id) {
+    const ck = "c:" + class_id;
+    if (markerProfileCache.has(ck)) return markerProfileCache.get(ck)!;
+    try {
+      const { data } = await sb.from("classes").select("subjects(marker_profile)").eq("id", class_id).single();
+      const mp = (data as { subjects?: { marker_profile?: string } } | null)?.subjects?.marker_profile;
+      if (mp) { markerProfileCache.set(ck, mp); return mp; }
+    } catch { /* fall through to default */ }
+  }
+  return null;
 }
 
 // Hard cost backstop: true when a school's AI-mark usage is >3x its fair-use
@@ -313,7 +174,7 @@ function logShortcut(source: string, school_id: string | null) {
   }).then(() => {}).catch(() => {});
 }
 
-async function callAiMark(label: string, source: string, school_id: string | null, question: string, model_answer: string, student_answer: string, marks: number) {
+async function callAiMark(label: string, source: string, school_id: string | null, overlay: string, question: string, model_answer: string, student_answer: string, marks: number) {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -325,7 +186,12 @@ async function callAiMark(label: string, source: string, school_id: string | nul
       model: MODEL,
       max_tokens: 300,
       system: [
-        { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
+        // Two cached system blocks: the subject-agnostic engine (shared across every
+        // subject) then the per-subject overlay. base + overlay are the same size as the
+        // old single prompt, so per-subject caching is unchanged; if the engine alone
+        // clears the 4096-token floor it also caches once across all subjects.
+        { type: "text", text: BASE_RETRIEVAL, cache_control: { type: "ephemeral" } },
+        { type: "text", text: overlay, cache_control: { type: "ephemeral" } },
       ],
       messages: [{
         role: "user",
@@ -335,8 +201,8 @@ async function callAiMark(label: string, source: string, school_id: string | nul
         // same question is marked again inside the 5-min TTL — e.g. a whole class doing
         // the same retrieval quiz. The student answer varies per pupil, so it is a
         // separate, uncached block AFTER the breakpoint. Concatenated, the model sees
-        // exactly the same text as before, so marking is unchanged. (2 breakpoints total
-        // with the system prompt; the API cap is 4.)
+        // exactly the same text as before, so marking is unchanged. (3 breakpoints total:
+        // engine, overlay and this question block; the API cap is 4.)
         content: [
           {
             type: "text",
@@ -565,7 +431,10 @@ Deno.serve(async (req: Request) => {
           await recordCacheConfirmation(question_id, normalised, marksAwarded, result.feedback || "Correct.");
         };
 
-        const first = await callAiMark("first", "ai", schoolId, question, model_answer, student_answer, maxMarks);
+        const markerProfile = await resolveMarkerProfile(question_id, class_id);
+        const overlay = overlayFor(markerProfile, "retrieval");
+
+        const first = await callAiMark("first", "ai", schoolId, overlay, question, model_answer, student_answer, maxMarks);
         if (first.correct || first.flagged) {
           tryWriteCache(first).catch(() => {});
           verdict = { correct: !!first.correct, marks_awarded: first.marks_awarded ?? (first.correct ? maxMarks : 0), feedback: first.feedback || "", flagged: !!first.flagged, source: "ai", confidence: first.confidence };
@@ -581,7 +450,7 @@ Deno.serve(async (req: Request) => {
           let overturned: { correct?: boolean; marks_awarded?: number; feedback?: string } | null = null;
           if (first.confidence !== "high") {
             try {
-              const second = await callAiMark("second", "ai_double_check", schoolId, question, model_answer, student_answer, maxMarks);
+              const second = await callAiMark("second", "ai_double_check", schoolId, overlay, question, model_answer, student_answer, maxMarks);
               if (second.correct) { tryWriteCache(second).catch(() => {}); overturned = second; }
             } catch (_) {
               // fall through to the confirmed-wrong verdict

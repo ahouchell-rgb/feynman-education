@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, forwardRef } from "react";
 import { C } from "../lib/theme";
 
 /* ─── UI primitives ─── */
 export const Inp = ({ style, ...p }) => <input {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", WebkitAppearance: "none", ...style }} />;
-export const TA = ({ style, ...p }) => <textarea {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "inherit", resize: "vertical", ...style }} />;
+export const TA = forwardRef(function TA({ style, ...p }, ref) {
+  return <textarea ref={ref} {...p} style={{ width: "100%", padding: "12px 14px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 3, color: C.txt, fontSize: 15, outline: "none", boxSizing: "border-box", fontFamily: "inherit", resize: "vertical", ...style }} />;
+});
 export const Btn = ({ v = "pri", style, children, ...p }) => {
   const s = { pri: { background: C.pri, color: C.bg }, ghost: { background: "transparent", color: C.mid, border: `1px solid ${C.bdr}` } };
   return <button {...p} style={{ padding: "11px 18px", borderRadius: 3, border: "none", fontWeight: 600, fontSize: 12, cursor: "pointer", fontFamily: "inherit", transition: "all .15s", letterSpacing: ".06em", textTransform: "uppercase", ...s[v], ...style, ...(p.disabled ? { background: C.bg, color: C.dim, border: `1.5px solid ${C.bdr}`, opacity: 1, cursor: "default" } : {}) }}>{children}</button>;

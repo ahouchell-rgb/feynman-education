@@ -114,7 +114,10 @@ export function detectFakeAnswer(answer) {
   if (words.length >= 3 && new Set(words).size === 1) return "Same word repeated — doesn't count.";
   // No vowels — keyboard mashing. 'y' counts as a vowel so real science words
   // like "rhythm", "lymph", "crypt", "glycyl" aren't rejected as gibberish.
-  if (trimmed.length >= 5 && !/[aeiouyAEIOUY]/.test(trimmed)) return "This doesn't look like a real answer — doesn't count.";
+  // Exempt anything containing a digit or a maths/relational operator: vowel-less
+  // strings like "3x+2=14", "(x+1)(x-2)" or "n=PV/RT" are real maths/formula
+  // answers, not mashing. Pure-letter gibberish ("bcdfg") still trips this.
+  if (trimmed.length >= 5 && !/[aeiouyAEIOUY]/.test(trimmed) && !/[\d=+\-*/^()<>≤≥≠√×÷]/.test(trimmed)) return "This doesn't look like a real answer — doesn't count.";
   // "I don't know" and explicit non-attempt phrases
   if (/^(i )?(don'?t|do not|dont) know\.?$/i.test(trimmed)) return "Please attempt the answer — doesn't count towards target.";
   if (/^(idk|dunno|no idea|not sure|unsure|no clue|i have no idea|i dont know|idek)\.?$/i.test(trimmed)) return "Please attempt the answer — doesn't count towards target.";

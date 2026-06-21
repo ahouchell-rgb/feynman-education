@@ -72,6 +72,12 @@ describe("detectFakeAnswer", () => {
     expect(detectFakeAnswer("bcdfg")).toMatch(/doesn't look like a real answer/i);
   });
 
+  it("does not reject vowel-less maths/formula answers (digits or operators present)", () => {
+    for (const a of ["3x+2=14", "(x+1)(x-2)", "n=PV/RT", "5x^2-3x+1", "2:3"]) {
+      expect(detectFakeAnswer(a)).toBeNull();
+    }
+  });
+
   it("does not reject real science words whose only vowel is 'y'", () => {
     for (const w of ["rhythm", "lymph", "crypt", "glycyl"]) {
       expect(detectFakeAnswer(w)).toBeNull();
