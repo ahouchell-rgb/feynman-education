@@ -41,16 +41,19 @@ jobs:
           set -uo pipefail
           # base64url of '"role":"service_role"' — the giveaway inside a service-role JWT.
           SERVICE_ROLE_B64='InJvbGUiOiJzZXJ2aWNlX3JvbGUi'
+          # Patterns require enough length to avoid matching obvious test stubs
+          # like "whsec_wrong". Test files are also excluded below.
           PATTERNS=(
-            "$SERVICE_ROLE_B64"      # Supabase service_role JWT
-            'sk_live_[0-9A-Za-z]+'   # Stripe live secret key
-            'whsec_[0-9A-Za-z]+'     # Stripe webhook signing secret
-            'sk-ant-[0-9A-Za-z_-]+'  # Anthropic API key
+            "$SERVICE_ROLE_B64"          # Supabase service_role JWT
+            'sk_live_[0-9A-Za-z]{20,}'   # Stripe live secret key
+            'whsec_[0-9A-Za-z]{24,}'     # Stripe webhook signing secret
+            'sk-ant-[0-9A-Za-z_-]{40,}'  # Anthropic API key
           )
           status=0
           for pat in "${PATTERNS[@]}"; do
-            # Search tracked files only; exclude .env.example and this workflow.
-            if git grep -nIE "$pat" -- . ':(exclude).env.example' ':(exclude).github/workflows/ci.yml' ; then
+            # Search tracked files only; exclude env example, this workflow, and
+            # test files (which legitimately carry fake/placeholder secrets).
+            if git grep -nIE "$pat" -- . ':(exclude).env.example' ':(exclude).github/workflows/ci.yml' ':(exclude)*.test.ts' ; then
               echo "::error::Possible committed secret matching /$pat/ — remove it and rotate the key."
               status=1
             fi
