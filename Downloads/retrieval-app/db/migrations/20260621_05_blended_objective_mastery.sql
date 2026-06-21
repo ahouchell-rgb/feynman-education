@@ -1,5 +1,7 @@
--- STATUS: NOT APPLIED. Branch feat/blended-objective-mastery. Target project
--- uvzukwoxqhcxaxtzrziy (shared anchor). Additive + idempotent. Phase 2 (blend) of the
+-- STATUS: APPLIED to uvzukwoxqhcxaxtzrziy on 2026-06-21. Verified: view + RPC live,
+-- 27 pupil-objective rows; no new security advisor (view is security_invoker, RPC is the
+-- same identity-gated SECURITY DEFINER pattern as the other gaps RPCs). Branch
+-- feat/blended-objective-mastery. Additive + idempotent. Phase 2 (blend) of the
 -- mastery graph: the per-pupil × per-objective mastery node, blending retrieval
 -- practice with past-paper exam marks into ONE number per objective.
 --
