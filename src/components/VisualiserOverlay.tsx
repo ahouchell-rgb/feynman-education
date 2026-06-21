@@ -90,10 +90,10 @@ export function VisualiserOverlay({ onClose }) {
   const labelFor = (d, i) => d.label?.trim() || `Camera ${i + 1}`;
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "#000", zIndex: 500, display: "flex", flexDirection: "column" }}>
+    <div role="dialog" aria-modal="true" aria-label="Visualiser" style={{ position: "fixed", inset: 0, background: "#000", zIndex: 500, display: "flex", flexDirection: "column" }}>
       {/* Top bar */}
       <div style={{ display: "flex", alignItems: "center", padding: "12px 20px", background: "rgba(0,0,0,0.85)", borderBottom: "1px solid rgba(255,255,255,0.08)", gap: 12, flexShrink: 0 }}>
-        <button onClick={onClose} title="Close (Esc)" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, color: "#fff", lineHeight: 1, padding: 4 }}>←</button>
+        <button onClick={onClose} title="Close (Esc)" aria-label="Close the visualiser" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, color: "#fff", lineHeight: 1, padding: 4 }}><span aria-hidden>←</span></button>
         <div style={{ flex: 1, color: "#fff", fontFamily: C.mono, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", opacity: 0.85 }}>
           {step === "init" && "Visualiser · requesting camera…"}
           {step === "picker" && "Visualiser · choose camera"}

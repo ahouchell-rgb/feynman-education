@@ -56,9 +56,9 @@ export default function LoginPage() {
               </button>
             ))}
           </div>
-          {mode === "signup" && <div style={{ marginBottom: 10 }}><Inp placeholder="Full name" value={name} onChange={e => setName(e.target.value)} /></div>}
-          <div style={{ marginBottom: 10 }}><Inp type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} /></div>
-          <div style={{ marginBottom: 16 }}><Inp type="password" placeholder="Password" value={pw} onChange={e => setPw(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} /></div>
+          {mode === "signup" && <div style={{ marginBottom: 10 }}><Inp aria-label="Full name" autoComplete="name" placeholder="Full name" value={name} onChange={e => setName(e.target.value)} /></div>}
+          <div style={{ marginBottom: 10 }}><Inp type="email" aria-label="Email" autoComplete="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} /></div>
+          <div style={{ marginBottom: 16 }}><Inp type="password" aria-label="Password" autoComplete={mode === "login" ? "current-password" : "new-password"} placeholder="Password" value={pw} onChange={e => setPw(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} /></div>
           {err && <div style={{ padding: "8px 10px", borderRadius: 6, background: C.redS, color: C.red, fontSize: 12, fontFamily: C.mono, marginBottom: 12 }}>{err}</div>}
           {info && <div style={{ padding: "8px 10px", borderRadius: 6, background: C.grnS, color: C.grn, fontSize: 12, fontFamily: C.mono, marginBottom: 12 }}>{info}</div>}
           <Btn onClick={go} disabled={busy} style={{ width: "100%" }}>{busy ? "..." : mode === "login" ? "Log in" : "Create account"}</Btn>

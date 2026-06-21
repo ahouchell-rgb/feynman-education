@@ -15,6 +15,7 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
       </head>
       <body>
+        <a href="#main" className="sk-skip-link">Skip to content</a>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
