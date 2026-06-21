@@ -70,6 +70,12 @@ function BillingContent() {
           );
         })}
       </div>
+
+      <div style={{ marginTop: 36, paddingTop: 18, borderTop: `1px solid ${C.rule}`, display: "flex", gap: 16, flexWrap: "wrap", fontFamily: C.mono, fontSize: 11.5, color: C.dim }}>
+        <a href={`/api/account/export`} onClick={(e) => { e.preventDefault(); fetch("/api/account/export", { headers: { authorization: `Bearer ${sk.auth.getToken()}` } }).then((r) => r.blob()).then((b) => { const u = URL.createObjectURL(b); const a = document.createElement("a"); a.href = u; a.download = "feynman-data-export.json"; a.click(); URL.revokeObjectURL(u); }); }} style={{ color: C.muted, textDecoration: "none", cursor: "pointer" }}>⬇ Export my data</a>
+        <a href="/trust-centre" style={{ color: C.muted, textDecoration: "none" }}>Trust Centre</a>
+        <a href="/privacy" style={{ color: C.muted, textDecoration: "none" }}>Privacy</a>
+      </div>
     </div>
   );
 }
