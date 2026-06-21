@@ -11,6 +11,7 @@
 // Env: ANTHROPIC_API_KEY. Optional: SUPABASE_SERVICE_ROLE_KEY (usage log).
 
 import { bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, json as j } from "@/lib/serverHelpers";
+import { enforceAiBudget } from "@/lib/aiBudget";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -77,6 +78,9 @@ export async function POST(req: Request) {
 
   const userId = await requireUserId(token);
   if (!userId) return j({ error: "Invalid or expired session — sign in again." }, 401);
+
+  const budget = await enforceAiBudget({ userId, token, model: MODEL });
+  if (!budget.ok) return j({ error: budget.error }, budget.status || 429);
 
   let res: Response;
   try {

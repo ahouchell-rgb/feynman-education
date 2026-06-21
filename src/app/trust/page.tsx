@@ -11,7 +11,7 @@ import { ObjectiveMasteryPanel, type BlendedObjectiveRow } from "@/components/Ob
 
 interface SchoolRow { school_id: string; name: string; classes: number; linked: number; avgMastery: number | null; weakest: { topic_name: string; avg: number }[]; }
 interface CohortRow { topic_name: string; avg: number; schools: number; }
-interface Overview { enabled: boolean; trust?: { name: string }; joinCode?: string | null; trustAvg?: number | null; schools?: SchoolRow[]; cohort?: CohortRow[]; objectiveMastery?: BlendedObjectiveRow[]; }
+interface Overview { enabled: boolean; trust?: { name: string }; joinCode?: string | null; trustAvg?: number | null; schools?: SchoolRow[]; cohort?: CohortRow[]; objectiveMastery?: BlendedObjectiveRow[]; meta?: { source: "snapshot" | "live"; takenOn?: string }; }
 
 function heat(pct: number) {
   if (pct < 40) return C.red; if (pct < 65) return C.amb; return C.grn;
@@ -40,6 +40,11 @@ function TrustContent() {
         const d = await r.json();
         if (!r.ok) throw new Error(d.error || "Failed to load");
         setData(d);
+        // Snapshot-first paint, then recompute live in the background.
+        if (d?.enabled && d.meta?.source === "snapshot") {
+          fetch("/api/trust/overview?live=1", { headers: { authorization: `Bearer ${sk.auth.getToken()}` } })
+            .then((res) => res.json()).then((live) => { if (live?.enabled) setData(live); }).catch(() => {});
+        }
       } catch (e: any) { setErr(e.message); }
       setLoading(false);
       // Trend from saved snapshots (RLS scopes to the caller's trust). Best-effort.
@@ -110,7 +115,7 @@ function TrustContent() {
       )}
 
       {/* school benchmark */}
-      <SectionLabel>Schools — benchmarked</SectionLabel>
+      <SectionLabel>Schools — benchmarked{data.meta?.source === "snapshot" ? " · snapshot" : ""}</SectionLabel>
       <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden", background: C.surface, marginBottom: 32 }}>
         {schools.length === 0 ? <Empty>No schools with data yet.</Empty> : schools.map((s, i) => {
           const below = trustAvg != null && s.avgMastery != null && s.avgMastery < trustAvg;

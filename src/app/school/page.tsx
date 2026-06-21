@@ -12,7 +12,7 @@ import { ObjectiveMasteryPanel, type BlendedObjectiveRow } from "@/components/Ob
 
 interface WeakRow { topic_id: string; topic_name: string; pct_correct: number; marked: number | null; students: number | null; }
 interface ClassRow { class_id: string; name: string; year_group: number; discipline: string; tier: string; teacher_name: string; linked: boolean; weak: WeakRow[]; }
-interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; homeSponsored?: boolean; trust?: { linked: boolean; name?: string }; years?: number[]; classes?: ClassRow[]; objectiveMastery?: BlendedObjectiveRow[]; }
+interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; homeSponsored?: boolean; trust?: { linked: boolean; name?: string }; years?: number[]; classes?: ClassRow[]; objectiveMastery?: BlendedObjectiveRow[]; cohort?: { topic_name: string; avg: number; classes?: number }[]; meta?: { source: "snapshot" | "live"; takenOn?: string }; }
 
 // Staff roster with role + remove controls (slt only).
 const ROLE_LABEL: Record<string, string> = { member: "Teacher", hod: "Head of Dept", slt: "Senior leader" };
@@ -210,10 +210,11 @@ function SchoolContent() {
   const [yearFilter, setYearFilter] = useState<number | "all">("all");
   const [discFilter, setDiscFilter] = useState<string>("all");
 
+  const [hydrating, setHydrating] = useState(false);
   const loadMembers = () => sk.rpc("school_members", {}).then(setMembers).catch(() => {});
-  const load = async () => {
+  const load = async (live = false) => {
     try {
-      const r = await fetch("/api/school/overview", { headers: { authorization: `Bearer ${sk.auth.getToken()}` } });
+      const r = await fetch(`/api/school/overview${live ? "?live=1" : ""}`, { headers: { authorization: `Bearer ${sk.auth.getToken()}` } });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || "Failed to load");
       setData(d);
@@ -221,6 +222,13 @@ function SchoolContent() {
       if (d.enabled) {
         sk.q("school_benchmark_snapshots", { params: { select: "taken_on,school_avg", order: "taken_on.asc", limit: "16" } })
           .then((rows) => setTrend((rows || []).filter((r: any) => r.school_avg != null))).catch(() => {});
+        // Snapshot-first paint, then hydrate the live per-class grid in the background.
+        if (d.enabled && d.meta?.source === "snapshot") {
+          setHydrating(true);
+          fetch("/api/school/overview?live=1", { headers: { authorization: `Bearer ${sk.auth.getToken()}` } })
+            .then((res) => res.json()).then((live) => { if (live?.enabled) setData(live); }).catch(() => {})
+            .finally(() => setHydrating(false));
+        }
       }
     } catch (e: any) { setErr(e.message); }
     setLoading(false);
@@ -251,9 +259,15 @@ function SchoolContent() {
         m.set(w.topic_id, e);
       }
     }
-    return [...m.values()].map((e) => ({ topic_name: e.topic_name, avg: Math.round(e.sum / e.n), classes: e.classes, pupils: e.pupils }))
+    const live = [...m.values()].map((e) => ({ topic_name: e.topic_name, avg: Math.round(e.sum / e.n), classes: e.classes, pupils: e.pupils }))
       .sort((a, b) => a.avg - b.avg);
-  }, [filtered]);
+    // Snapshot mode (no live classes yet): use the route's snapshot cohort.
+    if (live.length === 0 && (data?.cohort || []).length) {
+      return (data!.cohort || []).map((o: any) => ({ topic_name: o.topic_name, avg: o.avg, classes: o.classes || 0, pupils: 0 }))
+        .sort((a, b) => a.avg - b.avg);
+    }
+    return live;
+  }, [filtered, data]);
 
   if (loading) return <div style={{ padding: 40, color: C.dim, fontFamily: C.mono, fontSize: 12, letterSpacing: "0.08em" }}>Loading school data…</div>;
   if (err) return <div style={{ padding: 40, color: C.red, fontFamily: C.mono, fontSize: 12 }}>Error: {err}</div>;
@@ -377,7 +391,11 @@ function SchoolContent() {
       {/* per-class grid */}
       <SectionLabel>By class</SectionLabel>
       <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden", background: C.surface }}>
-        {filtered.length === 0 ? <Empty>No classes match the filter.</Empty> : filtered.map((c, i) => {
+        {filtered.length === 0 && hydrating ? (
+          <Empty>Loading the live class breakdown…</Empty>
+        ) : filtered.length === 0 && data.meta?.source === "snapshot" ? (
+          <Empty>Showing the latest snapshot{data.meta.takenOn ? ` (${new Date(data.meta.takenOn + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" })})` : ""}. <button onClick={() => { setHydrating(true); load(true).finally(() => setHydrating(false)); }} style={{ background: "none", border: "none", color: C.grn, cursor: "pointer", fontFamily: C.mono, fontSize: 12, textDecoration: "underline", padding: 0 }}>Load live breakdown</button></Empty>
+        ) : filtered.length === 0 ? <Empty>No classes match the filter.</Empty> : filtered.map((c, i) => {
           const d = DISC[c.discipline as keyof typeof DISC] || DISC.combined;
           const weakest = c.weak[0];
           const avg = c.weak.length ? Math.round(c.weak.reduce((s, w) => s + w.pct_correct, 0) / c.weak.length) : null;

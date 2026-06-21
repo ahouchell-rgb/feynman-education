@@ -59,6 +59,35 @@ export async function GET(req: Request) {
     joinCode = t?.join_code || null;
   } catch { /* default */ }
 
+  // Assessment per-objective mastery across the trust (one cheap RPC) — both modes.
+  let assessObjectives: AssessmentObjective[] = [];
+  try {
+    const rows = await rpc("trust_objective_mastery", { p_min_marked: 5 }, token);
+    if (Array.isArray(rows)) assessObjectives = rows;
+  } catch { /* assessment data optional */ }
+
+  // Snapshot-first: serve the weekly trust snapshot instantly unless ?live is set.
+  const wantLive = new URL(req.url).searchParams.has("live");
+  if (!wantLive) {
+    let snap: any = null;
+    try {
+      snap = (await rest(`trust_benchmark_snapshots?trust_id=eq.${profile.trust_id}&select=taken_on,trust_avg,payload&order=taken_on.desc&limit=1`, token))?.[0];
+    } catch { /* no snapshot */ }
+    if (snap) {
+      const snapCohort = snap.payload?.cohort || [];
+      const objectiveMastery = blendObjectiveMastery(
+        rollupRetrieval([snapCohort.map((o: any) => ({ topic_name: o.topic_name, pct_correct: o.avg, marked: null }))]),
+        assessObjectives,
+      );
+      return j({
+        enabled: true, trust: { name: trustName }, joinCode,
+        trustAvg: snap.trust_avg ?? null, schools: snap.payload?.schools || [], cohort: snapCohort,
+        objectiveMastery, meta: { source: "snapshot", takenOn: snap.taken_on },
+        generatedAt: new Date().toISOString(),
+      });
+    }
+  }
+
   let classes: any[] = [];
   try { classes = await rpc("trust_classes", {}, token); } catch { classes = []; }
   if (!Array.isArray(classes)) classes = [];
@@ -76,17 +105,11 @@ export async function GET(req: Request) {
 
   const { schools, cohort, trustAvg } = rollupTrust(enriched);
 
-  // Per-objective assessment mastery across the trust, blended with the
-  // retrieval rollup into one weakest-first per-objective view.
-  let assessObjectives: AssessmentObjective[] = [];
-  try {
-    const rows = await rpc("trust_objective_mastery", { p_min_marked: 5 }, token);
-    if (Array.isArray(rows)) assessObjectives = rows;
-  } catch { /* assessment data optional */ }
+  // Blend the live retrieval rollup with the trust assessment objectives.
   const objectiveMastery = blendObjectiveMastery(
     rollupRetrieval(enriched.map((c) => c.weak)),
     assessObjectives,
   );
 
-  return j({ enabled: true, trust: { name: trustName }, joinCode, trustAvg, schools, cohort, objectiveMastery, generatedAt: new Date().toISOString() });
+  return j({ enabled: true, trust: { name: trustName }, joinCode, trustAvg, schools, cohort, objectiveMastery, meta: { source: "live" }, generatedAt: new Date().toISOString() });
 }

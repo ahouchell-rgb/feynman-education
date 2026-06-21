@@ -76,12 +76,45 @@ export async function GET(req: Request) {
     }
   } catch { /* keep defaults */ }
 
-  // School-wide classes (security-definer RPC; returns [] unless hod/slt).
+  // Assessment per-objective mastery (one cheap RPC) — used in both modes.
+  let assessObjectives: AssessmentObjective[] = [];
+  try {
+    const rows = await rpc("school_objective_mastery", { p_min_marked: 5 }, token);
+    if (Array.isArray(rows)) assessObjectives = rows;
+  } catch { /* assessment data optional */ }
+
+  // Snapshot-first: serve the weekly snapshot instantly unless ?live is set.
+  // The per-class grid is the expensive fan-out (O(classes) retrieval calls), so
+  // it's live-only — the page paints from the snapshot, then hydrates with ?live.
+  const wantLive = new URL(req.url).searchParams.has("live");
+  if (!wantLive) {
+    let snap: any = null;
+    try {
+      snap = (await rest(`school_benchmark_snapshots?school_id=eq.${profile.school_id}&select=taken_on,school_avg,payload&order=taken_on.desc&limit=1`, token))?.[0];
+    } catch { /* no snapshot table / row */ }
+    if (snap) {
+      const snapObjectives = (snap.payload?.objectives || []).map((o: any) => ({
+        topic_name: o.topic_name, pct_correct: o.avg, marked: null, classes: o.classes,
+      }));
+      const objectiveMastery = blendObjectiveMastery(
+        rollupRetrieval([snapObjectives]),
+        assessObjectives,
+      );
+      return j({
+        enabled: true, role, school: { name: schoolName }, joinCode, homeSponsored, trust,
+        years: [], classes: [], cohort: snap.payload?.objectives || [], schoolAvg: snap.school_avg ?? null,
+        objectiveMastery, meta: { source: "snapshot", takenOn: snap.taken_on },
+        generatedAt: new Date().toISOString(),
+      });
+    }
+  }
+
+  // Live path: school-wide classes (security-definer RPC; [] unless hod/slt) +
+  // per-class retrieval aggregation in parallel.
   let classes: any[] = [];
   try { classes = await rpc("school_classes", {}, token); } catch { classes = []; }
   if (!Array.isArray(classes)) classes = [];
 
-  // Aggregate each class's weakest objectives from retrieval (in parallel).
   const enriched = await Promise.all(classes.map(async (c: any) => {
     const retId = (c.retrieval_class_ids || [])[0];
     let weak: any[] = [];
@@ -99,13 +132,6 @@ export async function GET(req: Request) {
     };
   }));
 
-  // Per-objective assessment mastery (security-definer RPC; hod/slt + own school)
-  // blended with the retrieval rollup into ONE weakest-first per-objective view.
-  let assessObjectives: AssessmentObjective[] = [];
-  try {
-    const rows = await rpc("school_objective_mastery", { p_min_marked: 5 }, token);
-    if (Array.isArray(rows)) assessObjectives = rows;
-  } catch { /* assessment data optional */ }
   const objectiveMastery = blendObjectiveMastery(
     rollupRetrieval(enriched.map((c) => c.weak)),
     assessObjectives,
@@ -114,7 +140,7 @@ export async function GET(req: Request) {
   const years = [...new Set(enriched.map((c) => c.year_group).filter(Boolean))].sort((a, b) => a - b);
   return j({
     enabled: true, role, school: { name: schoolName }, joinCode, homeSponsored, trust,
-    years, classes: enriched, objectiveMastery,
+    years, classes: enriched, objectiveMastery, meta: { source: "live" },
     generatedAt: new Date().toISOString(),
   });
 }

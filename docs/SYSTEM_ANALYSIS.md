@@ -153,6 +153,25 @@ correct spine and it has held across a large surface.
 3. **Switch dashboards to snapshot-first + enforce AI budgets** — makes it fast and keeps it
    profitable at MAT scale.
 
+### Status — all three shipped
+
+1. ✅ `src/lib/serverHelpers.ts` consolidates the auth/REST/AI/usage boilerplate; the
+   cover-sheet, practical-assistant and revision-pack routes use it. A unit suite covers the
+   security/logic surface (Stripe webhook signature, extractHtml, model routing, trust rollup,
+   subject resolution, entitlements, week-start) — **72 tests**.
+2. ✅ `school_objective_mastery()` / `trust_objective_mastery()` RPCs (role-gated, min-marked)
+   bring common-assessment QLA into the graph; `src/lib/mastery.ts` blends it with the retrieval
+   rollup per objective; the `ObjectiveMasteryPanel` surfaces it in the SLT and trust dashboards.
+3. ✅ Both overview routes are **snapshot-first** (instant paint from the weekly snapshot, then a
+   background `?live=1` hydrate of the per-class grid). `src/lib/aiBudget.ts` enforces a per-teacher
+   daily cap **and** a per-school monthly budget (`AI_ORG_MONTHLY_CAP_GBP`, via the
+   `school_ai_spend()` roll-up), with model-aware pricing; routing stays Opus-authoring /
+   Sonnet-bulk through `pickModel`.
+
+Next incremental steps (P1/P2): extend snapshot-first to the intervention path, add org-budget
+visibility in the billing UI, audit the role-change RPCs (P0 #4), and wire objective↔retrieval-topic
+IDs so the blend joins on identifiers rather than names.
+
 Everything else (subjects breadth, D2C funnels, MIS depth) is now incremental on a sound spine.
 The spine is good; the gaps are **testing, cross-repo contracts, performance switch-on, and the
 objective-level data unification** — not the architecture.

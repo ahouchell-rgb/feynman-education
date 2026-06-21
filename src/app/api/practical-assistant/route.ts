@@ -12,6 +12,7 @@
 import { supaRest } from "@/lib/supabaseRest";
 import { SUBJECT_SELECT, subjectName, isScience } from "@/lib/subject";
 import { SK_URL, SK_ANON, bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, json as j } from "@/lib/serverHelpers";
+import { enforceAiBudget } from "@/lib/aiBudget";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -54,6 +55,9 @@ export async function POST(req: Request) {
 
   const userId = await requireUserId(token);
   if (!userId) return j({ error: "Invalid or expired session — sign in again." }, 401);
+
+  const budget = await enforceAiBudget({ userId, token, model: MODEL });
+  if (!budget.ok) return j({ error: budget.error }, budget.status || 429);
 
   const ctx = [
     `Subject: ${subjectName(unit)}`,
