@@ -9,10 +9,24 @@ export const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 export const SK_ANON =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 
+export const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
+export const ANTHROPIC_VERSION = "2023-06-01";
+
 export const AI_MODELS = { OPUS: "claude-opus-4-8", SONNET: "claude-sonnet-4-6" } as const;
 /** Cheap model for bulk/derived generation; Opus only for authoring. */
 export function pickModel(kind: "authoring" | "bulk"): string {
   return kind === "authoring" ? AI_MODELS.OPUS : AI_MODELS.SONNET;
+}
+
+/** Authorize a Vercel Cron request.
+ *  `x-vercel-cron` is an ordinary request header any client can spoof, so once a
+ *  CRON_SECRET is configured we require the bearer secret and the header alone is
+ *  NOT sufficient. With no secret set we fall back to accepting the header so an
+ *  un-configured deployment's crons keep working (set CRON_SECRET to lock them). */
+export function cronAuthorized(req: Request): boolean {
+  const secret = process.env.CRON_SECRET;
+  if (secret) return req.headers.get("authorization") === `Bearer ${secret}`;
+  return req.headers.get("x-vercel-cron") != null;
 }
 
 /** Pull a Bearer token out of the request, or null. */
@@ -29,13 +43,6 @@ export async function requireUserId(token: string): Promise<string | null> {
     const u = await r.json();
     return u?.id || null;
   } catch { return null; }
-}
-
-/** RLS-scoped GET (caller's bearer). Returns [] / null on failure unless throwOnError. */
-export async function skRest(path: string, token: string, throwOnError = false): Promise<any> {
-  const r = await fetch(`${SK_URL}/rest/v1/${path}`, { headers: { apikey: SK_ANON, Authorization: `Bearer ${token}` } });
-  if (!r.ok) { if (throwOnError) throw new Error(`${path}: ${r.status}`); return null; }
-  return r.json();
 }
 
 /** Service-role request (server-only; bypasses RLS). */

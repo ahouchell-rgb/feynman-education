@@ -14,29 +14,16 @@
 //
 // Required env: ANTHROPIC_API_KEY. Optional: SUPABASE_SERVICE_ROLE_KEY (usage log).
 
+import {
+  AI_MODELS, ANTHROPIC_URL, ANTHROPIC_VERSION,
+  bearerToken, requireUserId, json, anthropicText, logTokenUsage,
+} from "@/lib/serverHelpers";
+import { enforceAiBudget } from "@/lib/aiBudget";
+
 export const runtime = "edge";
 
-const MODEL = "claude-sonnet-4-6"; // matches the feynman content routes (chat / feedforward)
-const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const ANTHROPIC_VERSION = "2023-06-01";
+const MODEL = AI_MODELS.SONNET; // matches the feynman content routes (chat / feedforward)
 const MAX_OUTPUT_TOKENS = 2400;
-
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-// Public anon key (same as src/lib/sk) — used as the apikey header alongside the caller's bearer.
-const SK_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
-
-// Sonnet pricing — kept in step with chat-with-lesson / feedforward.
-const INPUT_USD_PER_MTOK = 3;
-const OUTPUT_USD_PER_MTOK = 15;
-const GBP_PER_USD = 0.79;
-const DAILY_CAP_GBP = Number(process.env.AI_DAILY_CAP_GBP) || 0; // £/day per teacher; 0 = unlimited.
-
-const todayISO = () => new Date().toISOString().slice(0, 10);
-const costGBP = (input: number, output: number) =>
-  (input / 1e6) * INPUT_USD_PER_MTOK * GBP_PER_USD + (output / 1e6) * OUTPUT_USD_PER_MTOK * GBP_PER_USD;
-
-const json = (obj: unknown, status = 200) =>
-  new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json" } });
 
 const SYSTEM = `You are a UK secondary science teacher writing retrieval-practice questions for an AQA-aligned question bank, based on the content of a lesson you just taught.
 
@@ -89,9 +76,8 @@ export async function POST(req: Request) {
   }
 
   // Require an authenticated teacher — not an open AI endpoint.
-  const authHeader = req.headers.get("authorization") || "";
-  if (!authHeader.startsWith("Bearer ")) return json({ error: "Sign in to use the AI assistant." }, 401);
-  const token = authHeader.slice(7);
+  const token = bearerToken(req);
+  if (!token) return json({ error: "Sign in to use the AI assistant." }, 401);
 
   let body: any;
   try { body = await req.json(); } catch { return json({ error: "Invalid JSON body" }, 400); }
@@ -107,30 +93,12 @@ export async function POST(req: Request) {
   }
 
   // Validate the session and get the teacher's UID (also the usage key).
-  let userId: string;
-  try {
-    const ur = await fetch(`${SK_URL}/auth/v1/user`, { headers: { apikey: SK_ANON_KEY, Authorization: `Bearer ${token}` } });
-    if (!ur.ok) return json({ error: "Invalid or expired session — sign in again." }, 401);
-    userId = (await ur.json()).id;
-  } catch {
-    return json({ error: "Auth check failed." }, 401);
-  }
+  const userId = await requireUserId(token);
+  if (!userId) return json({ error: "Invalid or expired session — sign in again." }, 401);
 
-  // Daily cost backstop (per teacher) — opt-in via AI_DAILY_CAP_GBP; fails OPEN.
-  try {
-    const ur = await fetch(
-      `${SK_URL}/rest/v1/daily_token_usage?teacher_id=eq.${userId}&day=eq.${todayISO()}&select=input_tokens,output_tokens`,
-      { headers: { apikey: SK_ANON_KEY, Authorization: `Bearer ${token}` } },
-    );
-    if (ur.ok) {
-      const rows = await ur.json();
-      const u = (rows && rows[0]) || { input_tokens: 0, output_tokens: 0 };
-      const usedGBP = costGBP(u.input_tokens || 0, u.output_tokens || 0);
-      if (DAILY_CAP_GBP > 0 && usedGBP >= DAILY_CAP_GBP) {
-        return json({ error: `Daily AI limit of £${DAILY_CAP_GBP.toFixed(2)} reached. Resets at midnight UTC.` }, 429);
-      }
-    }
-  } catch { /* fail open */ }
+  // Daily/org cost backstop (opt-in via AI_DAILY_CAP_GBP / AI_ORG_MONTHLY_CAP_GBP; fails OPEN).
+  const budget = await enforceAiBudget({ userId, token, model: MODEL });
+  if (!budget.ok) return json({ error: budget.error }, budget.status);
 
   const avoid = existing.length
     ? `\n\nDo NOT duplicate or closely paraphrase these existing questions:\n- ${existing.slice(0, 25).map((s) => String(s).slice(0, 200)).join("\n- ")}`
@@ -168,24 +136,10 @@ export async function POST(req: Request) {
 
   const data = await res.json();
 
-  // Best-effort usage logging into the shared daily pool (same as slides-assistant).
-  try {
-    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      const u = data.usage || {};
-      const inputTotal = (u.input_tokens || 0) + (u.cache_read_input_tokens || 0) + (u.cache_creation_input_tokens || 0);
-      await fetch(`${SK_URL}/rest/v1/rpc/increment_token_usage`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-          Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-        },
-        body: JSON.stringify({ p_teacher_id: userId, p_day: todayISO(), p_input: inputTotal, p_output: u.output_tokens || 0 }),
-      });
-    }
-  } catch { /* best-effort */ }
+  // Best-effort usage logging into the shared daily pool.
+  await logTokenUsage(userId, data.usage);
 
-  const text = (data.content || []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
+  const text = anthropicText(data);
   const clean = text.replace(/```json|```/g, "").trim();
   let items: unknown;
   try { items = JSON.parse(clean); } catch { return json({ error: "The model returned malformed output — try again." }, 502); }

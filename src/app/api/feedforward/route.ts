@@ -13,6 +13,11 @@
 
 import { supaRest } from "@/lib/supabaseRest";
 import { SUBJECT_SELECT, subjectName } from "@/lib/subject";
+import {
+  SK_URL, SK_ANON, AI_MODELS, ANTHROPIC_URL, ANTHROPIC_VERSION,
+  bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage,
+} from "@/lib/serverHelpers";
+import { costGBP, enforceAiBudget } from "@/lib/aiBudget";
 
 // Node runtime (not edge): the edge ~25s cap was returning 504s on the longer Sonnet
 // generations (especially the multimodal paper-upload path). Node + maxDuration gives the
@@ -20,42 +25,16 @@ import { SUBJECT_SELECT, subjectName } from "@/lib/subject";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-// Same anon key as src/lib/sk — public, used for the apikey header alongside the user's bearer.
-const SK_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
-
-const MODEL = "claude-sonnet-4-6";
-const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const ANTHROPIC_VERSION = "2023-06-01";
+const MODEL = AI_MODELS.SONNET;
 const MAX_OUTPUT_TOKENS = 4096;
-
-// Rough Sonnet pricing — kept in step with chat-with-lesson.
-const INPUT_USD_PER_MTOK = 3;
-const OUTPUT_USD_PER_MTOK = 15;
-const GBP_PER_USD = 0.79;
-const DAILY_CAP_GBP = Number(process.env.AI_DAILY_CAP_GBP) || 0; // £/day per teacher; 0 (default) = unlimited. Set AI_DAILY_CAP_GBP in env to re-enable.
-
-const todayISO = () => new Date().toISOString().slice(0, 10);
-const costGBP = (i: number, o: number) =>
-  (i / 1e6) * INPUT_USD_PER_MTOK * GBP_PER_USD + (o / 1e6) * OUTPUT_USD_PER_MTOK * GBP_PER_USD;
 
 function jsonError(message: string, status = 500) {
   return new Response(JSON.stringify({ error: message }), { status, headers: { "content-type": "application/json" } });
 }
 
-// Pull the HTML doc out of the model's reply: prefer a ```html block, then a
-// raw <html>…</html>, else fall back to the whole reply.
-function extractHtml(text: string): string {
-  const fenced = text.match(/```html\s*([\s\S]*?)```/i);
-  if (fenced) return fenced[1].trim();
-  const doc = text.match(/<!doctype[\s\S]*<\/html>|<html[\s\S]*<\/html>/i);
-  if (doc) return doc[0].trim();
-  return text.trim();
-}
-
 interface SbOpts { method?: string; body?: any; token?: string; params?: Record<string, string>; single?: boolean; }
 async function sb(path: string, { method = "GET", body, token, params, single }: SbOpts = {}): Promise<any> {
-  return supaRest(SK_URL, path, { method, body, params, apikey: SK_ANON_KEY, bearer: token, single });
+  return supaRest(SK_URL, path, { method, body, params, apikey: SK_ANON, bearer: token, single });
 }
 
 function buildPrompt({ lesson, unit, gaps, className, source }: any) {
@@ -116,9 +95,8 @@ export async function POST(req: Request) {
     return jsonError("ANTHROPIC_API_KEY not configured in Vercel env vars.", 500);
   }
 
-  const authHeader = req.headers.get("authorization") || "";
-  if (!authHeader.startsWith("Bearer ")) return jsonError("Missing bearer token", 401);
-  const token = authHeader.slice(7);
+  const token = bearerToken(req);
+  if (!token) return jsonError("Missing bearer token", 401);
 
   let body: any;
   try { body = await req.json(); } catch { return jsonError("Invalid JSON body", 400); }
@@ -134,30 +112,20 @@ export async function POST(req: Request) {
   }
 
   // Validate the user (and get their UID for usage accounting).
-  let userId: string;
-  try {
-    const ur = await fetch(`${SK_URL}/auth/v1/user`, { headers: { apikey: SK_ANON_KEY, Authorization: `Bearer ${token}` } });
-    if (!ur.ok) return jsonError("Invalid auth", 401);
-    userId = (await ur.json()).id;
-  } catch { return jsonError("Auth check failed", 401); }
+  const userId = await requireUserId(token);
+  if (!userId) return jsonError("Invalid auth", 401);
 
-  // Load lesson + unit + today's usage under the user's RLS.
-  let lesson: any, unit: any, todayUsage: any;
+  // Daily/org cost backstop (same pool as the lesson chat; opt-in + fails OPEN).
+  const budget = await enforceAiBudget({ userId, token, model: MODEL });
+  if (!budget.ok) return jsonError(budget.error, budget.status);
+
+  // Load lesson + unit under the user's RLS.
+  let lesson: any, unit: any;
   try {
-    [lesson, todayUsage] = await Promise.all([
-      sb("lessons", { token, params: { id: `eq.${lessonId}` }, single: true }),
-      sb("daily_token_usage", { token, params: { teacher_id: `eq.${userId}`, day: `eq.${todayISO()}` } }),
-    ]);
+    lesson = await sb("lessons", { token, params: { id: `eq.${lessonId}` }, single: true });
     unit = await sb("units", { token, params: { id: `eq.${lesson.unit_id}`, select: `*,${SUBJECT_SELECT}` }, single: true }).catch(() => ({}));
-    todayUsage = (todayUsage && todayUsage[0]) || { input_tokens: 0, output_tokens: 0 };
   } catch (e: any) {
     return jsonError(`Couldn't load lesson context: ${e.message}`, 500);
-  }
-
-  // Daily cap — same budget pool as the lesson chat.
-  const usedGBP = costGBP(todayUsage.input_tokens || 0, todayUsage.output_tokens || 0);
-  if (DAILY_CAP_GBP > 0 && usedGBP >= DAILY_CAP_GBP) {
-    return jsonError(`Daily cap of £${DAILY_CAP_GBP.toFixed(2)} reached (used £${usedGBP.toFixed(3)}). Resets at midnight UTC.`, 429);
   }
 
   // Build the model input: image/PDF blocks + notes for an uploaded paper (multimodal),
@@ -190,8 +158,7 @@ export async function POST(req: Request) {
   }
 
   const data = await res.json();
-  const text = (data.content || []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
-  const html = extractHtml(text);
+  const html = extractHtml(anthropicText(data));
   const inputTok = data.usage?.input_tokens || 0;
   const outputTok = data.usage?.output_tokens || 0;
 
@@ -210,18 +177,10 @@ export async function POST(req: Request) {
   } catch { /* non-fatal — the teacher still receives the sheet on-screen */ }
 
   // Log token usage (best-effort; never fails the response).
-  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    try {
-      await fetch(`${SK_URL}/rest/v1/rpc/increment_token_usage`, {
-        method: "POST",
-        headers: { "content-type": "application/json", apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}` },
-        body: JSON.stringify({ p_teacher_id: userId, p_day: todayISO(), p_input: inputTok, p_output: outputTok }),
-      });
-    } catch { /* non-fatal */ }
-  }
+  await logTokenUsage(userId, data.usage);
 
   return new Response(
-    JSON.stringify({ html, usage: { inputTokens: inputTok, outputTokens: outputTok, costGBP: costGBP(inputTok, outputTok) } }),
+    JSON.stringify({ html, usage: { inputTokens: inputTok, outputTokens: outputTok, costGBP: costGBP(inputTok, outputTok, MODEL) } }),
     { headers: { "content-type": "application/json" } },
   );
 }

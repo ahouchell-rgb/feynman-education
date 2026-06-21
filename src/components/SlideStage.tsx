@@ -354,7 +354,7 @@ function LiveCamera() {
         <select value={deviceId} onChange={(e) => pick(e.target.value)}
           style={{ position: "absolute", top: 8, right: 8, fontSize: 12, padding: "4px 6px", borderRadius: 6, opacity: 0.85, border: "none" }}>
           <option value="">Default camera</option>
-          {devices.map((d, i) => <option key={d.deviceId} value={d.deviceId}>{d.label || `Camera ${i + 1}`}</option>)}
+          {devices.map((d, i) => <option key={d.deviceId || i} value={d.deviceId}>{d.label || `Camera ${i + 1}`}</option>)}
         </select>
       )}
     </div>

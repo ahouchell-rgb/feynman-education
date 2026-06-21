@@ -22,11 +22,13 @@ export function restHeaders(opts: {
   prefer?: string;
   extra?: Record<string, string>;
 }): Record<string, string> {
+  // `extra` first so the auth headers below always win (a caller-supplied
+  // Authorization/apikey in `extra` must never clobber the real credentials).
   const h: Record<string, string> = {
     "Content-Type": "application/json",
+    ...(opts.extra || {}),
     apikey: opts.apikey,
     Authorization: `Bearer ${opts.bearer || opts.apikey}`,
-    ...(opts.extra || {}),
   };
   if (opts.single) h["Accept"] = "application/vnd.pgrst.object+json";
   if (opts.prefer) h["Prefer"] = opts.prefer;

@@ -44,7 +44,7 @@ export function FileUpload({ unitId, lessonId, onUploaded }) {
       onDragOver={e => { e.preventDefault(); setDragging(true); }}
       onDragLeave={() => setDragging(false)}
       onDrop={e => { e.preventDefault(); setDragging(false); handleFiles(e.dataTransfer.files); }}
-      onClick={() => document.getElementById(inputId).click()}
+      onClick={() => document.getElementById(inputId)?.click()}
       style={{ border: `1.5px dashed ${dragging ? C.accent : C.border}`, borderRadius: 6, padding: "16px 20px", textAlign: "center", cursor: "pointer", background: dragging ? C.bg : "transparent", transition: "all .15s" }}>
       <input id={inputId} type="file" multiple style={{ display: "none" }}
         onChange={e => { handleFiles(Array.from(e.target.files)); e.target.value = ""; }} />

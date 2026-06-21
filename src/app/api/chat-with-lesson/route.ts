@@ -11,24 +11,19 @@
 
 import { supaRest } from "@/lib/supabaseRest";
 import { HOUSE_LESSON_STYLE } from "@/lib/lessonStyle";
+import {
+  SK_URL, SK_ANON, AI_MODELS, ANTHROPIC_URL, ANTHROPIC_VERSION,
+  bearerToken, requireUserId, logTokenUsage,
+} from "@/lib/serverHelpers";
+import { costGBP, enforceAiBudget } from "@/lib/aiBudget";
 
 export const runtime = "edge";
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-// Same anon key as src/lib/sk.js — public, used for the apikey header alongside the user's bearer.
-const SK_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
+const SK_ANON_KEY = SK_ANON; // public anon key, used as the apikey header alongside the user's bearer
 
-// ─── Model + cost config ────────────────────────────────────────────────
-const MODEL = "claude-sonnet-4-6";
-const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const ANTHROPIC_VERSION = "2023-06-01";
+// ─── Model config ───────────────────────────────────────────────────────
+const MODEL = AI_MODELS.SONNET;
 const MAX_OUTPUT_TOKENS = 4096;
-
-// Rough Sonnet pricing. Tune if Anthropic publishes new numbers.
-const INPUT_USD_PER_MTOK = 3;
-const OUTPUT_USD_PER_MTOK = 15;
-const GBP_PER_USD = 0.79;
-const DAILY_CAP_GBP = Number(process.env.AI_DAILY_CAP_GBP) || 0; // £/day per teacher; 0 (default) = unlimited. Set AI_DAILY_CAP_GBP in env to re-enable.
 
 // How much chat history to send back to Claude as context.
 const HISTORY_LIMIT = 30;
@@ -36,12 +31,6 @@ const HISTORY_LIMIT = 30;
 // ─── Helpers ───────────────────────────────────────────────────────────
 const enc = new TextEncoder();
 const sse = (obj) => enc.encode(`data: ${JSON.stringify(obj)}\n\n`);
-const todayISO = () => new Date().toISOString().slice(0, 10);
-
-function costGBP(input, output) {
-  return (input / 1e6) * INPUT_USD_PER_MTOK * GBP_PER_USD
-       + (output / 1e6) * OUTPUT_USD_PER_MTOK * GBP_PER_USD;
-}
 
 function jsonError(message, status = 500) {
   return new Response(JSON.stringify({ error: message }), {
@@ -126,9 +115,8 @@ export async function POST(req) {
     return jsonError("SUPABASE_SERVICE_ROLE_KEY not configured in Vercel env vars.", 500);
   }
 
-  const authHeader = req.headers.get("authorization") || "";
-  if (!authHeader.startsWith("Bearer ")) return jsonError("Missing bearer token", 401);
-  const token = authHeader.slice(7);
+  const token = bearerToken(req);
+  if (!token) return jsonError("Missing bearer token", 401);
 
   let body;
   try { body = await req.json(); }
@@ -140,32 +128,23 @@ export async function POST(req) {
   }
 
   // Validate user (also gives us their UID)
-  let userId;
-  try {
-    const ur = await fetch(`${SK_URL}/auth/v1/user`, {
-      headers: { apikey: SK_ANON_KEY, Authorization: `Bearer ${token}` },
-    });
-    if (!ur.ok) return jsonError("Invalid auth", 401);
-    const user = await ur.json();
-    userId = user.id;
-  } catch {
-    return jsonError("Auth check failed", 401);
-  }
+  const userId = await requireUserId(token);
+  if (!userId) return jsonError("Invalid auth", 401);
 
-  // Load lesson + history + usage + widgets (parallel, under user RLS)
-  let lesson, unit, teacherContent, widgets, history, todayUsage;
+  // Daily/org cost backstop (opt-in via AI_DAILY_CAP_GBP / AI_ORG_MONTHLY_CAP_GBP; fails OPEN).
+  const budget = await enforceAiBudget({ userId, token, model: MODEL });
+  if (!budget.ok) return jsonError(budget.error, budget.status);
+
+  // Load lesson + history + widgets (parallel, under user RLS)
+  let lesson, unit, teacherContent, widgets, history;
   try {
-    [lesson, history, todayUsage, widgets] = await Promise.all([
+    [lesson, history, widgets] = await Promise.all([
       sb("lessons", { token, params: { id: `eq.${lessonId}` }, single: true }),
       sb("lesson_chat_messages", { token, params: {
         lesson_id: `eq.${lessonId}`,
         teacher_id: `eq.${userId}`,
         order: "created_at.asc",
         limit: String(HISTORY_LIMIT),
-      } }),
-      sb("daily_token_usage", { token, params: {
-        teacher_id: `eq.${userId}`,
-        day: `eq.${todayISO()}`,
       } }),
       sb("lesson_widgets", { token, params: {
         lesson_id: `eq.${lessonId}`,
@@ -175,7 +154,6 @@ export async function POST(req) {
     ]);
     history = history || [];
     widgets = widgets || [];
-    todayUsage = (todayUsage && todayUsage[0]) || { input_tokens: 0, output_tokens: 0 };
 
     [unit, teacherContent] = await Promise.all([
       sb("units", { token, params: { id: `eq.${lesson.unit_id}` }, single: true }).catch(() => ({})),
@@ -185,15 +163,6 @@ export async function POST(req) {
     ]);
   } catch (e) {
     return jsonError(`Couldn't load lesson context: ${e.message}`, 500);
-  }
-
-  // Daily cap check
-  const usedGBP = costGBP(todayUsage.input_tokens || 0, todayUsage.output_tokens || 0);
-  if (DAILY_CAP_GBP > 0 && usedGBP >= DAILY_CAP_GBP) {
-    return jsonError(
-      `Daily cap of £${DAILY_CAP_GBP.toFixed(2)} reached (used £${usedGBP.toFixed(3)}). Resets at midnight UTC.`,
-      429
-    );
   }
 
   // Persist user message before streaming starts
@@ -318,36 +287,16 @@ export async function POST(req) {
           controller.enqueue(sse({ type: "warning", message: `Reply shown but not saved: ${e.message}` }));
         }
 
-        // Increment token usage via service-role RPC
-        try {
-          const rpcRes = await fetch(`${SK_URL}/rest/v1/rpc/increment_token_usage`, {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-              apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-              Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-            },
-            body: JSON.stringify({
-              p_teacher_id: userId,
-              p_day: todayISO(),
-              p_input: inputTok,
-              p_output: outputTok,
-            }),
-          });
-          if (!rpcRes.ok) {
-            const t = await rpcRes.text().catch(() => "");
-            controller.enqueue(sse({ type: "warning", message: `Usage not recorded: ${t.slice(0, 120)}` }));
-          }
-        } catch (e) {
-          controller.enqueue(sse({ type: "warning", message: `Usage not recorded: ${e.message}` }));
-        }
+        // Increment token usage in the shared daily pool (service-role; best-effort).
+        // inputTok already folds in cache reads/writes, so pass it as the raw input.
+        await logTokenUsage(userId, { input_tokens: inputTok, output_tokens: outputTok });
 
         controller.enqueue(sse({
           type: "done",
           usage: {
             inputTokens: inputTok,
             outputTokens: outputTok,
-            costGBP: costGBP(inputTok, outputTok),
+            costGBP: costGBP(inputTok, outputTok, MODEL),
           },
         }));
       } catch (e) {

@@ -302,8 +302,8 @@ export function ChatSidebar({ open, onClose, lesson, onWidgetCreated }) {
       )}
       {usage && !error && (
         <div style={{ padding: "6px 18px", borderTop: `1px solid ${C.border}`, fontFamily: C.mono, fontSize: 10, color: C.dim, display: "flex", justifyContent: "space-between" }}>
-          <span>Last reply: {usage.inputTokens}↑ {usage.outputTokens}↓ tok</span>
-          <span>£{usage.costGBP.toFixed(4)}</span>
+          <span>Last reply: {usage.inputTokens ?? 0}↑ {usage.outputTokens ?? 0}↓ tok</span>
+          <span>£{(usage.costGBP ?? 0).toFixed(4)}</span>
         </div>
       )}
 

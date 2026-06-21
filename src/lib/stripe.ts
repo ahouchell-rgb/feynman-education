@@ -52,16 +52,28 @@ export async function createPortalSession(customerId: string, returnUrl: string)
   return { url: s.url };
 }
 
-/** Verify a Stripe webhook signature (t + v1 HMAC-SHA256 over `${t}.${body}`). */
+/** Verify a Stripe webhook signature (t + v1 HMAC-SHA256 over `${t}.${body}`).
+ *  Accepts ANY of the header's `v1=` values so a webhook signed during a secret
+ *  rotation (Stripe sends multiple v1 entries) still verifies. */
 export function verifyWebhook(rawBody: string, sigHeader: string | null): boolean {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!secret || !sigHeader) return false;
-  const parts = Object.fromEntries(sigHeader.split(",").map((kv) => kv.split("=")));
-  const t = parts.t, v1 = parts.v1;
-  if (!t || !v1) return false;
+  let t: string | undefined;
+  const sigs: string[] = [];
+  for (const part of sigHeader.split(",")) {
+    const eq = part.indexOf("=");
+    if (eq === -1) continue;
+    const k = part.slice(0, eq).trim(), v = part.slice(eq + 1).trim();
+    if (k === "t") t = v;
+    else if (k === "v1") sigs.push(v);
+  }
+  if (!t || !sigs.length) return false;
   const expected = createHmac("sha256", secret).update(`${t}.${rawBody}`).digest("hex");
-  try {
-    const a = Buffer.from(expected), b = Buffer.from(v1);
-    return a.length === b.length && timingSafeEqual(a, b);
-  } catch { return false; }
+  const a = Buffer.from(expected);
+  return sigs.some((v1) => {
+    try {
+      const b = Buffer.from(v1);
+      return a.length === b.length && timingSafeEqual(a, b);
+    } catch { return false; }
+  });
 }
