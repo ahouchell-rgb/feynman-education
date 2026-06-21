@@ -55,6 +55,8 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
           {[
             { href: "/", label: "This week" },
             { href: "/curriculum", label: "Curriculum" },
+            // Content review pipeline is for authors / department leads.
+            ...(profile?.role === "admin" || profile?.is_lead ? [{ href: "/content", label: "Content" }] : []),
             { href: "/slides", label: "Slides" },
             { href: "/parents", label: "Parents" },
             { href: "/assessments", label: "Assess" },
