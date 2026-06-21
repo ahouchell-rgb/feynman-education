@@ -11,6 +11,7 @@
 
 import { supaRest } from "@/lib/supabaseRest";
 import { SUBJECT_SELECT, subjectName } from "@/lib/subject";
+import { SK_URL, SK_ANON, bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, json as j } from "@/lib/serverHelpers";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -18,10 +19,6 @@ export const maxDuration = 60;
 const MODEL = "claude-sonnet-4-6";
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION = "2023-06-01";
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
-const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });
-const todayISO = () => new Date().toISOString().slice(0, 10);
 const strip = (s: unknown) => String(s ?? "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 
 const SYSTEM = `You write a REVISION BOOKLET for a UK secondary pupil in the subject given below, as ONE self-contained HTML document that prints cleanly on A4 in black on white.
@@ -37,19 +34,10 @@ Include, in this order:
 
 Accurate to KS3-GCSE and to the unit content; do NOT invent beyond it. Encouraging, clear, UK spelling, SI units. Inline all CSS; NO external resources except the provided resource links. Return ONLY the HTML inside a single \`\`\`html ... \`\`\` code block.`;
 
-function extractHtml(text: string): string {
-  const fenced = text.match(/```html\s*([\s\S]*?)```/i);
-  if (fenced) return fenced[1].trim();
-  const doc = text.match(/<!doctype[\s\S]*<\/html>|<html[\s\S]*<\/html>/i);
-  if (doc) return doc[0].trim();
-  return text.trim();
-}
-
 export async function POST(req: Request) {
   if (!process.env.ANTHROPIC_API_KEY) return j({ error: "ANTHROPIC_API_KEY not configured." }, 500);
-  const auth = req.headers.get("authorization") || "";
-  if (!auth.startsWith("Bearer ")) return j({ error: "Sign in to use the AI assistant." }, 401);
-  const token = auth.slice(7);
+  const token = bearerToken(req);
+  if (!token) return j({ error: "Sign in to use the AI assistant." }, 401);
 
   let body: any;
   try { body = await req.json(); } catch { return j({ error: "Invalid JSON body" }, 400); }
@@ -68,12 +56,8 @@ export async function POST(req: Request) {
     }).catch(() => []);
   } catch { return j({ error: "Unit not found" }, 404); }
 
-  let userId: string;
-  try {
-    const u = await fetch(`${SK_URL}/auth/v1/user`, { headers: { apikey: SK_ANON, Authorization: `Bearer ${token}` } });
-    if (!u.ok) return j({ error: "Invalid or expired session — sign in again." }, 401);
-    userId = (await u.json()).id;
-  } catch { return j({ error: "Auth check failed." }, 401); }
+  const userId = await requireUserId(token);
+  if (!userId) return j({ error: "Invalid or expired session — sign in again." }, 401);
 
   // Build full resource URLs from the crosswalk (origin + href), de-duped by name.
   const seen = new Set<string>();
@@ -109,19 +93,8 @@ export async function POST(req: Request) {
   if (!res.ok) return j({ error: `Claude ${res.status}: ${(await res.text().catch(() => "")).slice(0, 300)}` }, 502);
 
   const data = await res.json();
-  const html = extractHtml((data.content || []).filter((b: any) => b.type === "text").map((b: any) => b.text).join(""));
-
-  try {
-    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      const u = data.usage || {};
-      const inputTotal = (u.input_tokens || 0) + (u.cache_read_input_tokens || 0) + (u.cache_creation_input_tokens || 0);
-      await fetch(`${SK_URL}/rest/v1/rpc/increment_token_usage`, {
-        method: "POST",
-        headers: { "content-type": "application/json", apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}` },
-        body: JSON.stringify({ p_teacher_id: userId, p_day: todayISO(), p_input: inputTotal, p_output: u.output_tokens || 0 }),
-      });
-    }
-  } catch { /* best-effort */ }
+  const html = extractHtml(anthropicText(data));
+  await logTokenUsage(userId, data.usage);
 
   if (!/[<][a-z]/i.test(html)) return j({ error: "The booklet came back empty — try again." }, 502);
   return j({ html });
