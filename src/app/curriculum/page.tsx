@@ -2,7 +2,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { sk } from "@/lib/sk";
-import { C, DISC, TERM_ORDER, unitAccent } from "@/lib/theme";
+import { C, DISC, SUBJECTS, TERM_ORDER, unitAccent } from "@/lib/theme";
+
+const subjColor = (slug) => slug === "science" ? C.grn : (SUBJECTS[slug]?.color || C.dim);
 import { AppShell } from "@/components/AppShell";
 
 function CurriculumContent() {
@@ -10,12 +12,15 @@ function CurriculumContent() {
   const [groups, setGroups] = useState([]);
   const [units, setUnits] = useState({});
   const [selectedYearId, setSelectedYearId] = useState(null);
-  const [subjectFilter, setSubjectFilter] = useState("all");
+  const [subjects, setSubjects] = useState([]);
+  const [subjectFilter, setSubjectFilter] = useState("all"); // subject slug | "all"
+  const [discFilter, setDiscFilter] = useState("all");        // science discipline | "all"
 
   useEffect(() => {
     (async () => {
       const gs = await sk.q("groups", { params: { order: "sort_order.asc" } });
       setGroups(gs);
+      sk.q("subjects", { params: { select: "slug,name", order: "sort_order.asc" } }).then(setSubjects).catch(() => {});
       const all = await sk.q("units", { params: { select: "*,subject:subjects(name,slug)", order: "sort_order.asc" } });
       const byGroup = {};
       gs.forEach(g => { byGroup[g.id] = all.filter(u => u.group_id === g.id); });
@@ -55,30 +60,45 @@ function CurriculumContent() {
         </div>
 
         <div style={{ display: "flex", gap: 8, paddingBottom: 12, flexWrap: "wrap" }}>
-          {[
-            { id: "all", label: "All", color: null },
-            { id: "biology", label: "Biology", color: DISC.biology.color },
-            { id: "chemistry", label: "Chemistry", color: DISC.chemistry.color },
-            { id: "physics", label: "Physics", color: DISC.physics.color },
-          ].map(s => {
-            const isActive = subjectFilter === s.id;
+          {[{ slug: "all", name: "All" }, ...subjects].map(s => {
+            const isActive = subjectFilter === s.slug;
+            const col = s.slug === "all" ? null : subjColor(s.slug);
             return (
-              <button key={s.id} onClick={() => setSubjectFilter(s.id)}
+              <button key={s.slug} onClick={() => { setSubjectFilter(s.slug); if (s.slug !== "all" && s.slug !== "science") setDiscFilter("all"); }}
                 style={{ background: isActive ? C.accent : "transparent", color: isActive ? C.accentFg : C.dim, border: `1px solid ${isActive ? C.accent : C.rule}`, cursor: "pointer", padding: "6px 14px", fontFamily: C.mono, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", borderRadius: 999, display: "flex", alignItems: "center", gap: 6, transition: "all .15s" }}>
-                {s.color && <span style={{ width: 7, height: 7, borderRadius: "50%", background: s.color, display: "inline-block" }} />}
-                {s.label}
+                {col && <span style={{ width: 7, height: 7, borderRadius: "50%", background: col, display: "inline-block" }} />}
+                {s.name}
               </button>
             );
           })}
         </div>
       </div>
 
+      {/* Science discipline sub-filter — only when viewing Science (or All). */}
+      {(subjectFilter === "all" || subjectFilter === "science") && (
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: -20, marginBottom: 32 }}>
+          {[{ id: "all", label: "All science" }, { id: "biology", label: "Biology", c: DISC.biology.color }, { id: "chemistry", label: "Chemistry", c: DISC.chemistry.color }, { id: "physics", label: "Physics", c: DISC.physics.color }].map(s => {
+            const isActive = discFilter === s.id;
+            return (
+              <button key={s.id} onClick={() => setDiscFilter(s.id)}
+                style={{ background: isActive ? `${s.c || C.dim}1a` : "transparent", color: isActive ? (s.c || C.text) : C.dim, border: `1px solid ${isActive ? (s.c || C.rule) : C.rule}`, cursor: "pointer", padding: "4px 11px", fontFamily: C.mono, fontSize: 10, letterSpacing: "0.05em", textTransform: "uppercase", borderRadius: 999, display: "flex", alignItems: "center", gap: 6 }}>
+                {s.c && <span style={{ width: 6, height: 6, borderRadius: "50%", background: s.c }} />}
+                {s.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {(() => {
         const year = groups.find(g => g.id === selectedYearId);
         if (!year) return null;
-        const yearUnits = (units[year.id] || []).filter(u =>
-          subjectFilter === "all" || u.discipline === subjectFilter
-        );
+        const yearUnits = (units[year.id] || []).filter(u => {
+          const su = u.subject?.slug || (u.discipline ? "science" : null);
+          const subjOk = subjectFilter === "all" || su === subjectFilter;
+          const discOk = discFilter === "all" || u.discipline === discFilter;
+          return subjOk && discOk;
+        });
         const byTerm = {};
         yearUnits.forEach(u => {
           const t = u.term || "untermed";
@@ -90,7 +110,7 @@ function CurriculumContent() {
         if (yearUnits.length === 0) {
           return (
             <div style={{ padding: "60px 0", textAlign: "center", color: C.dim, fontFamily: C.mono, fontSize: 12, letterSpacing: "0.06em" }}>
-              No {subjectFilter !== "all" ? DISC[subjectFilter]?.label.toLowerCase() + " " : ""}units for {year.label}.
+              No units for {year.label}{subjectFilter !== "all" || discFilter !== "all" ? " in this filter" : ""}.
             </div>
           );
         }
