@@ -9,6 +9,9 @@ export const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 export const SK_ANON =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 
+export const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
+export const ANTHROPIC_VERSION = "2023-06-01";
+
 export const AI_MODELS = { OPUS: "claude-opus-4-8", SONNET: "claude-sonnet-4-6" } as const;
 /** Cheap model for bulk/derived generation; Opus only for authoring. */
 export function pickModel(kind: "authoring" | "bulk"): string {
