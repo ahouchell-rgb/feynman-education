@@ -6,14 +6,13 @@ import { buildRestUrl, restError } from "./supabaseRest";
 /* ─── Config — UNIFIED (Phase 3): one project = the retrieval-app anchor. ───
    The teacher app's data + auth now live in the anchor, so SK_* point there.
    RET_* are kept as aliases (retrieval IS the anchor) so existing imports compile.
-   SK_API_KEY (the x-sciencekit-key shared secret) is retained ONLY for the server
-   cron's service path until those RPCs are re-gated by role (Phase 5); client calls
-   no longer send it. */
+   The x-sciencekit-key shared secret is NOT exported here: this is a "use client"
+   module, so any literal would be bundled into client JS. Server routes/crons read
+   it from process.env.SK_API_KEY instead; client calls rely on the user JWT + RLS. */
 export const SK_URL  = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 export const SK_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 export const RET_URL = SK_URL;
 export const RET_KEY = SK_KEY;
-export const SK_API_KEY = "MIHy7pb5UoumNqcqxkGfAREqRQkWFP64M1eYPsvc5oo";
 
 const STORAGE_KEY = "sk_auth";
 const REFRESH_BUFFER_MS = 60 * 1000; // refresh 60s before expiry
