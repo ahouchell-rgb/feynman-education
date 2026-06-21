@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ret, sk } from "@/lib/sk";
 import { C } from "@/lib/theme";
 import { Btn, Card } from "@/lib/primitives";
@@ -14,7 +14,8 @@ interface UnitGapsProps {
   contextClass?: { name?: string; retrieval_class_ids?: string[] } | null;
 }
 
-interface Gap { topic_id: string; topic_name: string; pct_correct: number; marked: number; students: number; }
+interface Gap { topic_id: string; topic_name: string; pct_correct: number; marked: number; students: number; objective_id?: string | null; objective_title?: string | null; }
+interface ObjGroup { id: string | null; title: string | null; pct: number; topics: Gap[]; }
 
 /**
  * UnitGaps — closes the loop on the planning side. For the class being taught
@@ -79,6 +80,22 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unitId, retIds.join(",")]);
 
+  // Group the flat gap rows by mastery-graph objective: an objective heading (its
+  // weakest %) with the topics nested beneath. Topics not yet mapped to an objective
+  // fall back to their own flat row (title === null), so nothing is hidden pre-crosswalk.
+  const objGroups = useMemo<ObjGroup[] | null>(() => {
+    if (!gaps) return null;
+    const map = new Map<string, ObjGroup>();
+    for (const g of gaps) {
+      const key = g.objective_id || `topic:${g.topic_id}`;
+      const cur = map.get(key) || { id: g.objective_id || null, title: g.objective_title || null, pct: 101, topics: [] };
+      cur.topics.push(g);
+      cur.pct = Math.min(cur.pct, g.pct_correct);
+      map.set(key, cur);
+    }
+    return [...map.values()].sort((a, b) => a.pct - b.pct);
+  }, [gaps]);
+
   if (retIds.length === 0) return null;        // no linked retrieval class
   if (gaps && gaps.length === 0) return null;  // nothing weak enough to show
 
@@ -127,15 +144,40 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
         <div style={{ fontFamily: C.mono, fontSize: 12, color: C.dim }}>Loading retrieval data…</div>
       ) : (
         <>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>
-            {gaps.map((g) => {
-              const pct = Math.round(g.pct_correct);
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 14 }}>
+            {(objGroups || []).map((grp) => {
+              const pct = Math.round(grp.pct);
               const col = pct >= 70 ? C.grn : pct >= 50 ? C.amb : C.red;
+              // Untagged topic (no objective yet) → flat row, as before.
+              if (!grp.title) {
+                const t = grp.topics[0];
+                return (
+                  <div key={`t-${t.topic_id}`} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
+                    <span style={{ fontFamily: C.serif, fontSize: 18, fontWeight: 600, color: col, minWidth: 42, textAlign: "right" }}>{pct}%</span>
+                    <span style={{ flex: 1, minWidth: 0, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.topic_name}</span>
+                    <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, flexShrink: 0 }}>{t.marked} marked</span>
+                  </div>
+                );
+              }
+              // Objective group → heading (weakest %) + nested topics.
               return (
-                <div key={g.topic_id} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
-                  <span style={{ fontFamily: C.serif, fontSize: 18, fontWeight: 600, color: col, minWidth: 42, textAlign: "right" }}>{pct}%</span>
-                  <span style={{ flex: 1, minWidth: 0, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{g.topic_name}</span>
-                  <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, flexShrink: 0 }}>{g.marked} marked</span>
+                <div key={`o-${grp.id}`} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
+                    <span style={{ fontFamily: C.serif, fontSize: 18, fontWeight: 600, color: col, minWidth: 42, textAlign: "right" }}>{pct}%</span>
+                    <span style={{ flex: 1, minWidth: 0, color: C.text, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{grp.title}</span>
+                    <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, flexShrink: 0 }}>{grp.topics.length} topic{grp.topics.length === 1 ? "" : "s"}</span>
+                  </div>
+                  {grp.topics.map((t) => {
+                    const tp = Math.round(t.pct_correct);
+                    const tc = tp >= 70 ? C.grn : tp >= 50 ? C.amb : C.red;
+                    return (
+                      <div key={t.topic_id} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 12, paddingLeft: 52 }}>
+                        <span style={{ fontFamily: C.mono, fontSize: 12, fontWeight: 600, color: tc, minWidth: 32, textAlign: "right" }}>{tp}%</span>
+                        <span style={{ flex: 1, minWidth: 0, color: C.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.topic_name}</span>
+                        <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, flexShrink: 0 }}>{t.marked} marked</span>
+                      </div>
+                    );
+                  })}
                 </div>
               );
             })}
