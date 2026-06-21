@@ -22,6 +22,12 @@ comment on column public.decks.is_public is
 comment on column public.decks.share_token is
   'Non-guessable capability token embedded in /slides/shared/<token>. Minted on first share.';
 
+-- Safety: this whole feature depends on RLS being enforced on public.decks
+-- (the app already secures owner reads via JWT + an owner policy, so RLS is
+-- expected to be on). Assert it explicitly — without RLS, the anon GRANT below
+-- would expose EVERY deck. Idempotent no-op if already enabled.
+alter table public.decks enable row level security;
+
 -- Public read: any reader (anon or authenticated) may SELECT a row that is
 -- public. This is additive to the existing owner policies — it never grants
 -- INSERT/UPDATE/DELETE, so non-owners can read a shared deck but cannot mutate it.
