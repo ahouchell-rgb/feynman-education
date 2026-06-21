@@ -14,8 +14,8 @@
 import { supaRest } from "@/lib/supabaseRest";
 import { SUBJECT_SELECT, subjectName } from "@/lib/subject";
 import {
-  SK_URL, SK_ANON, AI_MODELS, ANTHROPIC_URL, ANTHROPIC_VERSION,
-  bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage,
+  SK_URL, SK_ANON, AI_MODELS,
+  bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, callAnthropic,
 } from "@/lib/serverHelpers";
 import { costGBP, enforceAiBudget } from "@/lib/aiBudget";
 
@@ -144,11 +144,10 @@ export async function POST(req: Request) {
   // Generate (non-streaming — the teacher gets one finished sheet).
   let res: Response;
   try {
-    res = await fetch(ANTHROPIC_URL, {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": ANTHROPIC_VERSION },
-      body: JSON.stringify({ model: MODEL, max_tokens: MAX_OUTPUT_TOKENS, messages: [{ role: "user", content: messageContent }] }),
-    });
+    res = await callAnthropic(
+      { model: MODEL, max_tokens: MAX_OUTPUT_TOKENS, messages: [{ role: "user", content: messageContent }] },
+      { apiKey: process.env.ANTHROPIC_API_KEY },
+    );
   } catch (e: any) {
     return jsonError(`Anthropic request failed: ${e.message}`, 502);
   }

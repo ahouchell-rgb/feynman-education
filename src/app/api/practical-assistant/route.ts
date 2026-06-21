@@ -11,15 +11,14 @@
 
 import { supaRest } from "@/lib/supabaseRest";
 import { SUBJECT_SELECT, subjectName, isScience } from "@/lib/subject";
-import { SK_URL, SK_ANON, bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, json as j } from "@/lib/serverHelpers";
+import { SK_URL, SK_ANON, bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, callAnthropic, json as j } from "@/lib/serverHelpers";
 import { enforceAiBudget } from "@/lib/aiBudget";
+import { maybeFactcheck } from "@/lib/factcheck";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const MODEL = "claude-sonnet-4-6";
-const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const ANTHROPIC_VERSION = "2023-06-01";
 const strip = (s: unknown) => String(s ?? "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 
 const SYSTEM = `You write a REQUIRED PRACTICAL sheet for a UK secondary science teacher and technician, as ONE self-contained HTML document that prints cleanly on A4 in black on white.
@@ -69,17 +68,13 @@ export async function POST(req: Request) {
 
   let res: Response;
   try {
-    res = await fetch(ANTHROPIC_URL, {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": ANTHROPIC_VERSION },
-      body: JSON.stringify({
-        model: MODEL, max_tokens: 4096,
-        system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
-        messages: [{ role: "user", content: `${ctx}\n\n${isScience(unit)
-          ? "Write the required practical sheet."
-          : "This subject may not have a lab practical — write a 'required task / activity' sheet in the same structure (apparatus becomes materials/resources; the risk assessment becomes any safety or wellbeing notes, or omit if none), for the key hands-on activity in this unit."}` }],
-      }),
-    });
+    res = await callAnthropic({
+      model: MODEL, max_tokens: 4096,
+      system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
+      messages: [{ role: "user", content: `${ctx}\n\n${isScience(unit)
+        ? "Write the required practical sheet."
+        : "This subject may not have a lab practical — write a 'required task / activity' sheet in the same structure (apparatus becomes materials/resources; the risk assessment becomes any safety or wellbeing notes, or omit if none), for the key hands-on activity in this unit."}` }],
+    }, { apiKey: process.env.ANTHROPIC_API_KEY });
   } catch (e: any) { return j({ error: `Request to Claude failed: ${e.message}` }, 502); }
   if (!res.ok) return j({ error: `Claude ${res.status}: ${(await res.text().catch(() => "")).slice(0, 300)}` }, 502);
 
@@ -88,5 +83,7 @@ export async function POST(req: Request) {
   await logTokenUsage(userId, data.usage);
 
   if (!/[<][a-z]/i.test(html)) return j({ error: "The sheet came back empty — try again." }, 502);
-  return j({ html });
+
+  const factcheck = await maybeFactcheck({ html, ctx, apiKey: process.env.ANTHROPIC_API_KEY });
+  return j(factcheck ? { html, factcheck } : { html });
 }

@@ -12,8 +12,8 @@
 import { supaRest } from "@/lib/supabaseRest";
 import { HOUSE_LESSON_STYLE } from "@/lib/lessonStyle";
 import {
-  SK_URL, SK_ANON, AI_MODELS, ANTHROPIC_URL, ANTHROPIC_VERSION,
-  bearerToken, requireUserId, logTokenUsage,
+  SK_URL, SK_ANON, AI_MODELS,
+  bearerToken, requireUserId, logTokenUsage, callAnthropic,
 } from "@/lib/serverHelpers";
 import { costGBP, enforceAiBudget } from "@/lib/aiBudget";
 
@@ -194,29 +194,25 @@ export async function POST(req) {
   const messages = [...historyMsgs, { role: "user", content: userMessage }];
   const systemPrompt = buildSystemPrompt({ lesson, unit, teacherContent, widgets });
 
-  // Call Anthropic with streaming
+  // Call Anthropic with streaming. We retry only the INITIAL connection here (via
+  // callAnthropic) — once the stream is established its body is piped through
+  // untouched, so a mid-stream failure is NOT retried (that would corrupt output).
+  // callAnthropic returns successful responses without reading the body, so the SSE
+  // stream is left intact for the reader below.
   let anthropicRes;
   try {
-    anthropicRes = await fetch(ANTHROPIC_URL, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": ANTHROPIC_VERSION,
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: MAX_OUTPUT_TOKENS,
-        // Cache the large, lesson-stable system prompt (base instructions +
-        // HOUSE_LESSON_STYLE + lesson context) on a 1-hour TTL so it survives the
-        // gaps between a teacher's chat turns. NOTE: Sonnet's cache floor is 2048
-        // tokens — base + HOUSE_LESSON_STYLE is ~1.2k, so this only actually caches
-        // once the lesson carries real content; sparse lessons silently skip it.
-        system: [{ type: "text", text: systemPrompt, cache_control: { type: "ephemeral", ttl: "1h" } }],
-        messages,
-        stream: true,
-      }),
-    });
+    anthropicRes = await callAnthropic({
+      model: MODEL,
+      max_tokens: MAX_OUTPUT_TOKENS,
+      // Cache the large, lesson-stable system prompt (base instructions +
+      // HOUSE_LESSON_STYLE + lesson context) on a 1-hour TTL so it survives the
+      // gaps between a teacher's chat turns. NOTE: Sonnet's cache floor is 2048
+      // tokens — base + HOUSE_LESSON_STYLE is ~1.2k, so this only actually caches
+      // once the lesson carries real content; sparse lessons silently skip it.
+      system: [{ type: "text", text: systemPrompt, cache_control: { type: "ephemeral", ttl: "1h" } }],
+      messages,
+      stream: true,
+    }, { apiKey: process.env.ANTHROPIC_API_KEY });
   } catch (e) {
     return jsonError(`Anthropic request failed: ${e.message}`, 502);
   }

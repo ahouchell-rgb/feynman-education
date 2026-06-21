@@ -11,8 +11,8 @@
 
 import { HOUSE_LESSON_STYLE } from "@/lib/lessonStyle";
 import {
-  AI_MODELS, ANTHROPIC_URL, ANTHROPIC_VERSION,
-  bearerToken, requireUserId, json, logTokenUsage,
+  AI_MODELS,
+  bearerToken, requireUserId, json, logTokenUsage, callAnthropic,
 } from "@/lib/serverHelpers";
 import { enforceAiBudget } from "@/lib/aiBudget";
 
@@ -195,33 +195,25 @@ export async function POST(req) {
 
   let res;
   try {
-    res = await fetch(ANTHROPIC_URL, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": ANTHROPIC_VERSION,
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: MAX_OUTPUT_TOKENS,
-        // 1-hour TTL (write 2x, read 0.1x). Authoring is bursty: a teacher fires
-        // several edits at the SAME deck with review/think-time between them, which
-        // routinely exceeds the default 5-min cache. The hour-long window keeps the
-        // SYSTEM scaffold AND the deck snapshot warm across the whole editing session,
-        // so repeated whole-deck Opus edits read the prefix at 0.1x instead of re-writing.
-        system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral", ttl: "1h" } }],
-        messages: [{
-          role: "user",
-          content: [
-            { type: "text", text: deckText, cache_control: { type: "ephemeral", ttl: "1h" } },
-            { type: "text", text: `Instruction: ${instruction}` },
-          ],
-        }],
-        tools: [TOOL],
-        tool_choice: { type: "tool", name: "apply_edits" },
-      }),
-    });
+    res = await callAnthropic({
+      model: MODEL,
+      max_tokens: MAX_OUTPUT_TOKENS,
+      // 1-hour TTL (write 2x, read 0.1x). Authoring is bursty: a teacher fires
+      // several edits at the SAME deck with review/think-time between them, which
+      // routinely exceeds the default 5-min cache. The hour-long window keeps the
+      // SYSTEM scaffold AND the deck snapshot warm across the whole editing session,
+      // so repeated whole-deck Opus edits read the prefix at 0.1x instead of re-writing.
+      system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral", ttl: "1h" } }],
+      messages: [{
+        role: "user",
+        content: [
+          { type: "text", text: deckText, cache_control: { type: "ephemeral", ttl: "1h" } },
+          { type: "text", text: `Instruction: ${instruction}` },
+        ],
+      }],
+      tools: [TOOL],
+      tool_choice: { type: "tool", name: "apply_edits" },
+    }, { apiKey: process.env.ANTHROPIC_API_KEY });
   } catch (e) {
     return json({ error: `Request to Claude failed: ${e.message}` }, 502);
   }
