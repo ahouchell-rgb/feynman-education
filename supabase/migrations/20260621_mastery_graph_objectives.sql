@@ -34,6 +34,17 @@ create table if not exists public.objectives (
   created_at  timestamptz not null default now()
 );
 
+-- The earlier subject_foundation migration (20260620) may have already created
+-- `objectives` with a DIFFERENT, superseded shape (strand_id/spec_id, no
+-- unit_id/lesson_id/spec_ref). On a fresh `db reset` it runs first, so the
+-- `create table if not exists` above no-ops and the columns this migration's
+-- indexes + backfill rely on would be missing. Add them idempotently so this
+-- migration is order-independent and replays cleanly on the live anchor (where
+-- they already exist, so these are no-ops).
+alter table public.objectives add column if not exists unit_id   text references public.units(id)   on delete cascade;
+alter table public.objectives add column if not exists lesson_id uuid references public.lessons(id) on delete cascade;
+alter table public.objectives add column if not exists spec_ref  text;
+
 comment on table public.objectives is
   'Mastery-graph node: a curriculum objective (lesson-grain; rows with lesson_id null are unit-level fallbacks). Subject-scoped, school-agnostic. Non-personal taxonomy.';
 

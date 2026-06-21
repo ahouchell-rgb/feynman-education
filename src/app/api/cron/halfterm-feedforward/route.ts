@@ -11,6 +11,7 @@
 //   ANTHROPIC_API_KEY           — scaffolds
 //   SK_API_KEY                  — the x-sciencekit-key shared secret that gates the retrieval RPCs
 import { buildFeedforwardPptx } from "@/lib/feedforwardPptx";
+import { cronAuthorized } from "@/lib/serverHelpers";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -88,10 +89,7 @@ async function scaffold(topic: string, questions: string[]): Promise<any[]> {
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const force = url.searchParams.get("force") === "1";
-  // auth: Vercel cron header OR our CRON_SECRET bearer
-  const authed = req.headers.get("x-vercel-cron") != null ||
-    (process.env.CRON_SECRET && req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`);
-  if (!authed) return j({ error: "unauthorized" }, 401);
+  if (!cronAuthorized(req)) return j({ error: "unauthorized" }, 401);
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return j({ error: "SUPABASE_SERVICE_ROLE_KEY missing" }, 500);
   if (!SK_API_KEY) return j({ error: "SK_API_KEY missing (needed to read retrieval data)" }, 500);
 

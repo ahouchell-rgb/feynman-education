@@ -5,6 +5,7 @@
 //   CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, WONDE_TOKEN, WONDE_SCHOOL_ID
 
 import { wondeConfigured, runMisSync } from "@/lib/wonde";
+import { cronAuthorized } from "@/lib/serverHelpers";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -13,9 +14,7 @@ const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });
 
 export async function GET(req: Request) {
-  const authed = req.headers.get("x-vercel-cron") != null ||
-    (process.env.CRON_SECRET && req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`);
-  if (!authed) return j({ error: "unauthorized" }, 401);
+  if (!cronAuthorized(req)) return j({ error: "unauthorized" }, 401);
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return j({ error: "SUPABASE_SERVICE_ROLE_KEY missing" }, 500);
   if (!wondeConfigured()) return j({ skipped: "MIS not configured" });
 

@@ -18,6 +18,7 @@ import {
   fetchTaughtThisWeek, fetchWeakTopics, generateParentReportHtml, weekStartISO, weekLabel,
 } from "@/lib/parentReport";
 import { sendEmail, emailConfigured } from "@/lib/email";
+import { cronAuthorized } from "@/lib/serverHelpers";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -44,9 +45,7 @@ export async function GET(req: Request) {
   const force = url.searchParams.get("force") === "1";
   const limit = Math.min(Number(url.searchParams.get("limit")) || 500, 2000);
 
-  const authed = req.headers.get("x-vercel-cron") != null ||
-    (process.env.CRON_SECRET && req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`);
-  if (!authed) return j({ error: "unauthorized" }, 401);
+  if (!cronAuthorized(req)) return j({ error: "unauthorized" }, 401);
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return j({ error: "SUPABASE_SERVICE_ROLE_KEY missing" }, 500);
   if (!process.env.SK_API_KEY) return j({ error: "SK_API_KEY missing (needed to read retrieval data)" }, 500);
 

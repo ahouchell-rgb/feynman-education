@@ -9,6 +9,7 @@
 //   CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, SK_API_KEY
 
 import { rollupTrust, mapPool, type EnrichedClass } from "@/lib/trustBenchmark";
+import { cronAuthorized } from "@/lib/serverHelpers";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -17,9 +18,7 @@ const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });
 
 export async function GET(req: Request) {
-  const authed = req.headers.get("x-vercel-cron") != null ||
-    (process.env.CRON_SECRET && req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`);
-  if (!authed) return j({ error: "unauthorized" }, 401);
+  if (!cronAuthorized(req)) return j({ error: "unauthorized" }, 401);
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) return j({ error: "SUPABASE_SERVICE_ROLE_KEY missing" }, 500);
   const secret = process.env.SK_API_KEY || "";

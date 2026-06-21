@@ -29,6 +29,15 @@ describe("verifyWebhook", () => {
     expect(verifyWebhook(body, signedHeader(body, "whsec_wrong"))).toBe(false);
   });
 
+  it("accepts a payload when ONE of several v1 signatures matches (secret rotation)", () => {
+    const body = JSON.stringify({ id: "evt_1" });
+    const good = createHmac("sha256", SECRET).update(`1700000000.${body}`).digest("hex");
+    const bad = createHmac("sha256", "whsec_old_secret").update(`1700000000.${body}`).digest("hex");
+    // Stripe sends both signatures during a webhook-secret rotation.
+    expect(verifyWebhook(body, `t=1700000000,v1=${bad},v1=${good}`)).toBe(true);
+    expect(verifyWebhook(body, `t=1700000000,v1=${good},v1=${bad}`)).toBe(true);
+  });
+
   it("rejects a missing or malformed header", () => {
     const body = "{}";
     expect(verifyWebhook(body, null)).toBe(false);
