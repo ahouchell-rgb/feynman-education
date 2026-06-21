@@ -3,11 +3,33 @@
 // Handles checkout.session.completed + customer.subscription.{updated,deleted}.
 
 import { verifyWebhook } from "@/lib/stripe";
+import { SK_URL as SK_URL_SHARED } from "@/lib/serverHelpers";
 
 export const runtime = "nodejs";
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
+const SK_URL = SK_URL_SHARED;
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });
+
+// Idempotency guard: claim this event id (service role). Returns true if WE
+// claimed it (first delivery → process), false if it already existed (a Stripe
+// retry → skip). Race-safe via the primary key: with Prefer:resolution=ignore-
+// duplicates a duplicate INSERT yields an empty body, so an empty representation
+// means "already processed". On any transport error we fail OPEN (return true)
+// so a transient DB blip doesn't drop a real event — at-most-once is best-effort,
+// correctness still comes from the upsert being idempotent on owner_id.
+async function claimEvent(eventId: string): Promise<boolean> {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  try {
+    const r = await fetch(`${SK_URL}/rest/v1/stripe_webhook_events`, {
+      method: "POST",
+      headers: { apikey: key, Authorization: `Bearer ${key}`, "content-type": "application/json", Prefer: "resolution=ignore-duplicates,return=representation" },
+      body: JSON.stringify({ event_id: eventId }),
+    });
+    if (!r.ok) return true; // can't dedupe → process rather than silently drop
+    const rows = await r.json().catch(() => []);
+    return Array.isArray(rows) && rows.length > 0; // inserted a row → first time
+  } catch { return true; }
+}
 
 async function upsertSub(row: any) {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -32,6 +54,10 @@ export async function POST(req: Request) {
   if (!verifyWebhook(raw, req.headers.get("stripe-signature"))) return j({ error: "bad signature" }, 400);
 
   let event: any; try { event = JSON.parse(raw); } catch { return j({ error: "bad body" }, 400); }
+
+  // Dedupe: Stripe retries deliver the same event id; process each at most once.
+  if (event?.id && !(await claimEvent(event.id))) return j({ received: true, deduped: true });
+
   const obj = event?.data?.object || {};
   const userId = obj?.metadata?.user_id || obj?.client_reference_id || null;
 
