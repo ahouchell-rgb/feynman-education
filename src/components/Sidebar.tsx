@@ -57,6 +57,7 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             { href: "/curriculum", label: "Curriculum" },
             { href: "/slides", label: "Slides" },
             { href: "/parents", label: "Parents" },
+            { href: "/assessments", label: "Assess" },
             // School: dashboard for hod/slt, self-serve onboarding for everyone else.
             { href: "/school", label: "School" },
             // Trust dashboard is only for MAT leaders.
