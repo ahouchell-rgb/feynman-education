@@ -13,6 +13,7 @@
 // Env: ANTHROPIC_API_KEY + SUPABASE_SERVICE_ROLE_KEY (consumed by slides-assistant).
 
 import { supaRest } from "@/lib/supabaseRest";
+import { getEntitlement, can } from "@/lib/entitlements";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -49,6 +50,13 @@ export async function POST(req: Request) {
   try { body = await req.json(); } catch { return j({ error: "Invalid JSON body" }, 400); }
   const { unitId, lessonId, focus } = body || {};
   if (!unitId) return j({ error: "unitId is required" }, 400);
+
+  // Entitlement gate (soft): only enforced when BILLING_ENFORCED=1, so current
+  // pilots stay open until billing is switched on.
+  if (process.env.BILLING_ENFORCED === "1") {
+    const ent = await getEntitlement({ skUrl: SK_URL, apikey: SK_ANON, bearer: token });
+    if (!can(ent, "ai_generators")) return j({ error: "Lesson generation is a Pro feature. Upgrade on the Billing page.", upgrade: true }, 402);
+  }
 
   // Load unit (+ optional lesson) context under the teacher's RLS.
   let unit: any, lesson: any = null;

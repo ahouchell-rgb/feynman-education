@@ -63,6 +63,7 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             ...(profile?.trust_role === "trust_lead" ? [{ href: "/trust", label: "Trust" }] : []),
             { href: "/manage", label: "Manage" },
             { href: "/setup", label: "Setup" },
+            { href: "/billing", label: "Billing" },
           ].map(item => {
             const active = isActive(item.href) || (item.href === "/curriculum" && pathname?.startsWith("/unit/"));
             return (
