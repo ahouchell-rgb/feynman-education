@@ -11,10 +11,11 @@
 
 import { HOUSE_LESSON_STYLE } from "@/lib/lessonStyle";
 import {
-  AI_MODELS, ANTHROPIC_URL, ANTHROPIC_VERSION,
+  SK_URL, SK_ANON, AI_MODELS, ANTHROPIC_URL, ANTHROPIC_VERSION,
   bearerToken, requireUserId, json, logTokenUsage,
 } from "@/lib/serverHelpers";
 import { enforceAiBudget } from "@/lib/aiBudget";
+import { getEntitlement, can } from "@/lib/entitlements";
 
 export const runtime = "edge";
 
@@ -149,6 +150,13 @@ export async function POST(req) {
   // Require an authenticated teacher — this is no longer an open Opus endpoint.
   const token = bearerToken(req);
   if (!token) return json({ error: "Sign in to use the AI assistant." }, 401);
+
+  // Entitlement gate (soft): only enforced when BILLING_ENFORCED=1, so current
+  // pilots stay open until billing is switched on.
+  if (process.env.BILLING_ENFORCED === "1") {
+    const ent = await getEntitlement({ skUrl: SK_URL, apikey: SK_ANON, bearer: token });
+    if (!can(ent, "ai_generators")) return json({ error: "The slides assistant is a Pro feature. Upgrade on the Billing page.", upgrade: true }, 402);
+  }
 
   let body;
   try { body = await req.json(); } catch { return json({ error: "Invalid JSON body" }, 400); }

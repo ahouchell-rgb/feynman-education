@@ -18,6 +18,7 @@ import {
   bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage,
 } from "@/lib/serverHelpers";
 import { costGBP, enforceAiBudget } from "@/lib/aiBudget";
+import { getEntitlement, can } from "@/lib/entitlements";
 
 // Node runtime (not edge): the edge ~25s cap was returning 504s on the longer Sonnet
 // generations (especially the multimodal paper-upload path). Node + maxDuration gives the
@@ -97,6 +98,15 @@ export async function POST(req: Request) {
 
   const token = bearerToken(req);
   if (!token) return jsonError("Missing bearer token", 401);
+
+  // Entitlement gate (soft): only enforced when BILLING_ENFORCED=1, so current
+  // pilots stay open until billing is switched on.
+  if (process.env.BILLING_ENFORCED === "1") {
+    const ent = await getEntitlement({ skUrl: SK_URL, apikey: SK_ANON, bearer: token });
+    if (!can(ent, "ai_generators")) {
+      return new Response(JSON.stringify({ error: "Feedforward generation is a Pro feature. Upgrade on the Billing page.", upgrade: true }), { status: 402, headers: { "content-type": "application/json" } });
+    }
+  }
 
   let body: any;
   try { body = await req.json(); } catch { return jsonError("Invalid JSON body", 400); }
