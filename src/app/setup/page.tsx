@@ -140,7 +140,7 @@ function SetupContent() {
     setBusy(false);
   };
 
-  const saveTimetable = async () => {
+  const saveTimetable = async (dest = "/") => {
     setErr(""); setBusy(true);
     try {
       const rows = Object.entries(slots).filter(([_, v]) => v).map(([k, classId]) => {
@@ -148,7 +148,7 @@ function SetupContent() {
         return { class_id: classId, week_in_cycle: Number(m[1]), day_of_week: Number(m[2]), period: Number(m[3]) };
       });
       if (rows.length) await sk.q("class_timetable_slots", { method: "POST", body: rows });
-      router.replace("/");
+      router.replace(dest);
     } catch (e) { setErr(e.message); }
     setBusy(false);
   };
@@ -273,9 +273,13 @@ function SetupContent() {
           </p>
           <TimetableGrid classes={skClasses} slots={slots} onChange={setSlots} />
           {err && <div style={{ padding: "8px 10px", borderRadius: 6, background: C.redS, color: C.red, fontSize: 12, fontFamily: C.mono, marginBottom: 12, marginTop: 16 }}>{err}</div>}
-          <div style={{ display: "flex", gap: 8, marginTop: 20 }}>
+          <div style={{ display: "flex", gap: 8, marginTop: 20, alignItems: "center", flexWrap: "wrap" }}>
             <Btn v="ghost" onClick={() => setStep(2)}>← Back</Btn>
-            <Btn onClick={saveTimetable} disabled={busy}>{busy ? "Saving..." : "Finish setup →"}</Btn>
+            <Btn onClick={() => saveTimetable()} disabled={busy}>{busy ? "Saving..." : "Finish setup →"}</Btn>
+            {/* Cold-start: send teachers straight to the starter-deck picker. */}
+            <Btn v="soft" onClick={() => saveTimetable("/slides")} disabled={busy}>
+              Finish & build your first lesson →
+            </Btn>
           </div>
         </>
       )}
