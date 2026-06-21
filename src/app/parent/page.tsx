@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { pupilProgressLine } from "@/lib/pupilProgress";
 
 // Public, password-less parent portal. Reached via the token in the weekly
 // report emails: /parent?t=<token>. Lists the parent's consented children,
@@ -19,6 +20,57 @@ interface Child { linkId: string; studentName: string; classLabel: string; pract
 function firstName(s: string) { return (s || "").trim().split(/\s+/)[0] || s; }
 function heat(pct: number) { return pct < 40 ? "#b95a3c" : pct < 65 ? "#a06520" : "#1a7f5a"; }
 const GRADES = ["9", "8", "7", "6", "5", "4", "3"];
+
+// Read-only "my progress / what to practise" view, written TO the pupil. Reuses
+// the same per-child Home data (weakest topics, recent score, shared target/goal)
+// the parent sees — no extra fetch, no new auth, no other pupil's data.
+function PupilProgress({ child, target, onSetTarget }: {
+  child: Child; target: string; onSetTarget: (g: string) => void;
+}) {
+  const home = child.home;
+  if (!home || !home.enabled) return null;
+  const name = firstName(child.studentName);
+  const practiseUrl = home.weak.find((w) => w.practiseUrl)?.practiseUrl || child.practiseUrl;
+
+  return (
+    <div style={{ background: "#eef5f1", border: `1px solid #cfe3d8`, borderRadius: 10, padding: 16, marginBottom: 18 }}>
+      <div style={{ fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: COL.green, marginBottom: 6 }}>For {name}</div>
+      <p style={{ fontSize: 14, margin: "0 0 12px", lineHeight: 1.5 }}>{pupilProgressLine(home.recentScore, home.weak.length)}</p>
+
+      {practiseUrl && (
+        <p style={{ margin: "0 0 14px" }}>
+          <a href={practiseUrl} style={{ background: COL.green, color: "#fff", padding: "10px 18px", borderRadius: 8, textDecoration: "none", fontWeight: 600, fontSize: 14, display: "inline-block" }}>
+            Practise now →
+          </a>
+        </p>
+      )}
+
+      <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: COL.muted, marginBottom: 12 }}>
+        <span>My goal:</span>
+        <select value={target} onChange={(e) => onSetTarget(e.target.value)} style={{ fontSize: 13, padding: "3px 6px", borderRadius: 6, border: `1px solid ${COL.border}` }}>
+          <option value="">Pick a grade</option>
+          {GRADES.map((g) => <option key={g} value={g}>Grade {g}</option>)}
+        </select>
+        {target && home.recentScore != null && <span style={{ color: COL.dim }}>· aiming for grade {target}</span>}
+      </label>
+
+      {home.weak.length === 0 ? (
+        <p style={{ fontSize: 13, color: COL.muted, margin: 0 }}>Nothing flagged to practise right now — great work, {name}.</p>
+      ) : (
+        <div>
+          <div style={{ fontSize: 12, color: COL.dim, marginBottom: 6 }}>What to practise next:</div>
+          {home.weak.map((w) => (
+            <div key={w.topic_id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderTop: `1px solid #cfe3d8` }}>
+              <span style={{ flex: 1, fontSize: 13 }}>{w.topic_name}</span>
+              <span style={{ fontSize: 12, fontFamily: "monospace", color: heat(w.pct) }}>{w.pct}%</span>
+              {w.practiseUrl && <a href={w.practiseUrl} style={{ fontSize: 12, color: COL.green, textDecoration: "none", fontWeight: 600 }}>Practise →</a>}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function ChildCard({ child, token }: { child: Child; token: string }) {
   const [openId, setOpenId] = useState<string | null>(child.reports[0]?.id || null);
@@ -45,34 +97,20 @@ function ChildCard({ child, token }: { child: Child; token: string }) {
         </p>
       )}
 
-      {/* Home: adaptive practice + target tracker */}
+      {/* Pupil-facing "my progress / what to practise" view (read-only, same data). */}
+      <PupilProgress child={child} target={target} onSetTarget={saveTarget} />
+
+      {/* Home: parent summary line. The weak topics + goal live in the pupil
+          view above (single source of truth); this is the parent's framing. */}
       {home && (home.enabled ? (
-        <div style={{ background: "#f7f5ef", border: `1px solid ${COL.border}`, borderRadius: 10, padding: 16, marginBottom: 18 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
-            <strong style={{ fontSize: 14 }}>Home practice</strong>
-            <label style={{ fontSize: 12, color: COL.muted }}>Target grade{" "}
-              <select value={target} onChange={(e) => saveTarget(e.target.value)} style={{ fontSize: 13, padding: "3px 6px", borderRadius: 6, border: `1px solid ${COL.border}` }}>
-                <option value="">—</option>
-                {GRADES.map((g) => <option key={g} value={g}>{g}</option>)}
-              </select>
-            </label>
+        home.recentScore != null && (
+          <div style={{ background: "#f7f5ef", border: `1px solid ${COL.border}`, borderRadius: 10, padding: "12px 16px", marginBottom: 18, fontSize: 13, color: COL.muted }}>
+            <strong style={{ color: COL.text }}>For you:</strong> {firstName(child.studentName)} is averaging{" "}
+            <strong style={{ color: heat(home.recentScore) }}>{home.recentScore}%</strong> on recent practice
+            {target ? <> and is working toward grade {target}.</> : <>. Help {firstName(child.studentName)} set a goal above.</>}
+            {" "}The topics above are where a few minutes tonight will help most.
           </div>
-          {home.recentScore != null && (
-            <div style={{ fontSize: 12, color: COL.muted, marginBottom: 10 }}>Recent practice: <strong style={{ color: heat(home.recentScore) }}>{home.recentScore}%</strong>{target && <> · working toward grade {target}</>}</div>
-          )}
-          {home.weak.length === 0 ? <p style={{ fontSize: 13, color: COL.muted, margin: 0 }}>No weak areas to focus on right now — nice work.</p> : (
-            <div>
-              <div style={{ fontSize: 12, color: COL.dim, marginBottom: 6 }}>Focus on these tonight:</div>
-              {home.weak.map((w) => (
-                <div key={w.topic_id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderTop: `1px solid ${COL.border}` }}>
-                  <span style={{ flex: 1, fontSize: 13 }}>{w.topic_name}</span>
-                  <span style={{ fontSize: 12, fontFamily: "monospace", color: heat(w.pct) }}>{w.pct}%</span>
-                  {w.practiseUrl && <a href={w.practiseUrl} style={{ fontSize: 12, color: COL.green, textDecoration: "none" }}>Practise →</a>}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        )
       ) : (
         <div style={{ background: "#f7f5ef", border: `1px dashed ${COL.border}`, borderRadius: 10, padding: 14, marginBottom: 18, fontSize: 13, color: COL.muted }}>
           <strong>Home practice</strong> — personalised practice and a target tracker for {firstName(child.studentName)}. Ask your school to enable it, or subscribe.
@@ -131,7 +169,7 @@ function PortalInner() {
       <div style={{ fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", color: COL.dim, marginBottom: 6 }}>Feynman · Parent</div>
       <h1 style={{ fontSize: 30, margin: "0 0 6px" }}>{data.guardianName ? `Hello, ${data.guardianName}` : "Your child's science"}</h1>
       <p style={{ color: COL.muted, margin: "0 0 28px", fontSize: 15 }}>
-        {data.children.length ? "Weekly progress and a few minutes of the right practice." : "No active children are linked to this account yet."}
+        {data.children.length ? "Weekly progress and a few minutes of the right practice — best looked at together." : "No active children are linked to this account yet."}
       </p>
       {data.children.map((c) => <ChildCard key={c.linkId} child={c} token={token} />)}
       <p style={{ fontSize: 11, color: COL.dim, textAlign: "center", marginTop: 24 }}>
