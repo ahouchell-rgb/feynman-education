@@ -17,7 +17,7 @@ import { TableEditor } from "./slideEditor/TableEditor";
 import { TextEditor } from "./slideEditor/TextEditor";
 import { DeckQuestionsModal } from "@/components/DeckQuestionsModal";
 
-export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMasterChange, onCurChange }) {
+export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMasterChange, onCurChange, autoQuestions }) {
   const [slides, setSlides] = useState(() =>
     ensureIds(deck.slides?.length ? deck.slides : [{ id: uid(), elements: [] }]));
   const [cur, setCur] = useState(0);
@@ -36,6 +36,12 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const [find, setFind] = useState("");
   const [insertOpen, setInsertOpen] = useState(false);   // "+ Insert" dropdown
   const [qOpen, setQOpen] = useState(false);             // deck → retrieval questions modal
+  // After a one-click AI lesson, jump straight into drafting retrieval questions
+  // from the generated deck (lesson + practice in one flow). Fires once.
+  const autoQDone = useRef(false);
+  useEffect(() => {
+    if (autoQuestions && !autoQDone.current) { autoQDone.current = true; setQOpen(true); }
+  }, [autoQuestions]);
   const [slideMenu, setSlideMenu] = useState(null);      // { x, y, index } — slide-rail right-click menu
   // Right panel is single-occupancy: opening one view closes the others, and
   // the column is always mounted so toggling never changes canvas width.

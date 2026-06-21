@@ -12,6 +12,7 @@
 //   SUPABASE_SERVICE_ROLE_KEY    — optional; only used to log token usage
 
 import { supaRest } from "@/lib/supabaseRest";
+import { SUBJECT_SELECT, subjectName } from "@/lib/subject";
 
 // Node runtime (not edge): the edge ~25s cap was returning 504s on the longer Sonnet
 // generations (especially the multimodal paper-upload path). Node + maxDuration gives the
@@ -59,12 +60,13 @@ async function sb(path: string, { method = "GET", body, token, params, single }:
 
 function buildPrompt({ lesson, unit, gaps, className, source }: any) {
   const isExam = source === "exam";
+  const subject = subjectName(unit);
   const gapList = gaps
     .map((g: any) => `- ${g.topic_name} — ${Math.round(g.pct_correct)}% of marks (${g.marked} ${isExam ? "exam answers" : "answers"} marked)`)
     .join("\n");
   const intro = isExam
-    ? `You are making a one-page, printable EXAM FEEDFORWARD practice sheet for a UK secondary science class${className ? ` (${className})` : ""}. It targets the topics where the class lost the most marks on past-paper / exam questions and rebuilds EXAM TECHNIQUE on exactly those topics.`
-    : `You are making a one-page, printable FEEDFORWARD practice sheet for a UK secondary science class${className ? ` (${className})` : ""}. A feedforward sheet scaffolds DOWN from the specific objectives a class is weakest on, so pupils can close the gap through guided practice.`;
+    ? `You are making a one-page, printable EXAM FEEDFORWARD practice sheet for a UK secondary ${subject} class${className ? ` (${className})` : ""}. It targets the topics where the class lost the most marks on past-paper / exam questions and rebuilds EXAM TECHNIQUE on exactly those topics.`
+    : `You are making a one-page, printable FEEDFORWARD practice sheet for a UK secondary ${subject} class${className ? ` (${className})` : ""}. A feedforward sheet scaffolds DOWN from the specific objectives a class is weakest on, so pupils can close the gap through guided practice.`;
   const gapHeading = isExam
     ? "EXAM TOPICS — most marks lost first; build the sheet around exactly these:"
     : "CLASS GAPS — weakest first; build the sheet around exactly these:";
@@ -93,7 +95,7 @@ Start with a title${isExam ? " (make clear it is exam practice)" : ""} and a lin
 // paper and (optionally) a free-text note of which questions the class struggled on.
 function buildPaperPrompt({ lesson, unit, className, struggledNotes }: any) {
   const notes = String(struggledNotes || "").trim();
-  return `You are making a one-page, printable EXAM FEEDFORWARD practice sheet for a UK secondary science class${className ? ` (${className})` : ""}.
+  return `You are making a one-page, printable EXAM FEEDFORWARD practice sheet for a UK secondary ${subjectName(unit)} class${className ? ` (${className})` : ""}.
 
 The image(s) / PDF above are pages of a past paper or test the class has just sat. ${notes ? `The teacher says the class struggled most on: ${notes}.` : "Identify the questions most likely to need reteaching."}
 
@@ -146,7 +148,7 @@ export async function POST(req: Request) {
       sb("lessons", { token, params: { id: `eq.${lessonId}` }, single: true }),
       sb("daily_token_usage", { token, params: { teacher_id: `eq.${userId}`, day: `eq.${todayISO()}` } }),
     ]);
-    unit = await sb("units", { token, params: { id: `eq.${lesson.unit_id}` }, single: true }).catch(() => ({}));
+    unit = await sb("units", { token, params: { id: `eq.${lesson.unit_id}`, select: `*,${SUBJECT_SELECT}` }, single: true }).catch(() => ({}));
     todayUsage = (todayUsage && todayUsage[0]) || { input_tokens: 0, output_tokens: 0 };
   } catch (e: any) {
     return jsonError(`Couldn't load lesson context: ${e.message}`, 500);

@@ -85,7 +85,7 @@ export function SearchOverlay({ onClose }: { onClose: () => void }) {
 
   return (
     <div onMouseDown={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 80, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "10vh 16px 16px" }}>
-      <div onMouseDown={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 560, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, boxShadow: "0 18px 60px rgba(0,0,0,0.25)", overflow: "hidden" }}>
+      <div role="dialog" aria-modal="true" aria-label="Search the curriculum" onMouseDown={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 560, background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, boxShadow: "0 18px 60px rgba(0,0,0,0.25)", overflow: "hidden" }}>
         <input ref={inputRef} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={onKey}
           placeholder="Search units, lessons, decks…"
           aria-label="Search the curriculum"

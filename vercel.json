@@ -3,6 +3,26 @@
     {
       "path": "/api/cron/halfterm-feedforward",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-parent-report",
+      "schedule": "0 16 * * 5"
+    },
+    {
+      "path": "/api/cron/mis-sync",
+      "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/trust-snapshots",
+      "schedule": "0 4 * * 0"
+    },
+    {
+      "path": "/api/cron/school-snapshots",
+      "schedule": "30 4 * * 0"
+    },
+    {
+      "path": "/api/cron/mis-writeback",
+      "schedule": "30 3 * * *"
     }
   ]
 }

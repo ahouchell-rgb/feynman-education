@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useAuth, sk } from "@/lib/sk";
-import { C, DISC } from "@/lib/theme";
+import { C, DISC, unitAccent } from "@/lib/theme";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { Btn, Card, RichEditor } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
 import { FileUpload } from "@/components/FileUpload";
 import { ResourceItem, ResourceViewer } from "@/components/Resources";
+
+const stripTags = (s: unknown) => String(s ?? "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 
 function UnitContent() {
   const router = useRouter();
@@ -22,6 +24,8 @@ function UnitContent() {
   const [resources, setResources] = useState([]);
   const [decks, setDecks] = useState([]);
   const [generating, setGenerating] = useState(false);
+  const [practicalBusy, setPracticalBusy] = useState(false);
+  const [revisionBusy, setRevisionBusy] = useState(false);
   const [viewingResource, setViewingResource] = useState(null);
   const [editingSOW, setEditingSOW] = useState(false);
   const [sowDraft, setSowDraft] = useState("");
@@ -35,7 +39,7 @@ function UnitContent() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const u = await sk.q("units", { params: { id: `eq.${unitId}` }, single: true });
+      const u = await sk.q("units", { params: { id: `eq.${unitId}`, select: "*,subject:subjects(name,slug)" }, single: true });
       if (!u) { setNotFound(true); setLoading(false); return; }
       setUnit(u); setSowDraft(u.scheme_of_work || "");
       const [ls, rs, dk] = await Promise.all([
@@ -123,6 +127,41 @@ function UnitContent() {
     finally { setGenerating(false); }
   };
 
+  // Generate a printable required-practical sheet (apparatus, method, risk
+  // assessment) and open it in a new tab.
+  const practicalSheet = async () => {
+    if (practicalBusy) return;
+    setPracticalBusy(true);
+    const w = window.open("", "_blank");
+    if (w) w.document.write("<p style='font-family:system-ui;padding:24px;color:#666'>Writing practical sheet…</p>");
+    try {
+      const token = sk.auth.getToken();
+      if (!token) throw new Error("Sign in first.");
+      const r = await fetch("/api/practical-assistant", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify({ unitId }) });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || "Generation failed");
+      if (w) { w.document.open(); w.document.write(data.html); w.document.close(); }
+    } catch (e) { if (w) w.close(); alert("Practical sheet failed: " + e.message); }
+    finally { setPracticalBusy(false); }
+  };
+
+  // Generate a printable revision booklet for the unit and open it in a new tab.
+  const revisionPack = async () => {
+    if (revisionBusy) return;
+    setRevisionBusy(true);
+    const w = window.open("", "_blank");
+    if (w) w.document.write("<p style='font-family:system-ui;padding:24px;color:#666'>Writing revision pack…</p>");
+    try {
+      const token = sk.auth.getToken();
+      if (!token) throw new Error("Sign in first.");
+      const r = await fetch("/api/revision-pack", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify({ unitId }) });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || "Generation failed");
+      if (w) { w.document.open(); w.document.write(data.html); w.document.close(); }
+    } catch (e) { if (w) w.close(); alert("Revision pack failed: " + e.message); }
+    finally { setRevisionBusy(false); }
+  };
+
   const lessonHref = (lessonId) => {
     const q = classId ? `?class=${classId}` : "";
     return `/unit/${unitId}/lesson/${lessonId}${q}`;
@@ -131,7 +170,7 @@ function UnitContent() {
   if (loading) return <div style={{ color: C.dim, fontFamily: C.mono, fontSize: 12, padding: 40 }}>Loading unit…</div>;
   if (notFound || !unit) return <div style={{ color: C.red, fontFamily: C.mono, fontSize: 12, padding: 40 }}>Unit not found.</div>;
 
-  const d = DISC[unit.discipline] || DISC.combined;
+  const d = unitAccent(unit);
   const termLabel = unit.term ? unit.term.charAt(0).toUpperCase() + unit.term.slice(1) : "";
 
   // Split decks into the three tiers.
@@ -215,6 +254,19 @@ function UnitContent() {
             <div style={listCol}>{deptDecks.map((dk) => renderDeck(dk, "dept"))}</div>
           </div>
         )}
+      </Card>
+
+      <Card style={{ padding: 16, marginBottom: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.muted }}>Required practical</div>
+            <div style={{ fontSize: 13, color: unit.required_practical ? C.text : C.dim, marginTop: 4, fontStyle: unit.required_practical ? "normal" : "italic" }}>
+              {unit.required_practical ? stripTags(unit.required_practical).slice(0, 120) : "Generate apparatus, method & a risk assessment for this topic's practical."}
+            </div>
+          </div>
+          <Btn v="soft" onClick={revisionPack} disabled={revisionBusy} style={{ fontSize: 11, padding: "6px 12px", whiteSpace: "nowrap" }}>{revisionBusy ? "Writing…" : "📖 Revision pack"}</Btn>
+          <Btn onClick={practicalSheet} disabled={practicalBusy} style={{ fontSize: 11, padding: "6px 12px", whiteSpace: "nowrap" }}>{practicalBusy ? "Writing…" : "🧪 Practical sheet"}</Btn>
+        </div>
       </Card>
 
       <Card style={{ padding: 20, marginBottom: 20 }}>

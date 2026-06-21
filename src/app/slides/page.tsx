@@ -108,6 +108,7 @@ function SlidesContent() {
   const [save, setSave] = useState("saved");    // saved | saving | error
   const [err, setErr] = useState("");
   const [exporting, setExporting] = useState(false);
+  const [coverBusy, setCoverBusy] = useState(false);
   const [importing, setImporting] = useState(false);
   const [savingDrive, setSavingDrive] = useState(false);
   const [driveMsg, setDriveMsg] = useState("");
@@ -125,6 +126,13 @@ function SlidesContent() {
   const [groups, setGroups] = useState([]);
   const [units, setUnits] = useState([]);
   const [lessons, setLessons] = useState([]);
+  // AI lesson generator modal
+  const [genOpen, setGenOpen] = useState(false);
+  const [genUnit, setGenUnit] = useState("");
+  const [genLesson, setGenLesson] = useState("");
+  const [genFocus, setGenFocus] = useState("");
+  const [genBusy, setGenBusy] = useState(false);
+  const [autoQDeckId, setAutoQDeckId] = useState(null); // deck just AI-generated → auto-open questions
 
   const load = async () => {
     try { setDecks(await store.list()); }
@@ -204,6 +212,27 @@ function SlidesContent() {
   const createDeck = async () => {
     try { setActive(await store.create({ title: "Untitled deck", slides: [newSlide()] })); setSave("saved"); }
     catch (e) { setErr(e.message); }
+  };
+
+  // One-click AI lesson: generate a full deck from a unit (+ optional lesson),
+  // then open it in the editor. Reuses /api/lesson-generator → slides-assistant.
+  const generateLesson = async () => {
+    if (!genUnit) { setErr("Pick a unit to generate a lesson for."); return; }
+    setGenBusy(true); setErr("");
+    try {
+      const res = await fetch("/api/lesson-generator", {
+        method: "POST",
+        headers: { "content-type": "application/json", authorization: `Bearer ${sk.auth.getToken()}` },
+        body: JSON.stringify({ unitId: genUnit, lessonId: genLesson || null, focus: genFocus.trim() || null }),
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error || "Generation failed");
+      const deck = await sk.q("decks", { params: { id: `eq.${d.deckId}`, select: "*" }, single: true });
+      setGenOpen(false); setGenFocus(""); setGenLesson("");
+      setAutoQDeckId(d.deckId); // open the retrieval-questions modal once the editor mounts
+      openDeck(deck);
+    } catch (e) { setErr("Lesson generation failed: " + e.message); }
+    finally { setGenBusy(false); }
   };
 
   const onImportFile = async (e) => {
@@ -295,7 +324,7 @@ function SlidesContent() {
         else await saveSupabaseSlides(active.slides);
       } catch (e) { setErr(e.message); }
     }
-    setActive(null); load();
+    setActive(null); setAutoQDeckId(null); load();
   };
 
   // Pull the latest version after a conflict so the teacher continues from the
@@ -352,6 +381,24 @@ function SlidesContent() {
     try { const { exportDeck } = await import("@/lib/exportPptx"); await exportDeck(active); }
     catch (e) { setErr("Export failed: " + e.message); }
     finally { setExporting(false); }
+  };
+
+  // Generate a printable cover/non-specialist teaching script from the deck and
+  // open it in a new tab to read/print.
+  const coverScript = async () => {
+    setCoverBusy(true); setErr("");
+    const w = window.open("", "_blank"); // open synchronously so it isn't popup-blocked
+    if (w) w.document.write("<p style='font-family:system-ui;padding:24px;color:#666'>Writing cover script…</p>");
+    try {
+      const r = await fetch("/api/cover-sheet", {
+        method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${sk.auth.getToken()}` },
+        body: JSON.stringify({ slides: active.slides, title: active.title }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "Generation failed");
+      if (w) { w.document.open(); w.document.write(d.html); w.document.close(); }
+    } catch (e) { if (w) w.close(); setErr("Cover script failed: " + e.message); }
+    finally { setCoverBusy(false); }
   };
 
   const deleteDeck = async (id, e) => {
@@ -447,6 +494,7 @@ function SlidesContent() {
               </Btn>
             )}
             {driveMsg && <span style={{ fontFamily: C.mono, fontSize: 11, color: C.grn }}>{driveMsg}</span>}
+            {!guest && <Btn v="soft" title="Printable teaching script for a cover teacher / non-specialist" onClick={coverScript} disabled={coverBusy}>{coverBusy ? "scripting…" : "📋 Cover script"}</Btn>}
             <Btn v="soft" title="Printable handout / PDF" onClick={() => window.open(`/slides/${active.id}/print`, "_blank")}>Print / PDF</Btn>
             <div style={{ position: "relative" }}>
               <Btn onClick={() => setPresentOpen((o) => !o)} title="Start the slideshow">▶ Present ▾</Btn>
@@ -483,7 +531,8 @@ function SlidesContent() {
           <div style={{ flex: 1, minHeight: 0 }}>
             <SlideEditor deck={active} onChange={onSlidesChange} onCurChange={setCurSlide}
               onUploadImage={(file) => store.uploadImage(file, active.id)}
-              onThemeChange={onThemeChange} onMasterChange={onMasterChange} />
+              onThemeChange={onThemeChange} onMasterChange={onMasterChange}
+              autoQuestions={autoQDeckId === active.id} />
           </div>
         </div>
       </Shell>
@@ -513,6 +562,34 @@ function SlidesContent() {
 
   return (
     <Shell guest={guest}>
+      {genOpen && (
+        <div onClick={() => !genBusy && setGenOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 12, width: "min(480px,100%)", padding: 24 }}>
+            <div style={{ fontFamily: C.serif, fontSize: 26, color: C.text, marginBottom: 4 }}>Generate a lesson</div>
+            <div style={{ fontSize: 13, color: C.muted, marginBottom: 18, lineHeight: 1.5 }}>Pick a unit and AI drafts a full, ready-to-teach deck you can edit. Takes ~20–40 seconds.</div>
+            <label style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim }}>Unit</label>
+            <select value={genUnit} onChange={(e) => { setGenUnit(e.target.value); setGenLesson(""); }} style={{ width: "100%", margin: "6px 0 14px", padding: "9px 12px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 13, background: C.bg, color: C.text }}>
+              <option value="">Choose a unit…</option>
+              {unitsByYear.map((grp) => <optgroup key={grp.key} label={grp.label}>{grp.units.map((u) => <option key={u.id} value={u.id}>{u.title}</option>)}</optgroup>)}
+            </select>
+            {genUnit && lessons.filter((l) => l.unit_id === genUnit).length > 0 && (
+              <>
+                <label style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim }}>Lesson (optional)</label>
+                <select value={genLesson} onChange={(e) => setGenLesson(e.target.value)} style={{ width: "100%", margin: "6px 0 14px", padding: "9px 12px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 13, background: C.bg, color: C.text }}>
+                  <option value="">Whole unit</option>
+                  {lessons.filter((l) => l.unit_id === genUnit).map((l) => <option key={l.id} value={l.id}>L{l.lesson_number} · {l.title}</option>)}
+                </select>
+              </>
+            )}
+            <label style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim }}>Focus (optional)</label>
+            <input value={genFocus} onChange={(e) => setGenFocus(e.target.value)} placeholder="e.g. exam technique on required practical" style={{ width: "100%", margin: "6px 0 20px", padding: "9px 12px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 13, background: C.bg, color: C.text, outline: "none" }} />
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: 10 }}>
+              <Btn v="ghost" onClick={() => setGenOpen(false)} disabled={genBusy}>Cancel</Btn>
+              <Btn onClick={generateLesson} disabled={genBusy || !genUnit}>{genBusy ? "Generating…" : "✨ Generate"}</Btn>
+            </div>
+          </div>
+        </div>
+      )}
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 24 }}>
         <h1 style={{ fontFamily: C.serif, fontSize: 36, color: C.text, margin: 0 }}>Slides</h1>
         <div style={{ display: "flex", gap: 8 }}>
@@ -521,6 +598,7 @@ function SlidesContent() {
           <Btn v="soft" onClick={() => importRef.current?.click()} disabled={importing}>{importing ? "Importing…" : "Import .pptx"}</Btn>
           <Btn v="soft" onClick={() => importHtmlRef.current?.click()} disabled={importing}>{importing ? "Importing…" : "Import .html"}</Btn>
           {!guest && <Btn v="soft" onClick={onImportFromDrive} disabled={importing} title="Import a Google Slides or PowerPoint file from your Google Drive">{importing ? "Importing…" : "Import from Drive"}</Btn>}
+          {!guest && <Btn v="soft" onClick={() => setGenOpen(true)} title="Generate a full lesson deck from a curriculum unit with AI">✨ Generate lesson</Btn>}
           <Btn onClick={createDeck}>+ New deck</Btn>
         </div>
       </div>

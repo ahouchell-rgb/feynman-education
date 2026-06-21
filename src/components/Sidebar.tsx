@@ -34,7 +34,7 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
   return (
     <>
       {showSettings && <Settings onClose={() => setShowSettings(false)} />}
-      <div style={{ width: 240, minWidth: 240, borderRight: `1px solid ${C.border}`, background: C.surface, display: "flex", flexDirection: "column", position: "sticky", top: 0, height: "100dvh", overflowY: "auto" }}>
+      <nav aria-label="Primary" style={{ width: 240, minWidth: 240, borderRight: `1px solid ${C.border}`, background: C.surface, display: "flex", flexDirection: "column", position: "sticky", top: 0, height: "100dvh", overflowY: "auto" }}>
         <div style={{ padding: "20px 16px 16px", borderBottom: `1px solid ${C.border}` }}>
           <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
             <div style={{ fontFamily: C.mono, fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 4 }}>Feynman Education</div>
@@ -55,13 +55,23 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
           {[
             { href: "/", label: "This week" },
             { href: "/curriculum", label: "Curriculum" },
+            // Content review pipeline is for authors / department leads.
+            ...(profile?.role === "admin" || profile?.is_lead ? [{ href: "/content", label: "Content" }] : []),
             { href: "/slides", label: "Slides" },
+            { href: "/parents", label: "Parents" },
+            { href: "/assessments", label: "Assess" },
+            // School: dashboard for hod/slt, self-serve onboarding for everyone else.
+            { href: "/school", label: "School" },
+            // Trust dashboard is only for MAT leaders.
+            ...(profile?.trust_role === "trust_lead" ? [{ href: "/trust", label: "Trust" }] : []),
             { href: "/manage", label: "Manage" },
             { href: "/setup", label: "Setup" },
+            { href: "/billing", label: "Billing" },
+            { href: "/account", label: "Account" },
           ].map(item => {
             const active = isActive(item.href) || (item.href === "/curriculum" && pathname?.startsWith("/unit/"));
             return (
-              <Link key={item.href} href={item.href} style={{ display: "block", textDecoration: "none" }}>
+              <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} style={{ display: "block", textDecoration: "none" }}>
                 <div style={{ padding: "9px 16px", display: "flex", alignItems: "center", background: active ? C.bg : "transparent", borderLeft: active ? `2px solid ${C.accent}` : "2px solid transparent", fontFamily: C.mono, fontSize: 12, fontWeight: active ? 600 : 500, color: active ? C.text : C.muted, letterSpacing: "0.02em", cursor: "pointer" }}>
                   {item.label}
                 </div>
@@ -78,8 +88,9 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             return (
               <div key={g.id}>
                 <button onClick={() => setOpenGroups(p => { const n = new Set(p); n.has(g.id) ? n.delete(g.id) : n.add(g.id); return n; })}
+                  aria-expanded={isOpen} aria-label={`${g.label} units`}
                   style={{ width: "100%", padding: "8px 16px", display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>
-                  <span style={{ fontSize: 10, color: C.dim, transition: "transform .15s", transform: isOpen ? "rotate(90deg)" : "rotate(0)" }}>▶</span>
+                  <span aria-hidden style={{ fontSize: 10, color: C.dim, transition: "transform .15s", transform: isOpen ? "rotate(90deg)" : "rotate(0)" }}>▶</span>
                   <span style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, color: C.text, flex: 1 }}>{g.label}</span>
                   <span style={{ fontSize: 9, fontFamily: C.mono, padding: "1px 5px", borderRadius: 2, background: `${ksColor}18`, color: ksColor }}>{g.key_stage?.toUpperCase()}</span>
                 </button>
@@ -109,11 +120,11 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             <div style={{ fontSize: 12, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{profile?.full_name || "Teacher"}</div>
             <div style={{ fontSize: 10, color: C.dim, fontFamily: C.mono }}>{profile?.role}</div>
           </div>
-          <button onClick={() => onOpenVisualiser?.()} title="Visualiser (camera)" style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14, padding: 2 }}>📷</button>
-          <button onClick={() => setShowSettings(true)} style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14, padding: 2 }}>⚙</button>
-          <button onClick={() => { logout(); router.push("/login"); }} style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 12, fontFamily: C.mono, padding: 2 }}>↪</button>
+          <button onClick={() => onOpenVisualiser?.()} title="Visualiser (camera)" aria-label="Open the visualiser" style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14, padding: 2 }}><span aria-hidden>📷</span></button>
+          <button onClick={() => setShowSettings(true)} title="Settings" aria-label="Open settings" style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14, padding: 2 }}><span aria-hidden>⚙</span></button>
+          <button onClick={() => { logout(); router.push("/login"); }} title="Sign out" aria-label="Sign out" style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 12, fontFamily: C.mono, padding: 2 }}><span aria-hidden>↪</span></button>
         </div>
-      </div>
+      </nav>
     </>
   );
 }

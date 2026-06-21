@@ -1,0 +1,62 @@
+# MAT / Trust Dashboard — implementation
+
+Strategy Build 4. A trust (MAT) leader sees **every school in the trust benchmarked on
+the same mastery graph** — average mastery, weakest objectives, and how each school sits
+against the trust mean. No new data: it's Builds 2/3's graph one level higher.
+
+## What shipped
+
+| Piece | File |
+|---|---|
+| Schema (`trusts`, `schools.trust_id`, `profiles.trust_id` + `trust_role`, `trust_classes()` RPC) | `supabase/migrations/20260620_trusts_mat.sql` |
+| Aggregation API (per-school rollup + trust-wide leaderboard) | `src/app/api/trust/overview/route.ts` |
+| Dashboard | `src/app/trust/page.tsx` (nav: **Trust**, shown only for `trust_lead`) |
+
+## How cross-school access works
+
+Mirrors Build 2 exactly. Base tables stay owner-scoped; the single cross-org read is
+`trust_classes()` — a `SECURITY DEFINER` RPC that returns class metadata **only** to a
+`trust_lead` caller, scoped to schools whose `trust_id` matches theirs. The route then
+aggregates each class's weak objectives with `class_weak_topics` (server-side, `SK_API_KEY`)
+using a **bounded-concurrency pool** so a large trust doesn't fire hundreds of simultaneous
+retrieval calls. Only non-personal per-objective aggregates roll up.
+
+```
+/api/trust/overview (caller JWT)
+  ├─ gate: profiles.trust_role = trust_lead
+  ├─ trust_classes()                      ← security-definer, trust-scoped
+  ├─ per class: class_weak_topics(retId)  ← pooled, x-sciencekit-key
+  └─ rollup → schools[] (avgMastery, weakest[]) + cohort[] (trust-wide) + trustAvg
+```
+
+## Enabling it — self-serve (shipped)
+
+`supabase/migrations/20260620_trust_onboarding.sql` adds self-serve setup via
+`SECURITY DEFINER` RPCs (no hand-run SQL), mirroring school onboarding:
+
+- A school's **slt** opens **School → "Add this school to a trust (MAT)"** and either
+  **creates** a trust (`create_trust` → becomes `trust_lead`, links their own school) or
+  **links** to one with a code (`link_school_to_trust`).
+- The **Trust** nav item then appears (profile refreshes) and `/trust` populates, showing
+  the trust's **join code** so the lead can invite more schools' SLTs.
+
+`trust_lead` is only ever granted by creating a trust — never self-assignable. `SK_API_KEY`
+must be set for the mastery aggregation.
+
+## Benchmark snapshots + trend (shipped)
+
+`supabase/migrations/20260620_trust_snapshots.sql` adds `trust_benchmark_snapshots`
+(trust-member RLS read). A weekly cron `/api/cron/trust-snapshots` (Sun 04:00) gathers
+each trust's classes via the service role, aggregates with the **same shared `rollupTrust`**
+(`src/lib/trustBenchmark.ts`) the live route uses, and upserts one row per trust per day.
+The dashboard reads recent snapshots to draw a **trust-average trend sparkline** (with the
+points-change since the first snapshot). The live overview still computes the current
+numbers; snapshots add history and make future "instant load" possible.
+
+## Out of scope (next)
+
+- **Serve the dashboard from the latest snapshot** for instant first paint (currently the
+  live route always recomputes; the snapshot powers the trend only).
+- **Year-group / discipline filters** on the trust view (the per-school dashboard already has them).
+- **Curriculum consistency view** — which schools teach which SoW (the other half of the MAT pitch).
+- **Per-trust MIS-token store** so each school's Wonde connection rolls up centrally (Build 3 is single-school env today).

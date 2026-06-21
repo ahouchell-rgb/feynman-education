@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="1180" viewBox="0 0 1640 1180" font-family="'IBM Plex Sans','Segoe UI',Helvetica,Arial,sans-serif">
+  <defs>
+    <style>
+      .t{fill:#1a1714}.mut{fill:#4d4940}.dim{fill:#8c8678}.mono{font-family:'IBM Plex Mono',monospace}
+    </style>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a8a191"/></marker>
+  </defs>
+  <rect width="1640" height="1180" fill="#f3eee2"/>
+
+  <!-- Header -->
+  <text x="40" y="50" class="t" font-weight="700" font-size="34">Feynman Education — what we built</text>
+  <text x="40" y="78" class="mut" font-size="16">Strategy → the mastery-graph thesis (4 buyers) → a production platform any part of education can buy.</text>
+
+  <!-- Sources -->
+  <g font-size="13">
+    <rect x="40" y="98" width="470" height="64" rx="8" fill="#faf6ec" stroke="#dcd5c0"/>
+    <text x="58" y="124" class="t" font-weight="700" font-size="14">Feynman / ScienceKit</text>
+    <text x="58" y="146" class="mut">Curriculum · timetable · slide editor · present</text>
+    <rect x="540" y="98" width="470" height="64" rx="8" fill="#faf6ec" stroke="#5e7c4b" stroke-width="2"/>
+    <text x="558" y="124" class="t" font-weight="700" font-size="14">retrieval-app.com · the anchor</text>
+    <text x="558" y="146" class="mut">Spaced retrieval practice · weak-topic data</text>
+    <rect x="1040" y="98" width="520" height="64" rx="8" fill="#faf6ec" stroke="#dcd5c0"/>
+    <text x="1058" y="124" class="t" font-weight="700" font-size="14">interactive-science.com</text>
+    <text x="1058" y="146" class="mut">Interactive tools · widgets · resource_map</text>
+  </g>
+
+  <!-- Spine -->
+  <rect x="300" y="180" width="1000" height="58" rx="10" fill="#1a1714"/>
+  <text x="800" y="208" text-anchor="middle" fill="#f3eee2" font-weight="700" font-size="19">THE MASTERY GRAPH</text>
+  <text x="800" y="228" text-anchor="middle" fill="#cdbfae" font-size="12.5" class="mono">pupil × objective — one spine, sold as a view to each buyer · + assessments now feed it</text>
+
+  <!-- ============ Buyer columns (product surface) ============ -->
+  <text x="40" y="270" class="dim mono" font-size="11" letter-spacing="0.16em">PRODUCT SURFACE · WHAT USERS TOUCH</text>
+
+  <!-- TEACHER -->
+  <rect x="40" y="284" width="370" height="300" rx="8" fill="#fff" stroke="#5e7c4b" stroke-width="1.5"/>
+  <rect x="40" y="284" width="370" height="36" rx="8" fill="#5e7c4b"/>
+  <text x="58" y="308" fill="#fff" font-weight="700" font-size="15">TEACHER · free wedge (PLG)</text>
+  <g font-size="13" transform="translate(58,342)" class="mut">
+    <text y="0">Plan · slides · present · feedforward</text>
+    <text y="24" class="t">✦ One-click lesson generator</text>
+    <text y="46" class="t">✦ → chained retrieval questions</text>
+    <text y="68" class="t">✦ Cover / non-specialist script</text>
+    <text y="90" class="t">✦ Required-practical sheet</text>
+    <text y="112" class="t">✦ Revision pack (+ interactive)</text>
+    <text y="134" class="t">✦ Assessments &amp; QLA</text>
+    <text y="160" class="dim" font-size="11.5">generates the data → pulls schools + parents</text>
+  </g>
+
+  <!-- PARENT -->
+  <rect x="430" y="284" width="370" height="300" rx="8" fill="#fff" stroke="#6b4f7a" stroke-width="1.5"/>
+  <rect x="430" y="284" width="370" height="36" rx="8" fill="#6b4f7a"/>
+  <text x="448" y="308" fill="#fff" font-weight="700" font-size="15">PARENT · D2C</text>
+  <g font-size="13" transform="translate(448,342)" class="mut">
+    <text y="0" class="t">✦ Weekly progress report (cron+AI)</text>
+    <text y="22" class="t">✦ Teacher consent UI</text>
+    <text y="44" class="t">✦ Password-less portal + unsubscribe</text>
+    <text y="66" class="t">✦ Home practice — adaptive (E8)</text>
+    <text y="88" class="t">✦ Target-grade tracker</text>
+    <text y="118" class="dim" font-size="11.5">Funnels: school-sponsored (live)</text>
+    <text y="136" class="dim" font-size="11.5">+ parent-paid (scaffolded)</text>
+    <text y="162" class="dim" font-size="11.5">consent-gated · AADC posture</text>
+  </g>
+
+  <!-- SCHOOL -->
+  <rect x="820" y="284" width="370" height="300" rx="8" fill="#fff" stroke="#2e3a5f" stroke-width="1.5"/>
+  <rect x="820" y="284" width="370" height="36" rx="8" fill="#2e3a5f"/>
+  <text x="838" y="308" fill="#fff" font-weight="700" font-size="15">SCHOOL · B2B (the moat)</text>
+  <g font-size="13" transform="translate(838,342)" class="mut">
+    <text y="0" class="t">✦ SLT / Dept dashboard + trend</text>
+    <text y="22" class="t">✦ Intervention list + CSV export</text>
+    <text y="44" class="t">✦ Self-serve onboarding (code)</text>
+    <text y="66" class="t">✦ Staff roster management</text>
+    <text y="88" class="t">✦ Sponsor Home for parents</text>
+    <text y="114" class="dim" font-size="11.5">cross-teacher reads via one</text>
+    <text y="132" class="dim mono" font-size="11">SECURITY DEFINER school_classes()</text>
+    <text y="158" class="dim" font-size="11.5">aggregates — support, not ranking</text>
+  </g>
+
+  <!-- TRUST -->
+  <rect x="1200" y="284" width="360" height="300" rx="8" fill="#fff" stroke="#a06520" stroke-width="1.5"/>
+  <rect x="1200" y="284" width="360" height="36" rx="8" fill="#a06520"/>
+  <text x="1218" y="308" fill="#fff" font-weight="700" font-size="15">TRUST / MAT</text>
+  <g font-size="13" transform="translate(1218,342)" class="mut">
+    <text y="0" class="t">✦ Cross-school benchmarking</text>
+    <text y="22" class="t">✦ Trust-average trend snapshots</text>
+    <text y="44" class="t">✦ Self-serve MAT onboarding</text>
+    <text y="66" class="t">✦ Link schools by code</text>
+    <text y="96" class="dim mono" font-size="11">SECURITY DEFINER trust_classes()</text>
+    <text y="124" class="dim" font-size="11.5">central multi-school contracts</text>
+    <text y="142" class="dim" font-size="11.5">+ consistency &amp; benchmarking</text>
+  </g>
+
+  <!-- ============ Platform & business layer (NOW plan) ============ -->
+  <text x="40" y="624" class="dim mono" font-size="11" letter-spacing="0.16em">PLATFORM &amp; BUSINESS LAYER · NOW-PLAN COMPLETION</text>
+
+  <!-- 8 cards, 4 x 2 -->
+  <g font-size="12.5">
+    <!-- row 1 -->
+    <rect x="40"   y="640" width="365" height="118" rx="8" fill="#efe7d6" stroke="#dcd5c0"/>
+    <text x="58" y="666" class="t" font-weight="700" font-size="14">Subjects &amp; objective taxonomy</text>
+    <text x="58" y="690" class="mut">De-scienced engine: subjects, strands,</text>
+    <text x="58" y="708" class="mut">specs &amp; a generic objective taxonomy.</text>
+    <text x="58" y="732" class="dim" font-size="11.5">unlocks Maths/English · QLA mapping</text>
+
+    <rect x="425"  y="640" width="365" height="118" rx="8" fill="#efe7d6" stroke="#dcd5c0"/>
+    <text x="443" y="666" class="t" font-weight="700" font-size="14">Billing &amp; entitlements</text>
+    <text x="443" y="690" class="mut">Stripe (no-SDK) · plans config · webhook</text>
+    <text x="443" y="708" class="mut">· entitlement gating · AI-spend governance.</text>
+    <text x="443" y="732" class="dim" font-size="11.5">env-gated · soft-gate pilots stay open</text>
+
+    <rect x="810"  y="640" width="365" height="118" rx="8" fill="#efe7d6" stroke="#dcd5c0"/>
+    <text x="828" y="666" class="t" font-weight="700" font-size="14">Compliance &amp; trust</text>
+    <text x="828" y="690" class="mut">Trust Centre · privacy notice · audit log</text>
+    <text x="828" y="708" class="mut">· self-serve data export (GDPR).</text>
+    <text x="828" y="732" class="dim" font-size="11.5">procurement-ready artifacts</text>
+
+    <rect x="1195" y="640" width="365" height="118" rx="8" fill="#efe7d6" stroke="#dcd5c0"/>
+    <text x="1213" y="666" class="t" font-weight="700" font-size="14">Content review pipeline</text>
+    <text x="1213" y="690" class="mut">AI-generate + teacher review:</text>
+    <text x="1213" y="708" class="mut">draft → in-review → approved/published.</text>
+    <text x="1213" y="732" class="dim" font-size="11.5">approver-gated publish RPC</text>
+
+    <!-- row 2 -->
+    <rect x="40"   y="772" width="365" height="118" rx="8" fill="#efe7d6" stroke="#dcd5c0"/>
+    <text x="58" y="798" class="t" font-weight="700" font-size="14">Assessments &amp; QLA</text>
+    <text x="58" y="822" class="mut">Common assessments · mark grid ·</text>
+    <text x="58" y="840" class="mut">analysis by question / topic / pupil.</text>
+    <text x="58" y="864" class="dim" font-size="11.5">2nd data source into the graph</text>
+
+    <rect x="425"  y="772" width="365" height="118" rx="8" fill="#efe7d6" stroke="#dcd5c0"/>
+    <text x="443" y="798" class="t" font-weight="700" font-size="14">MIS — Wonde (in &amp; out)</text>
+    <text x="443" y="822" class="mut">Sync rosters/contacts/classes → import</text>
+    <text x="443" y="840" class="mut">parents · attainment write-back queue.</text>
+    <text x="443" y="864" class="dim" font-size="11.5">system-of-record stickiness</text>
+
+    <rect x="810"  y="772" width="365" height="118" rx="8" fill="#efe7d6" stroke="#dcd5c0"/>
+    <text x="828" y="798" class="t" font-weight="700" font-size="14">Identity &amp; access</text>
+    <text x="828" y="822" class="mut">Owner-scoped RLS everywhere; cross-org</text>
+    <text x="828" y="840" class="mut">reads via role-gated definer functions.</text>
+    <text x="828" y="864" class="dim" font-size="11.5">roles never client-self-assignable</text>
+
+    <rect x="1195" y="772" width="365" height="118" rx="8" fill="#efe7d6" stroke="#dcd5c0"/>
+    <text x="1213" y="798" class="t" font-weight="700" font-size="14">Scheduled jobs (7 crons)</text>
+    <text x="1213" y="822" class="mut">feedforward · parent-report · mis-sync ·</text>
+    <text x="1213" y="840" class="mut">mis-writeback · trust- &amp; school-snapshots.</text>
+    <text x="1213" y="864" class="dim" font-size="11.5">instant dashboards + trend</text>
+  </g>
+
+  <!-- Footer -->
+  <line x1="40" y1="930" x2="1560" y2="930" stroke="#dcd5c0"/>
+  <g font-size="13">
+    <text x="40" y="962" class="t" font-weight="700" font-size="15">Totals &amp; principles</text>
+    <text x="40" y="988" class="mut">~20 migrations · ~30 API routes · 14 strategy/feature docs · 7 crons · 10+ SECURITY DEFINER RPCs · 2 ecosystem maps</text>
+    <text x="40" y="1012" class="mut">One engine, configured — never forked. Every layer degrades gracefully without its dependency (Anthropic · Resend · Wonde · Stripe · retrieval RPCs).</text>
+    <text x="40" y="1040" class="dim" font-size="12.5">Pending (yours): run migrations · set env (Stripe/Wonde/Resend/SK_API_KEY) · ship retrieval RPCs (student_weak_topics, class_intervention_list) · SSO + parent accounts · GDPR/AADC sign-off.</text>
+  </g>
+
+  <text x="40" y="1090" class="dim mono" font-size="11">Strategy → Builds 1–4 → action layers → teacher toolkit → NOW plan (T6.1 · E1 · E2 · E3 · E4 · E5 · E7 · E8)</text>
+  <text x="1560" y="1090" text-anchor="end" class="dim mono" font-size="11">PR #5 · feynman-education</text>
+</svg>

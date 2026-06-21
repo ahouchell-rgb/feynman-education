@@ -41,9 +41,9 @@ export function AppShell({ children }) {
     <AuthGate>
       <div style={{ minHeight: "100dvh", display: "flex", background: C.bg }}>
         <Sidebar onOpenVisualiser={() => setShowVis(true)} onOpenSearch={() => setShowSearch(true)} />
-        <div style={{ flex: 1, padding: "28px 32px", maxWidth: 900, minWidth: 0 }}>
+        <main id="main" tabIndex={-1} style={{ flex: 1, padding: "28px 32px", maxWidth: 900, minWidth: 0, outline: "none" }}>
           {children}
-        </div>
+        </main>
       </div>
       {showVis && <VisualiserOverlay onClose={() => setShowVis(false)} />}
       {showSearch && <SearchOverlay onClose={() => setShowSearch(false)} />}

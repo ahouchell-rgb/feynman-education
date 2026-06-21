@@ -10,6 +10,42 @@ body {
 [contenteditable]:focus { outline: none; }
 input, textarea, select, button { font-family: inherit; }
 
+/* --- Accessibility (WCAG 2.2) --------------------------------------------- */
+/* Visible keyboard focus everywhere (the reset stripped the default). Uses
+   :focus-visible so a mouse click doesn't show the ring, but Tab/keyboard does.
+   2px offset ring in the brand green with a light halo for contrast on any bg. */
+:focus-visible {
+  outline: 2px solid #2f6f3e;
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+/* contenteditable surfaces opt out of the default outline above — give keyboard
+   users a ring there too. */
+[contenteditable]:focus-visible { outline: 2px solid #2f6f3e; outline-offset: 2px; }
+
+/* Skip-to-content link: off-screen until focused, then pinned top-left. */
+.sk-skip-link {
+  position: absolute;
+  left: 8px; top: -48px;
+  z-index: 1000;
+  padding: 8px 14px;
+  background: #1a1714; color: #faf6ec;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  border-radius: 6px; text-decoration: none;
+  transition: top .15s ease;
+}
+.sk-skip-link:focus { top: 8px; }
+
+/* Honour reduced-motion: drop non-essential transitions/animations. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Rich text boxes (el.rich): restore list rendering the global reset strips. */
 .rt ul, .rt ol { padding-left: 1.3em; margin: 0; }
 .rt ul { list-style: disc; }
