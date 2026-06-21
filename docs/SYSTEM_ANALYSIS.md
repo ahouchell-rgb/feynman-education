@@ -168,9 +168,15 @@ correct spine and it has held across a large surface.
    `school_ai_spend()` roll-up), with model-aware pricing; routing stays Opus-authoring /
    Sonnet-bulk through `pickModel`.
 
-Next incremental steps (P1/P2): extend snapshot-first to the intervention path, add org-budget
-visibility in the billing UI, audit the role-change RPCs (P0 #4), and wire objective↔retrieval-topic
-IDs so the blend joins on identifiers rather than names.
+Follow-ups since shipped: org-budget visibility in the billing UI ✅, role-change RPC auditing
+(P0 #4) + an slt audit viewer ✅, weak-objective → pupil intervention drill-down ✅, and the
+**objective↔retrieval-topic crosswalk** ✅ — `topic_objective_map` lets the blend join on ids
+(name remains the fallback); the retrieval-app side (topics gain `subject_id`/`objective_id`, RPCs
+gain an optional subject filter) is staged in `docs/retrieval/` to apply in that repo since both
+apps share the one anchor DB.
+
+Still open (P2/P3): accessibility pass (WCAG 2.2, procurement gate), observability (Sentry + cron
+alerting + dead-letter), and growing crosswalk coverage / per-subject dashboard splits.
 
 Everything else (subjects breadth, D2C funnels, MIS depth) is now incremental on a sound spine.
 The spine is good; the gaps are **testing, cross-repo contracts, performance switch-on, and the

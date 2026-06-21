@@ -14,7 +14,7 @@ export const maxDuration = 300;
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 import { rollupTrust, mapPool, type EnrichedClass } from "@/lib/trustBenchmark";
-import { rollupRetrieval, blendObjectiveMastery, type AssessmentObjective } from "@/lib/mastery";
+import { rollupRetrieval, blendObjectiveMastery, crosswalkMap, type AssessmentObjective } from "@/lib/mastery";
 
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 
@@ -89,8 +89,10 @@ export async function GET(req: Request) {
   }
 
   let classes: any[] = [];
+  let xwalk = new Map<string, string>();
   try { classes = await rpc("trust_classes", {}, token); } catch { classes = []; }
   if (!Array.isArray(classes)) classes = [];
+  try { xwalk = crosswalkMap(await rest(`topic_objective_map?select=topic_id,objective_id`, token)); } catch { /* no crosswalk yet */ }
 
   // Aggregate each class's weak objectives (bounded concurrency).
   const enriched: EnrichedClass[] = await mapPool(classes, 8, async (c: any) => {
@@ -98,7 +100,7 @@ export async function GET(req: Request) {
     let weak: any[] = [];
     if (retId) {
       const rows = await rpc("class_weak_topics", { p_class_id: retId, p_limit: 8, p_min_marked: 5 }, token, secret);
-      weak = (Array.isArray(rows) ? rows : []).map((w: any) => ({ topic_id: w.topic_id, topic_name: w.topic_name, pct_correct: Math.round(Number(w.pct_correct)) }));
+      weak = (Array.isArray(rows) ? rows : []).map((w: any) => ({ topic_id: w.topic_id, topic_name: w.topic_name, objective_id: xwalk.get(w.topic_id) || null, pct_correct: Math.round(Number(w.pct_correct)) }));
     }
     return { school_id: c.school_id, school_name: c.school_name, year_group: c.year_group, linked: !!retId, weak };
   });

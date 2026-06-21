@@ -8,7 +8,7 @@
 // Pure + unit-tested (mastery.test.ts): no IO. The routes gather the two source
 // lists (retrieval rollup + the *_objective_mastery RPC) and call blend here.
 
-export interface RetrievalTopic { topic_id?: string; topic_name: string; pct_correct: number; marked?: number | null; }
+export interface RetrievalTopic { topic_id?: string; topic_name: string; pct_correct: number; marked?: number | null; objective_id?: string | null; }
 export interface AssessmentObjective {
   objective_id?: string; objective: string; code?: string | null;
   subject_slug?: string | null; strand?: string | null;
@@ -34,17 +34,32 @@ export function masteryKey(name: string): string {
   return String(name || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
+/** A topic's join key: prefer its mapped objective id, else its normalised name. */
+const topicKey = (objectiveId: string | null | undefined, name: string) =>
+  objectiveId ? `obj:${objectiveId}` : masteryKey(name);
+
+/** Index the topic→objective crosswalk rows into a topic_id → objective_id map. */
+export function crosswalkMap(rows: { topic_id: string; objective_id: string }[]): Map<string, string> {
+  const m = new Map<string, string>();
+  for (const r of rows || []) if (r.topic_id && r.objective_id) m.set(r.topic_id, r.objective_id);
+  return m;
+}
+
+export interface RetrievalRollup { key: string; label: string; pct: number; marked: number; classes: number; objective_id?: string | null; }
+
 /**
- * Collapse per-class retrieval weak-topic lists into one per-topic rollup:
- * mark-weighted % where marks exist, else a simple mean, plus the class count.
+ * Collapse per-class retrieval weak-topic lists into one rollup keyed by the
+ * objective the topic maps to (via the topic_objective crosswalk) when known —
+ * so several topic names under one objective merge — else by topic name.
+ * Mark-weighted % where marks exist, else a simple mean, plus the class count.
  */
-export function rollupRetrieval(weakLists: RetrievalTopic[][]): { key: string; label: string; pct: number; marked: number; classes: number }[] {
-  const by = new Map<string, { label: string; wsum: number; w: number; psum: number; n: number; classes: number }>();
+export function rollupRetrieval(weakLists: RetrievalTopic[][]): RetrievalRollup[] {
+  const by = new Map<string, { label: string; objective_id?: string | null; wsum: number; w: number; psum: number; n: number; classes: number }>();
   for (const list of weakLists) {
     for (const t of list || []) {
-      const key = masteryKey(t.topic_name);
+      const key = topicKey(t.objective_id, t.topic_name);
       if (!key) continue;
-      const e = by.get(key) || { label: t.topic_name, wsum: 0, w: 0, psum: 0, n: 0, classes: 0 };
+      const e = by.get(key) || { label: t.topic_name, objective_id: t.objective_id ?? null, wsum: 0, w: 0, psum: 0, n: 0, classes: 0 };
       const m = Number(t.marked) || 0;
       e.wsum += (Number(t.pct_correct) || 0) * m; e.w += m;
       e.psum += Number(t.pct_correct) || 0; e.n += 1; e.classes += 1;
@@ -52,7 +67,7 @@ export function rollupRetrieval(weakLists: RetrievalTopic[][]): { key: string; l
     }
   }
   return [...by.entries()].map(([key, e]) => ({
-    key, label: e.label,
+    key, label: e.label, objective_id: e.objective_id,
     pct: e.w > 0 ? Math.round(e.wsum / e.w) : Math.round(e.psum / e.n),
     marked: e.w, classes: e.classes,
   }));
@@ -60,28 +75,33 @@ export function rollupRetrieval(weakLists: RetrievalTopic[][]): { key: string; l
 
 /**
  * Blend a retrieval rollup with assessment per-objective rows into one ranked
- * (weakest-first) list. Entries are joined by objective name; an entry present
- * in only one source still appears (tagged with that single source).
+ * (weakest-first) list. Entries are joined by objective IDENTITY when both
+ * sides carry it (via the topic_objective crosswalk), falling back to objective
+ * NAME otherwise; an entry present in only one source still appears.
  */
 export function blendObjectiveMastery(
-  retrieval: { key: string; label: string; pct: number; marked: number }[],
+  retrieval: RetrievalRollup[],
   assessment: AssessmentObjective[],
 ): BlendedObjective[] {
   const out = new Map<string, BlendedObjective>();
 
   for (const r of retrieval) {
     out.set(r.key, {
-      key: r.key, label: r.label, blendedPct: r.pct, marked: r.marked,
+      key: r.key, label: r.label, objective_id: r.objective_id ?? undefined,
+      blendedPct: r.pct, marked: r.marked,
       sources: ["retrieval"], retrieval: { pct: r.pct, marked: r.marked },
     });
   }
 
   for (const a of assessment) {
-    const key = masteryKey(a.objective);
-    if (!key) continue;
+    const nameKey = masteryKey(a.objective);
+    const idKey = a.objective_id ? `obj:${a.objective_id}` : null;
+    if (!idKey && !nameKey) continue;
     const marked = Number(a.marked) || 0;
     const assess = { pct: Math.round(a.pct), marked, students: Number(a.students) || 0 };
-    const existing = out.get(key);
+    // Match a retrieval entry by id first (precise), then by name (fallback).
+    const existing = (idKey && out.get(idKey)) || out.get(nameKey);
+    const key = idKey || nameKey;
     if (existing) {
       existing.assessment = assess;
       existing.objective_id = a.objective_id || existing.objective_id;

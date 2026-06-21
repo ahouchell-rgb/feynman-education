@@ -7,7 +7,7 @@
 
 export interface EnrichedClass {
   school_id: string; school_name: string; year_group: number | null; linked: boolean;
-  weak: { topic_id: string; topic_name: string; pct_correct: number }[];
+  weak: { topic_id: string; topic_name: string; pct_correct: number; objective_id?: string | null }[];
 }
 export interface TrustRollup {
   schools: { school_id: string; name: string; classes: number; linked: number; avgMastery: number | null; weakest: { topic_name: string; avg: number }[] }[];
