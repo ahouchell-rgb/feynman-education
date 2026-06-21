@@ -15,6 +15,7 @@ const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 import { rollupTrust, mapPool, type EnrichedClass } from "@/lib/trustBenchmark";
 import { rollupRetrieval, blendObjectiveMastery, crosswalkMap, type AssessmentObjective } from "@/lib/mastery";
+import { withTimeout, RETRIEVAL_TIMEOUT_MS } from "@/lib/serverHelpers";
 
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 
@@ -30,6 +31,17 @@ async function rpc(fn: string, body: any, bearer: string, secret?: string) {
     body: JSON.stringify(body),
   });
   return r.ok ? r.json() : [];
+}
+/** Retrieval RPC with a hard timeout — a slow/down retrieval app yields [] for
+ *  that class rather than hanging the whole dashboard request. */
+async function rpcT(fn: string, body: any, bearer: string, secret?: string) {
+  try {
+    return await withTimeout((signal) => fetch(`${SK_URL}/rest/v1/rpc/${fn}`, {
+      method: "POST", signal,
+      headers: { "content-type": "application/json", apikey: SK_ANON, Authorization: `Bearer ${bearer}`, ...(secret ? { "x-sciencekit-key": secret } : {}) },
+      body: JSON.stringify(body),
+    }).then((r) => (r.ok ? r.json() : [])), RETRIEVAL_TIMEOUT_MS);
+  } catch { return []; }
 }
 
 export async function GET(req: Request) {
@@ -99,7 +111,9 @@ export async function GET(req: Request) {
     const retId = (c.retrieval_class_ids || [])[0];
     let weak: any[] = [];
     if (retId) {
-      const rows = await rpc("class_weak_topics", { p_class_id: retId, p_limit: 8, p_min_marked: 5 }, token, secret);
+      // Timeout + fallback: a slow/down retrieval app degrades this class to no
+      // weak topics so the dashboard still loads, rather than hanging the request.
+      const rows = await rpcT("class_weak_topics", { p_class_id: retId, p_limit: 8, p_min_marked: 5 }, token, secret);
       weak = (Array.isArray(rows) ? rows : []).map((w: any) => ({ topic_id: w.topic_id, topic_name: w.topic_name, objective_id: xwalk.get(w.topic_id) || null, pct_correct: Math.round(Number(w.pct_correct)) }));
     }
     return { school_id: c.school_id, school_name: c.school_name, year_group: c.year_group, linked: !!retId, weak };

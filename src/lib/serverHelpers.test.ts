@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { extractHtml, anthropicText, bearerToken, pickModel, AI_MODELS } from "./serverHelpers.js";
+import { extractHtml, anthropicText, bearerToken, pickModel, AI_MODELS, withTimeout } from "./serverHelpers.js";
 
 describe("extractHtml", () => {
   it("pulls HTML out of a ```html fenced block", () => {
@@ -48,5 +48,42 @@ describe("pickModel", () => {
   it("routes bulk/derived work to the cheap model and authoring to Opus", () => {
     expect(pickModel("bulk")).toBe(AI_MODELS.SONNET);
     expect(pickModel("authoring")).toBe(AI_MODELS.OPUS);
+  });
+});
+
+describe("withTimeout", () => {
+  it("resolves with the fn's value when it finishes in time", async () => {
+    const out = await withTimeout(async () => "ok", 50);
+    expect(out).toBe("ok");
+  });
+
+  it("rejects with a timeout error when the fn is too slow", async () => {
+    await expect(
+      withTimeout(() => new Promise((r) => setTimeout(() => r("late"), 100)), 5),
+    ).rejects.toThrow(/timeout after 5ms/);
+  });
+
+  it("aborts the supplied signal on timeout", async () => {
+    let aborted = false;
+    await expect(
+      withTimeout((signal) => new Promise((_, reject) => {
+        signal.addEventListener("abort", () => { aborted = true; reject(new Error("aborted")); });
+      }), 5),
+    ).rejects.toThrow();
+    expect(aborted).toBe(true);
+  });
+
+  it("does not abort the signal on the success path", async () => {
+    const out = await withTimeout(async (signal) => {
+      expect(signal.aborted).toBe(false);
+      return 42;
+    }, 50);
+    expect(out).toBe(42);
+  });
+
+  it("propagates a rejection thrown by the fn before the timeout", async () => {
+    await expect(
+      withTimeout(async () => { throw new Error("boom"); }, 50),
+    ).rejects.toThrow(/boom/);
   });
 });

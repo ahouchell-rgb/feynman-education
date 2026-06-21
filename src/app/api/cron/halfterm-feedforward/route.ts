@@ -11,7 +11,7 @@
 //   ANTHROPIC_API_KEY           — scaffolds
 //   SK_API_KEY                  — the x-sciencekit-key shared secret that gates the retrieval RPCs
 import { buildFeedforwardPptx } from "@/lib/feedforwardPptx";
-import { cronAuthorized } from "@/lib/serverHelpers";
+import { cronAuthorized, withTimeout, RETRIEVAL_TIMEOUT_MS } from "@/lib/serverHelpers";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -36,13 +36,16 @@ async function skAdmin(path: string, init: RequestInit = {}) {
   if (!r.ok) throw new Error(`SK ${path}: ${r.status} ${await r.text().catch(() => "")}`);
   return r.status === 204 ? null : r.json();
 }
+// Timeout + fallback: a slow/down retrieval app yields [] so the per-class loop
+// skips that class (logged in `results`) instead of hanging to maxDuration.
 async function retRpc(fn: string, body: any) {
-  const r = await fetch(`${RET_URL}/rest/v1/rpc/${fn}`, {
-    method: "POST",
-    headers: { "content-type": "application/json", apikey: RET_KEY, Authorization: `Bearer ${RET_KEY}`, "x-sciencekit-key": SK_API_KEY },
-    body: JSON.stringify(body),
-  });
-  return r.ok ? r.json() : [];
+  try {
+    return await withTimeout((signal) => fetch(`${RET_URL}/rest/v1/rpc/${fn}`, {
+      method: "POST", signal,
+      headers: { "content-type": "application/json", apikey: RET_KEY, Authorization: `Bearer ${RET_KEY}`, "x-sciencekit-key": SK_API_KEY },
+      body: JSON.stringify(body),
+    }).then((r) => (r.ok ? r.json() : [])), RETRIEVAL_TIMEOUT_MS);
+  } catch (e: any) { console.warn(`halfterm-feedforward retRpc ${fn} failed: ${e?.message || e}`); return []; }
 }
 
 function halfTermLabel(d: Date) {

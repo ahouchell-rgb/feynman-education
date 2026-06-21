@@ -12,6 +12,7 @@
 //   3. an AI parent-tone summary (Anthropic) — falls back to a plain template
 
 import { supaRest } from "@/lib/supabaseRest";
+import { withTimeout, RETRIEVAL_TIMEOUT_MS } from "@/lib/serverHelpers";
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION = "2023-06-01";
@@ -69,13 +70,16 @@ export async function fetchWeakTopics(opts: {
   studentId?: string | null; retrievalClassId: string; limit?: number;
 }): Promise<WeakTopic[]> {
   const { retUrl, retKey, skApiKey, studentId, retrievalClassId, limit = 4 } = opts;
+  // Timeout + fallback: a slow/down retrieval app yields [] so the parent report
+  // is generated with no weak topics (the cron continues to the next pupil)
+  // rather than the request hanging to maxDuration.
   const call = async (fn: string, body: any): Promise<WeakTopic[]> => {
     try {
-      const r = await fetch(`${retUrl}/rest/v1/rpc/${fn}`, {
-        method: "POST",
+      const r = await withTimeout((signal) => fetch(`${retUrl}/rest/v1/rpc/${fn}`, {
+        method: "POST", signal,
         headers: { "content-type": "application/json", apikey: retKey, Authorization: `Bearer ${retKey}`, "x-sciencekit-key": skApiKey },
         body: JSON.stringify(body),
-      });
+      }), RETRIEVAL_TIMEOUT_MS);
       if (!r.ok) return [];
       const d = await r.json();
       return Array.isArray(d) ? d : [];
