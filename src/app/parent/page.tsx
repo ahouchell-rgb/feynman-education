@@ -12,13 +12,25 @@ const COL = {
 };
 
 interface Report { id: string; weekStart: string; html: string; emailed: boolean; }
-interface Child { linkId: string; studentName: string; classLabel: string; practiseUrl: string | null; unsubscribeToken: string; reports: Report[]; }
+interface Weak { topic_id: string; topic_name: string; pct: number; practiseUrl: string | null; }
+interface Home { enabled: boolean; weak: Weak[]; targetGrade: string | null; recentScore: number | null; }
+interface Child { linkId: string; studentName: string; classLabel: string; practiseUrl: string | null; unsubscribeToken: string; reports: Report[]; home?: Home; }
 
 function firstName(s: string) { return (s || "").trim().split(/\s+/)[0] || s; }
+function heat(pct: number) { return pct < 40 ? "#b95a3c" : pct < 65 ? "#a06520" : "#1a7f5a"; }
+const GRADES = ["9", "8", "7", "6", "5", "4", "3"];
 
-function ChildCard({ child }: { child: Child }) {
+function ChildCard({ child, token }: { child: Child; token: string }) {
   const [openId, setOpenId] = useState<string | null>(child.reports[0]?.id || null);
+  const [target, setTarget] = useState(child.home?.targetGrade || "");
   const open = child.reports.find((r) => r.id === openId);
+  const home = child.home;
+
+  const saveTarget = async (g: string) => {
+    setTarget(g);
+    await fetch("/api/parent/set-target", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ t: token, linkId: child.linkId, target: g }) }).catch(() => {});
+  };
+
   return (
     <div style={{ background: COL.card, border: `1px solid ${COL.border}`, borderRadius: 12, padding: 24, marginBottom: 20 }}>
       <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap", marginBottom: 4 }}>
@@ -32,6 +44,40 @@ function ChildCard({ child }: { child: Child }) {
           </a>
         </p>
       )}
+
+      {/* Home: adaptive practice + target tracker */}
+      {home && (home.enabled ? (
+        <div style={{ background: "#f7f5ef", border: `1px solid ${COL.border}`, borderRadius: 10, padding: 16, marginBottom: 18 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+            <strong style={{ fontSize: 14 }}>Home practice</strong>
+            <label style={{ fontSize: 12, color: COL.muted }}>Target grade{" "}
+              <select value={target} onChange={(e) => saveTarget(e.target.value)} style={{ fontSize: 13, padding: "3px 6px", borderRadius: 6, border: `1px solid ${COL.border}` }}>
+                <option value="">—</option>
+                {GRADES.map((g) => <option key={g} value={g}>{g}</option>)}
+              </select>
+            </label>
+          </div>
+          {home.recentScore != null && (
+            <div style={{ fontSize: 12, color: COL.muted, marginBottom: 10 }}>Recent practice: <strong style={{ color: heat(home.recentScore) }}>{home.recentScore}%</strong>{target && <> · working toward grade {target}</>}</div>
+          )}
+          {home.weak.length === 0 ? <p style={{ fontSize: 13, color: COL.muted, margin: 0 }}>No weak areas to focus on right now — nice work.</p> : (
+            <div>
+              <div style={{ fontSize: 12, color: COL.dim, marginBottom: 6 }}>Focus on these tonight:</div>
+              {home.weak.map((w) => (
+                <div key={w.topic_id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderTop: `1px solid ${COL.border}` }}>
+                  <span style={{ flex: 1, fontSize: 13 }}>{w.topic_name}</span>
+                  <span style={{ fontSize: 12, fontFamily: "monospace", color: heat(w.pct) }}>{w.pct}%</span>
+                  {w.practiseUrl && <a href={w.practiseUrl} style={{ fontSize: 12, color: COL.green, textDecoration: "none" }}>Practise →</a>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div style={{ background: "#f7f5ef", border: `1px dashed ${COL.border}`, borderRadius: 10, padding: 14, marginBottom: 18, fontSize: 13, color: COL.muted }}>
+          <strong>Home practice</strong> — personalised practice and a target tracker for {firstName(child.studentName)}. Ask your school to enable it, or subscribe.
+        </div>
+      ))}
 
       {child.reports.length === 0 ? (
         <p style={{ color: COL.muted, fontSize: 14 }}>No reports yet — the first arrives at the end of the school week.</p>
@@ -87,7 +133,7 @@ function PortalInner() {
       <p style={{ color: COL.muted, margin: "0 0 28px", fontSize: 15 }}>
         {data.children.length ? "Weekly progress and a few minutes of the right practice." : "No active children are linked to this account yet."}
       </p>
-      {data.children.map((c) => <ChildCard key={c.linkId} child={c} />)}
+      {data.children.map((c) => <ChildCard key={c.linkId} child={c} token={token} />)}
       <p style={{ fontSize: 11, color: COL.dim, textAlign: "center", marginTop: 24 }}>
         Reports reflect your child's class lessons and practice. Questions? Speak to their science teacher.
       </p>

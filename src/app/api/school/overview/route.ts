@@ -62,10 +62,12 @@ export async function GET(req: Request) {
   // School name + join code + trust link (RLS lets a member read their own school).
   let schoolName = "Your school";
   let joinCode: string | null = null;
+  let homeSponsored = false;
   let trust: { linked: boolean; name?: string } = { linked: false };
   try {
-    const s = (await rest(`schools?id=eq.${profile.school_id}&select=name,join_code,trust_id`, token))?.[0];
+    const s = (await rest(`schools?id=eq.${profile.school_id}&select=name,join_code,trust_id,home_sponsored`, token))?.[0];
     if (s?.name) schoolName = s.name;
+    homeSponsored = !!s?.home_sponsored;
     if (role === "slt") joinCode = s?.join_code || null;
     if (s?.trust_id) {
       trust.linked = true;
@@ -98,7 +100,7 @@ export async function GET(req: Request) {
 
   const years = [...new Set(enriched.map((c) => c.year_group).filter(Boolean))].sort((a, b) => a - b);
   return j({
-    enabled: true, role, school: { name: schoolName }, joinCode, trust,
+    enabled: true, role, school: { name: schoolName }, joinCode, homeSponsored, trust,
     years, classes: enriched,
     generatedAt: new Date().toISOString(),
   });

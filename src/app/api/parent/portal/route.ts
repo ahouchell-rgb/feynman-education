@@ -20,6 +20,16 @@ async function admin(path: string) {
   if (!r.ok) throw new Error(`${path}: ${r.status}`);
   return r.json();
 }
+async function retRpc(fn: string, body: any) {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const secret = process.env.SK_API_KEY || "";
+  const r = await fetch(`${SK_URL}/rest/v1/rpc/${fn}`, {
+    method: "POST",
+    headers: { "content-type": "application/json", apikey: key, Authorization: `Bearer ${key}`, ...(secret ? { "x-sciencekit-key": secret } : {}) },
+    body: JSON.stringify(body),
+  });
+  return r.ok ? r.json() : [];
+}
 
 export async function GET(req: Request) {
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return j({ error: "not configured" }, 500);
@@ -34,14 +44,27 @@ export async function GET(req: Request) {
   } catch { return j({ error: "lookup failed" }, 500); }
   if (!guardian) return j({ error: "not found" }, 404);
 
-  // Consented children only, with their class (for the practise link).
+  // Consented children only, with their class (for the practise link) + Home fields.
   let links: any[] = [];
   try {
     links = await admin(
       `guardian_student?guardian_id=eq.${guardian.id}&consent_status=eq.granted` +
-      `&select=id,student_name,unsubscribe_token,class:classes(name,retrieval_class_ids)`,
+      `&select=id,student_name,student_id,unsubscribe_token,target_grade,home_subscribed,class:classes(name,retrieval_class_ids,teacher_id)`,
     );
   } catch { /* leave empty */ }
+
+  // School sponsorship: a child's Home is free when their school sponsors it.
+  const teacherIds = [...new Set(links.map((l) => l.class?.teacher_id).filter(Boolean))];
+  const sponsoredByTeacher = new Map<string, boolean>();
+  if (teacherIds.length) {
+    try {
+      const profs = await admin(`profiles?id=in.(${teacherIds.join(",")})&select=id,school_id`);
+      const schoolIds = [...new Set(profs.map((p: any) => p.school_id).filter(Boolean))];
+      const schools = schoolIds.length ? await admin(`schools?id=in.(${schoolIds.join(",")})&select=id,home_sponsored`) : [];
+      const sponsored = new Map(schools.map((s: any) => [s.id, !!s.home_sponsored]));
+      profs.forEach((p: any) => sponsoredByTeacher.set(p.id, !!sponsored.get(p.school_id)));
+    } catch { /* no sponsorship info */ }
+  }
 
   // Saved reports for those links, newest first.
   const linkIds = links.map((l) => l.id);
@@ -54,9 +77,25 @@ export async function GET(req: Request) {
     } catch { /* leave empty */ }
   }
 
-  const children = links.map((l) => {
+  const children = await Promise.all(links.map(async (l) => {
     const retId = (l.class?.retrieval_class_ids || [])[0];
     const mine = reports.filter((r) => r.link_id === l.id);
+    const homeEnabled = !!l.home_subscribed || !!sponsoredByTeacher.get(l.class?.teacher_id);
+
+    // Home: the child's weakest objectives (per-pupil RPC, falling back to class).
+    let weak: any[] = [];
+    if (homeEnabled && retId) {
+      const rows = l.student_id
+        ? await retRpc("student_weak_topics", { p_student_id: l.student_id, p_limit: 6 })
+        : [];
+      const src = (Array.isArray(rows) && rows.length) ? rows : await retRpc("class_weak_topics", { p_class_id: retId, p_limit: 6 });
+      weak = (Array.isArray(src) ? src : []).map((w: any) => ({
+        topic_id: w.topic_id, topic_name: w.topic_name, pct: Math.round(Number(w.pct_correct)),
+        practiseUrl: w.topic_id ? `${RET_ORIGIN}/topic/${encodeURIComponent(w.topic_id)}` : null,
+      }));
+    }
+    const recentScore = weak.length ? Math.round(weak.reduce((a, w) => a + w.pct, 0) / weak.length) : null;
+
     return {
       linkId: l.id,
       studentName: l.student_name,
@@ -64,8 +103,9 @@ export async function GET(req: Request) {
       practiseUrl: retId ? `${RET_ORIGIN}/class/${encodeURIComponent(retId)}` : null,
       unsubscribeToken: l.unsubscribe_token,
       reports: mine.map((r) => ({ id: r.id, weekStart: r.week_start, html: r.html, emailed: r.emailed })),
+      home: { enabled: homeEnabled, weak, targetGrade: l.target_grade || null, recentScore },
     };
-  });
+  }));
 
   return j({ guardianName: guardian.full_name || null, children });
 }

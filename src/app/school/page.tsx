@@ -11,7 +11,7 @@ import { AppShell } from "@/components/AppShell";
 
 interface WeakRow { topic_id: string; topic_name: string; pct_correct: number; marked: number | null; students: number | null; }
 interface ClassRow { class_id: string; name: string; year_group: number; discipline: string; tier: string; teacher_name: string; linked: boolean; weak: WeakRow[]; }
-interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; trust?: { linked: boolean; name?: string }; years?: number[]; classes?: ClassRow[]; }
+interface Overview { enabled: boolean; role: string; school?: { name: string }; joinCode?: string | null; homeSponsored?: boolean; trust?: { linked: boolean; name?: string }; years?: number[]; classes?: ClassRow[]; }
 
 // Staff roster with role + remove controls (slt only).
 const ROLE_LABEL: Record<string, string> = { member: "Teacher", hod: "Head of Dept", slt: "Senior leader" };
@@ -301,6 +301,18 @@ function SchoolContent() {
               {members.length} staff · {members.filter((m) => m.school_role !== "member").length} leader{members.filter((m) => m.school_role !== "member").length === 1 ? "" : "s"}
             </span>
           )}
+        </div>
+      )}
+
+      {data.role === "slt" && (
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", padding: "12px 16px", border: `1px solid ${C.rule}`, borderRadius: 8, background: C.surface, marginBottom: 24 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 13, color: C.text, fontWeight: 500 }}>Home for parents {data.homeSponsored ? <span style={{ fontFamily: C.mono, fontSize: 10, color: C.grn }}>· SPONSORED</span> : ""}</div>
+            <div style={{ fontSize: 11, color: C.dim }}>Make the parent Home product (practice + target tracking) free for your parents.</div>
+          </div>
+          <Btn v={data.homeSponsored ? "ghost" : "pri"} onClick={async () => { try { await sk.rpc("set_school_home_sponsored", { p_on: !data.homeSponsored }); await load(); } catch (e: any) { setErr(e.message); } }}>
+            {data.homeSponsored ? "Turn off" : "Sponsor Home"}
+          </Btn>
         </div>
       )}
 
