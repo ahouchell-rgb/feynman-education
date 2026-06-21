@@ -15,6 +15,7 @@ import { SetCurrentLessonModal } from "@/components/SetCurrentLessonModal";
 import { SingleFileSlot } from "@/components/SingleFileSlot";
 import { RetrievalAppFrame } from "@/components/RetrievalAppFrame";
 import { UnitGaps } from "@/components/UnitGaps";
+import { ObjectiveMastery } from "@/components/ObjectiveMastery";
 import { ClassWeakTopics } from "@/components/ClassWeakTopics";
 import { PaperGaps } from "@/components/PaperGaps";
 import { FeedforwardFromPaper } from "@/components/FeedforwardFromPaper";
@@ -460,6 +461,9 @@ function LessonContent() {
 
       {/* Close the loop: this class's weakest objectives in this unit, + feedforward */}
       <UnitGaps unitId={unitId as string} unitTitle={unit?.title} lessonId={lessonId as string} contextClass={contextClass} />
+
+      {/* The mastery graph for this unit: blended retrieval + exam % per objective */}
+      <ObjectiveMastery unitId={unitId as string} contextClass={contextClass} />
 
       {/* Class-wide feedforward: the class's weakest topics across its whole retrieval history */}
       <ClassWeakTopics lessonId={lessonId as string} contextClass={contextClass} />

@@ -267,6 +267,37 @@ export const ret = {
       return [...byTopic.values()].sort((a, b) => a.pct_correct - b.pct_correct).slice(0, limit);
     } catch { return []; }
   },
+  // Blended per-objective mastery for one unit across the teacher's linked classes
+  // (class_objective_breakdown RPC: retrieval practice + past-paper marks → one % per
+  // objective, plus the retrieval/exam split). Across multiple linked classes the %s
+  // are marks-weighted and the volume summed (single-class — the common case — is exact).
+  objectiveBreakdown: async (classIds: string[], unitId: string): Promise<any[]> => {
+    if (!classIds?.length || !unitId) return [];
+    const wAvg = (a: number | null, am: number, b: number | null, bm: number): number | null => {
+      const aw = a == null ? 0 : am, bw = b == null ? 0 : bm;
+      const denom = aw + bw;
+      return denom ? Math.round(((a ?? 0) * aw + (b ?? 0) * bw) / denom) : null;
+    };
+    try {
+      const per = await Promise.all(classIds.map(cid =>
+        sk.rpc("class_objective_breakdown", { p_class_id: cid, p_unit_id: unitId }).catch(() => [])
+      ));
+      const byObj = new Map<string, any>();
+      for (const row of per.flat()) {
+        const prev = byObj.get(row.objective_id);
+        if (!prev) { byObj.set(row.objective_id, { ...row }); continue; }
+        byObj.set(row.objective_id, {
+          ...prev,
+          pct: wAvg(prev.pct, prev.marks, row.pct, row.marks),
+          retrieval_pct: wAvg(prev.retrieval_pct, prev.marks, row.retrieval_pct, row.marks),
+          paper_pct: wAvg(prev.paper_pct, prev.marks, row.paper_pct, row.marks),
+          marks: (prev.marks || 0) + (row.marks || 0),
+          pupils: (prev.pupils || 0) + (row.pupils || 0),
+        });
+      }
+      return [...byObj.values()].sort((a, b) => (a.pct ?? 101) - (b.pct ?? 101));
+    } catch { return []; }
+  },
 };
 
 /* ─── Misc helpers ─── */
