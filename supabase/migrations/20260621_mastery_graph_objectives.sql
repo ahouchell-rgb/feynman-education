@@ -1,6 +1,8 @@
 -- Mastery graph — Phase 1: the objectives layer.
 -- See docs/MASTERY_GRAPH.md. Target: the shared anchor (uvzukwoxqhcxaxtzrziy).
--- STATUS: NOT APPLIED — draft for review. Additive + idempotent; safe to replay.
+-- STATUS: APPLIED to uvzukwoxqhcxaxtzrziy on 2026-06-21 (via Supabase apply_migration,
+-- tracked in supabase_migrations as 'mastery_graph_objectives'). Verified: 48 objectives
+-- (1 lesson + 47 unit-level), 74 topic_objective_map rows. Additive + idempotent; safe to replay.
 --
 -- Locked decisions (2026-06-21): lesson-grain objectives (+ spec_ref escape hatch),
 -- with a unit-level fallback objective per unit so every topic_map row has a home;
