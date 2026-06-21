@@ -133,6 +133,8 @@ function SlidesContent() {
   const [genFocus, setGenFocus] = useState("");
   const [genBusy, setGenBusy] = useState(false);
   const [autoQDeckId, setAutoQDeckId] = useState(null); // deck just AI-generated → auto-open questions
+  const [shareOpen, setShareOpen] = useState(false); // public-share popover
+  const [shareCopied, setShareCopied] = useState(false);
 
   const load = async () => {
     try { setDecks(await store.list()); }
@@ -376,6 +378,29 @@ function SlidesContent() {
     try { bumpBase(await store.update(active.id, { title })); } catch (e) { setErr(e.message); }
   };
 
+  // The public share link for the open deck (only valid once it's public).
+  const shareUrl = (deck) =>
+    typeof window !== "undefined" && deck?.share_token ? `${window.location.origin}/slides/shared/${deck.share_token}` : "";
+
+  // Toggle anonymous public sharing. Turning it on mints a share_token (kept
+  // across off/on so a previously-handed-out link keeps working). Signed-in only.
+  const togglePublic = async () => {
+    if (!active || guest) return;
+    const turningOn = !active.is_public;
+    const token = active.share_token || (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    const patch = { is_public: turningOn, share_token: token };
+    setActive((a) => ({ ...a, ...patch }));
+    if (turningOn) setShareOpen(true);
+    try { bumpBase(await store.update(active.id, patch)); } catch (e) { setErr(e.message); }
+  };
+
+  const copyShareLink = async () => {
+    const url = shareUrl(active);
+    if (!url) return;
+    try { await navigator.clipboard.writeText(url); setShareCopied(true); setTimeout(() => setShareCopied(false), 2000); }
+    catch { /* clipboard blocked — the input is still selectable */ }
+  };
+
   const exportPptx = async () => {
     setExporting(true);
     try { const { exportDeck } = await import("@/lib/exportPptx"); await exportDeck(active); }
@@ -481,6 +506,36 @@ function SlidesContent() {
                     {active.is_master ? "★ Official" : "Make official"}
                   </Btn>
                 )}
+                <div style={{ position: "relative" }}>
+                  <Btn v={active.is_public ? "pri" : "ghost"} title="Share a public link anyone can view and copy"
+                    onClick={() => setShareOpen((o) => !o)}>
+                    {active.is_public ? "🔗 Public" : "Share link"}
+                  </Btn>
+                  {shareOpen && (
+                    <>
+                      <div onClick={() => setShareOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 40 }} />
+                      <div style={{ position: "absolute", top: "calc(100% + 6px)", right: 0, zIndex: 41, width: 320, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 10px 32px rgba(0,0,0,0.16)", padding: 14 }}>
+                        <div style={{ fontFamily: C.sans, fontSize: 13, color: C.text, marginBottom: 4 }}>Public share link</div>
+                        <div style={{ fontFamily: C.sans, fontSize: 12, color: C.muted, lineHeight: 1.4, marginBottom: 12 }}>
+                          {active.is_public ? "Anyone with this link can view the deck and make their own copy." : "Turn on to get a link anyone can view and copy. The deck stays read-only for them."}
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 12 }}>
+                          <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>{active.is_public ? "Public" : "Private"}</span>
+                          <Btn v={active.is_public ? "soft" : "pri"} onClick={togglePublic}>
+                            {active.is_public ? "Make private" : "Make public"}
+                          </Btn>
+                        </div>
+                        {active.is_public && (
+                          <div style={{ display: "flex", gap: 6 }}>
+                            <input readOnly value={shareUrl(active)} onFocus={(e) => e.target.select()}
+                              style={{ flex: 1, minWidth: 0, padding: "6px 8px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 11, background: C.bg, color: C.text }} />
+                            <Btn v="soft" onClick={copyShareLink}>{shareCopied ? "Copied ✓" : "Copy"}</Btn>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
               </>
             )}
             <span style={{ fontFamily: C.mono, fontSize: 11, color: save === "error" ? C.red : C.dim }}>
