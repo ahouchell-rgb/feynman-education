@@ -17,6 +17,10 @@
       "schedule": "0 4 * * 0"
     },
     {
+      "path": "/api/cron/school-snapshots",
+      "schedule": "30 4 * * 0"
+    },
+    {
       "path": "/api/cron/mis-writeback",
       "schedule": "30 3 * * *"
     }

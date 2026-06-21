@@ -184,10 +184,26 @@ function Bar({ pct }: { pct: number }) {
   );
 }
 
+function Sparkline({ points, w = 200, ht = 38 }: { points: number[]; w?: number; ht?: number }) {
+  if (points.length < 2) return null;
+  const min = Math.min(...points), max = Math.max(...points), span = Math.max(1, max - min);
+  const xs = (i: number) => (i / (points.length - 1)) * (w - 4) + 2;
+  const ys = (v: number) => ht - 4 - ((v - min) / span) * (ht - 8);
+  const d = points.map((v, i) => `${i === 0 ? "M" : "L"}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(" ");
+  const last = points[points.length - 1];
+  return (
+    <svg width={w} height={ht} style={{ display: "block" }}>
+      <path d={d} fill="none" stroke={heat(last).fg} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={xs(points.length - 1)} cy={ys(last)} r={3} fill={heat(last).fg} />
+    </svg>
+  );
+}
+
 function SchoolContent() {
   const { profile, setProfile } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
   const [members, setMembers] = useState<{ id: string; full_name: string; school_role: string }[]>([]);
+  const [trend, setTrend] = useState<{ taken_on: string; school_avg: number | null }[]>([]);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(true);
   const [yearFilter, setYearFilter] = useState<number | "all">("all");
@@ -201,6 +217,10 @@ function SchoolContent() {
       if (!r.ok) throw new Error(d.error || "Failed to load");
       setData(d);
       if (d.enabled && d.role === "slt") loadMembers();
+      if (d.enabled) {
+        sk.q("school_benchmark_snapshots", { params: { select: "taken_on,school_avg", order: "taken_on.asc", limit: "16" } })
+          .then((rows) => setTrend((rows || []).filter((r: any) => r.school_avg != null))).catch(() => {});
+      }
     } catch (e: any) { setErr(e.message); }
     setLoading(false);
   };
@@ -255,6 +275,20 @@ function SchoolContent() {
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 24, maxWidth: "54ch", lineHeight: 1.55 }}>
         Aggregated across every class — to target support, not to rank teachers. {filtered.length} classes shown.
       </p>
+
+      {trend.length >= 2 && (
+        <div style={{ display: "flex", alignItems: "center", gap: 16, padding: "12px 16px", border: `1px solid ${C.rule}`, borderRadius: 8, background: C.surface, marginBottom: 24 }}>
+          <div>
+            <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: C.dim }}>School average · trend</div>
+            <div style={{ fontFamily: C.serif, fontSize: 28, color: heat(trend[trend.length - 1].school_avg || 0).fg, lineHeight: 1.1 }}>
+              {trend[trend.length - 1].school_avg}%
+              {(() => { const delta = (trend[trend.length - 1].school_avg || 0) - (trend[0].school_avg || 0); return <span style={{ fontFamily: C.mono, fontSize: 12, color: delta >= 0 ? C.grn : C.red, marginLeft: 8 }}>{delta >= 0 ? "▲" : "▼"} {Math.abs(delta)} pts</span>; })()}
+            </div>
+          </div>
+          <Sparkline points={trend.map((s) => s.school_avg || 0)} />
+          <div style={{ fontFamily: C.mono, fontSize: 10, color: C.faint, marginLeft: "auto" }}>{trend.length} weekly snapshots</div>
+        </div>
+      )}
 
       {data.role === "slt" && data.joinCode && (
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", padding: "12px 16px", border: `1px solid ${C.rule}`, borderRadius: 8, background: C.surface, marginBottom: 24 }}>
