@@ -14,6 +14,7 @@
 
 import { supaRest } from "@/lib/supabaseRest";
 import { getEntitlement, can } from "@/lib/entitlements";
+import { SUBJECT_SELECT, subjectName } from "@/lib/subject";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -23,10 +24,8 @@ const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });
 const sb = (table: string, opts: any, token: string) => supaRest(SK_URL, table, { apikey: SK_ANON, bearer: token, ...opts });
 
-const DISC_LABEL: Record<string, string> = { biology: "biology", chemistry: "chemistry", physics: "physics" };
-
 function buildInstruction(unit: any, lesson: any, focus: string | null): string {
-  const disc = DISC_LABEL[unit?.discipline] || "science";
+  const disc = subjectName(unit);
   const year = unit?.year_group ? `Year ${unit.year_group}` : "KS3–GCSE";
   const keywords = (lesson?.keywords || unit?.keywords || []);
   const kw = Array.isArray(keywords) && keywords.length ? keywords.join(", ") : "";
@@ -61,7 +60,7 @@ export async function POST(req: Request) {
   // Load unit (+ optional lesson) context under the teacher's RLS.
   let unit: any, lesson: any = null;
   try {
-    unit = await sb("units", { params: { id: `eq.${unitId}`, select: "id,title,discipline,year_group,keywords" }, single: true }, token);
+    unit = await sb("units", { params: { id: `eq.${unitId}`, select: `id,title,discipline,year_group,keywords,${SUBJECT_SELECT}` }, single: true }, token);
   } catch { return j({ error: "Unit not found" }, 404); }
   if (lessonId) {
     try { lesson = await sb("lessons", { params: { id: `eq.${lessonId}`, select: "id,title,keywords,unit_id" }, single: true }, token); }

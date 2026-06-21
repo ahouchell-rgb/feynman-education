@@ -10,6 +10,7 @@
 // Env: ANTHROPIC_API_KEY. Optional: SUPABASE_SERVICE_ROLE_KEY (usage log).
 
 import { supaRest } from "@/lib/supabaseRest";
+import { SUBJECT_SELECT, subjectName } from "@/lib/subject";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -23,7 +24,7 @@ const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, head
 const todayISO = () => new Date().toISOString().slice(0, 10);
 const strip = (s: unknown) => String(s ?? "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 
-const SYSTEM = `You write a REVISION BOOKLET for a UK secondary science pupil, as ONE self-contained HTML document that prints cleanly on A4 in black on white.
+const SYSTEM = `You write a REVISION BOOKLET for a UK secondary pupil in the subject given below, as ONE self-contained HTML document that prints cleanly on A4 in black on white.
 
 Include, in this order:
 - A title (the unit) + a short, encouraging intro and the big idea in one line.
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
   try {
     unit = await supaRest(SK_URL, "units", {
       apikey: SK_ANON, bearer: token, single: true,
-      params: { id: `eq.${body.unitId}`, select: "title,discipline,year_group,content,big_idea,misconceptions" },
+      params: { id: `eq.${body.unitId}`, select: `title,discipline,year_group,content,big_idea,misconceptions,${SUBJECT_SELECT}` },
     });
     resources = await supaRest(SK_URL, "resource_map", {
       apikey: SK_ANON, bearer: token,
@@ -85,6 +86,7 @@ export async function POST(req: Request) {
   }).join("\n");
 
   const ctx = [
+    `Subject: ${subjectName(unit)}`,
     `Unit: ${unit.title}${unit.discipline ? ` (${unit.discipline})` : ""}${unit.year_group ? ` · ${unit.year_group}` : ""}`,
     unit.big_idea && `Big idea: ${strip(unit.big_idea)}`,
     unit.content && `Content: ${strip(unit.content).slice(0, 2200)}`,

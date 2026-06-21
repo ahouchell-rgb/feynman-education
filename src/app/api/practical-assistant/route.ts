@@ -10,6 +10,7 @@
 // Env: ANTHROPIC_API_KEY. Optional: SUPABASE_SERVICE_ROLE_KEY (usage log).
 
 import { supaRest } from "@/lib/supabaseRest";
+import { SUBJECT_SELECT, subjectName, isScience } from "@/lib/subject";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
   try {
     unit = await supaRest(SK_URL, "units", {
       apikey: SK_ANON, bearer: token, single: true,
-      params: { id: `eq.${body.unitId}`, select: "title,discipline,year_group,required_practical,content,misconceptions" },
+      params: { id: `eq.${body.unitId}`, select: `title,discipline,year_group,required_practical,content,misconceptions,${SUBJECT_SELECT}` },
     });
   } catch { return j({ error: "Unit not found" }, 404); }
 
@@ -71,6 +72,7 @@ export async function POST(req: Request) {
   } catch { return j({ error: "Auth check failed." }, 401); }
 
   const ctx = [
+    `Subject: ${subjectName(unit)}`,
     `Unit: ${unit.title}${unit.discipline ? ` (${unit.discipline})` : ""}${unit.year_group ? ` · ${unit.year_group}` : ""}`,
     unit.required_practical && `Required practical: ${strip(unit.required_practical)}`,
     unit.content && `Topic content: ${strip(unit.content).slice(0, 1200)}`,
@@ -85,7 +87,9 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         model: MODEL, max_tokens: 4096,
         system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
-        messages: [{ role: "user", content: `${ctx}\n\nWrite the required practical sheet.` }],
+        messages: [{ role: "user", content: `${ctx}\n\n${isScience(unit)
+          ? "Write the required practical sheet."
+          : "This subject may not have a lab practical — write a 'required task / activity' sheet in the same structure (apparatus becomes materials/resources; the risk assessment becomes any safety or wellbeing notes, or omit if none), for the key hands-on activity in this unit."}` }],
       }),
     });
   } catch (e: any) { return j({ error: `Request to Claude failed: ${e.message}` }, 502); }

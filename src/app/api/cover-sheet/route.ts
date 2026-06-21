@@ -53,7 +53,7 @@ function deckOutline(slides: any[]): string {
   return out.join("\n\n").slice(0, 16000);
 }
 
-const SYSTEM = `You write a COVER LESSON SCRIPT for a UK secondary science lesson, so a cover teacher or non-specialist who does NOT know the science can deliver it confidently from the slides. You are given the deck slide-by-slide.
+const SYSTEM = `You write a COVER LESSON SCRIPT for a UK secondary lesson (infer the subject from the slides), so a cover teacher or non-specialist who does NOT know the subject can deliver it confidently from the slides. You are given the deck slide-by-slide.
 
 Produce ONE self-contained HTML document that prints cleanly on A4 in black on white. Structure:
 - A header: the lesson title, "Cover lesson script", a line for class + date, and a 2-3 sentence PLAIN-ENGLISH overview of what the lesson is about and the single big idea.
