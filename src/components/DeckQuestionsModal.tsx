@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { C } from "@/lib/theme";
 import { Btn, Inp, Badge } from "@/lib/primitives";
 import { sk } from "@/lib/sk";
+import { bookletForTopic } from "@/lib/publicBooklets";
 
 interface Draft { question_text: string; model_answer: string; marks: number; _on: boolean; }
 interface Cls { id: string; name: string; subject_id?: string | null; }
@@ -144,6 +145,8 @@ export function DeckQuestionsModal({ slides, lessonTitle = "", onClose }: { slid
 
   const chosenCount = drafts ? drafts.filter(q => q._on).length : 0;
   const topicName = topics.find(t => t.id === topicId)?.name || "";
+  // If this topic also has a public revision booklet, shared questions go live there too.
+  const booklet = bookletForTopic(topicId);
 
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 80, background: "rgba(26,23,20,0.45)", display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "5vh 16px", overflowY: "auto" }}>
@@ -182,10 +185,22 @@ export function DeckQuestionsModal({ slides, lessonTitle = "", onClose }: { slid
                 </select>
               </div>
             </div>
-            <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+            <div style={{ display: "flex", gap: 8, marginBottom: booklet ? 10 : 16 }}>
               <Inp placeholder="…or a new topic (e.g. lesson title)" value={newTopic} onChange={e => setNewTopic(e.target.value)} onKeyDown={e => e.key === "Enter" && createTopic()} style={{ fontFamily: C.sans }} />
               <Btn v="soft" onClick={createTopic} disabled={creatingTopic || !newTopic.trim()} style={{ whiteSpace: "nowrap" }}>{creatingTopic ? "Adding…" : "＋ Topic"}</Btn>
             </div>
+
+            {/* One pipeline, two surfaces: this topic also has a public revision booklet,
+                so questions published to the shared bank go live there too. */}
+            {booklet && (
+              <div style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 16, padding: "9px 11px", background: C.grnS, border: `1px solid ${C.grn}33`, borderRadius: 8 }}>
+                <span style={{ fontSize: 13, lineHeight: 1.4 }}>📖</span>
+                <div style={{ fontSize: 12, color: C.text, lineHeight: 1.45 }}>
+                  <strong style={{ fontWeight: 600 }}>Also feeds the public revision booklet.</strong> Once shared to the central bank, these questions appear in the live practice on{" "}
+                  <a href={booklet.url} target="_blank" rel="noreferrer" style={{ color: C.grn, fontWeight: 600 }}>{booklet.slug}</a> — no login needed for pupils.
+                </div>
+              </div>
+            )}
 
             {/* Generate */}
             {!drafts && (
@@ -197,7 +212,7 @@ export function DeckQuestionsModal({ slides, lessonTitle = "", onClose }: { slid
             )}
 
             {err && <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 8, background: C.redS, color: C.red, fontSize: 12 }}>{err}</div>}
-            {saved > 0 && !drafts && <div style={{ marginTop: 12, fontSize: 13, color: C.grn, fontWeight: 600 }}>✓ {saved} question{saved !== 1 ? "s" : ""} saved to {topicName || "the bank"} — your pupils will see them in retrieval practice.</div>}
+            {saved > 0 && !drafts && <div style={{ marginTop: 12, fontSize: 13, color: C.grn, fontWeight: 600 }}>✓ {saved} question{saved !== 1 ? "s" : ""} saved to {topicName || "the bank"} — your pupils will see them in retrieval practice{booklet ? ", and once shared they go live on the public revision booklet too" : ""}.</div>}
 
             {/* Drafts review */}
             {drafts && (
