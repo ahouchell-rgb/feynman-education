@@ -65,6 +65,7 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             { href: "/manage", label: "Manage" },
             { href: "/setup", label: "Setup" },
             { href: "/billing", label: "Billing" },
+            { href: "/account", label: "Account" },
           ].map(item => {
             const active = isActive(item.href) || (item.href === "/curriculum" && pathname?.startsWith("/unit/"));
             return (
