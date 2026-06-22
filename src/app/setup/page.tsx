@@ -5,6 +5,8 @@ import { useAuth, sk, ret } from "@/lib/sk";
 import { C, DISC, DAYS, PERIODS } from "@/lib/theme";
 import { Btn, Inp, Card } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
+import { TimetablePhotoImport } from "@/components/TimetablePhotoImport";
+import { matchClassName } from "@/lib/timetableMatch";
 
 function TimetableGrid({ classes, slots, onChange }) {
   const cycleThrough = (key) => {
@@ -82,6 +84,7 @@ function SetupContent() {
   const [classConfig, setClassConfig] = useState({});
   const [skClasses, setSkClasses] = useState([]);
   const [slots, setSlots] = useState({});
+  const [singleWeek, setSingleWeek] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
@@ -151,6 +154,35 @@ function SetupContent() {
       router.replace("/");
     } catch (e) { setErr(e.message); }
     setBusy(false);
+  };
+
+  // AI photo import → merge parsed entries into the grid for review. Existing
+  // manual entries win; the AI only fills empty slots. Nothing is saved until
+  // the teacher clicks "Finish setup".
+  const applyParsed = (entries, singleWeek) => {
+    setSingleWeek(!!singleWeek);
+    setSlots(prev => {
+      const next = { ...prev };
+      entries.forEach(e => {
+        const classId = matchClassName(e.class, skClasses);
+        if (!classId) return;
+        const key = `w${e.week}-d${e.day}-p${e.period}`;
+        if (!next[key]) next[key] = classId; // keep manual entries
+      });
+      return next;
+    });
+  };
+
+  // Mirror every Week A slot into Week B (handy for single-week timetables).
+  const copyWeekAtoB = () => {
+    setSlots(prev => {
+      const next = { ...prev };
+      Object.entries(prev).forEach(([k, v]) => {
+        const m = k.match(/^w1-(d\d+-p\d+)$/);
+        if (m && v) next[`w2-${m[1]}`] = v;
+      });
+      return next;
+    });
   };
 
   const unitsFor = (year_group, discipline) => allUnits.filter(u => {
@@ -271,6 +303,15 @@ function SetupContent() {
           <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>
             Tap a slot to assign your next class. Tap again to cycle. Right-click to clear.
           </p>
+          <div style={{ fontSize: 13, color: C.muted, marginBottom: 10 }}>
+            📷 Snap a photo of your timetable and we&apos;ll fill it in.
+          </div>
+          <TimetablePhotoImport classes={skClasses} onParsed={applyParsed} />
+          {singleWeek && (
+            <div style={{ marginBottom: 12 }}>
+              <Btn v="ghost" onClick={copyWeekAtoB} style={{ fontSize: 11, padding: "5px 12px" }}>Copy Week A → Week B</Btn>
+            </div>
+          )}
           <TimetableGrid classes={skClasses} slots={slots} onChange={setSlots} />
           {err && <div style={{ padding: "8px 10px", borderRadius: 6, background: C.redS, color: C.red, fontSize: 12, fontFamily: C.mono, marginBottom: 12, marginTop: 16 }}>{err}</div>}
           <div style={{ display: "flex", gap: 8, marginTop: 20 }}>

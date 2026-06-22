@@ -4,6 +4,7 @@ import { useAuth, sk, ret } from "@/lib/sk";
 import { C, DISC, DAYS, PERIODS } from "@/lib/theme";
 import { Btn, Inp, Card } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
+import { TimetablePhotoImport } from "@/components/TimetablePhotoImport";
 
 /* ───────────────────────── CLASSES SECTION ───────────────────────── */
 
@@ -390,6 +391,24 @@ function TimetableSection({ classes, slots, onChange }) {
     finally { setImporting(false); }
   };
 
+  // AI photo import → reuse the proven CSV apply path. Convert parsed entries to
+  // the exact `week,day,period,class,room` text the paste-importer consumes and
+  // drop it into the textarea, so the teacher reviews/imports it as normal. No
+  // auto-save: import only runs when they click Import.
+  const DAY_SHORT = { 1: "Mon", 2: "Tue", 3: "Wed", 4: "Thu", 5: "Fri" };
+  const onPhotoParsed = (entries) => {
+    const lines = ["week,day,period,class,room"];
+    entries.forEach(e => {
+      // entry.class is the verbatim class name the CSV importer matches on by name.
+      const name = String(e.class || "");
+      const csvName = /[",]/.test(name) ? `"${name.replace(/"/g, '""')}"` : name;
+      lines.push(`${e.week === 2 ? "B" : "A"},${DAY_SHORT[e.day] || e.day},${e.period},${csvName},`);
+    });
+    setCsvText(lines.join("\n"));
+    setImportOpen(true);
+    setImportMsg("");
+  };
+
   const cycleThrough = async (week, day, period) => {
     const key = `w${week}-d${day}-p${period}`;
     const existing = slotsByKey[key];
@@ -487,6 +506,7 @@ function TimetableSection({ classes, slots, onChange }) {
               );
             })}
           </div>
+          <TimetablePhotoImport classes={activeClasses} onParsed={onPhotoParsed} />
           <div style={{ marginBottom: 16 }}>
             <Btn v="ghost" onClick={() => setImportOpen((o) => !o)} style={{ fontSize: 11, padding: "5px 12px" }}>
               {importOpen ? "Close CSV import" : "Import from CSV"}
