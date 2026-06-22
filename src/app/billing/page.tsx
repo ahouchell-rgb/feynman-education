@@ -17,6 +17,9 @@ function BillingContent() {
   const [data, setData] = useState<Status | null>(null);
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState("");
+  // Teacher Pro billing cycle. Annual maps to the teacher_pro_annual plan slug,
+  // which flows straight through the existing slug-based checkout.
+  const [annual, setAnnual] = useState(false);
 
   const load = () => fetch("/api/billing/status", { headers: { authorization: `Bearer ${sk.auth.getToken()}` } })
     .then((r) => r.json()).then(setData).catch((e) => setErr(e.message));
@@ -34,6 +37,11 @@ function BillingContent() {
 
   if (!data) return <div style={{ padding: 40, color: C.dim, fontFamily: C.mono, fontSize: 12 }}>{err ? `Error: ${err}` : "Loading…"}</div>;
   const current = data.entitlement;
+
+  // Show the Teacher Pro card for the chosen cycle only; other plans always show.
+  const hasAnnual = data.plans.some((p) => p.slug === "teacher_pro_annual");
+  const visiblePlans = data.plans.filter((p) =>
+    annual ? p.slug !== "teacher_pro" : p.slug !== "teacher_pro_annual");
 
   return (
     <div>
@@ -61,8 +69,20 @@ function BillingContent() {
       {!data.configured && <div style={{ padding: "10px 14px", background: C.ambS, border: `1px solid ${C.amb}`, borderRadius: 6, color: C.amb, fontSize: 13, marginBottom: 20 }}>Stripe isn't configured yet (set STRIPE_SECRET_KEY + each plan's stripe_price_id). Plans show below; checkout activates once it's set.</div>}
       {err && <div style={{ padding: "10px 14px", background: C.redS, border: `1px solid ${C.red}`, borderRadius: 6, color: C.red, fontSize: 13, marginBottom: 20 }}>{err}</div>}
 
+      {hasAnnual && (
+        <div style={{ display: "inline-flex", gap: 0, border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden", marginBottom: 20, fontFamily: C.mono, fontSize: 12 }}>
+          {([["Monthly", false], ["Annual", true]] as [string, boolean][]).map(([label, val]) => (
+            <button key={label} onClick={() => setAnnual(val)} style={{
+              padding: "7px 16px", border: "none", cursor: "pointer",
+              background: annual === val ? C.grn : C.surface,
+              color: annual === val ? "#fff" : C.muted,
+            }}>{label}{label === "Annual" ? " · save 2 months" : ""}</button>
+          ))}
+        </div>
+      )}
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 16 }}>
-        {data.plans.map((p) => {
+        {visiblePlans.map((p) => {
           const isCurrent = current.plan === p.slug;
           const canBuy = data.configured && !!p.stripe_price_id && !isCurrent;
           return (

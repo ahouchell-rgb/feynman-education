@@ -16,6 +16,7 @@ import {
   bearerToken, requireUserId, logTokenUsage, callAnthropic,
 } from "@/lib/serverHelpers";
 import { costGBP, enforceAiBudget } from "@/lib/aiBudget";
+import { getEntitlement, can } from "@/lib/entitlements";
 
 export const runtime = "edge";
 
@@ -117,6 +118,15 @@ export async function POST(req) {
 
   const token = bearerToken(req);
   if (!token) return jsonError("Missing bearer token", 401);
+
+  // Entitlement gate (soft): only enforced when BILLING_ENFORCED=1, so current
+  // pilots stay open until billing is switched on.
+  if (process.env.BILLING_ENFORCED === "1") {
+    const ent = await getEntitlement({ skUrl: SK_URL, apikey: SK_ANON, bearer: token });
+    if (!can(ent, "ai_generators")) {
+      return new Response(JSON.stringify({ error: "The lesson AI chat is a Pro feature. Upgrade on the Billing page.", upgrade: true }), { status: 402, headers: { "content-type": "application/json" } });
+    }
+  }
 
   let body;
   try { body = await req.json(); }

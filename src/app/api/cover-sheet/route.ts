@@ -10,9 +10,10 @@
 //
 // Env: ANTHROPIC_API_KEY. Optional: SUPABASE_SERVICE_ROLE_KEY (usage log).
 
-import { bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, callAnthropic, json as j } from "@/lib/serverHelpers";
+import { SK_URL, SK_ANON, bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, callAnthropic, json as j } from "@/lib/serverHelpers";
 import { enforceAiBudget } from "@/lib/aiBudget";
 import { maybeFactcheck } from "@/lib/factcheck";
+import { getEntitlement, can } from "@/lib/entitlements";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -67,6 +68,13 @@ export async function POST(req: Request) {
   if (!process.env.ANTHROPIC_API_KEY) return j({ error: "ANTHROPIC_API_KEY not configured." }, 500);
   const token = bearerToken(req);
   if (!token) return j({ error: "Sign in to use the AI assistant." }, 401);
+
+  // Entitlement gate (soft): only enforced when BILLING_ENFORCED=1, so current
+  // pilots stay open until billing is switched on.
+  if (process.env.BILLING_ENFORCED === "1") {
+    const ent = await getEntitlement({ skUrl: SK_URL, apikey: SK_ANON, bearer: token });
+    if (!can(ent, "ai_generators")) return j({ error: "Cover sheet generation is a Pro feature. Upgrade on the Billing page.", upgrade: true }, 402);
+  }
 
   let body: any;
   try { body = await req.json(); } catch { return j({ error: "Invalid JSON body" }, 400); }
