@@ -5,7 +5,7 @@
 //   CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, SK_API_KEY
 
 import { mapPool } from "@/lib/trustBenchmark";
-import { cronAuthorized, recordCronRun } from "@/lib/serverHelpers";
+import { cronAuthorized, recordCronRun, withTimeout, RETRIEVAL_TIMEOUT_MS } from "@/lib/serverHelpers";
 import { reportError } from "@/lib/observe";
 
 const JOB = "school-snapshots";
@@ -28,13 +28,16 @@ export async function GET(req: Request) {
     if (!r.ok) throw new Error(`${path}: ${r.status}`);
     return r.json();
   };
+  // Timeout + fallback: a slow/down retrieval app yields [] for that class so the
+  // cron skips it and keeps going (partial success), instead of hanging to maxDuration.
   const retRpc = async (fn: string, body: any) => {
-    const r = await fetch(`${SK_URL}/rest/v1/rpc/${fn}`, {
-      method: "POST",
-      headers: { "content-type": "application/json", apikey: key, Authorization: `Bearer ${key}`, "x-sciencekit-key": secret },
-      body: JSON.stringify(body),
-    });
-    return r.ok ? r.json() : [];
+    try {
+      return await withTimeout((signal) => fetch(`${SK_URL}/rest/v1/rpc/${fn}`, {
+        method: "POST", signal,
+        headers: { "content-type": "application/json", apikey: key, Authorization: `Bearer ${key}`, "x-sciencekit-key": secret },
+        body: JSON.stringify(body),
+      }).then((r) => (r.ok ? r.json() : [])), RETRIEVAL_TIMEOUT_MS);
+    } catch (e: any) { console.warn(`school-snapshots retRpc ${fn} failed: ${e?.message || e}`); return []; }
   };
 
   const startedAt = new Date().toISOString();

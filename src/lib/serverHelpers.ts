@@ -116,6 +116,38 @@ export function cronAuthorized(req: Request): boolean {
   return req.headers.get("x-vercel-cron") != null;
 }
 
+/** Default timeout (ms) for retrieval-app RPC calls. The retrieval app is a
+ *  separate deployment; if it's slow or down we must not let a dashboard request
+ *  or cron hang up to its Vercel maxDuration. Callers degrade gracefully on the
+ *  rejection (dashboards → empty weak-topics; crons → skip + continue). */
+export const RETRIEVAL_TIMEOUT_MS = 8000;
+
+/** Race a promise against an AbortController-backed timer. On timeout the
+ *  controller is aborted (so a passed-through `fetch(..., { signal })` actually
+ *  cancels) and the returned promise rejects with a "timeout" error. The signal
+ *  is optional: pass it into fetch to abort the in-flight request; even without
+ *  it the caller stops waiting once `ms` elapses.
+ *
+ *  `fn` receives the AbortSignal; resolve/timeout always clears the timer. */
+export async function withTimeout<T>(
+  fn: (signal: AbortSignal) => Promise<T>,
+  ms = RETRIEVAL_TIMEOUT_MS,
+): Promise<T> {
+  const ctrl = new AbortController();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => {
+      ctrl.abort();
+      reject(new Error(`timeout after ${ms}ms`));
+    }, ms);
+  });
+  try {
+    return await Promise.race([fn(ctrl.signal), timeout]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
 /** Pull a Bearer token out of the request, or null. */
 export function bearerToken(req: Request): string | null {
   const a = req.headers.get("authorization") || "";

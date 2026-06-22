@@ -16,6 +16,7 @@
 //   repo. Until it ships this route returns enabled:true with no rows + a note.
 
 import { mapPool } from "@/lib/trustBenchmark";
+import { withTimeout, RETRIEVAL_TIMEOUT_MS } from "@/lib/serverHelpers";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -36,6 +37,17 @@ async function rpc(fn: string, body: any, bearer: string, secret?: string) {
     body: JSON.stringify(body),
   });
   return r.ok ? r.json() : [];
+}
+/** Retrieval RPC with a hard timeout — a slow/down retrieval app yields [] for
+ *  that class rather than hanging the whole request. */
+async function rpcT(fn: string, body: any, bearer: string, secret?: string) {
+  try {
+    return await withTimeout((signal) => fetch(`${SK_URL}/rest/v1/rpc/${fn}`, {
+      method: "POST", signal,
+      headers: { "content-type": "application/json", apikey: SK_ANON, Authorization: `Bearer ${bearer}`, ...(secret ? { "x-sciencekit-key": secret } : {}) },
+      body: JSON.stringify(body),
+    }).then((r) => (r.ok ? r.json() : [])), RETRIEVAL_TIMEOUT_MS);
+  } catch { return []; }
 }
 
 export async function GET(req: Request) {
@@ -70,7 +82,7 @@ export async function GET(req: Request) {
   const perClass = await mapPool(classes, 6, async (c: any) => {
     const retId = (c.retrieval_class_ids || [])[0];
     if (!retId) return [];
-    const rows = await rpc("class_intervention_list", { p_class_id: retId, p_threshold: threshold }, token, secret);
+    const rows = await rpcT("class_intervention_list", { p_class_id: retId, p_threshold: threshold }, token, secret);
     return (Array.isArray(rows) ? rows : []).map((r: any) => ({
       class_name: c.name, teacher_name: c.teacher_name, year_group: c.year_group,
       student_name: r.student_name, topic_name: r.topic_name,

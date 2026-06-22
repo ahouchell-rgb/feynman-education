@@ -13,6 +13,10 @@
 
 const WONDE_BASE = "https://api.wonde.com/v1.0";
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
+// Per-page timeout so a hung MIS request can't stall the sync cron indefinitely
+// (wondeAll loops up to 200 pages). Wonde can be slow under load, so this is
+// generous; the AbortController cancels the in-flight fetch on expiry.
+const WONDE_PAGE_TIMEOUT_MS = 20000;
 
 export function wondeConfigured(): boolean {
   return !!(process.env.WONDE_TOKEN && process.env.WONDE_SCHOOL_ID);
@@ -25,7 +29,16 @@ export function wondeSchoolId(): string {
 async function wondeGet(path: string, params: Record<string, string> = {}): Promise<any> {
   const u = new URL(`${WONDE_BASE}/${path}`);
   Object.entries(params).forEach(([k, v]) => u.searchParams.set(k, v));
-  const r = await fetch(u, { headers: { Authorization: `Bearer ${process.env.WONDE_TOKEN}`, Accept: "application/json" } });
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), WONDE_PAGE_TIMEOUT_MS);
+  let r: Response;
+  try {
+    r = await fetch(u, { headers: { Authorization: `Bearer ${process.env.WONDE_TOKEN}`, Accept: "application/json" }, signal: ctrl.signal });
+  } catch (e: any) {
+    throw new Error(`Wonde ${path}: ${ctrl.signal.aborted ? `timeout after ${WONDE_PAGE_TIMEOUT_MS}ms` : (e?.message || "fetch failed")}`);
+  } finally {
+    clearTimeout(timer);
+  }
   if (!r.ok) throw new Error(`Wonde ${path}: ${r.status} ${(await r.text().catch(() => "")).slice(0, 200)}`);
   return r.json();
 }
