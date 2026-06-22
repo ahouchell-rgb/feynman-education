@@ -272,6 +272,22 @@ function Placeholder({ icon, label }) {
   );
 }
 
+/* Per-element error fallback (Present). A broken chart/video/equation used to
+   vanish silently — the teacher never knew something failed and couldn't
+   explain the gap. This small, unobtrusive card sits in the element's box so the
+   teacher SEES that one element didn't load and can simply move on. Sized to the
+   element so it never blows out the slide layout. */
+function ElementErrorCard({ el }: { el: any }) {
+  return (
+    <div style={{ ...elStyle(el), background: "rgba(243,238,226,0.96)", border: "1px dashed #b8a78a",
+                  borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "#8a6d3b", fontFamily: "system-ui, sans-serif", textAlign: "center",
+                  padding: 8, overflow: "hidden", boxSizing: "border-box" }}>
+      <span style={{ fontSize: 13, lineHeight: 1.3, maxWidth: "100%" }}>⚠ This element couldn’t load</span>
+    </div>
+  );
+}
+
 /* Live video embed (Present only). stopPropagation so play-clicks don't advance. */
 function VideoFrame({ el }) {
   const stop = (e) => e.stopPropagation();
@@ -319,15 +335,49 @@ function HtmlFrame({ el }) {
   );
 }
 
-/* Live webcam (Present only), with a device picker remembered per browser. */
+/* Camera permission, remembered per browser. Once a teacher grants access we
+   record it so the next lesson with a visualiser slide doesn't surprise them
+   mid-flow. Returns "granted" | "denied" | "prompt" | "unsupported". */
+export const CAM_PERMISSION_KEY = "sk_camera_permission"; // "granted" once allowed
+
+export async function probeCameraPermission(): Promise<string> {
+  if (typeof navigator === "undefined" || !navigator?.mediaDevices?.getUserMedia) return "unsupported";
+  // The Permissions API is the non-intrusive way to read state without prompting.
+  try {
+    const status = await (navigator as any).permissions?.query?.({ name: "camera" as any });
+    if (status?.state) {
+      if (status.state === "granted") { try { localStorage.setItem(CAM_PERMISSION_KEY, "granted"); } catch {} }
+      return status.state;
+    }
+  } catch {}
+  // Fall back to our remembered choice (Firefox/Safari may not expose camera here).
+  try { if (localStorage.getItem(CAM_PERMISSION_KEY) === "granted") return "granted"; } catch {}
+  return "prompt";
+}
+
+/* Live webcam (Present only), with a device picker remembered per browser. The
+   stream is only requested once `armed` is true — the present page pre-checks
+   permission and arms it (or the teacher taps the in-frame "Enable camera"
+   button), so the OS permission prompt never ambushes a live class. */
 function LiveCamera() {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const [devices, setDevices] = useState([]);
   const [deviceId, setDeviceId] = useState(() => { try { return localStorage.getItem("sk_visualiser_device") || ""; } catch { return ""; } });
   const [error, setError] = useState("");
+  // Don't auto-request unless permission was previously granted; otherwise wait
+  // for an explicit tap so the prompt is never a mid-lesson surprise.
+  const [armed, setArmed] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let alive = true;
+    probeCameraPermission().then((s) => { if (alive) { if (s === "granted") setArmed(true); setReady(true); } });
+    return () => { alive = false; };
+  }, []);
+
+  useEffect(() => {
+    if (!armed) return;
     let cancelled = false;
     (async () => {
       try {
@@ -337,16 +387,28 @@ function LiveCamera() {
         if (cancelled) { s.getTracks().forEach((t) => t.stop()); return; }
         streamRef.current = s;
         if (videoRef.current) videoRef.current.srcObject = s;
+        try { localStorage.setItem(CAM_PERMISSION_KEY, "granted"); } catch {}
         const all = await navigator.mediaDevices.enumerateDevices();
         if (!cancelled) setDevices(all.filter((d) => d.kind === "videoinput"));
       } catch (e) { if (!cancelled) setError(e?.message || "Couldn't access the camera."); }
     })();
     return () => { cancelled = true; if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop()); };
-  }, [deviceId]);
+  }, [deviceId, armed]);
 
   const pick = (id) => { setDeviceId(id); try { localStorage.setItem("sk_visualiser_device", id); } catch {} };
 
   if (error) return <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#e88", fontFamily: "system-ui", fontSize: 13, textAlign: "center", padding: 12 }}>📷 {error}</div>;
+  // Permission not yet granted — show a clear, calm prompt instead of silently
+  // firing the OS dialog. Tapping arms the stream (and triggers the prompt).
+  if (ready && !armed) return (
+    <div onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}
+      style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, background: "#0f0f12", color: "#cfcfd6", fontFamily: "system-ui", textAlign: "center", padding: 16 }}>
+      <span style={{ fontSize: 30 }}>📷</span>
+      <span style={{ fontSize: 13, opacity: 0.85, maxWidth: 260 }}>The visualiser needs camera access.</span>
+      <button onClick={() => setArmed(true)}
+        style={{ padding: "8px 18px", fontSize: 14, fontWeight: 600, color: "#1a1714", background: "#ffd166", border: "none", borderRadius: 8, cursor: "pointer" }}>Enable camera</button>
+    </div>
+  );
   return (
     <div style={{ width: "100%", height: "100%", position: "relative", background: "#000" }} onClick={(e) => e.stopPropagation()}>
       <video ref={videoRef} autoPlay playsInline muted style={{ width: "100%", height: "100%", objectFit: "contain", background: "#000" }} />
@@ -361,16 +423,50 @@ function LiveCamera() {
   );
 }
 
+/* Window event the present page dispatches when the teacher presses "T" — lets a
+   key shortcut pause/resume the countdown that lives inside the slide. */
+export const TIMER_TOGGLE_EVENT = "sk-timer-toggle";
+
 /* A countdown that runs while a slide is presented. Restarts on mount (the
-   present view keys each slide by index, so entering a slide restarts it). */
+   present view keys each slide by index, so entering a slide restarts it).
+   Pausable: click the timer (or press "T") to pause/resume — a classroom task
+   timer is useless if you can't hold it while the class needs a moment longer.
+   A paused timer shows a ⏸ marker and dims slightly so the state is obvious on
+   a projector. */
 function LiveTimer({ el }) {
   const [rem, setRem] = useState(el.duration ?? 300);
+  const [paused, setPaused] = useState(false);
+
+  // reset whenever we (re-)enter the slide / the duration changes
+  useEffect(() => { setRem(el.duration ?? 300); setPaused(false); }, [el.duration]);
+
   useEffect(() => {
-    setRem(el.duration ?? 300);
+    if (paused) return;
     const t = setInterval(() => setRem((r) => (r > 0 ? r - 1 : 0)), 1000);
     return () => clearInterval(t);
-  }, [el.duration]);
-  return <div style={{ ...elStyle(el), color: rem <= 10 ? "#ff5a4a" : (el.color || "#fff") }}>{fmtTime(rem)}</div>;
+  }, [paused]);
+
+  // "T" key toggles all live timers on the slide.
+  useEffect(() => {
+    const onToggle = () => setPaused((p) => !p);
+    window.addEventListener(TIMER_TOGGLE_EVENT, onToggle);
+    return () => window.removeEventListener(TIMER_TOGGLE_EVENT, onToggle);
+  }, []);
+
+  const toggle = (e) => { e.stopPropagation(); setPaused((p) => !p); };
+  return (
+    <div onClick={toggle} onPointerDown={(e) => e.stopPropagation()}
+      title={paused ? "Paused — click or press T to resume" : "Click or press T to pause"}
+      style={{ ...elStyle(el), cursor: "pointer", position: "relative",
+               opacity: paused ? 0.55 : (elStyle(el).opacity ?? 1),
+               color: rem <= 10 && !paused ? "#ff5a4a" : (el.color || "#fff") }}>
+      {fmtTime(rem)}
+      {paused && (
+        <span style={{ position: "absolute", top: 6, right: 10, fontSize: Math.max(14, (el.fontSize || 72) * 0.22),
+                       lineHeight: 1, opacity: 0.85 }}>⏸</span>
+      )}
+    </div>
+  );
 }
 
 /* An arrow, defined by two endpoints. Read-only by default; the editor passes
@@ -404,6 +500,11 @@ export function ArrowSvg({ el, selected, hitProps }: { el: any; selected?: boole
 
 /* How many elements on a slide are marked "reveal on click". */
 export const revealCount = (slide) => (slide?.elements || []).filter((e) => e.reveal).length;
+
+/* Whether a slide contains a live visualiser (camera) element — used by Present
+   to pre-check camera permission before the teacher reaches the slide. */
+export const slideHasVisualiser = (slide) => (slide?.elements || []).some((e) => e.type === "visualiser");
+export const deckHasVisualiser = (slides) => (slides || []).some(slideHasVisualiser);
 
 /* Replace brand-frame tokens. index is 0-based; {n} shows it 1-based. */
 export function masterToken(str: string, { index = 0, total = 1, title = "" }: { index?: number; total?: number; title?: string } = {}) {
@@ -481,8 +582,11 @@ export function StaticSlide({ slide, width, style, reveal = Infinity, live = fal
           else if (el.type === "html" && live) node = <div style={elStyle(el)}><HtmlFrame el={el} /></div>;
           else node = <div style={elStyle(el)}><ElInner el={el} /></div>;
           // Isolate each element: one malformed element (bad coords/chart/LaTeX)
-          // renders nothing rather than crashing the whole slide and the app.
-          return <ErrorBoundary key={el.id} fallback={null}>{node}</ErrorBoundary>;
+          // renders nothing rather than crashing the whole slide and the app. In
+          // Present (live) we show a small "couldn't load" card in the element's
+          // box so the teacher knows something failed and can move on; in
+          // thumbnails/editor-rail we stay silent (null) to avoid clutter.
+          return <ErrorBoundary key={el.id} fallback={live ? <ElementErrorCard el={el} /> : null}>{node}</ErrorBoundary>;
         })}
       </div>
     </div>
