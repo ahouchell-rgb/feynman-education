@@ -5,6 +5,10 @@ import { C, DISC } from "@/lib/theme";
 import { Btn, Inp } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
 import { ObjectiveMasteryPanel, type BlendedObjectiveRow } from "@/components/ObjectiveMasteryPanel";
+import {
+  overallTrend, objectiveDeltas, mostImproved, stillStuck, impactNarrative,
+  type Snapshot, type CohortOutcome,
+} from "@/lib/impact";
 
 // SLT / Head-of-Department dashboard (strategy Build 2). Cohort mastery across
 // every class in the school: the objectives the cohort is weakest on, and a
@@ -232,6 +236,7 @@ function Bar({ pct }: { pct: number }) {
   );
 }
 
+// Compact inline school-average sparkline used by the headline trend strip.
 function Sparkline({ points, w = 200, ht = 38 }: { points: number[]; w?: number; ht?: number }) {
   if (points.length < 2) return null;
   const min = Math.min(...points), max = Math.max(...points), span = Math.max(1, max - min);
@@ -247,11 +252,177 @@ function Sparkline({ points, w = 200, ht = 38 }: { points: number[]; w?: number;
   );
 }
 
+// A labelled school-average trend chart with axis-ish ticks (extends the bare
+// sparkline) — the first-vs-latest delta is shown by the caller's headline.
+function TrendChart({ points, w = 360, ht = 110 }: { points: { taken_on: string; avg: number }[]; w?: number; ht?: number }) {
+  if (points.length < 2) return null;
+  const vals = points.map((p) => p.avg);
+  const min = Math.max(0, Math.min(...vals) - 5), max = Math.min(100, Math.max(...vals) + 5), span = Math.max(1, max - min);
+  const padL = 26, padB = 16;
+  const xs = (i: number) => padL + (i / (points.length - 1)) * (w - padL - 6);
+  const ys = (v: number) => ht - padB - ((v - min) / span) * (ht - padB - 6);
+  const d = points.map((p, i) => `${i === 0 ? "M" : "L"}${xs(i).toFixed(1)},${ys(p.avg).toFixed(1)}`).join(" ");
+  const last = points[points.length - 1];
+  const fmtDate = (s: string) => new Date(s + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  return (
+    <svg width={w} height={ht} style={{ display: "block", overflow: "visible" }}>
+      {[min, Math.round((min + max) / 2), max].map((g) => (
+        <g key={g}>
+          <line x1={padL} y1={ys(g)} x2={w - 6} y2={ys(g)} stroke={C.rule} strokeWidth={1} />
+          <text x={padL - 5} y={ys(g) + 3} textAnchor="end" fontFamily={C.mono} fontSize={9} fill={C.faint}>{g}</text>
+        </g>
+      ))}
+      <path d={d} fill="none" stroke={heat(last.avg).fg} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+      {points.map((p, i) => <circle key={i} cx={xs(i)} cy={ys(p.avg)} r={i === points.length - 1 ? 3.5 : 2} fill={heat(p.avg).fg} />)}
+      <text x={xs(0)} y={ht - 3} textAnchor="start" fontFamily={C.mono} fontSize={9} fill={C.faint}>{fmtDate(points[0].taken_on)}</text>
+      <text x={w - 6} y={ht - 3} textAnchor="end" fontFamily={C.mono} fontSize={9} fill={C.faint}>{fmtDate(last.taken_on)}</text>
+    </svg>
+  );
+}
+
+// PRIORITY #1 — Impact / progress-over-time. Built entirely from the EXISTING
+// school_benchmark_snapshots history: overall trend + delta, and per-objective
+// most-improved / still-stuck. Degrades gracefully when history is too thin.
+function ImpactSection({ snaps, outcomes }: { snaps: Snapshot[]; outcomes: CohortOutcome[] }) {
+  const trend = useMemo(() => overallTrend(snaps), [snaps]);
+  const deltas = useMemo(() => objectiveDeltas(snaps), [snaps]);
+  const improved = useMemo(() => mostImproved(deltas, 5), [deltas]);
+  const stuck = useMemo(() => stillStuck(deltas, 5), [deltas]);
+
+  if (snaps.length === 0) return null;
+
+  return (
+    <>
+      <SectionLabel>Impact — progress over the term</SectionLabel>
+      {!trend.enough ? (
+        <Empty>Not enough snapshot history yet to show a trend — check back after a couple more weekly snapshots.</Empty>
+      ) : (
+        <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", padding: "16px 18px", border: `1px solid ${C.rule}`, borderRadius: 8, background: C.surface, marginBottom: 20 }}>
+          <div style={{ minWidth: 160 }}>
+            <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: C.dim }}>School mastery</div>
+            <div style={{ fontFamily: C.serif, fontSize: 38, color: heat(trend.latest || 0).fg, lineHeight: 1.05 }}>{trend.latest}%</div>
+            {trend.delta != null && (
+              <div style={{ fontFamily: C.mono, fontSize: 13, color: trend.delta >= 0 ? C.grn : C.red }}>
+                {trend.delta >= 0 ? "▲ +" : "▼ "}{trend.delta} pts since {new Date(trend.points[0].taken_on + "T00:00:00").toLocaleDateString("en-GB", { month: "long" })}
+              </div>
+            )}
+          </div>
+          <TrendChart points={trend.points} />
+        </div>
+      )}
+
+      {(improved.length > 0 || stuck.length > 0) && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 32 }}>
+          <DeltaList title="Most improved" rows={improved} mode="delta" empty="No measured improvement yet." />
+          <DeltaList title="Still stuck" rows={stuck} mode="level" empty="No persistently weak objectives." />
+        </div>
+      )}
+      {outcomes.length > 0 && trend.enough && (
+        <div style={{ fontFamily: C.mono, fontSize: 11, color: C.dim, marginTop: -16, marginBottom: 28, lineHeight: 1.5 }}>
+          {impactNarrative(trend, deltas, outcomes)}
+        </div>
+      )}
+    </>
+  );
+}
+
+function DeltaList({ title, rows, mode, empty }: { title: string; rows: { key: string; label: string; first: number | null; latest: number; delta: number | null }[]; mode: "delta" | "level"; empty: string }) {
+  return (
+    <div>
+      <div style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 10 }}>{title}</div>
+      <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden", background: C.surface }}>
+        {rows.length === 0 ? <Empty>{empty}</Empty> : rows.map((r, i) => (
+          <div key={r.key} style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 12, alignItems: "center", padding: "9px 14px", borderTop: i === 0 ? "none" : `1px solid ${C.rule}` }}>
+            <span style={{ fontSize: 13, color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.label}</span>
+            {mode === "delta" && r.delta != null ? (
+              <span style={{ fontFamily: C.mono, fontSize: 12, color: r.delta >= 0 ? C.grn : C.red, fontWeight: 600 }}>
+                {r.delta >= 0 ? "+" : ""}{r.delta} pts <span style={{ color: C.faint, fontWeight: 400 }}>({r.first}→{r.latest})</span>
+              </span>
+            ) : (
+              <span style={{ fontFamily: C.mono, fontSize: 12, color: heat(r.latest).fg, fontWeight: 600 }}>{r.latest}%{r.delta != null && <span style={{ color: r.delta >= 0 ? C.grn : C.red, fontWeight: 400, marginLeft: 6 }}>{r.delta >= 0 ? "+" : ""}{r.delta}</span>}</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// PRIORITY #2 — minimal SLT-only cohort-outcomes recorder. A table + add form;
+// writes go straight to the RLS-gated cohort_outcomes table under the SLT's JWT.
+function OutcomesPanel({ schoolId, selfId, outcomes, reload }: { schoolId: string; selfId?: string; outcomes: CohortOutcome[]; reload: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [label, setLabel] = useState("");
+  const [term, setTerm] = useState("");
+  const [metric, setMetric] = useState("");
+  const [value, setValue] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  const add = async () => {
+    const v = Number(value);
+    if (!label.trim()) { setErr("Enter a label, e.g. \"Y11 mock pass rate\"."); return; }
+    if (!value.trim() || Number.isNaN(v)) { setErr("Enter a numeric value."); return; }
+    setBusy(true); setErr("");
+    try {
+      await sk.q("cohort_outcomes", { method: "POST", body: {
+        school_id: schoolId, label: label.trim(), term: term.trim() || null,
+        metric: metric.trim() || null, value: v, recorded_by: selfId || null,
+      } });
+      setLabel(""); setTerm(""); setMetric(""); setValue("");
+      reload();
+    } catch (e: any) { setErr(e.message || "Couldn't save."); }
+    setBusy(false);
+  };
+  const remove = async (id: string) => {
+    if (!confirm("Remove this outcome?")) return;
+    try { await sk.del("cohort_outcomes", { id: `eq.${id}` }); reload(); } catch (e: any) { setErr(e.message); }
+  };
+
+  return (
+    <div style={{ marginBottom: 32 }}>
+      <SectionLabel>Cohort outcomes — recorded results</SectionLabel>
+      {outcomes.length > 0 && (
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden", background: C.surface, marginBottom: 12 }}>
+          {outcomes.map((o, i) => (
+            <div key={(o as any).id || i} style={{ display: "grid", gridTemplateColumns: "1fr 120px 90px 28px", gap: 12, alignItems: "center", padding: "10px 16px", borderTop: i === 0 ? "none" : `1px solid ${C.rule}` }}>
+              <span style={{ fontSize: 13, color: C.text }}>{o.label}{o.metric ? <span style={{ color: C.dim, fontFamily: C.mono, fontSize: 11 }}> · {o.metric}</span> : null}</span>
+              <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>{o.term || "—"}</span>
+              <span style={{ fontFamily: C.mono, fontSize: 14, color: C.text, fontWeight: 600, textAlign: "right" }}>{o.value}</span>
+              {(o as any).id ? <button onClick={() => remove((o as any).id)} title="Remove" style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14, textAlign: "right" }}>×</button> : <span />}
+            </div>
+          ))}
+        </div>
+      )}
+      {!open ? (
+        <button onClick={() => setOpen(true)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: C.mono, fontSize: 12, color: C.muted, padding: 0 }}>+ Record a cohort outcome</button>
+      ) : (
+        <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, padding: 16, background: C.surface }}>
+          {err && <div style={{ padding: "8px 12px", background: C.redS, border: `1px solid ${C.red}`, borderRadius: 6, color: C.red, fontSize: 12, marginBottom: 12 }}>{err}</div>}
+          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 90px auto", gap: 8, alignItems: "center" }}>
+            <Inp placeholder="Label (e.g. Y11 mock pass rate)" value={label} onChange={(e) => setLabel(e.target.value)} />
+            <Inp placeholder="Term (e.g. Spring)" value={term} onChange={(e) => setTerm(e.target.value)} />
+            <Inp placeholder="Metric (e.g. % 4+)" value={metric} onChange={(e) => setMetric(e.target.value)} />
+            <Inp placeholder="Value" value={value} onChange={(e) => setValue(e.target.value)} />
+            <Btn onClick={add} disabled={busy} style={{ whiteSpace: "nowrap" }}>{busy ? "…" : "Add"}</Btn>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function SchoolContent() {
   const { profile, setProfile } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
   const [members, setMembers] = useState<{ id: string; full_name: string; school_role: string }[]>([]);
-  const [trend, setTrend] = useState<{ taken_on: string; school_avg: number | null }[]>([]);
+  const [snaps, setSnaps] = useState<Snapshot[]>([]);
+  // Chronological school-average snapshots — drives the compact headline trend strip.
+  const trend = useMemo(
+    () => [...snaps].filter((s) => s.school_avg != null).sort((a, b) => a.taken_on.localeCompare(b.taken_on)),
+    [snaps],
+  );
+  const [outcomes, setOutcomes] = useState<CohortOutcome[]>([]);
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(true);
   const [yearFilter, setYearFilter] = useState<number | "all">("all");
@@ -259,6 +430,7 @@ function SchoolContent() {
 
   const [hydrating, setHydrating] = useState(false);
   const loadMembers = () => sk.rpc("school_members", {}).then(setMembers).catch(() => {});
+  const loadOutcomes = () => sk.q("cohort_outcomes", { params: { select: "id,label,term,metric,value,recorded_at", order: "recorded_at.desc", limit: "50" } }).then(setOutcomes).catch(() => {});
   const load = async (live = false) => {
     try {
       const r = await fetch(`/api/school/overview${live ? "?live=1" : ""}`, { headers: { authorization: `Bearer ${sk.auth.getToken()}` } });
@@ -267,8 +439,9 @@ function SchoolContent() {
       setData(d);
       if (d.enabled && d.role === "slt") loadMembers();
       if (d.enabled) {
-        sk.q("school_benchmark_snapshots", { params: { select: "taken_on,school_avg", order: "taken_on.asc", limit: "16" } })
-          .then((rows) => setTrend((rows || []).filter((r: any) => r.school_avg != null))).catch(() => {});
+        loadOutcomes();
+        sk.q("school_benchmark_snapshots", { params: { select: "taken_on,school_avg,payload", order: "taken_on.asc", limit: "16" } })
+          .then((rows) => setSnaps(rows || [])).catch(() => {});
         // Snapshot-first paint, then hydrate the live per-class grid in the background.
         if (d.enabled && d.meta?.source === "snapshot") {
           setHydrating(true);
@@ -376,6 +549,17 @@ function SchoolContent() {
           <Sparkline points={trend.map((s) => s.school_avg || 0)} />
           <div style={{ fontFamily: C.mono, fontSize: 10, color: C.faint, marginLeft: "auto" }}>{trend.length} weekly snapshots</div>
         </div>
+      )}
+
+      <ImpactSection snaps={snaps} outcomes={outcomes} />
+
+      {data.role === "slt" && profile?.school_id && (
+        <>
+          <OutcomesPanel schoolId={profile.school_id} selfId={profile?.id} outcomes={outcomes} reload={loadOutcomes} />
+          <div style={{ marginTop: -20, marginBottom: 28 }}>
+            <a href="/school/impact/print" style={{ fontFamily: C.mono, fontSize: 12, color: C.grn, textDecoration: "none" }}>Governors / Ofsted summary →</a>
+          </div>
+        </>
       )}
 
       {data.role === "slt" && data.joinCode && (
