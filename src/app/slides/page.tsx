@@ -6,9 +6,10 @@ import { C } from "@/lib/theme";
 import { Btn } from "@/lib/primitives";
 import { SlideEditor } from "@/components/SlideEditor";
 import { StaticSlide } from "@/components/SlideStage";
-import { guestRead, guestWrite, GUEST_KEY } from "@/lib/guestDecks";
+import { guestRead, guestWrite, GUEST_KEY, GuestQuotaError } from "@/lib/guestDecks";
 import { google, PPTX_MIME } from "@/lib/google";
 import { openDrivePicker } from "@/components/GoogleDrivePicker";
+import { hasUnsavedWork, readUpdatedAtWithRetry, retryDelayMs } from "./saveHelpers";
 
 function newSlide() { return { id: "s" + Math.floor(performance.now() * 1000), elements: [] }; }
 function nowISO() { return new Date().toISOString(); }
@@ -119,6 +120,10 @@ function SlidesContent() {
   const importRef = useRef(null);
   const importHtmlRef = useRef(null);
   const timer = useRef(null);
+  const pendingTimer = useRef(false);            // a debounced save is scheduled but hasn't run yet
+  const retryTimer = useRef(null);               // backoff timer for auto-retrying a failed save
+  const retryCount = useRef(0);                  // consecutive failed-save attempts (drives backoff)
+  const lastUnsaved = useRef(null);              // latest slides that still need persisting (survives a failed save)
   const baseRef = useRef(null);                  // last-known server updated_at (optimistic concurrency)
   const [conflict, setConflict] = useState("");  // set when a colleague edited the deck elsewhere
   const router = useRouter();
@@ -158,6 +163,24 @@ function SlidesContent() {
   // Capture the loaded version's updated_at whenever a *different* deck is opened,
   // so the slides autosave can detect a colleague writing over it.
   useEffect(() => { baseRef.current = active?.updated_at ?? null; setConflict(""); /* eslint-disable-next-line */ }, [active?.id]);
+
+  // Warn before closing/refreshing the tab while there is work that hasn't made
+  // it to storage yet — a pending debounce, an in-flight save, or a failed save.
+  // Without this, a refresh mid-save silently loses the teacher's last edits.
+  useEffect(() => {
+    const onBeforeUnload = (e) => {
+      if (!active) return;
+      if (!hasUnsavedWork({ save, pendingTimer: pendingTimer.current })) return;
+      e.preventDefault();
+      e.returnValue = ""; // required for the native confirmation prompt in most browsers
+      return "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [active, save]);
+
+  // Tidy up the debounce / retry timers when the editor unmounts.
+  useEffect(() => () => { clearTimeout(timer.current); clearTimeout(retryTimer.current); }, []);
 
   const bumpBase = (rows) => { const ts = Array.isArray(rows) ? rows[0]?.updated_at : null; if (ts) baseRef.current = ts; };
 
@@ -313,15 +336,18 @@ function SlidesContent() {
     finally { setSavingDrive(false); }
   };
 
-  const openDeck = (d) => { setActive(d); setSave("saved"); setCurSlide(0); };
+  const openDeck = (d) => { setActive(d); setSave("saved"); setCurSlide(0); lastUnsaved.current = null; pendingTimer.current = false; retryCount.current = 0; };
   const closeDeck = async () => {
-    clearTimeout(timer.current);
-    // Flush a pending debounced save first — otherwise a change made within the
-    // last ~600ms is dropped when we clear the timer and reload the list.
-    if (save === "saving" && active && !conflict) {
+    clearTimeout(timer.current); clearTimeout(retryTimer.current);
+    pendingTimer.current = false;
+    // Flush any work that hasn't landed yet — a change made within the last ~600ms,
+    // or one whose save previously failed — otherwise it's dropped when we reload.
+    if (lastUnsaved.current != null && active && !conflict) {
+      const slides = lastUnsaved.current;
       try {
-        if (guest) await store.update(active.id, { slides: active.slides, updated_at: nowISO() });
-        else await saveSupabaseSlides(active.slides);
+        if (guest) await store.update(active.id, { slides, updated_at: nowISO() });
+        else await saveSupabaseSlides(slides);
+        lastUnsaved.current = null;
       } catch (e) { setErr(e.message); }
     }
     setActive(null); setAutoQDeckId(null); load();
@@ -341,10 +367,14 @@ function SlidesContent() {
   // clobbering their work. Returns false on conflict, true on a clean write.
   const saveSupabaseSlides = async (slides) => {
     if (baseRef.current) {
-      let cur = null;
-      try { cur = await sk.q("decks", { params: { id: `eq.${active.id}`, select: "updated_at" }, single: true }); }
-      catch { cur = null; } // network read failed — fall through and let the write try
-      if (cur?.updated_at && cur.updated_at !== baseRef.current) {
+      // Read the current server version, retrying a transient failure. If EVERY
+      // attempt fails we must NOT proceed: a blind write would silently clobber a
+      // colleague's edit. Surface a save error instead of a false "saved".
+      const { ok, updatedAt } = await readUpdatedAtWithRetry(
+        () => sk.q("decks", { params: { id: `eq.${active.id}`, select: "updated_at" }, single: true }),
+      );
+      if (!ok) throw new Error("Couldn't verify the latest version before saving — your change is kept and will retry.");
+      if (updatedAt && updatedAt !== baseRef.current) {
         setConflict("A colleague edited this deck elsewhere. Reload to get their version — your last change here wasn’t saved.");
         return false;
       }
@@ -355,20 +385,68 @@ function SlidesContent() {
     return true;
   };
 
+  // Perform one persist of `slides`. On success clears the unsaved buffer and the
+  // retry backoff; on failure keeps the work in memory and schedules an auto-retry
+  // so a transient blip can't lose the lesson. Returns true on a clean write.
+  const persistSlides = async (slides) => {
+    try {
+      let ok = true;
+      if (guest) await store.update(active.id, { slides, updated_at: nowISO() });
+      else ok = await saveSupabaseSlides(slides);
+      if (ok) {
+        lastUnsaved.current = null;
+        retryCount.current = 0;
+        clearTimeout(retryTimer.current);
+        setSave("saved");
+      } else {
+        // A real conflict — surfaced via the conflict banner. Stop retrying so we
+        // don't keep hammering a write the teacher must resolve manually.
+        retryCount.current = 0;
+        clearTimeout(retryTimer.current);
+        setSave("error");
+      }
+      return ok;
+    } catch (e) {
+      setErr(e.message); setSave("error");
+      // A full localStorage quota won't fix itself on retry — keep the work in
+      // memory and surface the message, but don't spin a pointless backoff loop.
+      if (!(e instanceof GuestQuotaError)) scheduleRetry();
+      return false;
+    }
+  };
+
+  // Auto-retry the latest unsaved slides after an exponential backoff. Capped so
+  // it keeps trying quietly in the background until the teacher's work lands.
+  const scheduleRetry = () => {
+    if (lastUnsaved.current == null || conflict) return;
+    clearTimeout(retryTimer.current);
+    const delay = retryDelayMs(retryCount.current);
+    retryCount.current += 1;
+    retryTimer.current = setTimeout(() => {
+      if (lastUnsaved.current != null && !conflict) { setSave("saving"); persistSlides(lastUnsaved.current); }
+    }, delay);
+  };
+
+  // Manual "Retry save" affordance — fire the latest unsaved write immediately.
+  const retrySaveNow = () => {
+    if (lastUnsaved.current == null) return;
+    clearTimeout(retryTimer.current);
+    retryCount.current = 0;
+    setSave("saving");
+    persistSlides(lastUnsaved.current);
+  };
+
   // Debounced persist whenever the editor reports a change.
   const onSlidesChange = (slides) => {
     if (conflict) { setActive((a) => ({ ...a, slides })); return; } // don't auto-save over an unresolved conflict
     setActive((a) => ({ ...a, slides }));
+    lastUnsaved.current = slides;       // remember the latest work until it's safely persisted
     setSave("saving");
     clearTimeout(timer.current);
-    timer.current = setTimeout(async () => {
-      try {
-        let ok = true;
-        if (guest) await store.update(active.id, { slides, updated_at: nowISO() });
-        else ok = await saveSupabaseSlides(slides);
-        setSave(ok ? "saved" : "error");
-      } catch (e) { setErr(e.message); setSave("error"); }
-    }, 600);
+    clearTimeout(retryTimer.current);   // a fresh edit supersedes any pending retry
+    retryCount.current = 0;
+    pendingTimer.current = true;
+    timer.current = setTimeout(() => { pendingTimer.current = false; persistSlides(slides); }, 600);
   };
 
   const renameDeck = async (title) => {
@@ -483,9 +561,18 @@ function SlidesContent() {
                 )}
               </>
             )}
-            <span style={{ fontFamily: C.mono, fontSize: 11, color: save === "error" ? C.red : C.dim }}>
-              {save === "saving" ? "saving…" : save === "error" ? "save failed" : "saved"}
-            </span>
+            {save === "error" && !conflict ? (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: C.mono, fontSize: 11, color: C.red,
+                             background: `${C.red}14`, border: `1px solid ${C.red}`, borderRadius: 6, padding: "3px 8px" }}>
+                ⚠ save failed — your work is kept{lastUnsaved.current != null && (
+                  <Btn v="soft" onClick={retrySaveNow}>Retry save</Btn>
+                )}
+              </span>
+            ) : (
+              <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>
+                {save === "saving" ? "saving…" : "saved"}
+              </span>
+            )}
             <Btn v="soft" onClick={exportPptx} disabled={exporting}>{exporting ? "exporting…" : "Export .pptx"}</Btn>
             {!guest && (
               <Btn v="soft" onClick={saveToDrive} disabled={savingDrive}

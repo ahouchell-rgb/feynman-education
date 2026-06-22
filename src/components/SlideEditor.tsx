@@ -88,6 +88,18 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const patchEl = (id, patch) =>
     mapSlide(s => ({ ...s, elements: s.elements.map(e => (e.id === id ? { ...e, ...patch } : e)) }));
 
+  // ── Live-drag fast path ──
+  // During a pointer drag (move / resize / rotate / arrow) we update the slides
+  // for visual feedback EVERY frame, but deliberately do NOT call onChange — that
+  // would reschedule the page autosave 60×/sec. Instead we remember the in-flight
+  // result and fire onChange ONCE on mouseup. The final committed value is identical.
+  const dragNext = useRef(null);
+  const commitLive = (next) => { dragNext.current = next; setSlides(next); };          // no onChange
+  const mapSlideLive = (fn) => commitLive(slides.map((s, i) => (i === cur ? fn(s) : s)));
+  const patchElLive = (id, patch) =>
+    mapSlideLive(s => ({ ...s, elements: s.elements.map(e => (e.id === id ? { ...e, ...patch } : e)) }));
+  const endDrag = () => { if (dragNext.current) { onChange?.(dragNext.current); dragNext.current = null; } };
+
   // ── History (undo / redo) ──
   const histPast = useRef([]);
   const histFuture = useRef([]);
@@ -359,9 +371,9 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       deg = ((deg + 180) % 360 + 360) % 360 - 180;
       if (ev.shiftKey) deg = Math.round(deg / 15) * 15;
       else { const near = [-180, -90, 0, 90, 180].find((a) => Math.abs(deg - a) < 5); if (near !== undefined) deg = near; }
-      patchEl(el.id, { rotation: Math.round(deg) });
+      patchElLive(el.id, { rotation: Math.round(deg) });
     };
-    const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
+    const up = () => { endDrag(); window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
     window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
   };
 
@@ -393,7 +405,10 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const [aiInput, setAiInput] = useState("");
   const [aiBusy, setAiBusy] = useState(false);
   const [aiMsg, setAiMsg] = useState("");
-  const aiPrev = useRef(null); // previous slides, for one-step undo
+  // Marks history entries created by an AI edit, so the panel can show whether the
+  // most-recent undoable/redoable step is Claude's. The actual revert goes through
+  // the shared undo/redo stack (snapshot below), so redo works and no history is dropped.
+  const aiDidEdit = useRef(false);
 
   // Claude may name a font by label; map it back to the css/face the editor uses.
   const normalize = (sl) => (sl || []).map((s) => ({
@@ -425,8 +440,11 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       if (!r.ok) throw new Error(d.error || "Request failed");
       const next = normalize(d.slides);
       if (!next.length) throw new Error("No slides returned");
-      aiPrev.current = slides;
+      // snapshot() pushes the current slides onto the shared undo stack and clears
+      // the redo stack, so the AI edit is a normal history step: ⌘Z undoes it and
+      // ⌘⇧Z redoes it, identical to any manual edit.
       snapshot(false);
+      aiDidEdit.current = true;
       commit(next);
       setCur((c) => Math.min(c, next.length - 1));
       setSel(null); setEditing(null);
@@ -439,13 +457,10 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     }
   };
 
-  const undoAI = () => {
-    if (!aiPrev.current) return;
-    commit(aiPrev.current);
-    aiPrev.current = null;
-    setSel(null); setEditing(null);
-    setAiMsg("Reverted Claude's last change.");
-  };
+  // The AI panel's Undo / Redo drive the SAME history stack as ⌘Z / ⌘⇧Z, so an AI
+  // change can be reliably undone AND redone without silently dropping history.
+  const undoAI = () => { if (!histPast.current.length) return; undo(); aiDidEdit.current = false; setAiMsg("Reverted the last change."); };
+  const redoAI = () => { if (!histFuture.current.length) return; redo(); setAiMsg("Re-applied the change."); };
 
   const AI_QUICK = [
     "Make a title slide for today's lesson",
@@ -544,7 +559,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   // onto the current slide. Skipped while editing text, so pasting text into a
   // text box still works; non-image pastes always fall through to the default.
   useEffect(() => {
-    const onPaste = (e) => {
+    const onPaste = async (e) => {
       if (editing) return;
       const items = e.clipboardData?.items;
       if (!items) return;
@@ -553,7 +568,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       const file = imgItem.getAsFile();
       if (!file) return;
       e.preventDefault();
-      placeImageFile(file);
+      await placeImageFile(file);
     };
     window.addEventListener("paste", onPaste);
     return () => window.removeEventListener("paste", onPaste);
@@ -601,9 +616,9 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
         const snap = computeSnap(single.id, { x: single.x + dx, y: single.y + dy, w: single.width, h });
         dx += snap.dX; dy += snap.dY; setGuides(snap.guides);
       }
-      commit(slides.map((s, si) => (si !== cur ? s : { ...s, elements: s.elements.map((elm) => (originals[elm.id] ? moveEl(originals[elm.id], dx, dy) : elm)) })));
+      commitLive(slides.map((s, si) => (si !== cur ? s : { ...s, elements: s.elements.map((elm) => (originals[elm.id] ? moveEl(originals[elm.id], dx, dy) : elm)) })));
     };
-    const up = () => { setGuides([]); window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
+    const up = () => { setGuides([]); endDrag(); window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
     window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
   };
 
@@ -631,9 +646,9 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
         if (hx === -1) x = ox + ow - w;
         if (hy === -1) y = oy + oh - h;
       }
-      patchEl(el.id, { x: Math.round(x), y: Math.round(y), width: Math.round(w), height: Math.round(h) });
+      patchElLive(el.id, { x: Math.round(x), y: Math.round(y), width: Math.round(w), height: Math.round(h) });
     };
-    const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
+    const up = () => { endDrag(); window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
     window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
   };
 
@@ -644,8 +659,8 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     if (el.locked) return;
     const sx = e.clientX, sy = e.clientY, o = { x1: el.x1, y1: el.y1, x2: el.x2, y2: el.y2 }; let took = false;
     const move = (ev) => { if (!took) { snapshot(false); took = true; } const dx = (ev.clientX - sx) / scale, dy = (ev.clientY - sy) / scale;
-      patchEl(el.id, { x1: Math.round(o.x1 + dx), y1: Math.round(o.y1 + dy), x2: Math.round(o.x2 + dx), y2: Math.round(o.y2 + dy) }); };
-    const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
+      patchElLive(el.id, { x1: Math.round(o.x1 + dx), y1: Math.round(o.y1 + dy), x2: Math.round(o.x2 + dx), y2: Math.round(o.y2 + dy) }); };
+    const up = () => { endDrag(); window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
     window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
   };
 
@@ -655,8 +670,8 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     const sx = e.clientX, sy = e.clientY; let took = false;
     const ox = which === "a" ? el.x1 : el.x2, oy = which === "a" ? el.y1 : el.y2;
     const move = (ev) => { if (!took) { snapshot(false); took = true; } const nx = Math.round(ox + (ev.clientX - sx) / scale), ny = Math.round(oy + (ev.clientY - sy) / scale);
-      patchEl(el.id, which === "a" ? { x1: nx, y1: ny } : { x2: nx, y2: ny }); };
-    const up = () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
+      patchElLive(el.id, which === "a" ? { x1: nx, y1: ny } : { x2: nx, y2: ny }); };
+    const up = () => { endDrag(); window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up); };
     window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
   };
 
@@ -683,10 +698,11 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       if (!moved && Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) < 3) return; // ignore jitter
       if (!took) { snapshot(false); took = true; } moved = true;
       const dx = (ev.clientX - sx) / scale, dy = (ev.clientY - sy) / scale;
-      commit(slides.map((s, si) => (si !== cur ? s : { ...s, elements: s.elements.map((elm) => (originals[elm.id] ? moveEl(originals[elm.id], dx, dy) : elm)) })));
+      commitLive(slides.map((s, si) => (si !== cur ? s : { ...s, elements: s.elements.map((elm) => (originals[elm.id] ? moveEl(originals[elm.id], dx, dy) : elm)) })));
     };
     const up = (ev) => {
       window.removeEventListener("mousemove", move); window.removeEventListener("mouseup", up);
+      endDrag();
       if (!moved) { const hit = elAt(ev.clientX, ev.clientY); setSelIds(hit ? groupOf(hit.id) : []); setEditing(null); }
     };
     window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
@@ -961,7 +977,8 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
               <Btn onClick={askClaude} disabled={aiBusy || !aiInput.trim()} style={{ flex: 1 }}>
                 {aiBusy ? "thinking…" : "Generate"}
               </Btn>
-              <Btn v="ghost" onClick={undoAI} disabled={!aiPrev.current}>Undo</Btn>
+              <Btn v="ghost" onClick={undoAI} disabled={!histPast.current.length} title="Undo the last change (⌘Z)">Undo</Btn>
+              <Btn v="ghost" onClick={redoAI} disabled={!histFuture.current.length} title="Redo (⌘⇧Z)">Redo</Btn>
             </div>
             {aiMsg && (
               <div style={{ fontSize: 12, lineHeight: 1.45, color: aiMsg.startsWith("⚠") ? C.red : C.muted }}>{aiMsg}</div>
