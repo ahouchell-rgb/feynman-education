@@ -2,7 +2,9 @@
 
 export const C = {
   bg: "#f3eee2", surface: "#faf6ec", border: "#dcd5c0", borderStrong: "#b8b1a0",
-  text: "#1a1714", muted: "#4d4940", dim: "#8c8678", faint: "#b8b1a0",
+  // `dim` darkened from #8c8678 → #615c49 to clear WCAG AA contrast (4.5:1) on
+  // the cream bg for the small uppercase labels that use it (caught by axe).
+  text: "#1a1714", muted: "#4d4940", dim: "#615c49", faint: "#b8b1a0",
   rule: "#d8d1bd", ruleStrong: "#a8a191",
   accent: "#1a1714", accentFg: "#f3eee2",
   grn: "#5e7c4b", grnS: "rgba(94,124,75,0.10)",

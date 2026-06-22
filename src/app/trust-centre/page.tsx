@@ -8,7 +8,8 @@
 
 const SECURITY_CONTACT = process.env.NEXT_PUBLIC_SECURITY_CONTACT || "security@feynman.education";
 
-const COL = { bg: "#f4f4f2", card: "#fff", border: "#e5e5e0", text: "#1a1a1a", mut: "#555", dim: "#888", grn: "#1a7f5a" };
+// `dim` darkened #888 → #5f5f5f for WCAG AA contrast (4.5:1) on the light bg.
+const COL = { bg: "#f4f4f2", card: "#fff", border: "#e5e5e0", text: "#1a1a1a", mut: "#555", dim: "#5f5f5f", grn: "#1a7f5a" };
 const wrap: React.CSSProperties = { fontFamily: "-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif", color: COL.text, background: COL.bg, minHeight: "100dvh" };
 
 // Provider, purpose, data shared, processing region, and a link to the vendor's
