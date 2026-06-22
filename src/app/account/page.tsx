@@ -22,7 +22,11 @@ function AccountContent() {
   const isSlt = profile?.school_role === "slt";
 
   useEffect(() => {
-    sk.q("audit_log", { params: { select: "action,target,detail,at", order: "at.desc", limit: "20" } }).then(setAudit).catch(() => {});
+    // Owner-scoped read of the caller's own audit entries (see /api/audit-log).
+    fetch("/api/audit-log", { headers: { authorization: `Bearer ${sk.auth.getToken()}` } })
+      .then((r) => (r.ok ? r.json() : { entries: [] }))
+      .then((d) => setAudit(d.entries || []))
+      .catch(() => {});
   }, []);
 
   const exportData = () => {
@@ -62,6 +66,10 @@ function AccountContent() {
             </div>
           ))}
       </div>
+
+      <p style={{ fontSize: 12, color: C.dim, marginTop: 20, lineHeight: 1.6 }}>
+        Pupil practice data is never used to train AI models, and data is kept only as long as your school's contract requires, then deleted. <a href="/trust-centre" style={{ color: C.muted }}>See our Trust Centre →</a>
+      </p>
     </div>
   );
 }

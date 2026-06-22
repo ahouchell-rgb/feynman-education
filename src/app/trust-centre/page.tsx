@@ -1,17 +1,25 @@
 // Public Trust Centre (NOW plan E3). Procurement-facing: security posture,
 // data principles, and the sub-processor list a school's DPO asks for first.
 // Outside the auth gate — a URL you can hand to procurement.
+//
+// FOUNDER TODOs (search "[CONFIRM" / "TODO:"): confirm the Supabase processing
+// region, the DPO/security contact email, and the certification status before
+// handing this to procurement. Placeholders are intentional — fill, don't guess.
 
 const COL = { bg: "#f4f4f2", card: "#fff", border: "#e5e5e0", text: "#1a1a1a", mut: "#555", dim: "#888", grn: "#1a7f5a" };
 const wrap: React.CSSProperties = { fontFamily: "-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif", color: COL.text, background: COL.bg, minHeight: "100dvh" };
 
-const SUBPROCESSORS = [
-  ["Supabase", "Database, auth, file storage", "Pupil/teacher/parent records (encrypted at rest)", "EU"],
-  ["Anthropic (Claude)", "AI generation (lessons, feedforward, reports)", "Lesson/assessment content sent per request; not used to train models", "US/EU"],
-  ["Resend", "Transactional email", "Parent/teacher email addresses + report content", "EU/US"],
-  ["Wonde", "MIS integration (optional)", "Roster + contact data synced from the school MIS", "UK"],
-  ["Stripe", "Payments (optional)", "Billing details — no card data touches our servers", "EU/US"],
-  ["Vercel", "Application hosting / CDN", "Request metadata; no primary data store", "Global edge"],
+// Provider, purpose, data shared, processing region, and a link to the vendor's
+// security / DPA page so a DPO can verify each sub-processor directly.
+const SUBPROCESSORS: [string, string, string, string, string][] = [
+  ["Supabase", "Database, authentication, file storage", "Pupil/teacher/parent records (encrypted at rest)", "[CONFIRM REGION]", "https://supabase.com/security"],
+  ["Anthropic (Claude)", "AI generation (lessons, feedforward, reports)", "Lesson/assessment content sent per request; not used to train models", "US", "https://www.anthropic.com/legal/commercial-terms"],
+  ["Stripe", "Payments (optional, paid plans only)", "Billing details — no card data touches our servers", "EU/US", "https://stripe.com/gb/privacy"],
+  ["Resend", "Parent-report email delivery (optional)", "Parent/teacher email addresses + report content", "EU/US", "https://resend.com/legal/dpa"],
+  ["Wonde", "MIS sync (optional, per-school)", "Roster + contact data synced from the school MIS", "UK", "https://www.wonde.com/security"],
+  ["Google", "Drive / Slides import (optional, per-teacher OAuth)", "Only files a teacher explicitly picks (drive.file scope)", "Global", "https://workspace.google.com/terms/dpa_terms.html"],
+  ["Microsoft", "Slides / PowerPoint import (optional, per-teacher OAuth)", "Only files a teacher explicitly picks", "Global", "https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA"],
+  ["Vercel", "Application hosting / CDN", "Request metadata; no primary data store", "Global edge", "https://vercel.com/legal/dpa"],
 ];
 
 const PRINCIPLES = [
@@ -26,6 +34,9 @@ const Card = ({ children, style }: any) => (
   <div style={{ background: COL.card, border: `1px solid ${COL.border}`, borderRadius: 12, padding: 24, marginBottom: 20, ...style }}>{children}</div>
 );
 
+const H2 = ({ children }: any) => <h2 style={{ fontSize: 18, margin: "0 0 12px" }}>{children}</h2>;
+const P = ({ children, style }: any) => <p style={{ color: COL.mut, fontSize: 13.5, lineHeight: 1.6, margin: "0 0 8px", ...style }}>{children}</p>;
+
 export default function TrustCentre() {
   return (
     <div style={wrap}>
@@ -37,7 +48,7 @@ export default function TrustCentre() {
         </p>
 
         <Card>
-          <h2 style={{ fontSize: 18, margin: "0 0 12px" }}>How we handle data</h2>
+          <H2>How we handle data</H2>
           {PRINCIPLES.map(([h, d]) => (
             <div key={h} style={{ marginBottom: 14 }}>
               <div style={{ fontWeight: 600, fontSize: 14 }}>{h}</div>
@@ -47,7 +58,41 @@ export default function TrustCentre() {
         </Card>
 
         <Card>
-          <h2 style={{ fontSize: 18, margin: "0 0 12px" }}>Sub-processors</h2>
+          <H2>Data we hold &amp; who controls it</H2>
+          <P>
+            <strong>Teacher accounts</strong> (name, email, school role), <strong>classes &amp; curriculum</strong>, <strong>guardian</strong> contact and consent records, and <strong>pupil practice / mastery at cohort level</strong> (per-objective results, not free-text surveillance). Billing details for paid plans are held by Stripe; we never store card numbers.
+          </P>
+          <P>
+            <strong>Controller / processor split.</strong> For pupil records the <strong>school is the data controller</strong> and ScienceKit / Feynman Education is the <strong>processor</strong>, acting only on the school's documented instructions. For teachers' and parents' own account data we are the controller.
+          </P>
+        </Card>
+
+        <Card>
+          <H2>Data residency</H2>
+          {/* TODO (founder): confirm the Supabase project region from the Supabase
+              dashboard (Project Settings → General → Region) and replace the
+              placeholder below. Do not assume EU/UK without verifying. The AI
+              provider (Anthropic) processes per request in the US. */}
+          <P>
+            Primary data (the database, authentication and file storage) is hosted on Supabase in <strong>[CONFIRM REGION]</strong>. Content sent for AI generation is processed by Anthropic in the US per request and is not retained for model training. Other sub-processors are listed below with their regions.
+          </P>
+          <P style={{ color: COL.dim, fontSize: 12 }}>
+            [CONFIRM REGION] — to be set by Feynman Education from the live Supabase project before sharing with procurement.
+          </P>
+        </Card>
+
+        <Card>
+          <H2>Pupil data &amp; AI</H2>
+          <P>
+            Some features send lesson, assessment or gap content to our AI provider (Anthropic) to generate teaching material, feedforward and parent reports. Inputs are processed per request.
+          </P>
+          <P style={{ fontWeight: 600, color: COL.text }}>
+            Pupil practice data is not used to train AI models. Under Anthropic's commercial terms, prompts and pupil data sent to the API are not used to train their models.
+          </P>
+        </Card>
+
+        <Card>
+          <H2>Sub-processors</H2>
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
               <thead><tr style={{ textAlign: "left", color: COL.dim, fontSize: 11, textTransform: "uppercase", letterSpacing: ".06em" }}>
@@ -56,7 +101,7 @@ export default function TrustCentre() {
               <tbody>
                 {SUBPROCESSORS.map((r) => (
                   <tr key={r[0]} style={{ borderTop: `1px solid ${COL.border}` }}>
-                    <td style={{ padding: "8px", fontWeight: 600 }}>{r[0]}</td>
+                    <td style={{ padding: "8px", fontWeight: 600 }}><a href={r[4]} target="_blank" rel="noopener noreferrer" style={{ color: COL.grn, textDecoration: "none" }}>{r[0]} ↗</a></td>
                     <td style={{ padding: "8px", color: COL.mut }}>{r[1]}</td>
                     <td style={{ padding: "8px", color: COL.mut }}>{r[2]}</td>
                     <td style={{ padding: "8px", color: COL.mut, whiteSpace: "nowrap" }}>{r[3]}</td>
@@ -65,25 +110,67 @@ export default function TrustCentre() {
               </tbody>
             </table>
           </div>
+          <P style={{ marginTop: 12, fontSize: 12, color: COL.dim }}>
+            Provider links go to each vendor's security or data-processing page. Optional integrations (Stripe, Resend, Wonde, Google, Microsoft) only process data once a school or teacher enables them.
+          </P>
         </Card>
 
         <Card>
-          <h2 style={{ fontSize: 18, margin: "0 0 12px" }}>Security measures</h2>
+          <H2>Security measures</H2>
           <ul style={{ margin: 0, paddingLeft: 18, color: COL.mut, fontSize: 13.5, lineHeight: 1.7 }}>
-            <li>Encryption in transit (TLS) and at rest.</li>
+            <li>Encryption in transit (TLS) and at rest (Supabase-managed encryption).</li>
             <li>Row-Level Security on every table; least-privilege, role-gated access.</li>
-            <li>Server-side secrets only; signed webhooks; audited privileged actions.</li>
+            <li>Audit logging of privileged actions (data exports, role changes, MIS sync).</li>
+            <li>Server-side secrets only; signed webhooks; no client-held service keys.</li>
             <li>UK GDPR + DfE data-protection alignment; AADC for under-18 users.</li>
-            <li><strong>On the roadmap:</strong> Cyber Essentials (+ Plus), ISO 27001, independent penetration testing.</li>
           </ul>
         </Card>
 
         <Card>
-          <h2 style={{ fontSize: 18, margin: "0 0 12px" }}>Your rights &amp; requests</h2>
-          <p style={{ color: COL.mut, fontSize: 13.5, lineHeight: 1.6, margin: "0 0 8px" }}>
-            Schools and individuals can request data export or deletion at any time. Signed-in users can export their own data from the app. For a DPA, sub-processor updates, or a data request, contact <a href="mailto:privacy@feynman.education" style={{ color: COL.grn }}>privacy@feynman.education</a>.
-          </p>
+          <H2>Certifications</H2>
+          {/* TODO (founder): state ONLY what is genuinely held. Do not claim
+              ISO 27001 or Cyber Essentials unless and until certified. If/when a
+              certification or independent pen-test report exists, list it here
+              and offer the certificate on request. */}
+          <P>
+            We follow UK GDPR and the ICO Age-Appropriate Design Code, and align our controls with recognised standards (encryption, access control, audit logging, least privilege). We do not currently hold ISO 27001 or Cyber Essentials certification.
+          </P>
+          <P>
+            Our data-protection documentation, security overview and DPA are available on request. Independent certification and penetration testing are on our roadmap.
+          </P>
+        </Card>
+
+        <Card>
+          <H2>Your rights &amp; requests</H2>
+          <P>
+            <strong>Export.</strong> Signed-in users can export their own data from the app, or via the in-app{" "}
+            <a href="/account" style={{ color: COL.grn }}>account page</a> ("Export my data"). The export is a JSON bundle of the caller's owner-scoped records.
+          </P>
+          <P>
+            <strong>Retention &amp; deletion.</strong> We keep data for as long as the school's contract requires, then delete or anonymise it. A pupil leaving triggers deletion of their personal data. Schools and individuals can request export or deletion at any time; we action verified requests and confirm completion.
+          </P>
+          <P>
+            <strong>Parent unsubscribe.</strong> Every parent report email carries an unsubscribe link; parents can also stop emails per child from the parent portal at any time.
+          </P>
+          <P>
+            For a DPA, sub-processor updates, or a data-subject request, contact{" "}
+            <a href="mailto:privacy@feynman.education" style={{ color: COL.grn }}>privacy@feynman.education</a>.
+          </P>
           <a href="/privacy" style={{ color: COL.grn, fontSize: 13.5 }}>Read the privacy notice →</a>
+        </Card>
+
+        <Card>
+          <H2>Incident response &amp; contact</H2>
+          {/* TODO (founder): replace the placeholder security/DPO email below
+              with a monitored address before sharing with procurement. */}
+          <P>
+            We maintain an incident-response process and will notify affected schools without undue delay on becoming aware of a personal-data breach. Where a breach is reportable, we commit to supporting the controller school's notification to the ICO within <strong>72 hours</strong> as required by UK GDPR.
+          </P>
+          <P>
+            Security &amp; data-protection contact:{" "}
+            <a href="mailto:security@feynman.education" style={{ color: COL.grn }}>security@feynman.education</a>{" "}
+            <span style={{ color: COL.dim, fontSize: 12 }}>[CONFIRM CONTACT — set a monitored DPO/security inbox]</span>.
+          </P>
         </Card>
 
         <p style={{ textAlign: "center", color: COL.dim, fontSize: 12, marginTop: 28 }}>

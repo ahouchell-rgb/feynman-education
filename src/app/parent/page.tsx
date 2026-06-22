@@ -175,6 +175,10 @@ function PortalInner() {
       <p style={{ fontSize: 11, color: COL.dim, textAlign: "center", marginTop: 24 }}>
         Reports reflect your child's class lessons and practice. Questions? Speak to their science teacher.
       </p>
+      <p style={{ fontSize: 11, color: COL.dim, textAlign: "center", marginTop: 8, lineHeight: 1.6 }}>
+        Your child's practice data is never used to train AI models, and is kept only as long as the school needs it.{" "}
+        <a href="/trust-centre" style={{ color: COL.dim, textDecoration: "underline" }}>How we protect data →</a>
+      </p>
     </div>
   );
 }
