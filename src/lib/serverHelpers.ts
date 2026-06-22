@@ -21,11 +21,16 @@ export function pickModel(kind: "authoring" | "bulk"): string {
 /** Authorize a Vercel Cron request.
  *  `x-vercel-cron` is an ordinary request header any client can spoof, so once a
  *  CRON_SECRET is configured we require the bearer secret and the header alone is
- *  NOT sufficient. With no secret set we fall back to accepting the header so an
- *  un-configured deployment's crons keep working (set CRON_SECRET to lock them). */
+ *  NOT sufficient. In PRODUCTION a missing CRON_SECRET FAILS CLOSED (returns
+ *  false) — we never accept the spoofable header alone on a live deployment, so a
+ *  mis-configured prod can't silently expose its crons. Outside production (local
+ *  / preview / test) we keep the header-only dev fallback so un-configured crons
+ *  still run; set CRON_SECRET to lock them everywhere. */
 export function cronAuthorized(req: Request): boolean {
   const secret = process.env.CRON_SECRET;
   if (secret) return req.headers.get("authorization") === `Bearer ${secret}`;
+  const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+  if (isProd) return false; // fail closed: no secret in prod → reject
   return req.headers.get("x-vercel-cron") != null;
 }
 

@@ -302,17 +302,53 @@ function RetrievalFrame({ el }) {
   );
 }
 
+/* A strict Content-Security-Policy injected into the live HTML-slide srcdoc.
+   Interactive imported widgets genuinely need their own scripts, so we keep
+   allow-scripts; the CSP then closes the EXFILTRATION path that the sandbox
+   alone leaves open. The opaque-origin sandbox stops the page reading the
+   parent's session, but a malicious deck's own script could still beacon what
+   it can reach to an attacker (fetch/XHR/WebSocket/img/form to any host). This
+   policy permits only inline + same-origin scripts/styles and blocks ALL
+   outbound connections (connect-src 'none') and remote form posts, so an
+   imported deck can run interactively but cannot phone home. */
+const HTML_SLIDE_CSP =
+  "default-src 'none'; " +
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+  "style-src 'self' 'unsafe-inline'; " +
+  "img-src 'self' data: blob:; " +
+  "font-src 'self' data:; " +
+  "media-src 'self' data: blob:; " +
+  "connect-src 'none'; " +
+  "form-action 'none'; " +
+  "frame-src 'none'; " +
+  "base-uri 'none'";
+
+/* Prepend the CSP <meta> to the imported HTML so the iframe enforces it. We
+   inject into an existing <head> when present, otherwise wrap the document — a
+   <meta http-equiv> only takes effect inside <head>, so order matters. */
+function withHtmlSlideCsp(html: string): string {
+  const meta = `<meta http-equiv="Content-Security-Policy" content="${HTML_SLIDE_CSP}">`;
+  const src = html || "";
+  if (/<head[\s>]/i.test(src)) return src.replace(/<head([^>]*)>/i, `<head$1>${meta}`);
+  return `<!doctype html><html><head>${meta}</head><body>${src}</body></html>`;
+}
+
 /* Live, interactive HTML template (Present only). Runs the imported page's own
    CSS/JS in a sandboxed iframe. stopPropagation so clicks inside the lesson
    don't advance the slide (use the arrow keys to move on).
    NOTE: deliberately NO allow-same-origin — a srcdoc iframe inherits the app's
    origin, so allowing it together with scripts would let imported (and possibly
    shared/department) HTML read this user's session. Without it the page runs in
-   an opaque origin: scripts/forms still work, but it can't touch the parent. */
+   an opaque origin: scripts/forms still work, but it can't touch the parent.
+   We ALSO inject a strict CSP (withHtmlSlideCsp) that blocks outbound network
+   (connect-src/form-action 'none') so a malicious imported deck can't exfiltrate
+   anything it does reach. Sandbox isolates the parent; CSP closes the phone-home
+   path while still allowing the widget's own inline scripts to run. */
 function HtmlFrame({ el }) {
   const stop = (e) => e.stopPropagation();
+  const srcDoc = useMemo(() => withHtmlSlideCsp(el.html || ""), [el.html]);
   return (
-    <iframe title={el.title || "html-slide"} srcDoc={el.html || ""}
+    <iframe title={el.title || "html-slide"} srcDoc={srcDoc}
       sandbox="allow-scripts allow-forms allow-popups allow-modals allow-popups-to-escape-sandbox"
       onClick={stop} onMouseDown={stop}
       style={{ width: "100%", height: "100%", border: "none", display: "block", background: "#fff" }} />

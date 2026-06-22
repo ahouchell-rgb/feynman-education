@@ -5,6 +5,11 @@
 // that guardian's consented children + their saved reports + a practise link.
 // No teacher/auth data is exposed; revoked/pending links are omitted.
 //
+// Token lifecycle: the magic-link token has an expiry (guardians.access_token_
+// expires_at, default 60 days). Expired tokens are rejected (410); a successful
+// access slides the expiry window forward so an in-use link keeps working while a
+// leaked/unused one lapses. The weekly email always carries the current token.
+//
 // Env: SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN (practise link).
 
 export const runtime = "nodejs";
@@ -19,6 +24,21 @@ async function admin(path: string) {
   const r = await fetch(`${SK_URL}/rest/v1/${path}`, { headers: { apikey: key, Authorization: `Bearer ${key}` } });
   if (!r.ok) throw new Error(`${path}: ${r.status}`);
   return r.json();
+}
+// Sliding-window renewal: extend an actively-used token's expiry so the link
+// keeps working while it's in use, but a leaked/unused link still lapses. Best-
+// effort — a failed extend must not block returning the parent's reports.
+const ACCESS_TOKEN_TTL_DAYS = 60;
+async function extendToken(token: string) {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const expires = new Date(Date.now() + ACCESS_TOKEN_TTL_DAYS * 86400_000).toISOString();
+  try {
+    await fetch(`${SK_URL}/rest/v1/guardians?access_token=eq.${token}`, {
+      method: "PATCH",
+      headers: { apikey: key, Authorization: `Bearer ${key}`, "content-type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify({ access_token_expires_at: expires }),
+    });
+  } catch { /* best-effort */ }
 }
 async function retRpc(fn: string, body: any) {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -39,10 +59,19 @@ export async function GET(req: Request) {
   // Resolve the guardian by access token.
   let guardian: any;
   try {
-    const gs = await admin(`guardians?access_token=eq.${token}&select=id,full_name&limit=1`);
+    const gs = await admin(`guardians?access_token=eq.${token}&select=id,full_name,access_token_expires_at&limit=1`);
     guardian = gs?.[0];
   } catch { return j({ error: "lookup failed" }, 500); }
   if (!guardian) return j({ error: "not found" }, 404);
+
+  // Reject expired magic links with a clear, actionable message. A new link is
+  // sent with each weekly report email, so the parent just needs the latest one.
+  const exp = guardian.access_token_expires_at ? Date.parse(guardian.access_token_expires_at) : NaN;
+  if (Number.isFinite(exp) && exp < Date.now()) {
+    return j({ error: "This link has expired. Please open the link in your most recent weekly report email." }, 410);
+  }
+  // Slide the expiry window forward for an actively-used link (best-effort).
+  await extendToken(token);
 
   // Consented children only, with their class (for the practise link) + Home fields.
   let links: any[] = [];
