@@ -16,6 +16,7 @@ import { ChartDataModal } from "./slideEditor/ChartDataModal";
 import { TableEditor } from "./slideEditor/TableEditor";
 import { TextEditor } from "./slideEditor/TextEditor";
 import { DeckQuestionsModal } from "@/components/DeckQuestionsModal";
+import { DeckBookletModal } from "@/components/DeckBookletModal";
 
 export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMasterChange, onCurChange, autoQuestions }) {
   const [slides, setSlides] = useState(() =>
@@ -36,6 +37,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   const [find, setFind] = useState("");
   const [insertOpen, setInsertOpen] = useState(false);   // "+ Insert" dropdown
   const [qOpen, setQOpen] = useState(false);             // deck → retrieval questions modal
+  const [bookletOpen, setBookletOpen] = useState(false); // deck → public revision booklet modal
   // After a one-click AI lesson, jump straight into drafting retrieval questions
   // from the generated deck (lesson + practice in one flow). Fires once.
   const autoQDone = useRef(false);
@@ -843,6 +845,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
           <Btn v={masterOpen ? "pri" : "soft"} onClick={() => openPanel("brand")} title="Header / footer brand frame">🏷 Brand</Btn>
           <Btn v={aiOpen ? "pri" : "soft"} onClick={() => openPanel("claude")} title="Ask Claude">✦ Claude</Btn>
           <Btn v={qOpen ? "pri" : "soft"} onClick={() => setQOpen(true)} title="Generate retrieval questions for your class from this deck">❓ Questions</Btn>
+          <Btn v={bookletOpen ? "pri" : "soft"} onClick={() => setBookletOpen(true)} title="Generate a public revision booklet from this deck (one pipeline, two surfaces)">📖 Booklet</Btn>
           <Btn v="ghost" onClick={delSlide} disabled={slides.length < 2} title="Delete this slide">🗑</Btn>
         </div>
 
@@ -1173,6 +1176,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     })()}
     {helpOpen && <ShortcutHelp onClose={() => setHelpOpen(false)} />}
     {qOpen && <DeckQuestionsModal slides={slides} lessonTitle={deck?.title || ""} onClose={() => setQOpen(false)} />}
+    {bookletOpen && <DeckBookletModal slides={slides} lessonTitle={deck?.title || ""} onClose={() => setBookletOpen(false)} />}
     {slideMenu && (
       <>
         {/* click/right-click anywhere else dismisses the menu */}
