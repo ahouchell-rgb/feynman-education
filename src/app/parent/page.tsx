@@ -2,6 +2,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { pupilProgressLine } from "@/lib/pupilProgress";
+import { AccessibilityMenu, useApplyAccessibilityPrefs } from "@/components/AccessibilityMenu";
 
 // Public, password-less parent portal. Reached via the token in the weekly
 // report emails: /parent?t=<token>. Lists the parent's consented children,
@@ -144,6 +145,7 @@ function ChildCard({ child, token }: { child: Child; token: string }) {
 }
 
 function PortalInner() {
+  useApplyAccessibilityPrefs();
   const params = useSearchParams();
   const token = params.get("t") || "";
   const [data, setData] = useState<{ guardianName: string | null; children: Child[] } | null>(null);
@@ -166,7 +168,10 @@ function PortalInner() {
 
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "32px 20px" }}>
-      <div style={{ fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", color: COL.dim, marginBottom: 6 }}>Feynman · Parent</div>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 6 }}>
+        <div style={{ fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", color: COL.dim, marginTop: 4 }}>Feynman · Parent</div>
+        <AccessibilityMenu variant="light" />
+      </div>
       <h1 style={{ fontSize: 30, margin: "0 0 6px" }}>{data.guardianName ? `Hello, ${data.guardianName}` : "Your child's science"}</h1>
       <p style={{ color: COL.muted, margin: "0 0 28px", fontSize: 15 }}>
         {data.children.length ? "Weekly progress and a few minutes of the right practice — best looked at together." : "No active children are linked to this account yet."}

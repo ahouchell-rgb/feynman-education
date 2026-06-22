@@ -217,20 +217,24 @@ function HtmlInner({ el }) {
     style={{ width: "100%", height: "100%", border: "none", display: "block", background: "#fff", pointerEvents: "none" }} />;
 }
 
-/* Image, honouring an optional crop ({x,y,w,h} as 0–1 fractions of the image). */
+/* Image, honouring an optional crop ({x,y,w,h} as 0–1 fractions of the image).
+   `el.alt` is the author-provided description (editor → Present → print). Missing
+   alt renders alt="" so the image is treated as decorative by screen readers —
+   backward-compatible with decks created before alt existed. */
 function ImageInner({ el }) {
+  const alt = el.alt || "";
   if (el.crop) {
     const { x, y, w, h } = el.crop;
     return (
       <div style={{ width: "100%", height: "100%", overflow: "hidden", position: "relative" }}>
-        <img src={el.src} alt="" draggable={false}
+        <img src={el.src} alt={alt} draggable={false}
           style={{ position: "absolute", width: `${100 / w}%`, height: `${100 / h}%`,
                    left: `${-(x * 100) / w}%`, top: `${-(y * 100) / h}%`,
                    objectFit: "fill", display: "block", pointerEvents: "none" }} />
       </div>
     );
   }
-  return <img src={el.src} alt="" draggable={false}
+  return <img src={el.src} alt={alt} draggable={false}
     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", pointerEvents: "none" }} />;
 }
 

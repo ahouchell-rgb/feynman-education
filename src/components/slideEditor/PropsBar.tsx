@@ -172,6 +172,12 @@ export function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCro
     return (
       <div style={wrap}>
         {tag("image")}
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }} title="Describe this image for screen-reader and low-vision pupils. Leave blank if purely decorative.">
+          alt
+          <input value={selEl.alt || ""} onChange={(e) => P({ alt: e.target.value })} placeholder="Describe this image"
+            aria-label="Image description (alt text)"
+            style={{ width: 150, padding: "5px 7px", border: `1px solid ${C.border}`, borderRadius: 4, fontFamily: C.mono, fontSize: 12 }} />
+        </label>
         <Btn v="ghost" onClick={onCrop} style={{ fontSize: 12, padding: "5px 12px" }}>Crop</Btn>
         {selEl.crop && <Btn v="ghost" onClick={onResetCrop} style={{ fontSize: 12, padding: "5px 12px" }}>Reset crop</Btn>}
         <label style={{ display: "flex", alignItems: "center", gap: 6 }}>round {num(selEl.radius ?? 0, (v) => P({ radius: Math.max(0, v) }))}</label>

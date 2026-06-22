@@ -5,6 +5,7 @@ import { ms } from "@/lib/ms";
 import { google } from "@/lib/google";
 import { C } from "@/lib/theme";
 import { Btn, Inp, Card } from "@/lib/primitives";
+import { useDialog } from "@/lib/useDialog";
 
 // Keep in sync with src/app/api/chat-with-lesson/route.js
 const INPUT_USD_PER_MTOK = 3;
@@ -28,12 +29,9 @@ export function Settings({ onClose }) {
   const [gStatus, setGStatus] = useState(null); // Google Drive connection status (same shape as msStatus)
   const [gBusy, setGBusy] = useState(false);
 
-  // Escape closes the dialog (keyboard parity with the click-outside backdrop).
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  // Focus trap + Escape + focus restore on close (keyboard parity with the
+  // click-outside backdrop). Replaces the previous Escape-only handler.
+  const dialogRef = useDialog(onClose);
 
   useEffect(() => {
     if (!profile?.id) return;
@@ -124,8 +122,8 @@ export function Settings({ onClose }) {
   const barColor = pct >= 90 ? C.red : pct >= 70 ? C.amb : C.grn;
 
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby="settings-title" style={{ position: "fixed", inset: 0, background: "rgba(28,25,23,0.5)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <Card style={{ width: "100%", maxWidth: 440, padding: 24 }}>
+    <div onMouseDown={onClose} style={{ position: "fixed", inset: 0, background: "rgba(28,25,23,0.5)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <Card ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="settings-title" onMouseDown={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 440, padding: 24, outline: "none" }}>
         <div id="settings-title" style={{ fontFamily: C.mono, fontWeight: 600, fontSize: 14, marginBottom: 20 }}>Settings</div>
 
         <div style={{ marginBottom: 12 }}>

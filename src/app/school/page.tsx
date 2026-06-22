@@ -10,6 +10,13 @@ import {
   type Snapshot, type CohortOutcome,
 } from "@/lib/impact";
 
+// Visually-hidden but screen-reader-available — used to label table header rows
+// that are styled as divs, so assistive tech announces the columns.
+const SR_ONLY = {
+  position: "absolute", width: 1, height: 1, padding: 0, margin: -1,
+  overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0,
+} as const;
+
 // SLT / Head-of-Department dashboard (strategy Build 2). Cohort mastery across
 // every class in the school: the objectives the cohort is weakest on, and a
 // per-class grid. Framed as support — aggregates only, no per-pupil surveillance.
@@ -629,17 +636,22 @@ function SchoolContent() {
       {cohort.length === 0 ? (
         <Empty>No retrieval data yet for this selection.</Empty>
       ) : (
-        <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden", background: C.surface, marginBottom: 32 }}>
+        <div role="table" aria-label="Weakest objectives across the cohort" style={{ border: `1px solid ${C.rule}`, borderRadius: 8, overflow: "hidden", background: C.surface, marginBottom: 32 }}>
+          <div role="row" style={SR_ONLY}>
+            <span role="columnheader">Objective</span>
+            <span role="columnheader">Cohort mastery</span>
+            <span role="columnheader">Classes</span>
+          </div>
           {cohort.slice(0, 12).map((o, i) => {
             const h = heat(o.avg);
             return (
-              <div key={o.topic_name + i} style={{ display: "grid", gridTemplateColumns: "1fr 120px 70px", gap: 14, alignItems: "center", padding: "11px 16px", borderTop: i === 0 ? "none" : `1px solid ${C.rule}` }}>
-                <span style={{ fontSize: 14, color: C.text }}>{o.topic_name}</span>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div role="row" key={o.topic_name + i} style={{ display: "grid", gridTemplateColumns: "1fr 120px 70px", gap: 14, alignItems: "center", padding: "11px 16px", borderTop: i === 0 ? "none" : `1px solid ${C.rule}` }}>
+                <span role="cell" style={{ fontSize: 14, color: C.text }}>{o.topic_name}</span>
+                <div role="cell" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <Bar pct={o.avg} />
                   <span style={{ fontFamily: C.mono, fontSize: 12, color: h.fg, fontWeight: 600, minWidth: 34, textAlign: "right" }}>{o.avg}%</span>
                 </div>
-                <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim, textAlign: "right" }}>{o.classes} {o.classes === 1 ? "class" : "classes"}</span>
+                <span role="cell" style={{ fontFamily: C.mono, fontSize: 11, color: C.dim, textAlign: "right" }}>{o.classes} {o.classes === 1 ? "class" : "classes"}</span>
               </div>
             );
           })}
