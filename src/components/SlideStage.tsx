@@ -5,6 +5,7 @@ import katex from "katex";
 import "katex/dist/katex.min.css";
 import { C } from "@/lib/theme";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { sanitizeUrl } from "@/components/slideEditor/constants";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 /* The fixed virtual canvas every element is positioned within. */
@@ -15,6 +16,20 @@ export const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.max(0, s) % 6
 const SHADOW = "0 6px 18px rgba(0,0,0,0.28)";
 const STAR = "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
 const TRIANGLE = "polygon(50% 0%, 0% 100%, 100% 100%)";
+const HEXAGON = "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)";
+// A rounded speech bubble with a tail at the lower-left (a roundedCallout / speech shape).
+const SPEECH = "polygon(0% 0%, 100% 0%, 100% 75%, 30% 75%, 18% 100%, 16% 75%, 0% 75%)";
+
+/* Resolve a shape element's fill into a CSS background. Solid is the default and
+   backward-compatible; when fillType==="gradient" we emit a CSS linear-gradient
+   from `fill` → `fill2` at `gradAngle`° (Tier 2). */
+function shapeFill(el: any): string {
+  if (el.fillType === "gradient") {
+    const a = typeof el.gradAngle === "number" ? el.gradAngle : 90;
+    return `linear-gradient(${a}deg, ${el.fill || "#5e7c4b"}, ${el.fill2 || "#2e3a5f"})`;
+  }
+  return el.fill;
+}
 
 // Guard against a non-finite coordinate (e.g. an Infinity/NaN x from a broken
 // import or AI-generated deck) reaching a CSS length — React floods the dev
@@ -40,15 +55,17 @@ export function elStyle(el: any): CSSProperties {
       borderRadius: el.bg ? 8 : 0,
       boxShadow: el.shadow ? SHADOW : undefined,
       boxSizing: "border-box",
-      lineHeight: 1.15, overflow: "hidden", whiteSpace: el.rich ? "normal" : "pre-wrap", wordBreak: "break-word",
+      lineHeight: el.lineHeight ?? 1.15, overflow: "hidden", whiteSpace: el.rich ? "normal" : "pre-wrap", wordBreak: "break-word",
     };
   if (el.type === "rect") {
     const shape = el.shape || "rect";
     const border = el.stroke ? `${el.strokeW || 3}px ${el.dashed ? "dashed" : "solid"} ${el.stroke}` : "none";
-    const s: CSSProperties = { ...base, height: finite(el.height), background: el.fill, boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box" };
+    const s: CSSProperties = { ...base, height: finite(el.height), background: shapeFill(el), boxShadow: el.shadow ? SHADOW : undefined, boxSizing: "border-box" };
     if (shape === "ellipse") return { ...s, borderRadius: "50%", border };
     if (shape === "triangle") return { ...s, clipPath: TRIANGLE };
     if (shape === "star") return { ...s, clipPath: STAR };
+    if (shape === "hexagon") return { ...s, clipPath: HEXAGON };
+    if (shape === "speech") return { ...s, clipPath: SPEECH };
     return { ...s, borderRadius: el.radius ?? 6, border };
   }
   if (el.type === "image")
@@ -598,6 +615,22 @@ interface StaticSlideProps {
   total?: number;
   title?: string;
 }
+/* Wrap an element's rendered node in an opening link when it carries a safe
+   `href` (Tier 2). Used by the read-only / Present views only — the editor never
+   wraps, so clicking an element still selects/drags it. The anchor is positioned
+   exactly over the element box and opens in a new tab. URL is sanitised
+   (http/https/mailto only); an unsafe or missing href renders the node bare. */
+function LinkWrap({ el }: { el: any }) {
+  const href = sanitizeUrl(el.href);
+  if (!href) return <div style={elStyle(el)}><ElInner el={el} /></div>;
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer"
+      style={{ ...elStyle(el), cursor: "pointer", textDecoration: "none", color: "inherit" }}>
+      <div style={{ width: "100%", height: "100%" }}><ElInner el={el} /></div>
+    </a>
+  );
+}
+
 export function StaticSlide({ slide, width, style, reveal = Infinity, live = false, master, index = 0, total = 1, title = "" }: StaticSlideProps) {
   const scale = width / VW;
   let rIdx = 0;
@@ -620,6 +653,7 @@ export function StaticSlide({ slide, width, style, reveal = Infinity, live = fal
           else if (el.type === "visualiser" && live) node = <div style={elStyle(el)}><LiveCamera /></div>;
           else if (el.type === "retrieval" && live) node = <div style={elStyle(el)}><RetrievalFrame el={el} /></div>;
           else if (el.type === "html" && live) node = <div style={elStyle(el)}><HtmlFrame el={el} /></div>;
+          else if (el.href && sanitizeUrl(el.href)) node = <LinkWrap el={el} />;
           else node = <div style={elStyle(el)}><ElInner el={el} /></div>;
           // Isolate each element: one malformed element (bad coords/chart/LaTeX)
           // renders nothing rather than crashing the whole slide and the app. In

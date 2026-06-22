@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { richToRuns, toFill, toHex, revealFrames, xIn, yIn, wIn, rot } from "./exportPptx.js";
+import { richToRuns, toFill, toHex, revealFrames, xIn, yIn, wIn, rot, linkOpt } from "./exportPptx.js";
 
 describe("richToRuns — rich text → PptxGenJS runs (formatting must survive export)", () => {
   it("plain text becomes one run, line-broken", () => {
@@ -69,5 +69,22 @@ describe("geometry & rotation", () => {
     expect(rot({ rotation: 90 })).toBe(90);
     expect(rot({ rotation: -90 })).toBe(270);
     expect(rot({ rotation: 450 })).toBe(90);
+  });
+});
+
+describe("linkOpt — element hyperlink export (sanitised, never crashes)", () => {
+  it("passes http/https/mailto through", () => {
+    expect(linkOpt({ href: "https://example.com" })).toEqual({ url: "https://example.com" });
+    expect(linkOpt({ href: "http://x.org/a" })).toEqual({ url: "http://x.org/a" });
+    expect(linkOpt({ href: "mailto:a@b.com" })).toEqual({ url: "mailto:a@b.com" });
+  });
+  it("upgrades a bare domain to https", () => {
+    expect(linkOpt({ href: "example.com/page" })).toEqual({ url: "https://example.com/page" });
+  });
+  it("drops unsafe or missing links (returns undefined)", () => {
+    expect(linkOpt({ href: "javascript:alert(1)" })).toBeUndefined();
+    expect(linkOpt({ href: "" })).toBeUndefined();
+    expect(linkOpt({})).toBeUndefined();
+    expect(linkOpt(null)).toBeUndefined();
   });
 });

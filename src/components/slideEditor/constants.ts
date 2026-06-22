@@ -32,6 +32,31 @@ export const ensureIds = (sl) => {
 
 export const MIN = 24; // smallest box size, in virtual units
 
+// Optional snap-to-grid (Tier 2). When the grid is toggled on, element drags and
+// resizes snap to this virtual step and a faint overlay is drawn on the stage.
+// The smart-align guides keep working alongside (they take priority when closer).
+export const GRID = 10; // virtual units per grid step
+export const snapToGrid = (v: number) => Math.round(v / GRID) * GRID;
+
+// Line-spacing choices for text (Tier 2). `lineHeight` is stored on the element
+// and applied in the text render path; unset falls back to the legacy 1.15 so
+// old decks render unchanged.
+export const LINE_HEIGHTS = [1.0, 1.15, 1.5, 2.0];
+export const DEFAULT_LINE_HEIGHT = 1.15;
+
+// Only http(s) and mailto links are allowed on an element's optional `href`
+// (Tier 2). Anything else (javascript:, data:, relative) is dropped so a shared
+// deck can't smuggle a script-url link. Returns a safe absolute URL or "".
+export function sanitizeUrl(url: string | null | undefined): string {
+  const u = (url || "").trim();
+  if (!u) return "";
+  if (/^mailto:/i.test(u)) return u;
+  if (/^https?:\/\//i.test(u)) return u;
+  // Bare domains typed without a scheme → assume https (teacher convenience).
+  if (/^[\w.-]+\.[a-z]{2,}([/?#].*)?$/i.test(u)) return "https://" + u;
+  return "";
+}
+
 // Font choices: css family for the editor, `face` for PowerPoint export.
 export const FONTS = [
   { label: "Sans", css: "'IBM Plex Sans', sans-serif", face: "Arial" },
