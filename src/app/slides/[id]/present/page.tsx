@@ -1,19 +1,24 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { sk } from "@/lib/sk";
 import { guestFind } from "@/lib/guestDecks";
-import { StaticSlide, VW, VH, revealCount } from "@/components/SlideStage";
+import { StaticSlide, VW, VH, revealCount, slideHasVisualiser, deckHasVisualiser, probeCameraPermission, TIMER_TOGGLE_EVENT } from "@/components/SlideStage";
+import { cacheDeck, readCachedDeck } from "@/lib/deckCache";
 
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 const pickBtn = { padding: "10px 22px", fontSize: 15, fontWeight: 600, color: "#fff", background: "#1a1714", border: "none", borderRadius: 8, cursor: "pointer" };
 const pickGhost = { padding: "10px 18px", fontSize: 14, color: "#555", background: "#fff", border: "1px solid #ccc", borderRadius: 8, cursor: "pointer" };
 
 export default function PresentPage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : (params.id || "");
   const router = useRouter();
   const [deck, setDeck] = useState(null);
   const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [offline, setOffline] = useState(false);  // showing a cached "offline copy"
+  const [reload, setReload] = useState(0);         // bump to retry the deck fetch
 
   const [i, setI] = useState(0);          // slide index
   const [step, setStep] = useState(0);    // reveals shown on current slide
@@ -40,14 +45,45 @@ export default function PresentPage() {
   const [elapsed, setElapsed] = useState(0);
   const startRef = useRef(Date.now());
 
+  const [lbHintDismissed, setLbHintDismissed] = useState(false); // 4:3 letterbox hint
+  const [camPrompt, setCamPrompt] = useState("");   // "" | "prompt" | "denied" — visualiser pre-check banner
+  const [camDismissed, setCamDismissed] = useState(false);
+  const notesWin = useRef(null);                     // popped-out presenter-notes window
+
+  // Deck load with offline resilience. A 20-second wifi stutter must not white-
+  // screen a live lesson, so: on a SUCCESSFUL fetch we cache the deck; on a
+  // FAILED fetch we fall back to the cached copy (flagged as an "offline copy")
+  // if we have one. Either way a "⟳ Retry" path stays available via setReload.
   useEffect(() => {
+    let cancelled = false;
     (async () => {
+      setLoading(true); setErr(""); setOffline(false);
       const local = guestFind(id);
-      if (local) { setDeck(local); return; }
-      try { setDeck(await sk.q("decks", { params: { id: `eq.${id}`, select: "*" }, single: true })); }
-      catch (e) { setErr(e.message || "Could not load deck"); }
+      if (local) { if (!cancelled) { setDeck(local); setLoading(false); } return; }
+      try {
+        const d = await sk.q("decks", { params: { id: `eq.${id}`, select: "*" }, single: true });
+        if (cancelled) return;
+        if (!d) {
+          // RLS / shared-deck access returned nothing — try a cached copy first.
+          const cached = readCachedDeck(id);
+          if (cached) { setDeck(cached.deck); setOffline(true); }
+          else setErr("This deck couldn’t be loaded — you may not have access, or it no longer exists.");
+        } else {
+          setDeck(d);
+          cacheDeck(id, d); // refresh the offline copy
+        }
+      } catch (e) {
+        if (cancelled) return;
+        // Network blip / server error — keep the lesson alive on the cached copy.
+        const cached = readCachedDeck(id);
+        if (cached) { setDeck(cached.deck); setOffline(true); }
+        else setErr(e?.message || "Could not load deck");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     })();
-  }, [id]);
+    return () => { cancelled = true; };
+  }, [id, reload]);
 
   // Start from the slide passed in ?start= (e.g. "Present from current slide"),
   // applied once the deck is known so we can clamp to a valid index.
@@ -73,6 +109,17 @@ export default function PresentPage() {
 
   // clear annotations when the slide changes
   useEffect(() => { setStrokes([]); }, [i]);
+
+  // Camera pre-check. If this deck uses a visualiser anywhere, probe permission
+  // up front (without forcing the OS dialog) so the teacher can grant access
+  // calmly — never as a mid-lesson surprise. A "granted" state stays silent.
+  useEffect(() => {
+    if (!deck || camDismissed) return;
+    if (!deckHasVisualiser(deck.slides || [])) return;
+    let alive = true;
+    probeCameraPermission().then((s) => { if (alive && (s === "prompt" || s === "denied")) setCamPrompt(s); });
+    return () => { alive = false; };
+  }, [deck, camDismissed]);
 
   // Detect a touch / pen device (iPad, Surface, touchscreen). On a tablet there's
   // no keyboard for the P/C/arrow shortcuts, so we surface on-screen ink controls.
@@ -109,6 +156,33 @@ export default function PresentPage() {
   const slides = deck?.slides || [];
   const slide = slides[i];
   const totalReveal = revealCount(slide);
+
+  // ── Presenter notes on a second screen (lightweight) ──────────────────────
+  // Broadcast the current slide's notes + next-slide title so a popped-out notes
+  // window (on the teacher's laptop) can mirror it off the projected screen. We
+  // use localStorage (so a freshly opened window can read the latest immediately)
+  // and BroadcastChannel (for live updates). Best-effort: a missing API never
+  // breaks the show.
+  const notesPayload = useMemo(() => JSON.stringify({
+    id, n: i + 1, total: slides.length,
+    notes: slide?.notes || "",
+    next: slides[i + 1]?.title || (i + 1 < slides.length ? `Slide ${i + 2}` : ""),
+    isEnd: i + 1 >= slides.length,
+    ts: Date.now(),
+  }), [id, i, slides, slide]);
+  const NOTES_KEY = `sk_present_notes:${id}`;
+  useEffect(() => {
+    try { localStorage.setItem(NOTES_KEY, notesPayload); } catch {}
+    let ch;
+    try { ch = new BroadcastChannel(NOTES_KEY); ch.postMessage(notesPayload); } catch {}
+    return () => { try { ch?.close(); } catch {} };
+  }, [notesPayload]);
+
+  const openNotes = () => {
+    try { localStorage.setItem(NOTES_KEY, notesPayload); } catch {}
+    const w = window.open(`/slides/${id}/present/notes`, `sk_notes_${id}`, "width=520,height=620");
+    if (w) { notesWin.current = w; w.focus?.(); }
+  };
 
   const advance = () => {
     if (blackout) { setBlackout(""); return; }
@@ -154,20 +228,42 @@ export default function PresentPage() {
       else if (k === "c" || k === "C") setStrokes([]);
       else if (k === "u" || k === "U" || ((e.metaKey || e.ctrlKey) && k === "z")) { e.preventDefault(); setStrokes((s) => s.slice(0, -1)); }
       else if (k === "n" || k === "N") { setPicker(true); setTimeout(spin, 0); }
+      else if (k === "t" || k === "T") { window.dispatchEvent(new Event(TIMER_TOGGLE_EVENT)); } // pause/resume slide timer
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  if (err) return <Center>{err}</Center>;
+  if (err && !deck) return (
+    <Center>
+      <div style={{ textAlign: "center", maxWidth: 460 }}>
+        <div style={{ fontSize: 16, color: "#ddd", marginBottom: 18, lineHeight: 1.5 }}>{err}</div>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+          <button onClick={() => setReload((n) => n + 1)} disabled={loading}
+            style={{ padding: "10px 22px", fontSize: 15, fontWeight: 600, color: "#000", background: "#fff", border: "none", borderRadius: 8, cursor: "pointer", opacity: loading ? 0.6 : 1 }}>⟳ Retry</button>
+          <button onClick={() => { if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {}); router.push("/slides"); }}
+            style={{ padding: "10px 18px", fontSize: 14, color: "#ddd", background: "transparent", border: "1px solid #444", borderRadius: 8, cursor: "pointer" }}>Exit to slides</button>
+        </div>
+      </div>
+    </Center>
+  );
   if (!deck) return <div style={{ position: "fixed", inset: 0, background: "#000" }} />;
   if (!slide) return <Center>This deck has no slides.</Center>;
 
-  // sizing — leave room for the presenter panel when it's open
-  const areaW = size.w - (presenter ? 380 : 0);
-  const width = Math.max(0, Math.min(areaW, size.h * (VW / VH)));
+  // sizing — leave room for the presenter panel when it's open. The 16:9 canvas
+  // is fit (contain) into the available area: on a 16:9 projector it fills edge
+  // to edge; on a 4:3 projector (1024×768, common in schools) it letterboxes
+  // top & bottom, which is unavoidable without distorting the slide. We measure
+  // how much of the area is wasted and, if it's a lot, show a one-time hint so
+  // the teacher isn't left wondering about the black bars.
+  const areaW = Math.max(0, size.w - (presenter ? 380 : 0));
+  const areaH = size.h;
+  const width = Math.max(0, Math.min(areaW, areaH * (VW / VH)));
   const height = width * (VH / VW);
   const scale = width / VW;
+  // Fraction of the available area left as black bars (0 = perfect fill).
+  const fillArea = areaW > 0 && areaH > 0 ? (width * height) / (areaW * areaH) : 1;
+  const letterboxFrac = 1 - fillArea;
 
   // ── Live inking (draw in virtual 960×540 coords) ─────────────────────────
   // Route by pointer type: an Apple Pencil always draws; a finger / mouse tap
@@ -253,7 +349,11 @@ export default function PresentPage() {
           </div>
 
           <div>
-            <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "#777", marginBottom: 6 }}>Notes</div>
+            <div style={{ display: "flex", alignItems: "center", marginBottom: 6 }}>
+              <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "#777" }}>Notes</div>
+              <button onClick={openNotes} title="Open notes in a separate window (for a second screen)"
+                style={{ marginLeft: "auto", fontSize: 11, color: "#aaa", background: "none", border: "1px solid #333", borderRadius: 5, padding: "3px 8px", cursor: "pointer" }}>⧉ Pop out notes</button>
+            </div>
             <div style={{ fontSize: 15, lineHeight: 1.5, color: slide.notes ? "#e8e8e8" : "#666", whiteSpace: "pre-wrap" }}>
               {slide.notes || "No notes for this slide."}
             </div>
@@ -351,13 +451,60 @@ export default function PresentPage() {
         </div>
       )}
 
+      {/* offline-copy note + retry — the live fetch failed but we're presenting
+          from a cached deck, so the lesson goes on. */}
+      {offline && (
+        <div onClick={(e) => e.stopPropagation()}
+          style={{ position: "fixed", top: 12, left: "50%", transform: "translateX(-50%)", zIndex: 40,
+                   display: "flex", alignItems: "center", gap: 10, padding: "6px 12px",
+                   background: "rgba(40,34,24,0.92)", border: "1px solid #5a4a2a", borderRadius: 10,
+                   color: "#e7d9b5", fontFamily: "system-ui", fontSize: 12 }}>
+          <span>Offline copy — showing the last saved version</span>
+          <button onClick={() => setReload((n) => n + 1)} disabled={loading}
+            style={{ fontSize: 12, color: "#1a1714", background: "#e7d9b5", border: "none", borderRadius: 6, padding: "3px 9px", cursor: "pointer", opacity: loading ? 0.6 : 1 }}>⟳ Retry</button>
+        </div>
+      )}
+
+      {/* camera pre-check banner — this deck uses the visualiser; let the teacher
+          grant access calmly before they hit the slide mid-lesson. */}
+      {camPrompt && !camDismissed && (
+        <div onClick={(e) => e.stopPropagation()}
+          style={{ position: "fixed", top: offline ? 52 : 12, left: "50%", transform: "translateX(-50%)", zIndex: 40,
+                   display: "flex", alignItems: "center", gap: 10, padding: "6px 12px",
+                   background: "rgba(20,30,40,0.94)", border: "1px solid #2f4a5a", borderRadius: 10,
+                   color: "#cfe4ef", fontFamily: "system-ui", fontSize: 12 }}>
+          <span>📷 {camPrompt === "denied"
+            ? "Camera is blocked — allow it in the browser to use the visualiser."
+            : "This lesson uses the visualiser (camera)."}</span>
+          {camPrompt === "prompt" && (
+            <button onClick={async () => {
+              try { const s = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); s.getTracks().forEach((t) => t.stop()); try { localStorage.setItem("sk_camera_permission", "granted"); } catch {} setCamDismissed(true); }
+              catch { setCamPrompt("denied"); }
+            }} style={{ fontSize: 12, color: "#1a1714", background: "#cfe4ef", border: "none", borderRadius: 6, padding: "3px 9px", cursor: "pointer" }}>Allow camera</button>
+          )}
+          <button onClick={() => setCamDismissed(true)} title="Dismiss"
+            style={{ fontSize: 12, color: "#cfe4ef", background: "none", border: "1px solid #2f4a5a", borderRadius: 6, padding: "3px 8px", cursor: "pointer" }}>✕</button>
+        </div>
+      )}
+
+      {/* 4:3 projector hint — a lot of the screen is black bars (the 16:9 slide
+          can't fill a 4:3 projector without distortion). Show it once, dismissable. */}
+      {letterboxFrac > 0.18 && !lbHintDismissed && (
+        <div onClick={(e) => { e.stopPropagation(); setLbHintDismissed(true); }}
+          style={{ position: "fixed", bottom: 44, left: "50%", transform: "translateX(-50%)", zIndex: 35,
+                   padding: "6px 12px", background: "rgba(20,20,20,0.85)", border: "1px solid #333",
+                   borderRadius: 10, color: "#bbb", fontFamily: "system-ui", fontSize: 11, cursor: "pointer" }}>
+          Black bars are normal on a 4:3 projector — slides are 16:9. Tap to dismiss.
+        </div>
+      )}
+
       {/* status / hint bar */}
       <div style={{ position: "fixed", bottom: 12, right: 16, fontFamily: "monospace", fontSize: 12, color: "#777" }}>
         {i + 1} / {slides.length}{(pen || (penDraw && (touchCapable || penSeen))) ? " · ✎" : ""}
       </div>
       {!touchCapable && (
       <div style={{ position: "fixed", bottom: 12, left: 16, fontFamily: "monospace", fontSize: 11, color: "#555" }}>
-        ← → move · S notes · G grid · B/W blank · P pen · U undo · C clear · N names · Esc exit
+        ← → move · S notes · G grid · B/W blank · P pen · T timer · U undo · C clear · N names · Esc exit
       </div>
       )}
     </div>
