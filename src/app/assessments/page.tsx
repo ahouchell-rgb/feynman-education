@@ -156,15 +156,27 @@ function AssessmentsContent() {
       {/* questions */}
       <Sec>Questions</Sec>
       <div style={{ border: `1px solid ${C.rule}`, borderRadius: 8, background: C.surface, padding: 12, marginBottom: 24 }}>
-        {questions.map((q) => (
-          <div key={q.id} style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8 }}>
-            <span style={{ fontFamily: C.mono, fontSize: 12, color: C.dim, width: 28 }}>Q{q.q_number}</span>
-            <Inp placeholder="Topic / objective" value={q.topic || ""} onChange={(e) => patchQuestion(q.id, { topic: e.target.value })} style={{ flex: 1 }} />
-            <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>max</span>
-            <Inp type="number" min={1} value={q.max_marks} onChange={(e) => patchQuestion(q.id, { max_marks: Math.max(1, parseInt(e.target.value) || 1) })} style={{ width: 70 }} />
-            <button onClick={() => removeQuestion(q.id)} style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14 }}>×</button>
+        {questions.map((q) => {
+          const untagged = !(q.topic || "").trim();
+          return (
+          <div key={q.id} style={{ marginBottom: 8 }}>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <span style={{ fontFamily: C.mono, fontSize: 12, color: C.dim, width: 28 }}>Q{q.q_number}</span>
+              <Inp placeholder="Topic / objective" value={q.topic || ""} onChange={(e) => patchQuestion(q.id, { topic: e.target.value })} style={{ flex: 1 }} />
+              <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>max</span>
+              <Inp type="number" min={1} value={q.max_marks} onChange={(e) => patchQuestion(q.id, { max_marks: Math.max(1, parseInt(e.target.value) || 1) })} style={{ width: 70 }} />
+              <button onClick={() => removeQuestion(q.id)} style={{ background: "none", border: "none", cursor: "pointer", color: C.dim, fontSize: 14 }}>×</button>
+            </div>
+            {/* Data-quality hint: an untagged question is invisible to the topic QLA
+                and to the leadership mastery blend (which joins on objective/topic). */}
+            {untagged && (
+              <div style={{ fontFamily: C.mono, fontSize: 11, color: C.amb, marginTop: 3, paddingLeft: 36 }}>
+                Not linked to a curriculum objective — this won't show in leadership mastery dashboards.
+              </div>
+            )}
           </div>
-        ))}
+          );
+        })}
         <Btn v="soft" onClick={addQuestion} style={{ fontSize: 12 }}>+ Question</Btn>
       </div>
 

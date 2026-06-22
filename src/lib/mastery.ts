@@ -25,6 +25,13 @@ export interface BlendedObjective {
   blendedPct: number;
   marked: number;
   sources: ("retrieval" | "assessment")[];
+  /**
+   * True when this entry blends two sources that were joined only by a
+   * normalised NAME match (not a shared objective_id) — i.e. it relied on the
+   * crosswalk fallback. Callers can surface this as a lower-confidence join.
+   * Always false for single-source entries and for id-matched blends.
+   */
+  nameMatchedOnly?: boolean;
   retrieval?: { pct: number; marked: number };
   assessment?: { pct: number; marked: number; students: number };
 }
@@ -104,9 +111,12 @@ export function blendObjectiveMastery(
     const marked = Number(a.marked) || 0;
     const assess = { pct: Math.round(a.pct), marked, students: Number(a.students) || 0 };
     // Match a retrieval entry by id first (precise), then by name (fallback).
-    const existing = (idKey && out.get(idKey)) || out.get(nameKey);
+    const idMatch = idKey ? out.get(idKey) : undefined;
+    const existing = idMatch || out.get(nameKey);
     const key = idKey || nameKey;
     if (existing) {
+      // Joined by name fallback only when the id match missed but a name match hit.
+      if (!idMatch) existing.nameMatchedOnly = true;
       existing.assessment = assess;
       existing.objective_id = a.objective_id || existing.objective_id;
       existing.code = a.code ?? existing.code;

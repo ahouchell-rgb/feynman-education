@@ -322,6 +322,9 @@ function SchoolContent() {
   if (!data?.enabled) return <SchoolOnboarding onDone={onboarded} />;
 
   const years = data.years || [];
+  // Data-quality: classes not linked to retrieval contribute nothing to mastery.
+  // Surface them so SLT know the numbers are a partial view, not a verdict.
+  const unlinked = (data.classes || []).filter((c) => !c.linked);
 
   return (
     <div>
@@ -344,6 +347,21 @@ function SchoolContent() {
           {data.meta.staleDays === 0 ? "today" : `${data.meta.staleDays} day${data.meta.staleDays === 1 ? "" : "s"} ago`}
           {data.meta.staleDays > 9 ? " (the weekly snapshot may have stopped running)" : ""}
         </p>
+      )}
+
+      {unlinked.length > 0 && (
+        <div style={{ display: "flex", gap: 10, alignItems: "flex-start", padding: "12px 16px", border: `1px solid ${C.amb}33`, borderRadius: 8, background: C.ambS, marginBottom: 24 }}>
+          <span style={{ fontSize: 14, lineHeight: 1.4, color: C.amb }}>⚠</span>
+          <div style={{ fontSize: 13, color: C.text, lineHeight: 1.5 }}>
+            <strong style={{ fontWeight: 600 }}>{unlinked.length} {unlinked.length === 1 ? "class isn't" : "classes aren't"} linked to retrieval practice yet</strong> — {unlinked.length === 1 ? "its" : "their"} pupils won't appear in the mastery numbers above until linked.
+            <div style={{ fontSize: 12, color: C.muted, marginTop: 4 }}>
+              {unlinked.map((c) => c.name).join(", ")}
+            </div>
+            <div style={{ fontFamily: C.mono, fontSize: 11, color: C.dim, marginTop: 6 }}>
+              Link a class to its retrieval group on <a href="/school/integrations" style={{ color: C.amb }}>Integrations →</a>
+            </div>
+          </div>
+        </div>
       )}
 
       {trend.length >= 2 && (

@@ -95,6 +95,30 @@ describe("blendObjectiveMastery", () => {
     expect(out[0].sources.sort()).toEqual(["assessment", "retrieval"]);
     expect(out[0].blendedPct).toBe(70); // (50*20 + 90*20)/40
     expect(out[0].objective_id).toBe("o1");
+    expect(out[0].nameMatchedOnly).toBeFalsy(); // joined by id, high confidence
+  });
+
+  it("flags a name-only join when both sources lack a shared objective_id", () => {
+    // Retrieval topic has no objective_id (not in the crosswalk); the assessment
+    // row also carries no objective_id — so they can only meet on the name key.
+    const retrieval = rollupRetrieval([[{ topic_name: "Cells", pct_correct: 40, marked: 20 }]]);
+    const out = blendObjectiveMastery(retrieval, [
+      { objective: "Cells", pct: 80, marked: 60, students: 30 },
+    ]);
+    expect(out).toHaveLength(1);
+    expect(out[0].sources.sort()).toEqual(["assessment", "retrieval"]);
+    expect(out[0].nameMatchedOnly).toBe(true); // fallback join, lower confidence
+  });
+
+  it("does not flag single-source entries as name-matched", () => {
+    const retrieval = rollupRetrieval([[{ topic_name: "Atoms", pct_correct: 30, marked: 10 }]]);
+    const out = blendObjectiveMastery(retrieval, assess);
+    const atoms = out.find((o) => o.label === "Atoms")!;
+    expect(atoms.sources).toEqual(["retrieval"]);
+    expect(atoms.nameMatchedOnly).toBeFalsy();
+    const cells = out.find((o) => o.label === "Cells")!;
+    expect(cells.sources).toEqual(["assessment"]);
+    expect(cells.nameMatchedOnly).toBeFalsy();
   });
 
   it("collapses differently-named topics that map to the same objective", () => {
