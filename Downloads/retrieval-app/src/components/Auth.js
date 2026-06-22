@@ -9,8 +9,8 @@ import { Btn, Card, Inp } from "./ui";
 // `welcome` (optional): a summary handed off from a public interactive-science
 // booklet (see lib/anonSession.consumeAnonFromUrl). When present we open on the
 // signup tab and show a continuity banner — the "claim your progress" bridge.
-export function Auth({ onAuth, onBack, welcome }) {
-  const [mode, setMode] = useState(welcome ? "signup" : "login");
+export function Auth({ onAuth, onBack, welcome, startMode }) {
+  const [mode, setMode] = useState(startMode || (welcome ? "signup" : "login"));
   const [email, setEmail] = useState(""); const [pw, setPw] = useState(""); const [name, setName] = useState(""); const [role, setRole] = useState("student");
   const [err, setErr] = useState(""); const [info, setInfo] = useState(""); const [busy, setBusy] = useState(false);
 

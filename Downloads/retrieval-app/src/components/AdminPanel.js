@@ -38,11 +38,23 @@ export function AdminPanel({ user }) {
   // In-app support tickets (Support tab). openCount drives the tab's flag badge.
   const [tickets, setTickets] = useState(null);   // null = not loaded
   const [openCount, setOpenCount] = useState(0);
+  // Sales leads (Leads tab) — pilot/quote requests + in-app paywall taps. Moderator-only read.
+  const [leads, setLeads] = useState(null);   // null = not loaded
 
   useEffect(() => { loadAll(); }, []);
 
   // Lazy-load the full ticket list when the Support tab is first opened.
   useEffect(() => { if (view === "support" && tickets === null) loadTickets(); /* eslint-disable-next-line */ }, [view]);
+
+  // Lazy-load leads when the Leads tab is first opened.
+  useEffect(() => { if (view === "leads" && leads === null) loadLeads(); /* eslint-disable-next-line */ }, [view]);
+
+  const loadLeads = async () => {
+    try {
+      const l = await sb.q("leads", { params: { select: "*", order: "created_at.desc" } });
+      setLeads(l || []);
+    } catch (e) { setLeads([]); setMsg("Leads unavailable: " + e.message); }
+  };
 
   const loadTickets = async () => {
     try {
@@ -163,7 +175,7 @@ export function AdminPanel({ user }) {
 
       {/* View tabs */}
       <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>
-        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }, { k: "support", l: `Support${openCount > 0 ? ` (${openCount})` : ""}` }, { k: "schools", l: "Schools & plans" }, { k: "costs", l: "Costs" }, { k: "funnel", l: "Booklet funnel" }, { k: "aiusage", l: "AI usage" }, { k: "cache", l: "Cache health" }].map(t => (
+        {[{ k: "overview", l: "Overview" }, { k: "teachers", l: "All teachers" }, { k: "students", l: "All students" }, { k: "unjoined", l: `Unjoined${unjoinedStudents.length > 0 ? ` (${unjoinedStudents.length})` : ""}` }, { k: "support", l: `Support${openCount > 0 ? ` (${openCount})` : ""}` }, { k: "leads", l: `Leads${leads && leads.length ? ` (${leads.length})` : ""}` }, { k: "schools", l: "Schools & plans" }, { k: "costs", l: "Costs" }, { k: "funnel", l: "Booklet funnel" }, { k: "aiusage", l: "AI usage" }, { k: "cache", l: "Cache health" }].map(t => (
           <Pill key={t.k} on={view === t.k} onClick={() => setView(t.k)} style={{ fontSize: 12, padding: "6px 12px" }}>{t.l}</Pill>
         ))}
       </div>
@@ -469,6 +481,38 @@ export function AdminPanel({ user }) {
       )}
 
       {view === "funnel" && <FunnelDashboard />}
+
+      {view === "leads" && (
+        <div>
+          {leads === null ? (
+            <div style={{ padding: 20, textAlign: "center", color: C.mid, fontSize: 12 }}>Loading leads…</div>
+          ) : leads.length === 0 ? (
+            <div style={{ padding: 20, textAlign: "center", color: C.mid, fontSize: 12 }}>No leads yet. Pilot/quote requests and in-app upgrade taps land here.</div>
+          ) : leads.map(l => (
+            <div key={l.id} style={{ background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, padding: "12px 14px", marginBottom: 6 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: C.txt }}>{l.school_name || l.contact_name || l.email || "Lead"}</div>
+                  <div style={{ fontSize: 11, color: C.mid, marginTop: 2 }}>
+                    {l.contact_name ? `${l.contact_name} · ` : ""}{l.role ? `${l.role} · ` : ""}{l.email}
+                  </div>
+                  <div style={{ fontSize: 10, color: C.dim, marginTop: 4, display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    {l.source && <Badge color={l.source === "in_app_paywall" ? C.pri : C.mid}>{l.source}</Badge>}
+                    {l.plan_interest && <span>plan: {l.plan_interest}</span>}
+                    {l.pupils != null && <span>· {l.pupils} pupils</span>}
+                    <span>· {l.created_at ? new Date(l.created_at).toLocaleDateString() : ""}</span>
+                  </div>
+                  {l.message && <div style={{ fontSize: 12, color: C.mid, marginTop: 6, lineHeight: 1.4 }}>{l.message}</div>}
+                </div>
+                {l.email && (
+                  <a href={`mailto:${l.email}?subject=${encodeURIComponent("Feynman Education — your enquiry")}`}
+                    style={{ flexShrink: 0, padding: "5px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card2 || C.bg, color: C.mid, textDecoration: "none" }}>Reply</a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* AI USAGE — real cache hit rate from logged Anthropic usage */}
       {view === "aiusage" && (() => {

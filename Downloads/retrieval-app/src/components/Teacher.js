@@ -14,6 +14,7 @@ import { MarkReview } from "./MarkReview";
 import { LessonStarter } from "./LessonStarter";
 import { PaperManager } from "./PaperManager";
 import { QMgr } from "./QMgr";
+import { RequestCore } from "./RequestCore";
 import { Student } from "./Student";
 import { StudentList } from "./StudentList";
 import { StudentPaperAttempt } from "./StudentPaperAttempt";
@@ -1212,7 +1213,8 @@ export function Teacher({ user }) {
               <div style={{ maxWidth: 560, margin: "20px auto", padding: 24, textAlign: "center", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 12 }}>
                 <div style={{ fontSize: 26, marginBottom: 8 }}>🔒</div>
                 <div style={{ fontSize: 16, fontWeight: 700, color: C.txt }}>Writing your own questions is a Core feature</div>
-                <div style={{ fontSize: 13, color: C.mid, marginTop: 8, lineHeight: 1.5 }}>Your plan includes the full shared question bank. To author and edit your own questions, upgrade to Core — speak to your administrator or get in touch to upgrade.</div>
+                <div style={{ fontSize: 13, color: C.mid, marginTop: 8, lineHeight: 1.5 }}>Your plan includes the full shared question bank. To author and edit your own questions, upgrade to Core. Tap below and we&rsquo;ll be in touch about unlocking it for your school.</div>
+                <RequestCore user={user} />
               </div>
             ))}
           {tab === "papers" && <PaperManager user={user} cls={cls} classes={classes} topics={topics} subjectId={cls.subject_id} />}
