@@ -3,6 +3,8 @@
 // Validates that the guardian access token owns the link, then writes the
 // target. Service-role write; no parent account required.
 
+import { audit } from "@/lib/audit";
+
 export const runtime = "nodejs";
 
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
@@ -31,5 +33,6 @@ export async function POST(req: Request) {
   if (!link?.length) return j({ error: "not your child" }, 403);
 
   await admin("PATCH", `guardian_student?id=eq.${linkId}`, { target_grade: target || null });
+  await audit(null, "parent.set_target", linkId, { guardian_id: guardianId, target: target || null });
   return j({ ok: true, target });
 }

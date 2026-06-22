@@ -28,6 +28,61 @@ jobs:
       - name: Build
         run: npm run build
 
+  # Replays every migration onto a throwaway Postgres and asserts the security
+  # surface: owner RLS isolation, the SECURITY DEFINER role gates, the privilege-
+  # escalation guards, and that every public table has RLS enabled. See
+  # supabase/tests/README.md.
+  db-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run DB security tests
+        env:
+          PGHOST: localhost
+          PGPORT: "5432"
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: postgres
+        run: bash supabase/tests/run.sh
+
+  # Accessibility audit (WCAG 2.2 AA) on the public, no-auth surfaces with axe.
+  # Self-contained (installs its own tooling so the app's package-lock is
+  # untouched) and NON-BLOCKING for now (continue-on-error): it surfaces
+  # violations as a report while the team drives them to zero, then this should
+  # be promoted to a required check.
+  a11y:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Install axe + Playwright (job-local)
+        run: |
+          npm install --no-save @axe-core/playwright@4 playwright@1
+          npx playwright install --with-deps chromium
+      - name: Start app
+        run: |
+          npm run start &
+          npx --yes wait-on http://localhost:3000 --timeout 60000
+      - name: Run axe on public routes
+        run: node scripts/a11y-axe.mjs
+
   secret-scan:
     runs-on: ubuntu-latest
     steps:

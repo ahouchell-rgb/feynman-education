@@ -11,7 +11,7 @@
 //   ANTHROPIC_API_KEY           — scaffolds
 //   SK_API_KEY                  — the x-sciencekit-key shared secret that gates the retrieval RPCs
 import { buildFeedforwardPptx } from "@/lib/feedforwardPptx";
-import { cronAuthorized, recordCronRun, withTimeout, RETRIEVAL_TIMEOUT_MS } from "@/lib/serverHelpers";
+import { cronAuthorized, recordCronRun, withTimeout, RETRIEVAL_TIMEOUT_MS, callAnthropic, anthropicText, logTokenUsage } from "@/lib/serverHelpers";
 import { reportError } from "@/lib/observe";
 
 const JOB = "halfterm-feedforward";
@@ -71,24 +71,37 @@ async function holidayJustEnded(days = 8): Promise<boolean> {
   return false;
 }
 
+// Has this class already had a deck generated for this half-term? Idempotency:
+// the cron runs weekly and may be re-invoked, so a deck per (class, half-term)
+// must not be regenerated — that both duplicates the teacher's decks AND repeats
+// the (now metered) AI spend. `force=1` overrides for manual re-runs.
+async function alreadyGenerated(retId: string, halfTerm: string): Promise<boolean> {
+  const rows = await skAdmin(
+    `feedforward_decks?class_id=eq.${retId}&half_term=eq.${encodeURIComponent(halfTerm)}&select=id&limit=1`,
+  ).catch(() => []);
+  return Array.isArray(rows) && rows.length > 0;
+}
+
 // ── AI scaffolding (one call per topic; falls back to raw questions) ────────
-async function scaffold(topic: string, questions: string[]): Promise<any[]> {
+// Returns the activities + the Anthropic usage so the caller can meter the spend
+// against the teacher's budget pool (previously this cron's AI calls were both
+// unmetered and invisible to the per-org budget / usage dashboard).
+async function scaffold(topic: string, questions: string[]): Promise<{ acts: any[]; usage: any }> {
   const raw = [{ title: "Retrieve — answer from memory", lines: questions.slice(0, 6) }];
-  if (!process.env.ANTHROPIC_API_KEY || !questions.length) return raw;
+  if (!process.env.ANTHROPIC_API_KEY || !questions.length) return { acts: raw, usage: null };
   const prompt = `You are making a UK KS3 science FEEDFORWARD for "${topic}". Pupils were weak on it in retrieval practice. Their questions:\n- ${questions.slice(0, 10).join("\n- ")}\n\nProduce 3 scaffolded activities building to exam standard: (1) fill-in-the-blanks with a word bank, (2) a matching/sort task, (3) a short exam question. Return ONLY JSON: a list of {"title":"...","wordbank":"optional · dot · separated","lines":["...","..."]}. UK spelling.`;
   try {
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
-      body: JSON.stringify({ model: MODEL, max_tokens: 1500, messages: [{ role: "user", content: prompt }] }),
-    });
-    if (!r.ok) return raw;
+    const r = await callAnthropic(
+      { model: MODEL, max_tokens: 1500, messages: [{ role: "user", content: prompt }] },
+      { apiKey: process.env.ANTHROPIC_API_KEY! },
+    );
+    if (!r.ok) return { acts: raw, usage: null };
     const d = await r.json();
-    let text = (d.content || []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
+    let text = anthropicText(d);
     text = text.slice(text.indexOf("["), text.lastIndexOf("]") + 1);
     const acts = JSON.parse(text);
-    return Array.isArray(acts) && acts.length ? acts : raw;
-  } catch { return raw; }
+    return { acts: Array.isArray(acts) && acts.length ? acts : raw, usage: d.usage };
+  } catch { return { acts: raw, usage: null }; }
 }
 
 // ── handler ─────────────────────────────────────────────────────────────
@@ -121,6 +134,12 @@ export async function GET(req: Request) {
     const retId = (c.retrieval_class_ids || [])[0];
     if (!retId) continue;
     try {
+      // Idempotency: don't regenerate (and re-spend on) a deck this class already
+      // has for this half-term, unless explicitly forced.
+      if (!force && (await alreadyGenerated(retId, halfTerm))) {
+        results.push({ class: c.name, skipped: "already generated this half-term" });
+        continue;
+      }
       const weak = await retRpc("class_weak_topics", { p_class_id: retId, p_limit: 5 });
       if (!Array.isArray(weak) || !weak.length) { results.push({ class: c.name, skipped: "no weak topics" }); continue; }
       const topics = [];
@@ -128,10 +147,14 @@ export async function GET(req: Request) {
         const qs = await retRpc("topic_preview_questions", { p_topic_id: w.topic_id });
         const questions = (Array.isArray(qs) ? qs : []).map((q: any) => q.question_text);
         const pct = Math.round(Number(w.pct_correct));
+        const { acts, usage } = await scaffold(w.topic_name, questions);
+        // Meter the AI spend against the teacher's pool so it counts toward the
+        // daily/monthly budgets and shows on the usage dashboard.
+        if (usage) await logTokenUsage(c.teacher_id, usage);
         topics.push({
           topic: w.topic_name,
           stat: `only ${pct}% correct · ${w.marked} answers${w.students ? ` · ${w.students} pupils` : ""}`,
-          activities: await scaffold(w.topic_name, questions),
+          activities: acts,
         });
       }
       const buf: Buffer = await buildFeedforwardPptx({ classLabel: c.name, halfTerm, topics });

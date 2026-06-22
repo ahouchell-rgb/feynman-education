@@ -30,6 +30,7 @@ const JOBS = [
   "halfterm-feedforward",
   "mis-sync",
   "mis-writeback",
+  "pupil-lifecycle",
 ] as const;
 
 const j = (o: any, s = 200) =>
@@ -57,6 +58,39 @@ async function checkDb(): Promise<{ ok: boolean; status?: number }> {
 async function checkRetrievalApp(): Promise<{ ok: boolean; origin: string; status?: number }> {
   const r = await withTimeout((signal) => fetch(RET_APP_ORIGIN, { method: "HEAD", signal }), 4000);
   return { ok: !!r && r.status < 500, origin: RET_APP_ORIGIN, status: r?.status };
+}
+
+// The retrieval-app-owned RPCs this app calls across the "two repos, one schema"
+// boundary. If the retrieval side hasn't shipped one, every caller degrades
+// silently to an empty list (parent reports / dashboards look "broken" with no
+// error). This probe makes that drift VISIBLE: it calls each function with a
+// throwaway id and classifies the response.
+const RETRIEVAL_RPCS: Array<[string, Record<string, unknown>]> = [
+  ["class_weak_topics", { p_class_id: "00000000-0000-0000-0000-000000000000", p_limit: 1, p_min_marked: 0 }],
+  ["student_weak_topics", { p_student_id: "00000000-0000-0000-0000-000000000000", p_limit: 1 }],
+  ["class_intervention_list", { p_class_id: "00000000-0000-0000-0000-000000000000", p_threshold: 50 }],
+];
+
+/** Probe each retrieval RPC: present / missing / gated / unknown. A 404
+ *  (PostgREST PGRST202) means the function isn't deployed — real drift. A
+ *  401/403 means it exists but is auth-gated (fine). Skipped if SK_API_KEY is
+ *  unset (the gate secret), since we can't tell missing from gated without it. */
+async function checkRetrievalRpcs(): Promise<{ ok: boolean; rpcs: Record<string, string> }> {
+  const secret = process.env.SK_API_KEY;
+  const out: Record<string, string> = {};
+  if (!secret) {
+    for (const [fn] of RETRIEVAL_RPCS) out[fn] = "skipped";
+    return { ok: true, rpcs: out };
+  }
+  await Promise.all(RETRIEVAL_RPCS.map(async ([fn, body]) => {
+    const r = await withTimeout((signal) => fetch(`${SK_URL}/rest/v1/rpc/${fn}`, {
+      method: "POST", signal,
+      headers: { "content-type": "application/json", apikey: SK_ANON, Authorization: `Bearer ${SK_ANON}`, "x-sciencekit-key": secret },
+      body: JSON.stringify(body),
+    }), 4000);
+    out[fn] = !r ? "unknown" : r.status === 404 ? "missing" : r.status < 300 ? "present" : (r.status === 401 || r.status === 403) ? "gated" : "unknown";
+  }));
+  return { ok: !Object.values(out).includes("missing"), rpcs: out };
 }
 
 /** Most-recent cron_runs row per job (service role, so RLS doesn't hide it). */
@@ -91,14 +125,19 @@ async function checkCrons(): Promise<{ ok: boolean; jobs: Record<string, any> }>
 }
 
 export async function GET() {
-  const [db, retrievalApp, crons] = await Promise.all([checkDb(), checkRetrievalApp(), checkCrons()]);
-  const ok = db.ok && retrievalApp.ok;
+  const [db, retrievalApp, retrievalRpcs, crons] = await Promise.all([
+    checkDb(), checkRetrievalApp(), checkRetrievalRpcs(), checkCrons(),
+  ]);
+  // A missing retrieval RPC is a real, otherwise-silent failure, so it fails the
+  // overall check alongside basic reachability.
+  const ok = db.ok && retrievalApp.ok && retrievalRpcs.ok;
   return j(
     {
       ok,
       checkedAt: new Date().toISOString(),
       db,
       retrievalApp,
+      retrievalRpcs: retrievalRpcs.rpcs,
       crons: crons.jobs,
     },
     ok ? 200 : 503,

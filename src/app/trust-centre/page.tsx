@@ -2,9 +2,11 @@
 // data principles, and the sub-processor list a school's DPO asks for first.
 // Outside the auth gate — a URL you can hand to procurement.
 //
-// FOUNDER TODOs (search "[CONFIRM" / "TODO:"): confirm the Supabase processing
-// region, the DPO/security contact email, and the certification status before
-// handing this to procurement. Placeholders are intentional — fill, don't guess.
+// Primary data region: UK (London). The security/DPO contact is env-driven
+// (NEXT_PUBLIC_SECURITY_CONTACT) so it can be pointed at a monitored inbox per
+// deployment without a code change; it defaults to security@feynman.education.
+
+const SECURITY_CONTACT = process.env.NEXT_PUBLIC_SECURITY_CONTACT || "security@feynman.education";
 
 const COL = { bg: "#f4f4f2", card: "#fff", border: "#e5e5e0", text: "#1a1a1a", mut: "#555", dim: "#888", grn: "#1a7f5a" };
 const wrap: React.CSSProperties = { fontFamily: "-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif", color: COL.text, background: COL.bg, minHeight: "100dvh" };
@@ -12,7 +14,7 @@ const wrap: React.CSSProperties = { fontFamily: "-apple-system,Segoe UI,Roboto,H
 // Provider, purpose, data shared, processing region, and a link to the vendor's
 // security / DPA page so a DPO can verify each sub-processor directly.
 const SUBPROCESSORS: [string, string, string, string, string][] = [
-  ["Supabase", "Database, authentication, file storage", "Pupil/teacher/parent records (encrypted at rest)", "[CONFIRM REGION]", "https://supabase.com/security"],
+  ["Supabase", "Database, authentication, file storage", "Pupil/teacher/parent records (encrypted at rest)", "UK (London)", "https://supabase.com/security"],
   ["Anthropic (Claude)", "AI generation (lessons, feedforward, reports)", "Lesson/assessment content sent per request; not used to train models", "US", "https://www.anthropic.com/legal/commercial-terms"],
   ["Stripe", "Payments (optional, paid plans only)", "Billing details — no card data touches our servers", "EU/US", "https://stripe.com/gb/privacy"],
   ["Resend", "Parent-report email delivery (optional)", "Parent/teacher email addresses + report content", "EU/US", "https://resend.com/legal/dpa"],
@@ -69,15 +71,8 @@ export default function TrustCentre() {
 
         <Card>
           <H2>Data residency</H2>
-          {/* TODO (founder): confirm the Supabase project region from the Supabase
-              dashboard (Project Settings → General → Region) and replace the
-              placeholder below. Do not assume EU/UK without verifying. The AI
-              provider (Anthropic) processes per request in the US. */}
           <P>
-            Primary data (the database, authentication and file storage) is hosted on Supabase in <strong>[CONFIRM REGION]</strong>. Content sent for AI generation is processed by Anthropic in the US per request and is not retained for model training. Other sub-processors are listed below with their regions.
-          </P>
-          <P style={{ color: COL.dim, fontSize: 12 }}>
-            [CONFIRM REGION] — to be set by Feynman Education from the live Supabase project before sharing with procurement.
+            Primary data (the database, authentication and file storage) is hosted on Supabase in the <strong>UK (London)</strong> region. Content sent for AI generation is processed by Anthropic in the US per request and is not retained for model training. Other sub-processors are listed below with their regions.
           </P>
         </Card>
 
@@ -128,10 +123,6 @@ export default function TrustCentre() {
 
         <Card>
           <H2>Certifications</H2>
-          {/* TODO (founder): state ONLY what is genuinely held. Do not claim
-              ISO 27001 or Cyber Essentials unless and until certified. If/when a
-              certification or independent pen-test report exists, list it here
-              and offer the certificate on request. */}
           <P>
             We follow UK GDPR and the ICO Age-Appropriate Design Code, and align our controls with recognised standards (encryption, access control, audit logging, least privilege). We do not currently hold ISO 27001 or Cyber Essentials certification.
           </P>
@@ -161,15 +152,12 @@ export default function TrustCentre() {
 
         <Card>
           <H2>Incident response &amp; contact</H2>
-          {/* TODO (founder): replace the placeholder security/DPO email below
-              with a monitored address before sharing with procurement. */}
           <P>
             We maintain an incident-response process and will notify affected schools without undue delay on becoming aware of a personal-data breach. Where a breach is reportable, we commit to supporting the controller school's notification to the ICO within <strong>72 hours</strong> as required by UK GDPR.
           </P>
           <P>
             Security &amp; data-protection contact:{" "}
-            <a href="mailto:security@feynman.education" style={{ color: COL.grn }}>security@feynman.education</a>{" "}
-            <span style={{ color: COL.dim, fontSize: 12 }}>[CONFIRM CONTACT — set a monitored DPO/security inbox]</span>.
+            <a href={`mailto:${SECURITY_CONTACT}`} style={{ color: COL.grn }}>{SECURITY_CONTACT}</a>.
           </P>
         </Card>
 
