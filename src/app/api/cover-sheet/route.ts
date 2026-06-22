@@ -10,15 +10,14 @@
 //
 // Env: ANTHROPIC_API_KEY. Optional: SUPABASE_SERVICE_ROLE_KEY (usage log).
 
-import { bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, json as j } from "@/lib/serverHelpers";
+import { bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, callAnthropic, json as j } from "@/lib/serverHelpers";
 import { enforceAiBudget } from "@/lib/aiBudget";
+import { maybeFactcheck } from "@/lib/factcheck";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const MODEL = "claude-sonnet-4-6";
-const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const ANTHROPIC_VERSION = "2023-06-01";
 const MAX_OUTPUT_TOKENS = 4096;
 
 const stripTags = (s: unknown) =>
@@ -84,15 +83,11 @@ export async function POST(req: Request) {
 
   let res: Response;
   try {
-    res = await fetch(ANTHROPIC_URL, {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": ANTHROPIC_VERSION },
-      body: JSON.stringify({
-        model: MODEL, max_tokens: MAX_OUTPUT_TOKENS,
-        system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
-        messages: [{ role: "user", content: `LESSON: ${title}\n\nDECK (slide by slide):\n${outline}\n\nWrite the cover lesson script.` }],
-      }),
-    });
+    res = await callAnthropic({
+      model: MODEL, max_tokens: MAX_OUTPUT_TOKENS,
+      system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
+      messages: [{ role: "user", content: `LESSON: ${title}\n\nDECK (slide by slide):\n${outline}\n\nWrite the cover lesson script.` }],
+    }, { apiKey: process.env.ANTHROPIC_API_KEY });
   } catch (e: any) { return j({ error: `Request to Claude failed: ${e.message}` }, 502); }
   if (!res.ok) return j({ error: `Claude ${res.status}: ${(await res.text().catch(() => "")).slice(0, 300)}` }, 502);
 
@@ -101,5 +96,8 @@ export async function POST(req: Request) {
   await logTokenUsage(userId, data.usage);
 
   if (!/[<][a-z]/i.test(html)) return j({ error: "The script came back empty — try again." }, 502);
-  return j({ html });
+
+  // The deck outline is the curriculum context the script must stay faithful to.
+  const factcheck = await maybeFactcheck({ html, ctx: `LESSON: ${title}\n\nDECK (slide by slide):\n${outline}`, apiKey: process.env.ANTHROPIC_API_KEY });
+  return j(factcheck ? { html, factcheck } : { html });
 }

@@ -12,10 +12,92 @@ export const SK_ANON =
 export const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 export const ANTHROPIC_VERSION = "2023-06-01";
 
-export const AI_MODELS = { OPUS: "claude-opus-4-8", SONNET: "claude-sonnet-4-6" } as const;
-/** Cheap model for bulk/derived generation; Opus only for authoring. */
-export function pickModel(kind: "authoring" | "bulk"): string {
-  return kind === "authoring" ? AI_MODELS.OPUS : AI_MODELS.SONNET;
+// HAIKU is wired up here and selectable via pickModel("cheap"), but NO route is
+// routed onto it yet — every current AI route is quality-sensitive, teacher-facing
+// generation (full lessons, practicals, revision packs, slides, feedforward). It's
+// available for opt-in on a genuinely short/deterministic, low-stakes route after
+// evals, without another infra change.
+export const AI_MODELS = { OPUS: "claude-opus-4-8", SONNET: "claude-sonnet-4-6", HAIKU: "claude-haiku-4-5" } as const;
+/** Cheap model for bulk/derived generation; Opus only for authoring; Haiku for
+ *  cheap, short, low-stakes calls (e.g. the opt-in fact-check). */
+export function pickModel(kind: "authoring" | "bulk" | "cheap"): string {
+  if (kind === "authoring") return AI_MODELS.OPUS;
+  if (kind === "cheap") return AI_MODELS.HAIKU;
+  return AI_MODELS.SONNET;
+}
+
+// ─── Anthropic call with retry/backoff ───────────────────────────────────
+/** Transient HTTP statuses worth retrying: rate limit, server errors, overloaded.
+ *  Everything else (other 4xx — bad request, auth, not found) is NOT retried. */
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 529]);
+/** Backoff schedule (ms) before attempts 2, 3, 4. ~0.5s, 1s, 2s + jitter. */
+const RETRY_BACKOFF_MS = [500, 1000, 2000];
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+interface CallAnthropicOpts {
+  apiKey: string;
+  /** Abort signal forwarded to fetch (e.g. request cancellation). */
+  signal?: AbortSignal;
+  /** Override the version header (defaults to ANTHROPIC_VERSION). */
+  version?: string;
+  /** Max retries after the initial attempt (default 3 → up to 4 total tries). */
+  maxRetries?: number;
+  /** Test seam: compute the backoff delay for a given attempt. Defaults to the
+   *  exponential schedule above with jitter. Return 0 in tests to avoid sleeping. */
+  delayFn?: (attempt: number, retryAfterMs: number | null) => number;
+}
+
+/** Parse a Retry-After header (seconds, or an HTTP-date) into ms, or null. */
+function parseRetryAfter(res: Response): number | null {
+  const h = res.headers.get("retry-after");
+  if (!h) return null;
+  const secs = Number(h);
+  if (Number.isFinite(secs)) return Math.max(0, secs * 1000);
+  const when = Date.parse(h);
+  return Number.isFinite(when) ? Math.max(0, when - Date.now()) : null;
+}
+
+function defaultDelay(attempt: number, retryAfterMs: number | null): number {
+  if (retryAfterMs != null) return retryAfterMs; // server told us how long to wait
+  const base = RETRY_BACKOFF_MS[Math.min(attempt, RETRY_BACKOFF_MS.length - 1)];
+  return base + Math.floor(Math.random() * base * 0.5); // +0–50% jitter
+}
+
+/** POST a Messages request to Anthropic with retry + exponential backoff on
+ *  transient failures (429 / 500 / 502 / 503 / 529 and network throws). Honours a
+ *  Retry-After header when present. Other 4xx are returned immediately (no retry).
+ *  Returns the final Response — callers read .ok / .status / .json() as before; the
+ *  body and all headers (prompt-cache, anthropic-beta, …) are passed through verbatim. */
+export async function callAnthropic(body: unknown, opts: CallAnthropicOpts): Promise<Response> {
+  const { apiKey, signal, version = ANTHROPIC_VERSION, maxRetries = 3, delayFn = defaultDelay } = opts;
+  const payload = typeof body === "string" ? body : JSON.stringify(body);
+  let lastErr: unknown;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const res = await fetch(ANTHROPIC_URL, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-api-key": apiKey, "anthropic-version": version },
+        body: payload,
+        signal,
+      });
+      // Success, or a non-retryable error → hand back to the caller as-is.
+      if (res.ok || !RETRYABLE_STATUS.has(res.status) || attempt === maxRetries) return res;
+      // Retryable: drain the body so the connection can be reused, then back off.
+      const retryAfter = parseRetryAfter(res);
+      await res.text().catch(() => "");
+      await sleep(delayFn(attempt, retryAfter));
+    } catch (e) {
+      lastErr = e;
+      // Don't retry an intentional abort.
+      if (signal?.aborted) throw e;
+      if (attempt === maxRetries) throw e;
+      await sleep(delayFn(attempt, null));
+    }
+  }
+  // Unreachable in practice (loop returns/throws), but satisfies the type checker.
+  throw lastErr ?? new Error("callAnthropic: exhausted retries");
 }
 
 /** Authorize a Vercel Cron request.

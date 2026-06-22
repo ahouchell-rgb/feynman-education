@@ -15,8 +15,8 @@
 // Required env: ANTHROPIC_API_KEY. Optional: SUPABASE_SERVICE_ROLE_KEY (usage log).
 
 import {
-  AI_MODELS, ANTHROPIC_URL, ANTHROPIC_VERSION,
-  bearerToken, requireUserId, json, anthropicText, logTokenUsage,
+  AI_MODELS,
+  bearerToken, requireUserId, json, anthropicText, logTokenUsage, callAnthropic,
 } from "@/lib/serverHelpers";
 import { enforceAiBudget } from "@/lib/aiBudget";
 
@@ -110,21 +110,13 @@ export async function POST(req: Request) {
 
   let res: Response;
   try {
-    res = await fetch(ANTHROPIC_URL, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": ANTHROPIC_VERSION,
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: MAX_OUTPUT_TOKENS,
-        // Cache the stable ruleset; the deck content + instruction trail it uncached.
-        system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
-        messages: [{ role: "user", content: userText }],
-      }),
-    });
+    res = await callAnthropic({
+      model: MODEL,
+      max_tokens: MAX_OUTPUT_TOKENS,
+      // Cache the stable ruleset; the deck content + instruction trail it uncached.
+      system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
+      messages: [{ role: "user", content: userText }],
+    }, { apiKey: process.env.ANTHROPIC_API_KEY });
   } catch (e: any) {
     return json({ error: `Request to Claude failed: ${e.message}` }, 502);
   }
