@@ -203,7 +203,7 @@ export const SHORTCUTS: [string, [string, string][]][] = [
   ["Editing", [
     ["Undo / Redo", "⌘Z / ⌘⇧Z"],
     ["Duplicate selection", "⌘D"],
-    ["Copy / Paste element", "⌘C / ⌘V"],
+    ["Cut / Copy / Paste", "⌘X / ⌘C / ⌘V"],
     ["Select all on slide", "⌘A"],
     ["Delete selection / slide", "Delete"],
     ["Nudge (10px with ⇧)", "Arrow keys"],
@@ -214,9 +214,11 @@ export const SHORTCUTS: [string, [string, string][]][] = [
     ["Multi-select", "Shift-click / drag"],
     ["Free-resize an image", "⇧ + corner drag"],
     ["Rotate in 15° steps", "⇧ while rotating"],
+    ["Add an image", "Drag a file onto the canvas"],
   ]],
   ["General", [
     ["Edit text / table", "Double-click"],
+    ["Element / slide menu", "Right-click"],
     ["Find text in deck", "Find box · Enter"],
     ["This cheat sheet", "?"],
     ["Close overlay", "Esc"],

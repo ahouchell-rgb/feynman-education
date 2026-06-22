@@ -43,6 +43,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     if (autoQuestions && !autoQDone.current) { autoQDone.current = true; setQOpen(true); }
   }, [autoQuestions]);
   const [slideMenu, setSlideMenu] = useState(null);      // { x, y, index } — slide-rail right-click menu
+  const [elMenu, setElMenu] = useState(null);            // { x, y, canvas } — element / empty-canvas right-click menu
   // Right panel is single-occupancy: opening one view closes the others, and
   // the column is always mounted so toggling never changes canvas width.
   const openPanel = (name) => {
@@ -192,11 +193,42 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     mapSlide(s => ({ ...s, elements: [...s.elements, copy] }));
     setSel(id); setEditing(null);
   };
+  // Clone a list of elements together, offset by d, regenerating ids and keeping
+  // any grouping intact (each source group → one fresh group on the copies).
+  const cloneList = (els, d) => {
+    const gmap = {};
+    return els.map((e) => {
+      const ng = e.groupId ? (gmap[e.groupId] || (gmap[e.groupId] = "grp" + uid())) : undefined;
+      return { ...e, id: uid(), ...(ng ? { groupId: ng } : {}), ...cloneOffset(e, d) };
+    });
+  };
   const duplicate = () => { if (selEl) addClone(selEl, 22); };
-  const copyEl = () => { if (selEl) clip.current = selEl; };
-  const pasteEl = () => { if (clip.current) addClone(clip.current, 26); };
+  // Clipboard works on the whole selection (single or multi), like Google Slides.
+  const copySel = () => { if (selEls.length) clip.current = selEls.map((e) => ({ ...e })); };
+  const pasteEls = () => {
+    if (!clip.current?.length) return;
+    snapshot(false);
+    const copies = cloneList(clip.current, 26);
+    mapSlide((s) => ({ ...s, elements: [...s.elements, ...copies] }));
+    setSelIds(copies.map((c) => c.id)); setEditing(null);
+  };
+  const cutSel = () => { if (!selEls.length) return; copySel(); delSelection(); };
   const bringFront = () => { if (!sel) return; snapshot(false); mapSlide(s => { const el = s.elements.find(e => e.id === sel); return { ...s, elements: [...s.elements.filter(e => e.id !== sel), el] }; }); };
   const sendBack = () => { if (!sel) return; snapshot(false); mapSlide(s => { const el = s.elements.find(e => e.id === sel); return { ...s, elements: [el, ...s.elements.filter(e => e.id !== sel)] }; }); };
+  // Move the selection one step through the z-order, without leaping past other
+  // selected items. Forward = toward the front; backward = toward the back.
+  const raiseSel = () => {
+    if (!selIds.length) return; snapshot(false);
+    mapSlide((s) => { const els = [...s.elements];
+      for (let i = els.length - 2; i >= 0; i--) if (selSet.has(els[i].id) && !selSet.has(els[i + 1].id)) { const t = els[i]; els[i] = els[i + 1]; els[i + 1] = t; }
+      return { ...s, elements: els }; });
+  };
+  const lowerSel = () => {
+    if (!selIds.length) return; snapshot(false);
+    mapSlide((s) => { const els = [...s.elements];
+      for (let i = 1; i < els.length; i++) if (selSet.has(els[i].id) && !selSet.has(els[i - 1].id)) { const t = els[i]; els[i] = els[i - 1]; els[i - 1] = t; }
+      return { ...s, elements: els }; });
+  };
 
   // Lock, centre-on-slide, and format painter.
   const STYLE_KEYS = ["color", "font", "fontFace", "bold", "italic", "align", "bg", "fill", "stroke", "strokeW", "dashed", "radius", "shape", "fontSize", "shadow", "opacity"];
@@ -454,8 +486,9 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
         if (k === "z") { e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
         if (k === "y") { e.preventDefault(); redo(); return; }
         if (k === "d") { e.preventDefault(); duplicateSelection(); return; }
-        if (k === "c") { copyEl(); return; }
-        if (k === "v") { e.preventDefault(); pasteEl(); return; }
+        if (k === "x") { e.preventDefault(); cutSel(); return; }
+        if (k === "c") { copySel(); return; }
+        if (k === "v") { e.preventDefault(); pasteEls(); return; }
         if (k === "a") { e.preventDefault(); setSelIds(slide.elements.map((el) => el.id)); return; }
         if (k === "=" || k === "+") { e.preventDefault(); zoomBy(0.1); return; }
         if (k === "-" || k === "_") { e.preventDefault(); zoomBy(-0.1); return; }
@@ -477,11 +510,41 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
     return () => window.removeEventListener("keydown", onKey);
   }); // re-bound each render so it closes over current sel/slides
 
+  // Upload an image file and place it on the current slide. With vx/vy (virtual
+  // coords) it is centred there — used by drag-and-drop; without, it lands at a
+  // fixed top-left spot (clipboard paste / the Insert ▸ Image picker).
+  const placeImageFile = async (file, vx?, vy?) => {
+    try {
+      const url = onUploadImage
+        ? await onUploadImage(file)
+        : await sk.upload(`slides/${deck.id}/${Math.floor(performance.now())}-${(file.name || "image").replace(/[^\w.\-]/g, "_")}`, file);
+      const place = (w, h) => addEl({ type: "image", width: w, height: h, src: url,
+        x: vx == null ? 140 : Math.round(vx - w / 2), y: vy == null ? 120 : Math.round(vy - h / 2) });
+      const probe = new Image();
+      probe.onload = () => { const w = 420, h = Math.round(w * (probe.naturalHeight / probe.naturalWidth || 0.66)); place(w, h); };
+      probe.onerror = () => place(420, 280);
+      probe.src = url;
+    } catch (err) { alert("Image upload failed: " + err.message); }
+  };
+
+  // Drag image files straight from the desktop onto the canvas — they land where
+  // you drop them. Non-image drags (e.g. reordering slide thumbnails) are ignored.
+  const onDropFiles = (e) => {
+    const files = Array.from(e.dataTransfer?.files || []).filter((f: any) => f.type.startsWith("image/")) as any[];
+    if (!files.length) return;
+    e.preventDefault();
+    const rect = stageRef.current?.getBoundingClientRect();
+    const vx = rect ? (e.clientX - rect.left) / scale : undefined;
+    const vy = rect ? (e.clientY - rect.top) / scale : undefined;
+    files.forEach((f) => placeImageFile(f, vx, vy));
+  };
+  const onDragOverStage = (e) => { if (Array.from(e.dataTransfer?.types || []).includes("Files")) e.preventDefault(); };
+
   // Paste an image straight from the clipboard (screenshot, copied web image)
   // onto the current slide. Skipped while editing text, so pasting text into a
   // text box still works; non-image pastes always fall through to the default.
   useEffect(() => {
-    const onPaste = async (e) => {
+    const onPaste = (e) => {
       if (editing) return;
       const items = e.clipboardData?.items;
       if (!items) return;
@@ -490,33 +553,16 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       const file = imgItem.getAsFile();
       if (!file) return;
       e.preventDefault();
-      try {
-        const url = onUploadImage
-          ? await onUploadImage(file)
-          : await sk.upload(`slides/${deck.id}/${Math.floor(performance.now())}-paste`, file);
-        const probe = new Image();
-        probe.onload = () => { const w = 420, h = Math.round(w * (probe.naturalHeight / probe.naturalWidth || 0.66)); addEl({ type: "image", x: 140, y: 120, width: w, height: h, src: url }); };
-        probe.onerror = () => addEl({ type: "image", x: 140, y: 120, width: 420, height: 280, src: url });
-        probe.src = url;
-      } catch (err) { alert("Image paste failed: " + err.message); }
+      placeImageFile(file);
     };
     window.addEventListener("paste", onPaste);
     return () => window.removeEventListener("paste", onPaste);
   }); // re-bound each render so it closes over current slide / editing
 
-  const pickImage = async (e) => {
+  const pickImage = (e) => {
     const file = e.target.files?.[0];
     e.target.value = "";
-    if (!file) return;
-    try {
-      const url = onUploadImage
-        ? await onUploadImage(file)
-        : await sk.upload(`slides/${deck.id}/${Math.floor(performance.now())}-${file.name.replace(/[^\w.\-]/g, "_")}`, file);
-      const probe = new Image();
-      probe.onload = () => { const w = 420, h = Math.round(w * (probe.naturalHeight / probe.naturalWidth || 0.66)); addEl({ type: "image", x: 140, y: 120, width: w, height: h, src: url }); };
-      probe.onerror = () => addEl({ type: "image", x: 140, y: 120, width: 420, height: 280, src: url });
-      probe.src = url;
-    } catch (err) { alert("Image upload failed: " + err.message); }
+    if (file) placeImageFile(file);
   };
 
   // Insert an imported HTML page as a full-slide, interactive template element.
@@ -644,6 +690,15 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       if (!moved) { const hit = elAt(ev.clientX, ev.clientY); setSelIds(hit ? groupOf(hit.id) : []); setEditing(null); }
     };
     window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
+  };
+
+  // Right-click an element (or empty canvas) for a Google-Slides-style menu.
+  // Right-clicking an unselected element selects it (and its group) first.
+  const openElMenu = (e, el) => {
+    e.preventDefault(); e.stopPropagation();
+    if (el && !selSet.has(el.id)) setSelIds(groupOf(el.id));
+    const yMax = (typeof window !== "undefined" ? window.innerHeight : 800) - 360;
+    setElMenu({ x: e.clientX, y: Math.min(e.clientY, yMax), canvas: !el });
   };
 
   // Grouped insert menu — replaces the old flat row of ten "+" buttons.
@@ -776,16 +831,16 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
         </div>
 
         {/* stage */}
-        <div ref={wrapRef} style={{ flex: 1, overflow: "auto", background: C.bg, borderRadius: 8, padding: 16 }}>
+        <div ref={wrapRef} onDragOver={onDragOverStage} onDrop={onDropFiles} style={{ flex: 1, overflow: "auto", background: C.bg, borderRadius: 8, padding: 16 }}>
           <div style={{ width: VW * scale, height: VH * scale, position: "relative", margin: "auto" }}>
-            <div ref={stageRef} onMouseDown={startMarquee}
+            <div ref={stageRef} onMouseDown={startMarquee} onContextMenu={(e) => openElMenu(e, null)}
               style={{ width: VW, height: VH, position: "absolute", top: 0, left: 0,
                        transform: `scale(${scale})`, transformOrigin: "top left",
                        background: slide.background || "#fff", boxShadow: "0 2px 16px rgba(0,0,0,.12)", overflow: "hidden" }}>
               {!slide.hideMaster && masterState?.enabled && <MasterFrame master={masterState} index={cur} total={slides.length} title={deck.title} />}
               {slide.elements.map(el => {
                 if (el.type === "arrow")
-                  return <ArrowSvg key={el.id} el={el} selected={selSet.has(el.id)} hitProps={{ onMouseDown: (e) => startArrowDrag(e, el) }} />;
+                  return <ArrowSvg key={el.id} el={el} selected={selSet.has(el.id)} hitProps={{ onMouseDown: (e) => startArrowDrag(e, el), onContextMenu: (e) => openElMenu(e, el) }} />;
                 if (editing === el.id && el.type === "text")
                   return <TextEditor key={el.id} el={el} apiRef={editorApi}
                     onText={(text, rich) => patchEl(el.id, { text, rich: rich || null })}
@@ -799,6 +854,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                 return (
                   <div key={el.id}
                     onMouseDown={(e) => startDrag(e, el)}
+                    onContextMenu={(e) => openElMenu(e, el)}
                     onDoubleClick={(el.type === "text" || el.type === "table") ? () => { setSel(el.id); setEditing(el.id); } : undefined}
                     style={{ ...elStyle(el), cursor: "move", opacity: el.reveal && !selSet.has(el.id) ? 0.55 : (el.opacity ?? 1),
                              outline: selSet.has(el.id) ? `2px solid ${C.accent}` : el.reveal ? `1.5px dashed ${C.dim}` : "none", outlineOffset: 1 }}>
@@ -815,7 +871,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                 const minX = Math.min(...bs.map(b => b.x)), minY = Math.min(...bs.map(b => b.y));
                 const maxX = Math.max(...bs.map(b => b.x + b.w)), maxY = Math.max(...bs.map(b => b.y + b.h));
                 return (
-                  <div onMouseDown={startGroupDrag} title="Drag to move all selected together · Shift-click to add/remove · click an item to pick just it"
+                  <div onMouseDown={startGroupDrag} onContextMenu={(e) => openElMenu(e, selEls[0])} title="Drag to move all selected together · Shift-click to add/remove · click an item to pick just it"
                     style={{ position: "absolute", left: fin(minX), top: fin(minY), width: fin(maxX - minX), height: fin(maxY - minY),
                              border: `${1.5 / scale}px dashed ${C.accent}`, background: `${C.accent}0d`, cursor: "move", boxSizing: "border-box" }} />
                 );
@@ -1057,6 +1113,8 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                 <PanelLabel>Arrange</PanelLabel>
                 <Btn v="ghost" onClick={duplicateSelection} title="Duplicate (⌘D)">Duplicate</Btn>
                 <Btn v="ghost" onClick={bringSelFront} title="Bring to front">Front</Btn>
+                <Btn v="ghost" onClick={raiseSel} title="Bring forward one">Forward</Btn>
+                <Btn v="ghost" onClick={lowerSel} title="Send backward one">Backward</Btn>
                 <Btn v="ghost" onClick={sendSelBack} title="Send to back">Back</Btn>
                 <Btn v={selEl?.locked ? "pri" : "ghost"} onClick={toggleLock}>{selEl?.locked ? "🔒 Locked" : "Lock"}</Btn>
                 <Btn v={selEl?.reveal ? "pri" : "ghost"} onClick={() => sel && patchH(sel, { reveal: !selEl.reveal })} title="Hidden until clicked in Present">Reveal</Btn>
@@ -1126,6 +1184,50 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
         </div>
       </>
     )}
+    {elMenu && (() => {
+      const items = elMenu.canvas
+        ? [
+            { label: "Paste", icon: "📋", disabled: !clip.current?.length, run: pasteEls },
+            { label: "Select all", icon: "▦", disabled: !slide.elements.length, run: () => setSelIds(slide.elements.map((el) => el.id)) },
+          ]
+        : [
+            { label: "Cut", icon: "✂", run: cutSel },
+            { label: "Copy", icon: "⧉", run: copySel },
+            { label: "Paste", icon: "📋", disabled: !clip.current?.length, run: pasteEls },
+            { label: "Duplicate", icon: "⎘", run: duplicateSelection },
+            { sep: true },
+            { label: "Bring to front", icon: "⤒", run: bringSelFront },
+            { label: "Bring forward", icon: "↑", run: raiseSel },
+            { label: "Send backward", icon: "↓", run: lowerSel },
+            { label: "Send to back", icon: "⤓", run: sendSelBack },
+            { sep: true },
+            { label: selEl?.locked ? "Unlock" : "Lock", icon: "🔒", disabled: !sel, run: toggleLock },
+            { label: "Delete", icon: "🗑", danger: true, run: delSelection },
+          ];
+      return (
+        <>
+          <div onClick={() => setElMenu(null)} onContextMenu={(e) => { e.preventDefault(); setElMenu(null); }}
+            style={{ position: "fixed", inset: 0, zIndex: 60 }} />
+          <div style={{ position: "fixed", top: elMenu.y, left: elMenu.x, zIndex: 61, width: 188,
+            background: "#fff", border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 10px 32px rgba(0,0,0,0.16)", padding: 6 }}>
+            {items.map((item, i) => item.sep ? (
+              <div key={"sep" + i} style={{ height: 1, background: C.border, margin: "5px 4px" }} />
+            ) : (
+              <button key={item.label} disabled={item.disabled}
+                onClick={() => { setElMenu(null); item.run(); }}
+                onMouseEnter={(e) => { if (!item.disabled) e.currentTarget.style.background = C.bg; }}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", padding: "7px 9px",
+                  border: "none", background: "transparent", borderRadius: 5, cursor: item.disabled ? "default" : "pointer",
+                  fontFamily: C.sans, fontSize: 13, opacity: item.disabled ? 0.45 : 1,
+                  color: item.danger ? "#b4332a" : C.text }}>
+                <span style={{ width: 18, textAlign: "center", fontSize: 14, color: item.danger ? "#b4332a" : C.muted }}>{item.icon}</span>{item.label}
+              </button>
+            ))}
+          </div>
+        </>
+      );
+    })()}
     </>
   );
 }
