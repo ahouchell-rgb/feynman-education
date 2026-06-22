@@ -137,7 +137,7 @@ describe("callAnthropic (retry/backoff)", () => {
 describe("cronAuthorized", () => {
   const orig = { NODE_ENV: process.env.NODE_ENV, VERCEL_ENV: process.env.VERCEL_ENV, CRON_SECRET: process.env.CRON_SECRET };
   afterEach(() => {
-    process.env.NODE_ENV = orig.NODE_ENV;
+    (process.env as any).NODE_ENV = orig.NODE_ENV;
     if (orig.VERCEL_ENV === undefined) delete process.env.VERCEL_ENV; else process.env.VERCEL_ENV = orig.VERCEL_ENV;
     if (orig.CRON_SECRET === undefined) delete process.env.CRON_SECRET; else process.env.CRON_SECRET = orig.CRON_SECRET;
   });
@@ -145,19 +145,19 @@ describe("cronAuthorized", () => {
   const bearerReq = (s: string) => new Request("https://x.test", { headers: { authorization: `Bearer ${s}` } });
 
   it("FAILS CLOSED in production when no CRON_SECRET is set (header alone is rejected)", () => {
-    process.env.NODE_ENV = "production";
+    (process.env as any).NODE_ENV = "production";
     delete process.env.VERCEL_ENV;
     delete process.env.CRON_SECRET;
     expect(cronAuthorized(cronReq())).toBe(false);
   });
   it("fails closed when VERCEL_ENV=production and no secret, even outside NODE_ENV prod", () => {
-    process.env.NODE_ENV = "test";
+    (process.env as any).NODE_ENV = "test";
     process.env.VERCEL_ENV = "production";
     delete process.env.CRON_SECRET;
     expect(cronAuthorized(cronReq())).toBe(false);
   });
   it("accepts the correct bearer secret in production", () => {
-    process.env.NODE_ENV = "production";
+    (process.env as any).NODE_ENV = "production";
     delete process.env.VERCEL_ENV;
     process.env.CRON_SECRET = "s3cret";
     expect(cronAuthorized(bearerReq("s3cret"))).toBe(true);
@@ -165,7 +165,7 @@ describe("cronAuthorized", () => {
     expect(cronAuthorized(cronReq())).toBe(false); // header alone never suffices once a secret exists
   });
   it("accepts the spoofable header in dev when no secret is configured", () => {
-    process.env.NODE_ENV = "development";
+    (process.env as any).NODE_ENV = "development";
     delete process.env.VERCEL_ENV;
     delete process.env.CRON_SECRET;
     expect(cronAuthorized(cronReq())).toBe(true);
