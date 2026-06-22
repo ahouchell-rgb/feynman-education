@@ -19,7 +19,7 @@ const ANTHROPIC_VERSION = "2023-06-01";
 const MODEL = "claude-sonnet-4-6";
 
 export interface TaughtItem { lessonTitle: string; unitTitle: string; taughtAt: string; }
-export interface WeakTopic { topic_id?: string; topic_name: string; pct_correct: number; marked?: number; }
+export interface WeakTopic { topic_id?: string; topic_name: string; pct_correct: number; marked?: number; booklet_url?: string; }
 
 /** Monday (local) of the week containing `d`, as YYYY-MM-DD. */
 export function weekStartISO(d = new Date()): string {
@@ -85,11 +85,31 @@ export async function fetchWeakTopics(opts: {
       return Array.isArray(d) ? d : [];
     } catch { return []; }
   };
+  let topics: WeakTopic[] = [];
   if (studentId) {
     const perPupil = await call("student_weak_topics", { p_student_id: studentId, p_limit: limit });
-    if (perPupil.length) return perPupil;
+    if (perPupil.length) topics = perPupil;
   }
-  return call("class_weak_topics", { p_class_id: retrievalClassId, p_limit: limit });
+  if (!topics.length) topics = await call("class_weak_topics", { p_class_id: retrievalClassId, p_limit: limit });
+
+  // Enrich with the public revision booklet for each weak topic (anon-readable
+  // topic_booklets), so the report can offer a "Revise at home →" link — the
+  // parent surface of the practice→revise loop.
+  const ids = topics.map(t => t.topic_id).filter(Boolean) as string[];
+  if (ids.length) {
+    try {
+      const r = await fetch(`${retUrl}/rest/v1/topic_booklets?select=topic_id,url&topic_id=in.(${ids.join(",")})`, {
+        headers: { apikey: retKey, Authorization: `Bearer ${retKey}` },
+      });
+      if (r.ok) {
+        const rows = await r.json();
+        const map: Record<string, string> = {};
+        (Array.isArray(rows) ? rows : []).forEach((row: any) => { if (row?.topic_id) map[row.topic_id] = row.url; });
+        topics = topics.map(t => ({ ...t, booklet_url: t.topic_id ? map[t.topic_id] : undefined }));
+      }
+    } catch { /* best-effort — booklet links are optional */ }
+  }
+  return topics;
 }
 
 function fallbackHtml(p: {
@@ -100,7 +120,10 @@ function fallbackHtml(p: {
     ? p.taught.map(t => `<li>${esc(t.lessonTitle)}${t.unitTitle ? ` <span style="color:#888">· ${esc(t.unitTitle)}</span>` : ""}</li>`).join("")
     : "<li>No lessons were logged for this class this week.</li>";
   const weakList = p.weak.length
-    ? p.weak.map(w => `<li><strong>${esc(w.topic_name)}</strong> — ${Math.round(Number(w.pct_correct))}% correct in practice</li>`).join("")
+    ? p.weak.map(w => {
+        const revise = w.booklet_url ? ` · <a href="${esc(w.booklet_url)}" style="color:#1a7f5a;text-decoration:none;font-weight:600">Revise at home →</a>` : "";
+        return `<li><strong>${esc(w.topic_name)}</strong> — ${Math.round(Number(w.pct_correct))}% correct in practice${revise}</li>`;
+      }).join("")
     : "<li>No weak areas flagged this week — nice work.</li>";
   const cta = p.practiseUrl
     ? `<p style="margin:20px 0"><a href="${esc(p.practiseUrl)}" style="background:#1a7f5a;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:600">Practise tonight →</a></p>`
@@ -134,7 +157,7 @@ function buildPrompt(p: {
   taught: TaughtItem[]; weak: WeakTopic[]; practiseUrl: string | null; unsubscribeUrl?: string; portalUrl?: string;
 }): string {
   const taught = p.taught.length ? p.taught.map(t => `- ${t.lessonTitle}${t.unitTitle ? ` (${t.unitTitle})` : ""}`).join("\n") : "(no lessons logged this week)";
-  const weak = p.weak.length ? p.weak.map(w => `- ${w.topic_name} — ${Math.round(Number(w.pct_correct))}% correct`).join("\n") : "(no weak areas flagged)";
+  const weak = p.weak.length ? p.weak.map(w => `- ${w.topic_name} — ${Math.round(Number(w.pct_correct))}% correct${w.booklet_url ? ` [revise: ${w.booklet_url}]` : ""}`).join("\n") : "(no weak areas flagged)";
   return `You are writing a short, warm WEEKLY PROGRESS EMAIL to the parent/carer of a UK secondary science pupil named ${p.studentName} (class ${p.classLabel}), for the week of ${weekLabel(p.weekStart)}.
 
 WHAT THE CLASS STUDIED THIS WEEK:
@@ -146,7 +169,7 @@ ${weak}
 Write ONE self-contained, inline-styled, mobile-friendly HTML email (A 560px centred card on a light background; no external CSS, fonts, images or scripts). It must contain, in plain non-jargon language a parent will understand:
 1. A friendly one-line opener.
 2. "What ${firstName(p.studentName)} studied" — a short readable summary of the lessons above (not a raw list dump).
-3. "Where a little practice would help" — the weak topics, framed positively and concretely.
+3. "Where a little practice would help" — the weak topics, framed positively and concretely. For each weak topic that has a "[revise: URL]", add a small inline "Revise at home →" link to that exact URL right after the topic; omit the link for topics without one.
 4. "Three questions to ask at dinner" — three short, specific questions a parent can ask about the topics above to prompt recall.
 5. A single clear call-to-action button${p.practiseUrl ? ` linking to ${p.practiseUrl}` : " (omit if no link)"} labelled like "Practise tonight".
 6. A small footer noting they get this because they asked for updates about ${p.studentName}${p.portalUrl ? `, with a link to ${p.portalUrl} to see all of ${firstName(p.studentName)}'s reports` : ""}${p.unsubscribeUrl ? `, and an unsubscribe link to ${p.unsubscribeUrl}` : ""}.
