@@ -10,6 +10,7 @@ import { guestRead, guestWrite, GUEST_KEY, GuestQuotaError } from "@/lib/guestDe
 import { google, PPTX_MIME } from "@/lib/google";
 import { openDrivePicker } from "@/components/GoogleDrivePicker";
 import { hasUnsavedWork, readUpdatedAtWithRetry, retryDelayMs } from "./saveHelpers";
+import { STARTER_DECKS, instantiateStarter } from "@/lib/starterDecks";
 
 function newSlide() { return { id: "s" + Math.floor(performance.now() * 1000), elements: [] }; }
 function nowISO() { return new Date().toISOString(); }
@@ -36,6 +37,66 @@ function DeckThumb({ deck }) {
           {deck.slides?.length || 0} slide{(deck.slides?.length || 0) === 1 ? "" : "s"}
         </div>
       )}
+    </div>
+  );
+}
+
+/* A starter-deck card: live miniature of the exemplar's first slide + a one-line
+   description. One click clones it into the teacher's account and opens it. */
+function StarterCard({ starter, onClick }) {
+  const ref = useRef(null);
+  const [w, setW] = useState(0);
+  const [hov, setHov] = useState(false);
+  useEffect(() => {
+    if (!ref.current) return;
+    const ro = new ResizeObserver(([e]) => setW(e.contentRect.width));
+    ro.observe(ref.current);
+    return () => ro.disconnect();
+  }, []);
+  const first = starter.slides?.[0];
+  return (
+    <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ textAlign: "left", padding: 0, background: C.surface, border: `1px solid ${hov ? C.accent : C.border}`,
+               borderRadius: 8, cursor: "pointer", overflow: "hidden", fontFamily: "inherit",
+               transition: "transform .14s ease, box-shadow .14s ease, border-color .14s ease",
+               transform: hov ? "translateY(-2px)" : "none", boxShadow: hov ? "0 6px 18px rgba(0,0,0,0.10)" : "none" }}>
+      <div ref={ref} style={{ aspectRatio: "16/9", background: "#fff", borderBottom: `1px solid ${C.border}`, overflow: "hidden", lineHeight: 0 }}>
+        {w > 0 && first && <StaticSlide slide={first} width={w} index={0} total={starter.slides.length} title={starter.title} />}
+      </div>
+      <div style={{ padding: "10px 12px" }}>
+        <div style={{ fontSize: 14, color: C.text, marginBottom: 3 }}>{starter.title}</div>
+        <div style={{ fontFamily: C.mono, fontSize: 11, color: C.dim, lineHeight: 1.4 }}>{starter.blurb}</div>
+        <div style={{ fontFamily: C.mono, fontSize: 11, color: C.faint, marginTop: 5 }}>{starter.slides.length} slides</div>
+      </div>
+    </button>
+  );
+}
+
+/* Friendly empty state: pick a complete starter deck (one click → editable copy),
+   point teachers at the AI "generate from a unit" path, or start blank. */
+function StarterPicker({ guest, onUseStarter, onBlank, onGenerate }) {
+  return (
+    <div style={{ maxWidth: 980 }}>
+      <div style={{ marginBottom: 22 }}>
+        <div style={{ fontFamily: C.serif, fontSize: 24, color: C.text, marginBottom: 6 }}>Start with a ready-made lesson</div>
+        <div style={{ fontSize: 13, color: C.muted, lineHeight: 1.5, maxWidth: "64ch" }}>
+          Pick a lesson shape to get a complete, editable deck in one click — placeholder text you fill in with your own content. You can change anything once it opens.
+        </div>
+      </div>
+      <div style={gridStyle}>
+        {STARTER_DECKS.map((s) => <StarterCard key={s.id} starter={s} onClick={() => onUseStarter(s)} />)}
+      </div>
+      <div style={{ marginTop: 26, display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center" }}>
+        {!guest && (
+          <Btn v="soft" onClick={onGenerate} title="Generate a full lesson deck from a curriculum unit with AI">✨ Generate a lesson from a unit</Btn>
+        )}
+        {!guest && (
+          <a href="/curriculum" style={{ fontFamily: C.mono, fontSize: 12, color: C.muted, textDecoration: "none", border: `1px solid ${C.border}`, padding: "6px 12px", borderRadius: 6 }}>
+            Browse the curriculum →
+          </a>
+        )}
+        <Btn v="ghost" onClick={onBlank}>Start from a blank deck</Btn>
+      </div>
     </div>
   );
 }
@@ -237,6 +298,16 @@ function SlidesContent() {
   const createDeck = async () => {
     try { setActive(await store.create({ title: "Untitled deck", slides: [newSlide()] })); setSave("saved"); }
     catch (e) { setErr(e.message); }
+  };
+
+  // Clone a built-in starter deck into this teacher's account (fresh ids, owned
+  // by them) and open it — exactly like creating any deck. Works in guest mode
+  // too: makeStore's guest branch persists to localStorage.
+  const useStarter = async (starter) => {
+    try {
+      const created = await instantiateStarter(starter, store, { ownerId: guest ? null : user?.id });
+      setActive(created); setSave("saved"); setCurSlide(0);
+    } catch (e) { setErr(e.message); }
   };
 
   // One-click AI lesson: generate a full deck from a unit (+ optional lesson),
@@ -758,7 +829,7 @@ function SlidesContent() {
           <style>{`.sk-shimmer{background:linear-gradient(100deg,${C.bg} 30%,${C.border} 50%,${C.bg} 70%);background-size:200% 100%;animation:sk 1.2s ease-in-out infinite}@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}`}</style>
         </div>
       ) : decks.length === 0 ? (
-        <div style={{ color: C.dim, fontFamily: C.mono, fontSize: 13 }}>No decks yet. Create your first one.</div>
+        <StarterPicker guest={guest} onUseStarter={useStarter} onBlank={createDeck} onGenerate={() => setGenOpen(true)} />
       ) : guest ? (
         <div style={gridStyle}>{decks.map(renderCard)}</div>
       ) : (
