@@ -63,6 +63,29 @@ export async function skAdmin(method: string, path: string, body?: any): Promise
   return r.status === 204 ? null : r.json();
 }
 
+/** Record one cron_runs audit row (service role). Best-effort: NEVER throws, so
+ *  logging a run can't turn a successful job into a failed one. The crons used
+ *  to fail silently; this is what makes a run (good or bad) visible to /api/health. */
+export async function recordCronRun(
+  job: string,
+  run: { startedAt?: string; ok: boolean; processed?: number; failed?: number; notes?: string },
+): Promise<void> {
+  try {
+    await skAdmin("POST", "cron_runs", {
+      job,
+      started_at: run.startedAt ?? null,
+      finished_at: new Date().toISOString(),
+      ok: run.ok,
+      processed: run.processed ?? null,
+      failed: run.failed ?? null,
+      notes: run.notes ? run.notes.slice(0, 500) : null,
+    });
+  } catch (e: any) {
+    // last-resort: a structured line so the lost run is at least greppable.
+    console.error(JSON.stringify({ level: "warn", at: new Date().toISOString(), message: "recordCronRun failed", job, err: e?.message }));
+  }
+}
+
 /** Extract an HTML doc from a model reply: ```html block → raw <html> → whole text. */
 export function extractHtml(text: string): string {
   const fenced = text.match(/```html\s*([\s\S]*?)```/i);

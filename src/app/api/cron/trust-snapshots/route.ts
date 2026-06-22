@@ -9,7 +9,10 @@
 //   CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, SK_API_KEY
 
 import { rollupTrust, mapPool, type EnrichedClass } from "@/lib/trustBenchmark";
-import { cronAuthorized } from "@/lib/serverHelpers";
+import { cronAuthorized, recordCronRun } from "@/lib/serverHelpers";
+import { reportError } from "@/lib/observe";
+
+const JOB = "trust-snapshots";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -38,8 +41,15 @@ export async function GET(req: Request) {
     return r.ok ? r.json() : [];
   };
 
+  const startedAt = new Date().toISOString();
+
   let trusts: any[];
-  try { trusts = await admin("trusts?select=id,name"); } catch (e: any) { return j({ error: `load trusts: ${e.message}` }, 500); }
+  try { trusts = await admin("trusts?select=id,name"); }
+  catch (e: any) {
+    await reportError(e, { route: JOB, phase: "load trusts" });
+    await recordCronRun(JOB, { startedAt, ok: false, processed: 0, failed: 0, notes: `load trusts: ${e.message}` });
+    return j({ error: `load trusts: ${e.message}` }, 500);
+  }
 
   const today = new Date().toISOString().slice(0, 10);
   const results: any[] = [];
@@ -80,9 +90,13 @@ export async function GET(req: Request) {
       if (!r.ok) throw new Error(`snapshot write: ${r.status}`);
       results.push({ trust: t.name, trustAvg, schools: schoolRollup.length, ok: true });
     } catch (e: any) {
+      await reportError(e, { route: JOB, trust: t.name });
       results.push({ trust: t.name, error: e.message });
     }
   }
 
-  return j({ date: today, snapshotted: results.filter((r) => r.ok).length, results });
+  const processed = results.filter((r) => r.ok).length;
+  const failed = results.filter((r) => r.error).length;
+  await recordCronRun(JOB, { startedAt, ok: failed === 0, processed, failed, notes: `${processed} snapshotted, ${failed} failed of ${results.length}` });
+  return j({ date: today, snapshotted: processed, results });
 }

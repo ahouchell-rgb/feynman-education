@@ -11,7 +11,10 @@
 //   ANTHROPIC_API_KEY           — scaffolds
 //   SK_API_KEY                  — the x-sciencekit-key shared secret that gates the retrieval RPCs
 import { buildFeedforwardPptx } from "@/lib/feedforwardPptx";
-import { cronAuthorized } from "@/lib/serverHelpers";
+import { cronAuthorized, recordCronRun } from "@/lib/serverHelpers";
+import { reportError } from "@/lib/observe";
+
+const JOB = "halfterm-feedforward";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -93,13 +96,22 @@ export async function GET(req: Request) {
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return j({ error: "SUPABASE_SERVICE_ROLE_KEY missing" }, 500);
   if (!SK_API_KEY) return j({ error: "SK_API_KEY missing (needed to read retrieval data)" }, 500);
 
-  if (!force && !(await holidayJustEnded())) return j({ skipped: "no half-term boundary in the last week" });
+  const startedAt = new Date().toISOString();
+
+  if (!force && !(await holidayJustEnded())) {
+    await recordCronRun(JOB, { startedAt, ok: true, processed: 0, failed: 0, notes: "no half-term boundary in the last week" });
+    return j({ skipped: "no half-term boundary in the last week" });
+  }
 
   const halfTerm = halfTermLabel(new Date());
   let classes: any[];
   try {
     classes = await skAdmin("classes?select=id,name,teacher_id,retrieval_class_ids&archived=eq.false");
-  } catch (e: any) { return j({ error: `load classes: ${e.message}` }, 500); }
+  } catch (e: any) {
+    await reportError(e, { route: JOB, phase: "load classes" });
+    await recordCronRun(JOB, { startedAt, ok: false, processed: 0, failed: 0, notes: `load classes: ${e.message}` });
+    return j({ error: `load classes: ${e.message}` }, 500);
+  }
 
   const results: any[] = [];
   for (const c of classes || []) {
@@ -129,7 +141,13 @@ export async function GET(req: Request) {
         }),
       });
       results.push({ class: c.name, topics: topics.length, ok: true });
-    } catch (e: any) { results.push({ class: c.name, error: e.message }); }
+    } catch (e: any) {
+      await reportError(e, { route: JOB, class: c.name });
+      results.push({ class: c.name, error: e.message });
+    }
   }
-  return j({ halfTerm, generated: results.filter((r) => r.ok).length, results });
+  const processed = results.filter((r) => r.ok).length;
+  const failed = results.filter((r) => r.error).length;
+  await recordCronRun(JOB, { startedAt, ok: failed === 0, processed, failed, notes: `${halfTerm}: ${processed} decks, ${failed} failed` });
+  return j({ halfTerm, generated: processed, results });
 }

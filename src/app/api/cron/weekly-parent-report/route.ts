@@ -18,7 +18,10 @@ import {
   fetchTaughtThisWeek, fetchWeakTopics, generateParentReportHtml, weekStartISO, weekLabel,
 } from "@/lib/parentReport";
 import { sendEmail, emailConfigured } from "@/lib/email";
-import { cronAuthorized } from "@/lib/serverHelpers";
+import { cronAuthorized, recordCronRun } from "@/lib/serverHelpers";
+import { reportError } from "@/lib/observe";
+
+const JOB = "weekly-parent-report";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -50,6 +53,7 @@ export async function GET(req: Request) {
   if (!process.env.SK_API_KEY) return j({ error: "SK_API_KEY missing (needed to read retrieval data)" }, 500);
 
   const weekStart = weekStartISO();
+  const startedAt = new Date().toISOString();
 
   // Consented links + the embedded guardian + class (retrieval_class_ids, name).
   let links: any[];
@@ -58,9 +62,16 @@ export async function GET(req: Request) {
       `guardian_student?select=id,student_id,student_name,unsubscribe_token,teacher_id,guardian:guardians(email,full_name,access_token),class:classes(name,retrieval_class_ids)` +
       `&consent_status=eq.granted&limit=${limit}`,
     );
-  } catch (e: any) { return j({ error: `load links: ${e.message}` }, 500); }
+  } catch (e: any) {
+    await reportError(e, { route: JOB, phase: "load links" });
+    await recordCronRun(JOB, { startedAt, ok: false, processed: 0, failed: 0, notes: `load links: ${e.message}` });
+    return j({ error: `load links: ${e.message}` }, 500);
+  }
 
-  if (!links?.length) return j({ weekStart, skipped: "no consented guardian links" });
+  if (!links?.length) {
+    await recordCronRun(JOB, { startedAt, ok: true, processed: 0, failed: 0, notes: "no consented guardian links" });
+    return j({ weekStart, skipped: "no consented guardian links" });
+  }
 
   const results: any[] = [];
   for (const link of links) {
@@ -102,9 +113,13 @@ export async function GET(req: Request) {
 
       results.push({ student: link.student_name, emailed: emailRes.sent, topics: weak.length, ok: true });
     } catch (e: any) {
+      await reportError(e, { route: JOB, student: link.student_name });
       results.push({ student: link.student_name, error: e.message });
     }
   }
 
-  return j({ weekStart, generated: results.filter((r) => r.ok).length, emailable: emailConfigured(), results });
+  const processed = results.filter((r) => r.ok).length;
+  const failed = results.filter((r) => r.error).length;
+  await recordCronRun(JOB, { startedAt, ok: failed === 0, processed, failed, notes: `${processed} generated, ${failed} failed of ${links.length} links` });
+  return j({ weekStart, generated: processed, emailable: emailConfigured(), results });
 }

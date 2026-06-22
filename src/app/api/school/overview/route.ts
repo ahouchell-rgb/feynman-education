@@ -19,6 +19,15 @@ export const maxDuration = 60;
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 import { rollupRetrieval, blendObjectiveMastery, crosswalkMap, type AssessmentObjective } from "@/lib/mastery";
+import { reportError } from "@/lib/observe";
+
+/** Whole days since an ISO date (yyyy-mm-dd), or null. */
+function daysSince(isoDate?: string | null): number | null {
+  if (!isoDate) return null;
+  const t = Date.parse(`${isoDate}T00:00:00Z`);
+  if (isNaN(t)) return null;
+  return Math.max(0, Math.floor((Date.now() - t) / 864e5));
+}
 
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 
@@ -53,7 +62,7 @@ export async function GET(req: Request) {
   let profile: any;
   try {
     profile = (await rest(`profiles?id=eq.${uid}&select=school_id,school_role&limit=1`, token))?.[0];
-  } catch { return j({ error: "Couldn't load profile" }, 500); }
+  } catch (e) { await reportError(e, { route: "school/overview", phase: "load profile", uid }); return j({ error: "Couldn't load profile" }, 500); }
 
   const role = profile?.school_role || "member";
   if (!profile?.school_id || (role !== "hod" && role !== "slt")) {
@@ -103,7 +112,7 @@ export async function GET(req: Request) {
       return j({
         enabled: true, role, school: { name: schoolName }, joinCode, homeSponsored, trust,
         years: [], classes: [], cohort: snap.payload?.objectives || [], schoolAvg: snap.school_avg ?? null,
-        objectiveMastery, meta: { source: "snapshot", takenOn: snap.taken_on },
+        objectiveMastery, meta: { source: "snapshot", takenOn: snap.taken_on, staleDays: daysSince(snap.taken_on) },
         generatedAt: new Date().toISOString(),
       });
     }
