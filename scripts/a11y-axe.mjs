@@ -13,7 +13,10 @@ const ROUTES = ["/", "/login", "/privacy", "/trust-centre"];
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
 const browser = await chromium.launch();
-const page = await browser.newPage();
+// @axe-core/playwright requires a page from an explicit BrowserContext, not
+// browser.newPage() (which raises "Please use browser.newContext()").
+const context = await browser.newContext();
+const page = await context.newPage();
 let total = 0;
 
 for (const route of ROUTES) {
