@@ -12,8 +12,16 @@ export default function LoginPage() {
   const [email, setEmail] = useState(""); const [pw, setPw] = useState(""); const [name, setName] = useState("");
   const [err, setErr] = useState(""); const [info, setInfo] = useState(""); const [busy, setBusy] = useState(false);
 
+  // A safe same-origin return path (e.g. resume a deck fork after signing in).
+  // Read from window so we don't need a Suspense boundary for useSearchParams.
+  const nextPath = () => {
+    if (typeof window === "undefined") return null;
+    const n = new URLSearchParams(window.location.search).get("next");
+    return n && n.startsWith("/") && !n.startsWith("//") ? n : null;
+  };
+
   useEffect(() => {
-    if (!loading && user) router.replace("/");
+    if (!loading && user) router.replace(nextPath() || "/");
   }, [user, loading, router]);
 
   const go = async () => {
@@ -30,7 +38,10 @@ export default function LoginPage() {
       } else {
         await login(email, pw);
       }
-      // Decide where to land: setup if no calendar, else home
+      // Honour an explicit return path (e.g. resume a deck fork); otherwise
+      // land on setup if no calendar yet, else home.
+      const next = nextPath();
+      if (next) { router.replace(next); return; }
       try {
         const cals = await sk.q("timetable_calendar", { params: { teacher_id: `eq.${sk.auth.user().id}`, limit: "1" } });
         router.replace((cals && cals.length) ? "/" : "/setup");
