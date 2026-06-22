@@ -321,5 +321,30 @@ export const sb = (() => {
   };
   const bookletFor = (topicId) => (bookletMap && topicId ? bookletMap[topicId] || null : null);
 
-  return { q, del, qAll, rpc, auth, submitAnswer, flushAnswers, pendingAnswers: () => readPending().length, loadBooklets, bookletFor };
+  /* ─── Feedforward (upload-docx → feedforward) ───
+   * uploadToBucket sends a file to a Storage bucket under the user's JWT (the
+   * paper-uploads write policy is staff-only). callPaperFeedforward triggers the
+   * Node route that generates the .docx; the JWT lets the route auth + authorise. */
+  const uploadToBucket = async (bucket, path, file) => {
+    await ensureFresh();
+    const r = await fetch(`${SUPA_URL}/storage/v1/object/${bucket}/${path}`, {
+      method: "POST",
+      headers: { apikey: SUPA_KEY, Authorization: `Bearer ${token || SUPA_KEY}`, "x-upsert": "true", "Content-Type": file.type || "application/octet-stream" },
+      body: file,
+    });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || e.error || `Upload failed (${r.status})`); }
+    return path;
+  };
+
+  const callPaperFeedforward = async (payload) => {
+    await ensureFresh();
+    const headers = { "Content-Type": "application/json", apikey: SUPA_KEY };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+    const r = await fetch(`/api/paper-feedforward`, { method: "POST", headers, body: JSON.stringify(payload) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || `Feedforward generation failed (${r.status})`);
+    return d;
+  };
+
+  return { q, del, qAll, rpc, auth, submitAnswer, flushAnswers, pendingAnswers: () => readPending().length, loadBooklets, bookletFor, uploadToBucket, callPaperFeedforward };
 })();
