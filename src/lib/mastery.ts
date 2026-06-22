@@ -56,13 +56,17 @@ export interface RetrievalRollup { key: string; label: string; pct: number; mark
 export function rollupRetrieval(weakLists: RetrievalTopic[][]): RetrievalRollup[] {
   const by = new Map<string, { label: string; objective_id?: string | null; wsum: number; w: number; psum: number; n: number; classes: number }>();
   for (const list of weakLists) {
+    // Count each class (list) once per objective, even if several of its topic
+    // names map to the same objective — otherwise the "N classes" badge inflates.
+    const seenThisClass = new Set<string>();
     for (const t of list || []) {
       const key = topicKey(t.objective_id, t.topic_name);
       if (!key) continue;
       const e = by.get(key) || { label: t.topic_name, objective_id: t.objective_id ?? null, wsum: 0, w: 0, psum: 0, n: 0, classes: 0 };
       const m = Number(t.marked) || 0;
       e.wsum += (Number(t.pct_correct) || 0) * m; e.w += m;
-      e.psum += Number(t.pct_correct) || 0; e.n += 1; e.classes += 1;
+      e.psum += Number(t.pct_correct) || 0; e.n += 1;
+      if (!seenThisClass.has(key)) { e.classes += 1; seenThisClass.add(key); }
       by.set(key, e);
     }
   }

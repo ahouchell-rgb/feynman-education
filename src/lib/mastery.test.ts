@@ -27,6 +27,20 @@ describe("rollupRetrieval", () => {
     ]);
     expect(out[0].pct).toBe(60);
   });
+  it("counts a class once per objective even when two of its topics map to it", () => {
+    // One class (one list) whose two weak topics both map to objective o1 must
+    // not be counted as two classes — the "N classes" badge would otherwise lie.
+    const out = rollupRetrieval([
+      [
+        { topic_name: "Ionic bonding", pct_correct: 40, marked: 10, objective_id: "o1" },
+        { topic_name: "Ionic lattices", pct_correct: 60, marked: 10, objective_id: "o1" },
+      ],
+    ]);
+    expect(out).toHaveLength(1);
+    expect(out[0].classes).toBe(1);
+    expect(out[0].marked).toBe(20); // both measurements still feed the mark-weighted %
+    expect(out[0].pct).toBe(50); // (40*10 + 60*10) / 20
+  });
 });
 
 describe("blendObjectiveMastery", () => {
