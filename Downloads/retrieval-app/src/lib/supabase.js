@@ -336,15 +336,17 @@ export const sb = (() => {
     return path;
   };
 
-  const callPaperFeedforward = async (payload) => {
+  const callEdgeRoute = async (path, payload) => {
     await ensureFresh();
     const headers = { "Content-Type": "application/json", apikey: SUPA_KEY };
     if (token) headers["Authorization"] = `Bearer ${token}`;
-    const r = await fetch(`/api/paper-feedforward`, { method: "POST", headers, body: JSON.stringify(payload) });
+    const r = await fetch(path, { method: "POST", headers, body: JSON.stringify(payload) });
     const d = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(d.error || `Feedforward generation failed (${r.status})`);
+    if (!r.ok) throw new Error(d.error || `Request failed (${r.status})`);
     return d;
   };
+  const callPaperFeedforward = (payload) => callEdgeRoute(`/api/paper-feedforward`, payload);
+  const callParsePaper = (payload) => callEdgeRoute(`/api/parse-paper-docx`, payload);
 
-  return { q, del, qAll, rpc, auth, submitAnswer, flushAnswers, pendingAnswers: () => readPending().length, loadBooklets, bookletFor, uploadToBucket, callPaperFeedforward };
+  return { q, del, qAll, rpc, auth, submitAnswer, flushAnswers, pendingAnswers: () => readPending().length, loadBooklets, bookletFor, uploadToBucket, callPaperFeedforward, callParsePaper };
 })();

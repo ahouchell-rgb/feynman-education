@@ -1,95 +1,29 @@
 // Paper feedforward generator — POST /api/paper-feedforward
 //
 // Generates a feedforward .docx (agreed bordered-box style) from an exam paper the
-// teacher has marked: they tag the questions pupils struggled with (selected paper
-// questions and/or free-text notes), and this builds parallel practice scaffolded
-// down from those questions. The .docx is stored in the paper-uploads bucket and a
-// paper_feedforward_sheets row ties it to the paper (see FEEDFORWARD-FEATURE-SPEC.md).
+// teacher has marked: they tag the questions pupils struggled with — existing paper
+// questions (struggled.question_ids), questions parsed from an uploaded .docx
+// (struggled.parsed, see /api/parse-paper-docx), and/or free-text notes — and this
+// builds parallel practice scaffolded down from them. The .docx is stored in the
+// paper-uploads bucket and a paper_feedforward_sheets row ties it to the paper.
+// See docs/FEEDFORWARD-FEATURE-SPEC.md.
 //
-// Node runtime (not edge): the docx build + a Sonnet generation can exceed the ~25s
-// edge wall — same reason feynman's feedforward route runs on Node. Keeps the
-// Anthropic + service-role keys server-side.
-//
+// Node runtime: the docx build + a Sonnet generation can exceed the ~25s edge wall.
 // Required env (Vercel): ANTHROPIC_API_KEY, SUPABASE_SERVICE_ROLE_KEY,
 //   NEXT_PUBLIC_SUPA_URL, NEXT_PUBLIC_SUPA_KEY.
 
 import { buildFeedforwardDocx } from "../../../lib/feedforwardDocx";
+import {
+  SUPA_URL, ANON_KEY, SERVICE_KEY, ANTHROPIC_API_KEY,
+  jsonResponse as json, rest, getAuthedUid, logUsage, overBackstop, anthropicMessages, responseText,
+} from "../../../lib/serverSupa";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const SUPA_URL = process.env.NEXT_PUBLIC_SUPA_URL || "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const ANON_KEY = process.env.NEXT_PUBLIC_SUPA_KEY;
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 // Generation wants a stronger model than the Haiku marker; configurable.
 const MODEL = process.env.ANTHROPIC_FEEDFORWARD_MODEL || "claude-sonnet-4-6";
 const MAX_OUTPUT_TOKENS = 4096;
-
-const json = (obj, status = 200) =>
-  new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json" } });
-
-// Service-role PostgREST helper (raw fetch — the app deliberately has no supabase-js dep).
-async function rest(path, { method = "GET", body, params = {}, single } = {}) {
-  const u = new URL(`${SUPA_URL}/rest/v1/${path}`);
-  Object.entries(params).forEach(([k, v]) => u.searchParams.set(k, v));
-  const headers = { "Content-Type": "application/json", apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` };
-  if (single) headers["Accept"] = "application/vnd.pgrst.object+json";
-  if (method === "POST" || method === "PATCH") headers["Prefer"] = "return=representation";
-  const r = await fetch(u, { method, headers, body: body ? JSON.stringify(body) : undefined });
-  if (!r.ok) throw new Error(`${method} ${path} -> ${r.status}`);
-  if (method === "DELETE") return null;
-  return r.json();
-}
-
-async function rpc(fn, args) {
-  const r = await fetch(`${SUPA_URL}/rest/v1/rpc/${fn}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", apikey: SERVICE_KEY, Authorization: `Bearer ${SERVICE_KEY}` },
-    body: JSON.stringify(args),
-  });
-  if (!r.ok) return null;
-  return r.json().catch(() => null);
-}
-
-// Identify the caller from their Supabase JWT (validates the token).
-async function getAuthedUid(req) {
-  const m = (req.headers.get("authorization") || "").match(/^Bearer\s+(.+)$/i);
-  if (!m) return null;
-  try {
-    const r = await fetch(`${SUPA_URL}/auth/v1/user`, { headers: { apikey: ANON_KEY, Authorization: `Bearer ${m[1]}` } });
-    if (!r.ok) return null;
-    const u = await r.json();
-    return u?.id || null;
-  } catch { return null; }
-}
-
-// Fire-and-forget AI usage logging, identical row shape to mark-paper-answer so paper
-// feedforward spend shows up in the cost dashboard and counts toward the school backstop.
-function logUsage(school_id, usage) {
-  if (!usage) return;
-  const row = {
-    call_label: "paper-feedforward",
-    source: "ai",
-    school_id,
-    input_tokens: Number(usage.input_tokens) || 0,
-    output_tokens: Number(usage.output_tokens) || 0,
-    cache_creation_tokens: Number(usage.cache_creation_input_tokens) || 0,
-    cache_read_tokens: Number(usage.cache_read_input_tokens) || 0,
-  };
-  rest("ai_usage", { method: "POST", body: row }).catch((e) => console.error("ai_usage insert failed:", e));
-}
-
-// Hard cost backstop, same RPC as mark-paper-answer: a school >3x its fair-use
-// allowance is paused. Fails OPEN on any error so a transient issue never blocks staff.
-async function overBackstop(school_id) {
-  if (!school_id) return false;
-  try {
-    const data = await rpc("school_mark_status", { p_school_id: school_id });
-    const r = Array.isArray(data) ? data[0] : data;
-    return !!(r && r.over_backstop);
-  } catch { return false; }
-}
 
 function buildPrompt({ paper, subjectName, struggledQuestions, notes }) {
   const qList = struggledQuestions.length
@@ -115,20 +49,6 @@ Use UK spelling. Pupils answer in their books, so do NOT add answer lines.
 Return ONLY a JSON object (no prose, no code fences) of this exact shape:
 {"title": string, "boxes": [{"heading": string, "remember": string, "questions": [{"command": string, "text": string, "marks": number}], "markScheme": string, "diagram"?: string}]}
 "diagram" is OPTIONAL: include it ONLY when the question genuinely needs pupils to sketch/label something, as a short caption describing what to draw (never a real diagram).`;
-}
-
-async function generateSpec(prompt) {
-  const r = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
-    body: JSON.stringify({ model: MODEL, max_tokens: MAX_OUTPUT_TOKENS, messages: [{ role: "user", content: prompt }] }),
-  });
-  const data = await r.json();
-  const text = data?.content?.[0]?.text || "";
-  const clean = text.replace(/```json|```/g, "").trim();
-  let spec;
-  try { spec = JSON.parse(clean); } catch { spec = null; }
-  return { spec, usage: data?.usage };
 }
 
 export async function POST(req) {
@@ -177,8 +97,9 @@ export async function POST(req) {
     return json({ error: "AI generation is paused for your school right now — please check your usage." }, 429);
   }
 
-  // Load the selected struggled questions (authoritative text + mark schemes).
+  // Assemble the struggled questions from three sources.
   let struggledQuestions = [];
+  // (a) existing paper questions selected by id
   const ids = Array.isArray(struggled.question_ids) ? struggled.question_ids.filter(Boolean) : [];
   if (ids.length) {
     try {
@@ -187,6 +108,13 @@ export async function POST(req) {
       });
     } catch { struggledQuestions = []; }
   }
+  // (b) questions parsed from an uploaded .docx (Phase 2) — content, not ids
+  const parsed = Array.isArray(struggled.parsed) ? struggled.parsed : [];
+  const parsedQs = parsed
+    .filter((p) => p && p.text)
+    .map((p) => ({ question_text: p.text, command_word: p.command_word || null, marks: Number(p.marks) || null, marking_points: [] }));
+  struggledQuestions = [...struggledQuestions, ...parsedQs];
+
   const notes = String(struggled.notes || struggled.freeText || "").trim();
   if (!struggledQuestions.length && !notes) {
     return json({ error: "Tell me which questions the class struggled with (tick some questions or add a note)." }, 400);
@@ -195,8 +123,10 @@ export async function POST(req) {
   // Generate the structured spec, then build the .docx deterministically.
   const subjectName = paper?.subjects?.name || null;
   const prompt = buildPrompt({ paper, subjectName, struggledQuestions, notes });
-  const { spec, usage } = await generateSpec(prompt);
-  logUsage(schoolId, usage);
+  const data = await anthropicMessages({ model: MODEL, max_tokens: MAX_OUTPUT_TOKENS, messages: [{ role: "user", content: prompt }] });
+  logUsage("paper-feedforward", schoolId, data?.usage);
+  let spec;
+  try { spec = JSON.parse(responseText(data)); } catch { spec = null; }
   if (!spec || !Array.isArray(spec.boxes) || spec.boxes.length === 0) {
     return json({ error: "Could not generate a feedforward sheet — please try again." }, 502);
   }
@@ -225,7 +155,7 @@ export async function POST(req) {
       teacher_id: paper.teacher_id,
       class_id: class_id || null,
       source_upload_path: source_upload_path || null,
-      struggled_input: { notes, question_ids: ids },
+      struggled_input: { notes, question_ids: ids, parsed },
       spec,
       docx_path: docxPath,
       title: spec.title || `${paper.name} — feedforward`,

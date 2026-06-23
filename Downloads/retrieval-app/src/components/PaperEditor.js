@@ -20,6 +20,11 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
   const [ffNotes, setFfNotes] = useState("");
   const [ffFile, setFfFile] = useState(null);
   const [ffBusy, setFfBusy] = useState(false);
+  // Phase 2 — parse an uploaded .docx into a tickable question list.
+  const [uploadedPath, setUploadedPath] = useState(null); // cached source path once uploaded
+  const [parsedQs, setParsedQs] = useState([]);           // questions read from the docx
+  const [ffParsedSel, setFfParsedSel] = useState([]);     // selected indices into parsedQs
+  const [parsing, setParsing] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -40,18 +45,51 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
   };
 
   const toggleStruggled = (id) => setFfStruggled(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
+  const toggleParsed = (i) => setFfParsedSel(s => s.includes(i) ? s.filter(x => x !== i) : [...s, i]);
+
+  // Pick a file: reset any prior upload/parse so a new file isn't read from the old path.
+  const chooseFile = (f) => { setFfFile(f); setUploadedPath(null); setParsedQs([]); setFfParsedSel([]); };
+
+  // Upload the chosen file once, caching the path so parse + generate reuse it.
+  const ensureUploaded = async () => {
+    if (!ffFile) return null;
+    if (uploadedPath) return uploadedPath;
+    const safe = ffFile.name.replace(/[^\w.\-]+/g, "_");
+    const path = await sb.uploadToBucket("paper-uploads", `${user.id}/source/${crypto.randomUUID()}-${safe}`, ffFile);
+    setUploadedPath(path);
+    return path;
+  };
+
+  // Phase 2: read the uploaded .docx into a tickable question list.
+  const readPaper = async () => {
+    if (!ffFile) { alert("Choose a Word (.docx) exam paper first."); return; }
+    setParsing(true);
+    try {
+      const path = await ensureUploaded();
+      const res = await sb.callParsePaper({ source_upload_path: path });
+      const qs = Array.isArray(res?.questions) ? res.questions : [];
+      setParsedQs(qs);
+      setFfParsedSel([]);
+      if (qs.length === 0) alert("Couldn't find any questions in that document — tick existing questions or type notes instead.");
+    } catch (e) { alert("Couldn't read the paper: " + e.message); }
+    setParsing(false);
+  };
 
   const generateFeedforward = async () => {
-    if (ffStruggled.length === 0 && !ffNotes.trim()) { alert("Tick the questions your class struggled with, or add a note."); return; }
+    const parsedChosen = ffParsedSel.map(i => parsedQs[i]).filter(Boolean);
+    if (ffStruggled.length === 0 && parsedChosen.length === 0 && !ffNotes.trim()) {
+      alert("Tick the questions your class struggled with (or read them from an uploaded paper), or add a note."); return;
+    }
     setFfBusy(true);
     try {
-      let source_upload_path = null;
-      if (ffFile) {
-        const safe = ffFile.name.replace(/[^\w.\-]+/g, "_");
-        source_upload_path = await sb.uploadToBucket("paper-uploads", `${user.id}/source/${crypto.randomUUID()}-${safe}`, ffFile);
-      }
-      const res = await sb.callPaperFeedforward({ paper_id: paperId, source_upload_path, struggled: { question_ids: ffStruggled, notes: ffNotes.trim() } });
+      const source_upload_path = await ensureUploaded();
+      const res = await sb.callPaperFeedforward({
+        paper_id: paperId,
+        source_upload_path,
+        struggled: { question_ids: ffStruggled, parsed: parsedChosen, notes: ffNotes.trim() },
+      });
       setFfNotes(""); setFfStruggled([]); setFfFile(null);
+      setUploadedPath(null); setParsedQs([]); setFfParsedSel([]);
       await load();
       if (res?.url) window.open(res.url, "_blank");
     } catch (e) { alert("Generation failed: " + e.message); }
@@ -271,10 +309,40 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
             </div>
 
             <div style={{ marginBottom: 12 }}>
-              <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Exam paper (optional — for your records)</div>
-              <input type="file" accept=".docx,.doc,application/pdf,image/*" onChange={e => setFfFile(e.target.files?.[0] || null)} style={{ fontSize: 12, color: C.mid }} />
-              {ffFile && <div style={{ fontSize: 10, color: C.dim, marginTop: 4 }}>{ffFile.name}</div>}
+              <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Exam paper (optional — upload a .docx and I&apos;ll read its questions)</div>
+              <input type="file" accept=".docx,.doc,application/pdf,image/*" onChange={e => chooseFile(e.target.files?.[0] || null)} style={{ fontSize: 12, color: C.mid }} />
+              {ffFile && (
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 10, color: C.dim }}>{ffFile.name}</span>
+                  {/\.docx?$/i.test(ffFile.name) && (
+                    <Btn v="ghost" onClick={readPaper} disabled={parsing} style={{ fontSize: 11, padding: "5px 10px" }}>
+                      {parsing ? "Reading…" : parsedQs.length ? "Re-read questions" : "Read questions from this paper"}
+                    </Btn>
+                  )}
+                </div>
+              )}
             </div>
+
+            {parsedQs.length > 0 && (
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Questions found in your paper — tick the ones they struggled with</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  {parsedQs.map((q, i) => {
+                    const on = ffParsedSel.includes(i);
+                    return (
+                      <div key={i} onClick={() => toggleParsed(i)}
+                        style={{ display: "flex", gap: 8, alignItems: "flex-start", padding: "8px 10px", borderRadius: 8, background: on ? C.priSoft : C.card2, border: `1px solid ${on ? C.pri + "55" : C.bdr}`, cursor: "pointer" }}>
+                        <div style={{ width: 16, height: 16, marginTop: 2, borderRadius: 4, border: `2px solid ${on ? C.pri : C.bdr}`, background: on ? C.pri : "transparent", color: "#fff", fontSize: 10, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{on ? "✓" : ""}</div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <span style={{ fontSize: 11, color: C.mid, fontWeight: 700, marginRight: 6 }}>{q.label ? `Q${q.label}` : `Q${i + 1}`}{q.marks ? ` · ${q.marks}m` : ""}</span>
+                          <span style={{ fontSize: 11, color: C.txt }}>{q.text}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {questions.length > 0 && (
               <div style={{ marginBottom: 12 }}>
