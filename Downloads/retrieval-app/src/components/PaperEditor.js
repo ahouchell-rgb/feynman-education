@@ -128,6 +128,26 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
     catch (e) { alert("Delete failed: " + e.message); }
   };
 
+  // Regenerate a fresh sheet from a previous one's saved inputs, with an optional tweak.
+  const regenerateSheet = async (sheet) => {
+    const tweak = window.prompt("Regenerate this sheet. Add a tweak (optional) — e.g. “make it easier” or “add a diagram question”:", "");
+    if (tweak === null) return; // cancelled
+    setFfBusy(true);
+    try {
+      const si = sheet.struggled_input || {};
+      const notes = [si.notes, tweak.trim()].filter(Boolean).join(" — ");
+      const res = await sb.callPaperFeedforward({
+        paper_id: paperId,
+        class_id: sheet.class_id || null,
+        source_upload_path: sheet.source_upload_path || null,
+        struggled: { question_ids: si.question_ids || [], parsed: si.parsed || [], notes },
+      });
+      await load();
+      if (res?.url) window.open(res.url, "_blank");
+    } catch (e) { alert("Regenerate failed: " + e.message); }
+    setFfBusy(false);
+  };
+
   useEffect(() => { load(); }, [paperId]);
 
   const startNewQuestion = () => {
@@ -359,7 +379,7 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
               {ffFile && (
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
                   <span style={{ fontSize: 10, color: C.dim }}>{ffFile.name}</span>
-                  {/\.docx?$/i.test(ffFile.name) && (
+                  {/\.(docx?|pdf|png|jpe?g|webp|gif)$/i.test(ffFile.name) && (
                     <Btn v="ghost" onClick={readPaper} disabled={parsing} style={{ fontSize: 11, padding: "5px 10px" }}>
                       {parsing ? "Reading…" : parsedQs.length ? "Re-read questions" : "Read questions from this paper"}
                     </Btn>
@@ -431,6 +451,7 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
                     </div>
                     <a href={`${SUPA_URL}/storage/v1/object/public/paper-uploads/${s.docx_path}`} target="_blank" rel="noreferrer"
                       style={{ padding: "4px 10px", fontSize: 10, borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card, color: C.mid, textDecoration: "none" }}>Download</a>
+                    <button onClick={() => regenerateSheet(s)} disabled={ffBusy} style={{ padding: "4px 8px", fontSize: 10, borderRadius: 6, border: `1px solid ${C.bdr}`, background: "transparent", color: C.mid, cursor: ffBusy ? "default" : "pointer", fontFamily: "inherit" }}>Regenerate</button>
                     <button onClick={() => deleteSheet(s)} style={{ padding: "4px 8px", fontSize: 10, borderRadius: 6, border: `1px solid ${C.red}55`, background: "transparent", color: C.red, cursor: "pointer", fontFamily: "inherit" }}>Delete</button>
                   </div>
                 </Card>

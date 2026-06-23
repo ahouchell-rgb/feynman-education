@@ -20,9 +20,10 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const EXTRACT_MODEL = process.env.ANTHROPIC_EXTRACT_MODEL || "claude-haiku-4-5-20251001";
-const MAX_TEXT_CHARS = 24000; // bound the prompt: a long paper is plenty within this
+const MAX_TEXT_CHARS = 24000;            // bound the prompt for the .docx text path
+const MAX_BINARY_BYTES = 18 * 1024 * 1024; // PDF/image cap (base64 inflates ~33%; API limit ~32MB)
 
-const EXTRACT_SYSTEM = `You extract exam questions from the raw text of a UK secondary past paper. Return ONLY a JSON array (no prose, no code fences) of objects:
+const EXTRACT_SYSTEM = `You extract exam questions from a UK secondary past paper (given as text, a PDF, or an image). Return ONLY a JSON array (no prose, no code fences) of objects:
 {"label": string, "text": string, "marks": number|null, "command_word": string|null}
 - label: the question number/label exactly as printed (e.g. "3", "7(a)", "11").
 - text: the question wording a pupil answers, concise. OMIT mark schemes, instructions, figure captions, and page headers.
@@ -54,9 +55,14 @@ export async function POST(req) {
     return json({ error: "AI parsing is paused for your school right now — please check your usage." }, 429);
   }
 
-  // Only .docx is parseable here (mammoth). PDFs/images still upload + work via notes.
-  if (!/\.docx?$/i.test(path)) {
-    return json({ error: "Only Word (.docx) papers can be read automatically — for a PDF or photo, type the questions in the notes box." }, 415);
+  // Accept Word (.docx, parsed via mammoth) or a PDF / image (read multimodally by Claude).
+  const ext = (path.match(/\.([a-z0-9]+)$/i)?.[1] || "").toLowerCase();
+  const IMAGE_MEDIA = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", gif: "image/gif" };
+  const isDocx = ext === "docx" || ext === "doc";
+  const isPdf = ext === "pdf";
+  const isImage = !!IMAGE_MEDIA[ext];
+  if (!isDocx && !isPdf && !isImage) {
+    return json({ error: "Upload a Word (.docx), PDF, or photo of the paper — or type the questions in the notes box." }, 415);
   }
 
   // Download the file with the service role (bucket is public, but use the auth path).
@@ -69,21 +75,34 @@ export async function POST(req) {
     buffer = Buffer.from(await r.arrayBuffer());
   } catch (e) { return json({ error: "Could not read the uploaded file: " + String(e) }, 502); }
 
-  // Extract plain text.
-  let text;
-  try {
-    const out = await mammoth.extractRawText({ buffer });
-    text = (out?.value || "").trim();
-  } catch (e) { return json({ error: "Could not read text from that document: " + String(e) }, 422); }
-  if (!text) return json({ error: "That document had no readable text. Type the questions in the notes box instead." }, 422);
-  if (text.length > MAX_TEXT_CHARS) text = text.slice(0, MAX_TEXT_CHARS);
+  // Build the user content: extracted text for Word, or a multimodal block for PDF/image.
+  let userContent;
+  if (isDocx) {
+    let text;
+    try {
+      const out = await mammoth.extractRawText({ buffer });
+      text = (out?.value || "").trim();
+    } catch (e) { return json({ error: "Could not read text from that document: " + String(e) }, 422); }
+    if (!text) return json({ error: "That document had no readable text. Type the questions in the notes box instead." }, 422);
+    userContent = `Past paper text:\n\n${text.slice(0, MAX_TEXT_CHARS)}`;
+  } else {
+    // PDF / image: send the bytes to Claude (inline base64 — GA, no beta header). Bound the size.
+    if (buffer.length > MAX_BINARY_BYTES) {
+      return json({ error: "That file is too large to read automatically — try a smaller PDF/photo, or type the questions in the notes box." }, 413);
+    }
+    const b64 = buffer.toString("base64");
+    const block = isPdf
+      ? { type: "document", source: { type: "base64", media_type: "application/pdf", data: b64 } }
+      : { type: "image", source: { type: "base64", media_type: IMAGE_MEDIA[ext], data: b64 } };
+    userContent = [block, { type: "text", text: "The attached file is a past paper or test the class has sat. Extract its questions as specified." }];
+  }
 
   // Ask Haiku to split it into questions.
   const data = await anthropicMessages({
     model: EXTRACT_MODEL,
     max_tokens: 4096,
     system: [{ type: "text", text: EXTRACT_SYSTEM }],
-    messages: [{ role: "user", content: `Raw paper text:\n\n${text}` }],
+    messages: [{ role: "user", content: userContent }],
   });
   logUsage("paper-parse", schoolId, data?.usage);
 
