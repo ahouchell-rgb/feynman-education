@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { sb } from "../lib/supabase";
+import { sb, SUPA_URL } from "../lib/supabase";
 import { C } from "../lib/theme";
 import { Card } from "./ui";
 
@@ -10,6 +10,7 @@ export function PaperResults({ paperId, cls, onBack }) {
   const [attempts, setAttempts] = useState([]);
   const [responses, setResponses] = useState([]);
   const [members, setMembers] = useState([]);
+  const [sheets, setSheets] = useState([]);   // feedforward sheets generated for this paper
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { (async () => {
@@ -22,6 +23,9 @@ export function PaperResults({ paperId, cls, onBack }) {
         sb.q("class_members", { params: { class_id: `eq.${cls.id}`, select: "student_id,profiles(display_name)" } }),
       ]);
       setPaper(p[0]); setQuestions(qs || []); setAttempts(atts || []); setMembers(mems || []);
+      // Feedforward sheets for this paper (resilient — older deploys lack the table).
+      const fs = await sb.q("paper_feedforward_sheets", { params: { paper_id: `eq.${paperId}`, select: "*", order: "created_at.desc" } }).catch(() => []);
+      setSheets(fs || []);
       if ((atts || []).length > 0) {
         const ids = atts.map(a => a.id);
         const filterStr = ids.map(id => `attempt_id.eq.${id}`).join(",");
@@ -63,6 +67,28 @@ export function PaperResults({ paperId, cls, onBack }) {
           <div style={{ fontSize: 11, color: C.dim }}>{cls.name} · {submittedRows.length}/{members.length} submitted · class average {avgPct}%</div>
         </div>
       </div>
+
+      {sheets.length > 0 && (
+        <Card style={{ padding: "12px 14px", marginBottom: 10 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.txt, marginBottom: 8 }}>Feedforward sheets</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {sheets.map(s => (
+              <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 12, color: C.txt, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.title || "Feedforward sheet"}</div>
+                  <div style={{ fontSize: 10, color: C.dim, marginTop: 2 }}>
+                    {s.created_at ? new Date(s.created_at).toLocaleDateString() : ""}
+                    {s.class_id ? (s.class_id === cls.id ? " · this class" : " · class-specific") : " · general"}
+                  </div>
+                </div>
+                <a href={`${SUPA_URL}/storage/v1/object/public/paper-uploads/${s.docx_path}`} target="_blank" rel="noreferrer"
+                  style={{ flexShrink: 0, padding: "4px 10px", fontSize: 10, borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card2 || C.bg, color: C.mid, textDecoration: "none" }}>Download</a>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: 10, color: C.dim, marginTop: 8 }}>Generate more from the paper&apos;s Feedforward tab.</div>
+        </Card>
+      )}
 
       {studentRows.length === 0 ? (
         <Card style={{ padding: 24, textAlign: "center" }}><div style={{ fontSize: 12, color: C.dim }}>No students in this class yet.</div></Card>

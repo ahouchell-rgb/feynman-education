@@ -25,6 +25,10 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
   const [parsedQs, setParsedQs] = useState([]);           // questions read from the docx
   const [ffParsedSel, setFfParsedSel] = useState([]);     // selected indices into parsedQs
   const [parsing, setParsing] = useState(false);
+  // Phase 3 — attach the sheet to a class + auto-suggest from that class's results.
+  const [ffClassId, setFfClassId] = useState("");
+  const [gapPct, setGapPct] = useState(null);    // { [paper_question_id]: pct } for the chosen class
+  const [suggesting, setSuggesting] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -46,6 +50,26 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
 
   const toggleStruggled = (id) => setFfStruggled(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
   const toggleParsed = (i) => setFfParsedSel(s => s.includes(i) ? s.filter(x => x !== i) : [...s, i]);
+
+  // Phase 3: pick a class to attach the sheet to, and auto-suggest the questions
+  // that class scored lowest on (from their marked results). Pre-ticks the weak ones.
+  const SUGGEST_BELOW = 65; // % — pre-select questions the class averaged under this
+  const pickClass = async (classId) => {
+    setFfClassId(classId);
+    setGapPct(null);
+    if (!classId) return;
+    setSuggesting(true);
+    try {
+      const rows = await sb.rpc("class_paper_question_gaps", { p_class_id: classId, p_paper_id: paperId });
+      const map = {};
+      (Array.isArray(rows) ? rows : []).forEach(r => { if (r?.paper_question_id != null) map[r.paper_question_id] = r.pct; });
+      setGapPct(map);
+      // Pre-tick the questions this class averaged below the threshold (additive — keep any manual ticks).
+      const weak = Object.entries(map).filter(([, pct]) => Number(pct) < SUGGEST_BELOW).map(([id]) => id);
+      if (weak.length) setFfStruggled(s => Array.from(new Set([...s, ...weak])));
+    } catch (e) { console.error("suggest failed", e); }
+    setSuggesting(false);
+  };
 
   // Pick a file: reset any prior upload/parse so a new file isn't read from the old path.
   const chooseFile = (f) => { setFfFile(f); setUploadedPath(null); setParsedQs([]); setFfParsedSel([]); };
@@ -85,11 +109,13 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
       const source_upload_path = await ensureUploaded();
       const res = await sb.callPaperFeedforward({
         paper_id: paperId,
+        class_id: ffClassId || null,
         source_upload_path,
         struggled: { question_ids: ffStruggled, parsed: parsedChosen, notes: ffNotes.trim() },
       });
       setFfNotes(""); setFfStruggled([]); setFfFile(null);
       setUploadedPath(null); setParsedQs([]); setFfParsedSel([]);
+      setFfClassId(""); setGapPct(null);
       await load();
       if (res?.url) window.open(res.url, "_blank");
     } catch (e) { alert("Generation failed: " + e.message); }
@@ -308,6 +334,25 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
               sheet in the standard style — fresh parallel questions scaffolded down from those topics — as a Word document.
             </div>
 
+            {classes && classes.length > 0 && (
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 6 }}>For a class (optional — I&apos;ll pre-select what they scored lowest on)</div>
+                <select value={ffClassId} onChange={e => pickClass(e.target.value)}
+                  style={{ padding: "8px 10px", background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, color: C.txt, fontSize: 12, width: "100%" }}>
+                  <option value="">Not class-specific</option>
+                  {classes.map(c => <option key={c.id} value={c.id}>{c.name}{c.year_group ? ` (Y${c.year_group})` : ""}</option>)}
+                </select>
+                {suggesting && <div style={{ fontSize: 10, color: C.dim, marginTop: 4 }}>Reading this class&apos;s results…</div>}
+                {gapPct && !suggesting && (
+                  <div style={{ fontSize: 10, color: C.mid, marginTop: 4 }}>
+                    {Object.keys(gapPct).length === 0
+                      ? "No marked results for this class yet — tick the questions manually."
+                      : "Pre-selected the questions this class scored lowest on — adjust as needed."}
+                  </div>
+                )}
+              </div>
+            )}
+
             <div style={{ marginBottom: 12 }}>
               <div style={{ fontSize: 11, color: C.mid, fontWeight: 600, marginBottom: 6 }}>Exam paper (optional — upload a .docx and I&apos;ll read its questions)</div>
               <input type="file" accept=".docx,.doc,application/pdf,image/*" onChange={e => chooseFile(e.target.files?.[0] || null)} style={{ fontSize: 12, color: C.mid }} />
@@ -356,6 +401,9 @@ export function PaperEditor({ user, paperId, classes, topics, onBack, onResults 
                         <div style={{ width: 16, height: 16, marginTop: 2, borderRadius: 4, border: `2px solid ${on ? C.pri : C.bdr}`, background: on ? C.pri : "transparent", color: "#fff", fontSize: 10, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{on ? "✓" : ""}</div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <span style={{ fontSize: 11, color: C.mid, fontWeight: 700, marginRight: 6 }}>{q.question_label || `Q${i + 1}`}</span>
+                          {gapPct && gapPct[q.id] != null && (
+                            <span style={{ fontSize: 10, fontWeight: 700, marginRight: 6, color: gapPct[q.id] < 50 ? C.red : gapPct[q.id] < 70 ? (C.amb || C.mid) : C.grn }}>{gapPct[q.id]}%</span>
+                          )}
                           <span style={{ fontSize: 11, color: C.txt }}>{q.question_text}</span>
                         </div>
                       </div>
