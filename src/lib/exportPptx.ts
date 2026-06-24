@@ -68,6 +68,17 @@ export function richToRuns(html) {
    `rotate(Ndeg)`. Returns undefined when there's nothing to rotate. */
 export const rot = (el) => (el.rotation ? ((Math.round(el.rotation) % 360) + 360) % 360 : undefined);
 
+/* An element's optional hyperlink, as a PptxGenJS `hyperlink` option. Only
+   http/https/mailto survive (matching the in-app sanitiser) so a shared deck
+   can't smuggle a script-url into the exported file. Undefined when no link. */
+export function linkOpt(el) {
+  const u = (el?.href || "").trim();
+  if (!u) return undefined;
+  if (/^mailto:/i.test(u) || /^https?:\/\//i.test(u)) return { url: u };
+  if (/^[\w.-]+\.[a-z]{2,}([/?#].*)?$/i.test(u)) return { url: "https://" + u };
+  return undefined;
+}
+
 /* ── Image crop ──────────────────────────────────────────────────────────
    Crops are stored as {x,y,w,h} fractions (0–1) of the source image. PptxGenJS
    has no clean fractional-source crop, so we draw the cropped region onto a
@@ -157,17 +168,23 @@ async function renderEl(pptx, slide, el) {
 
   const box = { x: xIn(el.x), y: yIn(el.y), w: wIn(el.width), h: hIn(el.height || 100) };
   if (el.type === "rect") {
-    slide.addShape(pptx.ShapeType.rect, {
+    // Gradient fills degrade to a solid colour (the first stop, `el.fill`) so the
+    // export never chokes on a fill type PptxGenJS can't render natively here.
+    const shapeType = el.shape === "ellipse" ? pptx.ShapeType.ellipse
+      : el.shape === "triangle" ? pptx.ShapeType.triangle
+      : el.shape === "hexagon" ? pptx.ShapeType.hexagon
+      : pptx.ShapeType.rect; // star / speech / rect → rect box (closest portable shape)
+    slide.addShape(shapeType, {
       ...box, fill: toFill(el.fill),
       line: el.stroke ? { color: toHex(el.stroke), width: +((el.strokeW || 3) * 0.75).toFixed(1) } : { type: "none" },
       rectRadius: el.radius ? Math.min(0.2, el.radius / 200) : 0.04,
-      rotate: rot(el),
+      rotate: rot(el), hyperlink: linkOpt(el),
     });
   } else if (el.type === "image") {
     let data = null;
     if (el.crop) { try { data = await cropToDataURL(el.src, el.crop); } catch { data = null; } }
-    if (data) slide.addImage({ ...box, data, rotate: rot(el) });
-    else slide.addImage({ ...box, path: el.src, rotate: rot(el) });
+    if (data) slide.addImage({ ...box, data, rotate: rot(el), hyperlink: linkOpt(el) });
+    else slide.addImage({ ...box, path: el.src, rotate: rot(el), hyperlink: linkOpt(el) });
   } else if (el.type === "text") {
     const richRuns = el.rich ? richToRuns(el.rich) : null;
     slide.addText(richRuns || (el.text || ""), {
@@ -180,10 +197,11 @@ async function renderEl(pptx, slide, el) {
       italic: !!el.italic,
       align: el.align || "left",
       valign: "top",
+      lineSpacingMultiple: el.lineHeight || undefined, // line spacing (Tier 2)
       fill: el.bg ? toFill(el.bg) : undefined,
       wrap: true,
       margin: el.bg ? 6 : 0,
-      rotate: rot(el),
+      rotate: rot(el), hyperlink: linkOpt(el),
     });
   } else if (el.type === "chart") {
     const labels = el.labels?.length ? el.labels.map(String) : ["A", "B", "C"];

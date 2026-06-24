@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import { C } from "@/lib/theme";
 import { Btn } from "@/lib/primitives";
 import { toSubscript, toSuperscript } from "@/lib/formula";
-import { FONTS } from "./constants";
+import { FONTS, LINE_HEIGHTS, DEFAULT_LINE_HEIGHT } from "./constants";
 
 interface PropsBarProps {
   selEl: any;
@@ -48,6 +48,16 @@ export function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCro
       <input type="range" min={20} max={100} value={Math.round((selEl.opacity ?? 1) * 100)} onChange={(e) => P({ opacity: +e.target.value / 100 })} style={{ width: 70 }} />
     </label>
   );
+  // Optional hyperlink — opens in a new tab in Present/static (sanitised to
+  // http/https/mailto in the render path); the editor never navigates.
+  const linkCtl = (
+    <label style={{ display: "flex", alignItems: "center", gap: 6 }} title="Link — opens in a new tab when presenting. Editing never follows the link.">
+      link
+      <input value={selEl.href || ""} onChange={(e) => P({ href: e.target.value || null })} placeholder="https://…"
+        aria-label="Element link URL"
+        style={{ width: 130, padding: "5px 7px", border: `1px solid ${C.border}`, borderRadius: 4, fontFamily: C.mono, fontSize: 12 }} />
+    </label>
+  );
 
   if (selEl.type === "text") {
     return (
@@ -79,7 +89,14 @@ export function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCro
           highlight {color(selEl.bg?.startsWith("#") ? selEl.bg : "#2e3a5f", (v) => P({ bg: v }))}
           {selEl.bg && <button onClick={() => P({ bg: null })} style={{ fontSize: 11, color: C.muted, border: `1px solid ${C.border}`, background: "#fff", borderRadius: 4, padding: "2px 6px", cursor: "pointer" }}>none</button>}
         </label>
+        <label style={{ display: "flex", alignItems: "center", gap: 6 }} title="Line spacing">
+          spacing
+          <select value={String(selEl.lineHeight ?? DEFAULT_LINE_HEIGHT)} onChange={(e) => P({ lineHeight: +e.target.value })} style={selStyle}>
+            {LINE_HEIGHTS.map((lh) => <option key={lh} value={lh}>{lh.toFixed(2).replace(/0$/, "")}×</option>)}
+          </select>
+        </label>
         <button onClick={() => P({ shadow: !selEl.shadow })} style={pill(selEl.shadow)}>shadow</button>
+        {linkCtl}
         {opacityCtl}
       </div>
     );
@@ -87,6 +104,7 @@ export function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCro
 
   if (selEl.type === "rect") {
     const shape = selEl.shape || "rect";
+    const gradient = selEl.fillType === "gradient";
     return (
       <div style={wrap}>
         {tag("shape")}
@@ -95,8 +113,20 @@ export function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCro
           <option value="ellipse">Ellipse</option>
           <option value="triangle">Triangle</option>
           <option value="star">Star</option>
+          <option value="hexagon">Hexagon</option>
+          <option value="speech">Speech</option>
+        </select>
+        <select value={gradient ? "gradient" : "solid"} onChange={(e) => P({ fillType: e.target.value === "gradient" ? "gradient" : "solid" })} style={selStyle} title="Fill type">
+          <option value="solid">Solid</option>
+          <option value="gradient">Gradient</option>
         </select>
         <label style={{ display: "flex", alignItems: "center", gap: 6 }}>fill {color(selEl.fill?.startsWith("#") ? selEl.fill : "#5e7c4b", (v) => P({ fill: v }))}</label>
+        {gradient && (
+          <>
+            <label style={{ display: "flex", alignItems: "center", gap: 6 }}>to {color(selEl.fill2?.startsWith("#") ? selEl.fill2 : "#2e3a5f", (v) => P({ fill2: v }))}</label>
+            <label style={{ display: "flex", alignItems: "center", gap: 6 }} title="Gradient angle (degrees)">angle {num(selEl.gradAngle ?? 90, (v) => P({ gradAngle: ((Math.round(v) % 360) + 360) % 360 }))}</label>
+          </>
+        )}
         {(shape === "rect" || shape === "ellipse") && (
           <>
             <label style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -108,6 +138,7 @@ export function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCro
         )}
         {shape === "rect" && <label style={{ display: "flex", alignItems: "center", gap: 6 }}>round {num(selEl.radius ?? 6, (v) => P({ radius: Math.max(0, v) }))}</label>}
         <button onClick={() => P({ shadow: !selEl.shadow })} style={pill(selEl.shadow)}>shadow</button>
+        {linkCtl}
         {opacityCtl}
       </div>
     );
@@ -186,6 +217,7 @@ export function PropsBar({ selEl, slide, patchEl, setSlideBg, onCrop, onResetCro
           {selEl.stroke && <button onClick={() => P({ stroke: null })} style={{ fontSize: 11, color: C.muted, border: `1px solid ${C.border}`, background: "#fff", borderRadius: 4, padding: "2px 6px", cursor: "pointer" }}>none</button>}
         </label>
         <button onClick={() => P({ shadow: !selEl.shadow })} style={pill(selEl.shadow)}>shadow</button>
+        {linkCtl}
         {opacityCtl}
       </div>
     );

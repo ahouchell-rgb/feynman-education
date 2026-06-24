@@ -7,7 +7,7 @@ import { sk } from "@/lib/sk";
 import { VW, VH, elStyle, ElInner, ArrowSvg, StaticSlide, MasterFrame, CHART_COLORS } from "@/components/SlideStage";
 import { SUB, SUP, mapScript, toSubscript, toSuperscript, autoSub } from "@/lib/formula";
 // Constants, data, pure helpers and self-contained leaf components live in ./slideEditor/*
-import { uid, ensureIds, MIN, FONTS, SYMBOLS, STATES, CHARGES, EQUATIONS, parseVideo, RET_APP_ORIGIN, THEMES, fontByLabel, TEMPLATES, HANDLES, CURSORS, HANDLE_PX, fin, DEFAULT_MASTER } from "./slideEditor/constants";
+import { uid, ensureIds, MIN, GRID, snapToGrid, FONTS, SYMBOLS, STATES, CHARGES, EQUATIONS, parseVideo, RET_APP_ORIGIN, THEMES, fontByLabel, TEMPLATES, HANDLES, CURSORS, HANDLE_PX, fin, DEFAULT_MASTER } from "./slideEditor/constants";
 import { Sep, PanelLabel } from "./slideEditor/ui";
 import { ShortcutHelp } from "./slideEditor/ShortcutHelp";
 import { PropsBar } from "./slideEditor/PropsBar";
@@ -167,6 +167,12 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
   // edit click. Turn it on to flick through. Remembered per browser.
   const [clickThru, setClickThru] = useState(() => { try { return localStorage.getItem("sk_click_advance") === "1"; } catch { return false; } });
   const toggleClickThru = () => setClickThru((v) => { const n = !v; try { localStorage.setItem("sk_click_advance", n ? "1" : "0"); } catch {} if (n) { setSel(null); setEditing(null); } return n; });
+  // Snap-to-grid (Tier 2): an optional faint grid overlay on the stage plus
+  // grid-step snapping for element drags/resizes. The smart-align guides keep
+  // working alongside (they win when an edge/centre is closer than the grid).
+  // Remembered per browser. Off by default so old habits are unchanged.
+  const [gridOn, setGridOn] = useState(() => { try { return localStorage.getItem("sk_grid") === "1"; } catch { return false; } });
+  const toggleGrid = () => setGridOn((v) => { const n = !v; try { localStorage.setItem("sk_grid", n ? "1" : "0"); } catch {} return n; });
   const applyCrop = (id, crop, natW, natH) => {
     snapshot(false);
     const el = slide.elements.find((e) => e.id === id);
@@ -617,6 +623,12 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
         const h = single.height || (single.fontSize ? single.fontSize * 1.5 : 100);
         const snap = computeSnap(single.id, { x: single.x + dx, y: single.y + dy, w: single.width, h });
         dx += snap.dX; dy += snap.dY; setGuides(snap.guides);
+        // Snap-to-grid: when on, pull whichever axis a smart-guide didn't already
+        // catch onto the grid step, so the guides keep priority where they fire.
+        if (gridOn) {
+          if (!snap.guides.some((g) => g.type === "v")) dx = snapToGrid(single.x + dx) - single.x;
+          if (!snap.guides.some((g) => g.type === "h")) dy = snapToGrid(single.y + dy) - single.y;
+        }
       }
       commitLive(slides.map((s, si) => (si !== cur ? s : { ...s, elements: s.elements.map((elm) => (originals[elm.id] ? moveEl(originals[elm.id], dx, dy) : elm)) })));
     };
@@ -647,6 +659,15 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
         if (h < MIN) { h = MIN; w = h * aspect; }
         if (hx === -1) x = ox + ow - w;
         if (hy === -1) y = oy + oh - h;
+      }
+      // Snap-to-grid: round the moving edges to the grid step. Only the edge that
+      // is actually being dragged is snapped (the anchored edge stays put), and
+      // aspect-locked image corners are left alone so they don't get un-squared.
+      if (gridOn && !(el.type === "image" && hx !== 0 && hy !== 0 && !ev.shiftKey && oh)) {
+        if (hx === 1) w = Math.max(MIN, snapToGrid(x + w) - x);
+        else if (hx === -1) { const r = x + w; x = snapToGrid(x); w = Math.max(MIN, r - x); }
+        if (hy === 1) h = Math.max(MIN, snapToGrid(y + h) - y);
+        else if (hy === -1) { const b = y + h; y = snapToGrid(y); h = Math.max(MIN, b - y); }
       }
       patchElLive(el.id, { x: Math.round(x), y: Math.round(y), width: Math.round(w), height: Math.round(h) });
     };
@@ -840,6 +861,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
             style={{ width: 104, padding: "6px 9px", border: `1px solid ${C.border}`, borderRadius: 6, fontFamily: C.mono, fontSize: 12, background: "#fff", color: C.text, outline: "none" }} />
           <Btn v="ghost" onClick={() => setHelpOpen(true)} title="Keyboard shortcuts (?)">?</Btn>
           <Sep />
+          <Btn v={gridOn ? "pri" : "ghost"} onClick={toggleGrid} title="Snap-to-grid: shows a faint grid and snaps drags/resizes to it. Smart-align guides keep working too.">{gridOn ? "▦ Grid: on" : "▦ Grid: off"}</Btn>
           <Btn v={clickThru ? "pri" : "ghost"} onClick={toggleClickThru} title="When on, click anywhere on the slide to go to the next slide. Turn off to edit.">{clickThru ? "🖱 Click → next: on" : "🖱 Click → next: off"}</Btn>
           <Btn v={themeOpen ? "pri" : "soft"} onClick={() => openPanel("theme")} title="Deck theme">🎨 Theme</Btn>
           <Btn v={masterOpen ? "pri" : "soft"} onClick={() => openPanel("brand")} title="Header / footer brand frame">🏷 Brand</Btn>
@@ -857,6 +879,13 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
                        transform: `scale(${scale})`, transformOrigin: "top left",
                        background: slide.background || "#fff", boxShadow: "0 2px 16px rgba(0,0,0,.12)", overflow: "hidden" }}>
               {!slide.hideMaster && masterState?.enabled && <MasterFrame master={masterState} index={cur} total={slides.length} title={deck.title} />}
+              {/* snap-to-grid overlay — faint, non-interactive, editor-only (never
+                  rendered in thumbnails/Present). Drawn behind every element. */}
+              {gridOn && (
+                <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0,
+                  backgroundImage: `linear-gradient(to right, ${C.accent}22 ${1 / scale}px, transparent ${1 / scale}px), linear-gradient(to bottom, ${C.accent}22 ${1 / scale}px, transparent ${1 / scale}px)`,
+                  backgroundSize: `${GRID}px ${GRID}px` }} />
+              )}
               {slide.elements.map(el => {
                 if (el.type === "arrow")
                   return <ArrowSvg key={el.id} el={el} selected={selSet.has(el.id)} hitProps={{ onMouseDown: (e) => startArrowDrag(e, el), onContextMenu: (e) => openElMenu(e, el) }} />;
