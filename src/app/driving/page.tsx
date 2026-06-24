@@ -40,6 +40,13 @@ export default function DrivingHome() {
       {/* main actions */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14 }}>
         <BigCard
+          href="/driving/learn"
+          emoji="📖"
+          title="Learn"
+          desc="Short lessons on each topic, finishing with a few questions to check you've got it. Start here."
+          accent={C.grn}
+        />
+        <BigCard
           href="/driving/theory"
           emoji="📝"
           title="Mock theory test"

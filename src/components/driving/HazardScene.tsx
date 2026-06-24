@@ -568,7 +568,34 @@ function drawActor(ctx: CanvasRenderingContext2D, kind: ActorKind, g: Geom, t: n
   if (kind === "oncoming") return drawCar(ctx, g, "#d3d7db", "toward");
   if (kind === "bus") return drawBus(ctx, g);
   if (kind === "cyclist") return drawCyclist(ctx, g, t);
+  if (kind === "dog") return drawDog(ctx, g, t);
   return drawPerson(ctx, g, kind === "child", t);
+}
+
+function drawDog(ctx: CanvasRenderingContext2D, g: Geom, t: number) {
+  const { cx, baseY, w, h } = g;
+  const bodyH = h * 0.6;
+  const trot = Math.sin(t * 11) * h * 0.06;
+  ctx.fillStyle = "#6b4a2a";
+  // body
+  ctx.beginPath();
+  ctx.ellipse(cx, baseY - bodyH, w * 0.42, bodyH * 0.55, 0, 0, 7);
+  ctx.fill();
+  // head
+  ctx.beginPath();
+  ctx.arc(cx + w * 0.42, baseY - bodyH * 1.25, h * 0.16, 0, 7);
+  ctx.fill();
+  // ear + snout
+  ctx.fillRect(cx + w * 0.34, baseY - bodyH * 1.55, h * 0.07, h * 0.12);
+  ctx.fillRect(cx + w * 0.55, baseY - bodyH * 1.28, h * 0.12, h * 0.07);
+  // tail
+  ctx.strokeStyle = "#6b4a2a"; ctx.lineWidth = Math.max(1.4, h * 0.06); ctx.lineCap = "round";
+  ctx.beginPath(); ctx.moveTo(cx - w * 0.42, baseY - bodyH); ctx.lineTo(cx - w * 0.58, baseY - bodyH * 1.4); ctx.stroke();
+  // legs (trotting)
+  ctx.beginPath();
+  ctx.moveTo(cx - w * 0.2, baseY - bodyH * 0.6); ctx.lineTo(cx - w * 0.2 + trot, baseY);
+  ctx.moveTo(cx + w * 0.2, baseY - bodyH * 0.6); ctx.lineTo(cx + w * 0.2 - trot, baseY);
+  ctx.stroke();
 }
 
 function drawPerson(ctx: CanvasRenderingContext2D, g: Geom, child: boolean, t: number) {

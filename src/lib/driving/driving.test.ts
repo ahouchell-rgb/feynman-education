@@ -2,7 +2,9 @@ import { describe, it, expect } from "vitest";
 import { QUESTIONS, QUESTIONS_BY_CATEGORY } from "./questions";
 import { CATEGORIES } from "./categories";
 import { buildMockTest, THEORY_TOTAL } from "./mock";
-import { scoreHazardClick, tooManyFalseAlarms, HAZARD_CLIPS, MAX_PER_HAZARD } from "./hazardSim";
+import { scoreHazardClick, tooManyFalseAlarms, HAZARD_CLIPS, MAX_PER_HAZARD, maxHazardScore, hazardPassMark } from "./hazardSim";
+import { LESSONS } from "./lessons";
+import { SIGNS } from "./signs";
 
 describe("question bank integrity", () => {
   it("has questions and every one is well-formed", () => {
@@ -83,6 +85,45 @@ describe("hazard clips", () => {
         expect(h.appearAt).toBeLessThanOrEqual(h.developStart);
         expect(h.developEnd).toBeLessThanOrEqual(clip.duration);
       }
+    }
+  });
+  it("totals to a DVSA-style 75 max with a 44 pass mark", () => {
+    expect(maxHazardScore()).toBe(75);
+    expect(hazardPassMark()).toBe(44);
+    expect(HAZARD_CLIPS.length).toBeGreaterThanOrEqual(14);
+  });
+  it("hazard ids are unique within each clip", () => {
+    for (const clip of HAZARD_CLIPS) {
+      const ids = clip.hazards.map((h) => h.id);
+      expect(new Set(ids).size).toBe(ids.length);
+    }
+  });
+});
+
+describe("learn lessons", () => {
+  it("each lesson is well-formed and its quiz category has enough questions", () => {
+    const ids = new Set<string>();
+    for (const l of LESSONS) {
+      expect(l.id).toBeTruthy();
+      expect(ids.has(l.id), `dup ${l.id}`).toBe(false);
+      ids.add(l.id);
+      expect(l.sections.length).toBeGreaterThan(0);
+      for (const s of l.sections) expect(s.points.length).toBeGreaterThan(0);
+      expect(l.quizCount).toBeGreaterThan(0);
+      const pool = (QUESTIONS_BY_CATEGORY[l.category] ?? []).length;
+      expect(pool, `${l.id} pool`).toBeGreaterThanOrEqual(l.quizCount);
+    }
+  });
+});
+
+describe("road signs", () => {
+  it("has a healthy set with unique ids and meanings", () => {
+    expect(SIGNS.length).toBeGreaterThanOrEqual(30);
+    const ids = new Set(SIGNS.map((s) => s.id));
+    expect(ids.size).toBe(SIGNS.length);
+    for (const s of SIGNS) {
+      expect(s.name).toBeTruthy();
+      expect(s.meaning.length).toBeGreaterThan(0);
     }
   });
 });

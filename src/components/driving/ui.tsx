@@ -23,6 +23,7 @@ export function Shell({ children }: { children: ReactNode }) {
 export function TopBar({ active }: { active?: string }) {
   const links: [string, string][] = [
     ["/driving", "Home"],
+    ["/driving/learn", "Learn"],
     ["/driving/theory", "Mock test"],
     ["/driving/hazard", "Hazard perception"],
     ["/driving/practice", "Practice"],

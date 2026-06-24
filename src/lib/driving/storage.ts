@@ -29,6 +29,8 @@ export interface Progress {
   hazardAttempts: AttemptResult[];
   /** question ids the learner flagged to revise */
   flagged: string[];
+  /** ids of Learn lessons completed (quiz finished) */
+  lessonsDone: string[];
 }
 
 const EMPTY: Progress = {
@@ -37,6 +39,7 @@ const EMPTY: Progress = {
   theoryAttempts: [],
   hazardAttempts: [],
   flagged: [],
+  lessonsDone: [],
 };
 
 export function loadProgress(): Progress {
@@ -92,6 +95,15 @@ export function recordHazardAttempt(a: AttemptResult): Progress {
   const p = loadProgress();
   p.hazardAttempts = [a, ...p.hazardAttempts].slice(0, 50);
   saveProgress(p);
+  return p;
+}
+
+export function markLessonDone(lessonId: string): Progress {
+  const p = loadProgress();
+  if (!p.lessonsDone.includes(lessonId)) {
+    p.lessonsDone.push(lessonId);
+    saveProgress(p);
+  }
   return p;
 }
 
