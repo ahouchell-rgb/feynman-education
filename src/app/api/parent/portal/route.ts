@@ -12,6 +12,8 @@
 //
 // Env: SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN (practise link).
 
+import { audit } from "@/lib/audit";
+
 export const runtime = "nodejs";
 
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
@@ -72,6 +74,9 @@ export async function GET(req: Request) {
   }
   // Slide the expiry window forward for an actively-used link (best-effort).
   await extendToken(token);
+
+  // Audit the token-authenticated access to a guardian's children/reports.
+  await audit(null, "parent.portal.access", guardian.id);
 
   // Consented children only, with their class (for the practise link) + Home fields.
   let links: any[] = [];

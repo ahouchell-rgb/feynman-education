@@ -15,6 +15,8 @@
 import { supaRest } from "@/lib/supabaseRest";
 import { getEntitlement, can } from "@/lib/entitlements";
 import { SUBJECT_SELECT, subjectName } from "@/lib/subject";
+import { requireUserId, pickModel } from "@/lib/serverHelpers";
+import { enforceAiBudget } from "@/lib/aiBudget";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -56,6 +58,16 @@ export async function POST(req: Request) {
     const ent = await getEntitlement({ skUrl: SK_URL, apikey: SK_ANON, bearer: token });
     if (!can(ent, "ai_generators")) return j({ error: "Lesson generation is a Pro feature. Upgrade on the Billing page.", upgrade: true }, 402);
   }
+
+  // AI budget gate (defence-in-depth). slides-assistant also enforces + meters,
+  // but lesson generation is an Opus authoring call, so gate it here too: an
+  // exhausted daily/monthly budget should fail fast before we do unit lookups
+  // and fan out to the generator. enforceAiBudget only READS spend (metering
+  // still happens once, inside slides-assistant), so there's no double-count.
+  const userId = await requireUserId(token);
+  if (!userId) return j({ error: "Sign in to generate a lesson." }, 401);
+  const budget = await enforceAiBudget({ userId, token, model: pickModel("authoring") });
+  if (!budget.ok) return j({ error: budget.error }, budget.status || 429);
 
   // Load unit (+ optional lesson) context under the teacher's RLS.
   let unit: any, lesson: any = null;

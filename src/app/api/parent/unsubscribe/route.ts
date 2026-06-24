@@ -5,6 +5,8 @@
 // POST-only (and behind a confirm screen) so email link-prefetchers can't
 // auto-unsubscribe by following a GET. Service-role write, token-scoped.
 
+import { audit } from "@/lib/audit";
+
 export const runtime = "nodejs";
 
 const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
@@ -25,5 +27,6 @@ export async function POST(req: Request) {
   if (!r.ok) return j({ error: "couldn't unsubscribe" }, 500);
   const rows = await r.json().catch(() => []);
   if (!rows?.length) return j({ error: "not found" }, 404);
+  await audit(null, "parent.unsubscribe", rows[0].id ?? null, { student_name: rows[0].student_name ?? null });
   return j({ ok: true, studentName: rows[0].student_name });
 }

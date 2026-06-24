@@ -1,7 +1,8 @@
 // Public privacy notice (NOW plan E3). Plain-English, accurate to the product.
 // Outside the auth gate. Not legal advice — a starting point for counsel to finalise.
 
-const COL = { bg: "#f4f4f2", card: "#fff", border: "#e5e5e0", text: "#1a1a1a", mut: "#555", dim: "#888", grn: "#1a7f5a" };
+// `dim` darkened #888 → #5f5f5f for WCAG AA contrast (4.5:1) on the light bg.
+const COL = { bg: "#f4f4f2", card: "#fff", border: "#e5e5e0", text: "#1a1a1a", mut: "#555", dim: "#5f5f5f", grn: "#1a7f5a" };
 
 const SECTIONS: [string, string][] = [
   ["Who we are", "Feynman Education provides planning, practice and analytics tools to schools. For pupil data we act as a data processor on the school's instructions; the school is the data controller. For teachers' and parents' own account data we are the controller."],

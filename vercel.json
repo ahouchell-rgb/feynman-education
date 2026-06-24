@@ -23,6 +23,10 @@
     {
       "path": "/api/cron/mis-writeback",
       "schedule": "30 3 * * *"
+    },
+    {
+      "path": "/api/cron/pupil-lifecycle",
+      "schedule": "0 2 * * 0"
     }
   ]
 }
