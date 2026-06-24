@@ -74,6 +74,11 @@ export default function LoginPage() {
           {info && <div style={{ padding: "8px 10px", borderRadius: 6, background: C.grnS, color: C.grn, fontSize: 12, fontFamily: C.mono, marginBottom: 12 }}>{info}</div>}
           <Btn onClick={go} disabled={busy} style={{ width: "100%" }}>{busy ? "..." : mode === "login" ? "Log in" : "Create account"}</Btn>
         </Card>
+        <div style={{ textAlign: "center", marginTop: 18 }}>
+          <a href="/driving" style={{ fontFamily: C.mono, fontSize: 12, color: C.muted, textDecoration: "none" }}>
+            🚗 UK Driving Test Trainer — no account needed →
+          </a>
+        </div>
       </div>
     </div>
   );
