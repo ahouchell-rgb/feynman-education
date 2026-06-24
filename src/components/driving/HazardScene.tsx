@@ -18,6 +18,7 @@ import { D_FAR, D_GONE, DRIVE_SPEED, scoreHazardClick } from "@/lib/driving/haza
 
 const VW = 860;
 const VH = 500;
+const DPR = 2; // render the backing store at 2x for crisp, realistic detail
 const HORIZON = VH * 0.42;
 const CX = VW / 2;
 const FOCAL = 350;
@@ -149,6 +150,9 @@ export function HazardScene({
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    // high-DPI backing store for crisp rendering
+    canvas.width = VW * DPR;
+    canvas.height = VH * DPR;
 
     let raf = 0;
     let start = 0;
@@ -201,6 +205,7 @@ function drawScene(
   occurred: Map<string, number>,
   blanks: { x: number; y: number; t: number }[]
 ) {
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   ctx.clearRect(0, 0, VW, VH);
 
   // subtle engine bob + sway (visual only; within hit-box tolerance)
@@ -214,6 +219,7 @@ function drawScene(
   drawGround(ctx, clip.scene);
   drawRoad(ctx, clip.scene, t);
   drawScenery(ctx, clip.scene, t);
+  drawAmbientTraffic(ctx, clip.scene, t);
   if (clip.scene === "residential" || clip.scene === "town") drawParkedCars(ctx, t);
 
   for (const h of clip.hazards) {
@@ -249,6 +255,14 @@ function drawScene(
       else if (oc != null && t - oc < 1.6) drawOccurred(ctx, g, t);
     }
   }
+
+  // aerial perspective: soften distance toward the haze (depth realism)
+  const fog = ctx.createLinearGradient(0, HORIZON - 8, 0, HORIZON + 120);
+  const hz = clip.scene === "rural" ? "222,235,243" : "216,224,230";
+  fog.addColorStop(0, `rgba(${hz},0.55)`);
+  fog.addColorStop(1, `rgba(${hz},0)`);
+  ctx.fillStyle = fog;
+  ctx.fillRect(-30, HORIZON - 8, VW + 60, 130);
 
   // false-alarm flag markers
   for (const b of blanks) {
@@ -367,7 +381,7 @@ function drawRoad(ctx: CanvasRenderingContext2D, scene: string, t: number) {
   // solid edge lines
   edgeLine(ctx, -3.0); edgeLine(ctx, 3.0);
 
-  // centre dashes (animated)
+  // centre dashes (animated) + reflective cat's-eyes
   const phase = (t * DRIVE_SPEED) % 6;
   for (let k = 0; k < 14; k++) {
     const dTop = far - k * 6 - phase;
@@ -376,6 +390,30 @@ function drawRoad(ctx: CanvasRenderingContext2D, scene: string, t: number) {
     const a = project(0, dTop), b = project(0, Math.max(near, dBot));
     ctx.fillStyle = "#ece6d4";
     poly(ctx, [[a.x - a.scale * 0.08, a.ground], [a.x + a.scale * 0.08, a.ground], [b.x + b.scale * 0.08, b.ground], [b.x - b.scale * 0.08, b.ground]]);
+  }
+  const cphase = (t * DRIVE_SPEED) % 12;
+  for (let k = 0; k < 8; k++) {
+    const D = far - k * 12 - cphase;
+    if (D <= near + 2 || D >= far) continue;
+    const a = project(0, D);
+    ctx.fillStyle = "rgba(240,240,210,0.9)";
+    ctx.beginPath(); ctx.arc(a.x, a.ground, Math.max(0.8, a.scale * 0.05), 0, 7); ctx.fill();
+  }
+
+  // an approaching zebra crossing on town high streets
+  if (scene === "town") {
+    const zD = D_FAR - ((t * DRIVE_SPEED + 18) % (D_FAR * 1.6));
+    if (zD > near + 1 && zD < far - 6) drawZebra(ctx, zD);
+  }
+}
+
+function drawZebra(ctx: CanvasRenderingContext2D, D: number) {
+  for (let i = -3; i <= 3; i++) {
+    const X = i * 0.85;
+    const a = project(X - 0.32, D), b = project(X + 0.32, D);
+    const aB = project(X - 0.32, Math.max(D_GONE + 0.2, D - 3.2)), bB = project(X + 0.32, Math.max(D_GONE + 0.2, D - 3.2));
+    ctx.fillStyle = "rgba(236,232,218,0.92)";
+    poly(ctx, [[a.x, a.ground], [b.x, b.ground], [bB.x, bB.ground], [aB.x, aB.ground]]);
   }
 }
 
@@ -408,6 +446,14 @@ function drawScenery(ctx: CanvasRenderingContext2D, scene: string, t: number) {
       else if (scene === "rural") tree(ctx, x, ground, scale);
       else { tree(ctx, x + side * 0.6 * scale, ground, scale * 0.8); lamppost(ctx, x, ground, scale); }
       if (scene !== "rural" && k % 2 === 0) lamppost(ctx, project(side * 3.7, D).x, project(side * 3.7, D).ground, scale);
+      // occasional roadside signs / traffic lights at the kerb
+      if (scene !== "rural" && side === 1 && k % 3 === 1) {
+        const p = project(3.6, D);
+        drawSignpost(ctx, p.x, p.ground, p.scale, k % 3);
+      } else if (scene === "rural" && k % 4 === 2) {
+        const p = project(side * 3.8, D);
+        drawSignpost(ctx, p.x, p.ground, p.scale, 2);
+      }
     }
   }
 }
@@ -456,6 +502,48 @@ function drawParkedCars(ctx: CanvasRenderingContext2D, t: number) {
   }
 }
 
+function drawAmbientTraffic(ctx: CanvasRenderingContext2D, scene: string, t: number) {
+  if (scene === "rural") return; // keep rural clear so the oncoming hazard reads
+  // a steady stream of oncoming cars in the opposite lane
+  const colors = ["#34506e", "#6e3a3a", "#3a3d44", "#566b46", "#7a7f86"];
+  const span = 26;
+  for (let k = 0; k < 3; k++) {
+    const D = D_FAR - ((t * (DRIVE_SPEED + 8) + k * span) % D_FAR);
+    if (D <= D_GONE + 1 || D >= D_FAR - 3) continue;
+    const g = geomOf("oncoming", 1.75, D);
+    if (g) { drawShadow(ctx, g); drawCar(ctx, g, colors[k % colors.length], "toward"); }
+  }
+  // a lead vehicle ahead in your lane on busier roads
+  if (scene === "town" || scene === "dual") {
+    const D = D_FAR - ((t * (DRIVE_SPEED - 1.5) + 14) % D_FAR);
+    if (D > 14 && D < D_FAR - 3) {
+      const g = geomOf("car", CAM_X, D);
+      if (g) { drawShadow(ctx, g); drawCar(ctx, g, "#46566b", "away"); }
+    }
+  }
+}
+
+function drawSignpost(ctx: CanvasRenderingContext2D, x: number, ground: number, scale: number, kind: number) {
+  ctx.fillStyle = "#6b7178";
+  ctx.fillRect(x - 0.05 * scale, ground - 2.6 * scale, 0.1 * scale, 2.6 * scale);
+  if (kind === 0) {
+    // traffic light head
+    ctx.fillStyle = "#1c1f24"; roundRect(ctx, x - 0.18 * scale, ground - 3.3 * scale, 0.36 * scale, 0.8 * scale, 0.08 * scale); ctx.fill();
+    for (const [i, c] of [[0, "#c0312a"], [1, "#d8a52a"], [2, "#2faa4f"]] as const) {
+      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, ground - 3.15 * scale + i * 0.27 * scale, 0.1 * scale, 0, 7); ctx.fill();
+    }
+  } else if (kind === 1) {
+    // round speed-limit sign
+    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(x, ground - 2.9 * scale, 0.34 * scale, 0, 7); ctx.fill();
+    ctx.strokeStyle = "#c1272d"; ctx.lineWidth = Math.max(1, 0.08 * scale); ctx.beginPath(); ctx.arc(x, ground - 2.9 * scale, 0.34 * scale, 0, 7); ctx.stroke();
+    ctx.fillStyle = "#1a1714"; ctx.font = `bold ${Math.max(5, 0.34 * scale)}px sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("30", x, ground - 2.86 * scale);
+  } else {
+    // warning triangle
+    ctx.fillStyle = "#fff"; ctx.strokeStyle = "#c1272d"; ctx.lineWidth = Math.max(1, 0.07 * scale);
+    ctx.beginPath(); ctx.moveTo(x, ground - 3.3 * scale); ctx.lineTo(x + 0.34 * scale, ground - 2.7 * scale); ctx.lineTo(x - 0.34 * scale, ground - 2.7 * scale); ctx.closePath(); ctx.fill(); ctx.stroke();
+  }
+}
+
 function drawJunction(ctx: CanvasRenderingContext2D, side: "left" | "right", D: number) {
   const s = side === "left" ? -1 : 1;
   const inner = project(s * 3.3, D), outer = project(s * 7.8, D);
@@ -468,9 +556,10 @@ function drawJunction(ctx: CanvasRenderingContext2D, side: "left" | "right", D: 
 
 /* ── actors ──────────────────────────────────────────────────────────────── */
 function drawShadow(ctx: CanvasRenderingContext2D, g: Geom) {
-  ctx.fillStyle = "rgba(0,0,0,0.22)";
+  // sun is upper-right, so shadows fall to the lower-left
+  ctx.fillStyle = "rgba(0,0,0,0.26)";
   ctx.beginPath();
-  ctx.ellipse(g.cx, g.baseY + 1, Math.max(6, g.w * 0.6), Math.max(2, g.h * 0.06), 0, 0, 7);
+  ctx.ellipse(g.cx - g.w * 0.18, g.baseY + 1.5, Math.max(7, g.w * 0.66), Math.max(2, g.h * 0.07), 0, 0, 7);
   ctx.fill();
 }
 
