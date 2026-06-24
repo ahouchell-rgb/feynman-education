@@ -5,6 +5,7 @@ import { sk } from "@/lib/sk";
 import { C, DISC, DAYS, isoDate } from "@/lib/theme";
 import { Btn } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
+import { CloseLoopCard } from "@/components/CloseLoopCard";
 
 function NextLessonCard({ lesson, onClick }) {
   const d = DISC[lesson.discipline] || DISC.combined;
@@ -108,6 +109,13 @@ function HomeContent() {
           </h1>
           <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>Tap to open.</p>
           <NextLessonCard lesson={nextLesson} onClick={() => openLessonOrUnit(nextLesson)} />
+          {/* Close the loop: this class's top retrieval gap → one-click feedforward sheet. */}
+          <div style={{ marginTop: 16 }}>
+            <CloseLoopCard
+              lessonId={nextLesson.current_lesson_id || null}
+              defaultClassId={nextLesson.class_id || null}
+            />
+          </div>
         </>
       ) : (
         <>

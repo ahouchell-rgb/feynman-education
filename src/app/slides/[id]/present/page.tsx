@@ -5,6 +5,8 @@ import { sk } from "@/lib/sk";
 import { guestFind } from "@/lib/guestDecks";
 import { StaticSlide, VW, VH, revealCount, slideHasVisualiser, deckHasVisualiser, probeCameraPermission, TIMER_TOGGLE_EVENT } from "@/components/SlideStage";
 import { cacheDeck, readCachedDeck } from "@/lib/deckCache";
+import { PostLessonNudge } from "@/components/PostLessonNudge";
+import { DeckQuestionsModal } from "@/components/DeckQuestionsModal";
 
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 const pickBtn = { padding: "10px 22px", fontSize: 15, fontWeight: 600, color: "#fff", background: "#1a1714", border: "none", borderRadius: 8, cursor: "pointer" };
@@ -49,6 +51,11 @@ export default function PresentPage() {
   const [camPrompt, setCamPrompt] = useState("");   // "" | "prompt" | "denied" — visualiser pre-check banner
   const [camDismissed, setCamDismissed] = useState(false);
   const notesWin = useRef(null);                     // popped-out presenter-notes window
+
+  // Post-lesson loop: a dismissable prompt shown when the teacher EXITS, plus the
+  // deck→questions modal it can open. These never touch presenting — only the exit.
+  const [exitNudge, setExitNudge] = useState(false);
+  const [questionsOpen, setQuestionsOpen] = useState(false);
 
   // Deck load with offline resilience. A 20-second wifi stutter must not white-
   // screen a live lesson, so: on a SUCCESSFUL fetch we cache the deck; on a
@@ -196,6 +203,20 @@ export default function PresentPage() {
   };
   const jump = (n) => { setI(n); setStep(0); setGrid(false); };
 
+  // Exit flow: requestExit() shows the dismissable post-lesson nudge; doExit()
+  // performs the real navigation away. Guest decks have no class/lesson loop to
+  // close, so they exit straight out — the nudge only appears for saved decks.
+  const doExit = () => {
+    if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+    router.push("/slides");
+  };
+  const requestExit = () => {
+    // Only signed-in teachers have a class/lesson loop to close; guests (no user)
+    // and offline-cached sessions exit straight out.
+    if (deck && sk.auth.user() && !offline) setExitNudge(true);
+    else doExit();
+  };
+
   // keyboard — re-bound each render so it sees current state
   useEffect(() => {
     const onKey = (e) => {
@@ -206,6 +227,8 @@ export default function PresentPage() {
       const t = e.target;
       if (t && (t.isContentEditable || t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT")) return;
       // when an overlay owns the keyboard, handle it there and stop
+      if (questionsOpen) { if (k === "Escape") setQuestionsOpen(false); return; }
+      if (exitNudge) { if (k === "Escape") setExitNudge(false); return; }
       if (picker) {
         if (k === "Escape" || k === "n" || k === "N") setPicker(false);
         else if (k === " " || k === "Enter") { e.preventDefault(); spin(); }
@@ -218,7 +241,7 @@ export default function PresentPage() {
       else if (k === "Escape") {
         if (blackout) setBlackout("");
         else if (pen) setPen(false);
-        else { if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {}); router.push("/slides"); }
+        else requestExit();
       }
       else if (k === "b" || k === "B") setBlackout((v) => (v === "black" ? "" : "black"));
       else if (k === "w" || k === "W") setBlackout((v) => (v === "white" ? "" : "white"));
@@ -447,7 +470,7 @@ export default function PresentPage() {
           <TBtn onClick={() => setStrokes([])} title="Clear annotations">✕</TBtn>
           <TBtn onClick={() => setBlackout((v) => (v === "black" ? "" : "black"))} active={blackout === "black"} title="Blank screen">⬛</TBtn>
           <Sep />
-          <TBtn onClick={() => { if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {}); router.push("/slides"); }} title="Exit">⤬</TBtn>
+          <TBtn onClick={requestExit} title="Exit">⤬</TBtn>
         </div>
       )}
 
@@ -495,6 +518,25 @@ export default function PresentPage() {
                    padding: "6px 12px", background: "rgba(20,20,20,0.85)", border: "1px solid #333",
                    borderRadius: 10, color: "#bbb", fontFamily: "system-ui", fontSize: 11, cursor: "pointer" }}>
           Black bars are normal on a 4:3 projector — slides are 16:9. Tap to dismiss.
+        </div>
+      )}
+
+      {/* Post-lesson nudge — dismissable, shown on exit. Routes to the lesson's
+          feedforward loop, or opens deck→questions in place. Never blocks exit. */}
+      {exitNudge && (
+        <div onClick={(e) => e.stopPropagation()}>
+          <PostLessonNudge
+            deck={deck}
+            onExit={doExit}
+            onQuestions={() => { setExitNudge(false); setQuestionsOpen(true); }}
+          />
+        </div>
+      )}
+
+      {/* Deck → retrieval questions (reuses the same modal as the editor toolbar). */}
+      {questionsOpen && (
+        <div onClick={(e) => e.stopPropagation()}>
+          <DeckQuestionsModal slides={slides} lessonTitle={deck?.title || ""} onClose={() => setQuestionsOpen(false)} />
         </div>
       )}
 
