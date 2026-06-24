@@ -31,6 +31,8 @@ export interface Progress {
   flagged: string[];
   /** ids of Learn lessons completed (quiz finished) */
   lessonsDone: string[];
+  /** daily study streak */
+  streak: { count: number; best: number; lastDay: string };
 }
 
 const EMPTY: Progress = {
@@ -40,7 +42,26 @@ const EMPTY: Progress = {
   hazardAttempts: [],
   flagged: [],
   lessonsDone: [],
+  streak: { count: 0, best: 0, lastDay: "" },
 };
+
+const dayKey = (d = new Date()) => d.toISOString().slice(0, 10);
+
+/** Call once per app open: bumps the daily streak (consecutive days studied). */
+export function touchStreak(): Progress {
+  const p = loadProgress();
+  const today = dayKey();
+  const s = p.streak ?? { count: 0, best: 0, lastDay: "" };
+  if (s.lastDay !== today) {
+    const yesterday = dayKey(new Date(Date.now() - 86400000));
+    s.count = s.lastDay === yesterday ? s.count + 1 : 1;
+    s.best = Math.max(s.best, s.count);
+    s.lastDay = today;
+    p.streak = s;
+    saveProgress(p);
+  }
+  return p;
+}
 
 export function loadProgress(): Progress {
   if (typeof window === "undefined") return { ...EMPTY };

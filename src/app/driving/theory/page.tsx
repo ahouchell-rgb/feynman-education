@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { C } from "@/lib/theme";
+import { Cd as C } from "@/lib/driving/theme";
 import { Shell, TopBar, PageTitle, card } from "@/components/driving/ui";
 import { QuestionRunner, RunResult } from "@/components/driving/QuestionRunner";
 import { buildMockTest, THEORY_TOTAL, THEORY_PASS_MARK, THEORY_TIME_SEC } from "@/lib/driving/mock";

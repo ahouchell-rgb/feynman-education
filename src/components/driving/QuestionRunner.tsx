@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { C } from "@/lib/theme";
+import { Cd as C } from "@/lib/driving/theme";
 import type { Question } from "@/lib/driving/types";
 import { CATEGORY_LABEL } from "@/lib/driving/categories";
 import { recordAnswer, loadProgress, toggleFlag } from "@/lib/driving/storage";

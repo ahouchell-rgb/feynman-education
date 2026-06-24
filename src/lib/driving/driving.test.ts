@@ -10,7 +10,7 @@ import { CASE_STUDIES } from "./caseStudies";
 import { readiness, buildSmartSet, reviewMistakes } from "./study";
 import type { Progress } from "./storage";
 
-const emptyProgress = (): Progress => ({ questions: {}, categories: {}, theoryAttempts: [], hazardAttempts: [], flagged: [], lessonsDone: [] });
+const emptyProgress = (): Progress => ({ questions: {}, categories: {}, theoryAttempts: [], hazardAttempts: [], flagged: [], lessonsDone: [], streak: { count: 0, best: 0, lastDay: "" } });
 
 describe("question bank integrity", () => {
   it("has questions and every one is well-formed", () => {

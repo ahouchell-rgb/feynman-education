@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { C } from "@/lib/theme";
+import { Cd as C } from "@/lib/driving/theme";
 import { Shell, TopBar, PageTitle, card, fmtTime } from "@/components/driving/ui";
 import { HazardScene } from "@/components/driving/HazardScene";
 import {

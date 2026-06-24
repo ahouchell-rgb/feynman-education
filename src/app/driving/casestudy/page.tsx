@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { C } from "@/lib/theme";
+import { Cd as C } from "@/lib/driving/theme";
 import { Shell, TopBar, PageTitle, card } from "@/components/driving/ui";
 import { QuestionRunner } from "@/components/driving/QuestionRunner";
 import { CASE_STUDIES, CaseStudy } from "@/lib/driving/caseStudies";

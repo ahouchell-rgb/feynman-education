@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { C } from "@/lib/theme";
+import { Cd as C } from "@/lib/driving/theme";
 import { Shell, TopBar, PageTitle, card } from "@/components/driving/ui";
 import { SignGlyph } from "@/components/driving/SignGlyph";
 import { NOTES } from "@/lib/driving/notes";
