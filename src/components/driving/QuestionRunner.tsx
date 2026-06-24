@@ -1,10 +1,13 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { C } from "@/lib/theme";
+import { Cd as C } from "@/lib/driving/theme";
 import type { Question } from "@/lib/driving/types";
 import { CATEGORY_LABEL } from "@/lib/driving/categories";
 import { recordAnswer, loadProgress, toggleFlag } from "@/lib/driving/storage";
+import { SIGN_BY_ID } from "@/lib/driving/signs";
+import { SignGlyph } from "./SignGlyph";
 import { ProgressBar, fmtTime, card } from "./ui";
+import type { ReactNode } from "react";
 
 export interface RunResult {
   score: number;
@@ -26,6 +29,8 @@ interface Props {
   kicker?: string;
   onExitHref?: string;
   onComplete?: (r: RunResult) => void;
+  /** optional persistent banner shown above each question (e.g. a case-study scenario) */
+  headerNote?: ReactNode;
 }
 
 const setsEqual = (a: number[], b: number[]) =>
@@ -40,6 +45,7 @@ export function QuestionRunner({
   kicker,
   onExitHref = "/driving",
   onComplete,
+  headerNote,
 }: Props) {
   const [idx, setIdx] = useState(0);
   const [picks, setPicks] = useState<Record<string, number[]>>({});
@@ -136,8 +142,13 @@ export function QuestionRunner({
   const enoughPicked = sel.length === q.selectCount;
   const showActionCheck = instantFeedback && !isRevealed;
 
+  const sign = q.signId ? SIGN_BY_ID[q.signId] : null;
+
   return (
     <div>
+      {headerNote && (
+        <div style={{ ...card, padding: "14px 16px", marginBottom: 14, background: C.bluS, borderColor: C.blu }}>{headerNote}</div>
+      )}
       {/* status bar */}
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14, flexWrap: "wrap" }}>
         <div style={{ fontFamily: C.mono, fontSize: 12, color: C.muted }}>
@@ -177,6 +188,11 @@ export function QuestionRunner({
             {flagged.includes(q.id) ? "★ flagged" : "☆ flag"}
           </button>
         </div>
+        {sign && (
+          <div style={{ display: "flex", justifyContent: "center", margin: "8px 0 14px" }}>
+            <SignGlyph sign={sign} size={120} />
+          </div>
+        )}
         <h2 style={{ fontFamily: C.serif, fontSize: 24, lineHeight: 1.2, fontWeight: 400, marginBottom: 4 }}>{q.question}</h2>
         {q.selectCount > 1 && (
           <div style={{ fontFamily: C.mono, fontSize: 11, color: C.amb, marginBottom: 8 }}>Mark {q.selectCount} answers</div>

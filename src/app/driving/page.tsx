@@ -1,15 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { C } from "@/lib/theme";
+import { Cd as C } from "@/lib/driving/theme";
 import { Shell, TopBar, card } from "@/components/driving/ui";
-import { loadProgress, resetProgress, Progress } from "@/lib/driving/storage";
+import { Onboarding } from "@/components/driving/Onboarding";
+import { loadProgress, resetProgress, touchStreak, Progress } from "@/lib/driving/storage";
+import { readiness } from "@/lib/driving/study";
 import { QUESTIONS } from "@/lib/driving/questions";
 import { THEORY_PASS_MARK, THEORY_TOTAL } from "@/lib/driving/mock";
 
 export default function DrivingHome() {
   const [p, setP] = useState<Progress | null>(null);
-  useEffect(() => setP(loadProgress()), []);
+  useEffect(() => setP(touchStreak()), []);
 
   const answered = p ? Object.values(p.questions).reduce((a, q) => a + q.seen, 0) : 0;
   const correct = p ? Object.values(p.questions).reduce((a, q) => a + q.correct, 0) : 0;
@@ -19,26 +21,44 @@ export default function DrivingHome() {
   const passedTheory = p?.theoryAttempts.some((a) => a.passed) ?? false;
   const passedHazard = p?.hazardAttempts.some((a) => a.passed) ?? false;
 
+  const streak = p?.streak?.count ?? 0;
+
   return (
     <Shell>
+      <Onboarding />
       <TopBar active="/driving" />
 
-      <div style={{ padding: "10px 0 30px" }}>
-        <div style={{ fontFamily: C.mono, fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim, marginBottom: 10 }}>
-          UK car theory + hazard perception
+      <div style={{ padding: "14px 0 30px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12, flexWrap: "wrap" }}>
+          <div style={{ fontFamily: C.mono, fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", color: C.dim }}>
+            UK car theory + hazard perception
+          </div>
+          {streak > 0 && (
+            <span style={{ fontFamily: C.mono, fontSize: 11, fontWeight: 600, color: C.amb, background: C.ambS, border: `1px solid ${C.amb}`, padding: "3px 9px", borderRadius: 99 }}>
+              🔥 {streak}-day streak
+            </span>
+          )}
         </div>
-        <h1 style={{ fontFamily: C.serif, fontSize: 50, lineHeight: 1.02, fontWeight: 400, maxWidth: 640 }}>
-          Pass your UK driving theory test.
+        <h1 style={{ fontFamily: C.serif, fontSize: 54, lineHeight: 1.02, fontWeight: 700, maxWidth: 660, letterSpacing: "-0.02em" }}>
+          Pass your UK driving theory test{" "}
+          <span style={{ background: `linear-gradient(90deg, ${C.grn}, ${C.blu})`, WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>first time.</span>
         </h1>
-        <p style={{ fontSize: 16, color: C.muted, marginTop: 14, maxWidth: 600, lineHeight: 1.55 }}>
+        <p style={{ fontSize: 16, color: C.muted, marginTop: 16, maxWidth: 600, lineHeight: 1.55 }}>
           A complete trainer for both parts of the real test — the {THEORY_TOTAL}-question multiple choice and the
-          hazard perception — with the correct answer and a clear explanation shown after every question, plus a full
-          revision library to go over the content as often as you like.
+          hazard perception — with the correct answer explained after every question, lessons, smart practice and a
+          readiness score that tells you when you&apos;re ready.
         </p>
       </div>
 
       {/* main actions */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14 }}>
+        <BigCard
+          href="/driving/learn"
+          emoji="📖"
+          title="Learn"
+          desc="Short lessons on each topic, finishing with a few questions to check you've got it. Start here."
+          accent={C.grn}
+        />
         <BigCard
           href="/driving/theory"
           emoji="📝"
@@ -69,7 +89,40 @@ export default function DrivingHome() {
           desc="Key facts, every road sign, and flashcards. Go over the content again and again."
           accent={C.amb}
         />
+        <BigCard
+          href="/driving/premium"
+          emoji="★"
+          title="Go Premium"
+          desc="Unlimited mocks, all hazard clips and case studies. Try free, then one simple payment."
+          accent={C.amb}
+        />
       </div>
+
+      {/* readiness */}
+      {p && (() => {
+        const r = readiness(p);
+        const col = r.percent >= 85 ? C.grn : r.percent >= 60 ? C.amb : r.percent > 0 ? C.blu : C.dim;
+        return (
+          <div style={{ ...card, padding: "20px 24px", marginTop: 20, display: "flex", alignItems: "center", gap: 22, flexWrap: "wrap" }}>
+            <div style={{ position: "relative", width: 84, height: 84, flexShrink: 0 }}>
+              <svg width="84" height="84" viewBox="0 0 84 84">
+                <circle cx="42" cy="42" r="36" fill="none" stroke={C.border} strokeWidth="8" />
+                <circle cx="42" cy="42" r="36" fill="none" stroke={col} strokeWidth="8" strokeLinecap="round"
+                  strokeDasharray={`${(r.percent / 100) * 2 * Math.PI * 36} ${2 * Math.PI * 36}`} transform="rotate(-90 42 42)" />
+              </svg>
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: C.serif, fontSize: 24, color: col }}>{r.percent}%</div>
+            </div>
+            <div style={{ flex: 1, minWidth: 200 }}>
+              <div style={{ fontFamily: C.mono, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: C.dim }}>Test readiness</div>
+              <div style={{ fontFamily: C.serif, fontSize: 24, lineHeight: 1.1, margin: "4px 0 6px", color: C.text }}>{r.label}</div>
+              <div style={{ fontSize: 13, color: C.muted }}>
+                {Math.round(r.accuracy * 100)}% answer accuracy · {Math.round(r.coverage * 100)}% of the bank seen{r.mockAvg != null ? ` · ${Math.round(r.mockAvg * 100)}% recent mock average` : ""}
+              </div>
+            </div>
+            <Link href="/driving/practice" style={{ fontFamily: C.mono, fontSize: 13, fontWeight: 600, color: C.accentFg, background: C.accent, padding: "10px 16px", borderRadius: 8, textDecoration: "none" }}>Smart practice →</Link>
+          </div>
+        );
+      })()}
 
       {/* progress */}
       <h2 style={{ fontFamily: C.mono, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim, margin: "34px 0 14px" }}>

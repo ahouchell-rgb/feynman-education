@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { C } from "@/lib/theme";
+import { Cd as C } from "@/lib/driving/theme";
 import { Shell, TopBar, PageTitle, card, fmtTime } from "@/components/driving/ui";
 import { HazardScene } from "@/components/driving/HazardScene";
 import {
@@ -9,6 +9,8 @@ import {
   maxHazardScore,
   hazardPassMark,
   tooManyFalseAlarms,
+  DIFFICULTY,
+  DifficultyKey,
 } from "@/lib/driving/hazardSim";
 import type { HazardClip } from "@/lib/driving/types";
 import { recordHazardAttempt } from "@/lib/driving/storage";
@@ -31,6 +33,7 @@ export default function HazardPage() {
   const [playKey, setPlayKey] = useState(0);
   const [hud, setHud] = useState({ t: 0, spotted: 0, falseAlarms: 0 });
   const [flash, setFlash] = useState<{ band: number; at: number } | null>(null);
+  const [difficulty, setDifficulty] = useState<DifficultyKey>("standard");
 
   const scoresRef = useRef<Map<string, number>>(new Map());
   const falseRef = useRef<number[]>([]);
@@ -122,6 +125,24 @@ export default function HazardPage() {
               </li>
             ))}
           </ul>
+          <div style={{ marginTop: 18, borderTop: `1px solid ${C.rule}`, paddingTop: 16 }}>
+            <div style={{ fontFamily: C.mono, fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim, marginBottom: 8 }}>Difficulty</div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {(Object.keys(DIFFICULTY) as DifficultyKey[]).map((k) => {
+                const on = difficulty === k;
+                return (
+                  <button
+                    key={k}
+                    onClick={() => setDifficulty(k)}
+                    style={{ flex: "1 1 120px", textAlign: "left", padding: "10px 12px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", border: `1.5px solid ${on ? C.grn : C.border}`, background: on ? C.grnS : C.surface }}
+                  >
+                    <div style={{ fontSize: 14, fontWeight: 600, color: C.text }}>{DIFFICULTY[k].label}</div>
+                    <div style={{ fontSize: 12, color: C.muted }}>{DIFFICULTY[k].blurb}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
           <button onClick={begin} style={primaryBtn}>Start driving →</button>
         </div>
         <p style={{ fontSize: 12, color: C.dim, marginTop: 16, lineHeight: 1.5 }}>
@@ -182,6 +203,7 @@ export default function HazardPage() {
         <HazardScene
           clip={clip}
           playKey={playKey}
+          windowBias={DIFFICULTY[difficulty].bias}
           onTime={(t) => setHud((h) => (Math.abs(t - h.t) > 0.05 ? { ...h, t } : h))}
           onScore={onScore}
           onFalseAlarm={onFalseAlarm}
