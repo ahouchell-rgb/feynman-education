@@ -2,8 +2,7 @@ import { describe, it, expect } from "vitest";
 import { QUESTIONS, QUESTIONS_BY_CATEGORY } from "./questions";
 import { CATEGORIES } from "./categories";
 import { buildMockTest, THEORY_TOTAL } from "./mock";
-import { scoreHazard, detectCheat } from "./hazardScore";
-import { HAZARD_CLIPS } from "./hazardClips";
+import { scoreHazardClick, tooManyFalseAlarms, HAZARD_CLIPS, MAX_PER_HAZARD } from "./hazardSim";
 
 describe("question bank integrity", () => {
   it("has questions and every one is well-formed", () => {
@@ -41,41 +40,48 @@ describe("buildMockTest", () => {
   });
 });
 
-describe("scoreHazard", () => {
-  // window 7..12 => bands of 1s: [7,8)=5, [8,9)=4, [9,10)=3, [10,11)=2, [11,12]=1
-  it("scores earlier clicks higher", () => {
-    expect(scoreHazard(7, 12, [7.2])).toBe(5);
-    expect(scoreHazard(7, 12, [8.5])).toBe(4);
-    expect(scoreHazard(7, 12, [11.5])).toBe(1);
+describe("scoreHazardClick", () => {
+  // window develops 5..7.5
+  it("gives full marks for clicking before/at the window opens", () => {
+    expect(scoreHazardClick(5, 7.5, 4.5)).toBe(5);
+    expect(scoreHazardClick(5, 7.5, 5)).toBe(5);
   });
-  it("ignores clicks outside the window", () => {
-    expect(scoreHazard(7, 12, [3, 6.9, 13])).toBe(0);
+  it("scores earlier clicks within the window higher", () => {
+    expect(scoreHazardClick(5, 7.5, 5.2)).toBeGreaterThan(scoreHazardClick(5, 7.5, 7.2));
   });
-  it("takes the best qualifying click", () => {
-    expect(scoreHazard(7, 12, [11.5, 7.1, 9.5])).toBe(5);
+  it("scores 0 after the hazard has occurred", () => {
+    expect(scoreHazardClick(5, 7.5, 8)).toBe(0);
+  });
+  it("stays within 1..MAX inside the window", () => {
+    for (let tc = 5.01; tc < 7.5; tc += 0.1) {
+      const s = scoreHazardClick(5, 7.5, tc);
+      expect(s).toBeGreaterThanOrEqual(1);
+      expect(s).toBeLessThanOrEqual(MAX_PER_HAZARD);
+    }
   });
 });
 
-describe("detectCheat", () => {
-  it("passes normal clicking", () => {
-    expect(detectCheat([7.3])).toBe(false);
-    expect(detectCheat([6.5, 8.1, 11.0])).toBe(false);
+describe("tooManyFalseAlarms", () => {
+  it("allows a few genuine reactions", () => {
+    expect(tooManyFalseAlarms([])).toBe(false);
+    expect(tooManyFalseAlarms([2.1, 5.4])).toBe(false);
   });
   it("flags excessive clicking", () => {
-    expect(detectCheat(Array.from({ length: 13 }, (_, i) => i * 0.7))).toBe(true);
+    expect(tooManyFalseAlarms(Array.from({ length: 11 }, (_, i) => i * 0.6))).toBe(true);
   });
-  it("flags steady-rhythm clicking", () => {
-    expect(detectCheat([1, 2, 3, 4, 5, 6, 7, 8])).toBe(true);
+  it("flags steady-rhythm mashing", () => {
+    expect(tooManyFalseAlarms([1, 2, 3, 4, 5, 6])).toBe(true);
   });
 });
 
 describe("hazard clips", () => {
-  it("each clip has at least one hazard with a valid scoring window", () => {
+  it("each clip has valid hazards whose window sits inside the clip", () => {
     for (const clip of HAZARD_CLIPS) {
       expect(clip.hazards.length).toBeGreaterThan(0);
       for (const h of clip.hazards) {
-        expect(h.windowStart).toBeLessThan(h.windowEnd);
-        expect(h.windowEnd).toBeLessThanOrEqual(clip.duration);
+        expect(h.developStart).toBeLessThan(h.developEnd);
+        expect(h.appearAt).toBeLessThanOrEqual(h.developStart);
+        expect(h.developEnd).toBeLessThanOrEqual(clip.duration);
       }
     }
   });

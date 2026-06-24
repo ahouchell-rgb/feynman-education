@@ -57,16 +57,53 @@ export interface RoadSign {
   meaning: string;
 }
 
-/** A single developing-hazard scoring window inside a clip. */
-export interface HazardWindow {
-  /** human label, e.g. "Cyclist pulls out from the left" */
+/* ── Hazard perception simulation ──────────────────────────────────────────
+ * The hazard test is a moving first-person driving simulation. You drive
+ * forward through a scene with pedestrians, other cars and junctions; when a
+ * hazard starts to develop you click ON it to react in time. Objects live in a
+ * simple world space (distance D ahead in metres, lateral X in metres from the
+ * road centre — negative = left) and are projected to the screen each frame. */
+
+export type ActorKind =
+  | "pedestrian"
+  | "child"
+  | "cyclist"
+  | "car"
+  | "oncoming"
+  | "bus"
+  | "dog";
+
+export type Side = "left" | "right";
+
+/** A scoring hazard: an actor that starts safe, then moves into your path. */
+export interface SimHazard {
+  /** stable index-friendly id within the clip */
+  id: string;
+  kind: ActorKind;
+  /** which side of the road it starts on */
+  side: Side;
+  /** does it emerge from a side road / junction? (draws a junction there) */
+  fromJunction?: boolean;
+  /** clip-time (s) when it appears far ahead at the horizon */
+  appearAt: number;
+  /** seconds to travel from the horizon to passing the camera */
+  travel: number;
+  /** clip-time (s) when it starts moving into your path (scoring window opens) */
+  developStart: number;
+  /** clip-time (s) by which it is in your path (window closes; hazard occurs) */
+  developEnd: number;
+  /** what the hazard is, shown in the debrief */
   label: string;
-  /** seconds from clip start when the hazard *first becomes visible* */
-  appearsAt: number;
-  /** seconds from clip start when the hazard *starts developing* (window opens) */
-  windowStart: number;
-  /** seconds from clip start when the hazard would force you to act (window ends) */
-  windowEnd: number;
+}
+
+/** A non-scoring moving actor that stays in its lane — for realism/decoys. */
+export interface SimAmbient {
+  kind: ActorKind;
+  side: Side;
+  /** lateral position in metres (negative = left of road centre) */
+  worldX: number;
+  appearAt: number;
+  travel: number;
 }
 
 export interface HazardClip {
@@ -74,10 +111,11 @@ export interface HazardClip {
   title: string;
   /** total clip length in seconds */
   duration: number;
-  /** which built-in animated scene to render (see HazardScene.tsx) */
-  scene: string;
-  /** developing hazards to score (1 or 2 per clip, like the real test) */
-  hazards: HazardWindow[];
-  /** a short scene description / what to watch for, shown only after scoring */
+  scene: "residential" | "town" | "rural" | "dual";
+  /** ambient (decoy) actors */
+  ambient: SimAmbient[];
+  /** developing hazards to spot and click (1 or 2 per clip) */
+  hazards: SimHazard[];
+  /** what to watch for, shown only after scoring */
   debrief: string;
 }
