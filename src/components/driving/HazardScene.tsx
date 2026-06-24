@@ -75,6 +75,7 @@ function geomOf(kind: ActorKind, worldX: number, D: number): Geom | null {
 export function HazardScene({
   clip,
   playKey,
+  windowBias = 0,
   onTime,
   onEnd,
   onScore,
@@ -82,6 +83,8 @@ export function HazardScene({
 }: {
   clip: HazardClip;
   playKey: number;
+  /** seconds added each side of every scoring window (difficulty) */
+  windowBias?: number;
   onTime?: (t: number) => void;
   onEnd?: () => void;
   onScore?: (hazardId: string, band: number, t: number) => void;
@@ -94,6 +97,8 @@ export function HazardScene({
   cbRef.current = { onTime, onEnd, onScore, onFalseAlarm };
 
   const tRef = useRef(0);
+  const biasRef = useRef(windowBias);
+  biasRef.current = windowBias;
   const stopped = useRef<Map<string, { band: number; worldX: number; at: number }>>(new Map());
   const occurred = useRef<Map<string, number>>(new Map());
   const blanks = useRef<{ x: number; y: number; t: number }[]>([]);
@@ -125,12 +130,15 @@ export function HazardScene({
       const bottom = g.baseY + pad;
       if (x >= left && x <= right && y >= top && y <= bottom) {
         if (stopped.current.has(h.id) || occurred.current.has(h.id)) return;
-        if (t > h.developEnd) {
+        const bias = biasRef.current;
+        const ds = Math.max(h.appearAt, h.developStart - bias);
+        const de = h.developEnd + bias;
+        if (t > de) {
           occurred.current.set(h.id, t);
           cbRef.current.onFalseAlarm?.(t);
           return;
         }
-        const band = scoreHazardClick(h.developStart, h.developEnd, t);
+        const band = scoreHazardClick(ds, de, t);
         stopped.current.set(h.id, { band, worldX: hazardWorldX(h, t, null), at: t });
         cbRef.current.onScore?.(h.id, band, t);
         return;
@@ -165,7 +173,7 @@ export function HazardScene({
       tRef.current = t;
       const clip = clipRef.current;
       for (const h of clip.hazards) {
-        if (t > h.developEnd && !stopped.current.has(h.id) && !occurred.current.has(h.id)) {
+        if (t > h.developEnd + biasRef.current && !stopped.current.has(h.id) && !occurred.current.has(h.id)) {
           occurred.current.set(h.id, t);
         }
       }
@@ -264,6 +272,12 @@ function drawScene(
   ctx.fillStyle = fog;
   ctx.fillRect(-30, HORIZON - 8, VW + 60, 130);
 
+  // weather / lighting
+  const weather = clip.weather ?? "clear";
+  if (weather === "night") drawNight(ctx, t);
+  else if (weather === "fog") drawFog(ctx);
+  else if (weather === "rain") drawRain(ctx, t);
+
   // false-alarm flag markers
   for (const b of blanks) {
     const age = t - b.t;
@@ -282,6 +296,58 @@ function drawScene(
   // cockpit + vignette are fixed to the screen
   drawCockpit(ctx, clip.scene);
   drawVignette(ctx);
+}
+
+/* ── weather / lighting overlays ─────────────────────────────────────────── */
+function drawNight(ctx: CanvasRenderingContext2D, t: number) {
+  ctx.fillStyle = "rgba(8,12,32,0.55)";
+  ctx.fillRect(-30, -30, VW + 60, VH + 60);
+  // two headlight beams from the car, projecting up the road
+  ctx.save();
+  ctx.globalCompositeOperation = "lighter";
+  for (const dx of [-70, 70]) {
+    const bx = CX + dx, by = VH * 0.92;
+    const grad = ctx.createRadialGradient(bx, by, 8, bx, by - 120, 320);
+    grad.addColorStop(0, "rgba(255,247,214,0.5)");
+    grad.addColorStop(0.5, "rgba(255,247,214,0.16)");
+    grad.addColorStop(1, "rgba(255,247,214,0)");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(bx - 26, by);
+    ctx.lineTo(CX + dx * 1.7 - 150, HORIZON + 30);
+    ctx.lineTo(CX + dx * 1.7 + 150, HORIZON + 30);
+    ctx.lineTo(bx + 26, by);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawFog(ctx: CanvasRenderingContext2D) {
+  ctx.fillStyle = "rgba(214,218,223,0.32)";
+  ctx.fillRect(-30, -30, VW + 60, VH + 60);
+  const g = ctx.createLinearGradient(0, HORIZON - 30, 0, VH * 0.78);
+  g.addColorStop(0, "rgba(220,224,228,0.92)");
+  g.addColorStop(1, "rgba(220,224,228,0)");
+  ctx.fillStyle = g;
+  ctx.fillRect(-30, HORIZON - 30, VW + 60, VH * 0.6);
+}
+
+function drawRain(ctx: CanvasRenderingContext2D, t: number) {
+  ctx.fillStyle = "rgba(40,46,58,0.22)";
+  ctx.fillRect(-30, -30, VW + 60, VH + 60);
+  ctx.strokeStyle = "rgba(200,212,225,0.5)";
+  ctx.lineWidth = 1.3;
+  ctx.beginPath();
+  for (let i = 0; i < 90; i++) {
+    const sx = (i * 137.5) % VW;
+    const speed = 520 + (i % 5) * 90;
+    const y = ((i * 53 + t * speed) % (VH + 40)) - 20;
+    const x = (sx + (y * 0.32)) % VW;
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - 4, y + 14);
+  }
+  ctx.stroke();
 }
 
 /* ── sky, ground ─────────────────────────────────────────────────────────── */

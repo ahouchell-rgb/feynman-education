@@ -39,9 +39,10 @@ export const HAZARD_CLIPS: HazardClip[] = [
   },
   {
     id: "clip-3",
-    title: "Town centre crossing",
+    title: "Town centre (rain)",
     duration: 12,
     scene: "town",
+    weather: "rain",
     ambient: [{ kind: "pedestrian", side: "left", worldX: -4, appearAt: 1, travel: 6.5 }],
     hazards: [{ id: "h1", kind: "pedestrian", side: "right", appearAt: 2, travel: 6.5, developStart: 5.8, developEnd: 8.4, label: "A pedestrian steps off the kerb to cross from the right" }],
     debrief: "Look for people at the kerb who may step out. The pedestrian crossing from the right is the hazard — be ready to stop; they may not have seen you.",
@@ -105,9 +106,10 @@ export const HAZARD_CLIPS: HazardClip[] = [
   },
   {
     id: "clip-10",
-    title: "Cyclist on a country lane",
+    title: "Country lane (fog)",
     duration: 11,
     scene: "rural",
+    weather: "fog",
     ambient: [],
     hazards: [{ id: "h1", kind: "cyclist", side: "left", appearAt: 1.5, travel: 6.8, developStart: 5, developEnd: 7.8, label: "A cyclist in the road moves out around a pothole" }],
     debrief: "Cyclists move out to avoid potholes and drains. Hold back and give them plenty of room before overtaking.",
@@ -141,9 +143,10 @@ export const HAZARD_CLIPS: HazardClip[] = [
   },
   {
     id: "clip-14",
-    title: "Child near school",
+    title: "Residential street (night)",
     duration: 11,
     scene: "residential",
+    weather: "night",
     ambient: [{ kind: "pedestrian", side: "left", worldX: -4.1, appearAt: 0.5, travel: 6.5 }],
     hazards: [{ id: "h1", kind: "child", side: "right", appearAt: 1.5, travel: 6.2, developStart: 5, developEnd: 7.4, label: "A child runs into the road near a school on the right" }],
     debrief: "Near schools, expect children to act without warning. The child running out is the hazard — keep your speed down and be ready to stop.",
@@ -174,6 +177,14 @@ export function tooManyFalseAlarms(blankClickTimes: number[]): boolean {
   }
   return false;
 }
+
+/** Difficulty widens (easier) or narrows (harder) the effective scoring window. */
+export const DIFFICULTY = {
+  relaxed: { label: "Relaxed", bias: 1.2, blurb: "More time to react" },
+  standard: { label: "Standard", bias: 0, blurb: "Real test timing" },
+  hard: { label: "Hard", bias: -0.5, blurb: "React earlier" },
+} as const;
+export type DifficultyKey = keyof typeof DIFFICULTY;
 
 export const maxHazardScore = () =>
   HAZARD_CLIPS.reduce((s, c) => s + c.hazards.length * MAX_PER_HAZARD, 0);

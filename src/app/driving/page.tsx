@@ -4,6 +4,7 @@ import Link from "next/link";
 import { C } from "@/lib/theme";
 import { Shell, TopBar, card } from "@/components/driving/ui";
 import { loadProgress, resetProgress, Progress } from "@/lib/driving/storage";
+import { readiness } from "@/lib/driving/study";
 import { QUESTIONS } from "@/lib/driving/questions";
 import { THEORY_PASS_MARK, THEORY_TOTAL } from "@/lib/driving/mock";
 
@@ -77,6 +78,32 @@ export default function DrivingHome() {
           accent={C.amb}
         />
       </div>
+
+      {/* readiness */}
+      {p && (() => {
+        const r = readiness(p);
+        const col = r.percent >= 85 ? C.grn : r.percent >= 60 ? C.amb : r.percent > 0 ? C.blu : C.dim;
+        return (
+          <div style={{ ...card, padding: "20px 24px", marginTop: 20, display: "flex", alignItems: "center", gap: 22, flexWrap: "wrap" }}>
+            <div style={{ position: "relative", width: 84, height: 84, flexShrink: 0 }}>
+              <svg width="84" height="84" viewBox="0 0 84 84">
+                <circle cx="42" cy="42" r="36" fill="none" stroke={C.border} strokeWidth="8" />
+                <circle cx="42" cy="42" r="36" fill="none" stroke={col} strokeWidth="8" strokeLinecap="round"
+                  strokeDasharray={`${(r.percent / 100) * 2 * Math.PI * 36} ${2 * Math.PI * 36}`} transform="rotate(-90 42 42)" />
+              </svg>
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: C.serif, fontSize: 24, color: col }}>{r.percent}%</div>
+            </div>
+            <div style={{ flex: 1, minWidth: 200 }}>
+              <div style={{ fontFamily: C.mono, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: C.dim }}>Test readiness</div>
+              <div style={{ fontFamily: C.serif, fontSize: 24, lineHeight: 1.1, margin: "4px 0 6px", color: C.text }}>{r.label}</div>
+              <div style={{ fontSize: 13, color: C.muted }}>
+                {Math.round(r.accuracy * 100)}% answer accuracy · {Math.round(r.coverage * 100)}% of the bank seen{r.mockAvg != null ? ` · ${Math.round(r.mockAvg * 100)}% recent mock average` : ""}
+              </div>
+            </div>
+            <Link href="/driving/practice" style={{ fontFamily: C.mono, fontSize: 13, fontWeight: 600, color: C.accentFg, background: C.accent, padding: "10px 16px", borderRadius: 8, textDecoration: "none" }}>Smart practice →</Link>
+          </div>
+        );
+      })()}
 
       {/* progress */}
       <h2 style={{ fontFamily: C.mono, fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: C.dim, margin: "34px 0 14px" }}>

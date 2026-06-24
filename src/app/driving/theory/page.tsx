@@ -89,7 +89,11 @@ export default function TheoryPage() {
         </button>
       </div>
 
-      <p style={{ fontSize: 12, color: C.dim, marginTop: 16, lineHeight: 1.5 }}>
+      <a href="/driving/casestudy" style={{ display: "inline-block", marginTop: 16, fontFamily: C.mono, fontSize: 13, color: C.blu, textDecoration: "none" }}>
+        📋 Practise a case study (scenario + 5 questions) →
+      </a>
+
+      <p style={{ fontSize: 12, color: C.dim, marginTop: 14, lineHeight: 1.5 }}>
         Note: these are original revision questions written for this app based on The Highway Code — not the official
         DVSA question bank. They cover the same topics and rules so you can practise effectively.
       </p>

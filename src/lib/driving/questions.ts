@@ -1,10 +1,11 @@
 import type { Question } from "./types";
+import { SIGN_QUESTIONS } from "./signQuestions";
 
 /* Original UK driving-theory revision questions for this app (not the DVSA
- * copyright bank). Based on The Highway Code (2026). 171 questions across
- * the 14 official categories. Generated set — reviewed for the rules of the road. */
+ * copyright bank). Based on The Highway Code (2026). 171 written questions plus
+ * sign-recognition questions, across the 14 official categories. */
 
-export const QUESTIONS: Question[] = [
+const BASE_QUESTIONS: Question[] = [
   {
     "id": "alertness-001",
     "category": "alertness",
@@ -2747,6 +2748,8 @@ export const QUESTIONS: Question[] = [
     "selectCount": 1
   }
 ];
+
+export const QUESTIONS: Question[] = [...BASE_QUESTIONS, ...SIGN_QUESTIONS];
 
 export const QUESTIONS_BY_CATEGORY: Record<string, Question[]> = QUESTIONS.reduce(
   (acc, q) => {

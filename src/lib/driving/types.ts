@@ -112,6 +112,8 @@ export interface HazardClip {
   /** total clip length in seconds */
   duration: number;
   scene: "residential" | "town" | "rural" | "dual";
+  /** weather/lighting (default clear) */
+  weather?: "clear" | "rain" | "fog" | "night";
   /** ambient (decoy) actors */
   ambient: SimAmbient[];
   /** developing hazards to spot and click (1 or 2 per clip) */

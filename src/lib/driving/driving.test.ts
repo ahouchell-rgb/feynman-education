@@ -4,7 +4,13 @@ import { CATEGORIES } from "./categories";
 import { buildMockTest, THEORY_TOTAL } from "./mock";
 import { scoreHazardClick, tooManyFalseAlarms, HAZARD_CLIPS, MAX_PER_HAZARD, maxHazardScore, hazardPassMark } from "./hazardSim";
 import { LESSONS } from "./lessons";
-import { SIGNS } from "./signs";
+import { SIGNS, SIGN_BY_ID } from "./signs";
+import { SIGN_QUESTIONS } from "./signQuestions";
+import { CASE_STUDIES } from "./caseStudies";
+import { readiness, buildSmartSet, reviewMistakes } from "./study";
+import type { Progress } from "./storage";
+
+const emptyProgress = (): Progress => ({ questions: {}, categories: {}, theoryAttempts: [], hazardAttempts: [], flagged: [], lessonsDone: [] });
 
 describe("question bank integrity", () => {
   it("has questions and every one is well-formed", () => {
@@ -113,6 +119,56 @@ describe("learn lessons", () => {
       const pool = (QUESTIONS_BY_CATEGORY[l.category] ?? []).length;
       expect(pool, `${l.id} pool`).toBeGreaterThanOrEqual(l.quizCount);
     }
+  });
+});
+
+describe("sign-recognition questions", () => {
+  it("every sign question references a real sign and is well-formed", () => {
+    expect(SIGN_QUESTIONS.length).toBeGreaterThanOrEqual(10);
+    for (const q of SIGN_QUESTIONS) {
+      expect(q.signId, q.id).toBeTruthy();
+      expect(SIGN_BY_ID[q.signId!], `${q.id} sign ${q.signId}`).toBeTruthy();
+      expect(q.correct.length).toBe(q.selectCount);
+      expect(q.correct[0]).toBeLessThan(q.options.length);
+      expect(q.category).toBe("road-and-traffic-signs");
+    }
+  });
+});
+
+describe("case studies", () => {
+  it("each has a scenario and five well-formed questions", () => {
+    expect(CASE_STUDIES.length).toBeGreaterThan(0);
+    for (const cs of CASE_STUDIES) {
+      expect(cs.scenario.length).toBeGreaterThan(0);
+      expect(cs.questions.length).toBe(5);
+      for (const q of cs.questions) {
+        expect(q.correct.length).toBe(q.selectCount);
+        expect(q.correct[0]).toBeLessThan(q.options.length);
+        expect(q.explanation.length).toBeGreaterThan(0);
+      }
+    }
+  });
+});
+
+describe("adaptive study", () => {
+  it("readiness is 0 with no history and capped at 100", () => {
+    const r = readiness(emptyProgress());
+    expect(r.percent).toBe(0);
+    expect(r.label).toBeTruthy();
+  });
+  it("buildSmartSet returns the requested number of unique questions", () => {
+    const set = buildSmartSet(emptyProgress(), 20);
+    expect(set.length).toBe(20);
+    expect(new Set(set.map((q) => q.id)).size).toBe(20);
+  });
+  it("reviewMistakes returns only questions answered wrong", () => {
+    const p = emptyProgress();
+    const all = QUESTIONS_BY_CATEGORY["alertness"];
+    p.questions[all[0].id] = { seen: 2, correct: 1 }; // wrong at least once
+    p.questions[all[1].id] = { seen: 3, correct: 3 }; // always right
+    const m = reviewMistakes(p);
+    expect(m.map((q) => q.id)).toContain(all[0].id);
+    expect(m.map((q) => q.id)).not.toContain(all[1].id);
   });
 });
 
