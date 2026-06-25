@@ -62,7 +62,7 @@ Produce ONE self-contained HTML document that prints cleanly on A4 in black on w
    • "Answers" — the correct answers/mark points for any question, MCQ or task on that slide (so the non-specialist can check work). Omit if the slide has no question.
 - A short "If you have time / if you finish early" line at the end.
 
-Keep it accurate to KS3-GCSE and to the slide content — do NOT invent science beyond the slides. Encouraging, clear, jargon-free. UK spelling. Inline all CSS; NO external resources. Return ONLY the HTML inside a single \`\`\`html ... \`\`\` code block.`;
+Keep it accurate to KS3-GCSE and to the slide content — do NOT invent content beyond the slides. Encouraging, clear, jargon-free. UK spelling. Inline all CSS; NO external resources. Return ONLY the HTML inside a single \`\`\`html ... \`\`\` code block.`;
 
 export async function POST(req: Request) {
   if (!process.env.ANTHROPIC_API_KEY) return j({ error: "ANTHROPIC_API_KEY not configured." }, 500);
@@ -79,7 +79,10 @@ export async function POST(req: Request) {
   let body: any;
   try { body = await req.json(); } catch { return j({ error: "Invalid JSON body" }, 400); }
   const slides = Array.isArray(body?.slides) ? body.slides : [];
-  const title = String(body?.title || "").trim().slice(0, 200) || "Science lesson";
+  const title = String(body?.title || "").trim().slice(0, 200) || "Lesson";
+  // Optional subject hint (the deck's curriculum subject). The script is still
+  // deck-driven — this just stops a non-science cover lesson reading as science.
+  const subject = String(body?.subject || "").trim().slice(0, 40);
   const outline = deckOutline(slides);
   if (outline.replace(/[^a-z]/gi, "").length < 40) return j({ error: "This deck has too little content to script. Build the lesson first." }, 400);
 
@@ -94,7 +97,7 @@ export async function POST(req: Request) {
     res = await callAnthropic({
       model: MODEL, max_tokens: MAX_OUTPUT_TOKENS,
       system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
-      messages: [{ role: "user", content: `LESSON: ${title}\n\nDECK (slide by slide):\n${outline}\n\nWrite the cover lesson script.` }],
+      messages: [{ role: "user", content: `LESSON: ${title}${subject ? `\nSUBJECT: ${subject}` : ""}\n\nDECK (slide by slide):\n${outline}\n\nWrite the cover lesson script.` }],
     }, { apiKey: process.env.ANTHROPIC_API_KEY });
   } catch (e: any) { return j({ error: `Request to Claude failed: ${e.message}` }, 502); }
   if (!res.ok) return j({ error: `Claude ${res.status}: ${(await res.text().catch(() => "")).slice(0, 300)}` }, 502);

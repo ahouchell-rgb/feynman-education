@@ -77,7 +77,7 @@ export async function POST(req: Request) {
     const r = await fetch(`${origin}/api/slides-assistant`, {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
-      body: JSON.stringify({ slides: [], currentSlide: 0, instruction }),
+      body: JSON.stringify({ slides: [], currentSlide: 0, instruction, subject: subjectName(unit) }),
     });
     gen = await r.json();
     if (!r.ok) return j({ error: gen?.error || "Generation failed" }, r.status);

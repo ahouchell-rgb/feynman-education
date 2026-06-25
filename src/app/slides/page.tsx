@@ -3,6 +3,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sk, useAuth } from "@/lib/sk";
 import { C } from "@/lib/theme";
+import { SUBJECT_SELECT, subjectName } from "@/lib/subject";
 import { Btn } from "@/lib/primitives";
 import { SlideEditor } from "@/components/SlideEditor";
 import { StaticSlide } from "@/components/SlideStage";
@@ -213,11 +214,16 @@ function SlidesContent() {
     if (guest || loading) return;
     (async () => {
       try {
-        const [g, u, l] = await Promise.all([
+        const [g, l] = await Promise.all([
           sk.q("groups", { params: { order: "sort_order.asc" } }),
-          sk.q("units", { params: { select: "id,title,group_id,discipline,sort_order", order: "sort_order.asc" } }),
           sk.q("lessons", { params: { select: "id,unit_id,title,lesson_number", order: "lesson_number.asc" } }),
         ]);
+        // Embed the unit's subject so the AI assistant can author in-subject; fall
+        // back to the plain select if the units→subjects relationship is absent
+        // (mirrors the curriculum page — subjectName() then infers from discipline).
+        let u;
+        try { u = await sk.q("units", { params: { select: `id,title,group_id,discipline,sort_order,${SUBJECT_SELECT}`, order: "sort_order.asc" } }); }
+        catch { u = await sk.q("units", { params: { select: "id,title,group_id,discipline,sort_order", order: "sort_order.asc" } }); }
         setGroups(g || []); setUnits(u || []); setLessons(l || []);
       } catch {}
     })();
@@ -248,6 +254,13 @@ function SlidesContent() {
   const bumpBase = (rows) => { const ts = Array.isArray(rows) ? rows[0]?.updated_at : null; if (ts) baseRef.current = ts; };
 
   const unitById = useMemo(() => Object.fromEntries(units.map((u) => [u.id, u])), [units]);
+  // Subject of the open deck (via its curriculum unit) — drives subject-aware AI
+  // authoring. Empty when the deck isn't filed under a unit; the API defaults to
+  // science, so existing science decks are unaffected.
+  const activeSubject = useMemo(() => {
+    const u = active?.unit_id ? unitById[active.unit_id] : null;
+    return u ? subjectName(u) : "";
+  }, [active?.unit_id, unitById]);
 
   // Units grouped by year for the "save to" picker: years in sort_order, units in
   // teaching-sequence order within each year. Mirrors the curriculum page grouping.
@@ -566,7 +579,7 @@ function SlidesContent() {
     try {
       const r = await fetch("/api/cover-sheet", {
         method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${sk.auth.getToken()}` },
-        body: JSON.stringify({ slides: active.slides, title: active.title }),
+        body: JSON.stringify({ slides: active.slides, title: active.title, subject: activeSubject }),
       });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || "Generation failed");
@@ -745,6 +758,7 @@ function SlidesContent() {
             <SlideEditor deck={active} onChange={onSlidesChange} onCurChange={setCurSlide}
               onUploadImage={(file) => store.uploadImage(file, active.id)}
               onThemeChange={onThemeChange} onMasterChange={onMasterChange}
+              subject={activeSubject}
               autoQuestions={autoQDeckId === active.id} />
           </div>
         </div>
