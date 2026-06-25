@@ -7,7 +7,7 @@ import { Btn } from "@/lib/primitives";
 import { SlideEditor } from "@/components/SlideEditor";
 import { StaticSlide } from "@/components/SlideStage";
 import { guestRead, guestWrite, GUEST_KEY, GuestQuotaError } from "@/lib/guestDecks";
-import { google, PPTX_MIME } from "@/lib/google";
+import { google, PPTX_MIME, SLIDES_MIME } from "@/lib/google";
 import { openDrivePicker } from "@/components/GoogleDrivePicker";
 import { hasUnsavedWork, readUpdatedAtWithRetry, retryDelayMs } from "./saveHelpers";
 import { STARTER_DECKS, instantiateStarter } from "@/lib/starterDecks";
@@ -173,6 +173,7 @@ function SlidesContent() {
   const [coverBusy, setCoverBusy] = useState(false);
   const [importing, setImporting] = useState(false);
   const [savingDrive, setSavingDrive] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [driveMsg, setDriveMsg] = useState("");
   const [hovId, setHovId] = useState(null);     // card under the cursor
   const [confirmId, setConfirmId] = useState(null); // deck awaiting a 2nd delete click
@@ -380,14 +381,15 @@ function SlidesContent() {
       const title = (file.name || "Imported deck").replace(/\.pptx$/i, "");
       const created = await store.create({ title, slides });
       setActive(created); setSave("saved");
-      // Link back only when the source is a .pptx we can safely overwrite later;
-      // native Slides imports stay unlinked so save-back makes a fresh export.
+      // Link the deck to its Drive source so "Refresh from Drive" can later pull
+      // the latest version. We remember the MIME type too: it tells refresh how
+      // to re-fetch (native Slides export vs .pptx download) and stops "Save to
+      // Drive" from overwriting a native Slides file with .pptx bytes.
       // Best-effort: a deck still imports fine if the drive_* columns are absent.
-      if (file.mimeType === PPTX_MIME) {
-        store.update(created.id, { drive_file_id: file.id, drive_file_name: file.name })
-          .then(() => setActive((a) => (a && a.id === created.id ? { ...a, drive_file_id: file.id, drive_file_name: file.name } : a)))
-          .catch(() => {});
-      }
+      const link = { drive_file_id: file.id, drive_file_name: file.name, drive_file_mime: file.mimeType || PPTX_MIME };
+      store.update(created.id, link)
+        .then(() => setActive((a) => (a && a.id === created.id ? { ...a, ...link } : a)))
+        .catch(() => {});
     } catch (e) { setErr("Drive import failed: " + e.message); }
     finally { setImporting(false); }
   };
@@ -400,13 +402,49 @@ function SlidesContent() {
     try {
       const { exportDeckBlob, deckFileStem } = await import("@/lib/exportPptx");
       const blob = await exportDeckBlob(active);
-      const res = await google.saveDeckPptx(user.id, { name: deckFileStem(active), blob, fileId: active.drive_file_id || null });
-      setActive((a) => ({ ...a, drive_file_id: res.id, drive_file_name: res.name }));
-      store.update(active.id, { drive_file_id: res.id, drive_file_name: res.name }).then(bumpBase).catch(() => {});
-      setDriveMsg(active.drive_file_id ? "updated in Drive ✓" : "saved to Drive ✓");
+      // Overwrite in place only when the linked source is itself a .pptx. A deck
+      // linked to a native Google Slides file is linked for *refresh* (read), so
+      // we export a fresh .pptx copy instead of writing over the Slides file, and
+      // we leave the source link pointing at the Slides so Refresh still works.
+      const linkedToSlides = !!active.drive_file_id && active.drive_file_mime === SLIDES_MIME;
+      const overwriteId = active.drive_file_id && !linkedToSlides ? active.drive_file_id : null;
+      const res = await google.saveDeckPptx(user.id, { name: deckFileStem(active), blob, fileId: overwriteId });
+      if (!linkedToSlides) {
+        const link = { drive_file_id: res.id, drive_file_name: res.name, drive_file_mime: PPTX_MIME };
+        setActive((a) => ({ ...a, ...link }));
+        store.update(active.id, link).then(bumpBase).catch(() => {});
+      }
+      setDriveMsg(overwriteId ? "updated in Drive ✓" : "saved to Drive ✓");
       setTimeout(() => setDriveMsg(""), 4000);
     } catch (e) { setErr("Save to Drive failed: " + e.message); }
     finally { setSavingDrive(false); }
+  };
+
+  // Pull the latest version of the linked Drive file and replace this deck's
+  // slides with it. Manual + confirm-gated: a refresh discards any local edits
+  // (Feynman is a snapshot of the Drive source), so the teacher chooses when to
+  // resync. Re-uses the same fetch + import path as the initial Drive import.
+  const refreshFromDrive = async () => {
+    if (guest || !active || !user?.id || !active.drive_file_id) return;
+    const what = active.drive_file_name || "the linked Google file";
+    if (!window.confirm(
+      `Refresh this deck from “${what}” in Google Drive?\n\n` +
+      `It will be replaced with the latest version from Drive. Any edits you have made to this deck in Feynman will be overwritten.`,
+    )) return;
+    setRefreshing(true); setErr(""); setDriveMsg("");
+    try {
+      const blob = await google.fetchAsPptxBlob(user.id, { id: active.drive_file_id, mimeType: active.drive_file_mime });
+      const { importPptx } = await import("@/lib/importPptx");
+      const folder = "refresh-" + Math.floor(performance.now());
+      const slides = await importPptx(blob, { uploadImage: (f) => store.uploadImage(f, folder) });
+      const ts = nowISO();
+      bumpBase(await store.update(active.id, { slides, updated_at: ts }));
+      setActive((a) => ({ ...a, slides, updated_at: ts }));
+      setCurSlide(0); setSave("saved");
+      setDriveMsg("refreshed from Drive ✓");
+      setTimeout(() => setDriveMsg(""), 4000);
+    } catch (e) { setErr("Refresh from Drive failed: " + e.message); }
+    finally { setRefreshing(false); }
   };
 
   const openDeck = (d) => { setActive(d); setSave("saved"); setCurSlide(0); lastUnsaved.current = null; pendingTimer.current = false; retryCount.current = 0; };
@@ -700,8 +738,14 @@ function SlidesContent() {
               </span>
             )}
             <Btn v="soft" onClick={exportPptx} disabled={exporting}>{exporting ? "exporting…" : "Export .pptx"}</Btn>
+            {!guest && active.drive_file_id && (
+              <Btn v="soft" onClick={refreshFromDrive} disabled={refreshing || savingDrive}
+                title={`Pull the latest version of “${active.drive_file_name || "the linked Google file"}” from Google Drive (replaces this deck — local edits are overwritten)`}>
+                {refreshing ? "refreshing…" : "⟳ Refresh from Drive"}
+              </Btn>
+            )}
             {!guest && (
-              <Btn v="soft" onClick={saveToDrive} disabled={savingDrive}
+              <Btn v="soft" onClick={saveToDrive} disabled={savingDrive || refreshing}
                 title={active.drive_file_id ? "Update the linked .pptx in your Google Drive" : "Save this deck as a .pptx in your Google Drive"}>
                 {savingDrive ? "saving to Drive…" : active.drive_file_id ? "↻ Save to Drive" : "Save to Drive"}
               </Btn>
