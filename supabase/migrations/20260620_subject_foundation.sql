@@ -1,6 +1,6 @@
 -- =====================================================================
 -- Feynman Education — Subject config foundation (NOW plan · T6.1)
--- Applied to prod: (pending)
+-- Applied to prod: 2026-06-25 (verified live: subjects/strands/objectives + units.subject_id)
 --
 -- De-sciences the engine WITHOUT a rewrite: the hard-coded science
 -- discipline becomes data. Additive only — existing science units keep

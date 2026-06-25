@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useAuth, sk } from "@/lib/sk";
-import { C, DISC } from "@/lib/theme";
+import { C, unitAccent } from "@/lib/theme";
 import { Btn, Badge, Card } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
 import { FileUpload } from "@/components/FileUpload";
@@ -140,7 +140,7 @@ function LessonContent() {
       setLoading(true);
       try {
         const [u, l] = await Promise.all([
-          sk.q("units", { params: { id: `eq.${unitId}` }, single: true }),
+          sk.q("units", { params: { id: `eq.${unitId}`, select: "*,subject:subjects(name,slug)" }, single: true }),
           sk.q("lessons", { params: { id: `eq.${lessonId}` }, single: true }),
         ]);
         if (!alive) return;
@@ -320,7 +320,7 @@ function LessonContent() {
   if (loading) return <div style={{ color: C.dim, fontFamily: C.mono, fontSize: 12, padding: 40 }}>Loading lesson…</div>;
   if (notFound || !lesson || !unit) return <div style={{ color: C.red, fontFamily: C.mono, fontSize: 12, padding: 40 }}>Lesson not found.</div>;
 
-  const d = DISC[unit.discipline] || DISC.combined;
+  const d = unitAccent(unit);
 
   return (
     <div>
