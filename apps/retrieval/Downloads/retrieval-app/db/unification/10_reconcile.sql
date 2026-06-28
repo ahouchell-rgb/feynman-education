@@ -1,0 +1,248 @@
+-- Phase 3 reconciliation — run AFTER the teacher schema+data is loaded into the
+-- staging schema `feynman` (see README step 1; that step also remaps your teacher
+-- identity ab56a97d → cef87533 in the dump, so all teacher_id/owner FKs → auth.users
+-- already resolve to your anchor user).
+--
+-- Idempotent where practical. Run inside a transaction with ON_ERROR_STOP=1.
+-- Rehearse on a branch first. PENDING — not applied to any live DB.
+
+begin;
+
+-- 0. Identity remap: fold your teacher account into your anchor account. The pg_dump
+--    path (README) already does this via a stream sed, so these UPDATEs match 0 rows
+--    there; the MCP-driven path relies on them. Idempotent either way. Validated on a
+--    branch 2026-06-17.
+update feynman.profiles               set id='cef87533-7ff1-4f93-bfcf-22feb66f896a'        where id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.classes                set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.decks                  set owner='cef87533-7ff1-4f93-bfcf-22feb66f896a'     where owner='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.taught_log             set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.microsoft_tokens       set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.daily_token_usage      set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.timetable_calendar     set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.lesson_widgets         set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.lesson_chat_messages   set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.lesson_teacher_content set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.feedforward_sheets     set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.feedforward_decks      set teacher_id='cef87533-7ff1-4f93-bfcf-22feb66f896a' where teacher_id='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.lesson_retrieval_map   set created_by='cef87533-7ff1-4f93-bfcf-22feb66f896a' where created_by='ab56a97d-b326-434b-bd0f-1a894fb15819';
+update feynman.resources              set uploaded_by='cef87533-7ff1-4f93-bfcf-22feb66f896a' where uploaded_by='ab56a97d-b326-434b-bd0f-1a894fb15819';
+
+-- 1. Move the teacher enum types into public (the anchor has none of these). FIVE types
+--    (the rehearsal caught two missing: paper_number, resource_type).
+do $$
+declare ty text;
+begin
+  foreach ty in array array['discipline','key_stage','term','paper_number','resource_type'] loop
+    if exists (select 1 from pg_type t join pg_namespace n on n.oid=t.typnamespace
+               where n.nspname='feynman' and t.typname=ty)
+       and not exists (select 1 from pg_type t join pg_namespace n on n.oid=t.typnamespace
+               where n.nspname='public' and t.typname=ty) then
+      execute format('alter type feynman.%I set schema public', ty);
+    end if;
+  end loop;
+end $$;
+
+-- 2. profiles — add the teacher superset columns, then merge the teacher profile
+--    into the matching anchor profile by email (your two accounts share an email;
+--    the dump remap already aligned the ids too). 'admin' has no anchor role; we
+--    keep the anchor role (moderator). Assert no teacher profile is left unmatched.
+alter table public.profiles
+  add column if not exists full_name             text,
+  add column if not exists stripe_customer_id    text,
+  add column if not exists subscription_status   text,
+  add column if not exists subscription_id       text,
+  add column if not exists subscription_end_date timestamptz,
+  add column if not exists is_lead               boolean not null default false,
+  add column if not exists retrieval_class_ids   uuid[] default '{}'::uuid[],
+  add column if not exists retrieval_email        text;
+
+update public.profiles p set
+  full_name             = coalesce(p.full_name, f.full_name),
+  stripe_customer_id    = coalesce(p.stripe_customer_id, f.stripe_customer_id),
+  subscription_status   = coalesce(p.subscription_status, f.subscription_status),
+  subscription_id       = coalesce(p.subscription_id, f.subscription_id),
+  subscription_end_date = coalesce(p.subscription_end_date, f.subscription_end_date),
+  is_lead               = p.is_lead or coalesce(f.is_lead, false),
+  retrieval_class_ids   = coalesce(nullif(p.retrieval_class_ids,'{}'), f.retrieval_class_ids),
+  retrieval_email       = coalesce(p.retrieval_email, f.retrieval_email)
+from feynman.profiles f
+where lower(p.email) = lower(f.email);
+
+do $$ declare n int; begin
+  select count(*) into n from feynman.profiles f
+   where not exists (select 1 from public.profiles p where lower(p.email)=lower(f.email));
+  if n <> 0 then raise exception 'Phase3: % teacher profile(s) had no anchor match — create them in the anchor auth pool first', n; end if;
+end $$;
+
+-- 3. classes — add the teacher superset columns, then import teacher class rows
+--    honouring anchor constraints (key_stage upper-cased; KS3⇒tier NULL,
+--    KS4⇒tier 'Higher'; school/subject defaulted to yours/Science; join_code
+--    generated; teacher_id already remapped to cef87533). IDs preserved → no
+--    response/membership remap. current_unit_id gets its FK in step 5 (after units move).
+alter table public.classes
+  add column if not exists discipline    public.discipline,
+  add column if not exists pathway       text,
+  add column if not exists academic_year text,
+  add column if not exists current_unit_id text,
+  add column if not exists archived      boolean not null default false,
+  add column if not exists archived_at   timestamptz,
+  add column if not exists retrieval_class_ids uuid[] not null default '{}'::uuid[];  -- the teacher app + get_teaching_week still use this to link a teacher class to its retrieval class(es)
+
+insert into public.classes
+  (id, name, school_id, teacher_id, subject_id, year_group, created_at, join_code,
+   weekly_target, key_stage, tier, discipline, pathway, academic_year, current_unit_id, archived, archived_at, retrieval_class_ids)
+select
+  c.id, c.name,
+  (select school_id from public.profiles where id = c.teacher_id),         -- your school
+  c.teacher_id,                                                            -- cef87533 (remapped)
+  '10c54ef6-d3ca-439b-9d54-76597ee15e1c',                                  -- anchor 'Science' subject
+  c.year_group, c.created_at,
+  'F' || upper(substr(md5(c.id::text), 1, 5)),                            -- generated unique join code
+  10,
+  upper(c.key_stage::text),                                                -- ks3→KS3, ks4→KS4
+  case when upper(c.key_stage::text) = 'KS4' then 'Higher' else null end,  -- satisfies composite check
+  c.discipline, c.pathway, c.academic_year, c.current_unit_id, c.archived, c.archived_at, c.retrieval_class_ids
+from feynman.classes c
+on conflict (id) do nothing;
+
+-- 4. Move every remaining teacher table (keeps data, indexes, RLS, triggers intact)
+--    into public — all except the two we reconciled by hand (classes, profiles).
+do $$ declare r record; begin
+  for r in select tablename from pg_tables
+           where schemaname='feynman' and tablename not in ('classes','profiles') loop
+    execute format('alter table feynman.%I set schema public', r.tablename);
+  end loop;
+end $$;
+
+-- 4b. Restore the privileges pg_dump --no-privileges dropped. The moved teacher tables
+--     keep their RLS policies (those travel with the table), but the authenticated role
+--     needs granting so the teacher app can reach its data; owner-only writes stay
+--     enforced by the carried-over policies.
+do $$ declare t text; begin
+  foreach t in array array[
+    'units','lessons','groups','resources','modelling_diagrams','lesson_teacher_content',
+    'lesson_retrieval_map','taught_log','decks','class_timetable_slots','class_progress',
+    'timetable_calendar','lesson_widgets','lesson_chat_messages','daily_token_usage',
+    'microsoft_tokens','resource_map','feedforward_sheets','feedforward_decks'] loop
+    if exists (select 1 from pg_tables where schemaname='public' and tablename=t) then
+      execute format('grant select, insert, update, delete on public.%I to authenticated', t);
+    end if;
+  end loop;
+end $$;
+
+-- 5. Repoint the class-dependent FKs from feynman.classes onto public.classes,
+--    and give public.classes.current_unit_id its FK now that units are in public.
+alter table public.class_timetable_slots drop constraint if exists class_timetable_slots_class_id_fkey;
+alter table public.class_timetable_slots add  constraint class_timetable_slots_class_id_fkey
+  foreign key (class_id) references public.classes(id) on delete cascade;
+
+alter table public.class_progress drop constraint if exists class_progress_class_id_fkey;
+alter table public.class_progress add  constraint class_progress_class_id_fkey
+  foreign key (class_id) references public.classes(id) on delete cascade;
+
+alter table public.classes drop constraint if exists classes_current_unit_id_fkey;
+alter table public.classes add  constraint classes_current_unit_id_fkey
+  foreign key (current_unit_id) references public.units(id) on delete set null;
+
+-- 5b. Recreate the two RLS policies whose bodies *named* the classes table — the
+--     dump's public.→feynman. rewrite baked in `feynman.classes`, which we drop in
+--     step 8. (Teacher functions are unqualified + SET search_path=public, so they
+--     resolve correctly once moved; only these qualified policies need rebuilding.)
+drop policy if exists slots_owner_all on public.class_timetable_slots;
+create policy slots_owner_all on public.class_timetable_slots for all to authenticated
+  using      (exists (select 1 from public.classes c where c.id = class_id and c.teacher_id = auth.uid()))
+  with check (exists (select 1 from public.classes c where c.id = class_id and c.teacher_id = auth.uid()));
+
+drop policy if exists progress_owner_all on public.class_progress;
+create policy progress_owner_all on public.class_progress for all to authenticated
+  using      (exists (select 1 from public.classes c where c.id = class_id and c.teacher_id = auth.uid()))
+  with check (exists (select 1 from public.classes c where c.id = class_id and c.teacher_id = auth.uid()));
+
+-- 6. Turn the existing cross-app crosswalks into real FKs.
+--    topic_map.unit_id has legacy unit-id drift vs the teacher catalog, so add it
+--    NOT VALID (enforces new rows, tolerates legacy; Phase 6 validates after de-drift).
+alter table public.topic_map drop constraint if exists topic_map_unit_id_fkey;
+alter table public.topic_map add  constraint topic_map_unit_id_fkey
+  foreign key (unit_id) references public.units(id) not valid;
+
+alter table public.lesson_retrieval_map drop constraint if exists lesson_retrieval_map_retrieval_topic_id_fkey;
+alter table public.lesson_retrieval_map add  constraint lesson_retrieval_map_retrieval_topic_id_fkey
+  foreign key (retrieval_topic_id) references public.topics(id) on delete cascade;
+
+-- 7. Recreate the teacher functions in public, rewriting their bodies feynman.->public.
+--    so the homepage RPC (get_teaching_week) and the RLS helpers (is_admin,
+--    is_curriculum_author, has_resource_access, …) the moved tables' policies call all
+--    resolve against the merged tables. Skip any name+args the anchor already defines
+--    (its version wins). The feynman originals are removed by the CASCADE drop in step 8.
+do $$
+declare r record;
+begin
+  for r in
+    select p.oid, p.proname, pg_get_function_identity_arguments(p.oid) as args
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'feynman'
+  loop
+    if exists (select 1 from pg_proc p2 join pg_namespace n2 on n2.oid = p2.pronamespace
+               where n2.nspname='public' and p2.proname = r.proname
+                 and pg_get_function_identity_arguments(p2.oid) = r.args) then
+      continue;
+    end if;
+    execute replace(pg_get_functiondef(r.oid), 'feynman.', 'public.');
+    begin
+      execute format('grant execute on function public.%I(%s) to authenticated', r.proname, r.args);
+    exception when others then null;
+    end;
+  end loop;
+end $$;
+
+-- 8. Repoint any remaining FKs that still reference the staging classes/profiles onto
+--    the public ones (several teacher tables FK to profiles — taught_log, lesson_teacher_content,
+--    lesson_retrieval_map.created_by — not auth.users), and rebuild any policy still naming
+--    the feynman schema, then drop the two staging tables.
+do $$ declare r record; begin
+  for r in
+    select con.conname, con.conrelid::regclass::text as tbl, pg_get_constraintdef(con.oid) as def
+    from pg_constraint con
+    where con.contype='f' and con.connamespace = 'public'::regnamespace
+      and con.confrelid in ('feynman.classes'::regclass, 'feynman.profiles'::regclass)
+  loop
+    execute format('alter table %s drop constraint %I', r.tbl, r.conname);
+    execute format('alter table %s add constraint %I %s', r.tbl, r.conname, replace(r.def, 'feynman.', 'public.'));
+  end loop;
+end $$;
+
+do $$ declare r record; ddl text; begin
+  for r in
+    select tablename, policyname, permissive, cmd, qual, with_check, roles
+    from pg_policies
+    where schemaname='public'
+      and (coalesce(qual,'') like '%feynman.%' or coalesce(with_check,'') like '%feynman.%')
+  loop
+    ddl := format('create policy %I on public.%I as %s for %s to %s',
+                  r.policyname, r.tablename, r.permissive, r.cmd, array_to_string(r.roles, ', '));
+    if r.qual       is not null then ddl := ddl || ' using (' || replace(r.qual, 'feynman.', 'public.') || ')'; end if;
+    if r.with_check is not null then ddl := ddl || ' with check (' || replace(r.with_check, 'feynman.', 'public.') || ')'; end if;
+    execute format('drop policy %I on public.%I', r.policyname, r.tablename);
+    execute ddl;
+  end loop;
+end $$;
+
+-- Drop the whole staging schema. Everything real has been moved/merged/repointed into
+-- public above; CASCADE clears the leftover staging tables + the redundant feynman copies
+-- of functions. Only casualty: the teacher tables' updated_at triggers (they referenced
+-- feynman trigger fns) — cosmetic, recreate against public.tg_set_updated_at in Phase 6.
+drop schema if exists feynman cascade;
+
+-- 9. Assertions — fail loudly if anything important moved or broke.
+do $$ declare v int; begin
+  select count(*) into v from public.responses;            if v < 2955 then raise exception 'responses dropped: %', v; end if;
+  select count(*) into v from public.units;                if v < 47   then raise exception 'units missing: %', v; end if;
+  select count(*) into v from public.class_progress cp
+    where not exists (select 1 from public.classes c where c.id=cp.class_id);
+  if v <> 0 then raise exception 'orphan class_progress rows: %', v; end if;
+  select count(*) into v from public.class_timetable_slots s
+    where not exists (select 1 from public.classes c where c.id=s.class_id);
+  if v <> 0 then raise exception 'orphan timetable slots: %', v; end if;
+end $$;
+
+commit;

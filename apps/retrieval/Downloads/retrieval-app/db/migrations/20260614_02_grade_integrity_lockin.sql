@@ -1,0 +1,23 @@
+-- STATUS: APPLIED to project uvzukwoxqhcxaxtzrziy — verified 2026-06-18
+-- (authenticated/anon INSERT on responses is revoked). Precondition (now met):
+-- could only be applied once the mark-answer edge-function client was live, since
+-- the old client wrote responses directly; applying earlier would have stopped
+-- pupils recording answers.
+--
+-- Grade-integrity lock-in. The mark-answer edge function is now the authoritative
+-- grader AND writer of public.responses (it verifies the pupil's JWT, checks
+-- class membership, and inserts via the service role). Once the new client is
+-- live, revoke the browser's ability to INSERT responses directly so a pupil can
+-- no longer forge is_correct / marks_awarded:
+--
+--   psql "$DATABASE_URL" -f db/migrations/20260614_02_grade_integrity_lockin.sql
+--
+-- The service role (edge function) is unaffected and keeps writing. The client's
+-- offline queue retries through the function, so a revoked direct insert simply
+-- falls through to the queue rather than being lost.
+revoke insert on public.responses from authenticated, anon;
+
+-- After running this, flip block 6 of tests/rls_test.sql from RAISE WARNING to
+-- RAISE EXCEPTION so the lock-in becomes a hard regression gate.
+-- NOTE: paper_responses (the past-paper flow, mark-paper-answer function) is a
+-- separate write path and is NOT covered here — harden it the same way later.
