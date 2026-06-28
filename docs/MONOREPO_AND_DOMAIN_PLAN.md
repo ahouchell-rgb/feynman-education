@@ -1,6 +1,7 @@
 # Monorepo + domain consolidation — concrete plan
 
-*Prepared, not executed. Nothing here is pushed. Rewritten after inspecting the actual
+*Phase A (DB) done; **Phase B (monorepo move) executed 2026-06-28 on branch `chore/monorepo`,
+not yet pushed** — see §7. Phase C (domains) not started. Rewritten after inspecting the actual
 `retrieval-app` and `interactive-science` repos. Companion to
 [SYSTEM_ANALYSIS.md](SYSTEM_ANALYSIS.md) §2, [PHASE3_REPOINT.md](PHASE3_REPOINT.md),
 [PHASE5_REGATE_RPCS.md](PHASE5_REGATE_RPCS.md), and the retrieval repo's
@@ -195,14 +196,21 @@ Phase A  ── DB UNIFICATION  ✅ DONE (verified live 2026-06-23) — see §1
             • REMAINING: land security/sk-api-key-rotation-phase5 (re-gate RPCs by role, drop
               SK_API_KEY on interactive paths). This is the last gate before Phase B.
 
-Phase B  ── MONOREPO (the move)
-            • git switch -c chore/monorepo off main
-            • git mv this app → apps/feynman (history preserved, same repo)
-            • git subtree add --prefix=apps/retrieval   retrieval   main   (full history)
-            • git subtree add --prefix=apps/interactive interactive main   (full history)
-            • build packages/db = reconciled migrations + contracts + contract.test.ts  ← do FIRST
-            • wire pnpm-workspace + turbo + ci.yml; `turbo run build` green locally
-            • repoint 3 Vercel projects at subdirs, verify on *.vercel.app PREVIEW URLs
+Phase B  ── MONOREPO (the move)  ✅ DONE on branch `chore/monorepo` (2026-06-28, not yet pushed)
+            • branched off the security branch (not main) to keep packages/db, springboard,
+              home-course and the in-flight Phase 5 work — main lacked all of it
+            • git mv this app → apps/feynman (history preserved, renamed @feynman/web)
+            • git subtree add --prefix=apps/retrieval   retrieval   main   (full history) →
+              flattened the wrapper Downloads/retrieval-app/ up; renamed @feynman/retrieval
+            • git subtree add --prefix=apps/interactive interactive main   (full history;
+              static, not a workspace member)
+            • packages/db already scaffolded (@feynman/db); contract test + db-contract.yml in place
+            • wired **npm** workspaces + turbo + root README (npm, not pnpm — lowest churn; all
+              three were already on npm). `npm install` links web/retrieval/db; @feynman/web
+              typecheck=0 and 143/143 tests pass after the move.
+            • REMAINING in Phase B: push the branch; reconcile the SQL bodies into packages/db
+              (`supabase db pull`); fold retrieval's supabase-functions-deploy into root CI;
+              repoint 3 Vercel projects at subdirs, verify on *.vercel.app PREVIEW URLs
 
 Phase C  ── DOMAINS (incremental, reversible)
             • add app/practice/interactive subdomains to each Vercel project (keep old domains)
