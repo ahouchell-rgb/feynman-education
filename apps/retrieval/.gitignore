@@ -1,10 +1,11 @@
-# This git repository (origin: github.com/ahouchell-rgb/retrieval-app) is rooted
-# at the home directory but only versions the retrieval-app project.
-# Ignore everything else so stray home-directory files — ~/.env.local, shell
-# history, SSH/git config, other projects — can never be accidentally staged
-# or pushed to the retrieval-app remote.
-/*
-!/.gitignore
-!/Downloads/
-/Downloads/*
-!/Downloads/retrieval-app/
+node_modules/
+.next/
+out/
+
+# Secrets: ignore every .env* variant (incl. renamed copies like ".env.migrate copy.txt")
+# so connection strings can't be committed; keep the documented template.
+.env*
+!.env.example
+
+# OS cruft
+.DS_Store
