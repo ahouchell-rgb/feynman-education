@@ -60,6 +60,7 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             ...(profile?.role === "admin" || profile?.is_lead ? [{ href: "/content", label: "Content" }] : []),
             { href: "/slides", label: "Slides" },
             { href: "/parents", label: "Parents" },
+            { href: "/home-course", label: "Home course" },
             { href: "/assessments", label: "Assess" },
             // Teacher's own private, owner-scoped insight view of their classes.
             { href: "/teacher", label: "My classes" },
