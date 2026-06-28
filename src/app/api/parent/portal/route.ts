@@ -106,9 +106,20 @@ export async function GET(req: Request) {
     } catch { /* leave empty */ }
   }
 
+  // Home-learning course (Springboard) progress, joined by the child's student_id
+  // (the teacher mints course links against the same id, so this lines up).
+  const studentIds = [...new Set(links.map((l) => l.student_id).filter(Boolean))];
+  let courseRows: any[] = [];
+  if (studentIds.length) {
+    try { courseRows = await admin(`springboard_progress?student_id=in.(${studentIds.join(",")})&select=student_id,xp,crowns,streak,updated_at`); } catch { /* none */ }
+  }
+  const courseById = new Map(courseRows.map((c: any) => [c.student_id, c]));
+
   const children = await Promise.all(links.map(async (l) => {
     const retId = (l.class?.retrieval_class_ids || [])[0];
     const mine = reports.filter((r) => r.link_id === l.id);
+    const c = l.student_id ? courseById.get(l.student_id) : null;
+    const course = c ? { xp: c.xp || 0, crowns: c.crowns || 0, streak: c.streak || 0, updatedAt: c.updated_at || null } : null;
     const homeEnabled = !!l.home_subscribed || !!sponsoredByTeacher.get(l.class?.teacher_id);
 
     // Home: the child's weakest objectives (per-pupil RPC, falling back to class).
@@ -133,6 +144,7 @@ export async function GET(req: Request) {
       unsubscribeToken: l.unsubscribe_token,
       reports: mine.map((r) => ({ id: r.id, weekStart: r.week_start, html: r.html, emailed: r.emailed })),
       home: { enabled: homeEnabled, weak, targetGrade: l.target_grade || null, recentScore },
+      course,
     };
   }));
 
