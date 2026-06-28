@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioenergetics (B4) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for B4 Bioenergetics — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Biology Paper 1 · B4 Bioenergetics</div>
+    <h1>Bioenergetics, <em>for the exam.</em></h1>
+    <p class="tag">The whole of B4 — photosynthesis and the factors that limit it, what plants do with glucose, aerobic and anaerobic respiration, your body's response to exercise, and metabolism. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Photosynthesis</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Rate &amp; limits</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Uses of glucose</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Respiration</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Exercise</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Metabolism</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — PHOTOSYNTHESIS (4.4.1.1)                                      -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · B4 · Photosynthesis</div>
+    <h2 class="lesson-title">Photosynthesis — the <em>endothermic</em> reaction</h2>
+    <p class="lesson-promise">By the end of this topic you'll write both equations, explain why the reaction is endothermic, and link the leaf's structure to its job.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The reaction that feeds (almost) everything</h3>
+    <p><strong>Photosynthesis</strong> is the reaction that green plants and algae use to make their own food. It happens in the <strong>chloroplasts</strong>, which contain the green pigment <strong>chlorophyll</strong>. Chlorophyll absorbs <strong>light</strong>, and that light energy is transferred to the chemical store of the glucose that is made.</p>
+    <p>Because energy is <strong>taken in</strong> from the surroundings (from light), photosynthesis is an <strong>endothermic</strong> reaction. The raw materials are <strong>carbon dioxide</strong> (taken from the air) and <strong>water</strong> (taken up by the roots). The products are <strong>glucose</strong> and <strong>oxygen</strong>.</p>
+
+    <div class="eqbox">
+      <h4>The equations to know</h4>
+      <dl>
+        <dt>carbon dioxide + water → glucose + oxygen <span class="badge recall">recall</span></dt>
+        <dd>The word equation. Light (absorbed by chlorophyll) drives the reaction — it sits above the arrow, not in the equation itself.</dd>
+        <dt>6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ <span class="badge given">given</span></dt>
+        <dd>The symbol equation. It is balanced: six carbons, twelve hydrogens and eighteen oxygens on each side.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — light is not a reactant</h4>
+      <p>Don't write "light" inside the equation as if it were a chemical. Light is the <strong>energy source</strong>, and it's <em>transferred from the surroundings</em>, which is exactly why the reaction is <strong>endothermic</strong>. A common mix-up: <strong>chlorophyll</strong> is the green pigment; the <strong>chloroplast</strong> is the structure that holds it.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why is photosynthesis described as an endothermic reaction?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It releases energy to the surroundings as heat</span></li>
+        <li><span class="letter">B</span><span>It takes in energy from the surroundings (light is absorbed)</span></li>
+        <li><span class="letter">C</span><span>It produces oxygen, which is flammable</span></li>
+        <li><span class="letter">D</span><span>It happens inside warm-blooded organisms</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Endothermic means energy is <em>taken in</em> from the surroundings — here, light energy absorbed by chlorophyll. A describes an <em>exothermic</em> reaction (that's respiration, in Topic 4).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The leaf — built for the job</h3>
+    <p>A leaf is shaped to photosynthesise efficiently. It is <strong>broad and flat</strong> to catch as much light as possible and to give a large surface area for gases to diffuse in and out. Tiny holes called <strong>stomata</strong> on the underside let <strong>carbon dioxide</strong> diffuse in and <strong>oxygen</strong> diffuse out; their size is controlled by <strong>guard cells</strong>. The cells near the top, the <strong>palisade cells</strong>, are packed with chloroplasts because that's where most light reaches.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 620 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="270" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">A LEAF IN CROSS-SECTION</text>
+        <!-- waxy cuticle / upper -->
+        <rect x="110" y="40" width="320" height="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="430" y1="47" x2="478" y2="47" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="484" y="51" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">upper surface</text>
+        <!-- palisade layer -->
+        <rect x="110" y="54" width="320" height="44" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="1.5"/>
+        <circle cx="140" cy="76" r="5" fill="#2C5F2D"/><circle cx="170" cy="76" r="5" fill="#2C5F2D"/><circle cx="200" cy="76" r="5" fill="#2C5F2D"/><circle cx="230" cy="76" r="5" fill="#2C5F2D"/>
+        <line x1="430" y1="76" x2="478" y2="76" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="484" y="73" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">palisade cells</text>
+        <text x="484" y="86" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">most chloroplasts</text>
+        <!-- spongy mesophyll with air spaces -->
+        <rect x="110" y="98" width="320" height="60" fill="#F2E6BD" stroke="#C8A24A" stroke-width="1.5"/>
+        <circle cx="150" cy="128" r="9" fill="#FCFAF4" stroke="#C8A24A"/><circle cx="210" cy="118" r="11" fill="#FCFAF4" stroke="#C8A24A"/><circle cx="280" cy="132" r="10" fill="#FCFAF4" stroke="#C8A24A"/><circle cx="350" cy="120" r="9" fill="#FCFAF4" stroke="#C8A24A"/>
+        <line x1="430" y1="128" x2="478" y2="128" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="484" y="125" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">air spaces</text>
+        <text x="484" y="138" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">gas diffusion</text>
+        <!-- lower surface with stoma -->
+        <rect x="110" y="158" width="320" height="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="252" y="158" width="36" height="14" fill="#FCFAF4"/>
+        <line x1="270" y1="172" x2="270" y2="210" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="270" y="226" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">stoma (CO₂ in, O₂ out)</text>
+        <text x="270" y="240" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">opened &amp; closed by guard cells</text>
+      </svg>
+      <div class="caption">Each layer is adapted: light at the top, gas exchange below</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — name the gas the right way round</h4>
+      <p>In photosynthesis, <strong>carbon dioxide goes in</strong> and <strong>oxygen comes out</strong> — the opposite of respiration. In bright light, a plant photosynthesises faster than it respires, so the <em>net</em> movement is CO₂ in, O₂ out.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which feature of a leaf increases the surface area for carbon dioxide to diffuse in?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The waxy upper surface</span></li>
+        <li><span class="letter">B</span><span>The air spaces in the spongy layer and the stomata</span></li>
+        <li><span class="letter">C</span><span>The green colour of the chlorophyll</span></li>
+        <li><span class="letter">D</span><span>The thickness of the leaf</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The <em>air spaces</em> give a large internal surface area and the <em>stomata</em> let gases pass in and out. The waxy surface actually reduces water loss; colour and thickness aren't about surface area for gases.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Write the word equation for photosynthesis.</summary><div class="ans">carbon dioxide + water → <strong>glucose + oxygen</strong> (light absorbed by chlorophyll drives it).</div></details></li>
+      <li><details><summary>Photosynthesis is endothermic. What does that mean here?</summary><div class="ans">Energy is <strong>taken in</strong> from the surroundings — light energy is absorbed by chlorophyll and transferred to the chemical store of glucose.</div></details></li>
+      <li><details><summary>Where in a plant cell does photosynthesis happen, and what pigment absorbs the light?</summary><div class="ans">In the <strong>chloroplasts</strong>; the green pigment <strong>chlorophyll</strong> absorbs the light.</div></details></li>
+      <li><details><summary>Give the balanced symbol equation for photosynthesis.</summary><div class="ans">6CO₂ + 6H₂O → <strong>C₆H₁₂O₆ + 6O₂</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — RATE OF PHOTOSYNTHESIS & LIMITING FACTORS (4.4.1.2) + RP + HT  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · B4 · Rate &amp; limiting factors</div>
+    <h2 class="lesson-title">Rate of photosynthesis &amp; <em>limiting factors</em></h2>
+    <p class="lesson-promise">Why a rate stops rising even when you give a plant more light — and the practical that proves it.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The three limiting factors</h3>
+    <p>The <strong>rate of photosynthesis</strong> is how fast a plant makes glucose (we often measure it by how fast oxygen is given off). Three things can slow it down. Whichever is in shortest supply at that moment is the <strong>limiting factor</strong> — the one holding the rate back.</p>
+    <p>The three limiting factors are <strong>light intensity</strong>, <strong>carbon dioxide concentration</strong> and <strong>temperature</strong>. Increase the limiting one and the rate goes up — until something <em>else</em> becomes limiting and the rate levels off (it reaches a <strong>plateau</strong>).</p>
+    <p>Temperature works differently at the top end: it's also an enzyme-controlled process, so if the temperature gets too high (above about 45 °C) the <strong>enzymes denature</strong> and the rate falls sharply rather than levelling off.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">RATE vs LIGHT INTENSITY</text>
+        <!-- axes -->
+        <line x1="70" y1="210" x2="510" y2="210" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="70" y1="210" x2="70" y2="40" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="290" y="238" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">light intensity →</text>
+        <text x="40" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370" transform="rotate(-90 40 125)">rate →</text>
+        <!-- rising-then-plateau curve -->
+        <path d="M70 210 Q150 110 250 90 L510 90" fill="none" stroke="#2C5F2D" stroke-width="3"/>
+        <!-- limiting region marker -->
+        <line x1="250" y1="90" x2="250" y2="210" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="160" y="190" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#2C5F2D">light is limiting</text>
+        <text x="380" y="78" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">something else now limits</text>
+        <text x="380" y="110" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">(plateau)</text>
+      </svg>
+      <div class="caption">As light rises the rate climbs, then plateaus when CO₂ or temperature takes over</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the plateau still has a cause</h4>
+      <p>When the graph levels off, light is no longer the limiting factor — <strong>carbon dioxide or temperature</strong> now is. Don't just say "the rate stops increasing"; say <em>which</em> factor has become limiting. And remember a graph can only tell you a factor <em>might</em> be limiting if changing it changes the rate.</p>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — light intensity and the inverse square law</h4>
+      <p>Light intensity falls off quickly as you move a lamp away from a plant. It follows the <strong>inverse square law</strong>: the intensity is proportional to <strong>1 ÷ distance²</strong>.</p>
+      <p style="text-align:center"><span class="formula">light intensity ∝ 1 / distance²</span></p>
+      <p>So if you <strong>double</strong> the distance, the light intensity drops to a <strong>quarter</strong> (½² = ¼). If you <strong>triple</strong> it, intensity falls to a <strong>ninth</strong>. This is why moving a lamp twice as far away in the pondweed practical cuts the bubble rate far more than you might expect.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Measuring the effect of light</h3>
+
+    <div class="rp">
+      <h4>Effect of light intensity on the rate of photosynthesis</h4>
+      <p><strong>Aim:</strong> investigate how light intensity affects the rate of photosynthesis using pondweed (or algal balls).</p>
+      <ol>
+        <li>Place a piece of <strong>pondweed</strong> (e.g. <em>Elodea</em>) in a beaker of water with a measured amount of <strong>sodium hydrogencarbonate</strong>, which supplies a steady level of carbon dioxide.</li>
+        <li>Put a <strong>lamp</strong> a set distance from the pondweed and leave it a few minutes to settle.</li>
+        <li>Count the <strong>oxygen bubbles given off per minute</strong> (or measure the volume of gas collected) — this is your measure of the rate.</li>
+        <li>Move the lamp to a new distance, recording the distance each time, and repeat the bubble count.</li>
+        <li>Plot a graph of <strong>rate against light intensity</strong> (or against 1/distance²).</li>
+      </ol>
+      <p><strong>Control / improve:</strong> keep the <strong>temperature constant</strong> by putting a clear glass tank of water (a heat shield) between the lamp and the beaker, since lamps warm the water. Keeping CO₂ and temperature fixed makes light intensity the only variable you change.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">COUNTING OXYGEN BUBBLES</text>
+        <!-- lamp -->
+        <circle cx="80" cy="120" r="20" fill="#C8A24A"/>
+        <line x1="100" y1="120" x2="135" y2="120" stroke="#C8A24A" stroke-width="2"/>
+        <line x1="100" y1="108" x2="133" y2="98" stroke="#C8A24A" stroke-width="2"/>
+        <line x1="100" y1="132" x2="133" y2="142" stroke="#C8A24A" stroke-width="2"/>
+        <text x="80" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">lamp</text>
+        <!-- distance marker -->
+        <line x1="100" y1="185" x2="240" y2="185" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="100" y1="180" x2="100" y2="190" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="240" y1="180" x2="240" y2="190" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="170" y="202" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761">distance d</text>
+        <!-- beaker -->
+        <rect x="240" y="70" width="120" height="110" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- pondweed -->
+        <path d="M300 175 L300 110" stroke="#2C5F2D" stroke-width="3"/>
+        <path d="M300 150 l12 -8 M300 135 l-12 -8 M300 120 l12 -8" stroke="#2C5F2D" stroke-width="2"/>
+        <!-- bubbles -->
+        <circle cx="306" cy="100" r="3" fill="#1E2761"/><circle cx="312" cy="88" r="3" fill="#1E2761"/><circle cx="304" cy="80" r="3" fill="#1E2761"/>
+        <line x1="360" y1="90" x2="430" y2="90" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="436" y="86" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">O₂ bubbles</text>
+        <text x="436" y="100" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">count per minute</text>
+        <text x="300" y="200" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">pondweed</text>
+      </svg>
+      <div class="caption">Move the lamp, record the distance, count the bubbles — keep CO₂ and temperature fixed</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">In the pondweed experiment, the bubble rate stops rising when the lamp is brought closer. Which is the most likely reason?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The pondweed has run out of water</span></li>
+        <li><span class="letter">B</span><span>Carbon dioxide or temperature is now the limiting factor</span></li>
+        <li><span class="letter">C</span><span>Light is being destroyed by the chlorophyll</span></li>
+        <li><span class="letter">D</span><span>Oxygen has stopped being made completely</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Once there's plenty of light, another factor — usually <em>CO₂ concentration</em> or <em>temperature</em> — becomes the one holding the rate back, so adding more light no longer helps.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Name the three factors that can limit the rate of photosynthesis.</summary><div class="ans"><strong>Light intensity</strong>, <strong>carbon dioxide concentration</strong> and <strong>temperature</strong>.</div></details></li>
+      <li><details><summary>What does "limiting factor" mean?</summary><div class="ans">The factor in shortest supply that is <strong>holding back</strong> the rate — increasing it would increase the rate.</div></details></li>
+      <li><details><summary>Why does the rate of photosynthesis fall if the temperature gets too high?</summary><div class="ans">The <strong>enzymes denature</strong> (their shape is destroyed), so they can no longer catalyse the reaction.</div></details></li>
+      <li><details><summary>In the required practical, how do you keep the temperature roughly constant?</summary><div class="ans">Put a <strong>tank of water (a heat shield)</strong> between the lamp and the pondweed to absorb the lamp's heat.</div></details></li>
+      <li><details><summary>[HT] The lamp is moved from 10 cm to 20 cm from the pondweed. By roughly what factor does the light intensity change?</summary><div class="ans">Intensity ∝ 1/distance², so doubling the distance gives <strong>one quarter</strong> the intensity.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — USES OF GLUCOSE (4.4.1.3)                                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · B4 · Uses of glucose</div>
+    <h2 class="lesson-title">What a plant <em>does</em> with glucose</h2>
+    <p class="lesson-promise">Five fates for the sugar a plant makes — and the one that needs nitrate from the soil.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Five uses of glucose</h3>
+    <p>The glucose made in photosynthesis is the plant's raw material. It's put to <strong>five</strong> uses, and you need all of them.</p>
+    <p><strong>Respiration.</strong> Some glucose is used straight away in respiration to release energy for the plant's life processes. <strong>Making cellulose.</strong> Glucose is converted into <strong>cellulose</strong> to strengthen the cell walls, especially important in fast-growing plants.</p>
+    <p><strong>Making amino acids (and then proteins).</strong> Glucose is combined with <strong>nitrate ions</strong> taken from the soil to make <strong>amino acids</strong>, which are then joined into <strong>proteins</strong>. <strong>Stored as starch.</strong> Glucose is turned into <strong>starch</strong> for storage in roots, stems and leaves — starch is insoluble, so it doesn't affect the cell's water balance. <strong>Making fats and oils.</strong> Glucose is used to produce <strong>lipids (fats and oils)</strong>, often stored in seeds as an energy reserve.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">FIVE FATES OF GLUCOSE</text>
+        <!-- centre -->
+        <circle cx="280" cy="125" r="36" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+        <text x="280" y="122" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">glucose</text>
+        <text x="280" y="138" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">the sugar</text>
+        <!-- spokes -->
+        <line x1="244" y1="125" x2="120" y2="60" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="112" y="58" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">respiration</text>
+        <line x1="244" y1="125" x2="120" y2="125" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="112" y="122" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">cellulose</text>
+        <text x="112" y="136" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">cell walls</text>
+        <line x1="244" y1="125" x2="120" y2="195" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="112" y="193" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">starch</text>
+        <text x="112" y="207" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">storage</text>
+        <line x1="316" y1="125" x2="440" y2="70" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="448" y="68" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">amino acids</text>
+        <text x="448" y="82" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">+ nitrate → proteins</text>
+        <line x1="316" y1="125" x2="440" y2="180" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="448" y="178" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">fats &amp; oils</text>
+        <text x="448" y="192" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">seed stores</text>
+      </svg>
+      <div class="caption">One sugar, five jobs — only proteins need an extra ingredient from the soil</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — proteins need nitrate</h4>
+      <p>Glucose alone can become cellulose, starch and fats, but to make <strong>proteins</strong> the plant also needs <strong>nitrate ions</strong> absorbed from the soil. A plant short of nitrate grows poorly because it can't make enough protein. Also: <strong>starch is for storage; cellulose is for structure</strong> — don't swap them over.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A plant stores glucose as starch rather than leaving it as glucose. Why is that an advantage?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Starch is sweeter and tastes better</span></li>
+        <li><span class="letter">B</span><span>Starch is insoluble, so it doesn't draw water into the cell by osmosis</span></li>
+        <li><span class="letter">C</span><span>Starch can be used directly in respiration without change</span></li>
+        <li><span class="letter">D</span><span>Starch contains nitrate</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Because starch is <em>insoluble</em>, storing glucose as starch doesn't change the cell's water balance. Lots of dissolved glucose would pull water in by osmosis.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>List the five uses of glucose in a plant.</summary><div class="ans"><strong>Respiration</strong>, making <strong>cellulose</strong>, making <strong>amino acids/proteins</strong> (with nitrate), storage as <strong>starch</strong>, and making <strong>fats and oils</strong>.</div></details></li>
+      <li><details><summary>What does a plant need, in addition to glucose, to make proteins?</summary><div class="ans"><strong>Nitrate ions</strong> absorbed from the soil.</div></details></li>
+      <li><details><summary>What is glucose converted into for storage, and where might it be stored?</summary><div class="ans">Into <strong>starch</strong>, stored in <strong>roots, stems and leaves</strong>.</div></details></li>
+      <li><details><summary>Name the substance glucose is turned into to strengthen plant cell walls.</summary><div class="ans"><strong>Cellulose</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — AEROBIC & ANAEROBIC RESPIRATION (4.4.2.1–2)                   -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · B4 · Respiration</div>
+    <h2 class="lesson-title">Aerobic &amp; <em>anaerobic</em> respiration</h2>
+    <p class="lesson-promise">The exothermic reaction in every living cell — with oxygen and without — plus fermentation in yeast and muscle.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Aerobic respiration</h3>
+    <p><strong>Respiration</strong> happens in <strong>every cell, all the time</strong>, transferring energy from glucose so the organism can use it — for movement, keeping warm, and building larger molecules. It is an <strong>exothermic</strong> reaction: energy is <strong>released</strong> to the surroundings.</p>
+    <p><strong>Aerobic respiration</strong> uses <strong>oxygen</strong> and releases the most energy. Most of it takes place in the <strong>mitochondria</strong>.</p>
+
+    <div class="eqbox">
+      <h4>The equations to know</h4>
+      <dl>
+        <dt>glucose + oxygen → carbon dioxide + water <span class="badge recall">recall</span></dt>
+        <dd>Aerobic respiration, word equation. The reaction releases energy (exothermic).</dd>
+        <dt>C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O <span class="badge given">given</span></dt>
+        <dd>Aerobic respiration, symbol equation — it's photosynthesis run backwards.</dd>
+        <dt>glucose → lactic acid <span class="badge recall">recall</span></dt>
+        <dd>Anaerobic respiration in muscle cells (no oxygen). Releases much less energy.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — respiration is not breathing</h4>
+      <p><strong>Respiration is a chemical reaction inside cells</strong>; <em>breathing</em> (ventilation) is just moving air in and out of the lungs. They're different things — don't use the words as if they mean the same. And respiration is <strong>exothermic</strong> (releases energy), the opposite of endothermic photosynthesis.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TWO MIRROR-IMAGE REACTIONS</text>
+        <!-- photosynthesis -->
+        <rect x="40" y="50" width="220" height="50" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="150" y="72" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">PHOTOSYNTHESIS</text>
+        <text x="150" y="90" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E2761">CO₂ + H₂O → glucose + O₂</text>
+        <text x="150" y="120" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">takes energy in</text>
+        <!-- respiration -->
+        <rect x="300" y="50" width="220" height="50" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="410" y="72" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">AEROBIC RESPIRATION</text>
+        <text x="410" y="90" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E2761">glucose + O₂ → CO₂ + H₂O</text>
+        <text x="410" y="120" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">gives energy out</text>
+        <!-- arrows -->
+        <line x1="150" y1="135" x2="150" y2="160" stroke="#CFD8E3" stroke-width="1.5"/>
+        <line x1="410" y1="135" x2="410" y2="160" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="280" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">endothermic ⇆ exothermic</text>
+      </svg>
+      <div class="caption">Aerobic respiration is essentially photosynthesis in reverse</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Anaerobic respiration &amp; fermentation</h3>
+    <p>When oxygen runs short — for example during hard exercise — cells respire <strong>anaerobically</strong> (without oxygen). This is the <strong>incomplete breakdown</strong> of glucose, so it releases <strong>much less energy</strong> than aerobic respiration.</p>
+    <p>In <strong>muscle cells</strong>, anaerobic respiration produces <strong>lactic acid</strong>. In <strong>yeast and plant cells</strong>, it produces <strong>ethanol</strong> and <strong>carbon dioxide</strong> — this is called <strong>fermentation</strong>, and it's used by humans to make bread (the CO₂ makes dough rise) and alcoholic drinks (the ethanol).</p>
+
+    <div class="eqbox">
+      <h4>Fermentation in yeast</h4>
+      <dl>
+        <dt>glucose → ethanol + carbon dioxide <span class="badge recall">recall</span></dt>
+        <dd>Anaerobic respiration in yeast cells (fermentation). Releases little energy, but the products are economically useful.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — different products in different cells</h4>
+      <p>Anaerobic respiration in <strong>your muscles</strong> makes <strong>lactic acid</strong> (no CO₂). Anaerobic respiration in <strong>yeast</strong> makes <strong>ethanol + carbon dioxide</strong>. Both release less energy than aerobic respiration because the glucose is only <em>partly</em> broken down.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why does anaerobic respiration release less energy than aerobic respiration?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It uses more oxygen</span></li>
+        <li><span class="letter">B</span><span>The glucose is only partly (incompletely) broken down</span></li>
+        <li><span class="letter">C</span><span>It happens outside the mitochondria, which destroys energy</span></li>
+        <li><span class="letter">D</span><span>Lactic acid contains no energy at all</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Without oxygen the glucose is broken down <em>incompletely</em>, leaving energy still locked in the products (lactic acid, or ethanol). So far less energy is released per glucose molecule.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Write the word equation for aerobic respiration.</summary><div class="ans">glucose + oxygen → <strong>carbon dioxide + water</strong> (energy released — exothermic).</div></details></li>
+      <li><details><summary>Is respiration exothermic or endothermic, and what does that mean?</summary><div class="ans"><strong>Exothermic</strong> — energy is <strong>released</strong> to the surroundings.</div></details></li>
+      <li><details><summary>What is produced by anaerobic respiration in muscle cells?</summary><div class="ans"><strong>Lactic acid</strong> (glucose → lactic acid).</div></details></li>
+      <li><details><summary>Write the equation for fermentation in yeast and give one human use.</summary><div class="ans">glucose → <strong>ethanol + carbon dioxide</strong>. Used to make <strong>bread</strong> (CO₂ rises the dough) or <strong>alcoholic drinks</strong> (ethanol).</div></details></li>
+      <li><details><summary>In which part of the cell does most aerobic respiration take place?</summary><div class="ans">In the <strong>mitochondria</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — RESPONSE TO EXERCISE (4.4.2.3) + HT (oxygen debt)             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · B4 · Response to exercise</div>
+    <h2 class="lesson-title">The body's response to <em>exercise</em></h2>
+    <p class="lesson-promise">Why your heart pounds and you keep panting after you stop — heart rate, breathing, lactic acid and oxygen debt.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Getting more oxygen and glucose to the muscles</h3>
+    <p>During exercise the muscles respire faster, so they need <strong>more oxygen and glucose</strong> delivered and <strong>more carbon dioxide</strong> removed. The body responds in three ways: <strong>heart rate increases</strong>, <strong>breathing rate and depth (breath volume) increase</strong>, and the muscles' <strong>stored glycogen is converted back to glucose</strong> for respiration.</p>
+    <p>A faster, deeper breathing rate gets more oxygen into the blood; a faster heart rate pumps that oxygenated blood to the muscles more quickly. Together they keep aerobic respiration going as long as possible.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">EXERCISE → THREE RESPONSES</text>
+        <!-- trigger -->
+        <rect x="40" y="80" width="120" height="46" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+        <text x="100" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">exercise</text>
+        <text x="100" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">muscles need more O₂</text>
+        <!-- arrows out -->
+        <line x1="160" y1="90" x2="320" y2="55" stroke="#CFD8E3" stroke-width="1.5"/>
+        <line x1="160" y1="103" x2="320" y2="103" stroke="#CFD8E3" stroke-width="1.5"/>
+        <line x1="160" y1="116" x2="320" y2="151" stroke="#CFD8E3" stroke-width="1.5"/>
+        <!-- responses -->
+        <rect x="320" y="38" width="220" height="34" rx="5" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+        <text x="430" y="60" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">heart rate ↑</text>
+        <rect x="320" y="86" width="220" height="34" rx="5" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+        <text x="430" y="108" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">breathing rate &amp; depth ↑</text>
+        <rect x="320" y="134" width="220" height="34" rx="5" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+        <text x="430" y="156" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">glycogen → glucose</text>
+      </svg>
+      <div class="caption">All three responses deliver more oxygen and glucose to working muscles</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — say "breathing rate AND depth"</h4>
+      <p>During exercise you breathe both <strong>faster and more deeply</strong> (bigger breaths), not just faster. For full marks, mention <em>both</em>. And it's <strong>glycogen → glucose</strong> in muscles — glycogen is the muscle's stored carbohydrate.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Lactic acid and oxygen debt</h3>
+    <p>If exercise is hard enough that oxygen can't be delivered fast enough, muscles start to respire <strong>anaerobically</strong>, building up <strong>lactic acid</strong>. Lactic acid causes muscle fatigue (and that achy feeling). Because it's only partial breakdown, it also leaves the body with an <strong>oxygen debt</strong>.</p>
+    <p>The <strong>oxygen debt</strong> is the extra oxygen your body needs <em>after</em> exercise to deal with the lactic acid that built up. That's why you keep breathing hard for a while after you stop — you're "repaying" the debt.</p>
+
+    <div class="higher">
+      <h4>Higher tier — how the lactic acid is removed</h4>
+      <p>After exercise, blood flowing through the muscles carries the <strong>lactic acid to the liver</strong>. In the liver, the lactic acid is <strong>converted back into glucose</strong>.</p>
+      <p>The "extra" oxygen you take in (the oxygen debt, sometimes called <em>excess post-exercise oxygen consumption</em>) is used to react with the accumulated lactic acid and remove it, which is why heart rate and breathing stay high until it's cleared.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — explaining a recovery graph</h4>
+      <p class="q">After a sprint, an athlete's breathing rate stays high for several minutes before returning to normal. Explain why.</p>
+      <div class="step"><span class="label">During</span><span class="v">Muscles respired anaerobically — lactic acid built up (oxygen debt).</span></div>
+      <div class="step"><span class="label">After</span><span class="v">Extra oxygen is needed to remove the lactic acid, so breathing stays fast.</span></div>
+      <div class="step answer"><span class="label">Recovery</span><span class="v">Once the lactic acid (oxygen debt) is cleared, breathing returns to normal.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why does a runner keep breathing heavily for a few minutes after a hard race finishes?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>To cool the body down by losing heat through the breath</span></li>
+        <li><span class="letter">B</span><span>To take in extra oxygen to remove the lactic acid (repay the oxygen debt)</span></li>
+        <li><span class="letter">C</span><span>To breathe out the extra glucose made during exercise</span></li>
+        <li><span class="letter">D</span><span>Because the heart has stopped working temporarily</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The hard exercise caused anaerobic respiration and a build-up of lactic acid. The extra oxygen taken in afterwards (the <em>oxygen debt</em>) is used to remove it.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>State three ways the body responds to exercise.</summary><div class="ans"><strong>Heart rate increases</strong>, <strong>breathing rate and depth increase</strong>, and stored <strong>glycogen is converted to glucose</strong>.</div></details></li>
+      <li><details><summary>What substance builds up in muscles during long, hard exercise, and what does it cause?</summary><div class="ans"><strong>Lactic acid</strong>, which causes <strong>muscle fatigue</strong> and an oxygen debt.</div></details></li>
+      <li><details><summary>Define oxygen debt.</summary><div class="ans">The <strong>extra oxygen</strong> the body needs after exercise to react with and remove the <strong>lactic acid</strong> that built up.</div></details></li>
+      <li><details><summary>[HT] Where is lactic acid taken to be dealt with, and what happens to it there?</summary><div class="ans">It's carried in the blood to the <strong>liver</strong>, where it is <strong>converted back into glucose</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — METABOLISM (4.4.2.4)                                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · B4 · Metabolism</div>
+    <h2 class="lesson-title"><em>Metabolism</em> — all the reactions at once</h2>
+    <p class="lesson-promise">The big picture: how cells build up and break down molecules, powered by the energy from respiration.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What metabolism means</h3>
+    <p><strong>Metabolism</strong> is the <strong>sum of all the chemical reactions</strong> happening in a cell or in the body. These reactions are controlled by <strong>enzymes</strong>, and the energy that drives them is transferred by <strong>respiration</strong>.</p>
+    <p>Metabolic reactions fall into two types. <strong>Synthesis (building up)</strong> reactions join small molecules into larger ones — these need an energy input. <strong>Breakdown</strong> reactions split large molecules into smaller ones — these often release energy. Respiration sits at the centre, supplying the energy for the building-up reactions.</p>
+
+    <div class="keywords">
+      <h4>Metabolism in plants &amp; animals — the key conversions</h4>
+      <dl>
+        <dt>Glucose → starch, glycogen and cellulose</dt><dd>Small sugars joined into larger storage and structural carbohydrates.</dd>
+        <dt>Glucose + nitrate → amino acids → proteins</dt><dd>In plants; the amino acids are then built into proteins.</dd>
+        <dt>Lipids from one glycerol + three fatty acids</dt><dd>How fats and oils are built up.</dd>
+        <dt>Breaking down excess protein</dt><dd>In animals, surplus protein is broken down to form urea, which is excreted.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TWO DIRECTIONS OF METABOLISM</text>
+        <!-- small molecules -->
+        <circle cx="110" cy="120" r="10" fill="#C8A24A"/><circle cx="140" cy="120" r="10" fill="#C8A24A"/><circle cx="125" cy="95" r="10" fill="#C8A24A"/>
+        <text x="125" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">small molecules</text>
+        <!-- large molecule -->
+        <rect x="400" y="88" width="80" height="50" rx="6" fill="#2C5F2D"/>
+        <text x="440" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">large molecule</text>
+        <!-- synthesis arrow -->
+        <line x1="180" y1="98" x2="395" y2="98" stroke="#2C5F2D" stroke-width="3"/>
+        <polygon points="402,98 388,91 388,105" fill="#2C5F2D"/>
+        <text x="290" y="88" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#2C5F2D">synthesis (needs energy)</text>
+        <!-- breakdown arrow -->
+        <line x1="395" y1="130" x2="180" y2="130" stroke="#B85042" stroke-width="3"/>
+        <polygon points="173,130 187,123 187,137" fill="#B85042"/>
+        <text x="290" y="148" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#B85042">breakdown (releases energy)</text>
+      </svg>
+      <div class="caption">Building up needs energy from respiration; breaking down releases it</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — metabolism is the whole set</h4>
+      <p><strong>Metabolism</strong> means <em>all</em> the reactions added together, not a single reaction. It includes both building-up and breaking-down. And remember the energy that powers metabolism is transferred by <strong>respiration</strong> — so respiration underpins the whole topic.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Joining many glucose molecules together to make starch is an example of which kind of metabolic reaction?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>A breakdown reaction that releases energy</span></li>
+        <li><span class="letter">B</span><span>A synthesis (building-up) reaction that needs energy</span></li>
+        <li><span class="letter">C</span><span>Anaerobic respiration</span></li>
+        <li><span class="letter">D</span><span>Photosynthesis</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Building a large molecule (starch) from small ones (glucose) is a <em>synthesis</em> reaction, and it needs an input of energy — supplied by respiration.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define metabolism.</summary><div class="ans">The <strong>sum of all the chemical reactions</strong> in a cell or the body, controlled by enzymes.</div></details></li>
+      <li><details><summary>Which process supplies the energy needed to drive metabolic reactions?</summary><div class="ans"><strong>Respiration</strong> transfers the energy used in building-up reactions.</div></details></li>
+      <li><details><summary>Give one example of a building-up (synthesis) reaction in metabolism.</summary><div class="ans">Any of: glucose → <strong>starch / glycogen / cellulose</strong>; glucose + nitrate → amino acids → <strong>proteins</strong>; making <strong>lipids</strong> from glycerol and fatty acids.</div></details></li>
+      <li><details><summary>What happens to excess protein in the body, and what is formed?</summary><div class="ans">It is <strong>broken down</strong> to form <strong>urea</strong>, which is then excreted.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Biology Paper 1 · B4 Bioenergetics</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'b4-bioenergetics-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=cdad6594-a267-4d7b-bc1e-c437a57251d2&amp;ref=interactive-science&amp;from=b4-bioenergetics-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=b4-bioenergetics-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

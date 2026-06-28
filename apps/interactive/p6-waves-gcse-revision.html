@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waves (P6) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for P6 Waves — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Paper 2 · P6 Waves</div>
+    <h1>Waves, <em>for the exam.</em></h1>
+    <p class="tag">The whole of P6 — transverse and longitudinal waves, the two equations you'll use, the electromagnetic spectrum, its uses and dangers, and what happens at a boundary. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Wave types</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Wave speed</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">EM spectrum</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Uses &amp; dangers</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Reflection &amp; refraction</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — TRANSVERSE & LONGITUDINAL WAVES (4.6.1.1 / 4.6.1.2)           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.6.1 · Wave types &amp; properties</div>
+    <h2 class="lesson-title">Transverse &amp; <em>longitudinal</em> waves</h2>
+    <p class="lesson-promise">By the end of this topic you'll tell the two wave types apart, name the four properties of a wave, and use T = 1/f without blinking.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Two ways a wave can wobble</h3>
+    <p>A wave <strong>transfers energy</strong> from one place to another <strong>without transferring matter</strong>. That last bit matters: when a wave passes through water, the water itself doesn't travel along — it just bobs up and down while the energy moves on.</p>
+    <p>In a <strong>transverse</strong> wave, the oscillations are at <strong>90° (perpendicular)</strong> to the direction the wave travels. Ripples on water, waves on a rope, and all electromagnetic waves are transverse.</p>
+    <p>In a <strong>longitudinal</strong> wave, the oscillations are <strong>parallel</strong> to the direction of travel — back and forth along the same line. This makes regions of <strong>compression</strong> (squashed together) and <strong>rarefaction</strong> (spread out). <strong>Sound</strong> is the key example.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 270" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TWO TYPES OF WAVE</text>
+        <!-- transverse panel -->
+        <text x="40" y="50" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Transverse</text>
+        <path d="M40 90 q35 -40 70 0 t70 0 t70 0 t70 0 t70 0 t70 0" fill="none" stroke="#B85042" stroke-width="2.5"/>
+        <line x1="40" y1="130" x2="500" y2="130" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="500" y="126" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">travels →</text>
+        <line x1="110" y1="60" x2="110" y2="120" stroke="#1E2761" stroke-width="1.5"/>
+        <polygon points="110,58 106,68 114,68" fill="#1E2761"/>
+        <polygon points="110,122 106,112 114,112" fill="#1E2761"/>
+        <text x="110" y="152" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">oscillation ⊥ to travel</text>
+        <!-- longitudinal panel -->
+        <text x="40" y="180" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Longitudinal</text>
+        <g stroke="#2C5F2D" stroke-width="2">
+          <line x1="45" y1="200" x2="45" y2="240"/>
+          <line x1="58" y1="200" x2="58" y2="240"/>
+          <line x1="74" y1="200" x2="74" y2="240"/>
+          <line x1="95" y1="200" x2="95" y2="240"/>
+          <line x1="120" y1="200" x2="120" y2="240"/>
+          <line x1="150" y1="200" x2="150" y2="240"/>
+          <line x1="166" y1="200" x2="166" y2="240"/>
+          <line x1="179" y1="200" x2="179" y2="240"/>
+          <line x1="195" y1="200" x2="195" y2="240"/>
+          <line x1="220" y1="200" x2="220" y2="240"/>
+          <line x1="250" y1="200" x2="250" y2="240"/>
+          <line x1="266" y1="200" x2="266" y2="240"/>
+          <line x1="279" y1="200" x2="279" y2="240"/>
+        </g>
+        <text x="60" y="258" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#1E2761">compression</text>
+        <text x="225" y="258" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">rarefaction</text>
+        <line x1="320" y1="220" x2="500" y2="220" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="500" y="216" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">travels →</text>
+        <text x="410" y="240" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">oscillation ∥ to travel</text>
+      </svg>
+      <div class="caption">Transverse: oscillation across the travel; longitudinal: oscillation along the travel</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — sound is longitudinal</h4>
+      <p>A classic trap: sound waves are <strong>longitudinal</strong>, not transverse, even though they're drawn as wiggly lines on an oscilloscope. The oscilloscope shows pressure changing over time — the real air particles move <em>back and forth</em>, making compressions and rarefactions. And remember: in both wave types <strong>only energy moves along</strong>, the medium just oscillates in place.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which statement about a sound wave travelling through air is correct?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It is transverse, and the air moves along with it</span></li>
+        <li><span class="letter">B</span><span>It is longitudinal; air particles oscillate parallel to the direction of travel</span></li>
+        <li><span class="letter">C</span><span>It is transverse; air particles oscillate at 90° to travel</span></li>
+        <li><span class="letter">D</span><span>It is longitudinal, and the air is carried from speaker to ear</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Sound is <em>longitudinal</em> — particles oscillate <em>parallel</em> to the travel, making compressions and rarefactions. A and C wrongly call it transverse; D forgets that the air doesn't travel, <em>only the energy does</em>.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The properties of a wave</h3>
+    <p>Every wave can be described by the same four quantities. Learn them and their units:</p>
+
+    <div class="keywords">
+      <h4>The four wave properties</h4>
+      <dl>
+        <dt>Amplitude</dt><dd>The maximum displacement from the rest (undisturbed) position. Bigger amplitude = more energy. Unit: metres (m).</dd>
+        <dt>Wavelength</dt><dd>The distance from one point on a wave to the same point on the next — e.g. crest to crest. Symbol λ. Unit: metres (m).</dd>
+        <dt>Frequency</dt><dd>The number of complete waves passing a point each second. Unit: hertz (Hz). 1 Hz = 1 wave per second.</dd>
+        <dt>Period (T)</dt><dd>The time for one complete wave to pass. Unit: seconds (s).</dd>
+      </dl>
+    </div>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>T = 1 / f <span class="badge recall">recall</span></dt>
+        <dd>period (s) = 1 ÷ frequency (Hz). Period and frequency are reciprocals — fast waves (high f) have a short period.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">AMPLITUDE &amp; WAVELENGTH</text>
+        <!-- rest line -->
+        <line x1="40" y1="110" x2="520" y2="110" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="46" y="124" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">rest position</text>
+        <!-- wave -->
+        <path d="M40 110 q50 -60 100 0 t100 0 t100 0 t100 0 t60 0" fill="none" stroke="#B85042" stroke-width="2.5"/>
+        <!-- amplitude -->
+        <line x1="90" y1="110" x2="90" y2="80" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="86" y1="80" x2="94" y2="80" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="100" y="86" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">amplitude</text>
+        <!-- wavelength crest to crest -->
+        <line x1="90" y1="55" x2="290" y2="55" stroke="#2C5F2D" stroke-width="1.5"/>
+        <line x1="90" y1="50" x2="90" y2="60" stroke="#2C5F2D" stroke-width="1.5"/>
+        <line x1="290" y1="50" x2="290" y2="60" stroke="#2C5F2D" stroke-width="1.5"/>
+        <text x="190" y="46" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">wavelength λ</text>
+        <text x="280" y="185" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Amplitude is measured from the rest line, not crest to trough.</text>
+      </svg>
+      <div class="caption">Amplitude = height from rest; wavelength = one full cycle (e.g. crest to crest)</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — period from frequency</h4>
+      <p class="q">A water wave has a frequency of 5 Hz. Calculate its period.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">T = 1 ÷ f</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 1 ÷ 5</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 0.2 s</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — amplitude is from the middle</h4>
+      <p>Amplitude is measured from the <strong>rest position to the crest</strong> (or to the trough) — it is <em>not</em> the full distance from crest to trough. The full crest-to-trough height is <strong>twice</strong> the amplitude. Mixing these up loses easy marks.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A wave has a period of 0.04 s. What is its frequency?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>0.04 Hz</span></li>
+        <li><span class="letter">B</span><span>4 Hz</span></li>
+        <li><span class="letter">C</span><span>25 Hz</span></li>
+        <li><span class="letter">D</span><span>250 Hz</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 25 Hz.</strong> f = 1 ÷ T = 1 ÷ 0.04 = 25 Hz. Period and frequency are reciprocals, so rearrange T = 1/f to f = 1/T.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What does a wave transfer, and what does it not transfer?</summary><div class="ans">A wave transfers <strong>energy</strong> from place to place <strong>without transferring matter</strong> — the medium just oscillates.</div></details></li>
+      <li><details><summary>Give the difference between a transverse and a longitudinal wave.</summary><div class="ans">In a <strong>transverse</strong> wave the oscillations are <strong>perpendicular (90°)</strong> to the travel; in a <strong>longitudinal</strong> wave they are <strong>parallel</strong> to the travel (making compressions and rarefactions).</div></details></li>
+      <li><details><summary>State one example of each wave type.</summary><div class="ans">Transverse: ripples on water / waves on a rope / any EM wave. Longitudinal: <strong>sound</strong> waves.</div></details></li>
+      <li><details><summary>Define amplitude.</summary><div class="ans">The <strong>maximum displacement</strong> of a point on the wave from its rest position.</div></details></li>
+      <li><details><summary>A wave has a frequency of 50 Hz. Calculate its period.</summary><div class="ans">T = 1 ÷ f = 1 ÷ 50 = <strong>0.02 s</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — WAVE SPEED (4.6.1.2) + REQUIRED PRACTICAL                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.6.1.2 · Wave speed</div>
+    <h2 class="lesson-title">Wave <em>speed</em></h2>
+    <p class="lesson-promise">One equation to recall, the units that catch people out, and the required practical for measuring waves on water and on a string.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The wave equation</h3>
+    <p>The <strong>wave speed</strong> is how fast the energy moves through the medium. It links the wavelength and frequency in the most-used equation in P6:</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>v = f λ <span class="badge recall">recall</span></dt>
+        <dd>wave speed (m/s) = frequency (Hz) × wavelength (m). You must memorise this one — it isn't on the equation sheet.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — speed of a sound wave</h4>
+      <p class="q">A sound wave has a frequency of 170 Hz and a wavelength of 2.0 m. Calculate the wave speed.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">v = f λ</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 170 × 2.0</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 340 m/s</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — convert to metres and hertz</h4>
+      <p>Wavelength must be in <strong>metres</strong> and frequency in <strong>hertz</strong> before you multiply. A wavelength given in centimetres (e.g. 25 cm) must become 0.25 m first. A frequency in kHz must become Hz (1 kHz = 1000 Hz). Getting the units right is usually the whole battle.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — finding a wavelength</h4>
+      <p class="q">A wave on a string travels at 12 m/s with a frequency of 30 Hz. Find its wavelength.</p>
+      <div class="step"><span class="label">Rearrange</span><span class="v">λ = v ÷ f</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 12 ÷ 30</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 0.4 m</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A water wave has a wavelength of 0.5 m and a frequency of 4 Hz. What is its speed?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>8 m/s</span></li>
+        <li><span class="letter">B</span><span>0.125 m/s</span></li>
+        <li><span class="letter">C</span><span>2 m/s</span></li>
+        <li><span class="letter">D</span><span>4.5 m/s</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 2 m/s.</strong> v = f λ = 4 × 0.5 = 2 m/s. Answer B divides instead of multiplying; D adds them.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Measuring waves</h3>
+    <p>The required practical has two parts — measuring a wave on water in a <strong>ripple tank</strong>, and measuring a wave on a <strong>stretched string</strong>. In both, you find the frequency and wavelength, then use v = f λ to get the speed.</p>
+
+    <div class="rp">
+      <h4>Measuring frequency, wavelength and speed of waves</h4>
+      <p><strong>Aim:</strong> measure the frequency, wavelength and speed of waves in a ripple tank and on a stretched string.</p>
+      <p><strong>Ripple tank (water waves):</strong></p>
+      <ol>
+        <li>Set a <strong>signal generator</strong> and dipper going to make waves of a steady frequency; read the <strong>frequency</strong> off the generator.</li>
+        <li>Use a <strong>lamp above</strong> the tank to project the wave shadows onto the bench below.</li>
+        <li>Measure the length of, say, <strong>10 wavelengths</strong> with a ruler and divide by 10 to find one <strong>wavelength</strong> (this reduces the percentage error).</li>
+        <li>Calculate the speed: <span class="formula">v = f × λ</span></li>
+      </ol>
+      <p><strong>Stretched string:</strong></p>
+      <ol>
+        <li>Fix one end of a string and pass it over a pulley to a hanging mass; drive it with a <strong>vibration generator</strong> at a known <strong>frequency</strong>.</li>
+        <li>Adjust the frequency until you get a clear <strong>standing wave</strong> with whole loops.</li>
+        <li>Measure the length of the loops and work out the <strong>wavelength</strong> (one full wave = two loops).</li>
+        <li>Calculate the speed with <span class="formula">v = f × λ</span></li>
+      </ol>
+      <p><strong>Control / improve:</strong> measuring <strong>several wavelengths at once</strong> and dividing reduces the percentage uncertainty; a strobe or freezing the image makes the moving wave easier to measure accurately.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">RIPPLE TANK</text>
+        <!-- lamp -->
+        <circle cx="280" cy="46" r="12" fill="#C8A24A"/>
+        <line x1="280" y1="58" x2="280" y2="80" stroke="#C8A24A" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="280" y1="58" x2="240" y2="80" stroke="#C8A24A" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="280" y1="58" x2="320" y2="80" stroke="#C8A24A" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="296" y1="40" x2="420" y2="40" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="426" y="44" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">lamp above</text>
+        <!-- tank water with waves -->
+        <rect x="110" y="90" width="340" height="60" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <path d="M120 120 q15 -14 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0 t30 0" fill="none" stroke="#1E2761" stroke-width="1.8"/>
+        <!-- ruler under tank -->
+        <line x1="120" y1="180" x2="320" y2="180" stroke="#2C5F2D" stroke-width="1.5"/>
+        <line x1="120" y1="175" x2="120" y2="185" stroke="#2C5F2D" stroke-width="1.5"/>
+        <line x1="320" y1="175" x2="320" y2="185" stroke="#2C5F2D" stroke-width="1.5"/>
+        <text x="220" y="200" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">measure 10 wavelengths</text>
+        <text x="220" y="216" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">then ÷ 10 for λ</text>
+      </svg>
+      <div class="caption">Shadows of the ripples are projected onto a ruler; read frequency off the signal generator</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">In a ripple tank, 8 wavelengths measure 24 cm and the generator reads 6 Hz. What is the wave speed?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>0.18 m/s</span></li>
+        <li><span class="letter">B</span><span>1.44 m/s</span></li>
+        <li><span class="letter">C</span><span>18 m/s</span></li>
+        <li><span class="letter">D</span><span>0.5 m/s</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — 0.18 m/s.</strong> One wavelength = 24 ÷ 8 = 3 cm = 0.03 m. Then v = f λ = 6 × 0.03 = 0.18 m/s. The trap is forgetting to divide by 8 and to convert cm to m.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Write the wave equation and state whether you must recall it.</summary><div class="ans"><strong>v = f λ</strong> (wave speed = frequency × wavelength). <strong>Yes — recall it</strong>; it's not on the sheet.</div></details></li>
+      <li><details><summary>A wave has frequency 25 Hz and wavelength 4 m. Find its speed.</summary><div class="ans">v = f λ = 25 × 4 = <strong>100 m/s</strong>.</div></details></li>
+      <li><details><summary>A wave travels at 6 m/s with a wavelength of 0.3 m. Find its frequency.</summary><div class="ans">f = v ÷ λ = 6 ÷ 0.3 = <strong>20 Hz</strong>.</div></details></li>
+      <li><details><summary>In the required practical, why measure 10 wavelengths and divide by 10?</summary><div class="ans">It <strong>reduces the percentage uncertainty</strong> in the measurement compared with measuring a single wavelength.</div></details></li>
+      <li><details><summary>How is the frequency found in the ripple-tank experiment?</summary><div class="ans">It is <strong>read directly off the signal generator</strong> driving the dipper.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — THE ELECTROMAGNETIC SPECTRUM (4.6.2.1)                        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.6.2.1 · The EM spectrum</div>
+    <h2 class="lesson-title">The <em>electromagnetic</em> spectrum</h2>
+    <p class="lesson-promise">Seven groups, one running order to learn for life, and the three facts that hold them all together.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>One family of waves</h3>
+    <p>Electromagnetic (EM) waves are <strong>transverse</strong> waves that all <strong>travel at the same speed through a vacuum</strong> (or through air) — the speed of light, 3 × 10⁸ m/s. They don't need a medium, which is how light reaches us from the Sun across empty space.</p>
+    <p>They form a <strong>continuous spectrum</strong> grouped into <strong>seven</strong> bands by their wavelength and frequency. You must know them <strong>in order</strong>:</p>
+
+    <div class="keywords">
+      <h4>The seven groups (long λ / low f → short λ / high f)</h4>
+      <dl>
+        <dt>Radio waves</dt><dd>Longest wavelength, lowest frequency, lowest energy.</dd>
+        <dt>Microwaves</dt><dd>Shorter than radio.</dd>
+        <dt>Infrared</dt><dd>Felt as heat / radiated by warm objects.</dd>
+        <dt>Visible light</dt><dd>The only part our eyes detect (red → violet).</dd>
+        <dt>Ultraviolet</dt><dd>Just beyond violet; starts to be harmful.</dd>
+        <dt>X-rays</dt><dd>Very short wavelength, high frequency.</dd>
+        <dt>Gamma rays</dt><dd>Shortest wavelength, highest frequency, highest energy.</dd>
+      </dl>
+    </div>
+
+    <p>A memory trick for the order: <strong>R</strong>ich <strong>M</strong>en <strong>I</strong>n <strong>V</strong>egas <strong>U</strong>se <strong>X</strong>pensive <strong>G</strong>adgets. As you go from radio to gamma, the <strong>wavelength gets shorter</strong>, the <strong>frequency gets higher</strong>, and the <strong>energy increases</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE EM SPECTRUM IN ORDER</text>
+        <!-- seven blocks -->
+        <rect x="30" y="60" width="72" height="40" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="102" y="60" width="72" height="40" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="174" y="60" width="72" height="40" fill="#F4DAD7" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="246" y="60" width="68" height="40" fill="#F2E6BD" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="314" y="60" width="72" height="40" fill="#DDEBDD" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="386" y="60" width="72" height="40" fill="#F1ECFA" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="458" y="60" width="72" height="40" fill="#1E2761"/>
+        <text x="66" y="84" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9.5" fill="#1A1A1A">Radio</text>
+        <text x="138" y="84" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#1A1A1A">Micro</text>
+        <text x="210" y="84" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9.5" fill="#1A1A1A">Infrared</text>
+        <text x="280" y="84" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#1A1A1A">Visible</text>
+        <text x="350" y="84" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9.5" fill="#1A1A1A">UV</text>
+        <text x="422" y="84" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9.5" fill="#1A1A1A">X-rays</text>
+        <text x="494" y="84" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9.5" fill="#FFFFFF">Gamma</text>
+        <!-- arrows -->
+        <text x="40" y="135" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">long λ, low f</text>
+        <text x="520" y="135" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">short λ, high f</text>
+        <line x1="40" y1="148" x2="520" y2="148" stroke="#5C6370" stroke-width="1.5"/>
+        <polygon points="528,148 514,142 514,154" fill="#5C6370"/>
+        <text x="280" y="180" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Energy increases left to right.</text>
+      </svg>
+      <div class="caption">Radio → gamma: wavelength falls, frequency and energy rise</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "same speed" only in a vacuum</h4>
+      <p>All EM waves travel at the <strong>same speed in a vacuum</strong> (and very nearly so in air). They do <em>not</em> all have the same wavelength or frequency — those are exactly what change across the spectrum. Also remember the whole spectrum is <strong>transverse</strong>; none of it is longitudinal.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which group has the highest frequency and shortest wavelength?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Radio waves</span></li>
+        <li><span class="letter">B</span><span>Visible light</span></li>
+        <li><span class="letter">C</span><span>Gamma rays</span></li>
+        <li><span class="letter">D</span><span>Microwaves</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — Gamma rays.</strong> They sit at the short-wavelength, high-frequency, high-energy end. Radio is the opposite end (long λ, low f).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>List the seven EM groups in order from longest to shortest wavelength.</summary><div class="ans">Radio, microwaves, infrared, visible light, ultraviolet, X-rays, gamma rays.</div></details></li>
+      <li><details><summary>Are EM waves transverse or longitudinal?</summary><div class="ans">All EM waves are <strong>transverse</strong>.</div></details></li>
+      <li><details><summary>What do all EM waves have in common in a vacuum?</summary><div class="ans">They all travel at the <strong>same speed</strong> (the speed of light, 3 × 10⁸ m/s).</div></details></li>
+      <li><details><summary>Which part of the spectrum can the human eye detect?</summary><div class="ans">Only <strong>visible light</strong>.</div></details></li>
+      <li><details><summary>Going from radio to gamma, what happens to wavelength and energy?</summary><div class="ans">Wavelength <strong>decreases</strong>; frequency and energy <strong>increase</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — USES & DANGERS OF EM WAVES (4.6.2.2 / 4.6.2.3)                -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.6.2 · Uses &amp; dangers</div>
+    <h2 class="lesson-title">Uses &amp; <em>dangers</em> of EM waves</h2>
+    <p class="lesson-promise">What each group is used for, why the high-energy end is dangerous, and what "ionising" really means.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What each group is used for</h3>
+    <p>Each group's uses follow from its properties. Learn at least one use per group:</p>
+
+    <div class="keywords">
+      <h4>Uses across the spectrum</h4>
+      <dl>
+        <dt>Radio waves</dt><dd>Television and radio broadcasting; long-distance communication.</dd>
+        <dt>Microwaves</dt><dd>Satellite communications and cooking food (microwave ovens).</dd>
+        <dt>Infrared</dt><dd>Electrical heaters, cooking food, and infrared cameras (thermal imaging); also short-range communication like remote controls.</dd>
+        <dt>Visible light</dt><dd>Fibre-optic communication and photography / seeing.</dd>
+        <dt>Ultraviolet</dt><dd>Energy-efficient lamps, sun tanning, and security marking.</dd>
+        <dt>X-rays</dt><dd>Medical imaging — seeing bones and internal structures.</dd>
+        <dt>Gamma rays</dt><dd>Sterilising medical equipment and food; treating cancer (radiotherapy).</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ONE USE PER GROUP</text>
+        <!-- two columns of pairings -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="12">
+          <text x="60" y="55" font-weight="700" fill="#1E2761">Radio</text>
+          <line x1="120" y1="51" x2="200" y2="51" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="208" y="55" fill="#5C6370">TV &amp; radio</text>
+          <text x="60" y="85" font-weight="700" fill="#1E2761">Microwaves</text>
+          <line x1="155" y1="81" x2="200" y2="81" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="208" y="85" fill="#5C6370">satellites, cooking</text>
+          <text x="60" y="115" font-weight="700" fill="#1E2761">Infrared</text>
+          <line x1="130" y1="111" x2="200" y2="111" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="208" y="115" fill="#5C6370">heaters, remotes</text>
+        </g>
+        <g font-family="IBM Plex Sans,sans-serif" font-size="12">
+          <text x="340" y="55" font-weight="700" fill="#1E2761">UV</text>
+          <line x1="380" y1="51" x2="430" y2="51" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="438" y="55" fill="#5C6370">tanning, lamps</text>
+          <text x="340" y="85" font-weight="700" fill="#1E2761">X-rays</text>
+          <line x1="395" y1="81" x2="430" y2="81" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="438" y="85" fill="#5C6370">bone imaging</text>
+          <text x="340" y="115" font-weight="700" fill="#B85042">Gamma</text>
+          <line x1="405" y1="111" x2="430" y2="111" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="438" y="115" fill="#5C6370">sterilising, cancer</text>
+        </g>
+      </svg>
+      <div class="caption">Visible light (fibre optics / seeing) sits between infrared and UV</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Ionising radiation &amp; risk</h3>
+    <p>The danger of an EM wave depends on its <strong>energy</strong>, which rises towards the gamma end. The three highest-energy groups — <strong>ultraviolet, X-rays and gamma rays</strong> — carry enough energy to be <strong>ionising</strong>: they can knock electrons off atoms inside your cells.</p>
+    <p>Ionising radiation can <strong>damage cells</strong> and DNA, which can cause <strong>mutations</strong> that may lead to <strong>cancer</strong>. <strong>Ultraviolet</strong> from the Sun damages skin cells (causing ageing and skin cancer) and can damage the eyes — which is why sun cream and sunglasses help. <strong>X-rays and gamma rays</strong> can pass deep into the body, so doses are kept low and medical staff are shielded.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — only the high-energy end ionises</h4>
+      <p>Radio, microwaves, infrared and visible light are <strong>not ionising</strong> at the levels we meet them — they don't have enough energy. The ionising, more dangerous waves are <strong>UV, X-rays and gamma</strong>. Don't claim a radio wave can give you cancer by ionising your cells; it can't.</p>
+    </div>
+
+    <div class="worked">
+      <h4>How to answer a "use AND danger" question</h4>
+      <p class="q">"State a use of ultraviolet and one danger of it." (How to structure it.)</p>
+      <div class="step"><span class="label">Use</span><span class="v">Security marking, tanning, or energy-efficient (fluorescent) lamps.</span></div>
+      <div class="step"><span class="label">Why</span><span class="v">UV is ionising, so it can damage cells.</span></div>
+      <div class="step answer"><span class="label">Danger</span><span class="v">Damages skin (ageing, skin cancer) and harms the eyes.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which set of EM waves is ionising and so carries the greatest risk to health?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Radio, microwaves, infrared</span></li>
+        <li><span class="letter">B</span><span>Infrared, visible light, ultraviolet</span></li>
+        <li><span class="letter">C</span><span>Ultraviolet, X-rays, gamma rays</span></li>
+        <li><span class="letter">D</span><span>Microwaves, X-rays, gamma rays</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — UV, X-rays and gamma rays.</strong> These three are the high-energy, <em>ionising</em> groups that can damage cells and DNA. Microwaves (in D) are not ionising.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Give one use of microwaves and one use of infrared.</summary><div class="ans">Microwaves: <strong>satellite communication</strong> or <strong>cooking food</strong>. Infrared: <strong>heaters</strong>, cooking, thermal imaging, or remote controls.</div></details></li>
+      <li><details><summary>State a use of X-rays and a use of gamma rays.</summary><div class="ans">X-rays: <strong>medical imaging of bones</strong>. Gamma rays: <strong>sterilising equipment</strong> or treating cancer.</div></details></li>
+      <li><details><summary>What does "ionising" mean?</summary><div class="ans">The radiation has enough energy to <strong>knock electrons off atoms</strong>, which can damage cells and DNA.</div></details></li>
+      <li><details><summary>Which three EM groups are ionising?</summary><div class="ans"><strong>Ultraviolet, X-rays and gamma rays</strong>.</div></details></li>
+      <li><details><summary>Give one danger of over-exposure to ultraviolet.</summary><div class="ans">Damage to skin cells (premature <strong>ageing</strong> and <strong>skin cancer</strong>) and damage to the eyes.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — REFLECTION & REFRACTION (4.6.1.3)                             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.6.1.3 · Behaviour at boundaries</div>
+    <h2 class="lesson-title">Reflection &amp; <em>refraction</em></h2>
+    <p class="lesson-promise">What a wave does when it hits a boundary — bounce off, or bend through — and why the bending happens.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Reflection</h3>
+    <p>When a wave hits a boundary between two materials it can be <strong>reflected</strong>, <strong>absorbed</strong>, or <strong>transmitted</strong> (pass through). <strong>Reflection</strong> is when the wave bounces off the surface.</p>
+    <p>For reflection we measure angles from the <strong>normal</strong> — a line drawn at 90° to the surface where the ray hits. The rule is simple: the <strong>angle of incidence equals the angle of reflection</strong>. Both angles are measured between the ray and the normal, not the surface.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">REFLECTION AT A SURFACE</text>
+        <!-- mirror surface -->
+        <line x1="80" y1="170" x2="480" y2="170" stroke="#1E2761" stroke-width="3"/>
+        <g>
+          <line x1="280" y1="170" x2="280" y2="60" stroke="#CFD8E3" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="288" y="68" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">normal</text>
+        </g>
+        <!-- incident ray -->
+        <line x1="150" y1="80" x2="280" y2="170" stroke="#B85042" stroke-width="2.5"/>
+        <polygon points="280,170 264,156 272,148" fill="#B85042"/>
+        <text x="118" y="70" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">incident ray</text>
+        <!-- reflected ray -->
+        <line x1="280" y1="170" x2="410" y2="80" stroke="#2C5F2D" stroke-width="2.5"/>
+        <polygon points="410,80 396,90 404,96" fill="#2C5F2D"/>
+        <text x="360" y="100" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">reflected ray</text>
+        <!-- angle labels -->
+        <text x="252" y="150" text-anchor="end" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#1E2761">i</text>
+        <text x="308" y="150" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#1E2761">r</text>
+        <text x="280" y="200" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">angle of incidence i = angle of reflection r</text>
+      </svg>
+      <div class="caption">Angles are measured from the normal — the line at 90° to the surface</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — measure from the normal</h4>
+      <p>Angles of incidence and reflection are always measured between the ray and the <strong>normal</strong>, <em>not</em> the surface. A common slip is measuring from the surface itself, which gives the wrong value (it's 90° minus the correct angle).</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Refraction</h3>
+    <p><strong>Refraction</strong> is the <strong>change in direction</strong> of a wave as it crosses a boundary into a different material — for example, light passing from air into glass. The wave bends because its <strong>speed changes</strong> in the new material, while its <strong>frequency stays the same</strong> (so the wavelength changes).</p>
+    <p>The rule of thumb: when a wave <strong>slows down</strong> (entering a denser material like glass), it bends <strong>towards the normal</strong>. When it <strong>speeds up</strong> (coming back out into air), it bends <strong>away from the normal</strong>. If it hits the boundary straight on (along the normal), it doesn't bend at all.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">REFRACTION: AIR INTO GLASS</text>
+        <!-- glass block -->
+        <rect x="40" y="110" width="480" height="80" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="60" y="150" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">glass (slower)</text>
+        <text x="60" y="100" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">air (faster)</text>
+        <!-- normal at entry -->
+        <line x1="250" y1="50" x2="250" y2="170" stroke="#CFD8E3" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="256" y="60" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">normal</text>
+        <!-- incident ray in air -->
+        <line x1="160" y1="55" x2="250" y2="110" stroke="#B85042" stroke-width="2.5"/>
+        <polygon points="250,110 235,99 230,107" fill="#B85042"/>
+        <!-- refracted ray bends toward normal -->
+        <line x1="250" y1="110" x2="310" y2="190" stroke="#B85042" stroke-width="2.5"/>
+        <polygon points="310,190 297,179 291,186" fill="#B85042"/>
+        <text x="150" y="50" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">incoming ray</text>
+        <text x="320" y="180" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#1E2761">bends towards the normal</text>
+      </svg>
+      <div class="caption">Slowing down (air → glass) bends the ray towards the normal; frequency is unchanged</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — refraction doesn't change frequency</h4>
+      <p>When a wave refracts, its <strong>speed and wavelength change</strong> but its <strong>frequency stays the same</strong>. The wave bends only because the speed changes. If a wave hits the boundary <strong>along the normal</strong> (0° incidence), it slows down but carries straight on — no bending.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A ray of light passes from air into a glass block at an angle. What happens?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It speeds up and bends away from the normal</span></li>
+        <li><span class="letter">B</span><span>It slows down and bends towards the normal</span></li>
+        <li><span class="letter">C</span><span>Its frequency increases as it enters the glass</span></li>
+        <li><span class="letter">D</span><span>It carries straight on without changing direction</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Light <em>slows down</em> in glass, so it bends <em>towards the normal</em>. Its frequency is unchanged (C is wrong), and it does bend because it hits at an angle (D would only be true at 0° incidence).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Name the three things that can happen to a wave at a boundary.</summary><div class="ans">It can be <strong>reflected</strong>, <strong>absorbed</strong>, or <strong>transmitted</strong> (pass through, often refracting).</div></details></li>
+      <li><details><summary>What is the "normal" and why does it matter?</summary><div class="ans">A line drawn at <strong>90° to the surface</strong> where the ray hits. All angles of incidence, reflection and refraction are measured <strong>from the normal</strong>.</div></details></li>
+      <li><details><summary>State the law of reflection.</summary><div class="ans">The <strong>angle of incidence equals the angle of reflection</strong> (both measured from the normal).</div></details></li>
+      <li><details><summary>Why does a wave refract (bend) at a boundary?</summary><div class="ans">Because its <strong>speed changes</strong> in the new material. Its frequency stays the same, so the wavelength changes too.</div></details></li>
+      <li><details><summary>Light goes from glass into air. Which way does it bend?</summary><div class="ans">It <strong>speeds up</strong>, so it bends <strong>away from the normal</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Paper 2 · P6 Waves</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'p6-waves-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=6e64b531-ead3-481c-8d33-cdb069f2b024&amp;ref=interactive-science&amp;from=p6-waves-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=p6-waves-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

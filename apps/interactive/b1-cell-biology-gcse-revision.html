@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cell Biology (B1) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for B1 Cell Biology — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Biology Paper 1 · B1 Cell Biology</div>
+    <h1>Cell biology, <em>for the exam.</em></h1>
+    <p class="tag">The whole of B1 — cell structure, specialisation, microscopy, the cell cycle and stem cells, plus how substances move in and out of cells. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Cell structure</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Specialised cells</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Microscopy</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Cell division</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Diffusion</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Osmosis</a>
+    <a href="#lesson-7" class="nav-pill" data-lesson="7">Active transport</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — EUKARYOTES, PROKARYOTES & CELL STRUCTURE (4.1.1.1 / 4.1.1.2) -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.1.1 · Cell structure</div>
+    <h2 class="lesson-title">Cells — the <em>building blocks</em> of life</h2>
+    <p class="lesson-promise">By the end of this topic you'll tell a eukaryotic cell from a prokaryotic one, name every organelle, and say exactly what each one does.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Two types of cell</h3>
+    <p>All living things are made of cells. There are two big groups. <strong>Eukaryotic cells</strong> have a <strong>nucleus</strong> that holds the genetic material — animals, plants and fungi are all made of them. <strong>Prokaryotic cells</strong> are much smaller and have <strong>no nucleus</strong>; bacteria are prokaryotes.</p>
+    <p>In a prokaryote the genetic material is a single loop of DNA floating free in the cytoplasm, plus small extra rings called <strong>plasmids</strong>. A handy memory hook: <em>pro</em>karyotes come <em>before</em> a proper nucleus.</p>
+
+    <div class="keywords">
+      <h4>Organelles and their jobs</h4>
+      <dl>
+        <dt>Nucleus</dt><dd>Holds the DNA; controls the cell's activities.</dd>
+        <dt>Cytoplasm</dt><dd>Jelly-like fluid where most chemical reactions happen.</dd>
+        <dt>Cell membrane</dt><dd>Controls what enters and leaves the cell.</dd>
+        <dt>Mitochondria</dt><dd>Where aerobic respiration happens — release energy.</dd>
+        <dt>Ribosomes</dt><dd>Where proteins are made (protein synthesis).</dd>
+      </dl>
+    </div>
+
+    <p><strong>Plant cells</strong> have everything an animal cell has, plus three extras: a <strong>cell wall</strong> made of cellulose for strength and support, a <strong>permanent vacuole</strong> filled with cell sap, and <strong>chloroplasts</strong> that contain chlorophyll and carry out <strong>photosynthesis</strong>. Bacterial cells also have a cell wall (but not cellulose) and sometimes a flagellum to swim.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 580 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="290" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">ANIMAL CELL vs PLANT CELL</text>
+        <!-- animal cell -->
+        <text x="150" y="44" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Animal cell</text>
+        <ellipse cx="150" cy="150" rx="95" ry="78" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="150" cy="150" r="26" fill="#B85042"/>
+        <text x="150" y="154" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#fff">nucleus</text>
+        <ellipse cx="105" cy="110" rx="13" ry="7" fill="#C8A24A"/>
+        <ellipse cx="195" cy="190" rx="13" ry="7" fill="#C8A24A"/>
+        <text x="150" y="234" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">membrane · cytoplasm · mitochondria</text>
+        <!-- plant cell -->
+        <text x="430" y="44" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Plant cell</text>
+        <rect x="345" y="72" width="170" height="156" rx="4" fill="#fff" stroke="#2C5F2D" stroke-width="4"/>
+        <rect x="352" y="79" width="156" height="142" rx="3" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <circle cx="395" cy="118" r="20" fill="#B85042"/>
+        <text x="395" y="122" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8" fill="#fff">nucleus</text>
+        <rect x="420" y="150" width="70" height="55" rx="3" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="455" y="181" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#2C5F2D">vacuole</text>
+        <ellipse cx="385" cy="175" rx="11" ry="6" fill="#2C5F2D"/>
+        <ellipse cx="410" cy="100" rx="11" ry="6" fill="#2C5F2D"/>
+      </svg>
+      <div class="caption">Plant cells add a cellulose cell wall (green), a vacuole, and chloroplasts</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — what plants have that animals don't</h4>
+      <p>Don't say a plant cell "has a cell wall instead of a membrane" — it has <strong>both</strong>. The cell wall sits <em>outside</em> the membrane. And only the green parts of a plant have chloroplasts: a <strong>root cell has no chloroplasts</strong> because it's underground and never photosynthesises.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A cell has DNA but no nucleus, a cell wall, and a plasmid. What is it?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>An animal cell</span></li>
+        <li><span class="letter">B</span><span>A plant cell</span></li>
+        <li><span class="letter">C</span><span>A prokaryotic (bacterial) cell</span></li>
+        <li><span class="letter">D</span><span>A red blood cell</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> No nucleus + a <em>plasmid</em> means it's <strong>prokaryotic</strong> — bacteria keep their DNA as a free loop in the cytoplasm. Plant and animal cells (A, B) are eukaryotic and have a nucleus. A red blood cell (D) has no nucleus but it's still a eukaryotic cell with no plasmid.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>How small is a cell?</h3>
+    <p>Cells are tiny, so we measure them in <strong>micrometres (µm)</strong>. One micrometre is a millionth of a metre — that's <strong>1 µm = 0.001 mm</strong>, or 1 × 10⁻⁶ m. A typical animal cell is about 10–30 µm across; a bacterium is roughly 1 µm. Getting comfortable with these units now will make the microscopy maths in Topic 3 far easier.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — bacteria are much smaller</h4>
+      <p>Prokaryotic cells are typically <strong>100 to 1000 times smaller</strong> than eukaryotic cells. If an exam asks you to compare sizes, that's the headline point — not just "no nucleus".</p>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>State two differences between a prokaryotic and a eukaryotic cell.</summary><div class="ans">Prokaryotic cells have <strong>no nucleus</strong> (DNA is a free loop plus plasmids) and are <strong>much smaller</strong>. Eukaryotic cells have a nucleus and are larger.</div></details></li>
+      <li><details><summary>Name three structures found in a plant cell but not an animal cell.</summary><div class="ans">A <strong>cell wall</strong> (cellulose), a <strong>permanent vacuole</strong>, and <strong>chloroplasts</strong>.</div></details></li>
+      <li><details><summary>What is the job of the mitochondria?</summary><div class="ans">They are where <strong>aerobic respiration</strong> happens, releasing energy for the cell.</div></details></li>
+      <li><details><summary>Where in the cell are proteins made?</summary><div class="ans">At the <strong>ribosomes</strong>.</div></details></li>
+      <li><details><summary>Why does a root hair cell have no chloroplasts?</summary><div class="ans">It is <strong>underground</strong> and gets no light, so it cannot photosynthesise — chloroplasts would be useless.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — CELL SPECIALISATION & DIFFERENTIATION (4.1.1.5 / 4.1.1.3)    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.1.1.5 · Specialised cells</div>
+    <h2 class="lesson-title">Specialised cells &amp; <em>differentiation</em></h2>
+    <p class="lesson-promise">How one type of cell becomes many — and how each specialised cell's shape is matched perfectly to its job.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Differentiation</h3>
+    <p>Cells <strong>differentiate</strong> — they develop different structures so they can carry out a particular function. A cell that has become specialised is good at one job but can no longer turn into other cell types.</p>
+    <p>Most animal cells differentiate <strong>early</strong> in development, and after that an adult animal mostly only divides cells to <strong>repair and replace</strong> them. Many plant cells, by contrast, <strong>keep the ability to differentiate throughout life</strong> — that's a key difference between plants and animals.</p>
+
+    <div class="keywords">
+      <h4>Specialised cells you must know</h4>
+      <dl>
+        <dt>Sperm cell</dt><dd>Long tail to swim; many mitochondria for energy; carries half the genes (one parent).</dd>
+        <dt>Egg cell</dt><dd>Large with food stores for the embryo; membrane changes after fertilisation.</dd>
+        <dt>Ciliated cell</dt><dd>Tiny hairs (cilia) that beat to sweep mucus along the airways.</dd>
+        <dt>Root hair cell</dt><dd>Long projection — huge surface area for absorbing water and mineral ions.</dd>
+        <dt>Nerve cell</dt><dd>Long and thin to carry electrical impulses around the body.</dd>
+        <dt>Muscle cell</dt><dd>Packed with mitochondria and able to contract (shorten).</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 580 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="290" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SHAPE MATCHED TO JOB</text>
+        <!-- sperm -->
+        <ellipse cx="80" cy="80" rx="20" ry="14" fill="#B85042"/>
+        <path d="M100 80 q30 -16 60 0 q-30 16 -60 0" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <text x="100" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">sperm</text>
+        <text x="100" y="142" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">tail to swim</text>
+        <!-- root hair -->
+        <path d="M250 100 h-40 v-40 h40" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <line x1="250" y1="80" x2="320" y2="80" stroke="#2C5F2D" stroke-width="3"/>
+        <text x="285" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">root hair</text>
+        <text x="285" y="142" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">big surface area</text>
+        <!-- nerve -->
+        <circle cx="430" cy="70" r="16" fill="#C8A24A"/>
+        <line x1="446" y1="70" x2="540" y2="70" stroke="#C8A24A" stroke-width="3"/>
+        <text x="470" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">nerve cell</text>
+        <text x="470" y="142" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">long, carries impulses</text>
+        <line x1="50" y1="175" x2="530" y2="175" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="290" y="197" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Every feature exists for a reason — link structure to function in your answer.</text>
+      </svg>
+      <div class="caption">In the exam, always say HOW a feature helps the cell do its job</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — explain the adaptation, don't just name it</h4>
+      <p>"A sperm has a tail" earns little. Say <strong>why</strong>: "a tail so it can <em>swim to the egg</em>." Marks come from linking the <strong>feature</strong> to the <strong>function</strong>. A root hair cell's long shape gives a <strong>large surface area</strong>, which speeds up absorption of water and mineral ions.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A cell lining the airways has many tiny beating hairs. What is it, and what do the hairs do?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Root hair cell — it absorbs water</span></li>
+        <li><span class="letter">B</span><span>Ciliated cell — the cilia sweep mucus and trapped dirt out of the airways</span></li>
+        <li><span class="letter">C</span><span>Muscle cell — the hairs help it contract</span></li>
+        <li><span class="letter">D</span><span>Sperm cell — the hairs help it swim</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The "tiny beating hairs" are <strong>cilia</strong>, so it's a <strong>ciliated cell</strong>. The cilia beat to sweep mucus (with trapped dust and microbes) up and out of the airways. A root hair cell (A) has one long projection, not cilia.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What does "differentiation" mean?</summary><div class="ans">The process by which a cell <strong>becomes specialised</strong> for a particular job, developing a structure suited to its function.</div></details></li>
+      <li><details><summary>Give two ways a sperm cell is adapted to its function.</summary><div class="ans">A <strong>tail</strong> to swim to the egg, and <strong>many mitochondria</strong> to release the energy needed for swimming. (It also carries half the genetic information.)</div></details></li>
+      <li><details><summary>How is a root hair cell adapted for absorbing water?</summary><div class="ans">Its long, thin projection gives a <strong>large surface area</strong>, so water and mineral ions are absorbed faster.</div></details></li>
+      <li><details><summary>State one difference in how plant and animal cells differentiate.</summary><div class="ans">Many <strong>plant cells keep the ability to differentiate</strong> all through life; most <strong>animal cells lose it early</strong>, dividing later mainly to repair and replace.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — MICROSCOPY (4.1.1.4) + REQUIRED PRACTICAL                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.1.1.4 · Microscopy</div>
+    <h2 class="lesson-title">Microscopy &amp; the <em>magnification</em> sum</h2>
+    <p class="lesson-promise">Light versus electron microscopes, one equation to recall, and how to handle the standard-form numbers without panicking.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Two kinds of microscope</h3>
+    <p>A <strong>light microscope</strong> uses light and lenses. It's cheap, portable and lets you see living cells, but its <strong>resolution</strong> is limited — it can't separate the smallest sub-cellular structures. An <strong>electron microscope</strong> uses a beam of electrons instead of light. It has a much higher <strong>magnification and resolution</strong>, so it reveals tiny details like the internal structure of mitochondria — which is why our understanding of cells leapt forward when it was invented.</p>
+    <p><strong>Magnification</strong> is how many times bigger the image is. <strong>Resolution</strong> is the ability to tell two close points apart as separate — higher resolution means a sharper, more detailed image. Electron microscopes win on both.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>magnification = image size ÷ real size <span class="badge recall">recall</span></dt>
+        <dd>Rearranged: real size = image size ÷ magnification. Keep both sizes in the <strong>same unit</strong> before dividing. Magnification has no units (it's a ratio).</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — same units, and standard form</h4>
+      <p>If the image is in mm but the real size is in µm, <strong>convert first</strong> (1 mm = 1000 µm). Very small or very large answers are written in <strong>standard form</strong>: 0.002 mm = 2 × 10⁻³ mm. Practise moving the decimal point — it's where easy marks are won and lost.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="290" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">IMAGE vs REAL SIZE</text>
+        <!-- real (small) -->
+        <circle cx="120" cy="110" r="14" fill="#B85042"/>
+        <line x1="106" y1="135" x2="134" y2="135" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="106" y1="130" x2="106" y2="140" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="134" y1="130" x2="134" y2="140" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="120" y="158" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">real size</text>
+        <text x="120" y="174" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">the actual cell</text>
+        <!-- arrow -->
+        <line x1="180" y1="110" x2="300" y2="110" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="306,110 292,104 292,116" fill="#C8A24A"/>
+        <text x="240" y="100" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">× magnification</text>
+        <!-- image (big) -->
+        <circle cx="420" cy="105" r="50" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="370" y1="170" x2="470" y2="170" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="370" y1="165" x2="370" y2="175" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="470" y1="165" x2="470" y2="175" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="420" y="190" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">image size (what you measure)</text>
+      </svg>
+      <div class="caption">Magnification = how many times bigger the image is than the real cell</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — finding magnification</h4>
+      <p class="q">A cell is really 0.05 mm wide. In a drawing it measures 20 mm wide. Calculate the magnification.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">magnification = image size ÷ real size</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 20 ÷ 0.05</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= ×400</span></div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — finding the real size (standard form)</h4>
+      <p class="q">An image of a cell is 8 mm long at a magnification of ×2000. Find the real length, in mm and in standard form.</p>
+      <div class="step"><span class="label">Rearrange</span><span class="v">real size = image size ÷ magnification</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 8 ÷ 2000 = 0.004 mm</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 4 × 10⁻³ mm  (= 4 µm)</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">An image is 30 mm wide at a magnification of ×1500. What is the cell's real width?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>45 000 mm</span></li>
+        <li><span class="letter">B</span><span>0.02 mm (2 × 10⁻² mm)</span></li>
+        <li><span class="letter">C</span><span>50 mm</span></li>
+        <li><span class="letter">D</span><span>0.5 mm</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 0.02 mm.</strong> real size = image ÷ magnification = 30 ÷ 1500 = 0.02 mm = 2 × 10⁻² mm. Answer A is the slip of <em>multiplying</em> instead of dividing.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Using a light microscope</h3>
+
+    <div class="rp">
+      <h4>Observing cells with a light microscope</h4>
+      <p><strong>Aim:</strong> use a light microscope to observe, draw and label cells, and work out the magnification used.</p>
+      <ol>
+        <li>Prepare a slide: place a thin specimen (e.g. onion epidermis) on the slide and add a drop of <strong>stain</strong> (such as iodine) to make the structures show up.</li>
+        <li>Lower a <strong>coverslip</strong> gently at an angle to avoid trapping air bubbles.</li>
+        <li>Clip the slide on the stage. Start with the <strong>lowest-power objective lens</strong> and use the coarse focus to bring cells into view, then switch to higher power and fine-focus.</li>
+        <li>Make a clear, labelled <strong>biological drawing</strong> with sharp pencil lines (no shading).</li>
+        <li>Record the total magnification: <span class="formula">eyepiece lens × objective lens</span> (e.g. ×10 eyepiece × ×40 objective = ×400).</li>
+      </ol>
+      <p><strong>Control / improve:</strong> add the stain and coverslip carefully to avoid <strong>air bubbles</strong>, which can be mistaken for cells. Including a <strong>scale bar</strong> on your drawing makes the real size clear.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A microscope has a ×10 eyepiece and a ×40 objective lens. What is the total magnification?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>×50</span></li>
+        <li><span class="letter">B</span><span>×4</span></li>
+        <li><span class="letter">C</span><span>×400</span></li>
+        <li><span class="letter">D</span><span>×30</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — ×400.</strong> Total magnification = eyepiece × objective = 10 × 40 = ×400. You <em>multiply</em> the two lenses, not add them.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>State the magnification equation.</summary><div class="ans"><strong>magnification = image size ÷ real size</strong>. Keep both sizes in the same unit.</div></details></li>
+      <li><details><summary>Give two advantages of an electron microscope over a light microscope.</summary><div class="ans">Much higher <strong>magnification</strong> and much higher <strong>resolution</strong>, so it shows far more detail (e.g. inside organelles).</div></details></li>
+      <li><details><summary>A cell is 0.02 mm wide and appears 10 mm wide. Find the magnification.</summary><div class="ans">magnification = 10 ÷ 0.02 = <strong>×500</strong>.</div></details></li>
+      <li><details><summary>Why is a stain such as iodine added when preparing a slide?</summary><div class="ans">It makes the cells and their structures <strong>show up</strong> (increases contrast) so they're easier to see.</div></details></li>
+      <li><details><summary>Write 0.0008 mm in standard form.</summary><div class="ans"><strong>8 × 10⁻⁴ mm</strong> (which is the same as 0.8 µm).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — CELL DIVISION: CELL CYCLE, MITOSIS & STEM CELLS (4.1.2)       -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.1.2 · Cell division</div>
+    <h2 class="lesson-title">The cell cycle, <em>mitosis</em> &amp; stem cells</h2>
+    <p class="lesson-promise">How a cell copies itself to make two identical cells — and why stem cells, which can become anything, are so useful.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Chromosomes &amp; the cell cycle</h3>
+    <p>The nucleus contains <strong>chromosomes</strong> — long molecules of DNA carrying the genes. Body cells have chromosomes in <strong>pairs</strong>; human body cells have 23 pairs (46 chromosomes).</p>
+    <p>The <strong>cell cycle</strong> is how a cell grows and divides. In the long first stage, the cell <strong>grows</strong>, makes more <strong>sub-cellular structures</strong> (like ribosomes and mitochondria), and <strong>copies its DNA</strong> so each chromosome becomes two identical strands. Then comes <strong>mitosis</strong>: the chromosomes line up, are pulled to opposite ends, and the cell divides into <strong>two genetically identical daughter cells</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="290" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">MITOSIS → TWO IDENTICAL CELLS</text>
+        <!-- parent -->
+        <circle cx="100" cy="105" r="42" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="85" y1="95" x2="115" y2="95" stroke="#B85042" stroke-width="4"/>
+        <line x1="85" y1="115" x2="115" y2="115" stroke="#C8A24A" stroke-width="4"/>
+        <text x="100" y="170" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">1 parent cell</text>
+        <!-- arrow 1 -->
+        <line x1="155" y1="105" x2="220" y2="105" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="226,105 214,100 214,110" fill="#C8A24A"/>
+        <text x="190" y="96" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">DNA copied</text>
+        <!-- dividing -->
+        <ellipse cx="290" cy="105" rx="48" ry="40" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="290" y1="65" x2="290" y2="145" stroke="#CFD8E3" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="270" y1="95" x2="280" y2="95" stroke="#B85042" stroke-width="4"/>
+        <line x1="300" y1="95" x2="310" y2="95" stroke="#B85042" stroke-width="4"/>
+        <line x1="270" y1="115" x2="280" y2="115" stroke="#C8A24A" stroke-width="4"/>
+        <line x1="300" y1="115" x2="310" y2="115" stroke="#C8A24A" stroke-width="4"/>
+        <text x="290" y="170" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">splitting</text>
+        <!-- arrow 2 -->
+        <line x1="350" y1="105" x2="410" y2="105" stroke="#C8A24A" stroke-width="2.5"/>
+        <polygon points="416,105 404,100 404,110" fill="#C8A24A"/>
+        <!-- two cells -->
+        <circle cx="470" cy="80" r="28" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <line x1="458" y1="80" x2="482" y2="80" stroke="#B85042" stroke-width="3"/>
+        <circle cx="470" cy="140" r="28" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <line x1="458" y1="140" x2="482" y2="140" stroke="#B85042" stroke-width="3"/>
+        <text x="525" y="113" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">2 identical</text>
+      </svg>
+      <div class="caption">DNA is copied first, then mitosis splits it into two identical daughter cells</div>
+    </div>
+
+    <p>Mitosis is used for <strong>growth</strong>, <strong>repair</strong> of damaged tissue, and <strong>replacing</strong> worn-out cells — and for asexual reproduction in some organisms. Because the cells are identical clones, mitosis never produces variation.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — mitosis makes identical cells</h4>
+      <p>The two daughter cells are <strong>genetically identical</strong> to the parent and to each other. Don't muddle this with gametes (sperm and egg), which are <em>not</em> made by mitosis and are <em>not</em> identical. And remember the DNA is copied <strong>before</strong> the cell divides, not during.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Stem cells</h3>
+    <p>A <strong>stem cell</strong> is an undifferentiated cell that can keep dividing and can <strong>differentiate</strong> into many different cell types.</p>
+    <p><strong>Embryonic stem cells</strong> (from a very early embryo) can turn into almost <em>any</em> type of cell. <strong>Adult stem cells</strong>, found in places like bone marrow, can form a more <em>limited</em> range — for example, blood cells. In plants, stem cells are found in the <strong>meristems</strong> at the tips of roots and shoots, and these can produce <em>any</em> kind of plant cell throughout the plant's life.</p>
+
+    <div class="keywords">
+      <h4>Uses &amp; issues</h4>
+      <dl>
+        <dt>Medical uses</dt><dd>Replace faulty cells — e.g. treating diabetes or paralysis; bone-marrow transplants already use adult stem cells.</dd>
+        <dt>Therapeutic cloning</dt><dd>Embryo made with the patient's genes, so stem cells aren't rejected.</dd>
+        <dt>Plant meristems</dt><dd>Clone whole plants quickly and cheaply — useful for crops and rare species.</dd>
+        <dt>Issues</dt><dd>Ethical objections to using embryos; risk of transferring viral infection; some find it religiously or morally wrong.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — give a balanced argument</h4>
+      <p>"Evaluate" questions need <strong>both sides</strong>. Benefits: stem cells could cure conditions like paralysis or type 1 diabetes. Concerns: using <strong>embryonic</strong> stem cells raises ethical issues, and there's a small risk of <strong>viral infection</strong> being passed on. End with a justified conclusion.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Where are stem cells found in a plant, and what can they do?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>In the leaves — they photosynthesise</span></li>
+        <li><span class="letter">B</span><span>In the meristems (root and shoot tips) — they can differentiate into any plant cell</span></li>
+        <li><span class="letter">C</span><span>In the bone marrow — they make blood cells</span></li>
+        <li><span class="letter">D</span><span>In the vacuole — they store sap</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Plant stem cells sit in the <strong>meristem</strong> tissue at the tips of roots and shoots and can form <em>any</em> type of plant cell for the whole of the plant's life. Bone marrow (C) is where <em>animal</em> adult stem cells are found.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Name two things that happen before a cell divides by mitosis.</summary><div class="ans">The cell <strong>grows</strong> and makes more sub-cellular structures, and the <strong>DNA is copied</strong> so each chromosome becomes two identical strands.</div></details></li>
+      <li><details><summary>Give two uses of mitosis in the body.</summary><div class="ans">Any two of: <strong>growth</strong>, <strong>repair</strong> of damaged tissue, and <strong>replacing</strong> worn-out cells.</div></details></li>
+      <li><details><summary>How are the daughter cells from mitosis related to the parent cell?</summary><div class="ans">They are <strong>genetically identical</strong> (clones) to the parent and to each other.</div></details></li>
+      <li><details><summary>What is a stem cell?</summary><div class="ans">An <strong>undifferentiated cell</strong> that can keep dividing and can <strong>differentiate</strong> into many different cell types.</div></details></li>
+      <li><details><summary>State one benefit and one concern of using embryonic stem cells.</summary><div class="ans"><strong>Benefit:</strong> could treat conditions such as diabetes or paralysis. <strong>Concern:</strong> ethical objections to using embryos (or the risk of passing on a viral infection).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — DIFFUSION (4.1.3.1)                                           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.1.3.1 · Diffusion</div>
+    <h2 class="lesson-title">Diffusion — <em>spreading</em> out</h2>
+    <p class="lesson-promise">The passive spreading of particles from high to low concentration — and why small cells exchange substances faster than big ones.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Down the gradient</h3>
+    <p><strong>Diffusion</strong> is the <strong>net movement of particles from an area of higher concentration to an area of lower concentration</strong> — that is, <strong>down a concentration gradient</strong>. It happens because particles move randomly, and it needs <strong>no energy from the cell</strong>: it's a <em>passive</em> process.</p>
+    <p>In living things, oxygen and carbon dioxide diffuse in and out of cells, and urea diffuses out into the blood plasma. "Net" movement matters: particles move both ways, but <em>more</em> move from the high side, so overall they spread out until evenly mixed.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="290" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">HIGH → LOW CONCENTRATION</text>
+        <!-- container -->
+        <rect x="60" y="45" width="460" height="120" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="290" y1="45" x2="290" y2="165" stroke="#CFD8E3" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <!-- crowded left -->
+        <circle cx="100" cy="75" r="6" fill="#B85042"/><circle cx="135" cy="100" r="6" fill="#B85042"/>
+        <circle cx="115" cy="135" r="6" fill="#B85042"/><circle cx="170" cy="70" r="6" fill="#B85042"/>
+        <circle cx="200" cy="115" r="6" fill="#B85042"/><circle cx="160" cy="140" r="6" fill="#B85042"/>
+        <circle cx="230" cy="85" r="6" fill="#B85042"/><circle cx="245" cy="135" r="6" fill="#B85042"/>
+        <text x="175" y="35" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">high concentration</text>
+        <!-- sparse right -->
+        <circle cx="360" cy="95" r="6" fill="#B85042"/><circle cx="430" cy="130" r="6" fill="#B85042"/>
+        <circle cx="470" cy="75" r="6" fill="#B85042"/>
+        <text x="405" y="35" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">low concentration</text>
+        <!-- net arrow -->
+        <line x1="250" y1="105" x2="350" y2="105" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="356,105 342,99 342,111" fill="#C8A24A"/>
+        <text x="300" y="185" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Net movement is from the crowded side to the empty side.</text>
+      </svg>
+      <div class="caption">Diffusion: net movement down the concentration gradient, no energy needed</div>
+    </div>
+
+    <p>Three things <strong>speed up</strong> diffusion: a <strong>steeper concentration gradient</strong> (bigger difference), a <strong>higher temperature</strong> (particles move faster), and a <strong>larger surface area</strong> of the membrane.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — diffusion is passive</h4>
+      <p>Diffusion needs <strong>no energy</strong> from respiration — that's what separates it from <em>active transport</em> (Topic 7). And the word is <strong>"net"</strong> movement: particles still move both ways, just more from high to low. Don't say they "all" move one way.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Surface area : volume ratio</h3>
+    <p>For a substance to be exchanged fast enough, a cell needs a big <strong>surface area compared with its volume</strong>. As an object gets bigger, its volume grows faster than its surface area, so the <strong>surface-area-to-volume ratio falls</strong>. That's why <strong>single-celled organisms</strong> manage by diffusion alone, but large animals need specialised <strong>exchange surfaces</strong> (like lungs) and a transport system.</p>
+
+    <div class="worked">
+      <h4>Worked example — surface area : volume ratio</h4>
+      <p class="q">Compare the surface-area-to-volume ratio of a cube of side 1 cm and a cube of side 2 cm.</p>
+      <div class="step"><span class="label">1 cm cube</span><span class="v">SA = 6 × (1×1) = 6 cm² · Volume = 1×1×1 = 1 cm³</span></div>
+      <div class="step"><span class="label">Ratio</span><span class="v">6 : 1</span></div>
+      <div class="step"><span class="label">2 cm cube</span><span class="v">SA = 6 × (2×2) = 24 cm² · Volume = 2×2×2 = 8 cm³</span></div>
+      <div class="step answer"><span class="label">Ratio</span><span class="v">24 : 8 = 3 : 1 — smaller, so the big cube exchanges more slowly</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which change would make oxygen diffuse into a cell faster?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>A smaller surface area</span></li>
+        <li><span class="letter">B</span><span>A lower temperature</span></li>
+        <li><span class="letter">C</span><span>A steeper concentration gradient</span></li>
+        <li><span class="letter">D</span><span>A smaller concentration difference</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> A <strong>steeper (bigger) concentration gradient</strong> speeds up diffusion. A larger surface area and a higher temperature would also help — so A and B are the wrong direction, and D reduces the gradient.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define diffusion.</summary><div class="ans">The <strong>net movement of particles from a higher to a lower concentration</strong> (down a concentration gradient). It is passive — no energy needed.</div></details></li>
+      <li><details><summary>Name three factors that increase the rate of diffusion.</summary><div class="ans">A <strong>steeper concentration gradient</strong>, a <strong>higher temperature</strong>, and a <strong>larger surface area</strong>.</div></details></li>
+      <li><details><summary>Name two substances that diffuse across cell membranes in the body.</summary><div class="ans">Any two of: <strong>oxygen</strong>, <strong>carbon dioxide</strong>, and <strong>urea</strong>.</div></details></li>
+      <li><details><summary>Why can't a large multicellular animal rely on diffusion alone?</summary><div class="ans">Its <strong>surface-area-to-volume ratio is too small</strong>, so diffusion across the outer surface is too slow — it needs special exchange surfaces and a transport system.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — OSMOSIS (4.1.3.2) + REQUIRED PRACTICAL                        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.1.3.2 · Osmosis</div>
+    <h2 class="lesson-title">Osmosis — the <em>movement of water</em></h2>
+    <p class="lesson-promise">Diffusion's water-only cousin — across a partially permeable membrane — plus the potato required practical that everyone gets asked about.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Water across a membrane</h3>
+    <p><strong>Osmosis is the movement of water molecules across a partially permeable membrane, from a dilute solution (high water concentration) to a more concentrated solution (low water concentration)</strong>. It's really just diffusion of <em>water</em> — passive, no energy needed.</p>
+    <p>A <strong>partially permeable membrane</strong> lets water molecules through but not the larger solute particles (like sugar). So water moves to even out the concentration, but the sugar stays put.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="290" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WATER CROSSES, SUGAR CANNOT</text>
+        <rect x="60" y="45" width="460" height="120" rx="4" fill="#fff" stroke="#1E2761" stroke-width="2"/>
+        <line x1="290" y1="45" x2="290" y2="165" stroke="#2C5F2D" stroke-width="3" stroke-dasharray="6 5"/>
+        <text x="290" y="183" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#2C5F2D">partially permeable membrane</text>
+        <!-- dilute left: lots of water, no sugar -->
+        <text x="175" y="38" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">dilute (lots of water)</text>
+        <circle cx="110" cy="80" r="5" fill="#EDF2FA" stroke="#1E2761"/><circle cx="150" cy="110" r="5" fill="#EDF2FA" stroke="#1E2761"/>
+        <circle cx="120" cy="140" r="5" fill="#EDF2FA" stroke="#1E2761"/><circle cx="200" cy="90" r="5" fill="#EDF2FA" stroke="#1E2761"/>
+        <circle cx="240" cy="130" r="5" fill="#EDF2FA" stroke="#1E2761"/><circle cx="180" cy="135" r="5" fill="#EDF2FA" stroke="#1E2761"/>
+        <!-- concentrated right: sugar + some water -->
+        <text x="405" y="38" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">concentrated (sugar)</text>
+        <circle cx="350" cy="90" r="8" fill="#B85042"/><circle cx="420" cy="120" r="8" fill="#B85042"/>
+        <circle cx="470" cy="80" r="8" fill="#B85042"/><circle cx="390" cy="140" r="8" fill="#B85042"/>
+        <circle cx="450" cy="135" r="5" fill="#EDF2FA" stroke="#1E2761"/>
+        <!-- water arrow -->
+        <line x1="245" y1="62" x2="335" y2="62" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="341,62 327,56 327,68" fill="#C8A24A"/>
+        <text x="195" y="58" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="11" fill="#5C6370">water moves</text>
+      </svg>
+      <div class="caption">Small water molecules cross; large sugar molecules (red) cannot</div>
+    </div>
+
+    <p>This matters for cells. In a <strong>dilute</strong> solution, a plant cell takes in water and becomes firm (<strong>turgid</strong>) — that's what holds a plant up. In a <strong>concentrated</strong> solution, water leaves and the plant wilts. (Animal cells, with no cell wall, can burst or shrivel.)</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — osmosis is about WATER</h4>
+      <p>Osmosis moves <strong>water only</strong>, and only across a <strong>partially permeable membrane</strong>. Be careful which way it goes: water moves <em>towards</em> the more <strong>concentrated</strong> (lower-water) solution. Putting a cell in pure water makes it <em>gain</em> water; strong sugar solution makes it <em>lose</em> water.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The potato practical</h3>
+
+    <div class="rp">
+      <h4>Effect of solution concentration on potato tissue</h4>
+      <p><strong>Aim:</strong> investigate the effect of sugar (or salt) solution concentration on the mass of plant (potato) tissue.</p>
+      <ol>
+        <li>Use a cork borer and ruler to cut potato cylinders of the <strong>same size</strong>; blot them dry and record the <strong>starting mass</strong> of each.</li>
+        <li>Make up sugar solutions of <strong>different concentrations</strong> (and one of pure water, 0 mol/dm³).</li>
+        <li>Put one potato piece in each concentration for the <strong>same length of time</strong>.</li>
+        <li>Remove each piece, gently <strong>blot dry</strong>, and record the <strong>final mass</strong>.</li>
+        <li>Calculate the <strong>percentage change in mass</strong> for each: <span class="formula">% change = (change in mass ÷ start mass) × 100</span></li>
+      </ol>
+      <p><strong>Control / improve:</strong> keep size, time and temperature the same; using <strong>percentage</strong> change (not raw grams) lets you compare pieces fairly even if they started slightly different. Pieces <strong>gain</strong> mass in dilute solutions and <strong>lose</strong> mass in concentrated ones; the concentration where mass doesn't change equals the cells' internal concentration.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — percentage change in mass</h4>
+      <p class="q">A potato cylinder starts at 4.0 g. After soaking it is 4.6 g. Find the percentage change in mass.</p>
+      <div class="step"><span class="label">Change</span><span class="v">4.6 − 4.0 = +0.6 g (it gained mass → took in water)</span></div>
+      <div class="step"><span class="label">Equation</span><span class="v">% change = (change ÷ start) × 100 = (0.6 ÷ 4.0) × 100</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= +15%</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A potato piece is left in concentrated sugar solution. What happens to its mass, and why?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It increases — water moves in by osmosis</span></li>
+        <li><span class="letter">B</span><span>It decreases — water leaves the cells by osmosis</span></li>
+        <li><span class="letter">C</span><span>It stays the same — sugar can't cross the membrane</span></li>
+        <li><span class="letter">D</span><span>It decreases — sugar diffuses out of the potato</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The solution outside is more concentrated (lower water concentration), so <strong>water moves out</strong> of the potato cells by osmosis and the mass <em>decreases</em>. It's water that moves, not sugar — so D is wrong.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define osmosis.</summary><div class="ans">The movement of <strong>water</strong> across a <strong>partially permeable membrane</strong>, from a dilute solution to a more concentrated one.</div></details></li>
+      <li><details><summary>In the potato practical, why is percentage change in mass used rather than the change in grams?</summary><div class="ans">It lets you <strong>fairly compare</strong> pieces that may have started at slightly different masses.</div></details></li>
+      <li><details><summary>A potato piece starts at 5.0 g and ends at 4.5 g. Calculate the percentage change.</summary><div class="ans">(−0.5 ÷ 5.0) × 100 = <strong>−10%</strong> (it lost water).</div></details></li>
+      <li><details><summary>Why does a plant cell become turgid in pure water?</summary><div class="ans">Water enters the cell by <strong>osmosis</strong>; the cell wall stops it bursting, so the cell becomes firm (turgid), which supports the plant.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 7 — ACTIVE TRANSPORT (4.1.3.3)                                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-7">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 07 · 4.1.3.3 · Active transport</div>
+    <h2 class="lesson-title">Active transport — <em>uphill</em></h2>
+    <p class="lesson-promise">Moving substances the "wrong" way — against the gradient — using energy from respiration. The one that's not passive.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Against the gradient</h3>
+    <p><strong>Active transport moves substances from a more dilute solution to a more concentrated one — against the concentration gradient.</strong> Because this is "uphill", it <strong>needs energy released by respiration</strong>. That's the big contrast with diffusion and osmosis, which are passive and need no energy.</p>
+    <p>Two examples you must know. In plants, <strong>root hair cells use active transport to absorb mineral ions</strong> from the soil, even though the soil is more dilute than the cell. In humans, the <strong>gut absorbs sugar (glucose)</strong> from low concentrations in the food into the blood by active transport, so none is wasted — important for respiration.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="290" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">UPHILL — NEEDS ENERGY</text>
+        <!-- slope -->
+        <line x1="80" y1="155" x2="500" y2="65" stroke="#CFD8E3" stroke-width="2"/>
+        <text x="120" y="175" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">low concentration</text>
+        <text x="470" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">high concentration</text>
+        <!-- particle being pushed up -->
+        <circle cx="250" cy="115" r="14" fill="#B85042"/>
+        <line x1="265" y1="108" x2="360" y2="88" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="366,87 351,84 354,96" fill="#C8A24A"/>
+        <text x="305" y="80" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">moved against the gradient</text>
+        <!-- energy label -->
+        <rect x="180" y="150" width="200" height="26" rx="4" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="1.5"/>
+        <text x="280" y="168" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#2C5F2D">ENERGY from respiration</text>
+      </svg>
+      <div class="caption">Active transport pushes substances "uphill" using energy from respiration</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the energy point is the marks</h4>
+      <p>The single most important thing to write is that active transport <strong>requires energy from respiration</strong> — that's what makes it different from diffusion and osmosis. A cell doing lots of active transport (like a root hair cell) therefore has <strong>many mitochondria</strong>.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which statement correctly describes active transport?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Movement down a gradient, no energy needed</span></li>
+        <li><span class="letter">B</span><span>Movement of water across a partially permeable membrane</span></li>
+        <li><span class="letter">C</span><span>Movement against the gradient, using energy from respiration</span></li>
+        <li><span class="letter">D</span><span>Random movement of particles until evenly spread</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> Active transport moves substances <strong>against</strong> the concentration gradient and <strong>uses energy from respiration</strong>. A and D describe diffusion; B describes osmosis.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Telling the three apart</h3>
+    <p>Diffusion, osmosis and active transport are easy to mix up. Lock down the differences: what moves, which way, and whether energy is needed.</p>
+
+    <div class="keywords">
+      <h4>Three ways things move in and out of cells</h4>
+      <dl>
+        <dt>Diffusion</dt><dd>Any particle, high → low concentration, <strong>no energy</strong>.</dd>
+        <dt>Osmosis</dt><dd><strong>Water only</strong>, across a partially permeable membrane, dilute → concentrated, <strong>no energy</strong>.</dd>
+        <dt>Active transport</dt><dd>Substances moved low → high (against the gradient), <strong>energy from respiration needed</strong>.</dd>
+      </dl>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A root hair cell absorbs mineral ions from very dilute soil into its more concentrated cytoplasm. Which process is this?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Diffusion</span></li>
+        <li><span class="letter">B</span><span>Osmosis</span></li>
+        <li><span class="letter">C</span><span>Active transport</span></li>
+        <li><span class="letter">D</span><span>Evaporation</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — active transport.</strong> The ions move from a <em>dilute</em> place (soil) to a <em>concentrated</em> place (cytoplasm) — against the gradient — so it needs energy from respiration. Diffusion (A) only goes high → low.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 7 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define active transport.</summary><div class="ans">The movement of substances <strong>against the concentration gradient</strong> (from dilute to concentrated), using <strong>energy released by respiration</strong>.</div></details></li>
+      <li><details><summary>Give two examples of active transport in living things.</summary><div class="ans">Root hair cells absorbing <strong>mineral ions</strong> from the soil, and the gut absorbing <strong>glucose (sugar)</strong> into the blood.</div></details></li>
+      <li><details><summary>What is the key difference between active transport and diffusion?</summary><div class="ans">Active transport goes <strong>against the gradient and needs energy</strong> from respiration; diffusion goes <strong>down the gradient and needs no energy</strong>.</div></details></li>
+      <li><details><summary>Why does a root hair cell contain many mitochondria?</summary><div class="ans">To release the <strong>energy by respiration</strong> needed for the active transport of mineral ions.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="7">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Biology Paper 1 · B1 Cell Biology</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'b1-cell-biology-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=5356c6ee-b7a1-4879-bc32-c7a102290a26&amp;ref=interactive-science&amp;from=b1-cell-biology-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=b1-cell-biology-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

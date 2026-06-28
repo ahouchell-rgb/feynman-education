@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forces (P5) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for P5 Forces — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Physics Paper 2 · P5 Forces</div>
+    <h1>Forces, <em>for the exam.</em></h1>
+    <p class="tag">The whole of P5 — scalars and vectors, resultant forces, work, springs, motion graphs, acceleration, Newton's laws and stopping distances. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Scalars &amp; vectors</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Resultant forces</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Work &amp; energy</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Forces &amp; elasticity</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Speed &amp; velocity</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Acceleration</a>
+    <a href="#lesson-7" class="nav-pill" data-lesson="7">Newton's laws</a>
+    <a href="#lesson-8" class="nav-pill" data-lesson="8">Stopping distance</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — SCALARS, VECTORS & FORCES (4.5.1.1 / 4.5.1.2)                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.5.1 · Scalars, vectors &amp; forces</div>
+    <h2 class="lesson-title">Scalars, <em>vectors</em> &amp; forces</h2>
+    <p class="lesson-promise">By the end of this topic you'll tell a scalar from a vector, sort contact from non-contact forces, and never again confuse mass with weight.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Scalars and vectors</h3>
+    <p>A <strong>scalar</strong> quantity has size (magnitude) only. A <strong>vector</strong> quantity has size <strong>and</strong> direction. That direction is the whole point — it's why velocity and speed aren't the same thing.</p>
+    <p>We draw a vector as an <strong>arrow</strong>: the length shows the size, and the way it points shows the direction. A force is a vector, so it always has both a strength and a direction.</p>
+
+    <div class="keywords">
+      <h4>Scalars vs vectors</h4>
+      <dl>
+        <dt>Scalars</dt><dd>Speed, distance, mass, energy, time, temperature.</dd>
+        <dt>Vectors</dt><dd>Velocity, displacement, force, weight, acceleration, momentum.</dd>
+      </dl>
+    </div>
+
+    <p>A <strong>force</strong> is a push or a pull on an object, caused by it interacting with something else. Forces come in two families. A <strong>contact force</strong> needs the objects to be touching. A <strong>non-contact force</strong> acts at a distance, with no touching at all.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TWO FAMILIES OF FORCE</text>
+        <!-- contact column -->
+        <rect x="40" y="44" width="220" height="140" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="150" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">CONTACT</text>
+        <text x="150" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Friction</text>
+        <text x="150" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Air resistance</text>
+        <text x="150" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Tension</text>
+        <text x="150" y="162" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Normal contact</text>
+        <!-- non-contact column -->
+        <rect x="300" y="44" width="220" height="140" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="410" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">NON-CONTACT</text>
+        <text x="410" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Gravity (weight)</text>
+        <text x="410" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Magnetism</text>
+        <text x="410" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Electrostatic</text>
+      </svg>
+      <div class="caption">Contact forces need touching; non-contact forces act at a distance</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — direction matters</h4>
+      <p>Two forces of the same size but pointing opposite ways are <strong>not</strong> the same. A 10 N push right and a 10 N push left cancel out. Because a force is a <strong>vector</strong>, you must always say which way it points, and draw the arrow the right length and direction.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which of these is a non-contact force?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Friction between a tyre and the road</span></li>
+        <li><span class="letter">B</span><span>The tension in a tow rope</span></li>
+        <li><span class="letter">C</span><span>The gravitational pull of the Earth on a ball</span></li>
+        <li><span class="letter">D</span><span>Air resistance on a falling skydiver</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> Gravity acts without anything touching, so it's a <em>non-contact</em> force. Friction, tension and air resistance all need surfaces in contact, so they're <em>contact</em> forces.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Mass and weight</h3>
+    <p><strong>Mass</strong> is the amount of matter in an object, measured in <strong>kilograms (kg)</strong>. It never changes — you have the same mass on the Moon as on Earth. <strong>Weight</strong> is the <strong>force of gravity</strong> pulling on that mass, measured in <strong>newtons (N)</strong>. Weight changes if the gravitational field strength changes.</p>
+    <p>Weight acts straight down from a single point called the <strong>centre of mass</strong>. Weight is directly <strong>proportional</strong> to mass: double the mass, double the weight.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>W = m g <span class="badge recall">recall</span></dt>
+        <dd>weight (N) = mass (kg) × gravitational field strength (N/kg). On Earth, g = 9.8 N/kg.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — weight of a person</h4>
+      <p class="q">A student has a mass of 60 kg. Calculate their weight on Earth. (g = 9.8 N/kg)</p>
+      <div class="step"><span class="label">Equation</span><span class="v">W = m g</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 60 × 9.8</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 588 N</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — mass ≠ weight</h4>
+      <p>Mass is in <strong>kg</strong>; weight is a <strong>force</strong> in <strong>N</strong>. Don't say a person "weighs 60 kg" — that's their mass. On the Moon (g ≈ 1.6 N/kg) their mass is still 60 kg, but their weight is much smaller. We measure weight with a <strong>calibrated spring balance (newtonmeter)</strong>.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A bag has a mass of 4 kg. What is its weight on Earth? (g = 9.8 N/kg)</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>4 N</span></li>
+        <li><span class="letter">B</span><span>0.41 N</span></li>
+        <li><span class="letter">C</span><span>39.2 N</span></li>
+        <li><span class="letter">D</span><span>9.8 N</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 39.2 N.</strong> W = m g = 4 × 9.8 = 39.2 N. Answer A confuses weight (a force in N) with the mass; B divides instead of multiplying.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>State the difference between a scalar and a vector quantity.</summary><div class="ans">A <strong>scalar</strong> has magnitude only; a <strong>vector</strong> has magnitude <strong>and</strong> direction.</div></details></li>
+      <li><details><summary>Give one contact force and one non-contact force.</summary><div class="ans">Contact: e.g. <strong>friction</strong>, air resistance, tension or normal contact force. Non-contact: e.g. <strong>gravity</strong>, magnetism or electrostatic force.</div></details></li>
+      <li><details><summary>Write the weight equation and state the unit of each quantity.</summary><div class="ans">W = m g. Weight in <strong>newtons (N)</strong>, mass in <strong>kg</strong>, gravitational field strength in <strong>N/kg</strong>.</div></details></li>
+      <li><details><summary>An astronaut takes a 2 kg tool to the Moon (g = 1.6 N/kg). State its mass and its weight there.</summary><div class="ans">Mass is unchanged: <strong>2 kg</strong>. Weight = m g = 2 × 1.6 = <strong>3.2 N</strong> (much less than on Earth).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — RESULTANT FORCES & FREE BODY DIAGRAMS (4.5.1.3)               -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.5.1.3 · Resultant forces</div>
+    <h2 class="lesson-title">Resultant <em>forces</em> &amp; free body diagrams</h2>
+    <p class="lesson-promise">How to add up the forces on an object into a single resultant — and the Higher-tier skill of splitting one force into two.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Combining forces in a line</h3>
+    <p>Usually several forces act on an object at once. You can always replace them with a <strong>single force</strong> that has the same effect — the <strong>resultant force</strong>.</p>
+    <p>When forces act along the same line, just add them up, treating one direction as positive and the opposite as negative. Forces the same way <strong>add</strong>; forces opposite ways <strong>subtract</strong>. A <strong>free body diagram</strong> shows the object as a dot or box with an arrow for each force acting on it.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">FORCES ALONG ONE LINE</text>
+        <!-- box -->
+        <rect x="240" y="80" width="80" height="50" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="110" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">box</text>
+        <!-- right force 30 N -->
+        <line x1="320" y1="105" x2="470" y2="105" stroke="#2C5F2D" stroke-width="4"/>
+        <polygon points="478,105 464,98 464,112" fill="#2C5F2D"/>
+        <text x="430" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">30 N →</text>
+        <!-- left force 10 N -->
+        <line x1="240" y1="105" x2="150" y2="105" stroke="#B85042" stroke-width="4"/>
+        <polygon points="142,105 156,98 156,112" fill="#B85042"/>
+        <text x="190" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">← 10 N</text>
+        <!-- resultant -->
+        <text x="280" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#1E2761">Resultant = 30 − 10 = 20 N to the right</text>
+      </svg>
+      <div class="caption">Forces on the same line: add along it, subtract against it</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — resultant force</h4>
+      <p class="q">A sledge is pulled forwards with 200 N. Friction pushes back with 75 N. Find the resultant force.</p>
+      <div class="step"><span class="label">Take forwards as +</span><span class="v">forward 200 N, backward −75 N</span></div>
+      <div class="step"><span class="label">Add</span><span class="v">resultant = 200 − 75</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 125 N forwards</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — balanced ≠ no forces</h4>
+      <p>If the resultant force is <strong>zero</strong>, the forces are <strong>balanced</strong> — but that doesn't mean nothing is pushing. A car at steady speed has thrust balancing drag; the resultant is zero, so it just keeps the same velocity. Always state the <strong>direction</strong> of a resultant force, not only its size.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A box has a 50 N force to the right and a 50 N force to the left. What is the resultant force?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>100 N to the right</span></li>
+        <li><span class="letter">B</span><span>0 N — the forces are balanced</span></li>
+        <li><span class="letter">C</span><span>100 N to the left</span></li>
+        <li><span class="letter">D</span><span>50 N in each direction</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 0 N.</strong> Equal and opposite forces cancel, so the resultant is zero (balanced). The box keeps moving at constant velocity, or stays still.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Forces at angles</h3>
+    <p>When forces don't act along the same line, a single arrow can still represent their combined effect. On Higher tier you also need to do the reverse — split one force into two.</p>
+
+    <div class="higher">
+      <h4>Higher tier — resolving a force into components</h4>
+      <p>A single force can be <strong>resolved</strong> into two forces at right angles that have the same overall effect — usually a <strong>horizontal</strong> and a <strong>vertical</strong> component. You do this with a <strong>scale vector diagram</strong>: draw the force as an arrow to scale, then draw the horizontal and vertical components that complete the rectangle.</p>
+      <p>The same scale-diagram method finds the <strong>resultant</strong> of two forces at an angle: draw them tip-to-tail to scale and measure the single arrow from start to finish. A free body diagram in equilibrium has components that cancel in both directions.</p>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is meant by the resultant force on an object?</summary><div class="ans">The <strong>single force</strong> that has the same effect as all the forces acting on the object combined.</div></details></li>
+      <li><details><summary>A car has 600 N of thrust and 600 N of drag. State the resultant force and what the car does.</summary><div class="ans">Resultant = 600 − 600 = <strong>0 N</strong>. The forces are balanced, so the car continues at <strong>constant velocity</strong>.</div></details></li>
+      <li><details><summary>A rocket has 5000 N thrust up and 2000 N weight down. Find the resultant force.</summary><div class="ans">Resultant = 5000 − 2000 = <strong>3000 N upwards</strong>.</div></details></li>
+      <li><details><summary>[HT] What does it mean to "resolve" a force?</summary><div class="ans">To split a single force into <strong>two components</strong> at right angles (e.g. horizontal and vertical) that together have the same effect.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — WORK DONE & ENERGY (4.5.2)                                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.5.2 · Work &amp; energy</div>
+    <h2 class="lesson-title">Work done <em>&amp;</em> energy</h2>
+    <p class="lesson-promise">When a force moves something, it does work — and where that energy ends up when friction gets involved.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Work means transferring energy</h3>
+    <p><strong>Work is done</strong> whenever a force moves an object through a distance. Doing work <strong>transfers energy</strong> — the work done equals the energy transferred. Work is measured in <strong>joules (J)</strong>, the same unit as energy.</p>
+    <p>The distance must be measured <strong>along the line of the force</strong>. One joule of work is done when a force of 1 N moves an object 1 m in the direction of the force, so <strong>1 J = 1 N m</strong>.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>W = F s <span class="badge recall">recall</span></dt>
+        <dd>work done (J) = force (N) × distance moved along the line of action of the force (m)</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — pushing a crate</h4>
+      <p class="q">A worker pushes a crate with a force of 150 N across 4 m of floor. Calculate the work done.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">W = F s</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 150 × 4</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 600 J</span></div>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WORK = FORCE × DISTANCE</text>
+        <!-- ground -->
+        <line x1="60" y1="120" x2="500" y2="120" stroke="#CFD8E3" stroke-width="1.5"/>
+        <!-- crate -->
+        <rect x="90" y="78" width="60" height="42" rx="3" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- force arrow -->
+        <line x1="150" y1="99" x2="240" y2="99" stroke="#2C5F2D" stroke-width="4"/>
+        <polygon points="248,99 234,92 234,106" fill="#2C5F2D"/>
+        <text x="200" y="88" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">force F</text>
+        <!-- distance dimension -->
+        <line x1="120" y1="145" x2="430" y2="145" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="120" y1="140" x2="120" y2="150" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="430" y1="140" x2="430" y2="150" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="275" y="163" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#1E2761">distance s</text>
+        <!-- moved crate ghost -->
+        <rect x="370" y="78" width="60" height="42" rx="3" fill="none" stroke="#CFD8E3" stroke-width="2" stroke-dasharray="4 3"/>
+      </svg>
+      <div class="caption">Distance is measured along the direction of the force</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — no movement, no work</h4>
+      <p>If the object <strong>doesn't move</strong>, no work is done by that force, however hard you push. Holding a heavy bag still feels tiring, but s = 0, so the work done on the bag is 0 J. The distance must also be <strong>along the line of the force</strong>, not at an angle to it.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Work against friction</h3>
+    <p>When you do work against <strong>friction</strong>, the energy you transfer doesn't disappear — it ends up in the <strong>thermal store</strong> of the object and its surroundings. That's why rubbing your hands together warms them, and why brakes and tyres get hot.</p>
+    <p>So work done against friction causes a <strong>rise in temperature</strong>. The energy is dissipated, spread out and harder to use — but it is still conserved.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A force of 20 N drags a box 5 m across rough ground. How much work is done, and where does most of the energy end up?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>100 J — into the thermal store (the ground and box warm up)</span></li>
+        <li><span class="letter">B</span><span>4 J — into the kinetic store only</span></li>
+        <li><span class="letter">C</span><span>25 J — energy is used up by friction</span></li>
+        <li><span class="letter">D</span><span>100 J — energy is destroyed by friction</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — 100 J.</strong> W = F s = 20 × 5 = 100 J. Work done against friction is transferred to the <em>thermal</em> store, warming the surfaces. C and D use the banned ideas "used up" and "destroyed" — energy is conserved.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Write the work done equation and state the unit of work.</summary><div class="ans">W = F s. Work is measured in <strong>joules (J)</strong>, where 1 J = 1 N m.</div></details></li>
+      <li><details><summary>A 60 N force moves a trolley 3 m in the direction of the force. Calculate the work done.</summary><div class="ans">W = F s = 60 × 3 = <strong>180 J</strong>.</div></details></li>
+      <li><details><summary>A person holds a 100 N box still for one minute. How much work is done on the box? Explain.</summary><div class="ans"><strong>0 J.</strong> The box does not move (s = 0), so no work is done on it.</div></details></li>
+      <li><details><summary>What happens to the energy transferred when work is done against friction?</summary><div class="ans">It is transferred to the <strong>thermal store</strong> of the object and surroundings, causing a <strong>temperature rise</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — FORCES & ELASTICITY (4.5.3) + REQUIRED PRACTICAL              -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.5.3 · Forces &amp; elasticity</div>
+    <h2 class="lesson-title">Forces &amp; <em>elasticity</em></h2>
+    <p class="lesson-promise">Hooke's law, the difference between elastic and inelastic, and the required practical that draws it all together.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Stretching springs</h3>
+    <p>To change the shape of a spring you need <strong>more than one force</strong> — one to stretch each end (or to compress, or to bend). With one force the spring would just move off, not deform.</p>
+    <p>Up to a point, the <strong>extension is directly proportional to the force</strong> — that's <strong>Hooke's law</strong>. Stretch it too far and you pass the <strong>limit of proportionality</strong>, where the line stops being straight.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>F = k e <span class="badge recall">recall</span></dt>
+        <dd>force (N) = spring constant (N/m) × extension (m). The spring constant k is the stiffness — a bigger k means a stiffer spring.</dd>
+      </dl>
+    </div>
+
+    <p>Deformation is <strong>elastic</strong> if the object returns to its original shape when the force is removed. It's <strong>inelastic</strong> if it stays permanently stretched or bent. The work done in stretching a spring (elastically) is stored in its <strong>elastic potential store</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">FORCE vs EXTENSION</text>
+        <!-- axes -->
+        <line x1="80" y1="190" x2="480" y2="190" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="80" y1="190" x2="80" y2="50" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="218" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">extension e</text>
+        <text x="40" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370" transform="rotate(-90 40 120)">force F</text>
+        <!-- straight (proportional) part -->
+        <line x1="80" y1="190" x2="320" y2="90" stroke="#2C5F2D" stroke-width="3"/>
+        <!-- curve past limit -->
+        <path d="M320 90 Q380 70 430 70" fill="none" stroke="#B85042" stroke-width="3"/>
+        <!-- limit marker -->
+        <line x1="320" y1="90" x2="320" y2="190" stroke="#CFD8E3" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle cx="320" cy="90" r="4" fill="#1E2761"/>
+        <line x1="335" y1="90" x2="420" y2="105" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="426" y="109" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">limit of proportionality</text>
+        <text x="170" y="150" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#2C5F2D">straight: F ∝ e</text>
+      </svg>
+      <div class="caption">A force–extension graph is a straight line until the limit of proportionality</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — extension, not length</h4>
+      <p>In F = k e, <strong>e is the extension</strong> — how much longer the spring has become — not its total length. Measure from the <strong>natural (unstretched) length</strong>. Extension must be in <strong>metres</strong>, so a 5 cm stretch is 0.05 m. Beyond the limit of proportionality, F = k e no longer holds.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — spring constant</h4>
+      <p class="q">A force of 6 N stretches a spring by 0.04 m. Calculate the spring constant.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">F = k e → k = F ÷ e</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 6 ÷ 0.04</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 150 N/m</span></div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Measuring the relationship</h3>
+
+    <div class="rp">
+      <h4>Force &amp; extension of a spring</h4>
+      <p><strong>Aim:</strong> investigate the relationship between the force applied to a spring and its extension (Hooke's law).</p>
+      <ol>
+        <li>Clamp a spring vertically from a stand and measure its <strong>natural length</strong> with a ruler (read at eye level).</li>
+        <li>Hang a <strong>known weight</strong> (e.g. 1 N) on the spring and record the new length.</li>
+        <li>Work out the <strong>extension</strong> = new length − natural length.</li>
+        <li>Add weights one at a time, recording length each time, until you have several readings.</li>
+        <li>Plot a graph of <strong>force (y-axis) against extension (x-axis)</strong> and find the <strong>gradient</strong> — that's the spring constant k.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> add weights in <strong>small, equal steps</strong> and don't exceed the limit of proportionality (or the line will curve). Read the ruler at <strong>eye level</strong> to avoid parallax error. A straight line through the origin confirms F ∝ e.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A spring has a spring constant of 25 N/m. What force is needed to stretch it by 0.20 m?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>125 N</span></li>
+        <li><span class="letter">B</span><span>5 N</span></li>
+        <li><span class="letter">C</span><span>0.008 N</span></li>
+        <li><span class="letter">D</span><span>50 N</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 5 N.</strong> F = k e = 25 × 0.20 = 5 N. Answer A divides the wrong way; remember to keep extension in metres.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>State Hooke's law.</summary><div class="ans">The <strong>extension of a spring is directly proportional to the force</strong> applied, up to the limit of proportionality.</div></details></li>
+      <li><details><summary>What is the difference between elastic and inelastic deformation?</summary><div class="ans"><strong>Elastic</strong>: the object returns to its original shape when the force is removed. <strong>Inelastic</strong>: it stays permanently deformed.</div></details></li>
+      <li><details><summary>A spring (k = 40 N/m) is stretched by a 12 N force. Calculate the extension.</summary><div class="ans">e = F ÷ k = 12 ÷ 40 = <strong>0.3 m</strong>.</div></details></li>
+      <li><details><summary>In the required practical, why must you not exceed the limit of proportionality?</summary><div class="ans">Beyond it, extension is <strong>no longer proportional</strong> to force, so the graph curves and F = k e stops working.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — DISTANCE, DISPLACEMENT, SPEED & VELOCITY (4.5.6.1.1-2)        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.5.6.1 · Speed &amp; velocity</div>
+    <h2 class="lesson-title">Distance, displacement, <em>speed</em> &amp; velocity</h2>
+    <p class="lesson-promise">The scalar–vector pairs of motion, the typical speeds you're expected to know, and reading a distance–time graph.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The words, and one equation</h3>
+    <p><strong>Distance</strong> is how far you travel — a scalar, no direction. <strong>Displacement</strong> is the straight-line distance and direction from start to finish — a vector. Walk a full lap of a track and your distance is the lap length, but your displacement is <strong>zero</strong>.</p>
+    <p><strong>Speed</strong> is a scalar (how fast, no direction). <strong>Velocity</strong> is speed in a stated direction — a vector. So an object can move at constant speed but changing velocity, if its direction keeps changing (like a car going round a roundabout).</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>s = v t <span class="badge recall">recall</span></dt>
+        <dd>distance travelled (m) = speed (m/s) × time (s). Rearrange to v = s ÷ t to find speed.</dd>
+      </dl>
+    </div>
+
+    <div class="keywords">
+      <h4>Typical speeds (you should recall roughly)</h4>
+      <dl>
+        <dt>Walking ≈ 1.5 m/s</dt><dd>Running ≈ 3 m/s · cycling ≈ 6 m/s.</dd>
+        <dt>Car ≈ 25 m/s</dt><dd>Train ≈ 55 m/s · plane ≈ 250 m/s.</dd>
+        <dt>Sound in air ≈ 330 m/s</dt><dd>A walking wind speed varies a lot with weather.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — speed of a runner</h4>
+      <p class="q">A runner covers 200 m in 25 s. Calculate their average speed.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">v = s ÷ t</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 200 ÷ 25</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 8 m/s</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — speed and velocity aren't the same</h4>
+      <p>An object can move at <strong>constant speed</strong> but have a <strong>changing velocity</strong> if its direction changes — think of a car driving steadily round a bend. Changing velocity means it's <strong>accelerating</strong>, even though the speedometer reading is constant.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Distance–time graphs</h3>
+    <p>On a <strong>distance–time graph</strong>, the <strong>gradient (slope) is the speed</strong>. A steeper line means faster; a horizontal line means stationary; a curve means the speed is changing.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">DISTANCE–TIME GRAPH</text>
+        <!-- axes -->
+        <line x1="80" y1="190" x2="490" y2="190" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="80" y1="190" x2="80" y2="50" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="285" y="218" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">time</text>
+        <text x="42" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370" transform="rotate(-90 42 120)">distance</text>
+        <!-- steady moderate -->
+        <line x1="80" y1="190" x2="200" y2="120" stroke="#2C5F2D" stroke-width="3"/>
+        <!-- stationary -->
+        <line x1="200" y1="120" x2="300" y2="120" stroke="#1E2761" stroke-width="3"/>
+        <!-- steep fast -->
+        <line x1="300" y1="120" x2="400" y2="60" stroke="#B85042" stroke-width="3"/>
+        <!-- labels -->
+        <text x="135" y="180" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#2C5F2D">moving</text>
+        <text x="250" y="112" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">stopped</text>
+        <text x="360" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">faster</text>
+      </svg>
+      <div class="caption">Gradient = speed. Flat line = stationary; steeper = faster</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">On a distance–time graph, a horizontal (flat) line means the object is:</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>moving at constant speed</span></li>
+        <li><span class="letter">B</span><span>stationary (not moving)</span></li>
+        <li><span class="letter">C</span><span>accelerating</span></li>
+        <li><span class="letter">D</span><span>moving backwards</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — stationary.</strong> A flat line has zero gradient, so the distance isn't changing: the object is not moving. A straight sloped line would be constant speed.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Explain the difference between distance and displacement.</summary><div class="ans">Distance is the total path length (a <strong>scalar</strong>); displacement is the straight-line distance <strong>and direction</strong> from start to finish (a <strong>vector</strong>).</div></details></li>
+      <li><details><summary>A car travels at 25 m/s for 8 s. How far does it go?</summary><div class="ans">s = v t = 25 × 8 = <strong>200 m</strong>.</div></details></li>
+      <li><details><summary>State a typical speed for a person walking and for sound in air.</summary><div class="ans">Walking ≈ <strong>1.5 m/s</strong>; sound in air ≈ <strong>330 m/s</strong>.</div></details></li>
+      <li><details><summary>How do you find the speed from a distance–time graph?</summary><div class="ans">Find the <strong>gradient (slope)</strong> of the line — distance ÷ time.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — ACCELERATION (4.5.6.1.3-5)                                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.5.6.1 · Acceleration</div>
+    <h2 class="lesson-title"><em>Acceleration</em></h2>
+    <p class="lesson-promise">How fast velocity is changing, reading a velocity–time graph, and the given equation that links speed to distance.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The rate of change of velocity</h3>
+    <p><strong>Acceleration</strong> is how quickly velocity changes, measured in <strong>metres per second squared (m/s²)</strong>. Speeding up is a positive acceleration; slowing down is a negative acceleration, also called <strong>deceleration</strong>.</p>
+
+    <div class="eqbox">
+      <h4>Equations</h4>
+      <dl>
+        <dt>a = Δv ÷ t <span class="badge recall">recall</span></dt>
+        <dd>acceleration (m/s²) = change in velocity (m/s) ÷ time taken (s)</dd>
+        <dt>v² − u² = 2 a s <span class="badge given">given</span></dt>
+        <dd>(final velocity)² − (initial velocity)² = 2 × acceleration (m/s²) × distance (m). Use when there's no time given.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — accelerating car</h4>
+      <p class="q">A car speeds up from 8 m/s to 20 m/s in 6 s. Calculate its acceleration.</p>
+      <div class="step"><span class="label">Δv</span><span class="v">change in velocity = 20 − 8 = 12 m/s</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">a = Δv ÷ t = 12 ÷ 6</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 2 m/s²</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — Δv is the change</h4>
+      <p>Use the <strong>change</strong> in velocity (final − initial), not the final velocity. For an object slowing down, the acceleration is <strong>negative</strong>. Objects falling freely near Earth accelerate at about <strong>9.8 m/s²</strong> — but with air resistance, an object can reach a constant <strong>terminal velocity</strong> where the resultant force, and so the acceleration, is zero.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Velocity–time graphs</h3>
+    <p>On a <strong>velocity–time graph</strong>, the <strong>gradient is the acceleration</strong> and the <strong>area under the line is the distance travelled</strong>. A flat line means constant velocity (zero acceleration); a straight slope means constant acceleration.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">VELOCITY–TIME GRAPH</text>
+        <!-- axes -->
+        <line x1="80" y1="190" x2="490" y2="190" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="80" y1="190" x2="80" y2="50" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="285" y="218" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">time</text>
+        <text x="42" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370" transform="rotate(-90 42 120)">velocity</text>
+        <!-- accelerate -->
+        <line x1="80" y1="190" x2="220" y2="90" stroke="#2C5F2D" stroke-width="3"/>
+        <!-- constant -->
+        <line x1="220" y1="90" x2="360" y2="90" stroke="#1E2761" stroke-width="3"/>
+        <!-- area shade -->
+        <polygon points="80,190 220,90 360,90 360,190" fill="#EDF2FA" opacity="0.8"/>
+        <line x1="80" y1="190" x2="220" y2="90" stroke="#2C5F2D" stroke-width="3"/>
+        <line x1="220" y1="90" x2="360" y2="90" stroke="#1E2761" stroke-width="3"/>
+        <!-- labels -->
+        <text x="108" y="128" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#2C5F2D">slope = a</text>
+        <text x="245" y="165" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">area = distance</text>
+        <text x="290" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">constant velocity</text>
+      </svg>
+      <div class="caption">Gradient = acceleration · area under the line = distance travelled</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A motorbike accelerates uniformly from rest at 3 m/s² over a distance of 24 m. Use v² − u² = 2 a s to find its final velocity.</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>12 m/s</span></li>
+        <li><span class="letter">B</span><span>144 m/s</span></li>
+        <li><span class="letter">C</span><span>72 m/s</span></li>
+        <li><span class="letter">D</span><span>8 m/s</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — 12 m/s.</strong> u = 0, so v² = 2 a s = 2 × 3 × 24 = 144. v = √144 = 12 m/s. Answer B forgets to take the square root.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define acceleration and state its unit.</summary><div class="ans">Acceleration is the <strong>rate of change of velocity</strong> (change in velocity per second). Unit: <strong>m/s²</strong>.</div></details></li>
+      <li><details><summary>A train slows from 30 m/s to 6 m/s in 8 s. Calculate its acceleration.</summary><div class="ans">a = Δv ÷ t = (6 − 30) ÷ 8 = −24 ÷ 8 = <strong>−3 m/s²</strong> (a deceleration).</div></details></li>
+      <li><details><summary>What two things can you find from a velocity–time graph?</summary><div class="ans">The <strong>acceleration</strong> (the gradient) and the <strong>distance travelled</strong> (the area under the line).</div></details></li>
+      <li><details><summary>A car at 10 m/s accelerates at 2 m/s² over 75 m. Use v² − u² = 2 a s to find its final speed.</summary><div class="ans">v² = u² + 2 a s = 10² + 2 × 2 × 75 = 100 + 300 = 400. v = <strong>20 m/s</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 7 — NEWTON'S LAWS OF MOTION (4.5.6.2)                             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-7">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 07 · 4.5.6.2 · Newton's laws</div>
+    <h2 class="lesson-title">Newton's <em>laws</em> of motion</h2>
+    <p class="lesson-promise">Three laws that tie forces to motion — plus inertia, and the Higher-tier idea of momentum.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The first and second laws</h3>
+    <p><strong>Newton's first law:</strong> if the resultant force on an object is <strong>zero</strong>, a still object stays still and a moving object keeps the <strong>same velocity</strong> (same speed and direction). So a car at steady speed has balanced forces. To change velocity, you need an unbalanced force.</p>
+    <p>The tendency of an object to keep its state of rest or motion is its <strong>inertia</strong>. <strong>Newton's second law</strong> tells you how much it accelerates: the acceleration is proportional to the resultant force and inversely proportional to the mass.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>F = m a <span class="badge recall">recall</span></dt>
+        <dd>resultant force (N) = mass (kg) × acceleration (m/s²). The <strong>inertial mass</strong> measures how hard it is to change an object's velocity.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — force on a trolley</h4>
+      <p class="q">A 2 kg trolley accelerates at 3 m/s². Calculate the resultant force on it.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">F = m a</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 2 × 3</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 6 N</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — F is the resultant force</h4>
+      <p>In F = m a, the F is the <strong>resultant</strong> (net) force, after you've combined all the forces — not just the force you applied. And greater mass means more <strong>inertia</strong>: for the same force, a heavier object accelerates <em>less</em>.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SAME FORCE, MORE MASS → LESS ACCELERATION</text>
+        <!-- small mass -->
+        <rect x="80" y="70" width="50" height="50" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="105" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">1 kg</text>
+        <line x1="130" y1="95" x2="240" y2="95" stroke="#2C5F2D" stroke-width="4"/>
+        <polygon points="248,95 234,88 234,102" fill="#2C5F2D"/>
+        <text x="190" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">big acceleration</text>
+        <!-- large mass -->
+        <rect x="330" y="65" width="70" height="60" rx="4" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="365" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">4 kg</text>
+        <line x1="400" y1="95" x2="450" y2="95" stroke="#B85042" stroke-width="4"/>
+        <polygon points="458,95 444,88 444,102" fill="#B85042"/>
+        <text x="400" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">small acceleration</text>
+      </svg>
+      <div class="caption">Same force: the larger mass (more inertia) accelerates less</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The third law &amp; momentum</h3>
+    <p><strong>Newton's third law:</strong> whenever two objects interact, they exert <strong>equal and opposite forces</strong> on each other. If you push a wall, the wall pushes back on you just as hard. The two forces are the <strong>same size, opposite direction</strong>, and act on <strong>different objects</strong>.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A resultant force of 12 N acts on a 4 kg box. What is its acceleration?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>48 m/s²</span></li>
+        <li><span class="letter">B</span><span>3 m/s²</span></li>
+        <li><span class="letter">C</span><span>0.33 m/s²</span></li>
+        <li><span class="letter">D</span><span>16 m/s²</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 3 m/s².</strong> F = m a → a = F ÷ m = 12 ÷ 4 = 3 m/s². Answer A multiplies instead of dividing.</div>
+      </details>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — momentum</h4>
+      <p>A moving object has <strong>momentum</strong>, a vector given by <span class="formula">p = m v</span> — momentum (kg m/s) = mass (kg) × velocity (m/s).</p>
+      <p>In a <strong>closed system</strong> (no external resultant force), the <strong>total momentum before an event equals the total momentum after</strong> — this is the <strong>conservation of momentum</strong>. So in a collision or explosion, the combined momentum stays the same, even though the objects swap or share it.</p>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 7 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>State Newton's first law.</summary><div class="ans">If the resultant force is <strong>zero</strong>, an object stays at rest, or keeps moving at the <strong>same velocity</strong>.</div></details></li>
+      <li><details><summary>A 1500 kg car has a resultant force of 3000 N. Calculate its acceleration.</summary><div class="ans">a = F ÷ m = 3000 ÷ 1500 = <strong>2 m/s²</strong>.</div></details></li>
+      <li><details><summary>What is inertia?</summary><div class="ans">The tendency of an object to <strong>stay at rest or keep moving at constant velocity</strong> — its resistance to a change in motion. Greater mass = greater inertia.</div></details></li>
+      <li><details><summary>[HT] Write the momentum equation and state the unit of momentum.</summary><div class="ans">p = m v. Momentum is measured in <strong>kg m/s</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="7">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 8 — STOPPING DISTANCE & BRAKING (4.5.6.3)                         -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-8">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 08 · 4.5.6.3 · Stopping distance</div>
+    <h2 class="lesson-title">Stopping distance <em>&amp;</em> braking</h2>
+    <p class="lesson-promise">Why a car needs so much room to stop — thinking distance, braking distance, and the factors that make each one worse.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Thinking + braking</h3>
+    <p>The <strong>stopping distance</strong> is the total distance a vehicle travels from the moment a hazard appears to the moment it stops. It is made of two parts:</p>
+    <p><strong>Thinking distance</strong> — how far the car travels during the driver's <strong>reaction time</strong>, before the brakes are even touched. <strong>Braking distance</strong> — how far it travels once the brakes are applied, while it slows to a stop.</p>
+
+    <div class="eqbox">
+      <h4>Key relationship</h4>
+      <dl>
+        <dt>stopping distance = thinking distance + braking distance</dt>
+        <dd>Both parts increase with speed, so the total grows rapidly as the car goes faster.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">STOPPING DISTANCE = THINKING + BRAKING</text>
+        <!-- road -->
+        <line x1="40" y1="110" x2="520" y2="110" stroke="#CFD8E3" stroke-width="1.5"/>
+        <!-- thinking bar -->
+        <rect x="60" y="80" width="150" height="30" fill="#C8A24A"/>
+        <text x="135" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">thinking</text>
+        <!-- braking bar -->
+        <rect x="210" y="80" width="280" height="30" fill="#B85042"/>
+        <text x="350" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#fff">braking</text>
+        <!-- total dimension -->
+        <line x1="60" y1="130" x2="490" y2="130" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="60" y1="125" x2="60" y2="135" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="490" y1="125" x2="490" y2="135" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="275" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#1E2761">total stopping distance</text>
+      </svg>
+      <div class="caption">Stopping distance is thinking distance plus braking distance</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — braking distance grows fastest</h4>
+      <p>Thinking distance is <strong>proportional</strong> to speed, but braking distance grows <strong>much faster</strong> (roughly with speed squared — the kinetic energy depends on v²). So doubling the speed roughly <strong>doubles</strong> the thinking distance but <strong>quadruples</strong> the braking distance. That's the key exam point.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The factors, and braking forces</h3>
+    <p><strong>Thinking distance</strong> increases with a longer <strong>reaction time</strong> — caused by <strong>tiredness</strong>, <strong>alcohol or drugs</strong>, and <strong>distractions</strong> like phones. (Typical reaction times are around 0.2–0.9 s.)</p>
+    <p><strong>Braking distance</strong> increases with higher speed, <strong>poor road conditions</strong> (wet or icy — less friction), and <strong>poor vehicle condition</strong> (worn brakes or bald tyres).</p>
+    <p>When the brakes are applied, friction at the brake pads does work against the wheels. This transfers energy from the car's <strong>kinetic store</strong> to the <strong>thermal store</strong> of the brakes, so the brakes get hot. A larger braking force means a <strong>greater deceleration</strong> — but very large decelerations can cause skidding and brakes to overheat.</p>
+
+    <div class="worked">
+      <h4>Worked example — braking force from deceleration</h4>
+      <p class="q">A 900 kg car decelerates at 6 m/s² when braking. Estimate the braking force. (Use F = m a)</p>
+      <div class="step"><span class="label">Equation</span><span class="v">F = m a</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 900 × 6</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 5400 N</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which of these increases the <em>thinking</em> distance (not the braking distance)?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>A wet, icy road</span></li>
+        <li><span class="letter">B</span><span>Worn brake pads</span></li>
+        <li><span class="letter">C</span><span>The driver being tired or having drunk alcohol</span></li>
+        <li><span class="letter">D</span><span>Bald tyres</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> Tiredness and alcohol lengthen the driver's <em>reaction time</em>, which increases the <em>thinking</em> distance. Wet roads, worn brakes and bald tyres all increase the <em>braking</em> distance instead.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 8 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What two distances make up the stopping distance?</summary><div class="ans"><strong>Thinking distance</strong> (during the reaction time) + <strong>braking distance</strong> (while the brakes act).</div></details></li>
+      <li><details><summary>Give two factors that increase the thinking distance.</summary><div class="ans">Any two of: <strong>tiredness</strong>, <strong>alcohol or drugs</strong>, <strong>distractions</strong> (e.g. a phone) — all increase the reaction time. (Higher speed too.)</div></details></li>
+      <li><details><summary>Give two factors that increase the braking distance.</summary><div class="ans">Any two of: higher <strong>speed</strong>, <strong>wet/icy roads</strong> (less friction), <strong>worn brakes or bald tyres</strong>.</div></details></li>
+      <li><details><summary>What happens to the car's kinetic energy when it brakes?</summary><div class="ans">It is transferred to the <strong>thermal store of the brakes</strong> (by friction), so the brakes get hot.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="8">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Physics Paper 2 · P5 Forces</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'p5-forces-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=3abd8e06-b917-4d42-9a26-9c9b0dd6c400&amp;ref=interactive-science&amp;from=p5-forces-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=p5-forces-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>
