@@ -1,0 +1,80 @@
+name: db-contract
+
+# Turns cross-repo RPC drift from a silent production fallback into a red check.
+# Path-filtered to packages/db/** so it stays out of the way of unrelated branches.
+# See docs/MONOREPO_AND_DOMAIN_PLAN.md §5 and packages/db/README.md.
+
+on:
+  push:
+    paths:
+      - "packages/db/**"
+      - ".github/workflows/db-contract.yml"
+  pull_request:
+    paths:
+      - "packages/db/**"
+      - ".github/workflows/db-contract.yml"
+  workflow_dispatch: {}
+
+defaults:
+  run:
+    working-directory: packages/db
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: contract
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/contract
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install (pg only)
+        run: npm install --no-audit --no-fund
+      - name: Ledger ↔ migrations consistency
+        run: npm run check:ledger
+      - name: Apply migrations to ephemeral Postgres
+        id: apply
+        run: node lib/applyMigrations.mjs
+      - name: Contract test (only once SQL bodies are seeded)
+        if: steps.apply.outputs.seeded == 'true'
+        run: npm test
+      - name: Note unseeded state
+        if: steps.apply.outputs.seeded != 'true'
+        run: echo "::notice::Migrations not seeded yet (supabase db pull) — ledger check ran; contract test skipped. See packages/db/migrations/README.md."
+
+  # Manual, secret-gated: prove the LIVE anchor still honours the contract (read-only).
+  verify-live:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install (pg only)
+        working-directory: packages/db
+        run: npm install --no-audit --no-fund
+      - name: Verify live anchor (skips cleanly if secret absent)
+        working-directory: packages/db
+        env:
+          DATABASE_URL: ${{ secrets.ANCHOR_DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::notice::ANCHOR_DATABASE_URL not set — skipping live verify."
+            exit 0
+          fi
+          npm run verify:live
