@@ -15,7 +15,10 @@ import { REQUIRED_RPCS } from "./contracts/rpcs.mjs";
 import { makeClient } from "./lib/pg.mjs";
 import { checkRpcs } from "./lib/checkRpcs.mjs";
 
-test("every RPC the apps depend on exists on the unified anchor with the expected signature", async () => {
+// Skip (don't fail) when there's no DB to check against — so a repo-wide
+// `turbo run test` stays green without a Postgres. The dedicated db-contract.yml
+// workflow sets DATABASE_URL (ephemeral postgres) and runs this for real.
+test("every RPC the apps depend on exists on the unified anchor with the expected signature", { skip: !process.env.DATABASE_URL && "DATABASE_URL unset — run via db-contract workflow" }, async () => {
   const client = makeClient();
   await client.connect();
   try {
