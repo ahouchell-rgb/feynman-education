@@ -24,9 +24,14 @@ Team: `adam houchell's projects` / `team_JCZkEbKe2AXWStL8y1nCbsc6`.
 (`parent-hub`, `pulse-hub` are the decommissioned projects — out of scope.)
 
 **Two things to fix before Phase C proper:**
-1. **`science-kit`'s latest deploy is ERROR** — the feynman web app isn't deploying
-   cleanly. Fix this first (it will also break once repointed at the monorepo if the
-   build is broken). Check the build logs on that project.
+1. **`science-kit`'s `chore/monorepo` previews ERROR — diagnosed: Root Directory.**
+   Production (`main`) is healthy; only the monorepo-branch previews fail. The build
+   itself *succeeds* (`turbo run build` → 2/2 apps); Vercel then can't find
+   `.next/routes-manifest.json` because the project's **Root Directory is still the
+   repo root**, so it looks for output at root `.next` instead of `apps/feynman/.next`.
+   **Fix:** project → Settings → set **Root Directory = `apps/feynman`** (keep
+   "Include files outside the Root Directory" ON for the workspace install), redeploy.
+   (The turbo env warning that also showed is already fixed in `turbo.json`.)
 2. **No `feynman.education` domain exists on any project.** The whole phase assumes
    you own `feynman.education`. Confirm it's registered and you can edit its DNS
    before starting — otherwise step 2 has nothing to point at.
