@@ -188,6 +188,12 @@ differ today — feynman uses `SK_URL`/anon literal; retrieval uses `NEXT_PUBLIC
 
 ## 7. Sequencing (revised — the DB cutover leads)
 
+> **✅ Phase B rehearsed 2026-06-28 — it builds end-to-end (`turbo run build` 2/2, exit 0). See
+> [MONOREPO_REHEARSAL.md](MONOREPO_REHEARSAL.md).** Two commands below are now known-wrong:
+> retrieval-app has **no local `.git`** → subtree from GitHub (`ahouchell-rgb/retrieval-app`), not the
+> local dir; and interactive's canonical branch is **`retrieval-cta`**, not `main`. Full conflict list
+> + pre-move checklist in the rehearsal doc.
+
 ```
 Phase A  ── DB UNIFICATION  ✅ DONE (verified live 2026-06-23) — see §1
             • cutover applied: one anchor, one auth pool, feynman_* migrations ported, queries
