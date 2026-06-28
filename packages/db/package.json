@@ -1,0 +1,16 @@
+{
+  "name": "@feynman/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Single source of truth for the unified anchor schema: the ordered migration ledger, the RPC contract the apps depend on, and the contract test that turns cross-repo drift into a red CI check.",
+  "scripts": {
+    "test": "node --test",
+    "verify:live": "node scripts/verify-rpcs.mjs",
+    "check:ledger": "node scripts/check-ledger.mjs",
+    "apply": "node lib/applyMigrations.mjs"
+  },
+  "devDependencies": {
+    "pg": "^8.13.0"
+  }
+}
