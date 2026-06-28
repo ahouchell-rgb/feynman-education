@@ -14,7 +14,9 @@ Reviewed against all 6 RPC bodies captured from the anchor.
 |---|---|---|
 | `01_gate_helpers.sql` | `can_read_class_analytics` / `can_read_class_pii` / `can_read_student_analytics` — superset of today's access + school(hod/slt) + trust_lead scope | Step 1a |
 | `02_additive_rewrite_rpcs.sql` | the 6 RPCs re-gated to `( secret OR helper )` — **no breakage, no one loses access** | Step 1b |
-| `03_subtractive_drop_secret.sql` | the 5 secret-bearing RPCs re-gated to just `helper` (secret removed) + rotate note | Step 4 |
+| `04_assign_leadership_roles.sql` | **TEMPLATE** — set `school_role`/`trust_role` for the real leaders (the unblock; all profiles are `'member'` today) | Step 3a (data) |
+| `05_verify_coverage.sql` | **TEMPLATE** — simulate a leader's JWT, confirm the gate passes for them (read-only, rolled back) | after 04 |
+| `03_subtractive_drop_secret.sql` | the 5 secret-bearing RPCs re-gated to just `helper` (secret removed) + rotate note | Step 4 (last) |
 
 ## Safe order
 1. Apply `01` then `02` (additive — adds identity scope, keeps the secret). Dashboards keep working.
