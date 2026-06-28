@@ -1,0 +1,21 @@
+{
+  "name": "feynman",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Feynman monorepo: the web app, retrieval-practice app, the static interactive-science site, and the shared DB contract.",
+  "workspaces": [
+    "apps/feynman",
+    "apps/retrieval",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "build:interactive": "python3 apps/interactive/build.py"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  }
+}
