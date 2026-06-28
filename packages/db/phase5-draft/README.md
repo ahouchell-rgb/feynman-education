@@ -1,7 +1,14 @@
 # phase5-draft/ — re-gate the interactive RPCs by role, drop the shared secret
 
-**DRAFT. Nothing here is applied to the database.** Implements `docs/PHASE5_DESIGN.md`, grounded in
-the live schema (`../live-defs/ROLE_MODEL.md`). Reviewed against all 6 RPC bodies captured from the anchor.
+> **STATUS 2026-06-28:** `01` + `02` (the **additive** half) are **APPLIED to the live anchor**
+> (`uvzukwoxqhcxaxtzrziy`) as migrations `phase5_01_gate_helpers` + `phase5_02_additive_rpcs` —
+> dry-run-validated in a rolled-back transaction first, then verified live (3 helpers present, all 6
+> RPCs wired, secret branch preserved, security advisors: 0 new errors). **Still to do:** the app PR
+> dropping `x-sciencekit-key` on the 4 routes, verify with a real `slt`/`trust_lead` profile, then
+> apply `03` (subtractive) + rotate `app_config.sciencekit_key`.
+
+Implements `docs/PHASE5_DESIGN.md`, grounded in the live schema (`../live-defs/ROLE_MODEL.md`).
+Reviewed against all 6 RPC bodies captured from the anchor.
 
 | File | What | When to apply |
 |---|---|---|
