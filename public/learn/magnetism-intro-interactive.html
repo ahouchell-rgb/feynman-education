@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#1E2761">
+<title>Introducing magnetism — learn it step by step</title>
+<meta name="description" content="A guided, self-marking science lesson for home learning. Learn about magnets, poles and the push–pull rule one small step at a time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---- Feynman / HGO house palette ---- */
+  :root{
+    --cream:#F7F2E6; --paper:#FFFFFF; --ink:#1A1A1A; --navy:#1E2761;
+    --grey:#5C6370; --line:#E4DDCB; --line-2:#D7DCEC;
+    --green:#2C5F2D; --green-bg:#E6F0E0; --green-line:#BFD8B6;
+    --wrong:#B4341E; --wrong-bg:#FBE7E2; --wrong-line:#EBB9AC;
+    --gold:#C99528; --lav:#AEB6D6; --lav-pale:#D7DCEC;
+    --shadow:0 1px 0 rgba(26,26,26,.04), 0 8px 28px rgba(30,39,97,.08);
+    --r:16px;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html{ background:var(--cream); color-scheme:light only; }
+  body{
+    font-family:'IBM Plex Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    color:var(--ink); background:var(--cream); line-height:1.55;
+    -webkit-font-smoothing:antialiased; min-height:100dvh;
+  }
+  .fr{ font-family:'Fraunces', Georgia, serif; letter-spacing:-0.02em; font-variation-settings:'opsz' 110,'SOFT' 20; }
+  .mono-kicker{ font-size:11px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--grey); }
+  button{ font-family:inherit; cursor:pointer; }
+  .sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+  /* ---- App shell ---- */
+  .app{ max-width:680px; margin:0 auto; min-height:100dvh; display:flex; flex-direction:column; }
+
+  /* Top bar: close + progress + hearts */
+  .topbar{ display:flex; align-items:center; gap:14px; padding:14px 16px calc(14px); position:sticky; top:0; background:var(--cream); z-index:20; }
+  .iconbtn{ border:none; background:transparent; color:var(--grey); font-size:22px; line-height:1; width:34px; height:34px; border-radius:10px; display:grid; place-items:center; }
+  .iconbtn:hover{ background:rgba(30,39,97,.07); color:var(--navy); }
+  .pbar{ flex:1; height:14px; background:#E9E2D1; border-radius:999px; overflow:hidden; }
+  .pbar > i{ display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--green),#3f8a40); border-radius:999px; transition:width .45s cubic-bezier(.4,0,.2,1); }
+  .hearts{ display:flex; align-items:center; gap:5px; font-weight:600; color:var(--wrong); font-size:15px; }
+  .hearts .hh{ font-size:18px; line-height:1; }
+
+  /* Main panel */
+  .stage{ flex:1; padding:8px 18px 150px; display:flex; flex-direction:column; }
+  .step-kicker{ margin-bottom:10px; }
+  .prompt{ font-size:26px; line-height:1.18; color:var(--navy); margin-bottom:6px; }
+  @media (max-width:430px){ .prompt{ font-size:22px; } }
+
+  /* ---- Teaching card ---- */
+  .teach{ background:var(--paper); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); padding:22px 22px 24px; margin-top:6px; }
+  .teach .emoji{ font-size:34px; display:block; margin-bottom:10px; }
+  .teach h2{ font-size:24px; color:var(--navy); line-height:1.2; margin-bottom:12px; }
+  .teach p{ font-size:16.5px; margin-bottom:12px; color:#2a2a28; }
+  .teach p:last-child{ margin-bottom:0; }
+  .teach b, .teach strong{ color:var(--navy); font-weight:600; }
+  .keybox{ background:#F4F6FC; border:1px solid var(--line-2); border-left:4px solid var(--navy); border-radius:10px; padding:13px 15px; margin:14px 0; }
+  .keybox .kt{ font-weight:700; color:var(--navy); }
+  .keybox dl{ display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-size:15px; }
+  .keybox dt{ font-weight:600; color:var(--navy); }
+  .keybox dd{ color:#33332f; }
+  .watch{ background:#FFF7E8; border:1px solid #ECD9A8; border-left:4px solid var(--gold); border-radius:10px; padding:12px 15px; font-size:15px; margin-top:14px; }
+  .watch b{ color:#8a6400; }
+  .etym{ display:flex; gap:14px; align-items:flex-start; margin:10px 0; }
+  .etym .root{ flex:none; min-width:96px; font-weight:700; color:var(--navy); }
+  .etym .gloss{ font-size:15px; color:#33332f; }
+
+  /* ---- Options (mcq / multi / tf) ---- */
+  .opts{ display:flex; flex-direction:column; gap:11px; margin-top:14px; }
+  .opt{ position:relative; text-align:left; background:var(--paper); border:1.5px solid var(--line); border-bottom-width:3px; border-radius:14px; padding:15px 16px 15px 52px; font-size:16.5px; color:var(--ink); transition:border-color .12s, background .12s, transform .04s; }
+  .opt:hover:not(:disabled){ border-color:var(--lav); }
+  .opt:active:not(:disabled){ transform:translateY(1px); }
+  .opt .num{ position:absolute; left:13px; top:50%; transform:translateY(-50%); width:26px; height:26px; border-radius:8px; border:1.5px solid var(--line-2); display:grid; place-items:center; font-size:13px; font-weight:600; color:var(--grey); }
+  .opt.sel{ border-color:var(--navy); background:#F4F6FC; }
+  .opt.sel .num{ border-color:var(--navy); background:var(--navy); color:#fff; }
+  .opt.correct{ border-color:var(--green-line); background:var(--green-bg); }
+  .opt.correct .num{ border-color:var(--green); background:var(--green); color:#fff; }
+  .opt.wrong{ border-color:var(--wrong-line); background:var(--wrong-bg); }
+  .opt.wrong .num{ border-color:var(--wrong); background:var(--wrong); color:#fff; }
+  .opt.dim{ opacity:.55; }
+  .opt .mk{ position:absolute; right:14px; top:50%; transform:translateY(-50%); font-weight:700; font-size:17px; }
+  .opt.correct .mk{ color:var(--green); }
+  .opt.wrong .mk{ color:var(--wrong); }
+  .hint{ font-size:13.5px; color:var(--grey); margin-top:10px; }
+
+  /* ---- Tap-all grid ---- */
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:11px; margin-top:14px; }
+  .chip{ display:flex; align-items:center; gap:10px; background:var(--paper); border:1.5px solid var(--line); border-bottom-width:3px; border-radius:14px; padding:14px 14px; font-size:16px; text-align:left; }
+  .chip .ce{ font-size:22px; }
+  .chip.sel{ border-color:var(--navy); background:#F4F6FC; }
+  .chip.correct{ border-color:var(--green-line); background:var(--green-bg); }
+  .chip.wrong{ border-color:var(--wrong-line); background:var(--wrong-bg); }
+  .chip.miss{ border-color:var(--green); border-style:dashed; }
+
+  /* ---- Gap fill ---- */
+  .sentence{ font-size:19px; line-height:2.1; margin-top:16px; color:#2a2a28; }
+  .blank{ display:inline-block; min-width:104px; border-bottom:2.5px solid var(--lav); margin:0 3px; text-align:center; vertical-align:baseline; color:var(--navy); font-weight:600; padding:0 6px; }
+  .blank.filled{ border-bottom-color:var(--navy); }
+  .blank button{ border:none; background:#F4F6FC; border-radius:8px; padding:4px 10px; font-size:16px; font-weight:600; color:var(--navy); }
+  .blank.ok{ color:var(--green); border-bottom-color:var(--green); }
+  .blank.ok button{ background:var(--green-bg); color:var(--green); }
+  .blank.bad{ color:var(--wrong); border-bottom-color:var(--wrong); }
+  .blank.bad button{ background:var(--wrong-bg); color:var(--wrong); }
+  .bank{ display:flex; flex-wrap:wrap; gap:10px; margin-top:26px; }
+  .token{ background:var(--paper); border:1.5px solid var(--line); border-bottom-width:3px; border-radius:12px; padding:11px 16px; font-size:16px; font-weight:500; color:var(--ink); }
+  .token:hover:not(:disabled){ border-color:var(--lav); }
+  .token.used{ opacity:.32; pointer-events:none; }
+
+  /* ---- Match pairs ---- */
+  .match{ display:grid; grid-template-columns:1fr 1fr; gap:11px 16px; margin-top:16px; }
+  .match .col{ display:flex; flex-direction:column; gap:11px; }
+  .mitem{ position:relative; background:var(--paper); border:1.5px solid var(--line); border-bottom-width:3px; border-radius:14px; padding:14px 14px; font-size:15.5px; text-align:left; min-height:54px; }
+  .mitem:hover:not(:disabled){ border-color:var(--lav); }
+  .mitem.active{ border-color:var(--navy); background:#F4F6FC; }
+  .mitem.paired{ border-color:var(--lav); background:#FBFAF5; }
+  .mitem .dot{ position:absolute; top:8px; right:10px; width:14px; height:14px; border-radius:50%; }
+  .mitem.correct{ border-color:var(--green-line); background:var(--green-bg); }
+  .mitem.wrong{ border-color:var(--wrong-line); background:var(--wrong-bg); }
+
+  /* ---- Footer / check + feedback ---- */
+  .footer{ position:fixed; left:0; right:0; bottom:0; z-index:30; }
+  .footer .inner{ max-width:680px; margin:0 auto; padding:16px 18px calc(16px + env(safe-area-inset-bottom)); background:var(--cream); border-top:1px solid var(--line); }
+  .footer.fb-ok .inner{ background:var(--green-bg); border-top-color:var(--green-line); }
+  .footer.fb-bad .inner{ background:var(--wrong-bg); border-top-color:var(--wrong-line); }
+  .fbhead{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .fbhead .ic{ width:30px; height:30px; border-radius:50%; display:grid; place-items:center; font-weight:800; color:#fff; flex:none; }
+  .fb-ok .fbhead .ic{ background:var(--green); }
+  .fb-bad .fbhead .ic{ background:var(--wrong); }
+  .fbhead h3{ font-size:18px; }
+  .fb-ok .fbhead h3{ color:var(--green); }
+  .fb-bad .fbhead h3{ color:var(--wrong); }
+  .fbwhy{ font-size:15px; color:#2a2a28; margin-bottom:14px; }
+  .fbwhy b{ color:var(--navy); }
+  .fb-bad .fbwhy .ans{ color:var(--green); font-weight:600; }
+
+  .btn{ display:block; width:100%; border:none; border-radius:14px; padding:16px; font-size:16px; font-weight:700; letter-spacing:.02em; text-transform:uppercase; box-shadow:0 4px 0 rgba(0,0,0,.14); transition:transform .05s, box-shadow .05s, background .15s; }
+  .btn:active{ transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.14); }
+  .btn-primary{ background:var(--navy); color:#fff; }
+  .btn-primary:disabled{ background:#D9D7CB; color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.07); cursor:not-allowed; }
+  .btn-go{ background:var(--green); color:#fff; }
+  .btn-ghost{ background:transparent; color:var(--navy); box-shadow:none; border:1.5px solid var(--line-2); }
+
+  /* ---- Cover / start screen ---- */
+  .cover{ flex:1; display:flex; flex-direction:column; justify-content:center; padding:30px 24px 40px; text-align:center; }
+  .cover .badge{ display:inline-block; align-self:center; background:var(--navy); color:var(--lav-pale); font-size:11.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; padding:7px 14px; border-radius:999px; margin-bottom:22px; }
+  .cover .mascot{ font-size:64px; margin-bottom:12px; }
+  .cover h1{ font-size:38px; line-height:1.05; color:var(--navy); margin-bottom:14px; }
+  @media (max-width:430px){ .cover h1{ font-size:30px; } }
+  .cover .lede{ font-size:17px; color:#3a3a36; max-width:42ch; margin:0 auto 24px; }
+  .cover .meta{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:30px; }
+  .cover .pill{ background:var(--paper); border:1px solid var(--line); border-radius:999px; padding:8px 15px; font-size:13.5px; color:var(--grey); display:flex; gap:7px; align-items:center; }
+  .cover .pill b{ color:var(--navy); }
+  .cover .cta{ max-width:340px; margin:0 auto; width:100%; }
+  .parent{ margin-top:26px; max-width:440px; align-self:center; background:#F4F6FC; border:1px solid var(--line-2); border-radius:14px; padding:15px 18px; font-size:13.5px; color:#3a3a36; text-align:left; }
+  .parent b{ color:var(--navy); }
+  .resume{ margin-top:14px; font-size:14px; }
+  .resume button{ background:none; border:none; color:var(--navy); text-decoration:underline; font-size:14px; font-weight:600; }
+
+  /* ---- Complete screen ---- */
+  .done{ flex:1; display:flex; flex-direction:column; justify-content:center; padding:30px 24px 40px; text-align:center; }
+  .done .trophy{ font-size:72px; margin-bottom:6px; animation:pop .5s cubic-bezier(.2,1.4,.4,1) both; }
+  .done h1{ font-size:34px; color:var(--navy); margin-bottom:8px; }
+  .done .sub{ font-size:16px; color:#3a3a36; margin-bottom:26px; }
+  .stats{ display:flex; gap:12px; justify-content:center; margin-bottom:26px; flex-wrap:wrap; }
+  .stat{ background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:16px 20px; min-width:104px; }
+  .stat .v{ font-size:30px; font-weight:700; line-height:1; }
+  .stat.xp .v{ color:var(--gold); } .stat.acc .v{ color:var(--green); } .stat.best .v{ color:var(--navy); }
+  .stat .l{ font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--grey); margin-top:7px; }
+  .recap{ text-align:left; max-width:460px; margin:0 auto 26px; background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:18px 20px; }
+  .recap h3{ font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--grey); margin-bottom:12px; }
+  .recap li{ list-style:none; padding:8px 0 8px 28px; position:relative; font-size:15.5px; color:#2a2a28; border-top:1px solid var(--line); }
+  .recap li:first-of-type{ border-top:none; }
+  .recap li::before{ content:'✓'; position:absolute; left:2px; top:8px; color:var(--green); font-weight:800; }
+  .done .actions{ max-width:340px; margin:0 auto; width:100%; display:flex; flex-direction:column; gap:11px; }
+
+  @keyframes pop{ 0%{ transform:scale(.4); opacity:0; } 100%{ transform:scale(1); opacity:1; } }
+  .fade{ animation:fade .28s ease both; }
+  @keyframes fade{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+
+  .colophon{ text-align:center; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--grey); opacity:.7; padding:18px; }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+/* =========================================================================
+   Introducing magnetism — a Duolingo-style, self-marking home-learning lesson.
+   Self-contained: no build step, no network needed (fonts degrade gracefully).
+   Content follows the HGO lesson engine: small chunks, then auto-marked checks
+   whose wrong answers DIAGNOSE the common misconception.
+   ========================================================================= */
+
+const LESSON_ID = "magnetism-intro-v1";
+const PASS_XP_PER_CORRECT = 10;
+
+/* ---- The lesson: an ordered list of steps ----------------------------- */
+const STEPS = [
+  /* 1 */ { type:"teach", kicker:"Teacher talk — chunk 1 of 4", emoji:"🧲",
+    h:"What is a magnet?",
+    html:`<p>A <b>magnet</b> is an object that creates a <b>magnetic field</b> — an invisible region around it where it can <b>push or pull</b> certain materials <b>without touching them</b>.</p>
+          <p>That "action at a distance" is the whole point of a magnet: the force reaches out through the space around it.</p>
+          <div class="keybox"><div class="kt">Key terms</div>
+            <dl><dt>magnet</dt><dd>an object that produces a magnetic field</dd>
+                <dt>magnetic field</dt><dd>the region around a magnet where it can push or pull</dd></dl></div>` },
+
+  /* 2 */ { type:"mcq", kicker:"Check for understanding", q:"Which sentence best describes a magnetic field?",
+    options:[
+      { t:"The shiny metal coating on the outside of a magnet.", why:"A field isn't a coating — it's the space <i>around</i> the magnet, not a layer on it." },
+      { t:"The region around a magnet where it can push or pull without touching.", correct:true },
+      { t:"The weight that pulls a magnet down towards the Earth.", why:"That's gravity. A magnetic field is about magnetic push/pull, not weight." } ],
+    ok:"A magnetic field is the space around a magnet where its force acts — no contact needed." },
+
+  /* 3 */ { type:"teach", kicker:"Teacher talk — chunk 2 of 4", emoji:"⛓️",
+    h:"What sticks to a magnet?",
+    html:`<p>Only a few materials are <b>magnetic</b> — they are pulled towards a magnet. The magnetic materials are <b>iron</b>, <b>steel</b> (which is mostly iron), <b>nickel</b> and <b>cobalt</b>.</p>
+          <p>Most metals are <b>not</b> magnetic at all — a magnet will <b>not</b> pull aluminium, copper, gold or silver.</p>
+          <div class="watch"><b>Watch out:</b> "all metals are magnetic" is a common mistake. A magnet ignores an aluminium can or a copper coin — only iron, steel, nickel and cobalt are pulled.</div>` },
+
+  /* 4 */ { type:"multi", kicker:"Mini-task — tap all that apply", q:"Tap every object a magnet will attract.",
+    items:[
+      { e:"🔩", t:"Iron nail", correct:true },
+      { e:"📎", t:"Steel paperclip", correct:true },
+      { e:"🥫", t:"Aluminium can" },
+      { e:"🪙", t:"Copper coin" },
+      { e:"🔋", t:"Nickel strip", correct:true },
+      { e:"📏", t:"Plastic ruler" } ],
+    ok:"Iron, steel and nickel are magnetic. Aluminium, copper and plastic are not — most materials aren't magnetic at all.",
+    bad:"Remember: only <b>iron, steel, nickel and cobalt</b> are magnetic. The others are not pulled — being a metal isn't enough." },
+
+  /* 5 */ { type:"teach", kicker:"Etymology — where the words come from", emoji:"📜",
+    h:"Break the words apart",
+    html:`<div class="etym"><div class="root">magnet</div><div class="gloss">from <b>Magnesia</b>, a region of ancient Greece where naturally magnetic rock (lodestone) was first found.</div></div>
+          <div class="etym"><div class="root">ferro&#8209;</div><div class="gloss">from the Latin <b>ferrum</b> = <b>iron</b>. So the magnetic materials are called <b>ferromagnetic</b> — "iron-like magnetic".</div></div>
+          <p style="font-style:italic;color:#5C6370;font-size:14.5px;margin-top:4px;">Crack the word open and it tells you the science: <b>ferro</b>magnetic = the iron family of magnets.</p>` },
+
+  /* 6 */ { type:"mcq", kicker:"Quick check", q:"“Ferromagnetic” materials are named after the Latin word for…",
+    options:[
+      { t:"iron", correct:true },
+      { t:"north", why:"North is a pole, not the root here. <i>Ferrum</i> means iron." },
+      { t:"magnet", why:"Close idea, but <i>ferrum</i> specifically means iron — the main magnetic metal." } ],
+    ok:"Ferrum = iron. Ferromagnetic literally means “iron-like magnetic”.", layout:"row" },
+
+  /* 7 */ { type:"teach", kicker:"Teacher talk — chunk 3 of 4", emoji:"🧭",
+    h:"Every magnet has two poles",
+    html:`<p>The force of a magnet is strongest at its two ends, called <b>poles</b>: a <b>north pole (N)</b> and a <b>south pole (S)</b>.</p>
+          <p>You can <b>never</b> get a magnet with only one pole. If you cut a bar magnet in half, you don't get a separate N and a separate S — you get <b>two smaller magnets</b>, and each one has its own N and S.</p>
+          <div class="watch"><b>Watch out:</b> a single "north-only" magnet does not exist. Poles always come in pairs.</div>` },
+
+  /* 8 */ { type:"mcq", kicker:"Check for understanding", q:"You cut a bar magnet exactly in half. What do you get?",
+    options:[
+      { t:"One north-only piece and one south-only piece.", why:"Poles always come in pairs — you can't separate N from S. This is the single-pole misconception." },
+      { t:"Two smaller magnets, each with a north and a south pole.", correct:true },
+      { t:"Two pieces of ordinary metal with no magnetism.", why:"The pieces stay magnetic — cutting a magnet makes smaller magnets, not plain metal." } ],
+    ok:"Cutting a magnet just makes two smaller magnets, each with its own N and S pole." },
+
+  /* 9 */ { type:"teach", kicker:"Teacher talk — chunk 4 of 4", emoji:"➡️⬅️",
+    h:"The push–pull rule",
+    html:`<p>Bring two magnets close and the poles decide what happens — this is the simple rule of the whole topic:</p>
+          <div class="keybox"><dl>
+            <dt>Like poles</dt><dd>(N–N or S–S) <b>repel</b> — they push apart.</dd>
+            <dt>Unlike poles</dt><dd>(N–S) <b>attract</b> — they pull together.</dd></dl></div>
+          <p>“Like” means the same (both north, or both south). “Unlike” means opposite. The push or pull acts <b>through the field, at a distance</b> — the magnets don't need to touch.</p>` },
+
+  /* 10 */ { type:"match", kicker:"Mini-task — match them up", q:"Match each pair of poles to what they do.",
+    /* graded by KEY (meaning), not identity — so either “Repel” tile is accepted for N+N or S+S */
+    left:[ {t:"North + North", key:"repel"}, {t:"North + South", key:"attract"}, {t:"South + South", key:"repel"} ],
+    right:[ {t:"Attract — pull together", key:"attract"}, {t:"Repel — push apart", key:"repel"}, {t:"Repel — push apart", key:"repel"} ],
+    ok:"Like poles (N–N, S–S) repel; unlike poles (N–S) attract.",
+    bad:"Same poles push apart; opposite poles pull together." },
+
+  /* 11 */ { type:"gap", kicker:"Sentence builder", q:"Build the rule. Tap the words to fill the gaps.",
+    parts:["Like poles ", {b:0}, " and unlike poles ", {b:1}, ". This push or pull acts through the magnetic ", {b:2}, ", without ", {b:3}, "."],
+    blanks:["repel","attract","field","touching"],
+    bank:["repel","attract","field","touching","gravity","charge"],
+    ok:"Like poles repel, unlike poles attract — through the field, without touching." },
+
+  /* 12 */ { type:"mcq", kicker:"Apply it — think carefully", q:"A magnet pulls a steel paperclip towards it. You turn the magnet around so the other pole faces the clip. What happens now?",
+    options:[
+      { t:"The clip is now pushed away.", why:"Repelling needs <b>two magnets</b> (two sets of poles). A paperclip is a magnetic material, not a magnet — it has no fixed poles, so it is <b>always attracted</b>, whichever way you face the magnet." },
+      { t:"The clip is still pulled towards the magnet.", correct:true },
+      { t:"Nothing — the clip falls off.", why:"The clip stays magnetic material near a magnet, so it's still attracted." } ],
+    ok:"Repelling needs two magnets. A paperclip has no poles of its own, so a magnet always attracts it — either way round." },
+
+  /* 13 */ { type:"teach", kicker:"One more idea", emoji:"🧷",
+    h:"Magnet vs magnetic material",
+    html:`<p>A <b>permanent magnet</b> keeps its magnetism — like a bar magnet or a fridge magnet.</p>
+          <p>An iron nail is <b>not</b> a magnet on its own. But held near a strong magnet it is <b>attracted</b>, and for that moment it even becomes a weak <b>temporary magnet</b> itself — which is why a chain of paperclips can hang from one magnet.</p>` },
+
+  /* 14 */ { type:"mcq", kicker:"Last check", q:"An iron nail is not a magnet. What happens when you hold it near a strong magnet?",
+    options:[
+      { t:"It is attracted, and briefly acts like a weak magnet itself.", correct:true },
+      { t:"It is repelled and pushed away.", why:"Iron is magnetic material — it's pulled in, not pushed away. Repelling needs two magnets." },
+      { t:"Nothing happens — iron isn't magnetic.", why:"Iron is one of the four magnetic materials, so it's strongly attracted." } ],
+    ok:"Iron is magnetic, so it's attracted — and becomes a temporary magnet while it's near the strong magnet." },
+];
+
+/* ------------------------------------------------------------------------ */
+const RECAP = [
+  "A magnet makes a magnetic field — it pushes or pulls without touching.",
+  "Only iron, steel, nickel and cobalt are magnetic — not all metals.",
+  "Every magnet has two poles, N and S; you can't have just one.",
+  "Like poles repel, unlike poles attract.",
+  "A magnetic material (like a paperclip) is always attracted, never repelled."
+];
+
+/* ---- State ------------------------------------------------------------- */
+const app = document.getElementById("app");
+let S = { i:0, xp:0, correct:0, asked:0, hearts:5, started:false, checked:false, payload:null };
+
+const ASK_STEPS = STEPS.filter(s => s.type!=="teach").length;
+
+function save(){
+  try{ localStorage.setItem(LESSON_ID, JSON.stringify({ i:S.i, xp:S.xp, correct:S.correct, asked:S.asked, hearts:S.hearts, started:S.started })); }catch(e){}
+}
+function loadSaved(){
+  try{ return JSON.parse(localStorage.getItem(LESSON_ID) || "null"); }catch(e){ return null; }
+}
+function bestScore(){
+  try{ return JSON.parse(localStorage.getItem(LESSON_ID+":best") || "null"); }catch(e){ return null; }
+}
+function saveBest(acc, xp){
+  const b = bestScore();
+  if(!b || acc > b.acc){ try{ localStorage.setItem(LESSON_ID+":best", JSON.stringify({acc, xp})); }catch(e){} }
+}
+function clearProgress(){ try{ localStorage.removeItem(LESSON_ID); }catch(e){} }
+
+/* ---- Render dispatch --------------------------------------------------- */
+function render(){
+  if(!S.started){ renderCover(); return; }
+  if(S.i >= STEPS.length){ renderDone(); return; }
+  renderStep();
+  save();
+}
+
+/* ---- Cover ------------------------------------------------------------- */
+function renderCover(){
+  const saved = loadSaved();
+  const resumable = saved && saved.started && saved.i > 0 && saved.i < STEPS.length;
+  app.innerHTML = `
+    <div class="cover fade">
+      <span class="badge">KS3 / GCSE Science · Magnetism</span>
+      <div class="mascot">🧲</div>
+      <h1 class="fr">Introducing magnetism</h1>
+      <p class="lede">What magnets are — and the one simple rule that decides whether they push or pull. Learn it in small steps; the lesson marks your answers as you go.</p>
+      <div class="meta">
+        <span class="pill">⏱️ <b>10–15 min</b></span>
+        <span class="pill">🎯 <b>${ASK_STEPS}</b> checks</span>
+        <span class="pill">💾 saves your place</span>
+      </div>
+      <div class="cta">
+        <button class="btn btn-go" id="start">${resumable ? "Start again" : "Start lesson"}</button>
+        ${resumable ? `<div class="resume">…or <button id="resume">resume where you left off (step ${saved.i+1})</button></div>` : ``}
+      </div>
+      <div class="parent">
+        <b>For grown-ups helping at home:</b> there's nothing to install and it works offline. Your child reads a little, then answers — each question is marked instantly and explains <i>why</i>, so they can learn on their own. Sit alongside and ask them to say each answer out loud before they tap.
+      </div>
+    </div>
+    <div class="colophon">Feynman · learn it, joined up</div>`;
+  document.getElementById("start").onclick = () => { reset(); S.started=true; render(); };
+  const r = document.getElementById("resume");
+  if(r) r.onclick = () => { Object.assign(S, { i:saved.i, xp:saved.xp, correct:saved.correct, asked:saved.asked, hearts:saved.hearts, started:true, checked:false, payload:null }); render(); };
+}
+
+function reset(){ S = { i:0, xp:0, correct:0, asked:0, hearts:5, started:true, checked:false, payload:null }; }
+
+/* ---- Top bar ----------------------------------------------------------- */
+function topbar(){
+  const pct = Math.round((S.i / STEPS.length) * 100);
+  const hearts = "❤️".repeat(S.hearts) + "🤍".repeat(Math.max(0,5-S.hearts));
+  return `<div class="topbar">
+      <button class="iconbtn" id="quit" aria-label="Quit to start">✕</button>
+      <div class="pbar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Lesson progress"><i style="width:${pct}%"></i></div>
+      <div class="hearts" aria-label="${S.hearts} hearts left"><span class="hh">${hearts}</span></div>
+    </div>`;
+}
+
+/* ---- Step renderers ---------------------------------------------------- */
+function renderStep(){
+  const step = STEPS[S.i];
+  let body = "";
+  if(step.type==="teach")  body = viewTeach(step);
+  if(step.type==="mcq")    body = viewMcq(step);
+  if(step.type==="multi")  body = viewMulti(step);
+  if(step.type==="gap")    body = viewGap(step);
+  if(step.type==="match")  body = viewMatch(step);
+
+  app.innerHTML = topbar() + `<div class="stage fade" id="stage">${body}</div>` + footerShell();
+
+  document.getElementById("quit").onclick = () => { if(confirm("Leave the lesson? Your place is saved.")){ S.started=false; render(); } };
+
+  if(step.type==="teach")  wireTeach();
+  if(step.type==="mcq")    wireMcq(step);
+  if(step.type==="multi")  wireMulti(step);
+  if(step.type==="gap")    wireGap(step);
+  if(step.type==="match")  wireMatch(step);
+}
+
+/* TEACH ------------------------------------------------------------------ */
+function viewTeach(s){
+  return `<div class="step-kicker mono-kicker">${s.kicker}</div>
+    <div class="teach"><span class="emoji">${s.emoji}</span><h2 class="fr">${s.h}</h2>${s.html}</div>`;
+}
+function wireTeach(){
+  footerButton("Continue", "btn-go", true, () => next());
+}
+
+/* MCQ -------------------------------------------------------------------- */
+function viewMcq(s){
+  const opts = s.options.map((o,idx)=>`
+    <button class="opt" data-idx="${idx}">
+      <span class="num">${idx+1}</span>${o.t}<span class="mk"></span>
+    </button>`).join("");
+  return `<div class="step-kicker mono-kicker">${s.kicker}</div>
+    <h1 class="prompt fr">${s.q}</h1>
+    <div class="opts" id="opts">${opts}</div>
+    <div class="hint">Tap an answer, then press Check.</div>`;
+}
+function wireMcq(s){
+  S.payload = { choice:null };
+  const opts = [...document.querySelectorAll(".opt")];
+  opts.forEach(b => b.onclick = () => {
+    if(S.checked) return;
+    S.payload.choice = +b.dataset.idx;
+    opts.forEach(x=>x.classList.remove("sel"));
+    b.classList.add("sel");
+    enableCheck(true);
+  });
+  setCheck(() => {
+    const ci = s.options.findIndex(o=>o.correct);
+    const chosen = S.payload.choice;
+    const isOk = chosen === ci;
+    opts.forEach((b,idx)=>{
+      b.disabled = true;
+      if(idx===ci){ b.classList.add("correct"); b.querySelector(".mk").textContent="✓"; }
+      else if(idx===chosen){ b.classList.add("wrong"); b.querySelector(".mk").textContent="✗"; }
+      else b.classList.add("dim");
+    });
+    const why = isOk ? s.ok : (s.options[chosen].why ? s.options[chosen].why+` <span class="ans">The answer is: ${s.options[ci].t}</span>` : `<span class="ans">The answer is: ${s.options[ci].t}</span>`);
+    grade(isOk, why);
+  });
+}
+
+/* MULTI (tap all that apply) --------------------------------------------- */
+function viewMulti(s){
+  const items = s.items.map((it,idx)=>`
+    <button class="chip" data-idx="${idx}"><span class="ce">${it.e}</span><span>${it.t}</span></button>`).join("");
+  return `<div class="step-kicker mono-kicker">${s.kicker}</div>
+    <h1 class="prompt fr">${s.q}</h1>
+    <div class="grid" id="grid">${items}</div>
+    <div class="hint">Choose one or more, then press Check.</div>`;
+}
+function wireMulti(s){
+  S.payload = { set:new Set() };
+  const chips = [...document.querySelectorAll(".chip")];
+  chips.forEach(c => c.onclick = () => {
+    if(S.checked) return;
+    const idx=+c.dataset.idx;
+    if(S.payload.set.has(idx)){ S.payload.set.delete(idx); c.classList.remove("sel"); }
+    else { S.payload.set.add(idx); c.classList.add("sel"); }
+    enableCheck(S.payload.set.size>0);
+  });
+  setCheck(() => {
+    let isOk = true;
+    chips.forEach((c,idx)=>{
+      c.disabled = true; c.classList.remove("sel");
+      const shouldBe = !!s.items[idx].correct;
+      const picked = S.payload.set.has(idx);
+      if(shouldBe && picked) c.classList.add("correct");
+      else if(!shouldBe && picked){ c.classList.add("wrong"); isOk=false; }
+      else if(shouldBe && !picked){ c.classList.add("miss"); isOk=false; }
+    });
+    grade(isOk, isOk ? s.ok : s.bad);
+  });
+}
+
+/* GAP (sentence builder) ------------------------------------------------- */
+function viewGap(s){
+  let html = "";
+  s.parts.forEach(p=>{
+    if(typeof p==="string") html += p;
+    else html += `<span class="blank" data-b="${p.b}" role="button" tabindex="0"></span>`;
+  });
+  const bank = s.bank.map((w,idx)=>`<button class="token" data-w="${idx}">${w}</button>`).join("");
+  return `<div class="step-kicker mono-kicker">${s.kicker}</div>
+    <h1 class="prompt fr">${s.q}</h1>
+    <div class="sentence" id="sentence">${html}</div>
+    <div class="bank" id="bank">${bank}</div>`;
+}
+function wireGap(s){
+  S.payload = { fill:{} };  // blankIndex -> bankIndex
+  const blanks = [...document.querySelectorAll(".blank")];
+  const tokens = [...document.querySelectorAll(".token")];
+
+  function refresh(){
+    blanks.forEach(bl=>{
+      const bi=+bl.dataset.b; const tk=S.payload.fill[bi];
+      bl.classList.toggle("filled", tk!=null);
+      bl.innerHTML = tk!=null ? `<button>${s.bank[tk]}</button>` : "";
+      if(tk!=null) bl.querySelector("button").onclick = (e)=>{ if(S.checked) return; e.stopPropagation(); delete S.payload.fill[bi]; refresh(); };
+    });
+    tokens.forEach(t=>{
+      const used = Object.values(S.payload.fill).includes(+t.dataset.w);
+      t.classList.toggle("used", used);
+    });
+    const all = s.blanks.every((_,bi)=>S.payload.fill[bi]!=null);
+    enableCheck(all);
+  }
+  function firstEmpty(){ for(let bi=0;bi<s.blanks.length;bi++) if(S.payload.fill[bi]==null) return bi; return -1; }
+
+  tokens.forEach(t=> t.onclick=()=>{ if(S.checked) return; const bi=firstEmpty(); if(bi<0) return; S.payload.fill[bi]=+t.dataset.w; refresh(); });
+  blanks.forEach(bl=> bl.onclick=()=>{ if(S.checked) return; const bi=+bl.dataset.b; if(S.payload.fill[bi]!=null){ delete S.payload.fill[bi]; refresh(); } });
+  refresh();
+
+  setCheck(() => {
+    let isOk = true;
+    blanks.forEach(bl=>{
+      const bi=+bl.dataset.b; const word = s.bank[S.payload.fill[bi]];
+      const good = word === s.blanks[bi];
+      bl.classList.add(good?"ok":"bad"); if(!good) isOk=false;
+      const inner = bl.querySelector("button"); if(inner) inner.disabled=true;
+    });
+    tokens.forEach(t=>t.disabled=true);
+    const correctSentence = s.parts.map(p=> typeof p==="string"? p : `<b>${s.blanks[p.b]}</b>`).join("");
+    grade(isOk, isOk ? s.ok : `The correct sentence is:<br>“${correctSentence}”`);
+  });
+}
+
+/* MATCH ------------------------------------------------------------------ */
+const PAIR_COLORS = ["#1E2761","#C99528","#2C5F2D","#8a4fa0"];
+function viewMatch(s){
+  const left = s.left.map((l,idx)=>`<button class="mitem mleft" data-idx="${idx}">${l.t}<span class="dot"></span></button>`).join("");
+  const right = s.right.map((r,idx)=>`<button class="mitem mright" data-idx="${idx}">${r.t}<span class="dot"></span></button>`).join("");
+  return `<div class="step-kicker mono-kicker">${s.kicker}</div>
+    <h1 class="prompt fr">${s.q}</h1>
+    <div class="match"><div class="col">${left}</div><div class="col">${right}</div></div>
+    <div class="hint">Tap one on the left, then its match on the right.</div>`;
+}
+function wireMatch(s){
+  S.payload = { links:{}, activeLeft:null, colorOf:{} };  // links: leftIdx -> rightIdx
+  const lefts = [...document.querySelectorAll(".mleft")];
+  const rights = [...document.querySelectorAll(".mright")];
+  let colorN = 0;
+
+  function clearActive(){ lefts.forEach(l=>l.classList.remove("active")); }
+  function paint(){
+    lefts.forEach(l=>{ const i=+l.dataset.idx; const on=S.payload.links[i]!=null; l.classList.toggle("paired",on); l.querySelector(".dot").style.background = on?S.payload.colorOf[i]:"transparent"; });
+    rights.forEach(r=>{ const i=+r.dataset.idx; const li=Object.keys(S.payload.links).find(k=>S.payload.links[k]===i); const on=li!=null; r.classList.toggle("paired",on); r.querySelector(".dot").style.background = on?S.payload.colorOf[li]:"transparent"; });
+    enableCheck(Object.keys(S.payload.links).length === s.left.length);
+  }
+  lefts.forEach(l=> l.onclick=()=>{ if(S.checked) return; clearActive(); l.classList.add("active"); S.payload.activeLeft=+l.dataset.idx; });
+  rights.forEach(r=> r.onclick=()=>{
+    if(S.checked) return; if(S.payload.activeLeft==null) return;
+    const li=S.payload.activeLeft, ri=+r.dataset.idx;
+    // remove any existing link to this right
+    for(const k of Object.keys(S.payload.links)) if(S.payload.links[k]===ri) delete S.payload.links[k];
+    if(S.payload.colorOf[li]==null) S.payload.colorOf[li]=PAIR_COLORS[(colorN++)%PAIR_COLORS.length];
+    S.payload.links[li]=ri; S.payload.activeLeft=null; clearActive(); paint();
+  });
+
+  setCheck(() => {
+    let isOk=true;
+    lefts.forEach(l=>{ l.disabled=true; });
+    rights.forEach(r=>{ r.disabled=true; });
+    Object.entries(S.payload.links).forEach(([li,ri])=>{
+      const good = s.left[li].key === s.right[ri].key;
+      lefts[li].classList.add(good?"correct":"wrong");
+      rights[ri].classList.add(good?"correct":"wrong");
+      if(!good) isOk=false;
+    });
+    grade(isOk, isOk ? s.ok : s.bad);
+  });
+}
+
+/* ---- Footer: check button / feedback ----------------------------------- */
+function footerShell(){ return `<div class="footer" id="footer"><div class="inner" id="finner"></div></div>`; }
+
+function footerButton(label, cls, enabled, onClick){
+  const f=document.getElementById("footer"); f.className="footer";
+  const inner=document.getElementById("finner");
+  inner.innerHTML = `<button class="btn ${cls}" id="fbtn" ${enabled?"":"disabled"}>${label}</button>`;
+  document.getElementById("fbtn").onclick = onClick;
+}
+
+let _checkFn = null;
+function setCheck(fn){ _checkFn = fn; footerButton("Check", "btn-primary", false, () => _checkFn && _checkFn()); }
+function enableCheck(on){ const b=document.getElementById("fbtn"); if(b && !S.checked) b.disabled=!on; }
+
+function grade(isOk, whyHtml){
+  S.checked = true;
+  S.asked += 1;
+  if(isOk){ S.correct += 1; S.xp += PASS_XP_PER_CORRECT; }
+  else {
+    S.hearts = Math.max(0, S.hearts-1);
+    if(S.hearts===0){ S.hearts=5; }  // forgiving for home learning: refill rather than fail
+  }
+  const f=document.getElementById("footer");
+  f.className = "footer " + (isOk?"fb-ok":"fb-bad");
+  document.getElementById("finner").innerHTML = `
+    <div class="fbhead"><span class="ic">${isOk?"✓":"✕"}</span><h3 class="fr">${isOk?pickPraise():"Not quite"}</h3></div>
+    <div class="fbwhy">${whyHtml}</div>
+    <button class="btn ${isOk?"btn-go":"btn-primary"}" id="cont">Continue</button>`;
+  document.getElementById("cont").onclick = () => next();
+  // refresh hearts display
+  const h=document.querySelector(".hearts .hh"); if(h) h.textContent = "❤️".repeat(S.hearts)+"🤍".repeat(5-S.hearts);
+  save();
+}
+const PRAISE=["Nice!","Well done!","Correct!","Exactly!","Spot on!","You've got it!"];
+function pickPraise(){ return PRAISE[S.correct % PRAISE.length]; }
+
+function next(){ S.checked=false; S.payload=null; S.i+=1; render(); }
+
+/* ---- Complete ---------------------------------------------------------- */
+function renderDone(){
+  const acc = S.asked ? Math.round((S.correct/S.asked)*100) : 0;
+  saveBest(acc, S.xp);
+  const best = bestScore();
+  clearProgress();
+  const recap = RECAP.map(r=>`<li>${r}</li>`).join("");
+  app.innerHTML = `
+    <div class="done fade">
+      <div class="trophy">${acc>=80?"🏆":acc>=50?"🎉":"💪"}</div>
+      <h1 class="fr">Lesson complete!</h1>
+      <p class="sub">${acc>=80?"Brilliant work — you really know your magnets.":acc>=50?"Good effort — a quick re-run will lock it in.":"Great start — try it again to boost your score."}</p>
+      <div class="stats">
+        <div class="stat xp"><div class="v">${S.xp}</div><div class="l">XP earned</div></div>
+        <div class="stat acc"><div class="v">${acc}%</div><div class="l">Accuracy</div></div>
+        <div class="stat best"><div class="v">${best?best.acc:acc}%</div><div class="l">Your best</div></div>
+      </div>
+      <div class="recap"><h3>What you learned</h3><ul>${recap}</ul></div>
+      <div class="actions">
+        <button class="btn btn-go" id="again">Practise again</button>
+        <button class="btn btn-ghost" id="home">Back to start</button>
+      </div>
+      <div class="colophon">Feynman · learn it, joined up</div>
+    </div>`;
+  document.getElementById("again").onclick = () => { reset(); render(); };
+  document.getElementById("home").onclick = () => { S.started=false; render(); };
+}
+
+/* ---- Keyboard support -------------------------------------------------- */
+document.addEventListener("keydown", (e)=>{
+  if(!S.started || S.i>=STEPS.length) return;
+  const step=STEPS[S.i];
+  if(e.key==="Enter"){
+    const cont=document.getElementById("cont");
+    if(cont){ cont.click(); e.preventDefault(); return; }
+    const fb=document.getElementById("fbtn");
+    if(fb && !fb.disabled){ fb.click(); e.preventDefault(); return; }
+  }
+  if(!S.checked && /^[1-9]$/.test(e.key)){
+    const n=+e.key-1;
+    if(step.type==="mcq"){ const b=document.querySelector(`.opt[data-idx="${n}"]`); if(b) b.click(); }
+    if(step.type==="multi"){ const b=document.querySelector(`.chip[data-idx="${n}"]`); if(b) b.click(); }
+  }
+});
+
+/* ---- Go ---------------------------------------------------------------- */
+render();
+</script>
+</body>
+</html>

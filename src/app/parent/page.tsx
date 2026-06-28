@@ -16,7 +16,8 @@ const COL = {
 interface Report { id: string; weekStart: string; html: string; emailed: boolean; }
 interface Weak { topic_id: string; topic_name: string; pct: number; practiseUrl: string | null; }
 interface Home { enabled: boolean; weak: Weak[]; targetGrade: string | null; recentScore: number | null; }
-interface Child { linkId: string; studentName: string; classLabel: string; practiseUrl: string | null; unsubscribeToken: string; reports: Report[]; home?: Home; }
+interface Course { xp: number; crowns: number; streak: number; updatedAt: string | null }
+interface Child { linkId: string; studentName: string; classLabel: string; practiseUrl: string | null; unsubscribeToken: string; reports: Report[]; home?: Home; course?: Course | null; }
 
 function firstName(s: string) { return (s || "").trim().split(/\s+/)[0] || s; }
 function heat(pct: number) { return pct < 40 ? "#b95a3c" : pct < 65 ? "#a06520" : "#1a7f5a"; }
@@ -101,6 +102,18 @@ function ChildCard({ child, token }: { child: Child; token: string }) {
       {/* Pupil-facing "my progress / what to practise" view (read-only, same data). */}
       <PupilProgress child={child} target={target} onSetTarget={saveTarget} />
 
+      {/* Home-learning course progress (synced from the self-study app). */}
+      {child.course && (
+        <div style={{ background: "#f4f6fc", border: "1px solid #d7dcec", borderRadius: 10, padding: "12px 16px", marginBottom: 18 }}>
+          <div style={{ fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "#1E2761", marginBottom: 8 }}>Home science course</div>
+          <div style={{ display: "flex", gap: 18, fontSize: 14 }}>
+            <span><strong>👑 {child.course.crowns}</strong> lessons</span>
+            <span><strong>💎 {child.course.xp}</strong> XP</span>
+            <span><strong>🔥 {child.course.streak}</strong> day streak</span>
+          </div>
+        </div>
+      )}
+
       {/* Home: parent summary line. The weak topics + goal live in the pupil
           view above (single source of truth); this is the parent's framing. */}
       {home && (home.enabled ? (
@@ -176,6 +189,18 @@ function PortalInner() {
       <p style={{ color: COL.muted, margin: "0 0 28px", fontSize: 15 }}>
         {data.children.length ? "Weekly progress and a few minutes of the right practice — best looked at together." : "No active children are linked to this account yet."}
       </p>
+
+      {/* Free, self-paced KS3 home-learning course (no login, works offline). Open to every parent. */}
+      <a href="/learn/springboard.html" target="_blank" rel="noopener noreferrer"
+        style={{ display: "flex", alignItems: "center", gap: 13, background: "#eef5f1", border: `1px solid #cfe3d8`, borderRadius: 12, padding: 16, marginBottom: 24, textDecoration: "none", color: COL.text }}>
+        <span style={{ fontSize: 26, lineHeight: 1 }}>📚</span>
+        <span style={{ flex: 1 }}>
+          <span style={{ display: "block", fontWeight: 600, fontSize: 15 }}>Revise at home — KS3 science course</span>
+          <span style={{ display: "block", fontSize: 13, color: COL.muted, marginTop: 2 }}>A free, self-paced course following the class lessons: learn the key words aloud, practise, and grow a streak.</span>
+        </span>
+        <span style={{ color: COL.green, fontWeight: 600, fontSize: 14, whiteSpace: "nowrap" }}>Open →</span>
+      </a>
+
       {data.children.map((c) => <ChildCard key={c.linkId} child={c} token={token} />)}
       <p style={{ fontSize: 11, color: COL.dim, textAlign: "center", marginTop: 24 }}>
         Reports reflect your child's class lessons and practice. Questions? Speak to their science teacher.

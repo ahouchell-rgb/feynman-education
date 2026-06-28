@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#101314">
+<title>Feynman — every science lesson, joined up.</title>
+<meta name="description" content="Plan, teach, practise and track secondary science — teacher to parent to trust — on one mastery graph.">
+<link rel="canonical" href="https://feynman.education/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://feynman.education/">
+<meta property="og:site_name" content="Feynman Education">
+<meta property="og:title" content="Feynman — every science lesson, joined up.">
+<meta property="og:description" content="One spine. Every view. A question authored in Sciencekit is practised in Retrieval, then lands in a parent's report and a trust's benchmark.">
+<meta property="og:image" content="https://feynman.education/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Feynman — every science lesson, joined up.">
+<meta name="twitter:description" content="One spine. Every view. Author once → practised → reported → benchmarked.">
+<meta name="twitter:image" content="https://feynman.education/og-cover.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%23101314'/%3E%3Ctext%20x='16'%20y='23'%20font-family='Georgia,serif'%20font-size='20'%20fill='%23F2EBDA'%20text-anchor='middle'%3EF%3C/text%3E%3Ccircle%20cx='25'%20cy='22'%20r='2.4'%20fill='%23C99528'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css" rel="stylesheet">
+<style>
+  :root{ --cream:#F2EBDA; --ink:#101314; --gold:#C99528; --green:#1F3D2D; --surf:#F6F1E2; --clay:#C2603F; }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ background:var(--cream); color-scheme:light only; scroll-behavior:smooth; }
+  body{ font-family:'IBM Plex Sans',sans-serif; font-size:15px; line-height:1.6; color:var(--ink); background:var(--cream); -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; text-decoration:none; }
+  .fr{ font-family:'Fraunces',serif; font-weight:400; letter-spacing:-0.03em; font-variation-settings:'opsz' 144,'SOFT' 30; }
+  .mono{ font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.18em; }
+  .wm{ font-family:'Fraunces',serif; font-weight:400; letter-spacing:-0.035em; font-variation-settings:'opsz' 144,'SOFT' 30; }
+  .wm .dot{ color:var(--gold); }
+  em{ font-style:italic; font-weight:300; }
+  .inner{ max-width:1040px; margin:0 auto; }
+
+  .nav{ position:sticky; top:0; z-index:50; background:var(--ink); color:var(--cream); border-bottom:1px solid rgba(242,235,218,0.14); }
+  .nav .inner{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; }
+  .nav .wm{ font-size:24px; color:var(--cream); }
+  .nav .links{ display:none; gap:22px; font-size:13px; opacity:0.78; }
+  .nav .right{ display:flex; align-items:center; gap:14px; }
+  .nav .signin{ font-size:13px; opacity:0.8; display:none; }
+  .btn-gold{ font-size:13px; font-weight:500; padding:10px 16px; background:var(--gold); color:var(--ink); }
+  .btn-ink{ font-size:14px; font-weight:500; padding:15px 24px; background:var(--ink); color:var(--cream); display:inline-block; }
+  .link-u{ font-size:13.5px; text-decoration:underline; text-underline-offset:4px; }
+
+  .hero{ background:var(--ink); color:var(--cream); padding:52px 24px 34px; }
+  .hero .eyebrow{ font-size:11px; color:var(--gold); margin-bottom:20px; }
+  .hero h1{ font-size:42px; line-height:1.0; margin-bottom:18px; max-width:18ch; }
+  .hero .lede{ font-family:'Fraunces',serif; font-weight:300; font-style:italic; font-size:18px; font-variation-settings:'opsz' 96,'SOFT' 70; line-height:1.45; opacity:0.84; max-width:50ch; margin-bottom:26px; }
+  .hero .ctas{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  .hero .btn-gold{ padding:15px 24px; font-size:14px; }
+
+  .spine{ max-width:740px; margin:30px auto 0; }
+  .spine svg{ display:block; width:100%; height:auto; }
+  .spine .cap{ font-size:11px; opacity:0.55; text-align:center; margin-top:8px; }
+  .flow{ stroke:var(--gold); stroke-width:1.6; fill:none; stroke-dasharray:4 7; stroke-opacity:0.5; animation:fdown 1s linear infinite; }
+  .vnode{ animation:pul 2.6s ease-in-out infinite; }
+  .vnode:nth-of-type(2){ animation-delay:.5s; } .vnode:nth-of-type(3){ animation-delay:1s; } .vnode:nth-of-type(4){ animation-delay:1.5s; }
+  @keyframes fdown{ to{ stroke-dashoffset:-22; } }
+  @keyframes pul{ 0%,100%{ opacity:.55 } 50%{ opacity:1 } }
+  @media (prefers-reduced-motion: reduce){ .flow,.vnode{ animation:none; } .pulse{ display:none; } }
+
+  .proof{ background:var(--cream); border-bottom:1px solid rgba(16,19,20,0.14); }
+  .proof .inner{ font-size:11px; color:#5F5B50; text-align:center; padding:15px 24px; }
+
+  .sec{ padding:48px 24px; }
+  .sec .eyebrow{ font-size:11px; opacity:0.6; margin-bottom:14px; }
+  .sec h2{ font-size:32px; line-height:1.05; margin-bottom:22px; }
+
+  .cards{ display:grid; grid-template-columns:1fr; gap:14px; }
+  .pcard{ background:var(--surf); border:1px solid rgba(16,19,20,0.15); }
+  .pcard .rule{ height:3px; background:var(--gold); }
+  .pcard .body{ padding:20px 18px; }
+  .pcard .ic{ font-size:22px; color:var(--green); }
+  .pcard .lock{ display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; margin:10px 0 3px; }
+  .pcard .wm{ font-size:17px; } .pcard .pname{ font-size:15px; font-weight:500; }
+  .pcard .sub{ font-family:'IBM Plex Mono',monospace; font-size:11px; opacity:0.55; margin-bottom:10px; }
+  .pcard ul{ list-style:none; } .pcard li{ font-size:13px; padding:5px 0 5px 16px; position:relative; opacity:0.82; }
+  .pcard li::before{ content:'—'; position:absolute; left:0; opacity:0.5; }
+  .pcard .tie{ margin-top:12px; padding-top:10px; border-top:1px solid rgba(16,19,20,0.12); font-size:11px; opacity:0.6; }
+
+  .views{ background:var(--green); color:var(--cream); }
+  .views .eyebrow{ color:var(--gold); opacity:1; }
+  .views h2{ color:var(--cream); }
+  .views h2 em{ color:var(--gold); }
+  .vrow{ display:flex; gap:14px; align-items:baseline; padding:14px 0; border-top:1px solid rgba(242,235,218,0.2); }
+  .vrow:last-child{ border-bottom:1px solid rgba(242,235,218,0.2); }
+  .vrow .ic{ font-size:18px; color:var(--gold); width:22px; flex:none; }
+  .vrow .who{ font-weight:500; } .vrow .what{ opacity:0.78; font-size:13.5px; }
+
+  .magnet .res{ background:var(--surf); border:1px solid rgba(16,19,20,0.15); padding:20px; max-width:640px; }
+  .magnet .meta{ font-size:11px; color:var(--clay); margin-bottom:8px; }
+  .magnet .rtitle{ font-size:21px; margin-bottom:6px; }
+  .magnet .rdesc{ font-size:13.5px; opacity:0.82; margin-bottom:16px; }
+  .magnet form{ display:flex; flex-direction:column; gap:10px; }
+  .magnet input{ width:100%; padding:14px 16px; font-family:'IBM Plex Sans',sans-serif; font-size:15px; background:var(--cream); border:1px solid rgba(16,19,20,0.25); outline:none; color:var(--ink); }
+  .magnet input::placeholder{ color:rgba(16,19,20,0.5); }
+  .magnet button{ padding:14px 22px; font-family:'IBM Plex Sans',sans-serif; font-size:14px; font-weight:500; background:var(--gold); color:var(--ink); border:none; cursor:pointer; }
+  .magnet .fine{ font-size:11px; opacity:0.55; margin-top:12px; }
+
+  .foot{ background:var(--ink); color:var(--cream); padding:40px 24px 32px; }
+  .foot .top{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:18px; }
+  .foot .wm{ font-size:30px; color:var(--cream); margin-bottom:12px; }
+  .foot .tag{ font-family:'Fraunces',serif; font-weight:300; font-style:italic; font-size:14px; opacity:0.78; max-width:30ch; }
+  .foot .links{ display:flex; gap:22px; font-size:13px; opacity:0.82; flex-wrap:wrap; }
+  .foot .colophon{ font-size:11px; opacity:0.5; margin-top:24px; padding-top:16px; border-top:1px solid rgba(242,235,218,0.2); }
+
+  @media (min-width:760px){
+    .nav .links{ display:flex; } .nav .signin{ display:inline; }
+    .hero{ padding:84px 24px 48px; }
+    .hero h1{ font-size:72px; }
+    .hero .lede{ font-size:23px; }
+    .sec{ padding:80px 24px; }
+    .sec h2{ font-size:48px; }
+    .cards{ grid-template-columns:repeat(3,1fr); }
+    .magnet form{ flex-direction:row; } .magnet input{ flex:1; } .magnet button{ width:auto; }
+    .vrow .what{ font-size:14px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="inner">
+    <span class="wm">Feynman<span class="dot">.</span></span>
+    <span class="links"><a href="#system">Teachers</a><a href="#system">Schools</a><a href="#views">Trusts</a><a href="#magnet">Parents</a></span>
+    <span class="right"><a href="#" class="signin">Sign in</a><a href="#magnet" class="btn-gold">Start free</a></span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="inner">
+    <div class="eyebrow mono">The mastery graph</div>
+    <h1 class="fr">One spine. <em>Every view.</em></h1>
+    <p class="lede">A question authored in Sciencekit is practised in Retrieval, then lands in a parent's report and a trust's benchmark — because it's all one graph.</p>
+    <div class="ctas">
+      <a href="#magnet" class="btn-gold">Start free &rarr;</a>
+      <a href="#system" class="link-u" style="opacity:.9;">See the architecture</a>
+    </div>
+
+    <div class="spine">
+      <svg viewBox="0 0 600 244" role="img" xmlns="http://www.w3.org/2000/svg">
+        <title>One question authored in any of three surfaces flows down into the single mastery graph and back out as four audience views.</title>
+        <desc>Sciencekit, Retrieval and Sciencetools feed a central gold mastery-graph bar; below it, Teacher, Parent, School and Trust read out. Animated dashes and travelling pulses show questions flowing top to bottom.</desc>
+
+        <text x="40" y="13" fill="#C99528" opacity="0.75" font-family="'IBM Plex Mono',monospace" font-size="9.5" letter-spacing="2">IN</text>
+        <g fill="#1B2122" stroke="#C99528" stroke-opacity="0.35">
+          <rect x="90" y="20" width="120" height="34" rx="5"/>
+          <rect x="240" y="20" width="120" height="34" rx="5"/>
+          <rect x="390" y="20" width="120" height="34" rx="5"/>
+        </g>
+        <g fill="#F2EBDA" font-size="12.5" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif">
+          <text x="150" y="41">Sciencekit</text>
+          <text x="300" y="41">Retrieval</text>
+          <text x="450" y="41">Sciencetools</text>
+        </g>
+
+        <path class="flow" d="M150 54 L150 112"/>
+        <path class="flow" d="M300 54 L300 112"/>
+        <path class="flow" d="M450 54 L450 112"/>
+
+        <rect x="40" y="112" width="520" height="34" rx="5" fill="#C99528"/>
+        <text x="300" y="134" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" letter-spacing="2" fill="#101314"><tspan font-weight="500">THE MASTERY GRAPH</tspan><tspan fill="#1F3D2D"> · pupil × objective × confidence</tspan></text>
+
+        <path class="flow" d="M105 146 L105 204"/>
+        <path class="flow" d="M235 146 L235 204"/>
+        <path class="flow" d="M365 146 L365 204"/>
+        <path class="flow" d="M495 146 L495 204"/>
+
+        <text x="40" y="184" fill="#C99528" opacity="0.75" font-family="'IBM Plex Mono',monospace" font-size="9.5" letter-spacing="2">OUT</text>
+        <g fill="none" stroke="#F2EBDA" stroke-opacity="0.4">
+          <rect class="vnode" x="47" y="204" width="116" height="32" rx="5"/>
+          <rect class="vnode" x="177" y="204" width="116" height="32" rx="5"/>
+          <rect class="vnode" x="307" y="204" width="116" height="32" rx="5"/>
+          <rect class="vnode" x="437" y="204" width="116" height="32" rx="5"/>
+        </g>
+        <g fill="#F2EBDA" font-size="12.5" text-anchor="middle" font-family="'IBM Plex Sans',sans-serif">
+          <text x="105" y="224">Teacher</text>
+          <text x="235" y="224">Parent</text>
+          <text x="365" y="224">School</text>
+          <text x="495" y="224">Trust</text>
+        </g>
+
+        <g class="pulse">
+          <circle r="8" fill="#C99528" opacity="0.22"/><circle r="3.6" fill="#FFF8E6"/>
+          <animateMotion dur="3.4s" repeatCount="indefinite" path="M150 54 L150 129 L365 129 L365 206"/>
+          <animate attributeName="opacity" dur="3.4s" repeatCount="indefinite" values="0;1;1;1;0" keyTimes="0;0.07;0.5;0.9;1"/>
+        </g>
+        <g class="pulse">
+          <circle r="8" fill="#C99528" opacity="0.22"/><circle r="3.6" fill="#FFF8E6"/>
+          <animateMotion dur="3.8s" begin="-1.3s" repeatCount="indefinite" path="M300 54 L300 129 L235 129 L235 206"/>
+          <animate attributeName="opacity" dur="3.8s" begin="-1.3s" repeatCount="indefinite" values="0;1;1;1;0" keyTimes="0;0.07;0.5;0.9;1"/>
+        </g>
+        <g class="pulse">
+          <circle r="8" fill="#C99528" opacity="0.22"/><circle r="3.6" fill="#FFF8E6"/>
+          <animateMotion dur="4.1s" begin="-2.6s" repeatCount="indefinite" path="M450 54 L450 129 L495 129 L495 206"/>
+          <animate attributeName="opacity" dur="4.1s" begin="-2.6s" repeatCount="indefinite" values="0;1;1;1;0" keyTimes="0;0.07;0.5;0.9;1"/>
+        </g>
+      </svg>
+      <div class="cap mono">author once → practised → reported → benchmarked</div>
+    </div>
+  </div>
+</header>
+
+<div class="proof"><div class="inner mono">Rosenshine-aligned · retrieval-first · editable, always · no badges, no streaks · UK GDPR</div></div>
+
+<section class="sec" id="system"><div class="inner">
+  <div class="eyebrow mono">01 · The system</div>
+  <h2 class="fr">Three surfaces. <em>One spine.</em></h2>
+  <div class="cards">
+    <article class="pcard"><div class="rule"></div><div class="body">
+      <i class="ti ti-presentation ic" aria-hidden="true"></i>
+      <div class="lock"><span class="wm">Feynman<span class="dot">.</span></span><span class="pname">Sciencekit</span></div>
+      <div class="sub">app.feynman.education</div>
+      <ul><li>Rosenshine decks, Y7–11</li><li>Feedforward + parent reports</li><li>SLT &amp; trust dashboards</li></ul>
+      <div class="tie">↳ writes to the mastery graph</div>
+    </div></article>
+    <article class="pcard"><div class="rule"></div><div class="body">
+      <i class="ti ti-repeat ic" aria-hidden="true"></i>
+      <div class="lock"><span class="wm">Feynman<span class="dot">.</span></span><span class="pname">Retrieval</span></div>
+      <div class="sub">practice.feynman.education</div>
+      <ul><li>Spaced retrieval by topic</li><li>Quiz, mark, see the gaps</li><li>Anonymous practice, no login</li></ul>
+      <div class="tie">↳ feeds the mastery graph</div>
+    </div></article>
+    <article class="pcard"><div class="rule"></div><div class="body">
+      <i class="ti ti-atom ic" aria-hidden="true"></i>
+      <div class="lock"><span class="wm">Feynman<span class="dot">.</span></span><span class="pname">Sciencetools</span></div>
+      <div class="sub">interactive.feynman.education</div>
+      <ul><li>Interactive widgets</li><li>Revision booklets</li><li>Open, project, teach</li></ul>
+      <div class="tie">↳ embeds live retrieval</div>
+    </div></article>
+  </div>
+</div></section>
+
+<section class="sec views" id="views"><div class="inner">
+  <div class="eyebrow mono">02 · One graph, four views</div>
+  <h2 class="fr">One spine, <em>a view for each.</em></h2>
+  <div class="vrow"><i class="ti ti-user ic" aria-hidden="true"></i><div><span class="who">Teacher</span> <span class="what">— their classes' weakest objectives, ready to reteach</span></div></div>
+  <div class="vrow"><i class="ti ti-home ic" aria-hidden="true"></i><div><span class="who">Parent</span> <span class="what">— a weekly progress report and a practise-at-home link</span></div></div>
+  <div class="vrow"><i class="ti ti-building ic" aria-hidden="true"></i><div><span class="who">School</span> <span class="what">— cohort heatmaps and an intervention list</span></div></div>
+  <div class="vrow"><i class="ti ti-building-bank ic" aria-hidden="true"></i><div><span class="who">Trust / MAT</span> <span class="what">— every school benchmarked on the same graph</span></div></div>
+</div></section>
+
+<section class="sec magnet" id="magnet"><div class="inner">
+  <div class="eyebrow mono">03 · Start here</div>
+  <h2 class="fr">A sample to <em>actually use.</em></h2>
+  <div class="res">
+    <div class="meta mono">Y9 · C5 Energy changes · PDF + editable .docx</div>
+    <div class="rtitle fr">A 40-question retrieval bank.</div>
+    <div class="rdesc">Six difficulty tiers, mark scheme included, in the Feynman house style. Yours to edit, print or import — no drip campaign.</div>
+    <form id="sampleForm" novalidate>
+      <input type="email" name="email" placeholder="your.name@school.uk" autocomplete="email" required aria-label="Your email address">
+      <input type="hidden" name="resource" value="Y9 · C5 Energy changes — 40-question retrieval bank">
+      <input type="hidden" name="source" value="brand-home">
+      <button type="submit">Send me the bank &rarr;</button>
+    </form>
+    <p class="fine mono" id="formStatus" role="status" aria-live="polite">One email · no newsletter unless you ask</p>
+  </div>
+</div></section>
+
+<footer class="foot"><div class="inner">
+  <div class="top">
+    <div>
+      <div class="wm">Feynman<span class="dot">.</span></div>
+      <div class="tag">The science teacher's tools. Built in a classroom, used in a classroom.</div>
+    </div>
+    <div class="links"><a href="#system">Sciencekit</a><a href="#system">Retrieval</a><a href="#system">Sciencetools</a><a href="#">Trust Centre</a></div>
+  </div>
+  <div class="colophon mono">feynman.education · one domain · one spine</div>
+</div></footer>
+
+<script>
+(function(){
+  // Swap this for your real form endpoint (Formspree / Getform / Web3Forms — any
+  // service that accepts a POST'd FormData and returns JSON). Until it's set, the
+  // form shows a friendly confirmation so the page never looks broken in demos.
+  var FORM_ENDPOINT = "https://formspree.io/f/REPLACE_WITH_FORM_ID";
+
+  var form = document.getElementById('sampleForm');
+  if(!form) return;
+  var status = document.getElementById('formStatus');
+  var btn = form.querySelector('button');
+  var defaultStatus = status.textContent;
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var email = (form.email.value || '').trim();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+      status.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    // Demo fallback until a real endpoint is configured.
+    if(FORM_ENDPOINT.indexOf('REPLACE_WITH') !== -1){
+      btn.textContent = 'Sent ✓'; btn.disabled = true;
+      status.textContent = 'Sent. Check your inbox for the bank.';
+      return;
+    }
+    var original = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try{
+      var res = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      });
+      if(!res.ok) throw new Error('bad status ' + res.status);
+      btn.textContent = 'Sent ✓'; form.email.value = '';
+      status.textContent = 'Sent. Check your inbox for the bank.';
+    }catch(err){
+      btn.disabled = false; btn.textContent = original;
+      status.textContent = "Couldn't send — email schools@feynman.education and we'll send it over.";
+    }
+  });
+
+  form.email.addEventListener('input', function(){
+    if(status.textContent !== defaultStatus) status.textContent = defaultStatus;
+  });
+})();
+</script>
+
+</body>
+</html>

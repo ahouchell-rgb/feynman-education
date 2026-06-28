@@ -1,0 +1,74 @@
+# Phase B centerpiece — enforce the RPC contract against the unified schema.
+#
+# Path-filtered to packages/db/** so it never runs on unrelated branches (it will
+# NOT fire on the current security/sk-api-key-rotation work). It activates only
+# when you start working under packages/db — i.e. once you begin Phase B.
+#
+# Prepared-state behaviour: migrations/ ships only LEDGER.json + README until you
+# seed the SQL bodies (`supabase db pull` — see packages/db/migrations/README.md).
+# With no .sql present, applyMigrations records seeded=false and the contract test
+# is skipped (green-with-notice) rather than failing spuriously. Once seeded, it
+# enforces for real.
+name: db-contract
+
+on:
+  push:
+    paths: ["packages/db/**", ".github/workflows/db-contract.yml"]
+  pull_request:
+    paths: ["packages/db/**", ".github/workflows/db-contract.yml"]
+  workflow_dispatch:
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: contract
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/contract
+    defaults:
+      run:
+        working-directory: packages/db
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Migrations match the anchor ledger
+        run: npm run check:ledger
+      - name: Apply unified migrations to ephemeral Postgres
+        id: apply
+        run: npm run apply
+      - name: Contract test — every required RPC exists with the expected signature
+        if: ${{ steps.apply.outputs.seeded == 'true' }}
+        run: npm test
+
+  # Optional: prove the LIVE anchor still honours the contract (read-only).
+  # Manual trigger; gated on a repo secret ANCHOR_DATABASE_URL (read-only pooler URI).
+  verify-live:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/db
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Verify live anchor RPC contract (read-only)
+        if: ${{ secrets.ANCHOR_DATABASE_URL != '' }}
+        env:
+          DATABASE_URL: ${{ secrets.ANCHOR_DATABASE_URL }}
+        run: npm run verify:live
