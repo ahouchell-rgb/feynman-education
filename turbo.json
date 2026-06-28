@@ -3,7 +3,26 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": [
+        "NODE_ENV",
+        "VERCEL_ENV",
+        "NEXT_PUBLIC_*",
+        "ANTHROPIC_*",
+        "GOOGLE_*",
+        "MICROSOFT_*",
+        "STRIPE_*",
+        "SUPABASE_*",
+        "WONDE_*",
+        "SK_API_KEY",
+        "RESEND_API_KEY",
+        "CRON_SECRET",
+        "PARENT_REPORT_FROM",
+        "RET_APP_ORIGIN",
+        "SENTRY_DSN",
+        "AI_FACTCHECK",
+        "BILLING_ENFORCED"
+      ]
     },
     "typecheck": {
       "dependsOn": ["^build"]
