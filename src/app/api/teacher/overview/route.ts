@@ -16,9 +16,10 @@
 // teacher. There is no teacher-scoped equivalent yet, so this view is RETRIEVAL-
 // ONLY — blendObjectiveMastery(rollup, []) — and the payload flags that with
 // assessmentIncluded:false so the UI can say so. (Mirrors school/overview's
-// retrieval aggregation: class_weak_topics via the x-sciencekit-key secret.)
+// retrieval aggregation: class_weak_topics, now called under the teacher's JWT.)
 //
-// Env: SK_API_KEY (retrieval RPC). No service-role key required.
+// Env: none — class_weak_topics is gated by identity (the teacher owns the class,
+// Phase 5 can_read_class_analytics). No SK_API_KEY / x-sciencekit-key, no service-role key.
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -34,10 +35,10 @@ async function rest(path: string, bearer: string) {
   if (!r.ok) throw new Error(`${path}: ${r.status}`);
   return r.json();
 }
-async function rpc(fn: string, body: any, bearer: string, secret?: string) {
+async function rpc(fn: string, body: any, bearer: string) {
   const r = await fetch(`${SK_URL}/rest/v1/rpc/${fn}`, {
     method: "POST",
-    headers: { "content-type": "application/json", apikey: SK_ANON, Authorization: `Bearer ${bearer}`, ...(secret ? { "x-sciencekit-key": secret } : {}) },
+    headers: { "content-type": "application/json", apikey: SK_ANON, Authorization: `Bearer ${bearer}` },
     body: JSON.stringify(body),
   });
   return r.ok ? r.json() : [];
@@ -47,7 +48,6 @@ export async function GET(req: Request) {
   const auth = req.headers.get("authorization") || "";
   if (!auth.startsWith("Bearer ")) return j({ error: "Missing bearer token" }, 401);
   const token = auth.slice(7);
-  const secret = process.env.SK_API_KEY || undefined;
 
   // Resolve the caller. ANY authenticated teacher is allowed (no role gating).
   let uid: string;
@@ -71,12 +71,12 @@ export async function GET(req: Request) {
 
   // Per-class retrieval weak topics. Unlinked classes (no retrieval ids) are
   // still listed, flagged linked:false with no weak topics. The retrieval RPC
-  // is the same one school/overview uses, called with the shared secret.
+  // is the same one school/overview uses, now called under the teacher's JWT (Phase 5).
   const enriched = await Promise.all(classes.map(async (c: any) => {
     const retId = (c.retrieval_class_ids || [])[0];
     let weak: any[] = [];
     if (retId) {
-      const rows = await rpc("class_weak_topics", { p_class_id: retId, p_limit: 8, p_min_marked: 5 }, token, secret);
+      const rows = await rpc("class_weak_topics", { p_class_id: retId, p_limit: 8, p_min_marked: 5 }, token);
       weak = (Array.isArray(rows) ? rows : []).map((w: any) => ({
         topic_id: w.topic_id, topic_name: w.topic_name, objective_id: xwalk.get(w.topic_id) || null,
         pct_correct: Math.round(Number(w.pct_correct)), marked: w.marked ?? null, students: w.students ?? null,
