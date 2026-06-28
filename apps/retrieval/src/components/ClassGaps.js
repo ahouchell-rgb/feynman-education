@@ -83,7 +83,7 @@ export function ClassGaps({ cls }) {
           @media print{ @page{margin:14mm} }
         </style></head><body>
         <h1>${esc(cls.name)} — targeted reteach</h1>
-        <div class="sub">Built from this class's weakest retrieval topics · ${date} · Feynman Education</div>
+        <div class="sub">Built from this class's weakest retrieval topics · ${date} · Houchell Education</div>
         ${pupil}
         <div class="pagebreak"></div><div class="keyhdr">Teacher mark scheme</div>${teacher}
         <script>window.onload=function(){window.print()}<\/script></body></html>`;

@@ -1,0 +1,13 @@
+
+> @houchell/db@0.0.0 test
+> node --test
+
+﹣ every RPC the apps depend on exists on the unified anchor with the expected signature (0.300417ms) # DATABASE_URL unset — run via db-contract workflow
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 81.554625

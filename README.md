@@ -1,4 +1,4 @@
-# Feynman monorepo
+# Houchell monorepo
 
 One repo, three sites, one database contract. Created by merging
 `feynman-education`, `retrieval-app`, and `interactive-science` (full history
@@ -9,12 +9,12 @@ for the why and the sequencing.
 
 ```
 apps/
-  feynman/      @feynman/web        TypeScript · Next 14    → app.feynman.education
-  retrieval/    @feynman/retrieval  JavaScript · Next 14    → practice.feynman.education
-  interactive/  (no package.json)   static HTML built by    → interactive.feynman.education
+  houchell/      @houchell/web        TypeScript · Next 14    → app.houchelleducation.com
+  retrieval/    @houchell/retrieval  JavaScript · Next 14    → practice.houchelleducation.com
+  interactive/  (no package.json)   static HTML built by    → interactive.houchelleducation.com
                                     python build.py
 packages/
-  db/           @feynman/db         migration ledger + RPC contract + contract test
+  db/           @houchell/db         migration ledger + RPC contract + contract test
 ```
 
 `apps/interactive` is **not** a JS workspace member — it is a static site
@@ -32,7 +32,7 @@ npm test                 # turbo test
 npm run build:interactive # python3 apps/interactive/build.py
 ```
 
-Per-app: `npm run dev -w @feynman/web` (or `-w @feynman/retrieval`).
+Per-app: `npm run dev -w @houchell/web` (or `-w @houchell/retrieval`).
 
 ## Deploy
 

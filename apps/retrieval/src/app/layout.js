@@ -16,7 +16,7 @@ const serif = Source_Serif_4({
 });
 
 export const metadata = {
-  title: "Feynman Education — Practice that sticks",
+  title: "Houchell Education — Practice that sticks",
   description: "AI-marked retrieval practice: instant, fair feedback on written answers, with spaced repetition scheduling what each pupil needs to revisit.",
 };
 

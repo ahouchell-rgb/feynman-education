@@ -33,7 +33,7 @@ without giving pupils logins. A pupil is identified by a per-pupil magic-link **
 3. **Deploy** the Next app (Vercel) — this serves the course *and* the sync API same-origin,
    with HTTPS (required for the PWA install, the microphone, and the service worker).
 4. **Custom domain** (optional): point e.g. `learn.<domain>` at the Vercel project.
-   Keep this off the parked `feynman.education` monorepo move for now.
+   Keep this off the parked `houchelleducation.com` monorepo move for now.
 
 ## Daily use
 - Teacher opens **/home-course**, creates a link per pupil (picks an existing pupil so

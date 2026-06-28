@@ -1,4 +1,4 @@
-# `@feynman/db` migrations — the unified anchor schema
+# `@houchell/db` migrations — the unified anchor schema
 
 **The cutover already happened.** The Phase-3 unification (see
 `retrieval-app/db/unification/README.md`) collapsed the ScienceKit teacher project and

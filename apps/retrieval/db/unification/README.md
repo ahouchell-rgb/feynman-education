@@ -1,6 +1,6 @@
 # Phase 3 — One Identity + One Database (migration runbook)
 
-Collapses the **Feynman/ScienceKit teacher** project (`uujbgdwnuspfnvfpdtvr`) and the
+Collapses the **Houchell/ScienceKit teacher** project (`uujbgdwnuspfnvfpdtvr`) and the
 **pulse-student-hub** project (`kdtdunjbrwucjsnggmkl`) into the **retrieval-app** anchor
 (`uvzukwoxqhcxaxtzrziy`), with one shared Supabase Auth pool. Approved plan:
 `~/.claude/plans/synchronous-tickling-crystal.md`.
@@ -30,7 +30,7 @@ identity remap, table moves, FK repoints, crosswalk FKs, 0 orphans, 0 schema lea
 | Teacher project | **no pupil rows** — curriculum (47 units, lessons, decks, `resource_map`60) + your own classes |
 | Teacher auth users | 1 — you: `ab56a97d-b326-434b-bd0f-1a894fb15819` (role `admin`, ahouchell@gmail.com) |
 | Your anchor identity | `cef87533-7ff1-4f93-bfcf-22feb66f896a` (role `moderator`, same email) → **remap target** |
-| Other anchor teachers | `7448784b…` (DSA), `4bf156a4…` (MFR) — retrieval-only, not in Feynman |
+| Other anchor teachers | `7448784b…` (DSA), `4bf156a4…` (MFR) — retrieval-only, not in Houchell |
 | pulse-student-hub | empty data; defer (Phase 6 / later milestone) |
 
 **Class linkage reality:** the teacher app's 6 *active* classes (7H,7J,8H,8J,9H,9J) have

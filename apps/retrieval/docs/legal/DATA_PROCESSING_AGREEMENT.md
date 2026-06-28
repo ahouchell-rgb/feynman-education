@@ -6,7 +6,7 @@
 > **To complete:** registered legal entity name & address (clause heading), and
 > confirm the retention period (clause 8) and backup plan (Annex A).
 
-This Agreement is between **Feynman Education** *(insert registered legal entity &
+This Agreement is between **Houchell Education** *(insert registered legal entity &
 address)* ("Processor") and the **school/customer** ("Controller") and forms part
 of the service contract. It reflects UK GDPR Art. 28.
 

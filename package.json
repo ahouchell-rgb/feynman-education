@@ -1,11 +1,11 @@
 {
-  "name": "feynman",
+  "name": "houchell",
   "version": "0.0.0",
   "private": true,
   "packageManager": "npm@11.6.2",
-  "description": "Feynman monorepo: the web app, retrieval-practice app, the static interactive-science site, and the shared DB contract.",
+  "description": "Houchell monorepo: the web app, retrieval-practice app, the static interactive-science site, and the shared DB contract.",
   "workspaces": [
-    "apps/feynman",
+    "apps/houchell",
     "apps/retrieval",
     "packages/*"
   ],

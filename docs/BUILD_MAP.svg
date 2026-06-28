@@ -8,13 +8,13 @@
   <rect width="1640" height="1180" fill="#f3eee2"/>
 
   <!-- Header -->
-  <text x="40" y="50" class="t" font-weight="700" font-size="34">Feynman Education — what we built</text>
+  <text x="40" y="50" class="t" font-weight="700" font-size="34">Houchell Education — what we built</text>
   <text x="40" y="78" class="mut" font-size="16">Strategy → the mastery-graph thesis (4 buyers) → a production platform any part of education can buy.</text>
 
   <!-- Sources -->
   <g font-size="13">
     <rect x="40" y="98" width="470" height="64" rx="8" fill="#faf6ec" stroke="#dcd5c0"/>
-    <text x="58" y="124" class="t" font-weight="700" font-size="14">Feynman / ScienceKit</text>
+    <text x="58" y="124" class="t" font-weight="700" font-size="14">Houchell / ScienceKit</text>
     <text x="58" y="146" class="mut">Curriculum · timetable · slide editor · present</text>
     <rect x="540" y="98" width="470" height="64" rx="8" fill="#faf6ec" stroke="#5e7c4b" stroke-width="2"/>
     <text x="558" y="124" class="t" font-weight="700" font-size="14">retrieval-app.com · the anchor</text>

@@ -1,0 +1,29 @@
+
+> @houchell/web@0.1.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.8 [39m[90m/Users/adamhouchell/Downloads/feynman-education/apps/houchell[39m
+
+ [32m✓[39m src/lib/guestDecks.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/lib/observe.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/lib/trustBenchmark.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/lib/impact.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/lib/serverHelpers.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m src/lib/parentReport.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/lib/exportPptx.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/lib/mastery.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/lib/stripe.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/app/slides/page.helpers.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/timetableMatch.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/lib/formula.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/entitlements.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/subject.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/pupilProgress.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/lib/aiBudget.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m16 passed[39m[22m[90m (16)[39m
+[2m      Tests [22m [1m[32m143 passed[39m[22m[90m (143)[39m
+[2m   Start at [22m 21:59:14
+[2m   Duration [22m 2.86s[2m (transform 832ms, setup 0ms, import 1.18s, tests 174ms, environment 14.12s)[22m
+

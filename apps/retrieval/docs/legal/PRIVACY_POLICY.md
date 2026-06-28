@@ -1,4 +1,4 @@
-# Privacy Policy — Feynman Education (Retrieval science-practice app)
+# Privacy Policy — Houchell Education (Retrieval science-practice app)
 
 > **DRAFT — not legal advice.** This template has been filled in as far as the
 > product/engineering facts allow. Before publishing or relying on it, have a
@@ -16,12 +16,12 @@
 ---
 
 **Last updated:** 14 June 2026 · **Data controller (for our own account/billing
-data):** Feynman Education *(insert registered legal entity & address)* ·
-**Contact / data-protection queries:** schools@feynmaneducation.com ·
+data):** Houchell Education *(insert registered legal entity & address)* ·
+**Contact / data-protection queries:** schools@houchelleducation.com ·
 **ICO registration:** *(insert number)*
 
 ## 1. Who we are
-Feynman Education ("we", "the app") provides a science retrieval-practice tool
+Houchell Education ("we", "the app") provides a science retrieval-practice tool
 used by schools. Where a school decides how and why pupil data is used, **the
 school is the data controller and we act as its data processor** (see the Data
 Processing Agreement). For account/billing data of the teacher/school, we are the
@@ -78,7 +78,7 @@ server-side and cannot be altered by pupils.
 Access, rectification, erasure, restriction, portability, and objection. For
 pupil data, requests are normally made **through the school**; we will assist the
 school as its processor (a per-pupil data export is available to school staff in
-the app). Contact: schools@feynmaneducation.com.
+the app). Contact: schools@houchelleducation.com.
 
 ## 9. International transfers
 Supabase data is held in the UK/EEA (London). Where a sub-processor is outside

@@ -2,7 +2,7 @@
 
 Companion to [MONOREPO_AND_DOMAIN_PLAN.md](MONOREPO_AND_DOMAIN_PLAN.md) §7 Phase C.
 Phase B (the monorepo) is done on branch `chore/monorepo`. This phase moves the
-three live sites onto `*.feynman.education`. It is **incremental and reversible** —
+three live sites onto `*.houchelleducation.com`. It is **incremental and reversible** —
 every step keeps the old domain working until the new one is verified.
 
 > **Why this can't be fully scripted from the repo:** the live steps touch the
@@ -28,12 +28,12 @@ Team: `adam houchell's projects` / `team_JCZkEbKe2AXWStL8y1nCbsc6`.
    Production (`main`) is healthy; only the monorepo-branch previews fail. The build
    itself *succeeds* (`turbo run build` → 2/2 apps); Vercel then can't find
    `.next/routes-manifest.json` because the project's **Root Directory is still the
-   repo root**, so it looks for output at root `.next` instead of `apps/feynman/.next`.
-   **Fix:** project → Settings → set **Root Directory = `apps/feynman`** (keep
+   repo root**, so it looks for output at root `.next` instead of `apps/houchell/.next`.
+   **Fix:** project → Settings → set **Root Directory = `apps/houchell`** (keep
    "Include files outside the Root Directory" ON for the workspace install), redeploy.
    (The turbo env warning that also showed is already fixed in `turbo.json`.)
-2. **No `feynman.education` domain exists on any project.** The whole phase assumes
-   you own `feynman.education`. Confirm it's registered and you can edit its DNS
+2. **No `houchelleducation.com` domain exists on any project.** The whole phase assumes
+   you own `houchelleducation.com`. Confirm it's registered and you can edit its DNS
    before starting — otherwise step 2 has nothing to point at.
 
 ---
@@ -46,7 +46,7 @@ Settings → Git / Build & Output:**
 
 | Project | Connected repo → set to | Root Directory | Build command |
 |---|---|---|---|
-| `science-kit` | `ahouchell-rgb/feynman-education` | `apps/feynman` | (default `next build`) |
+| `science-kit` | `ahouchell-rgb/feynman-education` | `apps/houchell` | (default `next build`) |
 | `retrieval-app` | `ahouchell-rgb/feynman-education` | `apps/retrieval` | (default `next build`) |
 | `science-tools` | `ahouchell-rgb/feynman-education` | `apps/interactive` | `python3 build.py`, Output Directory `.` |
 
@@ -69,9 +69,9 @@ In each project → Settings → Domains, **add** (do not remove the old one):
 
 | Project | Add domain | DNS record at registrar |
 |---|---|---|
-| `science-kit` | `app.feynman.education` | CNAME `app` → `cname.vercel-dns.com` |
-| `retrieval-app` | `practice.feynman.education` | CNAME `practice` → `cname.vercel-dns.com` |
-| `science-tools` | `interactive.feynman.education` | CNAME `interactive` → `cname.vercel-dns.com` |
+| `science-kit` | `app.houchelleducation.com` | CNAME `app` → `cname.vercel-dns.com` |
+| `retrieval-app` | `practice.houchelleducation.com` | CNAME `practice` → `cname.vercel-dns.com` |
+| `science-tools` | `interactive.houchelleducation.com` | CNAME `interactive` → `cname.vercel-dns.com` |
 
 Vercel shows the exact target value per domain — use what it shows. Wait for the
 SSL cert to issue (green check) and load each subdomain before proceeding. The old
@@ -79,18 +79,18 @@ SSL cert to issue (green check) and load each subdomain before proceeding. The o
 
 ---
 
-## 3. Scope the auth session cookie to `.feynman.education`
+## 3. Scope the auth session cookie to `.houchelleducation.com`
 
-Only after all three serve from `*.feynman.education`. This gives one first-party
+Only after all three serve from `*.houchelleducation.com`. This gives one first-party
 session across the three subdomains (the "one Auth pool" the DB unification already
 created on the backend).
 
 - The feynman app does **not** set an explicit cookie `domain` today — Supabase
-  manages it (`apps/feynman/src/lib/sk.tsx`, `serverHelpers.ts`). To share the
+  manages it (`apps/houchell/src/lib/sk.tsx`, `serverHelpers.ts`). To share the
   session across subdomains, configure the Supabase client cookie options with
-  `domain: ".feynman.education"` (server client `cookies.setAll` / SSR helper).
+  `domain: ".houchelleducation.com"` (server client `cookies.setAll` / SSR helper).
 - **Do not do this while the apps are still on different apex `.com`s** — a
-  `.feynman.education` cookie does nothing for `retrieval-app.com` and can confuse
+  `.houchelleducation.com` cookie does nothing for `retrieval-app.com` and can confuse
   the transition. It's a no-op until step 2 is live, then it's the enabler.
 
 ---
@@ -98,26 +98,26 @@ created on the backend).
 ## 4. Re-register OAuth redirect URIs + email From-domain
 
 The feynman app builds OAuth `redirect_uri` in:
-- `apps/feynman/src/app/api/google/start/route.ts`
-- `apps/feynman/src/app/api/microsoft/start/route.ts`
+- `apps/houchell/src/app/api/google/start/route.ts`
+- `apps/houchell/src/app/api/microsoft/start/route.ts`
 
-These derive the callback from the request origin/env. Once `app.feynman.education`
+These derive the callback from the request origin/env. Once `app.houchelleducation.com`
 is live:
 - **Google Cloud Console** → OAuth client → add authorized redirect URI
-  `https://app.feynman.education/api/google/callback` (keep the old one during cutover).
+  `https://app.houchelleducation.com/api/google/callback` (keep the old one during cutover).
 - **Microsoft Entra (Azure AD)** → app registration → Redirect URIs → add
-  `https://app.feynman.education/api/microsoft/callback`.
+  `https://app.houchelleducation.com/api/microsoft/callback`.
 - **Supabase Auth** → URL config → add the new site URL + redirect allow-list.
-- **Resend** → verify `feynman.education` as a sending domain and switch the
-  parent-report / transactional From address to `@feynman.education`.
+- **Resend** → verify `houchelleducation.com` as a sending domain and switch the
+  parent-report / transactional From address to `@houchelleducation.com`.
 
 ---
 
 ## 5. 301 the old `.com`s → the subdomains
 
 Last, once the subdomains are proven in real use:
-- `retrieval-app.com` → 301 → `practice.feynman.education`
-- `interactive-science.com` → 301 → `interactive.feynman.education`
+- `retrieval-app.com` → 301 → `practice.houchelleducation.com`
+- `interactive-science.com` → 301 → `interactive.houchelleducation.com`
 
 Keep the `.com`s registered and redirecting (a descriptive `retrieval-app.com` may
 still convert as a D2C front door). Reversible: drop the redirect to fall back.

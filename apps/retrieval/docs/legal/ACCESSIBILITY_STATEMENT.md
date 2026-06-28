@@ -1,4 +1,4 @@
-# Accessibility Statement — Feynman Education (Retrieval science-practice app)
+# Accessibility Statement — Houchell Education (Retrieval science-practice app)
 
 > **Self-assessment draft.** This reflects the product's accessibility posture and
 > intent. Before publishing, validate the claims with an automated audit
@@ -7,7 +7,7 @@
 > (Equality Act 2010; and the Public Sector Bodies Accessibility Regulations
 > where the buyer is a public body).
 
-**Last reviewed:** *(insert date)* · **Contact:** schools@feynmaneducation.com
+**Last reviewed:** *(insert date)* · **Contact:** schools@houchelleducation.com
 
 ## Our aim
 We aim to meet **WCAG 2.1 level AA** and to make the app usable by as many pupils
@@ -34,7 +34,7 @@ zoom/large text.
 - A "skip to content" link is planned.
 
 ## Getting help / reporting a problem
-If you hit an accessibility barrier, contact **schools@feynmaneducation.com** (or
+If you hit an accessibility barrier, contact **schools@houchelleducation.com** (or
 use **Help & support** in the app). Tell us the page and what happened and we will
 respond and prioritise a fix. Schools can request an alternative format for any
 report a pupil or parent needs.

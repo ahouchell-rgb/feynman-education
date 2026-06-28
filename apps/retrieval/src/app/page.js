@@ -83,7 +83,7 @@ export default function App() {
       <div style={{ borderBottom: `1px solid ${C.bdr}`, background: C.card, padding: "0 16px", position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 700, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", height: 50 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.3 }}>Feynman<span style={{ color: C.pri }}> Education</span></span>
+            <span style={{ fontSize: 16, fontWeight: 800, letterSpacing: -.3 }}>Houchell<span style={{ color: C.pri }}> Education</span></span>
             <Badge color={roleColor(user)}>{roleLabel(user)}</Badge>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

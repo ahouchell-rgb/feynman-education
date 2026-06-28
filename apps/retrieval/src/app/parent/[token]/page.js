@@ -44,7 +44,7 @@ export default function ParentReport() {
       <div style={{ maxWidth: 640, margin: "0 auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 22 }}>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: -0.3 }}>Feynman<span style={{ color: C.pri }}> Education</span></div>
+            <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: -0.3 }}>Houchell<span style={{ color: C.pri }}> Education</span></div>
             <div style={{ fontFamily: C.serif, fontStyle: "italic", fontSize: 13, color: C.dim, marginTop: 2 }}>Retrieval practice — progress report</div>
           </div>
           <button className="no-print" onClick={() => window.print()} style={{ padding: "9px 16px", borderRadius: 3, border: `1px solid ${C.bdr}`, background: C.card, color: C.txt, fontFamily: "inherit", fontSize: 12, fontWeight: 600, cursor: "pointer", textTransform: "uppercase", letterSpacing: ".06em" }}>Print / Save PDF</button>

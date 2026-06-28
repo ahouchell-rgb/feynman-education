@@ -25,7 +25,7 @@ if [ ! -f .env.migrate.local ]; then
   cat > .env.migrate.local <<'TEMPLATE'
 # Replace [YOUR-PASSWORD] in BOTH lines with each project's DB password
 # (Supabase -> project -> Settings -> Database -> Connection string -> URI; or reset the password there).
-# TEACHER = ScienceKit/Feynman project, TARGET = retrieval-app (the anchor / prod). Then save and re-run ./run.sh
+# TEACHER = ScienceKit/Houchell project, TARGET = retrieval-app (the anchor / prod). Then save and re-run ./run.sh
 TEACHER="postgresql://postgres:[YOUR-PASSWORD]@db.uujbgdwnuspfnvfpdtvr.supabase.co:5432/postgres"
 TARGET="postgresql://postgres:[YOUR-PASSWORD]@db.uvzukwoxqhcxaxtzrziy.supabase.co:5432/postgres"
 TEMPLATE

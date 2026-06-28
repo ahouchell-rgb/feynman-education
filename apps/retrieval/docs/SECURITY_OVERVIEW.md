@@ -1,4 +1,4 @@
-# Security & Data Overview — Feynman Education (Retrieval)
+# Security & Data Overview — Houchell Education (Retrieval)
 
 > A one-page summary for school IT / data-protection leads. Pairs with the
 > Privacy Policy, Data Processing Agreement and Data Retention policy in
@@ -72,4 +72,4 @@ minimised to what practice needs; pupils are not asked for special-category data
 **Still to confirm before sharing externally:** registered legal entity & ICO
 registration number, named data-protection contact, Supabase backup/PITR plan,
 and (optionally) an independent penetration test. **Contact:**
-schools@feynmaneducation.com
+schools@houchelleducation.com

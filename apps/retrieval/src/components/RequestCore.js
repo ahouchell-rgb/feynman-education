@@ -54,7 +54,7 @@ export function RequestCore({ user }) {
       <Btn onClick={request} disabled={state === "sending"}>
         {state === "sending" ? "Sending…" : "Request Core for my school"}
       </Btn>
-      {state === "error" && <div style={{ fontSize: 12, color: C.red, marginTop: 8 }}>Couldn&rsquo;t send just now — email schools@feynmaneducation.com and we&rsquo;ll sort it.</div>}
+      {state === "error" && <div style={{ fontSize: 12, color: C.red, marginTop: 8 }}>Couldn&rsquo;t send just now — email schools@houchelleducation.com and we&rsquo;ll sort it.</div>}
     </div>
   );
 }

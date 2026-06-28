@@ -19,7 +19,7 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 
-// Teacher-facing analysis tier (matches the Feynman content routes: chat /
+// Teacher-facing analysis tier (matches the Houchell content routes: chat /
 // feedforward / deck-to-questions). Insight quality matters here and call volume
 // is low (a teacher clicks occasionally), so Sonnet over Haiku. Bump to
 // "claude-opus-4-8" if you want deeper clustering — one-line change.

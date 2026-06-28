@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ── JS workspaces: @feynman/web, @feynman/retrieval, @feynman/db ──────────────
+  # ── JS workspaces: @houchell/web, @houchell/retrieval, @houchell/db ──────────────
   build:
     runs-on: ubuntu-latest
     steps:

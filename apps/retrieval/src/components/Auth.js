@@ -41,7 +41,7 @@ export function Auth({ onAuth, onBack, welcome, startMode }) {
       <div style={{ width: "100%", maxWidth: 380 }}>
         {onBack && <button onClick={onBack} style={{ background: "none", border: "none", color: C.dim, fontSize: 13, cursor: "pointer", fontFamily: "inherit", padding: 0, marginBottom: 14 }}>← Home</button>}
         <div style={{ textAlign: "center", marginBottom: 36 }}>
-          <div style={{ fontSize: 30, fontWeight: 800, color: C.txt, letterSpacing: -0.5 }}>Feynman<span style={{ color: C.pri }}> Education</span></div>
+          <div style={{ fontSize: 30, fontWeight: 800, color: C.txt, letterSpacing: -0.5 }}>Houchell<span style={{ color: C.pri }}> Education</span></div>
           <div style={{ fontFamily: C.serif, fontStyle: "italic", fontSize: 14, color: C.dim, marginTop: 6 }}>Retrieval practice that sticks</div>
         </div>
         {welcome && (
@@ -109,7 +109,7 @@ export function ResetPassword({ onDone }) {
     <div style={{ minHeight: "100dvh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, fontFamily: "var(--font-plex), -apple-system, sans-serif" }}>
       <div style={{ width: "100%", maxWidth: 380 }}>
         <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <div style={{ fontSize: 30, fontWeight: 800, color: C.txt, letterSpacing: -0.5 }}>Feynman<span style={{ color: C.pri }}> Education</span></div>
+          <div style={{ fontSize: 30, fontWeight: 800, color: C.txt, letterSpacing: -0.5 }}>Houchell<span style={{ color: C.pri }}> Education</span></div>
         </div>
         <Card style={{ padding: "28px 24px" }}>
           <div style={{ fontSize: 18, fontWeight: 700, color: C.txt, marginBottom: 16 }}>Choose a new password</div>

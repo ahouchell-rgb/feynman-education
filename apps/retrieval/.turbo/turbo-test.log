@@ -1,0 +1,18 @@
+
+> @houchell/retrieval@1.0.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.8 [39m[90m/Users/adamhouchell/Downloads/feynman-education/apps/retrieval[39m
+
+ [32m✓[39m src/lib/promptCache.test.js [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/lib/marking.test.js [2m([22m[2m16 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/lib/sr.test.js [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/lib/supabase.test.js [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/lib/roles.test.js [2m([22m[2m5 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m33 passed[39m[22m[90m (33)[39m
+[2m   Start at [22m 21:59:14
+[2m   Duration [22m 320ms[2m (transform 373ms, setup 0ms, import 508ms, tests 26ms, environment 1ms)[22m
+

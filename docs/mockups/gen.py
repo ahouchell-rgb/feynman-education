@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Generates mockup PNGs of the Feynman Education app screens using the real palette.
+# Generates mockup PNGs of the Houchell Education app screens using the real palette.
 import cairosvg, os
 
 W, H, SB, TOP = 1280, 760, 240, 34
@@ -53,7 +53,7 @@ def h1(y,parts): # parts: list of (txt,color,italic)
         out+=t(x,y,txt,40,col,SERIF,400,italic=it); x+=len(txt)*19
     return out
 
-def frame(content, active=None, url="app.feynman.education", app=True):
+def frame(content, active=None, url="app.houchelleducation.com", app=True):
     body=chrome(url)+(sidebar(active) if app else rect(0,TOP,W,H-TOP,BG,rx=0))+content
     return f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">{rect(0,0,W,H,BG,rx=0)}{body}</svg>'
 
@@ -82,7 +82,7 @@ def home():
             c+=rect(CX+98,ty+10+j*20,260,17,"#5e7c4b14" if j==0 else "transparent",rx=4)
             c+=t(CX+106,ty+23+j*20,ls_,12,TEXT)
         if not ls: c+=t(CX+106,ty+30,"—",12,FAINT,MONO,italic=True)
-    return frame(c,"This week","app.feynman.education")
+    return frame(c,"This week","app.houchelleducation.com")
 
 def school():
     c=label(TOP+50,"OAKWOOD HIGH · LEADERSHIP")
@@ -105,7 +105,7 @@ def school():
         if i: c+=f'<line x1="{CX}" y1="{oy}" x2="{CX+CW}" y2="{oy}" stroke="{RULE}"/>'
         c+=t(CX+18,oy+25,o,14,TEXT)+bar(CX+CW-220,oy+16,120,p)
         c+=t(CX+CW-90,oy+25,f"{p}%",12,heat(p),MONO,600)+t(CX+CW-18,oy+25,f"{n} classes",11,DIM,MONO,anchor="end")
-    return frame(c,"School","app.feynman.education/school")
+    return frame(c,"School","app.houchelleducation.com/school")
 
 def assess():
     c=t(CX,TOP+44,"← Assessments",11,MUTED,MONO,ls="1")
@@ -133,7 +133,7 @@ def assess():
         oy=ry+i*38
         if i: c+=f'<line x1="{CX}" y1="{oy}" x2="{CX+CW}" y2="{oy}" stroke="{RULE}"/>'
         c+=t(CX+18,oy+24,tp,14,TEXT)+bar(CX+CW-180,oy+15,110,p)+t(CX+CW-18,oy+24,f"{p}%",12,heat(p),MONO,600,anchor="end")
-    return frame(c,"Assess","app.feynman.education/assessments")
+    return frame(c,"Assess","app.houchelleducation.com/assessments")
 
 def trust():
     c=label(TOP+50,"NORTHSTAR TRUST · TRUST")
@@ -149,7 +149,7 @@ def trust():
         c+=t(CX+38,oy+27,s,14,TEXT,SANS,500)
         if below: c+=rect(CX+38+len(s)*8,oy+15,86,16,"#a0652018",rx=3)+t(CX+44+len(s)*8,oy+27,"BELOW AVG",9,AMB,MONO,600)
         c+=bar(CX+CW-200,oy+18,110,p)+t(CX+CW-72,oy+27,f"{p}%",12,heat(p),MONO,600)
-    return frame(c,"Trust","app.feynman.education/trust")
+    return frame(c,"Trust","app.houchelleducation.com/trust")
 
 def slides():
     c=t(CX,TOP+54,"Slides",30,TEXT,SERIF)
@@ -175,7 +175,7 @@ def slides():
     c+=t(mx+26,my+104,"UNIT",10,DIM,MONO,ls="1.2")+rect(mx+26,my+114,mw-52,38,BG,BORDER,6)+t(mx+40,my+138,"Y10 · Photosynthesis",13,TEXT,MONO)
     c+=t(mx+26,my+178,"FOCUS (OPTIONAL)",10,DIM,MONO,ls="1.2")+rect(mx+26,my+188,mw-52,38,BG,BORDER,6)+t(mx+40,my+212,"exam technique on the required practical",12,DIM,MONO)
     c+=rect(mx+mw-160,my+250,134,38,ACCENT,rx=6)+t(mx+mw-93,my+274,"✨ Generate",13,ACCFG,MONO,600,anchor="middle")
-    return frame(c,"Slides","app.feynman.education/slides")
+    return frame(c,"Slides","app.houchelleducation.com/slides")
 
 def parent():
     # public portal, no app sidebar
@@ -201,7 +201,7 @@ def parent():
     c+=rect(cx+24,ry-14,120,22,ACCENT,rx=11)+t(cx+84,ry+1,"Week of 16 June",11,ACCFG,SANS,anchor="middle")
     c+=rect(cx+152,ry-14,120,22,"#fff",BORDER,11)+t(cx+212,ry+1,"Week of 9 June",11,MUTED,SANS,anchor="middle")
     c+=t(cx,cardy+390,"Reports reflect Alex's class lessons and practice.",11,DIM,SANS,anchor="start")
-    return frame(c,None,"feynman.education/parent?t=…",app=False)
+    return frame(c,None,"houchelleducation.com/parent?t=…",app=False)
 
 def maths_curric():
     c=label(TOP+50,"CURRICULUM OVERVIEW")
@@ -230,7 +230,7 @@ def maths_curric():
         c+=t(gx+24,gy+66,ti,26,TEXT,SERIF)
         c+=f'<line x1="{gx+24}" y1="{gy+118}" x2="{gx+gw-24}" y2="{gy+118}" stroke="{RULE}" stroke-dasharray="3 3"/>'
         c+=t(gx+24,gy+138,meta,10,DIM,MONO)
-    return frame(c,"Curriculum","app.feynman.education/curriculum")
+    return frame(c,"Curriculum","app.houchelleducation.com/curriculum")
 
 def maths_lesson():
     c=t(CX,TOP+44,"← Decks",11,MUTED,MONO,ls="1")
@@ -268,7 +268,7 @@ def maths_lesson():
     for i in range(6):
         fx=sx+i*((sw-50)/6+10)
         c+=rect(fx,fy,(sw-50)/6,((sw-50)/6)*9/16,"#fff",BLU if i==1 else BORDER,6)
-    return frame(c,"Slides","app.feynman.education/slides")
+    return frame(c,"Slides","app.houchelleducation.com/slides")
 
 OUT=os.path.dirname(__file__)
 screens={"01-home-this-week":home,"02-school-dashboard":school,"03-assessments-qla":assess,"04-trust-benchmark":trust,"05-slides-generate":slides,"06-parent-home":parent,
