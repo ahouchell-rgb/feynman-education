@@ -137,6 +137,22 @@ export const google = {
   },
 
   /**
+   * Lightweight metadata for a Drive file: { id, name, mimeType, modifiedTime }.
+   * `modifiedTime` (RFC-3339) is the change-detection key for linked decks — we
+   * only re-import on open when it has moved since the last sync, so opening an
+   * unchanged deck costs one cheap metadata call instead of a full re-convert.
+   */
+  getFileMeta: async (
+    profileId: string,
+    fileId: string,
+  ): Promise<{ id: string; name: string; mimeType: string; modifiedTime: string }> => {
+    return await google.driveFetch(
+      profileId,
+      `/files/${fileId}?fields=id,name,mimeType,modifiedTime&supportsAllDrives=true`,
+    );
+  },
+
+  /**
    * Download a picked Drive file as a .pptx Blob:
    *   - native Google Slides → Drive `export` (server-side conversion to pptx)
    *   - an existing .pptx     → `alt=media` (raw bytes, no conversion)
