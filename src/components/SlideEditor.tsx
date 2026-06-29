@@ -18,7 +18,7 @@ import { TextEditor } from "./slideEditor/TextEditor";
 import { DeckQuestionsModal } from "@/components/DeckQuestionsModal";
 import { DeckBookletModal } from "@/components/DeckBookletModal";
 
-export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMasterChange, onCurChange, autoQuestions }) {
+export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMasterChange, onCurChange, autoQuestions, subject }) {
   const [slides, setSlides] = useState(() =>
     ensureIds(deck.slides?.length ? deck.slides : [{ id: uid(), elements: [] }]));
   const [cur, setCur] = useState(0);
@@ -436,7 +436,7 @@ export function SlideEditor({ deck, onChange, onUploadImage, onThemeChange, onMa
       const r = await fetch("/api/slides-assistant", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ slides, currentSlide: cur, instruction }),
+        body: JSON.stringify({ slides, currentSlide: cur, instruction, subject: subject || "" }),
       });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || "Request failed");
