@@ -144,7 +144,7 @@ function Shell({ guest, children }) {
     <div style={{ minHeight: "100dvh", background: C.bg }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 24px", borderBottom: `1px solid ${C.border}`, background: C.surface }}>
         <a href="/" style={{ textDecoration: "none", fontFamily: C.serif, fontSize: 20, color: C.text }}>
-          Feyn<em style={{ fontStyle: "italic", color: C.grn }}>man</em>
+          Hou<em style={{ fontStyle: "italic", color: C.grn }}>chell</em>
         </a>
         <span style={{ fontFamily: C.mono, fontSize: 11, color: C.dim }}>· Slides</span>
         <span style={{ flex: 1 }} />
