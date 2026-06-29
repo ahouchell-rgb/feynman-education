@@ -20,7 +20,7 @@ export function Shell({ children }: { children: ReactNode }) {
       style={{
         minHeight: "100vh",
         color: C.text,
-        background: `radial-gradient(1100px 560px at 78% -12%, #17223d 0%, rgba(23,34,61,0) 55%), ${C.bg}`,
+        background: `radial-gradient(circle at 10% -10%, rgba(88,224,194,0.18), transparent 34%), radial-gradient(circle at 92% 0%, rgba(122,167,255,0.20), transparent 36%), radial-gradient(circle at 50% 120%, rgba(255,209,102,0.08), transparent 38%), ${C.bg}`,
       }}
     >
       <div style={{ maxWidth: 940, margin: "0 auto", padding: "0 20px 90px" }}>{children}</div>
@@ -49,9 +49,9 @@ export function TopBar({ active }: { active?: string }) {
         position: "sticky",
         top: 0,
         zIndex: 40,
-        backdropFilter: "blur(10px)",
-        background: "rgba(12,15,22,0.72)",
-        borderBottom: `1px solid ${C.rule}`,
+        backdropFilter: "blur(20px)",
+        background: "rgba(7,17,31,0.72)",
+        borderBottom: `1px solid ${C.border}`,
         marginBottom: 28,
       }}
     >
@@ -85,8 +85,8 @@ export function TopBar({ active }: { active?: string }) {
                 fontFamily: C.mono,
                 fontSize: 12,
                 letterSpacing: "0.02em",
-                padding: "7px 11px",
-                borderRadius: 6,
+                padding: "7px 13px",
+                borderRadius: 999,
                 textDecoration: "none",
                 color: premium ? (on ? "#1b1405" : C.amb) : on ? C.accentFg : C.muted,
                 background: premium ? (on ? C.amb : C.ambS) : on ? C.accent : "transparent",

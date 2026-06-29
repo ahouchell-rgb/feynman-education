@@ -519,7 +519,7 @@ function TimetableSection({ classes, slots, onChange }) {
                 <input type="file" accept=".csv,text/csv" onChange={onFile} style={{ fontSize: 12, marginBottom: 8 }} />
                 <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} rows={6}
                   placeholder={"week,day,period,class,room\nA,Mon,1,10X Chemistry,Lab 3\nA,Mon,2,8Y,Rm 12\nB,Tue,5,11Z Triple,"}
-                  style={{ width: "100%", fontFamily: C.mono, fontSize: 12, padding: 8, border: `1px solid ${C.border}`, borderRadius: 6, background: "#fff", color: C.text, resize: "vertical" }} />
+                  style={{ width: "100%", fontFamily: C.mono, fontSize: 12, padding: 8, border: `1px solid ${C.border}`, borderRadius: 6, background: "rgba(255,255,255,0.05)", color: C.text, resize: "vertical" }} />
                 <div style={{ display: "flex", gap: 10, alignItems: "flex-start", marginTop: 8 }}>
                   <Btn onClick={runImport} disabled={importing || !csvText.trim()} style={{ fontSize: 12 }}>{importing ? "Importing…" : "Import"}</Btn>
                   {importMsg && <span style={{ fontSize: 11, color: importMsg.startsWith("⚠") ? C.red : C.muted, whiteSpace: "pre-wrap", lineHeight: 1.5 }}>{importMsg}</span>}

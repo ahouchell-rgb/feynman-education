@@ -32,6 +32,19 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
   const isActive = (path) => pathname === path;
   const currentUnitId = pathname?.startsWith("/unit/") ? pathname.split("/")[2] : null;
 
+  // Top-level sections. Everything that isn't a standalone section belongs to
+  // the Teacher app (home, curriculum, slides, school…), so the detailed
+  // teacher nav + curriculum tree only render when you're inside it.
+  const SECTIONS = [
+    { href: "/learn", label: "Learn", hint: "Springboard", hard: true },
+    { href: "/revise", label: "Revise", hint: "Revision" },
+    { href: "/retrieve", label: "Retrieve", hint: "Practice" },
+    { href: "/", label: "Teacher", hint: "Science Kit", teacher: true },
+    { href: "/tools", label: "Tools", hint: "Interactive" },
+  ];
+  const STANDALONE = ["/learn", "/revise", "/retrieve", "/tools"];
+  const inTeacher = !STANDALONE.some(p => pathname === p || pathname?.startsWith(p + "/"));
+
   return (
     <>
       {showSettings && <Settings onClose={() => setShowSettings(false)} />}
@@ -53,6 +66,22 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
         </div>
 
         <div style={{ padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
+          {SECTIONS.map(s => {
+            const active = s.teacher ? inTeacher : (pathname === s.href || pathname?.startsWith(s.href + "/"));
+            const inner = (
+              <div style={{ padding: "10px 16px", display: "flex", alignItems: "baseline", gap: 8, background: active ? C.bg : "transparent", borderLeft: active ? `2px solid ${C.grn}` : "2px solid transparent", cursor: "pointer" }}>
+                <span style={{ fontFamily: C.serif, fontSize: 16, color: active ? C.text : C.muted, lineHeight: 1 }}>{s.label}</span>
+                <span style={{ fontFamily: C.mono, fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: active ? C.grn : C.dim, marginLeft: "auto" }}>{s.hint}</span>
+              </div>
+            );
+            // /learn is a static rewrite, not a router page → hard navigation.
+            return s.hard
+              ? <a key={s.href} href={s.href} aria-current={active ? "page" : undefined} style={{ display: "block", textDecoration: "none" }}>{inner}</a>
+              : <Link key={s.href} href={s.href} aria-current={active ? "page" : undefined} style={{ display: "block", textDecoration: "none" }}>{inner}</Link>;
+          })}
+        </div>
+
+        {inTeacher && <div style={{ padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
           {[
             { href: "/", label: "This week" },
             { href: "/curriculum", label: "Curriculum" },
@@ -82,9 +111,9 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
               </Link>
             );
           })}
-        </div>
+        </div>}
 
-        <div style={{ flex: 1, padding: "10px 0" }}>
+        {inTeacher ? <div style={{ flex: 1, padding: "10px 0" }}>
           {groups.map(g => {
             const isOpen = openGroups.has(g.id);
             const groupUnits = units[g.id] || [];
@@ -114,7 +143,7 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
               </div>
             );
           })}
-        </div>
+        </div> : <div style={{ flex: 1 }} />}
 
         <div style={{ borderTop: `1px solid ${C.border}`, padding: "12px 14px", display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{ width: 28, height: 28, borderRadius: "50%", background: C.bg, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontFamily: C.mono, color: C.muted, flexShrink: 0 }}>

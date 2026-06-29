@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Sidebar } from "@/components/Sidebar";
+import { TopNav } from "@/components/TopNav";
 import { AuthGate } from "@/components/AuthGate";
 import { VisualiserOverlay } from "@/components/VisualiserOverlay";
 import { SearchOverlay } from "@/components/SearchOverlay";
@@ -41,9 +41,9 @@ export function AppShell({ children }) {
 
   return (
     <AuthGate>
-      <div style={{ minHeight: "100dvh", display: "flex", background: C.bg }}>
-        <Sidebar onOpenVisualiser={() => setShowVis(true)} onOpenSearch={() => setShowSearch(true)} />
-        <main id="main" tabIndex={-1} style={{ flex: 1, padding: "28px 32px", maxWidth: 900, minWidth: 0, outline: "none" }}>
+      <div style={{ minHeight: "100dvh" }}>
+        <TopNav onOpenVisualiser={() => setShowVis(true)} onOpenSearch={() => setShowSearch(true)} />
+        <main id="main" tabIndex={-1} style={{ width: "min(1180px, calc(100% - 36px))", margin: "0 auto", padding: "32px 0 64px", minWidth: 0, outline: "none" }}>
           {children}
         </main>
       </div>

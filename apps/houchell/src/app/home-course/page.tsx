@@ -9,7 +9,7 @@ import { AppShell } from "@/components/AppShell";
 // student_id where possible, so progress joins to the same pupil the parent
 // portal already shows. Auth: teacher JWT via sk; data via /api/springboard/*.
 
-const COL = { card: "#fff", border: "#e5e5e0", text: "#1a1a1a", muted: "#666", dim: "#999", green: "#1a7f5a", navy: "#1E2761", surf: "#f7f5ef" };
+const COL = { card: "rgba(255,255,255,0.07)", border: "rgba(255,255,255,0.12)", text: "#f5f7fb", muted: "#9aa8bc", dim: "#7d8aa0", green: "#58e0c2", navy: "#7aa7ff", surf: "rgba(255,255,255,0.04)" };
 
 interface Cls { id: string; name: string }
 interface Pupil { studentId: string; name: string; classId: string | null; token: string; xp: number; crowns: number; streak: number; words: number; updatedAt: string | null }
@@ -83,7 +83,7 @@ function HomeCourseContent() {
     try { await navigator.clipboard.writeText(linkFor(token)); setCopied(who); setTimeout(() => setCopied(""), 1800); } catch { /* clipboard blocked */ }
   }
 
-  const input: React.CSSProperties = { padding: "9px 11px", borderRadius: 8, border: `1px solid ${COL.border}`, fontSize: 14, background: "#fff" };
+  const input: React.CSSProperties = { padding: "9px 11px", borderRadius: 8, border: `1px solid ${COL.border}`, fontSize: 14, background: "rgba(255,255,255,0.05)", color: COL.text };
 
   return (
     <div style={{ maxWidth: 860, margin: "0 auto", padding: "28px 20px" }}>
@@ -93,7 +93,7 @@ function HomeCourseContent() {
         Create a personal link for each pupil. They learn at home; their progress syncs back here automatically — no pupil login needed.
       </p>
 
-      {err && <div style={{ background: "#fdecea", border: "1px solid #f5c6cb", color: "#a12", borderRadius: 8, padding: "10px 14px", marginBottom: 16, fontSize: 14 }}>{err}</div>}
+      {err && <div style={{ background: "rgba(255,107,138,0.13)", border: "1px solid rgba(255,107,138,0.3)", color: "#ff6b8a", borderRadius: 8, padding: "10px 14px", marginBottom: 16, fontSize: 14 }}>{err}</div>}
 
       {/* Create a link */}
       <div style={{ background: COL.surf, border: `1px solid ${COL.border}`, borderRadius: 12, padding: 18, marginBottom: 26 }}>
@@ -116,7 +116,7 @@ function HomeCourseContent() {
             </select>
           )}
           <button onClick={mint} disabled={busy || !name.trim()}
-            style={{ padding: "9px 18px", borderRadius: 8, border: "none", background: COL.navy, color: "#fff", fontWeight: 600, fontSize: 14, cursor: busy ? "default" : "pointer", opacity: busy || !name.trim() ? 0.6 : 1 }}>
+            style={{ padding: "9px 18px", borderRadius: 8, border: "none", background: COL.navy, color: "#06101e", fontWeight: 600, fontSize: 14, cursor: busy ? "default" : "pointer", opacity: busy || !name.trim() ? 0.6 : 1 }}>
             {busy ? "Creating…" : "Create link"}
           </button>
         </div>
