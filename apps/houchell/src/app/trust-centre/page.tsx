@@ -6,7 +6,7 @@
 // region, the DPO/security contact email, and the certification status before
 // handing this to procurement. Placeholders are intentional — fill, don't guess.
 
-const COL = { bg: "#f4f4f2", card: "#fff", border: "#e5e5e0", text: "#1a1a1a", mut: "#555", dim: "#888", grn: "#1a7f5a" };
+const COL = { bg: "#07111f", card: "rgba(255,255,255,0.07)", border: "rgba(255,255,255,0.12)", text: "#f5f7fb", mut: "#9aa8bc", dim: "#7d8aa0", grn: "#58e0c2" };
 const wrap: React.CSSProperties = { fontFamily: "-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif", color: COL.text, background: COL.bg, minHeight: "100dvh" };
 
 // Provider, purpose, data shared, processing region, and a link to the vendor's

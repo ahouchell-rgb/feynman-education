@@ -13,21 +13,21 @@ import { sanitizeHtml } from "./sanitize";
 /* Static style objects are hoisted to module scope so they aren't re-allocated
  * on every render (and so the variants are defined once, not per <Btn>). */
 const BTN_BASE: CSSProperties = {
-  padding: "8px 16px",
-  borderRadius: 6,
+  padding: "9px 18px",
+  borderRadius: 999,
   fontFamily: C.mono,
   fontSize: 12,
-  fontWeight: 500,
+  fontWeight: 600,
   letterSpacing: "0.02em",
   cursor: "pointer",
-  transition: "all .12s",
+  transition: "all .16s ease",
 };
 
 type BtnVariant = "pri" | "ghost" | "soft";
 const BTN_VARIANTS: Record<BtnVariant, CSSProperties> = {
-  pri: { background: C.accent, color: C.accentFg, border: "none" },
+  pri: { background: C.accentGrad, color: C.accentFg, border: "none", boxShadow: "0 14px 36px rgba(88,224,194,0.22)" },
   ghost: { background: "transparent", color: C.muted, border: `1px solid ${C.border}` },
-  soft: { background: C.bg, color: C.text, border: `1px solid ${C.border}` },
+  soft: { background: C.surfaceStrong, color: C.text, border: `1px solid ${C.border}` },
 };
 const BTN_DISABLED: CSSProperties = { opacity: 0.4, cursor: "default" };
 
@@ -42,12 +42,12 @@ export const Btn = ({ v = "pri", style, children, ...p }: BtnProps) => (
 
 const INP_BASE: CSSProperties = {
   width: "100%",
-  padding: "9px 12px",
+  padding: "11px 14px",
   border: `1px solid ${C.border}`,
-  borderRadius: 6,
+  borderRadius: 12,
   fontFamily: C.mono,
   fontSize: 13,
-  background: C.surface,
+  background: "rgba(255,255,255,0.05)",
   color: C.text,
   outline: "none",
 };
@@ -76,7 +76,8 @@ export const Badge = ({ children, color = C.muted, bg = C.bg }: BadgeProps) => (
 const CARD_BASE: CSSProperties = {
   background: C.surface,
   border: `1px solid ${C.border}`,
-  borderRadius: 8,
+  borderRadius: 18,
+  backdropFilter: "blur(8px)",
 };
 export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ children, style, ...p }, ref) => (

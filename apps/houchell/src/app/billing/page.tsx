@@ -75,7 +75,7 @@ function BillingContent() {
             <button key={label} onClick={() => setAnnual(val)} style={{
               padding: "7px 16px", border: "none", cursor: "pointer",
               background: annual === val ? C.grn : C.surface,
-              color: annual === val ? "#fff" : C.muted,
+              color: annual === val ? C.accentFg : C.muted,
             }}>{label}{label === "Annual" ? " · save 2 months" : ""}</button>
           ))}
         </div>

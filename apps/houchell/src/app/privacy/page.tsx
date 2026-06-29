@@ -1,7 +1,7 @@
 // Public privacy notice (NOW plan E3). Plain-English, accurate to the product.
 // Outside the auth gate. Not legal advice — a starting point for counsel to finalise.
 
-const COL = { bg: "#f4f4f2", card: "#fff", border: "#e5e5e0", text: "#1a1a1a", mut: "#555", dim: "#888", grn: "#1a7f5a" };
+const COL = { bg: "#07111f", card: "rgba(255,255,255,0.07)", border: "rgba(255,255,255,0.12)", text: "#f5f7fb", mut: "#9aa8bc", dim: "#7d8aa0", grn: "#58e0c2" };
 
 const SECTIONS: [string, string][] = [
   ["Who we are", "Houchell Education provides planning, practice and analytics tools to schools. For pupil data we act as a data processor on the school's instructions; the school is the data controller. For teachers' and parents' own account data we are the controller."],

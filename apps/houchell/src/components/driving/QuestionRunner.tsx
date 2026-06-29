@@ -240,7 +240,7 @@ export function QuestionRunner({
                     borderRadius: q.selectCount > 1 ? 5 : 99,
                     border: `1.5px solid ${chosen || (isRevealed && correct) ? border : C.faint}`,
                     background: chosen || (isRevealed && correct) ? border : "transparent",
-                    color: "#fff",
+                    color: chosen || (isRevealed && correct) ? C.accentFg : C.faint,
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",

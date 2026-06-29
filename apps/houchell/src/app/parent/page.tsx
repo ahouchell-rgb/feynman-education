@@ -10,7 +10,7 @@ import { AccessibilityMenu, useApplyAccessibilityPrefs } from "@/components/Acce
 // No teacher auth, no AppShell — this page is intentionally outside the gate.
 
 const COL = {
-  bg: "#f4f4f2", card: "#fff", border: "#e5e5e0", text: "#1a1a1a", muted: "#666", dim: "#999", green: "#1a7f5a",
+  bg: "#07111f", card: "rgba(255,255,255,0.07)", border: "rgba(255,255,255,0.12)", text: "#f5f7fb", muted: "#9aa8bc", dim: "#7d8aa0", green: "#58e0c2",
 };
 
 interface Report { id: string; weekStart: string; html: string; emailed: boolean; }
@@ -20,7 +20,7 @@ interface Course { xp: number; crowns: number; streak: number; updatedAt: string
 interface Child { linkId: string; studentName: string; classLabel: string; practiseUrl: string | null; unsubscribeToken: string; reports: Report[]; home?: Home; course?: Course | null; }
 
 function firstName(s: string) { return (s || "").trim().split(/\s+/)[0] || s; }
-function heat(pct: number) { return pct < 40 ? "#b95a3c" : pct < 65 ? "#a06520" : "#1a7f5a"; }
+function heat(pct: number) { return pct < 40 ? "#ff6b8a" : pct < 65 ? "#ffd166" : "#58e0c2"; }
 const GRADES = ["9", "8", "7", "6", "5", "4", "3"];
 
 // Read-only "my progress / what to practise" view, written TO the pupil. Reuses
@@ -35,13 +35,13 @@ function PupilProgress({ child, target, onSetTarget }: {
   const practiseUrl = home.weak.find((w) => w.practiseUrl)?.practiseUrl || child.practiseUrl;
 
   return (
-    <div style={{ background: "#eef5f1", border: `1px solid #cfe3d8`, borderRadius: 10, padding: 16, marginBottom: 18 }}>
+    <div style={{ background: "rgba(88,224,194,0.1)", border: `1px solid rgba(88,224,194,0.25)`, borderRadius: 10, padding: 16, marginBottom: 18 }}>
       <div style={{ fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: COL.green, marginBottom: 6 }}>For {name}</div>
       <p style={{ fontSize: 14, margin: "0 0 12px", lineHeight: 1.5 }}>{pupilProgressLine(home.recentScore, home.weak.length)}</p>
 
       {practiseUrl && (
         <p style={{ margin: "0 0 14px" }}>
-          <a href={practiseUrl} style={{ background: COL.green, color: "#fff", padding: "10px 18px", borderRadius: 8, textDecoration: "none", fontWeight: 600, fontSize: 14, display: "inline-block" }}>
+          <a href={practiseUrl} style={{ background: COL.green, color: "#06101e", padding: "10px 18px", borderRadius: 8, textDecoration: "none", fontWeight: 600, fontSize: 14, display: "inline-block" }}>
             Practise now →
           </a>
         </p>
@@ -62,7 +62,7 @@ function PupilProgress({ child, target, onSetTarget }: {
         <div>
           <div style={{ fontSize: 12, color: COL.dim, marginBottom: 6 }}>What to practise next:</div>
           {home.weak.map((w) => (
-            <div key={w.topic_id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderTop: `1px solid #cfe3d8` }}>
+            <div key={w.topic_id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", borderTop: `1px solid ${COL.border}` }}>
               <span style={{ flex: 1, fontSize: 13 }}>{w.topic_name}</span>
               <span style={{ fontSize: 12, fontFamily: "monospace", color: heat(w.pct) }}>{w.pct}%</span>
               {w.practiseUrl && <a href={w.practiseUrl} style={{ fontSize: 12, color: COL.green, textDecoration: "none", fontWeight: 600 }}>Practise →</a>}
@@ -93,7 +93,7 @@ function ChildCard({ child, token }: { child: Child; token: string }) {
       </div>
       {child.practiseUrl && (
         <p style={{ margin: "14px 0 18px" }}>
-          <a href={child.practiseUrl} style={{ background: COL.green, color: "#fff", padding: "10px 18px", borderRadius: 8, textDecoration: "none", fontWeight: 600, fontSize: 14, display: "inline-block" }}>
+          <a href={child.practiseUrl} style={{ background: COL.green, color: "#06101e", padding: "10px 18px", borderRadius: 8, textDecoration: "none", fontWeight: 600, fontSize: 14, display: "inline-block" }}>
             Practise with {firstName(child.studentName)} →
           </a>
         </p>
@@ -104,8 +104,8 @@ function ChildCard({ child, token }: { child: Child; token: string }) {
 
       {/* Home-learning course progress (synced from the self-study app). */}
       {child.course && (
-        <div style={{ background: "#f4f6fc", border: "1px solid #d7dcec", borderRadius: 10, padding: "12px 16px", marginBottom: 18 }}>
-          <div style={{ fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "#1E2761", marginBottom: 8 }}>Home science course</div>
+        <div style={{ background: "rgba(122,167,255,0.1)", border: "1px solid rgba(122,167,255,0.25)", borderRadius: 10, padding: "12px 16px", marginBottom: 18 }}>
+          <div style={{ fontSize: 11, letterSpacing: ".12em", textTransform: "uppercase", color: "#7aa7ff", marginBottom: 8 }}>Home science course</div>
           <div style={{ display: "flex", gap: 18, fontSize: 14 }}>
             <span><strong>👑 {child.course.crowns}</strong> lessons</span>
             <span><strong>💎 {child.course.xp}</strong> XP</span>
@@ -118,7 +118,7 @@ function ChildCard({ child, token }: { child: Child; token: string }) {
           view above (single source of truth); this is the parent's framing. */}
       {home && (home.enabled ? (
         home.recentScore != null && (
-          <div style={{ background: "#f7f5ef", border: `1px solid ${COL.border}`, borderRadius: 10, padding: "12px 16px", marginBottom: 18, fontSize: 13, color: COL.muted }}>
+          <div style={{ background: "rgba(255,255,255,0.05)", border: `1px solid ${COL.border}`, borderRadius: 10, padding: "12px 16px", marginBottom: 18, fontSize: 13, color: COL.muted }}>
             <strong style={{ color: COL.text }}>For you:</strong> {firstName(child.studentName)} is averaging{" "}
             <strong style={{ color: heat(home.recentScore) }}>{home.recentScore}%</strong> on recent practice
             {target ? <> and is working toward grade {target}.</> : <>. Help {firstName(child.studentName)} set a goal above.</>}
@@ -126,7 +126,7 @@ function ChildCard({ child, token }: { child: Child; token: string }) {
           </div>
         )
       ) : (
-        <div style={{ background: "#f7f5ef", border: `1px dashed ${COL.border}`, borderRadius: 10, padding: 14, marginBottom: 18, fontSize: 13, color: COL.muted }}>
+        <div style={{ background: "rgba(255,255,255,0.05)", border: `1px dashed ${COL.border}`, borderRadius: 10, padding: 14, marginBottom: 18, fontSize: 13, color: COL.muted }}>
           <strong>Home practice</strong> — personalised practice and a target tracker for {firstName(child.studentName)}. Ask your school to enable it, or subscribe.
         </div>
       ))}
@@ -138,7 +138,7 @@ function ChildCard({ child, token }: { child: Child; token: string }) {
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
             {child.reports.map((r) => (
               <button key={r.id} onClick={() => setOpenId(r.id)}
-                style={{ border: `1px solid ${r.id === openId ? COL.text : COL.border}`, background: r.id === openId ? COL.text : "#fff", color: r.id === openId ? "#fff" : COL.muted, borderRadius: 999, padding: "5px 12px", fontSize: 12, cursor: "pointer" }}>
+                style={{ border: `1px solid ${r.id === openId ? COL.text : COL.border}`, background: r.id === openId ? COL.text : "rgba(255,255,255,0.06)", color: r.id === openId ? "#06101e" : COL.muted, borderRadius: 999, padding: "5px 12px", fontSize: 12, cursor: "pointer" }}>
                 Week of {r.weekStart}
               </button>
             ))}
@@ -192,7 +192,7 @@ function PortalInner() {
 
       {/* Free, self-paced KS3 home-learning course (no login, works offline). Open to every parent. */}
       <a href="/learn/springboard.html" target="_blank" rel="noopener noreferrer"
-        style={{ display: "flex", alignItems: "center", gap: 13, background: "#eef5f1", border: `1px solid #cfe3d8`, borderRadius: 12, padding: 16, marginBottom: 24, textDecoration: "none", color: COL.text }}>
+        style={{ display: "flex", alignItems: "center", gap: 13, background: "rgba(88,224,194,0.1)", border: `1px solid rgba(88,224,194,0.25)`, borderRadius: 12, padding: 16, marginBottom: 24, textDecoration: "none", color: COL.text }}>
         <span style={{ fontSize: 26, lineHeight: 1 }}>📚</span>
         <span style={{ flex: 1 }}>
           <span style={{ display: "block", fontWeight: 600, fontSize: 15 }}>Revise at home — KS3 science course</span>

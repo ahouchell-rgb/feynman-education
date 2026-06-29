@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { sk } from "@/lib/sk";
+import { sk, useAuth } from "@/lib/sk";
 import { C, DISC, DAYS, isoDate } from "@/lib/theme";
 import { Btn } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
+import { Landing } from "@/components/Landing";
 
 function NextLessonCard({ lesson, onClick }) {
   const d = DISC[lesson.discipline] || DISC.combined;
@@ -148,5 +149,10 @@ function HomeContent() {
 }
 
 export default function HomePage() {
+  // "/" is the front door: the marketing landing for logged-out visitors, the
+  // teacher dashboard once signed in.
+  const { user, loading } = useAuth();
+  if (loading) return <div style={{ minHeight: "100dvh", display: "grid", placeItems: "center", color: C.dim, fontFamily: C.mono, fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase" }}>Loading…</div>;
+  if (!user) return <Landing />;
   return <AppShell><HomeContent /></AppShell>;
 }
