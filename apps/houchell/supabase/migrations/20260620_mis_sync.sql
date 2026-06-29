@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — MIS sync (Wonde) — strategy Build 3
+-- Houchell Education — MIS sync (Wonde) — strategy Build 3
 -- Applied to prod: (pending)
 --
 -- The "system of record" hook. Pulls roster + parent-contact data from the

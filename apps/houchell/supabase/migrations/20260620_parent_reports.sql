@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Weekly Parent Progress Reports
+-- Houchell Education — Weekly Parent Progress Reports
 -- Applied to prod: (pending)
 --
 -- The first parent-facing ("D2C") surface. A weekly cron generates, per

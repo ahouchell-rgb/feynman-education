@@ -1,4 +1,4 @@
-// Feynman Education — single "is everything running?" endpoint.
+// Houchell Education — single "is everything running?" endpoint.
 // GET /api/health
 //
 // Checks, in parallel:

@@ -1,4 +1,4 @@
-// Feynman Education — Deck → public revision booklet
+// Houchell Education — Deck → public revision booklet
 // POST /api/deck-to-booklet
 //
 // Body:    { slides: Slide[], lessonTitle?: string }

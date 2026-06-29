@@ -1,4 +1,4 @@
-// Feynman Education — public parent portal data (password-less, token magic-link).
+// Houchell Education — public parent portal data (password-less, token magic-link).
 // GET /api/parent/portal?t=<guardians.access_token>
 //
 // Resolves the guardian token server-side with the service role and returns ONLY

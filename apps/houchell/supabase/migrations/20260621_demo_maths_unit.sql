@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Demo Maths content (proves the multi-subject engine)
+-- Houchell Education — Demo Maths content (proves the multi-subject engine)
 -- Applied to prod: (pending)
 --
 -- Seeds a Year 9 Maths year-group + two units + lessons, attached to the

@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — foreign-key / hot-path indexes (additive)
+-- Houchell Education — foreign-key / hot-path indexes (additive)
 -- Applied to prod: (pending)
 --
 -- Several recently-added tables foreign-key or filter on columns that have

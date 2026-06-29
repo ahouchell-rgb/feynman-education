@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Subject config foundation (NOW plan · T6.1)
+-- Houchell Education — Subject config foundation (NOW plan · T6.1)
 -- Applied to prod: (pending)
 --
 -- De-sciences the engine WITHOUT a rewrite: the hard-coded science

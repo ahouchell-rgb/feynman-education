@@ -1,4 +1,4 @@
-// Feynman Education — nightly MIS sync (Vercel Cron).
+// Houchell Education — nightly MIS sync (Vercel Cron).
 // GET /api/cron/mis-sync   (?force=1 to bypass nothing; it always runs)
 //
 // Iterates every active mis_connection and runs a Wonde sync. Env-gated.

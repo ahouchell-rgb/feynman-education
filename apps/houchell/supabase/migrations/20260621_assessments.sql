@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Assessments & QLA (NOW plan · E5)
+-- Houchell Education — Assessments & QLA (NOW plan · E5)
 -- Applied to prod: (pending)
 --
 -- Common assessments + per-question mark capture → question-level analysis

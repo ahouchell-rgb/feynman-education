@@ -13,7 +13,7 @@ import { sessionId } from "../lib/anonSession";
 // free account" path (not the schools pricing page), and emit funnel telemetry so the
 // booklet → signup conversion is measured (the static path was previously untracked).
 
-const BRAND = "Feynman Education";
+const BRAND = "Houchell Education";
 
 // Fire-and-forget funnel telemetry, mirroring embed/practice. Best-effort.
 function emitFunnel(event, data = {}) {
@@ -54,7 +54,7 @@ export function Landing({ onLogin, pupilArrival }) {
       <div style={{ minHeight: "100dvh", background: C.bg, color: C.txt, fontFamily: "var(--font-plex), -apple-system, sans-serif" }}>
         <div style={{ borderBottom: `1px solid ${C.bdr}`, background: C.card }}>
           <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 20px", height: 56, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: 16, fontWeight: 800, color: C.txt, letterSpacing: -0.3 }}>Feynman<span style={{ color: C.pri }}> Education</span></span>
+            <span style={{ fontSize: 16, fontWeight: 800, color: C.txt, letterSpacing: -0.3 }}>Houchell<span style={{ color: C.pri }}> Education</span></span>
             <button onClick={() => onLogin()} style={{ ...btn(false), fontSize: 13, padding: "8px 16px" }}>Log in</button>
           </div>
         </div>
@@ -95,7 +95,7 @@ export function Landing({ onLogin, pupilArrival }) {
       {/* Nav */}
       <div style={{ borderBottom: `1px solid ${C.bdr}`, background: C.card }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 20px", height: 56, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontSize: 16, fontWeight: 800, color: C.txt, letterSpacing: -0.3 }}>Feynman<span style={{ color: C.pri }}> Education</span></span>
+          <span style={{ fontSize: 16, fontWeight: 800, color: C.txt, letterSpacing: -0.3 }}>Houchell<span style={{ color: C.pri }}> Education</span></span>
           <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
             <a href="/pricing" style={{ fontSize: 13, fontWeight: 600, color: C.mid, textDecoration: "none" }}>For schools</a>
             <button onClick={onLogin} style={{ ...btn(true), fontSize: 13, padding: "8px 16px" }}>Log in</button>

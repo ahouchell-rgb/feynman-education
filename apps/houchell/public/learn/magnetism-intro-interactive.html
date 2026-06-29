@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* ---- Feynman / HGO house palette ---- */
+  /* ---- Houchell / HGO house palette ---- */
   :root{
     --cream:#F7F2E6; --paper:#FFFFFF; --ink:#1A1A1A; --navy:#1E2761;
     --grey:#5C6370; --line:#E4DDCB; --line-2:#D7DCEC;
@@ -361,7 +361,7 @@ function renderCover(){
         <b>For grown-ups helping at home:</b> there's nothing to install and it works offline. Your child reads a little, then answers — each question is marked instantly and explains <i>why</i>, so they can learn on their own. Sit alongside and ask them to say each answer out loud before they tap.
       </div>
     </div>
-    <div class="colophon">Feynman · learn it, joined up</div>`;
+    <div class="colophon">Houchell · learn it, joined up</div>`;
   document.getElementById("start").onclick = () => { reset(); S.started=true; render(); };
   const r = document.getElementById("resume");
   if(r) r.onclick = () => { Object.assign(S, { i:saved.i, xp:saved.xp, correct:saved.correct, asked:saved.asked, hearts:saved.hearts, started:true, checked:false, payload:null }); render(); };
@@ -637,7 +637,7 @@ function renderDone(){
         <button class="btn btn-go" id="again">Practise again</button>
         <button class="btn btn-ghost" id="home">Back to start</button>
       </div>
-      <div class="colophon">Feynman · learn it, joined up</div>
+      <div class="colophon">Houchell · learn it, joined up</div>
     </div>`;
   document.getElementById("again").onclick = () => { reset(); render(); };
   document.getElementById("home").onclick = () => { S.started=false; render(); };

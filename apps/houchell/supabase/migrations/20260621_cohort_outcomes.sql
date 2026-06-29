@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Cohort outcomes (efficacy / outcomes-evidence layer)
+-- Houchell Education — Cohort outcomes (efficacy / outcomes-evidence layer)
 -- Applied to prod: (pending)
 --
 -- SLT/MAT renewals hinge on "did our mastery work translate to outcomes?".

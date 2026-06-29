@@ -1,10 +1,10 @@
-// Feynman Education — minimal transactional email (server-only).
+// Houchell Education — minimal transactional email (server-only).
 //
 // Env-gated, like the AI calls: if RESEND_API_KEY isn't set we no-op and report
 // `sent:false` so callers (the parent-report cron) persist the report and carry
 // on without failing. Resend is used via plain fetch (no SDK dependency).
 //   RESEND_API_KEY      — secret from resend.com
-//   PARENT_REPORT_FROM  — verified From address, e.g. "Feynman <hi@feynman.education>"
+//   PARENT_REPORT_FROM  — verified From address, e.g. "Houchell <hi@houchelleducation.com>"
 
 export interface SendEmailResult { sent: boolean; id?: string; error?: string; }
 

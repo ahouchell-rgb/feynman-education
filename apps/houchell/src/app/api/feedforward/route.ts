@@ -1,4 +1,4 @@
-// Feynman Education — Feedforward generator
+// Houchell Education — Feedforward generator
 // POST /api/feedforward
 //
 // Body:    { lessonId, gaps: [{ topic_name, pct_correct, marked }], className? }

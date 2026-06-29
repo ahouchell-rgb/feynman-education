@@ -1,4 +1,4 @@
-// Feynman Education — fork a shared deck into the signed-in teacher's account.
+// Houchell Education — fork a shared deck into the signed-in teacher's account.
 // POST /api/deck/fork   Authorization: Bearer <teacher JWT>   Body: { token }
 // Returns: { deckId }
 //

@@ -1,4 +1,4 @@
-// Feynman Education — timetable class-name matcher (pure, client-safe).
+// Houchell Education — timetable class-name matcher (pure, client-safe).
 //
 // The AI timetable-photo importer returns class names as Claude read them off the
 // grid. They must be mapped back to the teacher's OWN class ids before anything is

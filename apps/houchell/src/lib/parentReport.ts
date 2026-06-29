@@ -1,4 +1,4 @@
-// Feynman Education — Weekly Parent Report generator (server-only).
+// Houchell Education — Weekly Parent Report generator (server-only).
 //
 // Shared by the weekly cron (/api/cron/weekly-parent-report) and the on-demand
 // preview route (/api/parent-report/preview). Pure-ish: data-gathering helpers

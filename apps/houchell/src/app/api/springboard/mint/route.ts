@@ -1,4 +1,4 @@
-// Feynman Education — mint a pupil's home-course link (teacher only).
+// Houchell Education — mint a pupil's home-course link (teacher only).
 //   POST /api/springboard/mint  { studentName, classId? }  → { studentId, token }
 //
 // A teacher creates a personal course link for a pupil. The teacher must own the

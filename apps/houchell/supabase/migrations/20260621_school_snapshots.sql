@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — School benchmark snapshots (NOW plan · E1 / T1.3)
+-- Houchell Education — School benchmark snapshots (NOW plan · E1 / T1.3)
 -- Applied to prod: (pending)
 --
 -- Mirrors trust_benchmark_snapshots one level down: a weekly per-school

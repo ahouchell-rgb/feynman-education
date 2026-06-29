@@ -1,4 +1,4 @@
-// Feynman Education — AI cost governance (server-only).
+// Houchell Education — AI cost governance (server-only).
 //
 // One place for token pricing + budget enforcement, so the generator routes
 // stop copy-pasting their own costGBP + daily-cap blocks (analysis P1 #7: "no

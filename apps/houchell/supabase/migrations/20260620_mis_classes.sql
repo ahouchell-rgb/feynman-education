@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — MIS class rosters (Build 3 follow-up)
+-- Houchell Education — MIS class rosters (Build 3 follow-up)
 -- Applied to prod: (pending)
 --
 -- Adds class + class-membership staging from Wonde so guardian import can use

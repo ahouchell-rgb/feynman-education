@@ -27,7 +27,7 @@ export function SupportModal({ user, onClose }) {
         message: message.trim(),
       } });
       setSent(true);
-    } catch (e) { setErr(e.message || "Couldn't send — please email schools@feynmaneducation.com"); }
+    } catch (e) { setErr(e.message || "Couldn't send — please email schools@houchelleducation.com"); }
     setBusy(false);
   };
 
@@ -46,7 +46,7 @@ export function SupportModal({ user, onClose }) {
         ) : (
           <>
             <div style={{ fontSize: 13, color: C.mid, marginBottom: 14, lineHeight: 1.5 }}>
-              Found a bug, stuck, or have a question? Send us a message — or email <strong style={{ color: C.txt }}>schools@feynmaneducation.com</strong>.
+              Found a bug, stuck, or have a question? Send us a message — or email <strong style={{ color: C.txt }}>schools@houchelleducation.com</strong>.
             </div>
             <TA value={message} onChange={e => setMessage(e.target.value)} rows={5} placeholder="What's happening? Include the class or question if relevant." />
             {err && <div style={{ color: C.red, fontSize: 13, padding: "10px 12px", background: C.redS, borderRadius: 8, marginTop: 12 }}>{err}</div>}

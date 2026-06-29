@@ -1,4 +1,4 @@
-// Feynman Education — Chat-with-Claude edge function
+// Houchell Education — Chat-with-Claude edge function
 // POST /api/chat-with-lesson
 //
 // Body:    { lessonId, userMessage }

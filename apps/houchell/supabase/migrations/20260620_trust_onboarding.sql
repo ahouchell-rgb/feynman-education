@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Self-serve trust (MAT) onboarding (Build 4 follow-up)
+-- Houchell Education — Self-serve trust (MAT) onboarding (Build 4 follow-up)
 -- Applied to prod: (pending)
 --
 -- Mirrors school onboarding one level up. A school's slt can CREATE a trust

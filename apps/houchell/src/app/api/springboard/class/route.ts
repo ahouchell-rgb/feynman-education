@@ -1,4 +1,4 @@
-// Feynman Education — a teacher's home-course progress for their classes.
+// Houchell Education — a teacher's home-course progress for their classes.
 //   GET /api/springboard/class  → { classes:[{id,name}], pupils:[{studentId,name,classId,xp,crowns,streak,words,updatedAt}] }
 //
 // Lists every pupil the teacher has minted a course link for (scoped to classes

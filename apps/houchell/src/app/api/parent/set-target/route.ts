@@ -1,4 +1,4 @@
-// Feynman Education — parent sets a child's target grade (token-validated).
+// Houchell Education — parent sets a child's target grade (token-validated).
 // POST /api/parent/set-target   body { t, linkId, target }
 // Validates that the guardian access token owns the link, then writes the
 // target. Service-role write; no parent account required.

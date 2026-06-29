@@ -1,4 +1,4 @@
-// Feynman Education — tiny, dependency-free error capture (server-only).
+// Houchell Education — tiny, dependency-free error capture (server-only).
 //
 // reportError(err, ctx) gives the cron + dashboard routes one place to send
 // failures. If SENTRY_DSN is set it POSTs a minimal event straight to Sentry's

@@ -1,4 +1,4 @@
-// Feynman Education — AI timetable photo importer
+// Houchell Education — AI timetable photo importer
 // POST /api/timetable-ocr
 //
 // Body:    { image: { mediaType: string, data: string /* base64, no data: prefix */ },

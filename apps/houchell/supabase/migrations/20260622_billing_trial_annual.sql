@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Billing: free trial + annual Teacher Pro
+-- Houchell Education — Billing: free trial + annual Teacher Pro
 -- Applied to prod: (pending)
 --
 -- Adds two config-only plan rows on top of 20260621_billing.sql:

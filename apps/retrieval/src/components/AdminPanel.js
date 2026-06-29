@@ -162,7 +162,7 @@ export function AdminPanel({ user }) {
       {/* Header */}
       <div style={{ marginBottom: 16, padding: "16px 20px", background: `linear-gradient(135deg, ${C.priSoft}, transparent)`, border: `1px solid ${C.pri}33`, borderRadius: 12 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: C.pri, marginBottom: 4 }}>Moderator panel</div>
-        <div style={{ fontSize: 12, color: C.mid }}>You can see every teacher and student across Feynman Education. Only ahouchell@gmail.com has this access.</div>
+        <div style={{ fontSize: 12, color: C.mid }}>You can see every teacher and student across Houchell Education. Only ahouchell@gmail.com has this access.</div>
       </div>
 
       {/* Overview stats */}
@@ -461,7 +461,7 @@ export function AdminPanel({ user }) {
                </div>
                <div style={{ fontSize: 14, color: C.txt, lineHeight: 1.5, whiteSpace: "pre-wrap" }}>{t.message}</div>
                <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10, fontSize: 11, color: C.dim }}>
-                 {t.email && <a href={`mailto:${t.email}?subject=Re%3A%20your%20Feynman%20Education%20message`} style={{ color: C.pri, fontWeight: 600, textDecoration: "none" }}>Reply by email</a>}
+                 {t.email && <a href={`mailto:${t.email}?subject=Re%3A%20your%20Houchell%20Education%20message`} style={{ color: C.pri, fontWeight: 600, textDecoration: "none" }}>Reply by email</a>}
                  {t.page && <span>· {t.page}</span>}
                  <span style={{ flex: 1 }} />
                  {t.status === "open"
@@ -505,7 +505,7 @@ export function AdminPanel({ user }) {
                   {l.message && <div style={{ fontSize: 12, color: C.mid, marginTop: 6, lineHeight: 1.4 }}>{l.message}</div>}
                 </div>
                 {l.email && (
-                  <a href={`mailto:${l.email}?subject=${encodeURIComponent("Feynman Education — your enquiry")}`}
+                  <a href={`mailto:${l.email}?subject=${encodeURIComponent("Houchell Education — your enquiry")}`}
                     style={{ flexShrink: 0, padding: "5px 10px", fontSize: 11, borderRadius: 6, border: `1px solid ${C.bdr}`, background: C.card2 || C.bg, color: C.mid, textDecoration: "none" }}>Reply</a>
                 )}
               </div>

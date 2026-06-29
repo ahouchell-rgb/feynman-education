@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — MAT / Trust rollup + benchmarking (strategy Build 4)
+-- Houchell Education — MAT / Trust rollup + benchmarking (strategy Build 4)
 -- Applied to prod: (pending)
 --
 -- Trusts buy centrally and want cross-school consistency + benchmarking.

@@ -1,4 +1,4 @@
-// Feynman Education — start a Stripe Checkout (or Billing Portal) session.
+// Houchell Education — start a Stripe Checkout (or Billing Portal) session.
 // POST /api/billing/checkout   Authorization: Bearer <JWT>
 // Body: { plan }            → returns { url } to redirect to checkout
 //   or  { portal: true }    → returns { url } to the billing portal (manage/cancel)

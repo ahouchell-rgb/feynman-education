@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Schools & staff roles (strategy Build 2 foundation)
+-- Houchell Education — Schools & staff roles (strategy Build 2 foundation)
 -- Applied to prod: (pending)
 --
 -- The B2B surface: a Head of Dept / SLT user can see aggregated mastery

@@ -1,4 +1,4 @@
-// Feynman Education — subject resolution (shared).
+// Houchell Education — subject resolution (shared).
 // Resolves a unit's subject for subject-aware AI prompts. Units now carry a
 // subject_id (T6.1); embed it with SUBJECT_SELECT. Falls back to the legacy
 // science discipline, then "Science", so existing science content is unchanged.

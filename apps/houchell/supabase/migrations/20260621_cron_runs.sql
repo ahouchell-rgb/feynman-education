@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — cron run audit (Ops · observability)
+-- Houchell Education — cron run audit (Ops · observability)
 -- Applied to prod: (pending)
 --
 -- One row per cron invocation (success OR failure) so we can SEE whether the

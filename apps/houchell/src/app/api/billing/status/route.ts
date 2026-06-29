@@ -1,4 +1,4 @@
-// Feynman Education — billing status for the /billing page.
+// Houchell Education — billing status for the /billing page.
 // GET /api/billing/status   Authorization: Bearer <JWT>
 // Returns: { configured, plans, entitlement, usage }
 

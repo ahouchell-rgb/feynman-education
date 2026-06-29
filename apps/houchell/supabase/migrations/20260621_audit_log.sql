@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Audit log (NOW plan · E4 / T4.1)
+-- Houchell Education — Audit log (NOW plan · E4 / T4.1)
 -- Applied to prod: (pending)
 --
 -- A tamper-evident record of privileged actions (exports, MIS sync/write-back,

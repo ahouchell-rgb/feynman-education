@@ -1,4 +1,4 @@
-// Feynman Education — SLT/Department dashboard data (strategy Build 2).
+// Houchell Education — SLT/Department dashboard data (strategy Build 2).
 // GET /api/school/overview   Authorization: Bearer <teacher JWT>
 //
 // Returns the caller's school + every class in it (via the security-definer

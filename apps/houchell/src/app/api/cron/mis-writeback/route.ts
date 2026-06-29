@@ -1,4 +1,4 @@
-// Feynman Education — MIS write-back worker (Vercel Cron).
+// Houchell Education — MIS write-back worker (Vercel Cron).
 // GET /api/cron/mis-writeback
 // Drains every active connection's pending write-back queue. Env-gated.
 //   CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, WONDE_TOKEN

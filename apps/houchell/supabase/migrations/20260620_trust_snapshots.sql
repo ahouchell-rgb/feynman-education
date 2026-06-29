@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Trust benchmark snapshots (Build 4 follow-up)
+-- Houchell Education — Trust benchmark snapshots (Build 4 follow-up)
 -- Applied to prod: (pending)
 --
 -- The MAT rollup fans out across every class on each page load. This stores a

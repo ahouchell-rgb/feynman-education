@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — School audit read (NOW plan · P0 #4 follow-on)
+-- Houchell Education — School audit read (NOW plan · P0 #4 follow-on)
 -- Applied to prod: (pending)
 --
 -- The role/onboarding RPCs now write to audit_log, but base RLS only lets an

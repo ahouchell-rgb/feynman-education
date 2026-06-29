@@ -1,4 +1,4 @@
-// Feynman Education — self-serve data export (NOW plan E3 / data-subject rights).
+// Houchell Education — self-serve data export (NOW plan E3 / data-subject rights).
 // GET /api/account/export   Authorization: Bearer <JWT>
 // Returns a JSON bundle of the caller's own owner-scoped data (RLS guarantees
 // it's only theirs). A simple GDPR access-request path.
@@ -41,7 +41,7 @@ export async function GET(req: Request) {
   const bundle = {
     exported_at: new Date().toISOString(),
     user_id: uid,
-    note: "Your owner-scoped data held by Feynman Education. Pupil practice data is held under your school's controller relationship.",
+    note: "Your owner-scoped data held by Houchell Education. Pupil practice data is held under your school's controller relationship.",
     profile: profile?.[0] || null,
     classes, guardians, guardian_links: links, parent_reports: reports, assessments,
     subscription: subscription?.[0] || null,
@@ -50,6 +50,6 @@ export async function GET(req: Request) {
   await audit(uid, "data.export", uid, { tables: ["profile", "classes", "guardians", "parent_reports", "assessments"] });
 
   return new Response(JSON.stringify(bundle, null, 2), {
-    headers: { "content-type": "application/json", "content-disposition": `attachment; filename="feynman-data-export.json"`, "cache-control": "no-store" },
+    headers: { "content-type": "application/json", "content-disposition": `attachment; filename="houchell-data-export.json"`, "cache-control": "no-store" },
   });
 }

@@ -11,7 +11,7 @@ A marked block is replaced if already present, otherwise inserted before </body>
 Run after adding a new widget or a new page that embeds one.
 
 Cross-app note: to auto-fit an interactive-science widget embedded in another site
-(e.g. the Feynman lesson page), paste the HOST block into that page's host window.
+(e.g. the Houchell lesson page), paste the HOST block into that page's host window.
 
 Usage:  python3 add_resize.py
 """

@@ -1,4 +1,4 @@
-// Feynman Education — optional, opt-in post-generation fact-check (server-only).
+// Houchell Education — optional, opt-in post-generation fact-check (server-only).
 //
 // Gated behind AI_FACTCHECK === "1" (default OFF → zero added latency/cost). When
 // on, after a route generates its HTML it makes ONE cheap Haiku call comparing the

@@ -1,4 +1,4 @@
-// Feynman Education — import MIS parent contacts as guardian links (Build 3 → 1).
+// Houchell Education — import MIS parent contacts as guardian links (Build 3 → 1).
 // POST /api/mis/import-guardians   Authorization: Bearer <teacher JWT>
 // Body: { classId, limit? }
 //

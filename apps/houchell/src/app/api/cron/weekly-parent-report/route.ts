@@ -1,4 +1,4 @@
-// Feynman Education — weekly parent progress reports (Vercel Cron)
+// Houchell Education — weekly parent progress reports (Vercel Cron)
 // GET /api/cron/weekly-parent-report   (?force=1 to run off-schedule)
 //
 // Runs weekly. For every CONSENTED guardian↔pupil link it builds a plain-language

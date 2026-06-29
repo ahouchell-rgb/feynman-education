@@ -1,4 +1,4 @@
-// Feynman Education — weekly school benchmark snapshots (Vercel Cron).
+// Houchell Education — weekly school benchmark snapshots (Vercel Cron).
 // GET /api/cron/school-snapshots
 // For every school, aggregates its classes' weak objectives from retrieval and
 // upserts one snapshot per school per day (school-average + weakest objectives).

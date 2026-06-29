@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — AI spend roll-up for org budgets (NOW plan · P1 #7)
+-- Houchell Education — AI spend roll-up for org budgets (NOW plan · P1 #7)
 -- Applied to prod: (pending)
 --
 -- Per-teacher daily caps already exist (daily_token_usage + the route checks).

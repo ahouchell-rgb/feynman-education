@@ -1,4 +1,4 @@
-// Feynman Education — per-objective mastery blend (shared, pure).
+// Houchell Education — per-objective mastery blend (shared, pure).
 //
 // The mastery graph is sold to four buyers off ONE spine; until now the SLT/trust
 // dashboards showed retrieval weakness only. This blends the two data sources

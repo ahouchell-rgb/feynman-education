@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Content review pipeline (NOW plan · E7)
+-- Houchell Education — Content review pipeline (NOW plan · E7)
 -- Applied to prod: (pending)
 --
 -- The chosen content model: AI-generate + teacher review. Items move

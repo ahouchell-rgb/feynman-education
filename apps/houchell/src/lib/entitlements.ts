@@ -1,4 +1,4 @@
-// Feynman Education — entitlements (server-only).
+// Houchell Education — entitlements (server-only).
 // Resolves what a user can do from their active subscription's plan features.
 // Defaults to the free plan. Used to gate Pro AI features behind billing.
 

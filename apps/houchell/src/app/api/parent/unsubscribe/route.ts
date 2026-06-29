@@ -1,4 +1,4 @@
-// Feynman Education — parent unsubscribe (revoke consent for one child link).
+// Houchell Education — parent unsubscribe (revoke consent for one child link).
 // POST /api/parent/unsubscribe   body { t: <guardian_student.unsubscribe_token> }
 //
 // Sets consent_status = 'revoked' so the weekly cron stops sending. Idempotent.

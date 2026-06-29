@@ -6,7 +6,7 @@ import { C } from "../../lib/theme";
 // Public pricing / marketing page (no auth). Mirrors the rate card and drops
 // pilot / quote requests into the `leads` table (anon insert allowed by RLS).
 
-const BRAND = "Feynman Education";
+const BRAND = "Houchell Education";
 
 const TIERS = [
   { key: "free", name: "Starter", price: "Free", sub: "Try it out", href: "/?login=1",
@@ -56,7 +56,7 @@ export default function Pricing() {
       {/* Nav */}
       <div style={{ borderBottom: `1px solid ${C.bdr}`, background: C.card }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 20px", height: 56, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <a href="/" style={{ fontSize: 16, fontWeight: 800, color: C.txt, letterSpacing: -0.3, textDecoration: "none" }}>Feynman<span style={{ color: C.pri }}> Education</span></a>
+          <a href="/" style={{ fontSize: 16, fontWeight: 800, color: C.txt, letterSpacing: -0.3, textDecoration: "none" }}>Houchell<span style={{ color: C.pri }}> Education</span></a>
           <a href="/?login=1" style={{ fontSize: 13, fontWeight: 700, color: "#fff", background: C.pri, padding: "8px 16px", borderRadius: 8, textDecoration: "none" }}>Log in</a>
         </div>
       </div>
@@ -141,7 +141,7 @@ export default function Pricing() {
             <>
               <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: -0.5 }}>Start a free pilot or request a quote</div>
               <div style={{ fontSize: 13, color: C.mid, marginTop: 6 }}>Tell us about your school and we’ll get you set up — no card required.</div>
-              <div style={{ fontSize: 13, color: C.mid, marginTop: 4, marginBottom: 18 }}>Prefer email? Write to <a href="mailto:schools@feynmaneducation.com" style={{ color: C.pri, fontWeight: 600, textDecoration: "none" }}>schools@feynmaneducation.com</a>.</div>
+              <div style={{ fontSize: 13, color: C.mid, marginTop: 4, marginBottom: 18 }}>Prefer email? Write to <a href="mailto:schools@houchelleducation.com" style={{ color: C.pri, fontWeight: 600, textDecoration: "none" }}>schools@houchelleducation.com</a>.</div>
               <form onSubmit={submit}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
                   <div><label style={label}>School name *</label><input style={input} value={form.school_name} onChange={set("school_name")} required /></div>
@@ -169,7 +169,7 @@ export default function Pricing() {
       </div>
 
       <div style={{ borderTop: `1px solid ${C.bdr}`, padding: "20px 0", textAlign: "center", fontSize: 12, color: C.dim }}>
-        {BRAND} · <a href="mailto:schools@feynmaneducation.com" style={{ color: C.dim }}>schools@feynmaneducation.com</a> · feynmaneducation.com<br />
+        {BRAND} · <a href="mailto:schools@houchelleducation.com" style={{ color: C.dim }}>schools@houchelleducation.com</a> · houchelleducation.com<br />
         All prices exclude VAT · Prices valid for the 2026/27 academic year.
       </div>
     </div>

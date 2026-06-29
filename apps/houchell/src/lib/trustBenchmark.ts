@@ -1,4 +1,4 @@
-// Feynman Education — trust benchmark rollup (shared, pure).
+// Houchell Education — trust benchmark rollup (shared, pure).
 //
 // Turns a flat list of enriched classes (each with its weak objectives) into the
 // trust dashboard shape: per-school averages + weakest topics, a trust-wide

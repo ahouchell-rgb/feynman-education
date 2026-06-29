@@ -1,4 +1,4 @@
-// Feynman Education — MIS connection status for the integrations screen.
+// Houchell Education — MIS connection status for the integrations screen.
 // GET /api/mis/status   Authorization: Bearer <teacher JWT>
 // Returns whether the MIS is configured, the connection row, staging counts,
 // and the last few sync runs. Read-only; school-member RLS scopes the data.

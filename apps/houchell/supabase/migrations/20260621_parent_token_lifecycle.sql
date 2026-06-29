@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Parent magic-link token lifecycle
+-- Houchell Education — Parent magic-link token lifecycle
 -- Applied to prod: (pending)
 --
 -- Hardens the password-less parent portal link (/parent?t=<guardians.access_token>).

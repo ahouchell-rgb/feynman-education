@@ -1,5 +1,5 @@
 # interactive (the Python static site) is intentionally NOT a member — it has no package.json.
 packages:
-  - apps/feynman
+  - apps/houchell
   - apps/retrieval
   - packages/*

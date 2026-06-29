@@ -1,4 +1,4 @@
-// Feynman Education — Cover / non-specialist lesson script (strategy #8).
+// Houchell Education — Cover / non-specialist lesson script (strategy #8).
 // POST /api/cover-sheet   Authorization: Bearer <teacher JWT>
 //
 // Body:    { slides: Slide[], title?: string }

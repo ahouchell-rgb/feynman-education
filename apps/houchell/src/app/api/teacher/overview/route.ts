@@ -1,4 +1,4 @@
-// Feynman Education — Teacher dashboard data (private, owner-scoped).
+// Houchell Education — Teacher dashboard data (private, owner-scoped).
 // GET /api/teacher/overview   Authorization: Bearer <teacher JWT>
 //
 // The teacher is the most frequent user but had no insight view of their own

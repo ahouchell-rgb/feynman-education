@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Billing & entitlements (NOW plan · E2)
+-- Houchell Education — Billing & entitlements (NOW plan · E2)
 -- Applied to prod: (pending)
 --
 -- Plans are config (not code); a subscription row per user tracks Stripe

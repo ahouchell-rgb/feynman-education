@@ -1,4 +1,4 @@
-// Feynman Education — push pending MIS write-back now (SLT).
+// Houchell Education — push pending MIS write-back now (SLT).
 // POST /api/mis/writeback/run   Authorization: Bearer <teacher JWT>
 // Drains the caller's school's pending write-back queue to Wonde. SLT only.
 

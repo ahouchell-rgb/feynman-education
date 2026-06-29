@@ -31,7 +31,7 @@ function AccountContent() {
 
   const exportData = () => {
     fetch("/api/account/export", { headers: { authorization: `Bearer ${sk.auth.getToken()}` } })
-      .then((r) => r.blob()).then((b) => { const u = URL.createObjectURL(b); const a = document.createElement("a"); a.href = u; a.download = "feynman-data-export.json"; a.click(); URL.revokeObjectURL(u); });
+      .then((r) => r.blob()).then((b) => { const u = URL.createObjectURL(b); const a = document.createElement("a"); a.href = u; a.download = "houchell-data-export.json"; a.click(); URL.revokeObjectURL(u); });
   };
 
   const links: [string, string][] = [

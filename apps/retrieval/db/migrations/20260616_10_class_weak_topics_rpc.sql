@@ -1,5 +1,5 @@
 -- Class's weakest topics overall, for the half-term feedforward selection
--- (Feynman cron). Same shared-secret gate as class_unit_gaps; aggregate only.
+-- (Houchell cron). Same shared-secret gate as class_unit_gaps; aggregate only.
 --
 -- SECRET REDACTED FOR VCS: the live DB (and the ScienceKit SK_API_KEY env) hold
 -- the real value. Substitute it for the placeholder before replaying on a fresh

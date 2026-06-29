@@ -41,7 +41,7 @@ export default function TrustCentre() {
   return (
     <div style={wrap}>
       <div style={{ maxWidth: 760, margin: "0 auto", padding: "40px 20px 64px" }}>
-        <div style={{ fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", color: COL.dim, marginBottom: 6 }}>Feynman Education · Trust Centre</div>
+        <div style={{ fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", color: COL.dim, marginBottom: 6 }}>Houchell Education · Trust Centre</div>
         <h1 style={{ fontSize: 34, margin: "0 0 8px" }}>Security, privacy &amp; data protection</h1>
         <p style={{ color: COL.mut, fontSize: 15, lineHeight: 1.6, margin: "0 0 28px" }}>
           We process pupil, teacher and parent data on behalf of schools as a <strong>data processor</strong>. This page is for procurement and Data Protection Officers; a signed DPA and full sub-processor list are available on request.
@@ -63,7 +63,7 @@ export default function TrustCentre() {
             <strong>Teacher accounts</strong> (name, email, school role), <strong>classes &amp; curriculum</strong>, <strong>guardian</strong> contact and consent records, and <strong>pupil practice / mastery at cohort level</strong> (per-objective results, not free-text surveillance). Billing details for paid plans are held by Stripe; we never store card numbers.
           </P>
           <P>
-            <strong>Controller / processor split.</strong> For pupil records the <strong>school is the data controller</strong> and ScienceKit / Feynman Education is the <strong>processor</strong>, acting only on the school's documented instructions. For teachers' and parents' own account data we are the controller.
+            <strong>Controller / processor split.</strong> For pupil records the <strong>school is the data controller</strong> and ScienceKit / Houchell Education is the <strong>processor</strong>, acting only on the school's documented instructions. For teachers' and parents' own account data we are the controller.
           </P>
         </Card>
 
@@ -77,7 +77,7 @@ export default function TrustCentre() {
             Primary data (the database, authentication and file storage) is hosted on Supabase in <strong>[CONFIRM REGION]</strong>. Content sent for AI generation is processed by Anthropic in the US per request and is not retained for model training. Other sub-processors are listed below with their regions.
           </P>
           <P style={{ color: COL.dim, fontSize: 12 }}>
-            [CONFIRM REGION] — to be set by Feynman Education from the live Supabase project before sharing with procurement.
+            [CONFIRM REGION] — to be set by Houchell Education from the live Supabase project before sharing with procurement.
           </P>
         </Card>
 
@@ -154,7 +154,7 @@ export default function TrustCentre() {
           </P>
           <P>
             For a DPA, sub-processor updates, or a data-subject request, contact{" "}
-            <a href="mailto:privacy@feynman.education" style={{ color: COL.grn }}>privacy@feynman.education</a>.
+            <a href="mailto:privacy@houchelleducation.com" style={{ color: COL.grn }}>privacy@houchelleducation.com</a>.
           </P>
           <a href="/privacy" style={{ color: COL.grn, fontSize: 13.5 }}>Read the privacy notice →</a>
         </Card>
@@ -168,7 +168,7 @@ export default function TrustCentre() {
           </P>
           <P>
             Security &amp; data-protection contact:{" "}
-            <a href="mailto:security@feynman.education" style={{ color: COL.grn }}>security@feynman.education</a>{" "}
+            <a href="mailto:security@houchelleducation.com" style={{ color: COL.grn }}>security@houchelleducation.com</a>{" "}
             <span style={{ color: COL.dim, fontSize: 12 }}>[CONFIRM CONTACT — set a monitored DPO/security inbox]</span>.
           </P>
         </Card>

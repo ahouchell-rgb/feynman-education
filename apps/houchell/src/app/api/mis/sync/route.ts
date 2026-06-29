@@ -1,4 +1,4 @@
-// Feynman Education — manual MIS sync trigger (SLT).
+// Houchell Education — manual MIS sync trigger (SLT).
 // POST /api/mis/sync   Authorization: Bearer <teacher JWT>
 //
 // Runs a Wonde sync for the caller's school now. Restricted to slt. Env-gated:

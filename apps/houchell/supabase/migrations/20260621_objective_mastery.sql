@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Per-objective mastery from assessments (NOW plan · P2 #9)
+-- Houchell Education — Per-objective mastery from assessments (NOW plan · P2 #9)
 -- Applied to prod: (pending)
 --
 -- Blends the SECOND data source — common-assessment QLA — into the mastery

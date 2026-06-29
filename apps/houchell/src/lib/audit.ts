@@ -1,4 +1,4 @@
-// Feynman Education — audit logging (server-only, best-effort).
+// Houchell Education — audit logging (server-only, best-effort).
 // Writes a privileged-action record with the service role. Never throws — an
 // audit hiccup must not fail the user's action.
 

@@ -1,4 +1,4 @@
-// Feynman Education — Stripe (server-only, env-gated, no SDK).
+// Houchell Education — Stripe (server-only, env-gated, no SDK).
 //
 // Talks to the Stripe REST API with plain fetch. Without STRIPE_SECRET_KEY the
 // helpers report "not configured" and the billing UI disables checkout — same

@@ -1,4 +1,4 @@
-// Feynman Education — automatic half-term feedforward (Vercel Cron)
+// Houchell Education — automatic half-term feedforward (Vercel Cron)
 // GET /api/cron/halfterm-feedforward   (?force=1 to run off-schedule)
 //
 // Runs weekly. If a holiday period just ended (a new half-term started), it

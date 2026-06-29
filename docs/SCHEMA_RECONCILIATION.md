@@ -8,7 +8,7 @@ reconcile rows — that were applied **directly to the DB, out-of-band, and neve
 - **Phase 5 is blocked** — you can't write or review the new `slt`/`trust_lead` scope predicates
   without seeing the existing helpers they build on.
 - **`packages/db` is half-built** — `LEDGER.json` lists the 110 applied migrations but the SQL
-  bodies aren't committed, so the contract test can't run for real and `@feynman/db` is an orphan.
+  bodies aren't committed, so the contract test can't run for real and `@houchell/db` is an orphan.
 
 Reconciling the live schema back into tracked source unblocks **all three** at once.
 
@@ -60,7 +60,7 @@ contract) instead of skipping.
 - **Phase 5** — write the `slt`/`trust_lead` scope predicates + tighten `class_intervention_list` to
   slt-only + the subtractive secret-restriction migration, all as new migrations reviewed against
   `live-defs/`. (See `PHASE5_REGATE_RPCS.md`.)
-- **Phase B** — `@feynman/db` becomes a real dependency feynman can import typed contracts from,
+- **Phase B** — `@houchell/db` becomes a real dependency feynman can import typed contracts from,
   instead of an orphan package (rehearsal conflict #5).
 
 ## Don't

@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — MIS attainment write-back queue (Build 3, phase 2)
+-- Houchell Education — MIS attainment write-back queue (Build 3, phase 2)
 -- Applied to prod: (pending)
 --
 -- The stickiest half of the moat: push attainment (predicted grades / marks)

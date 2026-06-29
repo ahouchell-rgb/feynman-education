@@ -1,4 +1,4 @@
-// Feynman Education — on-demand parent report preview / send.
+// Houchell Education — on-demand parent report preview / send.
 // POST /api/parent-report/preview   Authorization: Bearer <teacher JWT>
 //
 // Body: { linkId }                       — generate for a saved guardian_student link

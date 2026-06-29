@@ -1,4 +1,4 @@
-// Feynman Education — enqueue MIS attainment write-back (SLT).
+// Houchell Education — enqueue MIS attainment write-back (SLT).
 // POST /api/mis/writeback/enqueue   Authorization: Bearer <teacher JWT>
 // Body: { aspect, source?, items: [{ student_mis_id, value }] }
 //

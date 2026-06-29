@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Parent Portal (token magic-link)
+-- Houchell Education — Parent Portal (token magic-link)
 -- Applied to prod: (pending)
 --
 -- Completes Build 1. Parents get a read-only portal (list children, latest

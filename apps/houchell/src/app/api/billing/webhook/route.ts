@@ -1,4 +1,4 @@
-// Feynman Education — Stripe webhook. POST /api/billing/webhook
+// Houchell Education — Stripe webhook. POST /api/billing/webhook
 // Verifies the signature, then upserts the user's subscription (service role).
 // Handles checkout.session.completed + customer.subscription.{updated,deleted}.
 

@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Home-course (Springboard) synced progress
+-- Houchell Education — Home-course (Springboard) synced progress
 -- Applied to prod: (pending)
 --
 -- Lets the self-study KS3 course (public/learn/springboard.html) save a pupil's

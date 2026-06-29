@@ -1,4 +1,4 @@
-// Feynman Education — pupil-facing progress copy (pure, no I/O).
+// Houchell Education — pupil-facing progress copy (pure, no I/O).
 //
 // Used by the pupil "my progress / what to practise" view inside the parent
 // portal (src/app/parent/page.tsx). Kept here so the wording is unit-testable

@@ -2,7 +2,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/sk";
 
 export const metadata = {
-  title: "Feynman Education",
+  title: "Houchell Education",
   description: "A shared curriculum workspace for every subject",
 };
 

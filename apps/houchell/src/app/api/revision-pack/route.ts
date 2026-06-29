@@ -1,4 +1,4 @@
-// Feynman Education — Revision pack generator (strategy #3).
+// Houchell Education — Revision pack generator (strategy #3).
 // POST /api/revision-pack   Authorization: Bearer <teacher JWT>
 //
 // Body:    { unitId }

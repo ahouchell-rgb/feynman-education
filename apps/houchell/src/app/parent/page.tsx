@@ -182,7 +182,7 @@ function PortalInner() {
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "32px 20px" }}>
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 6 }}>
-        <div style={{ fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", color: COL.dim, marginTop: 4 }}>Feynman · Parent</div>
+        <div style={{ fontSize: 11, letterSpacing: ".18em", textTransform: "uppercase", color: COL.dim, marginTop: 4 }}>Houchell · Parent</div>
         <AccessibilityMenu variant="light" />
       </div>
       <h1 style={{ fontSize: 30, margin: "0 0 6px" }}>{data.guardianName ? `Hello, ${data.guardianName}` : "Your child's science"}</h1>

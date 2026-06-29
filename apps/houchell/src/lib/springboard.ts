@@ -1,4 +1,4 @@
-// Feynman Education — home-course (Springboard) sync helpers (server-only).
+// Houchell Education — home-course (Springboard) sync helpers (server-only).
 // Thin service-role REST wrappers + state summarising, shared by the
 // /api/springboard/* routes. Mirrors the direct-fetch style of the parent portal.
 

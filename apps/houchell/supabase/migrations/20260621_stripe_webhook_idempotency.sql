@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Stripe webhook idempotency
+-- Houchell Education — Stripe webhook idempotency
 -- Applied to prod: (pending)
 --
 -- Stripe delivers events at-least-once and retries on any non-2xx, so the

@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Retrieval-topic ↔ objective crosswalk (NOW plan · P2 #9)
+-- Houchell Education — Retrieval-topic ↔ objective crosswalk (NOW plan · P2 #9)
 -- Applied to prod: (pending)
 --
 -- The mastery blend (lib/mastery) currently joins retrieval weakness to

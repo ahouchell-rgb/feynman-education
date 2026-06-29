@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Google Drive OAuth tokens
+-- Houchell Education — Google Drive OAuth tokens
 -- Per-teacher access + refresh tokens for the Google Drive API, used to
 -- import Google Slides / .pptx files from Drive and save decks back.
 -- Mirrors public.microsoft_tokens exactly: one row per teacher

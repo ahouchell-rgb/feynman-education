@@ -1,4 +1,4 @@
-// Feynman KS3 Science — offline service worker.
+// Houchell KS3 Science — offline service worker.
 // Cache-first for the app shell (so it works offline + installs as a PWA),
 // and runtime-cache other GETs (e.g. Google Fonts) as they're fetched.
 const CACHE = "feynman-sci-v3";

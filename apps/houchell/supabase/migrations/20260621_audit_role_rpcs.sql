@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Audit the privileged role RPCs (NOW plan · P0 #4)
+-- Houchell Education — Audit the privileged role RPCs (NOW plan · P0 #4)
 -- Applied to prod: (pending)
 --
 -- The audit_log table existed but only the export/MIS routes wrote to it; the

@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Self-serve school onboarding (Build 2 follow-up)
+-- Houchell Education — Self-serve school onboarding (Build 2 follow-up)
 -- Applied to prod: (pending)
 --
 -- Replaces hand-run SQL for school setup. A teacher can CREATE a school (and

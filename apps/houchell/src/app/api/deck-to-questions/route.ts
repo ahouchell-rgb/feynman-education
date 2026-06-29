@@ -1,4 +1,4 @@
-// Feynman Education — Deck → retrieval questions
+// Houchell Education — Deck → retrieval questions
 // POST /api/deck-to-questions
 //
 // Body:    { slides: Slide[], lessonTitle?: string, count?: number, existing?: string[] }

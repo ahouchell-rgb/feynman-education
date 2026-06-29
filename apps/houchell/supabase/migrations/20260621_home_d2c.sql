@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — Home (D2C) + school-sponsored access (NOW plan · E8)
+-- Houchell Education — Home (D2C) + school-sponsored access (NOW plan · E8)
 -- Applied to prod: (pending)
 --
 -- Adds the consumer "Home" layer on the existing parent token-portal:

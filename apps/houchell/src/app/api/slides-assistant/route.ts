@@ -1,4 +1,4 @@
-// Feynman Education — Slides assistant
+// Houchell Education — Slides assistant
 // POST /api/slides-assistant
 //
 // Body: { slides: Slide[], currentSlide: number, instruction: string }

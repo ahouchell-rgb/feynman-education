@@ -1,5 +1,5 @@
 -- =====================================================================
--- Feynman Education — School member management (onboarding follow-up)
+-- Houchell Education — School member management (onboarding follow-up)
 -- Applied to prod: (pending)
 --
 -- Lets a school's slt manage their roster: promote a member to hod (or slt),

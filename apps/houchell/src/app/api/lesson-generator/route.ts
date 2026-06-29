@@ -1,4 +1,4 @@
-// Feynman Education — one-click AI lesson generator (strategy #11, the teacher wedge).
+// Houchell Education — one-click AI lesson generator (strategy #11, the teacher wedge).
 // POST /api/lesson-generator   Authorization: Bearer <teacher JWT>
 //
 // Body: { unitId, lessonId?, focus? }

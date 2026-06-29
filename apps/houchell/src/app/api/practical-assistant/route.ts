@@ -1,4 +1,4 @@
-// Feynman Education — Required-practical assistant (strategy #13).
+// Houchell Education — Required-practical assistant (strategy #13).
 // POST /api/practical-assistant   Authorization: Bearer <teacher JWT>
 //
 // Body:    { unitId }

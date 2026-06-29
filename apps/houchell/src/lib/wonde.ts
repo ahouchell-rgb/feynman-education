@@ -1,4 +1,4 @@
-// Feynman Education — Wonde MIS sync engine (server-only, env-gated).
+// Houchell Education — Wonde MIS sync engine (server-only, env-gated).
 //
 // Wonde (https://wonde.com) is a single API over the UK MIS platforms
 // (SIMS / Arbor / Bromcom / …). A school approves the app and issues a token;

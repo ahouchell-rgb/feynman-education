@@ -87,7 +87,7 @@ function HomeCourseContent() {
 
   return (
     <div style={{ maxWidth: 860, margin: "0 auto", padding: "28px 20px" }}>
-      <div style={{ fontSize: 11, letterSpacing: ".16em", textTransform: "uppercase", color: COL.dim, marginBottom: 6 }}>Feynman · Home course</div>
+      <div style={{ fontSize: 11, letterSpacing: ".16em", textTransform: "uppercase", color: COL.dim, marginBottom: 6 }}>Houchell · Home course</div>
       <h1 style={{ fontSize: 28, margin: "0 0 6px" }}>Home-learning course</h1>
       <p style={{ color: COL.muted, margin: "0 0 24px", fontSize: 15 }}>
         Create a personal link for each pupil. They learn at home; their progress syncs back here automatically — no pupil login needed.

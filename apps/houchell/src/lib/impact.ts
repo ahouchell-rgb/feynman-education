@@ -1,4 +1,4 @@
-// Feynman Education — efficacy / outcomes-evidence layer (shared, pure).
+// Houchell Education — efficacy / outcomes-evidence layer (shared, pure).
 //
 // SLT/MAT renewals hinge on "did our mastery work translate to improvement?".
 // The dashboards already show CURRENT mastery; this turns the EXISTING weekly

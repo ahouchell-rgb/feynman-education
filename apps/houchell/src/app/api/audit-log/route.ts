@@ -1,4 +1,4 @@
-// Feynman Education — self-serve audit-log read (NOW plan E4 / data-subject
+// Houchell Education — self-serve audit-log read (NOW plan E4 / data-subject
 // transparency). GET /api/audit-log   Authorization: Bearer <JWT>
 // Returns the caller's OWN recent audit entries (actor-scoped), reusing the
 // same audit_log store that src/lib/audit.ts writes. Read-only; never widens

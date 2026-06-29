@@ -1,4 +1,4 @@
-// Feynman Education — home-course progress sync (password-less, per-pupil token).
+// Houchell Education — home-course progress sync (password-less, per-pupil token).
 //   GET  /api/springboard/progress?t=<token>           → { studentName, state, updatedAt }
 //   POST /api/springboard/progress?t=<token>  {state}  → { ok:true }
 //

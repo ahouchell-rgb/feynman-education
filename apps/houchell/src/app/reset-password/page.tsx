@@ -117,7 +117,7 @@ export default function ResetPasswordPage() {
     <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", padding: 20, background: C.bg }}>
       <Card style={{ width: "100%", maxWidth: 420, padding: 28 }}>
         <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 10 }}>
-          Feynman Education
+          Houchell Education
         </div>
         <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 28, lineHeight: 1.1, letterSpacing: "-0.01em", color: C.text, marginBottom: 16 }}>
           Set a new password

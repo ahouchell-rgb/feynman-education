@@ -1,4 +1,4 @@
-// Feynman Education — shared server helpers (server-only).
+// Houchell Education — shared server helpers (server-only).
 // Consolidates the auth / Supabase-REST / AI boilerplate that was copy-pasted
 // across ~20 route handlers, so a fix lands once. Pure functions here are unit
 // tested in serverHelpers.test.ts.

@@ -208,7 +208,7 @@ function SetupContent() {
             Your <em style={{ fontStyle: "italic", color: C.grn }}>academic year</em>.
           </h1>
           <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>
-            Feynman needs to know your school&apos;s 2-week cycle. Pick the Monday that is Week A of the year — typically the first day back in September.
+            Houchell needs to know your school&apos;s 2-week cycle. Pick the Monday that is Week A of the year — typically the first day back in September.
           </p>
           <Card style={{ padding: 24, maxWidth: 480 }}>
             <div style={{ marginBottom: 16 }}>
@@ -232,7 +232,7 @@ function SetupContent() {
           </h1>
           <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>
             {retClasses?.length
-              ? "Pulled from retrieval. Tell Feynman what year, discipline, and starting unit each class is on."
+              ? "Pulled from retrieval. Tell Houchell what year, discipline, and starting unit each class is on."
               : "No retrieval classes found. Set them up in retrieval first, then come back."}
           </p>
           {retClasses?.length === 0 ? (

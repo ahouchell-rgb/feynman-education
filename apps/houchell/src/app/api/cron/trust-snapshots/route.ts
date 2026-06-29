@@ -1,4 +1,4 @@
-// Feynman Education — weekly trust benchmark snapshots (Vercel Cron).
+// Houchell Education — weekly trust benchmark snapshots (Vercel Cron).
 // GET /api/cron/trust-snapshots   (?force=1 — always runs anyway)
 //
 // For every trust, gathers its schools' classes via the service role (so it

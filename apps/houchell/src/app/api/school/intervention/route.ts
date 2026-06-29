@@ -1,4 +1,4 @@
-// Feynman Education — SLT intervention list (Build 2 action layer).
+// Houchell Education — SLT intervention list (Build 2 action layer).
 // GET /api/school/intervention?threshold=50   Authorization: Bearer <teacher JWT>
 //
 // Returns the pupils below a mastery threshold per objective, across the school's

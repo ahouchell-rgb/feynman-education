@@ -1,4 +1,4 @@
-# @feynman/db
+# @houchell/db
 
 The single source of truth for the unified anchor schema — and the contract test that turns
 cross-repo RPC drift from a **silent production fallback** into a **red CI check**. This is the

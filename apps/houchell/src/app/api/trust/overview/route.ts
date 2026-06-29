@@ -1,4 +1,4 @@
-// Feynman Education — MAT/Trust dashboard data (strategy Build 4).
+// Houchell Education — MAT/Trust dashboard data (strategy Build 4).
 // GET /api/trust/overview   Authorization: Bearer <teacher JWT>
 //
 // Returns every school in the caller's trust (via trust_classes(), which only

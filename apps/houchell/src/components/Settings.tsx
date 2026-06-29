@@ -68,7 +68,7 @@ export function Settings({ onClose }) {
 
   const disconnectMicrosoft = async () => {
     if (!profile?.id) return;
-    if (!confirm("Disconnect your Microsoft account? Any PowerPoint files in OneDrive stay there, but you won't be able to edit them inside Feynman until you reconnect.")) return;
+    if (!confirm("Disconnect your Microsoft account? Any PowerPoint files in OneDrive stay there, but you won't be able to edit them inside Houchell until you reconnect.")) return;
     setMsBusy(true);
     try {
       await ms.disconnect(profile.id);
@@ -97,7 +97,7 @@ export function Settings({ onClose }) {
 
   const disconnectGoogle = async () => {
     if (!profile?.id) return;
-    if (!confirm("Disconnect your Google account? Your files in Drive stay there, but you won't be able to import from or save to Drive inside Feynman until you reconnect.")) return;
+    if (!confirm("Disconnect your Google account? Your files in Drive stay there, but you won't be able to import from or save to Drive inside Houchell until you reconnect.")) return;
     setGBusy(true);
     try {
       await google.disconnect(profile.id);
@@ -181,7 +181,7 @@ export function Settings({ onClose }) {
           ) : (
             <>
               <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim, lineHeight: 1.5, marginBottom: 10 }}>
-                Connect your school Microsoft account to edit PowerPoints directly inside Feynman. Files are stored in your own OneDrive.
+                Connect your school Microsoft account to edit PowerPoints directly inside Houchell. Files are stored in your own OneDrive.
               </div>
               <Btn v="ghost" onClick={connectMicrosoft} style={{ fontSize: 12, padding: "6px 12px" }}>
                 Connect Microsoft account →
@@ -213,7 +213,7 @@ export function Settings({ onClose }) {
           ) : (
             <>
               <div style={{ fontSize: 11, fontFamily: C.mono, color: C.dim, lineHeight: 1.5, marginBottom: 10 }}>
-                Connect your Google account to import Google Slides (and PowerPoint files) straight from Drive, and save decks back as .pptx. Feynman only ever sees the files you pick.
+                Connect your Google account to import Google Slides (and PowerPoint files) straight from Drive, and save decks back as .pptx. Houchell only ever sees the files you pick.
               </div>
               <Btn v="ghost" onClick={connectGoogle} style={{ fontSize: 12, padding: "6px 12px" }}>
                 Connect Google account →
