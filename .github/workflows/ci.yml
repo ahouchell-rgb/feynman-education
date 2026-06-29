@@ -4,45 +4,69 @@ on:
   push:
     branches: ["**"]
   pull_request:
+  workflow_dispatch:
 
 jobs:
+  # ── JS workspaces: @houchell/web, @houchell/retrieval, @houchell/db ───────────
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
-
-      - name: Install
+      - name: Install (workspaces)
         run: npm ci
-
       - name: Typecheck
-        run: npx tsc --noEmit
-
+        run: npx turbo run typecheck
       - name: Test
-        run: npm test
+        run: npx turbo run test
 
-      - name: Build
-        run: npm run build
+  # ── interactive-science: prove the static build runs without error ────────────
+  # build.py stamps sitemap.xml <lastmod> with today's date (not idempotent), so
+  # we only assert the build completes — no git-diff drift check.
+  interactive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build static site
+        working-directory: apps/interactive
+        run: python3 build.py
 
+  # ── retrieval Supabase Edge Functions: deploy on main when secrets present ────
+  edge-functions:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Deploy retrieval edge functions
+        if: ${{ env.SUPABASE_ACCESS_TOKEN != '' }}
+        working-directory: apps/retrieval
+        run: supabase functions deploy --project-ref "$SUPABASE_PROJECT_REF"
+
+  # ── repo-wide secret scan (covers all three apps) ─────────────────────────────
   secret-scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      # Fail the build if a service-role JWT or an obvious live secret was
-      # committed anywhere except .env.example (the anon key is intentionally in
-      # source, so we match the service_role payload specifically, not any JWT).
       - name: Scan for committed secrets
         run: |
           set -uo pipefail
           # base64url of '"role":"service_role"' — the giveaway inside a service-role JWT.
+          # (The anon key is intentionally in source in both Node apps, so we match
+          # the service_role payload specifically, not any JWT.)
           SERVICE_ROLE_B64='InJvbGUiOiJzZXJ2aWNlX3JvbGUi'
-          # Patterns require enough length to avoid matching obvious test stubs
-          # like "whsec_wrong". Test files are also excluded below.
           PATTERNS=(
             "$SERVICE_ROLE_B64"          # Supabase service_role JWT
             'sk_live_[0-9A-Za-z]{20,}'   # Stripe live secret key
@@ -51,9 +75,11 @@ jobs:
           )
           status=0
           for pat in "${PATTERNS[@]}"; do
-            # Search tracked files only; exclude env example, this workflow, and
-            # test files (which legitimately carry fake/placeholder secrets).
-            if git grep -nIE "$pat" -- . ':(exclude).env.example' ':(exclude).github/workflows/ci.yml' ':(exclude)*.test.ts' ; then
+            if git grep -nIE "$pat" -- . \
+                 ':(exclude,glob)**/.env.example' ':(exclude).env.example' \
+                 ':(exclude).github/workflows/ci.yml' \
+                 ':(exclude,glob)**/*.test.ts' ':(exclude,glob)**/*.test.tsx' \
+                 ':(exclude,glob)**/*.test.js' ; then
               echo "::error::Possible committed secret matching /$pat/ — remove it and rotate the key."
               status=1
             fi
