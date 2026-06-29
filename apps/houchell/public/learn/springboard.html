@@ -384,6 +384,109 @@
   .cover .lede{ font-size:16.5px; color:#3a3a36; max-width:40ch; margin:0 auto 24px; }
   .cover .cta{ max-width:340px; margin:0 auto; width:100%; }
   .colophon{ text-align:center; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--grey); opacity:.7; padding:18px; }
+
+  /* interactive widgets (canvas, mounted in a lesson step) */
+  .ixfact{ font:500 16px/1.45 "Fraunces",Georgia,serif; color:#26261f; margin:4px 2px 12px; min-height:46px; }
+  .ixcanvas{ display:block; width:100%; border-radius:16px; background:radial-gradient(130% 120% at 50% 0,#fcfdff,#eceef7); }
+  .ixctrls{ display:flex; gap:8px; margin-top:14px; }
+  .ixbtn{ flex:1; font:800 14px/1 inherit; padding:11px; border-radius:12px; border:2px solid var(--navy); background:#fff; color:var(--navy); cursor:pointer; }
+  .ixbtn.primary{ background:var(--navy); color:#fff; }
+  .ixbtn:disabled{ opacity:.4; cursor:default; }
+  .ixread{ text-align:center; font:700 13px ui-monospace,monospace; color:var(--navy); margin-top:10px; }
+  .ixbar{ display:inline-block; width:110px; height:8px; background:var(--lav-pale); border-radius:5px; vertical-align:middle; margin:0 6px; overflow:hidden; }
+  .ixbar i{ display:block; height:100%; background:var(--wrong); width:0; transition:width .3s; }
+  .ixslider{ display:flex; align-items:center; gap:10px; margin:8px 2px; font:700 12px inherit; color:var(--navy); }
+  .ixslider input{ flex:1; accent-color:var(--navy); }
+
+  /* ============ DARK THEME (Duolingo-style glassmorphism) ============ */
+  :root{
+    --cream:#0a1626; --paper:rgba(255,255,255,.065); --ink:#eef4ff; --navy:#cfe0ff;
+    --grey:#9fb0c7; --line:rgba(255,255,255,.12); --line-2:rgba(255,255,255,.16);
+    --green:#58e0c2; --green-bg:rgba(88,224,194,.14); --green-line:rgba(88,224,194,.34);
+    --wrong:#ff7da3; --wrong-bg:rgba(255,107,154,.15); --wrong-line:rgba(255,107,154,.34);
+    --gold:#ffd166; --gold-bg:rgba(255,209,102,.16); --lav:#79a7ff; --lav-pale:rgba(255,255,255,.14);
+    --line-2:rgba(255,255,255,.16);
+    --shadow:0 18px 50px rgba(0,0,0,.34);
+    --accent:linear-gradient(135deg,#58e0c2,#79a7ff);
+  }
+  body{ color:#eef4ff;
+    background:
+      radial-gradient(circle at 15% 0%, rgba(88,224,194,.16), transparent 32%),
+      radial-gradient(circle at 90% 8%, rgba(121,167,255,.18), transparent 34%),
+      linear-gradient(180deg,#06111f 0%,#081528 48%,#05101e 100%);
+    background-attachment:fixed; }
+  /* top bar */
+  .hbar{ background:rgba(8,18,33,.72); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,.10); }
+  .hbar .streak{ color:#ffce63; }
+  .hbar .snd:hover{ background:rgba(255,255,255,.10); }
+  .seg{ background:rgba(255,255,255,.06); }
+  .seg button.on{ background:rgba(255,255,255,.14); color:#fff; box-shadow:none; }
+  .yearjump button{ background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.12); color:#cdd8ea; }
+  /* year + unit cards */
+  .yr-head .yl{ color:#9af0dd; }
+  .unit{ background:rgba(255,255,255,.065); border:1px solid rgba(255,255,255,.12); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); box-shadow:0 18px 50px rgba(0,0,0,.30); }
+  .unit.locked{ background:rgba(255,255,255,.03); border-color:rgba(255,255,255,.07); }
+  .unit .meta .t{ color:#f1f6ff; }
+  /* path nodes */
+  .node .ring{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.2); color:#eef4ff; box-shadow:0 8px 20px rgba(0,0,0,.32); }
+  .node.done .ring{ background:linear-gradient(135deg,#58e0c2,#7dffd4); border-color:#58e0c2; color:#04201a; box-shadow:0 10px 24px rgba(88,224,194,.28); }
+  .node.next .ring{ background:rgba(255,209,102,.12); border-color:#ffd166; color:#ffe6a3; box-shadow:0 0 0 4px rgba(255,209,102,.2),0 10px 24px rgba(0,0,0,.3); }
+  .node.locked .ring{ background:rgba(255,255,255,.04); }
+  .node.recap .ring{ background:rgba(255,209,102,.12); border-color:#ffd166; color:#ffe6a3; }
+  .node.recap.done .ring{ background:linear-gradient(135deg,#ffd166,#ffe39a); color:#3a2c00; }
+  .node .start-pill{ background:linear-gradient(135deg,#ffd166,#ffb443); color:#3a2c00; }
+  /* lesson content cards */
+  .teach{ background:rgba(255,255,255,.065); border:1px solid rgba(255,255,255,.12); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
+  .teach h2,.prompt,.vcard .term,.teach b,.etym-gloss,.ebit b,.vcard,.mic-status b,.heard{ color:#eaf1ff; }
+  .teach p,.vcard .def,.sentence{ color:#d4e0f3; }
+  /* keep diagram + interactive SCREENS light so navy line-art stays legible */
+  .bdiagram{ background:#fff; border-color:rgba(255,255,255,.25); }
+  .ixfact{ color:#eaf1ff; } .ixread{ color:#cdd8ea; }
+  .ixbtn{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.22); color:#eef4ff; }
+  .ixbtn.primary{ background:var(--accent); border-color:transparent; color:#06111f; }
+  /* question elements */
+  .opt,.chip,.token,.tinput{ background:rgba(255,255,255,.05); color:#eef4ff; }
+  .opt .num{ color:#9fb0c7; }
+  .opt.sel{ background:rgba(121,167,255,.16); } .opt.sel .num{ background:#79a7ff; border-color:#79a7ff; }
+  .opt:hover:not(:disabled),.token:hover:not(:disabled){ border-color:#79a7ff; }
+  .etym,.ebit,.blank button{ background:rgba(255,255,255,.06); }
+  .blank button{ color:#cfe0ff; }
+  /* buttons */
+  .btn-primary{ background:var(--accent); color:#06111f; box-shadow:0 6px 0 rgba(0,0,0,.3); }
+  .btn-primary:disabled{ background:rgba(255,255,255,.1); color:#7d8aa3; box-shadow:0 6px 0 rgba(0,0,0,.18); }
+  .btn-go{ background:linear-gradient(135deg,#58e0c2,#34c9a6); color:#04201a; }
+  .btn-ghost{ border-color:rgba(255,255,255,.2); color:#cdd8ea; }
+  .micbtn,.listen-big button{ background:var(--accent); color:#06111f; }
+  .speakbtn{ background:rgba(255,255,255,.06); border-color:#79a7ff; color:#eaf1ff; }
+  /* lesson chrome */
+  .footer .inner{ background:rgba(8,18,33,.85); border-top:1px solid rgba(255,255,255,.1); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+  .footer.fb-ok .inner{ background:rgba(88,224,194,.14); border-top-color:var(--green-line); }
+  .footer.fb-bad .inner{ background:rgba(255,107,154,.14); border-top-color:var(--wrong-line); }
+  /* categorise */
+  .cat-chip,.bin{ background:rgba(255,255,255,.05); }
+  .bin-head{ color:#cfe0ff; }
+  /* settings sheet + cover */
+  .sheet{ background:#0c1b30; }
+  .seg-opt{ background:rgba(255,255,255,.06); color:#eaf1ff; }
+  .seg-opt.on{ background:var(--accent); border-color:transparent; color:#06111f; }
+  .cover{ background:transparent; } .cover h1{ color:#eaf1ff; }
+  .cover .badge2{ background:var(--accent); color:#06111f; }
+  /* lesson progress track */
+  .pbar{ background:rgba(255,255,255,.12); }
+  .pbar > i{ background:linear-gradient(90deg,#58e0c2,#79a7ff); }
+  /* unit discipline-tinted badge keeps its colour; dim locked badges */
+  .unit.locked .badge{ filter:grayscale(.4) opacity(.7); }
+  /* dashboard: hero goal card + tracked chip (were var(--navy)/light) */
+  .goalcard{ background:linear-gradient(135deg, rgba(88,224,194,.18), rgba(121,167,255,.13)); border:1px solid rgba(255,255,255,.14); color:#eef4ff; box-shadow:var(--shadow); }
+  .goalcard .gtext .lev{ background:rgba(255,255,255,.14); }
+  .srow .snum.tracked{ background:rgba(255,255,255,.1); color:#cfe0ff; }
+  .mcard.streak .v{ color:#ffce63; }
+  /* exam: marks pill + mark-scheme box (had hardcoded light bg vs now-light --ink text) */
+  .exam-marks{ background:var(--accent); color:#06111f; }
+  .scheme{ background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14); }
+  .scheme li:before{ color:#58e0c2; }
+  /* order/numbered drop-slots + any leftover light fills */
+  .ord-slot,.nbox{ background:rgba(255,255,255,.05); }
 </style>
 </head>
 <body>
@@ -1251,6 +1354,7 @@ function openSettings(){
 function stripHtml(h){ return String(h||"").replace(/<[^>]+>/g," ").replace(/&[a-z]+;/g," ").replace(/\s+/g," ").trim(); }
 function stepReadText(s){
   if(!s) return "";
+  if(s.type==="interactive") return (document.querySelector(".ixfact")||{}).textContent||"Explore the interactive diagram.";
   if(s.type==="teach") return (s.h?s.h+". ":"")+stripHtml(s.html);
   if(s.type==="vocab") return s.term+". "+s.def;
   if(s.type==="speak") return "Say the word: "+s.term;
@@ -1355,6 +1459,194 @@ function interleaveBlocks(blocks, qs){ const out=[]; const n=Math.max(blocks.len
 // Higher-tier detection (so Foundation tier can hide HT-only content).
 function isHTQ(q){ return /higher/i.test(q.kicker||"") || /^\s*higher tier/i.test(q.q||""); }
 function isHTFact(f){ return /^\s*higher tier/i.test(f||""); }
+/* ===== INTERACTIVE WIDGETS (canvas) — mounted into a lesson step ===== */
+function ixScaffold(c, o){
+  c.innerHTML = `<div class="ixfact">${o.fact}</div>`+
+    `<canvas class="ixcanvas" width="${o.w||344}" height="${o.h||244}"></canvas>`+
+    (o.below||'');
+  const cv=c.querySelector('canvas');
+  return {cv, ctx:cv.getContext('2d'), fact:c.querySelector('.ixfact'), q:s=>c.querySelector(s)};
+}
+function ixRR(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function ixEll(ctx,x,y,a,b){ctx.beginPath();ctx.ellipse(x,y,a,b,0,0,7);}
+const INTERACTIVES = {
+particles(c){
+  const {ctx,cv,fact,q}=ixScaffold(c,{fact:'Heat a solid and its particles gain energy — watch them break free.',
+    below:`<div class="ixctrls"><button class="ixbtn" data-a="cool">❄ Cool</button><button class="ixbtn primary" data-a="heat">🔥 Heat</button></div><div class="ixread"><b class="st">SOLID</b> · <span class="hint">vibrate in a fixed lattice</span></div>`});
+  const W=344,H=244,R=11,STATES=['solid','liquid','gas'];let si=0,alive=true;
+  const FACT={solid:'In a SOLID, particles are packed in a fixed regular lattice and only vibrate in place.',liquid:'In a LIQUID, particles have more energy — they break the lattice and slide past each other, still touching.',gas:'In a GAS, particles have broken all bonds — they fly apart and move quickly in every direction.'};
+  const HINT={solid:'vibrate in a fixed lattice',liquid:'slide past each other',gas:'fly freely and fill the space'};
+  let P=[];(function(){let cols=7,rows=4,gx=(W-cols*2*R)/2+R,gy=H-rows*2*R-26;for(let r=0;r<rows;r++)for(let cc=0;cc<cols;cc++){if(P.length>=28)break;let hx=gx+cc*2*R,hy=gy+r*2*R;P.push({hx,hy,x:hx,y:hy,vx:0,vy:0});}})();
+  function set(i){si=Math.max(0,Math.min(2,i));const s=STATES[si];q('.st').textContent=s.toUpperCase();q('.hint').textContent=HINT[s];fact.textContent=FACT[s];
+    c.querySelector('[data-a=cool]').disabled=si===0;c.querySelector('[data-a=heat]').disabled=si===2;
+    const sp={solid:0,liquid:.9,gas:2.6}[s];P.forEach(p=>{p.vx=(Math.random()-.5)*sp*2;p.vy=(Math.random()-.5)*sp*2;});}
+  c.querySelector('[data-a=heat]').onclick=()=>set(si+1);c.querySelector('[data-a=cool]').onclick=()=>set(si-1);
+  function loop(){if(!alive)return;const s=STATES[si];P.forEach(p=>{if(s==='solid'){p.x+=(p.hx-p.x)*.2+(Math.random()-.5)*1.4;p.y+=(p.hy-p.y)*.2+(Math.random()-.5)*1.4;}else if(s==='liquid'){p.x+=p.vx;p.y+=p.vy;p.vx*=.98;p.vy*=.98;p.vx+=(Math.random()-.5)*.4;p.vy+=(Math.random()-.5)*.4;if(p.y<H*.32)p.vy+=.15;}else{p.x+=p.vx;p.y+=p.vy;p.vx+=(Math.random()-.5)*.3;p.vy+=(Math.random()-.5)*.3;const sp=Math.hypot(p.vx,p.vy);if(sp>3.4){p.vx*=3.4/sp;p.vy*=3.4/sp;}}const m=R+4;if(p.x<m){p.x=m;p.vx=Math.abs(p.vx);}if(p.x>W-m){p.x=W-m;p.vx=-Math.abs(p.vx);}if(p.y<m){p.y=m;p.vy=Math.abs(p.vy);}if(p.y>H-m){p.y=H-m;p.vy=-Math.abs(p.vy);}});
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#FbFcff';ctx.strokeStyle='#1E2761';ctx.lineWidth=3;ixRR(ctx,8,8,W-16,H-16,14);ctx.fill();ctx.stroke();
+    const col={solid:['#2b3573','#1E2761'],liquid:['#3f7a40','#2C5F2D'],gas:['#c8553f','#B4341E']}[STATES[si]];
+    P.forEach(p=>{const g=ctx.createRadialGradient(p.x-R*.35,p.y-R*.35,R*.2,p.x,p.y,R);g.addColorStop(0,'#fff');g.addColorStop(.35,col[0]);g.addColorStop(1,col[1]);ctx.beginPath();ctx.arc(p.x,p.y,R,0,7);ctx.fillStyle=g;ctx.fill();});
+    requestAnimationFrame(loop);}
+  set(0);loop();return ()=>{alive=false;};
+},
+circuit(c){
+  const {ctx,fact,q}=ixScaffold(c,{fact:'A circuit needs a complete loop. The switch is open, so no current flows — tap it to close the circuit.',
+    below:`<div class="ixctrls"><button class="ixbtn primary" data-a="t">Close the switch</button></div><div class="ixread" id="ixr">Ammeter: 0.0 A · bulb OFF</div>`});
+  const W=344,H=244,L=40,Rt=304,Tp=46,Bt=198;let closed=false,t=0,alive=true;
+  const cor=[[L,Tp],[Rt,Tp],[Rt,Bt],[L,Bt]];const SEG=[];for(let i=0;i<4;i++){const a=cor[i],b=cor[(i+1)%4];SEG.push({a,b,len:Math.hypot(b[0]-a[0],b[1]-a[1])});}const TOT=SEG.reduce((x,s)=>x+s.len,0);
+  function pt(d){d=((d%TOT)+TOT)%TOT;for(const s of SEG){if(d<=s.len){const f=d/s.len;return[s.a[0]+(s.b[0]-s.a[0])*f,s.a[1]+(s.b[1]-s.a[1])*f];}d-=s.len;}return cor[0];}
+  const SW={x:152,y:Tp,w:60,h:34};
+  function set(v){closed=v;c.querySelector('[data-a=t]').textContent=closed?'Open the switch':'Close the switch';fact.textContent=closed?'The switch is closed, so the loop is complete. Current flows all the way round and the bulb lights up.':'A circuit needs a complete loop. The switch is open, so no current flows — tap it to close the circuit.';q('#ixr').innerHTML=closed?'Ammeter: 0.3 A · bulb <b>ON</b>':'Ammeter: 0.0 A · bulb OFF';}
+  c.querySelector('[data-a=t]').onclick=()=>set(!closed);
+  c.querySelector('canvas').onclick=e=>{const cv=c.querySelector('canvas'),r=cv.getBoundingClientRect();const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;if(x>SW.x-30&&x<SW.x+SW.w&&y>SW.y-22&&y<SW.y+SW.h)set(!closed);};
+  function wire(){ctx.beginPath();ctx.moveTo(cor[0][0],cor[0][1]);for(let i=1;i<4;i++)ctx.lineTo(cor[i][0],cor[i][1]);ctx.closePath();}
+  function bat(cx,cy){const w=66,h=30,x=cx-w/2,y=cy-h/2;const g=ctx.createLinearGradient(0,y,0,y+h);g.addColorStop(0,'#f2f3f7');g.addColorStop(.5,'#c7ccdb');g.addColorStop(1,'#9aa1bb');ctx.fillStyle=g;ctx.strokeStyle='#1E2761';ctx.lineWidth=2.5;ixRR(ctx,x,y,w,h,6);ctx.fill();ctx.stroke();ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(x+22,y-7);ctx.lineTo(x+22,y+h+7);ctx.stroke();ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(x+44,y+2);ctx.lineTo(x+44,y+h-2);ctx.stroke();}
+  function bulb(cx,cy,on){if(on){const gl=ctx.createRadialGradient(cx,cy,2,cx,cy,46);gl.addColorStop(0,'rgba(255,214,110,.95)');gl.addColorStop(.5,'rgba(255,196,70,.35)');gl.addColorStop(1,'rgba(255,196,70,0)');ctx.fillStyle=gl;ctx.beginPath();ctx.arc(cx,cy,46,0,7);ctx.fill();}const g=ctx.createRadialGradient(cx-6,cy-8,3,cx,cy,22);g.addColorStop(0,on?'#fff7df':'#fff');g.addColorStop(1,on?'#ffe49b':'#eef0f7');ctx.fillStyle=g;ctx.strokeStyle='#1E2761';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(cx,cy,21,0,7);ctx.fill();ctx.stroke();ctx.fillStyle='#aab0c6';ixRR(ctx,cx-9,cy+18,18,12,2);ctx.fill();ctx.stroke();ctx.strokeStyle=on?'#ff8a1e':'#7a8199';ctx.lineWidth=on?3:2;ctx.beginPath();ctx.moveTo(cx-8,cy+4);ctx.lineTo(cx-4,cy-6);ctx.lineTo(cx,cy+4);ctx.lineTo(cx+4,cy-6);ctx.lineTo(cx+8,cy+4);ctx.stroke();}
+  function sw(x,y,on){ctx.fillStyle='#1E2761';ctx.beginPath();ctx.arc(x,y,4.5,0,7);ctx.fill();ctx.beginPath();ctx.arc(x+60,y,4.5,0,7);ctx.fill();ctx.strokeStyle='#1E2761';ctx.lineWidth=5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x,y);if(on)ctx.lineTo(x+60,y);else ctx.lineTo(x+50,y-26);ctx.stroke();}
+  function loop(){if(!alive)return;ctx.clearRect(0,0,W,H);ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#b5742f';ctx.lineWidth=7;wire();ctx.stroke();ctx.strokeStyle='#d79447';ctx.lineWidth=3;wire();ctx.stroke();bat(150,Bt);bulb(Rt,122,closed);sw(SW.x,Tp,closed);if(closed){t+=1.1;for(let d=0;d<TOT;d+=26){const p=pt(d+t);ctx.beginPath();ctx.arc(p[0],p[1],3.4,0,7);ctx.fillStyle='#1E2761';ctx.fill();}}requestAnimationFrame(loop);}
+  set(false);loop();return ()=>{alive=false;};
+},
+cell(c){
+  const {ctx,fact,q}=ixScaffold(c,{fact:'Oxygen is concentrated outside this cell and there is almost none inside. Tap Start to watch it diffuse.',
+    below:`<div class="ixctrls"><button class="ixbtn" data-a="r">↺ Reset</button><button class="ixbtn primary" data-a="g">▶ Start diffusion</button></div><div class="ixread">O₂ inside <span class="ixbar"><i></i></span> <b class="pct">0%</b></div>`});
+  const W=344,H=244,cx=172,cy=126,rx=140,ry=94;let P=[],run=false,alive=true,fr=0;
+  const inside=(x,y)=>{const a=(x-cx)/rx,b=(y-cy)/ry;return a*a+b*b<1;};
+  function reset(){P=[];let tr=0;while(P.length<26&&tr<5000){tr++;const x=12+Math.random()*(W-24),y=10+Math.random()*(H-20);if(!inside(x,y))P.push({x,y,vx:(Math.random()-.5),vy:(Math.random()-.5)});}run=false;c.querySelector('[data-a=g]').textContent='▶ Start diffusion';fact.textContent='Oxygen is concentrated outside this cell and there is almost none inside. Tap Start to watch it diffuse.';upd();}
+  function upd(){const ins=P.filter(p=>inside(p.x,p.y)).length,pct=Math.round(100*ins/P.length);q('.ixbar i').style.width=pct+'%';q('.pct').textContent=pct+'%';if(run&&pct>=38)fact.textContent='The particles move randomly, so the NET flow is from high concentration (outside) to low (inside) — until oxygen is spread evenly.';}
+  c.querySelector('[data-a=g]').onclick=()=>{run=!run;c.querySelector('[data-a=g]').textContent=run?'❚❚ Pause':'▶ Start diffusion';};
+  c.querySelector('[data-a=r]').onclick=reset;
+  function phys(){P.forEach(p=>{p.vx+=(Math.random()-.5)*.5;p.vy+=(Math.random()-.5)*.5;const s=Math.hypot(p.vx,p.vy);if(s>1.5){p.vx*=1.5/s;p.vy*=1.5/s;}p.x+=p.vx;p.y+=p.vy;if(p.x<7){p.x=7;p.vx=Math.abs(p.vx);}if(p.x>W-7){p.x=W-7;p.vx=-Math.abs(p.vx);}if(p.y<7){p.y=7;p.vy=Math.abs(p.vy);}if(p.y>H-7){p.y=H-7;p.vy=-Math.abs(p.vy);}});}
+  function mito(x,y,a,b,rot){ctx.save();ctx.translate(x,y);ctx.rotate(rot*Math.PI/180);const g=ctx.createLinearGradient(0,-b,0,b);g.addColorStop(0,'#cfe6c8');g.addColorStop(1,'#a7cf9c');ctx.fillStyle=g;ctx.strokeStyle='#2C5F2D';ctx.lineWidth=2;ixEll(ctx,0,0,a,b);ctx.fill();ctx.stroke();ctx.restore();}
+  function loop(){if(!alive)return;if(run)phys();ctx.clearRect(0,0,W,H);ctx.save();ctx.shadowColor='rgba(30,39,97,.18)';ctx.shadowBlur=16;ctx.shadowOffsetY=4;const g=ctx.createRadialGradient(cx-30,cy-30,20,cx,cy,rx);g.addColorStop(0,'#fbfcff');g.addColorStop(.7,'#eef1fb');g.addColorStop(1,'#dfe4f4');ctx.fillStyle=g;ixEll(ctx,cx,cy,rx,ry);ctx.fill();ctx.restore();ctx.strokeStyle='#1E2761';ctx.lineWidth=3.5;ixEll(ctx,cx,cy,rx,ry);ctx.stroke();mito(96,180,26,13,-18);mito(250,72,24,12,24);mito(244,176,22,11,8);const ng=ctx.createRadialGradient(cx-12,cy-12,6,cx,cy,40);ng.addColorStop(0,'#c3c9e6');ng.addColorStop(1,'#8e96c4');ctx.fillStyle=ng;ctx.strokeStyle='#1E2761';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(cx,cy,38,0,7);ctx.fill();ctx.stroke();ctx.fillStyle='#5b639a';ctx.beginPath();ctx.arc(cx+8,cy+6,9,0,7);ctx.fill();P.forEach(p=>{const r=5.4,og=ctx.createRadialGradient(p.x-1.6,p.y-1.6,1,p.x,p.y,r);og.addColorStop(0,'#ffd9cf');og.addColorStop(.4,'#d6492f');og.addColorStop(1,'#9c2f1c');ctx.fillStyle=og;ctx.beginPath();ctx.arc(p.x,p.y,r,0,7);ctx.fill();});if(fr++%6===0)upd();requestAnimationFrame(loop);}
+  reset();loop();return ()=>{alive=false;};
+},
+decay(c){
+  const {ctx,fact,q}=ixScaffold(c,{fact:'These 64 nuclei are unstable. Each decays at random — you can never tell which is next. Tap Start to run time.',
+    below:`<div class="ixctrls"><button class="ixbtn" data-a="r">↺ Reset</button><button class="ixbtn primary" data-a="g">▶ Start time</button></div><div class="ixread"><b class="un" style="color:#B4341E">Undecayed: 64</b> · <span class="hl">Half-lives: 0.0</span> · <b class="de" style="color:#2C5F2D">Decayed: 0</b></div>`});
+  const W=344,H=244,COLS=8,ROWS=8,N=64,HALF=150;let nuc=[],run=false,time=0,emits=[],alive=true;
+  function reset(){nuc=[];const gw=W-40,gh=H-40;for(let i=0;i<N;i++){const cc=i%COLS,r=(i/COLS|0);nuc.push({x:20+cc*(gw/(COLS-1)),y:20+r*(gh/(ROWS-1)),decayed:false,t:0,ph:Math.random()*6});}run=false;time=0;emits=[];c.querySelector('[data-a=g]').textContent='▶ Start time';fact.textContent='These 64 nuclei are unstable. Each decays at random — you can never tell which is next. Tap Start to run time.';upd();}
+  function upd(){const dec=nuc.filter(n=>n.decayed).length,un=N-dec,hl=time/HALF;q('.un').textContent='Undecayed: '+un;q('.de').textContent='Decayed: '+dec;q('.hl').textContent='Half-lives: '+hl.toFixed(1);if(run&&hl>=1)fact.textContent='Each half-life the count halves: 64 → ~32 → ~16 → ~8… Decay is random, but with many nuclei it follows a smooth curve.';}
+  c.querySelector('[data-a=g]').onclick=()=>{run=!run;c.querySelector('[data-a=g]').textContent=run?'❚❚ Pause':'▶ Start time';};
+  c.querySelector('[data-a=r]').onclick=reset;
+  function loop(){if(!alive)return;if(run){time++;const p=1-Math.pow(2,-1/HALF);nuc.forEach(n=>{if(!n.decayed&&Math.random()<p){n.decayed=true;n.t=1;emits.push({x:n.x,y:n.y,a:Math.random()*6,life:1});}});emits.forEach(e=>{e.x+=Math.cos(e.a)*2.4;e.y+=Math.sin(e.a)*2.4;e.life-=.04;});emits=emits.filter(e=>e.life>0);}
+    ctx.clearRect(0,0,W,H);emits.forEach(e=>{ctx.strokeStyle='rgba(180,52,30,'+e.life+')';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(e.x-Math.cos(e.a)*8,e.y-Math.sin(e.a)*8);ctx.lineTo(e.x,e.y);ctx.stroke();});
+    nuc.forEach(n=>{const r=10;if(!n.decayed){const pulse=.5+.5*Math.sin(time*.06+n.ph);ctx.save();ctx.shadowColor='rgba(180,52,30,'+(.35+.3*pulse)+')';ctx.shadowBlur=8;const g=ctx.createRadialGradient(n.x-3,n.y-3,1,n.x,n.y,r);g.addColorStop(0,'#ffd2c6');g.addColorStop(.45,'#d6492f');g.addColorStop(1,'#9c2f1c');ctx.fillStyle=g;ctx.beginPath();ctx.arc(n.x,n.y,r,0,7);ctx.fill();ctx.restore();}else{if(n.t>0)n.t-=.05;const g=ctx.createRadialGradient(n.x-3,n.y-3,1,n.x,n.y,r);g.addColorStop(0,'#dfe3f1');g.addColorStop(.5,'#9aa1bb');g.addColorStop(1,'#6b73a0');ctx.fillStyle=g;ctx.beginPath();ctx.arc(n.x,n.y,r*(1+.25*Math.max(0,n.t)),0,7);ctx.fill();}});
+    if(run)upd();requestAnimationFrame(loop);}
+  reset();loop();return ()=>{alive=false;};
+},
+light(c){
+  const {ctx,fact,q}=ixScaffold(c,{fact:'Drag the incoming ray. The angle of reflection always equals the angle of incidence, measured from the normal.',
+    below:`<div class="ixctrls"><button class="ixbtn" data-a="m">Switch to glass (refraction)</button></div><div class="ixread" id="ixr">Angle of incidence 45° · Angle of reflection 45°</div>`});
+  const W=344,H=244,hx=172,hy=150;let ang=45,mode='mirror',drag=false,alive=true;const cv=c.querySelector('canvas');
+  function setA(d){ang=Math.max(8,Math.min(80,d));upd();}
+  function setM(m){mode=m;c.querySelector('[data-a=m]').textContent=mode==='mirror'?'Switch to glass (refraction)':'Switch to mirror (reflection)';fact.textContent=mode==='mirror'?'Drag the incoming ray. The angle of reflection always equals the angle of incidence, measured from the normal.':'Light slows and bends towards the normal as it enters the denser glass — this is refraction. A bigger angle bends more.';upd();}
+  function upd(){const i=Math.round(ang);q('#ixr').textContent=mode==='mirror'?'Angle of incidence '+i+'° · Angle of reflection '+i+'°':'Incidence '+i+'° · Refraction '+Math.round(Math.asin(Math.sin(ang*Math.PI/180)/1.5)*180/Math.PI)+'° (bent to normal)';}
+  c.querySelector('[data-a=m]').onclick=()=>setM(mode==='mirror'?'glass':'mirror');
+  cv.onpointerdown=e=>{drag=true;cv.setPointerCapture(e.pointerId);};cv.onpointerup=()=>drag=false;
+  cv.onpointermove=e=>{if(!drag)return;const r=cv.getBoundingClientRect();const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;if(y<hy)setA(Math.abs(Math.atan2(x-hx,-(y-hy))*180/Math.PI));};
+  function ray(x1,y1,x2,y2){ctx.save();ctx.strokeStyle='#f5b942';ctx.shadowColor='rgba(245,166,35,.8)';ctx.shadowBlur=8;ctx.lineWidth=3.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();const a=Math.atan2(y2-y1,x2-x1),mx=(x1+x2)/2,my=(y1+y2)/2;ctx.fillStyle='#e0921a';ctx.beginPath();ctx.moveTo(mx,my);ctx.lineTo(mx-9*Math.cos(a-.4),my-9*Math.sin(a-.4));ctx.lineTo(mx-9*Math.cos(a+.4),my-9*Math.sin(a+.4));ctx.closePath();ctx.fill();}
+  function loop(){if(!alive)return;ctx.clearRect(0,0,W,H);
+    if(mode==='glass'){ctx.fillStyle='rgba(120,160,210,.35)';ctx.fillRect(0,hy,W,H-hy);ctx.strokeStyle='#1E2761';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,hy);ctx.lineTo(W,hy);ctx.stroke();}
+    else{ctx.strokeStyle='#1E2761';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(24,hy);ctx.lineTo(W-24,hy);ctx.stroke();ctx.strokeStyle='#9aa1bb';ctx.lineWidth=2;for(let x=30;x<W-24;x+=16){ctx.beginPath();ctx.moveTo(x,hy);ctx.lineTo(x-9,hy+11);ctx.stroke();}}
+    ctx.strokeStyle='#8a90ad';ctx.lineWidth=1.4;ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(hx,hy-130);ctx.lineTo(hx,hy+(mode==='glass'?80:0));ctx.stroke();ctx.setLineDash([]);
+    const a=ang*Math.PI/180,len=140,ix=hx-Math.sin(a)*len,iy=hy-Math.cos(a)*len;ray(ix,iy,hx,hy);
+    ctx.fillStyle='#1E2761';ctx.beginPath();ctx.arc(ix,iy,7,0,7);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(ix,iy,2.5,0,7);ctx.fill();
+    if(mode==='mirror')ray(hx,hy,hx+Math.sin(a)*len,hy-Math.cos(a)*len);else{const rr2=Math.asin(Math.sin(a)/1.5);ray(hx,hy,hx+Math.sin(rr2)*120,hy+Math.cos(rr2)*120);}
+    ctx.strokeStyle='#B4341E';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(hx,hy,26,-Math.PI/2-a,-Math.PI/2);ctx.stroke();if(mode==='mirror'){ctx.beginPath();ctx.arc(hx,hy,26,-Math.PI/2,-Math.PI/2+a);ctx.stroke();}
+    requestAnimationFrame(loop);}
+  setM('mirror');loop();return ()=>{alive=false;};
+},
+photo(c){
+  const {ctx,fact,q}=ixScaffold(c,{fact:"In the leaf's chloroplasts, light energy turns carbon dioxide and water into glucose and oxygen. More light → faster photosynthesis.",h:220,
+    below:`<div class="ixslider">☀ Light <input type="range" min="0" max="100" value="60"></div><div class="ixread" style="color:#2C5F2D">CO₂ + H₂O — light → glucose + O₂</div>`});
+  const W=344,H=220,leaf={x:206,y:120};let light=60,parts=[],fr=0,alive=true;
+  c.querySelector('input').oninput=e=>light=+e.target.value;
+  function loop(){if(!alive)return;ctx.clearRect(0,0,W,H);fr++;const sx=42,sy=40,glow=.3+.7*light/100;
+    const sg=ctx.createRadialGradient(sx,sy,3,sx,sy,40);sg.addColorStop(0,'rgba(255,240,170,'+glow+')');sg.addColorStop(.4,'rgba(255,206,80,'+(glow*.7)+')');sg.addColorStop(1,'rgba(255,206,80,0)');ctx.fillStyle=sg;ctx.beginPath();ctx.arc(sx,sy,40,0,7);ctx.fill();ctx.fillStyle='#ffcf3a';ctx.beginPath();ctx.arc(sx,sy,15,0,7);ctx.fill();
+    ctx.strokeStyle='rgba(255,190,40,'+glow+')';ctx.lineWidth=2.5;for(let i=0;i<8;i++){const a=i/8*6.28+fr*.005;ctx.beginPath();ctx.moveTo(sx+Math.cos(a)*19,sy+Math.sin(a)*19);ctx.lineTo(sx+Math.cos(a)*26,sy+Math.sin(a)*26);ctx.stroke();}
+    ctx.strokeStyle='rgba(255,206,80,'+(glow*.5)+')';ctx.lineWidth=8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(sx+10,sy+10);ctx.lineTo(leaf.x-26,leaf.y-22);ctx.stroke();
+    ctx.strokeStyle='#3f7a40';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(leaf.x-34,leaf.y+8);ctx.quadraticCurveTo(leaf.x-60,180,leaf.x-58,216);ctx.stroke();
+    ctx.save();ctx.translate(leaf.x,leaf.y);ctx.rotate(-.3);const lg=ctx.createLinearGradient(0,-46,0,46);lg.addColorStop(0,'#7bbf5e');lg.addColorStop(1,'#3f7a40');ctx.fillStyle=lg;ctx.strokeStyle='#2C5F2D';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(-58,0);ctx.bezierCurveTo(-30,-44,40,-46,62,0);ctx.bezierCurveTo(40,46,-30,44,-58,0);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='rgba(44,95,45,.6)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-54,0);ctx.lineTo(58,0);ctx.stroke();ctx.restore();
+    const rate=light/100;if(Math.random()<rate*.5)parts.push({t:'co2',x:330,y:150+Math.random()*40,vx:-1-Math.random(),vy:-.2});if(Math.random()<rate*.5)parts.push({t:'h2o',x:120+Math.random()*60,y:215,vx:0,vy:-1-Math.random()});if(Math.random()<rate*.5)parts.push({t:'o2',x:leaf.x-30+Math.random()*60,y:leaf.y-10,vx:(Math.random()-.5),vy:-1.3-Math.random()});
+    parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;ctx.fillStyle=p.t==='co2'?'#8a90ad':p.t==='h2o'?'#3f8fd0':'#d6492f';ctx.beginPath();ctx.arc(p.x,p.y,4.5,0,7);ctx.fill();});
+    parts=parts.filter(p=>p.y>-12&&p.x>-12&&p.x<W+12&&!(p.t!=='o2'&&Math.hypot(p.x-leaf.x,p.y-leaf.y)<30));
+    ctx.fillStyle='#8a90ad';ctx.font='600 10px ui-rounded';ctx.fillText('CO₂ in',292,140);ctx.fillStyle='#3f8fd0';ctx.fillText('H₂O up',150,210);ctx.fillStyle='#d6492f';ctx.fillText('O₂ out',leaf.x-12,leaf.y-40);
+    requestAnimationFrame(loop);}
+  loop();return ()=>{alive=false;};
+},
+profile(c){
+  const {ctx,fact,q}=ixScaffold(c,{fact:'Reactants must gain enough energy to cross the activation-energy barrier before they can become products.',
+    below:`<div class="ixctrls"><button class="ixbtn" data-a="m">Show endothermic</button><button class="ixbtn primary" data-a="g">▶ React</button></div><div class="ixread" id="ixr">Exothermic · energy released (ΔH negative)</div>`});
+  const W=344,H=244,xR=46,xP=298,xPk=172;let exo=true,prog=0,run=false,alive=true;
+  const lerp=(a,b,t)=>a+(b-a)*t,sm=t=>t*t*(3-2*t);
+  const yR=()=>150,yPk=()=>56,yP=()=>exo?186:120;
+  const cX=t=>lerp(xR,xP,t),cY=t=>t<.5?lerp(yR(),yPk(),sm(t/.5)):lerp(yPk(),yP(),sm((t-.5)/.5));
+  function setM(e){exo=e;c.querySelector('[data-a=m]').textContent=exo?'Show endothermic':'Show exothermic';q('#ixr').textContent=exo?'Exothermic · energy released (ΔH negative)':'Endothermic · energy taken in (ΔH positive)';fact.textContent=exo?'Reactants cross the barrier, then products end up LOWER than reactants — energy is released (exothermic).':'Reactants cross the barrier but products end up HIGHER than reactants — energy is taken in (endothermic).';}
+  c.querySelector('[data-a=m]').onclick=()=>setM(!exo);c.querySelector('[data-a=g]').onclick=()=>{if(prog>=1)prog=0;run=true;};
+  function line(a,b,cc,d){ctx.beginPath();ctx.moveTo(a,b);ctx.lineTo(cc,d);ctx.stroke();}
+  function arrow(a,b,cc,d,col){ctx.strokeStyle=col;ctx.lineWidth=1.6;ctx.setLineDash([4,3]);line(a,b,cc,d);ctx.setLineDash([]);ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cc,d);ctx.lineTo(cc-4,d+(d>b?-6:6));ctx.lineTo(cc+4,d+(d>b?-6:6));ctx.closePath();ctx.fill();}
+  function loop(){if(!alive)return;ctx.clearRect(0,0,W,H);ctx.strokeStyle='#c9cde0';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(34,20);ctx.lineTo(34,212);ctx.lineTo(322,212);ctx.stroke();
+    ctx.fillStyle='#8a90ad';ctx.font='600 10px ui-rounded';ctx.fillText('Progress of reaction →',150,228);
+    ctx.strokeStyle='#1E2761';ctx.lineWidth=3.5;ctx.lineJoin='round';ctx.beginPath();for(let i=0;i<=60;i++){const t=i/60,x=cX(t),y=cY(t);i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();
+    ctx.strokeStyle='#9aa1bb';ctx.setLineDash([5,4]);ctx.lineWidth=1.2;line(34,yR(),xR,yR());line(34,yP(),xP,yP());ctx.setLineDash([]);
+    arrow(xPk,yR(),xPk,yPk(),'#B4341E');ctx.fillStyle='#B4341E';ctx.font='700 11px ui-rounded';ctx.fillText('Eₐ',xPk+6,(yR()+yPk())/2);
+    arrow(xP+14,yR(),xP+14,yP(),exo?'#2C5F2D':'#B4341E');ctx.fillStyle=exo?'#2C5F2D':'#B4341E';ctx.fillText('ΔH',xP-30,(yR()+yP())/2);
+    ctx.fillStyle='#1E2761';ctx.font='700 11px ui-rounded';ctx.fillText('reactants',xR-6,yR()-10);ctx.fillText('products',xP-46,yP()+(exo?22:-12));
+    if(run){prog=Math.min(1,prog+.012);if(prog>=1)run=false;}const mx=cX(prog),my=cY(prog)-9;const g=ctx.createRadialGradient(mx-2,my-2,1,mx,my,8);g.addColorStop(0,'#fff');g.addColorStop(.4,'#d6492f');g.addColorStop(1,'#9c2f1c');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mx,my,8,0,7);ctx.fill();
+    requestAnimationFrame(loop);}
+  setM(true);loop();return ()=>{alive=false;};
+},
+solar(c){
+  const {ctx,fact,q}=ixScaffold(c,{fact:'Eight planets orbit the Sun, held in by its gravity. The closer a planet is, the faster it orbits.',
+    below:`<div class="ixctrls"><button class="ixbtn" data-a="s">Speed: 1×</button><button class="ixbtn primary" data-a="g">❚❚ Pause</button></div><div class="ixread" id="ixr">Tap a planet to identify it</div>`});
+  const W=344,H=244,cx=172,cy=122,cv=c.querySelector('canvas');
+  cv.style.background='radial-gradient(120% 120% at 50% 40%,#10142e,#05060f)';
+  const PL=[['Mercury','#b7a08a',26,0,4],['Venus','#d9a05b',38,0,5],['Earth','#3f7fb0',52,0,5],['Mars','#b4543a',66,0,4],['Jupiter','#caa37a',92,0,11],['Saturn','#d8c08a',116,0,9,true],['Uranus','#8fc7cf',138,0,6],['Neptune','#4a6cc4',158,0,6]];
+  PL.forEach(p=>p[3]=Math.random()*6.28);let run=true,mult=1,stars=[],sel=-1,alive=true;for(let i=0;i<60;i++)stars.push([Math.random()*W,Math.random()*H,Math.random()*1.3+.3]);
+  c.querySelector('[data-a=g]').onclick=()=>{run=!run;c.querySelector('[data-a=g]').textContent=run?'❚❚ Pause':'▶ Play';};
+  c.querySelector('[data-a=s]').onclick=()=>{mult=mult>=4?1:mult*2;c.querySelector('[data-a=s]').textContent='Speed: '+mult+'×';};
+  cv.onclick=e=>{const r=cv.getBoundingClientRect();const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;let best=-1,bd=18;PL.forEach((p,i)=>{const px=cx+Math.cos(p[3])*p[2],py=cy+Math.sin(p[3])*p[2]*.62;const d=Math.hypot(x-px,y-py);if(d<bd){bd=d;best=i;}});if(best>=0){sel=best;q('#ixr').textContent=PL[best][0]+' · planet '+(best+1)+' from the Sun';fact.textContent=PL[best][0]+' is '+(best<4?'a small rocky planet (the four inner planets are rocky).':'a giant ball of gas/ice (the four outer planets).');}};
+  function loop(){if(!alive)return;ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';stars.forEach(s=>{ctx.globalAlpha=s[2]*.6;ctx.fillRect(s[0],s[1],1.4,1.4);});ctx.globalAlpha=1;
+    PL.forEach(p=>{ctx.strokeStyle='rgba(255,255,255,.13)';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(cx,cy,p[2],p[2]*.62,0,0,7);ctx.stroke();});
+    const sg=ctx.createRadialGradient(cx,cy,2,cx,cy,30);sg.addColorStop(0,'#fff7d0');sg.addColorStop(.4,'#ffd34d');sg.addColorStop(1,'rgba(255,150,30,0)');ctx.fillStyle=sg;ctx.beginPath();ctx.arc(cx,cy,30,0,7);ctx.fill();ctx.fillStyle='#ffcf3a';ctx.beginPath();ctx.arc(cx,cy,13,0,7);ctx.fill();
+    PL.forEach((p,i)=>{if(run)p[3]+=(.012*mult)/Math.pow(p[2]/26,1.5);const px=cx+Math.cos(p[3])*p[2],py=cy+Math.sin(p[3])*p[2]*.62,rad=p[4];if(p[5]){ctx.strokeStyle='rgba(216,192,138,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(px,py,rad+6,(rad+6)*.4,.5,0,7);ctx.stroke();}const g=ctx.createRadialGradient(px-rad*.3,py-rad*.3,1,px,py,rad);g.addColorStop(0,'#fff');g.addColorStop(.4,p[1]);g.addColorStop(1,p[1]);ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py,rad,0,7);ctx.fill();if(i===sel){ctx.strokeStyle='#fff';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(px,py,rad+4,0,7);ctx.stroke();ctx.fillStyle='#fff';ctx.font='700 10px ui-rounded';ctx.fillText(p[0],px+rad+5,py-4);}});
+    requestAnimationFrame(loop);}
+  loop();return ()=>{alive=false;};
+},
+wave(c){
+  const {ctx,fact,q}=ixScaffold(c,{fact:'A wave carries energy without moving matter. Amplitude sets how tall it is; wavelength how stretched out.',h:200,
+    below:`<div class="ixslider">Amplitude <input class="amp" type="range" min="8" max="60" value="38"></div><div class="ixslider">Frequency <input class="frq" type="range" min="1" max="6" value="2" step="0.5"></div><div class="ixctrls"><button class="ixbtn primary" data-a="m">Transverse</button></div>`});
+  const W=344,H=200,mid=104;let amp=38,k=2,t=0,mode='transverse',alive=true;
+  c.querySelector('.amp').oninput=e=>amp=+e.target.value;c.querySelector('.frq').oninput=e=>k=+e.target.value;
+  c.querySelector('[data-a=m]').onclick=()=>{mode=mode==='transverse'?'longitudinal':'transverse';c.querySelector('[data-a=m]').textContent=mode==='transverse'?'Transverse':'Longitudinal';fact.textContent=mode==='transverse'?'In a TRANSVERSE wave particles move up and down, at right angles to the wave (light, water).':'In a LONGITUDINAL wave particles move back and forth ALONG the wave, making compressions and rarefactions (sound).';};
+  const wY=x=>mid-amp*Math.sin((x/W)*k*2*Math.PI-t);
+  function loop(){if(!alive)return;ctx.clearRect(0,0,W,H);t+=.05;ctx.strokeStyle='#c9cde0';ctx.setLineDash([5,5]);ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(8,mid);ctx.lineTo(W-8,mid);ctx.stroke();ctx.setLineDash([]);
+    if(mode==='transverse'){ctx.strokeStyle='#1E2761';ctx.lineWidth=3.5;ctx.lineJoin='round';ctx.beginPath();for(let x=8;x<=W-8;x+=2){const y=wY(x);x===8?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();const mx=120,my=wY(mx);ctx.fillStyle='#B4341E';ctx.beginPath();ctx.arc(mx,my,6,0,7);ctx.fill();const cxp=W-70;ctx.strokeStyle='#2C5F2D';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(cxp,mid);ctx.lineTo(cxp,mid-amp);ctx.stroke();ctx.fillStyle='#2C5F2D';ctx.font='700 11px ui-rounded';ctx.fillText('amplitude',cxp+4,mid-amp/2);}
+    else{for(let x=12;x<W-8;x+=7){const d=Math.sin((x/W)*k*2*Math.PI-t),off=d*amp*.32,xx=x+off,dark=.35+.5*((d+1)/2);ctx.strokeStyle='rgba(30,39,97,'+dark+')';ctx.lineWidth=2.4;ctx.beginPath();ctx.moveTo(xx,mid-34);ctx.lineTo(xx,mid+34);ctx.stroke();}ctx.fillStyle='#8a90ad';ctx.font='600 10px ui-rounded';ctx.fillText('compression',60,mid+54);ctx.fillText('rarefaction',200,mid+54);}
+    requestAnimationFrame(loop);}
+  loop();return ()=>{alive=false;};
+},
+heart(c){
+  const {ctx,fact,q}=ixScaffold(c,{fact:'Blood flows a figure-of-eight: the heart pumps it to the lungs to pick up oxygen, back to the heart, then out to the body.',
+    below:`<div class="ixctrls"><button class="ixbtn primary" data-a="g">❚❚ Pause</button></div><div class="ixread"><b style="color:#B4341E">● oxygenated</b> · <b style="color:#2a5cb8">● deoxygenated</b></div>`});
+  const W=344,H=244,HX=172,HY=128,lung={x:92,y:108,r:60},body={x:252,y:140,r:60};let run=true,t=0,beat=0,alive=true;
+  const dots=[];for(let i=0;i<14;i++){dots.push({loop:'lung',a:i/14*6.28});dots.push({loop:'body',a:i/14*6.28});}
+  c.querySelector('[data-a=g]').onclick=()=>{run=!run;c.querySelector('[data-a=g]').textContent=run?'❚❚ Pause':'▶ Play';};
+  const pos=(lp,a)=>{const L=lp==='lung'?lung:body;return[L.x+Math.cos(a)*L.r,L.y+Math.sin(a)*L.r*.82];};
+  function col(L,y){const f=(L.y-y)/(L.r*.82),tt=Math.max(0,Math.min(1,(f+1)/2));return'rgb('+Math.round(42+138*tt)+','+Math.round(92-40*tt)+','+Math.round(184-154*tt)+')';}
+  function hrt(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.shadowColor='rgba(180,52,30,.4)';ctx.shadowBlur=12;const g=ctx.createRadialGradient(-6,-8,4,0,0,30);g.addColorStop(0,'#e06a52');g.addColorStop(.6,'#b5341e');g.addColorStop(1,'#7e2113');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(0,22);ctx.bezierCurveTo(-26,2,-22,-20,-6,-16);ctx.bezierCurveTo(-2,-14,0,-10,0,-7);ctx.bezierCurveTo(0,-10,2,-14,6,-16);ctx.bezierCurveTo(22,-20,26,2,0,22);ctx.closePath();ctx.fill();ctx.restore();}
+  function loop(){if(!alive)return;ctx.clearRect(0,0,W,H);if(run){t+=.03;beat=.5+.5*Math.sin(t*3.2);}
+    [lung,body].forEach(L=>{ctx.strokeStyle='#d8b7b0';ctx.lineWidth=11;ctx.beginPath();ctx.ellipse(L.x,L.y,L.r,L.r*.82,0,0,7);ctx.stroke();ctx.strokeStyle='#f0e0dc';ctx.lineWidth=5;ctx.beginPath();ctx.ellipse(L.x,L.y,L.r,L.r*.82,0,0,7);ctx.stroke();});
+    ctx.fillStyle='#f1c3cb';ctx.strokeStyle='#c98a93';ctx.lineWidth=1.5;[[-12,0],[12,0]].forEach(o=>{ctx.beginPath();ctx.ellipse(lung.x+o[0],lung.y-lung.r*.82-2,11,16,o[0]<0?.2:-.2,0,7);ctx.fill();ctx.stroke();});
+    ctx.fillStyle='#cdd3ea';ctx.strokeStyle='#8e96c4';const by=body.y+body.r*.82+2;ctx.beginPath();ctx.arc(body.x,by-8,7,0,7);ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(body.x-11,by+16);ctx.quadraticCurveTo(body.x,by-2,body.x+11,by+16);ctx.lineTo(body.x+9,by+22);ctx.lineTo(body.x-9,by+22);ctx.closePath();ctx.fill();ctx.stroke();
+    dots.forEach(d=>{if(run)d.a+=.018;const L=d.loop==='lung'?lung:body,p=pos(d.loop,d.a);ctx.fillStyle=col(L,p[1]);ctx.beginPath();ctx.arc(p[0],p[1],4.2,0,7);ctx.fill();});
+    hrt(HX,HY,1+.07*beat);ctx.fillStyle='#1E2761';ctx.font='700 11px ui-rounded';ctx.textAlign='center';ctx.fillText('lungs',lung.x,lung.y-lung.r*.82-20);ctx.fillText('body',body.x,by+24);ctx.textAlign='left';
+    requestAnimationFrame(loop);}
+  loop();return ()=>{alive=false;};
+}
+};
+const TOPIC_IX={ C1:"particles", DEN:"particles", ELE:"circuit", GL1:"circuit", B1:"cell", GA3:"decay", GA4:"decay", LGT:"light", PHO:"photo", GBE1:"photo", ENC:"profile", GCE1:"profile", SPC:"solar", GS1:"solar", SND:"wave", GW1:"wave", GBO2:"heart" };
+function ixCleanup(){ if(typeof L!=="undefined" && L && L._cleanup){ try{L._cleanup();}catch(e){} L._cleanup=null; } }
+
 function buildLessons(c){
   const disc=c.discipline, V=c.vocab;
   const rawFacts = (TIER==="foundation") ? c.facts.filter(f=>!isHTFact(f)) : c.facts;
@@ -1394,6 +1686,8 @@ function buildLessons(c){
     if(lessonWords.length) steps.push(listenTypeStep(lessonWords[lessonWords.length-1]));
     lessons.push({ title:pTitles[ci]||("Round "+(ci+1)), icon:pIcons[ci]||"🎯", kind:"practice", words:lessonWords.length, steps });
   });
+  // Lead the topic with its interactive widget (an engaging "explore" hook), if it has one.
+  if(TOPIC_IX[c.code] && lessons[0]) lessons[0].steps.unshift({ type:"interactive", widget:TOPIC_IX[c.code], kicker:"Explore" });
   return lessons;
 }
 
@@ -1730,10 +2024,12 @@ function topbar(){
 }
 
 function renderStep(){
+  ixCleanup();
   if(L.i >= L.steps.length){ return finishLesson(); }
   const s=L.steps[L.i];
   let body="";
-  if(s.type==="teach") body=viewTeach(s);
+  if(s.type==="interactive") body=viewInteractive(s);
+  else if(s.type==="teach") body=viewTeach(s);
   else if(s.type==="vocab") body=viewVocab(s);
   else if(s.type==="speak") body=viewSpeak(s);
   else if(s.type==="listenType") body=viewListenType(s);
@@ -1748,10 +2044,11 @@ function renderStep(){
   else if(s.type==="exam") body=viewExam(s);
 
   app.innerHTML = topbar() + `<div class="stage fade" id="stage">${body}</div>` + footerShell();
-  document.getElementById("quit").onclick=()=>{ if(L.rec){try{L.rec.abort();}catch(e){}} go("home"); };
+  document.getElementById("quit").onclick=()=>{ if(L.rec){try{L.rec.abort();}catch(e){}} ixCleanup(); go("home"); };
   document.getElementById("readaloud").onclick=readStep;
 
-  if(s.type==="teach") wireTeachLike(s);
+  if(s.type==="interactive") wireInteractive(s);
+  else if(s.type==="teach") wireTeachLike(s);
   else if(s.type==="vocab") wireVocab(s);
   else if(s.type==="speak") wireSpeak(s);
   else if(s.type==="listenType") wireListenType(s);
@@ -1780,6 +2077,16 @@ function teachDiagram(s){
 function viewTeach(s){
   return `<div class="step-kicker mono-kicker">${s.kicker}</div>
     <div class="teach"><span class="emoji">${s.emoji}</span>${s.h?`<h2 class="fr">${s.h}</h2>`:''}${s.dgram?teachDiagram(s):''}${s.html}</div>`;
+}
+/* INTERACTIVE — mount a canvas widget; Continue advances. Cleanup stops its animation loop. */
+function viewInteractive(s){
+  return `<div class="step-kicker mono-kicker">${s.kicker||"Explore"}</div>
+    <div class="teach"><div id="ixwrap"></div></div>`;
+}
+function wireInteractive(s){
+  const wrap=document.getElementById("ixwrap"), w=INTERACTIVES[s.widget];
+  if(wrap && w){ try{ L._cleanup = w(wrap) || null; }catch(e){ console.error("interactive "+s.widget, e); } }
+  footerButton("Continue","btn-go",true,()=>next());
 }
 // Break a term into its morphemes so the meaning can be read from the parts.
 function etymHTML(term){
