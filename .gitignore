@@ -30,3 +30,6 @@ next-env.d.ts
 
 # claude code agent worktrees (transient)
 .claude/worktrees/
+
+# turbo
+.turbo/
