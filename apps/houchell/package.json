@@ -1,10 +1,11 @@
 {
-  "name": "sciencekit",
+  "name": "@houchell/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "typecheck": "tsc --noEmit",
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest"
