@@ -55,7 +55,7 @@ export default function LoginPage() {
       <div style={{ width: "100%", maxWidth: 380 }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.32em", textTransform: "uppercase", color: C.dim, marginBottom: 14 }}>Houchell Education</div>
-          <div style={{ fontFamily: C.serif, fontSize: 44, lineHeight: 1, letterSpacing: "-0.02em", color: C.text }}>Feyn<em style={{ fontStyle: "italic", color: C.grn }}>man</em></div>
+          <div style={{ fontFamily: C.serif, fontSize: 44, lineHeight: 1, letterSpacing: "-0.02em", color: C.text }}>Hou<em style={{ fontStyle: "italic", color: C.grn }}>chell</em></div>
           <div style={{ fontSize: 12, color: C.muted, marginTop: 12, fontFamily: C.serif, fontStyle: "italic" }}>a shared base for every lesson</div>
         </div>
         <Card style={{ padding: "28px 24px" }}>

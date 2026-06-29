@@ -39,7 +39,7 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
         <div style={{ padding: "20px 16px 16px", borderBottom: `1px solid ${C.border}` }}>
           <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
             <div style={{ fontFamily: C.mono, fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase", color: C.dim, marginBottom: 4 }}>Houchell Education</div>
-            <div style={{ fontFamily: C.serif, fontSize: 24, lineHeight: 1, letterSpacing: "-0.01em", color: C.text }}>Feyn<em style={{ fontStyle: "italic", color: C.grn }}>man</em></div>
+            <div style={{ fontFamily: C.serif, fontSize: 24, lineHeight: 1, letterSpacing: "-0.01em", color: C.text }}>Hou<em style={{ fontStyle: "italic", color: C.grn }}>chell</em></div>
           </Link>
         </div>
 
