@@ -1,5 +1,5 @@
 {
-  "name": "retrieval-app",
+  "name": "@houchell/retrieval",
   "version": "1.0.0",
   "private": true,
   "scripts": {
