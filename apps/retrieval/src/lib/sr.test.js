@@ -33,7 +33,7 @@ describe("nextSR (SM-2 scheduling)", () => {
     expect(r.reps).toBe(0);
     expect(r.iv).toBe(0);
     expect(r.ef).toBeCloseTo(2.3, 5);
-    expect(daysFromNow(r.due)).toBe(0); // due immediately
+    expect(daysFromNow(r.due)).toBeCloseTo(0, 5); // due immediately (≈0; avoids flaky -0 vs +0 under Object.is)
   });
 
   it("ease factor never drops below the 1.3 floor", () => {
