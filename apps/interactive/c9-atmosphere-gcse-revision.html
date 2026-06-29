@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chemistry of the Atmosphere (C9) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for C9 Chemistry of the Atmosphere — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Chemistry Paper 2 · C9 Chemistry of the Atmosphere</div>
+    <h1>The air, <em>explained.</em></h1>
+    <p class="tag">The whole of C9 — how the atmosphere formed and changed, the greenhouse effect, climate change and your carbon footprint, and the pollutants from burning fuels. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Early atmosphere</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Greenhouse effect</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Climate change</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Pollutants</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — THE EARTH'S EARLY ATMOSPHERE (4.9.1)                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.9.1 · The early atmosphere</div>
+    <h2 class="lesson-title">The Earth's <em>early</em> atmosphere</h2>
+    <p class="lesson-promise">By the end you'll be able to tell the story of how the air changed — volcanoes, oceans, and the plants that gave us oxygen — and why we're not certain about the details.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Today's atmosphere — the numbers to know</h3>
+    <p>For about <strong>200 million years</strong> the proportions of gases in the atmosphere have been roughly the same as they are today. You need these figures by heart.</p>
+    <p>The air is about <strong>four-fifths nitrogen</strong> and <strong>one-fifth oxygen</strong>. More precisely: roughly <strong>78% nitrogen (N₂)</strong> and <strong>21% oxygen (O₂)</strong>. The last 1% is small amounts of other gases — mainly <strong>argon</strong>, with <strong>carbon dioxide</strong> at a small fraction of a per cent, plus varying amounts of <strong>water vapour</strong>.</p>
+
+    <div class="keywords">
+      <h4>The air today</h4>
+      <dl>
+        <dt>Nitrogen — about 80%</dt><dd>The main gas (≈78%). Unreactive, so it has built up.</dd>
+        <dt>Oxygen — about 20%</dt><dd>≈21%. The gas that animals (and burning) need.</dd>
+        <dt>Other gases — about 1%</dt><dd>Small amounts of argon, carbon dioxide and water vapour.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WHAT THE AIR IS MADE OF TODAY</text>
+        <!-- pie -->
+        <circle cx="150" cy="130" r="80" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- oxygen wedge ~21% : start at top, sweep 75.6 deg clockwise -->
+        <path d="M150 130 L150 50 A80 80 0 0 1 227.5 154.7 Z" fill="#B85042"/>
+        <!-- thin sliver for other gases ~1% near the boundary, drawn small at 3 o'clock-ish -->
+        <path d="M150 130 L227.5 154.7 A80 80 0 0 1 226.6 158.6 Z" fill="#C8A24A"/>
+        <text x="150" y="135" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">N₂</text>
+        <!-- labels in clear space, right -->
+        <rect x="300" y="70" width="14" height="14" fill="#1E2761"/>
+        <text x="322" y="82" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Nitrogen ≈ 78%</text>
+        <rect x="300" y="100" width="14" height="14" fill="#B85042"/>
+        <text x="322" y="112" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Oxygen ≈ 21%</text>
+        <rect x="300" y="130" width="14" height="14" fill="#C8A24A"/>
+        <text x="322" y="142" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Other ≈ 1% (Ar, CO₂, H₂O)</text>
+      </svg>
+      <div class="caption">Roughly 80% nitrogen, 20% oxygen, 1% other gases</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "about 80% / 20%"</h4>
+      <p>Examiners accept <strong>about 80% nitrogen and about 20% oxygen</strong>, or the exact 78% / 21%. Don't write 50/50, and don't forget the tiny <strong>~1% of other gases</strong>. Note that <strong>carbon dioxide is a very small fraction today</strong> — it was once far higher, which is the story of this topic.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The first billion years — volcanoes and oceans</h3>
+    <p>Evidence about the early atmosphere is limited, so scientists' ideas are uncertain — but one widely accepted theory goes like this.</p>
+    <p>For the Earth's first billion years there was <strong>intense volcanic activity</strong>. Volcanoes released the gases that formed the early atmosphere. The atmosphere was probably <strong>mainly carbon dioxide</strong>, with little or no oxygen — a bit like the atmospheres of Mars and Venus today. Volcanoes also released <strong>water vapour</strong>, and <strong>nitrogen</strong>, plus small amounts of <strong>methane</strong> and <strong>ammonia</strong>.</p>
+    <p>As the Earth cooled, the <strong>water vapour condensed</strong> to form the <strong>oceans</strong>. This was a turning point: once there were oceans, <strong>carbon dioxide dissolved</strong> into the water. Dissolved CO₂ then formed <strong>carbonate precipitates</strong> that made <strong>sediments</strong> on the sea bed — locking carbon away and lowering the CO₂ in the air.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WHERE THE CARBON DIOXIDE WENT</text>
+        <!-- step 1 box -->
+        <rect x="30" y="50" width="150" height="150" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="105" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Air</text>
+        <text x="105" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#B85042">lots of CO₂</text>
+        <text x="105" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">from volcanoes</text>
+        <!-- arrow 1 -->
+        <line x1="180" y1="125" x2="220" y2="125" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="226,125 212,118 212,132" fill="#C8A24A"/>
+        <text x="203" y="115" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">dissolves</text>
+        <!-- step 2 box -->
+        <rect x="230" y="50" width="150" height="150" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="305" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Oceans</text>
+        <text x="305" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1E2761">CO₂ dissolved</text>
+        <text x="305" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">water vapour</text>
+        <text x="305" y="166" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">condensed</text>
+        <!-- arrow 2 -->
+        <line x1="380" y1="125" x2="420" y2="125" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="426,125 412,118 412,132" fill="#C8A24A"/>
+        <text x="403" y="115" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">forms</text>
+        <!-- step 3 box -->
+        <rect x="430" y="50" width="110" height="150" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="485" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">Sediments</text>
+        <text x="485" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">carbonate</text>
+        <text x="485" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">precipitates</text>
+        <text x="485" y="168" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">carbon locked away</text>
+      </svg>
+      <div class="caption">Oceans formed → CO₂ dissolved → carbonate sediments → CO₂ in the air fell</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>How oxygen appeared</h3>
+    <p>When <strong>algae and plants</strong> evolved, they began to <strong>photosynthesise</strong>. Photosynthesis takes in carbon dioxide and releases <strong>oxygen</strong>, so it did two jobs at once: it slowly <strong>raised the oxygen</strong> in the air and helped <strong>lower the carbon dioxide</strong>.</p>
+    <p>Algae first appeared about <strong>2.7 billion years ago</strong>. Over the next billion years or so, oxygen built up to a level high enough for <strong>animals to evolve</strong>.</p>
+    <p>Carbon dioxide was also reduced because it was locked into <strong>sedimentary rocks</strong> (like limestone) and into <strong>fossil fuels</strong> — coal, crude oil and natural gas — which formed from the buried remains of ancient plants and plankton. That carbon stays locked away until we burn the fuels.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PHOTOSYNTHESIS CHANGED THE AIR</text>
+        <!-- plant -->
+        <rect x="120" y="120" width="10" height="40" fill="#2C5F2D"/>
+        <ellipse cx="110" cy="115" rx="22" ry="12" fill="#2C5F2D"/>
+        <ellipse cx="140" cy="115" rx="22" ry="12" fill="#2C5F2D"/>
+        <ellipse cx="125" cy="100" rx="22" ry="12" fill="#2C5F2D"/>
+        <text x="125" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">algae &amp; plants</text>
+        <!-- CO2 in arrow -->
+        <line x1="240" y1="90" x2="180" y2="105" stroke="#B85042" stroke-width="3"/>
+        <polygon points="174,107 190,103 187,113" fill="#B85042"/>
+        <text x="250" y="94" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">CO₂ in (falls)</text>
+        <!-- O2 out arrow -->
+        <line x1="180" y1="130" x2="240" y2="145" stroke="#1E7A5E" stroke-width="3"/>
+        <polygon points="246,147 230,143 233,153" fill="#1E7A5E"/>
+        <text x="250" y="150" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E7A5E">O₂ out (rises)</text>
+      </svg>
+      <div class="caption">Plants take in CO₂ and give out O₂ — so CO₂ fell and O₂ rose</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — slow and uncertain</h4>
+      <p>Oxygen built up <strong>gradually over billions of years</strong> — not overnight. And because the evidence is so old and scarce, exam questions often ask <em>why scientists can't be sure</em>: the answer is that the early Earth was <strong>4.6 billion years ago</strong> and we have very little direct evidence, so theories keep changing.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which best explains how oxygen came to be a large part of the atmosphere?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Volcanoes released oxygen directly</span></li>
+        <li><span class="letter">B</span><span>Oceans gave out oxygen as they formed</span></li>
+        <li><span class="letter">C</span><span>Algae and plants released it by photosynthesis over billions of years</span></li>
+        <li><span class="letter">D</span><span>Oxygen was made when carbon dioxide dissolved in the sea</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> Photosynthesis by algae (then plants) released oxygen and took in carbon dioxide. Volcanoes released CO₂ and water vapour, not oxygen. <em>Oceans lowered CO₂ but did not produce O₂.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>State the approximate proportions of nitrogen and oxygen in the air today.</summary><div class="ans">About <strong>80% nitrogen</strong> and <strong>20% oxygen</strong> (more precisely ≈78% N₂ and ≈21% O₂), with about <strong>1% other gases</strong>.</div></details></li>
+      <li><details><summary>What is thought to have released the gases of the early atmosphere?</summary><div class="ans"><strong>Intense volcanic activity</strong> during the Earth's first billion years. It is thought the early atmosphere was <strong>mainly carbon dioxide</strong>, with little or no oxygen.</div></details></li>
+      <li><details><summary>Give two ways the amount of carbon dioxide in the atmosphere was reduced.</summary><div class="ans">(1) <strong>Dissolving in the oceans</strong> and forming carbonate <strong>sediments</strong>; (2) being taken in by <strong>plants/algae for photosynthesis</strong>; carbon was also locked into <strong>sedimentary rocks and fossil fuels</strong>.</div></details></li>
+      <li><details><summary>How did the amount of oxygen increase?</summary><div class="ans"><strong>Algae and plants photosynthesised</strong>, releasing oxygen, over <strong>billions of years</strong>, until it was high enough for animals to evolve.</div></details></li>
+      <li><details><summary>Why are scientists unsure about the early atmosphere?</summary><div class="ans">There is <strong>very little evidence</strong> from so long ago (the Earth formed about <strong>4.6 billion years ago</strong>), so theories are uncertain and have changed over time.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — GREENHOUSE GASES & THE GREENHOUSE EFFECT (4.9.2.1)            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.9.2 · The greenhouse effect</div>
+    <h2 class="lesson-title">Greenhouse gases &amp; <em>warming</em></h2>
+    <p class="lesson-promise">Which gases trap heat, how the greenhouse effect actually works, and why it keeps the planet warm enough to live on.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The greenhouse gases</h3>
+    <p>Some gases in the atmosphere keep the Earth <strong>warm enough to support life</strong>. They are called <strong>greenhouse gases</strong>. The three you must know are <strong>carbon dioxide (CO₂)</strong>, <strong>methane (CH₄)</strong> and <strong>water vapour (H₂O)</strong>.</p>
+    <p>These gases are present in <strong>small amounts</strong>, but they have a big effect, because they absorb the heat (infrared) energy that the Earth radiates and stop it escaping straight back to space.</p>
+
+    <div class="keywords">
+      <h4>The greenhouse gases</h4>
+      <dl>
+        <dt>Carbon dioxide (CO₂)</dt><dd>From burning fossil fuels, deforestation. Rising over the last century.</dd>
+        <dt>Methane (CH₄)</dt><dd>From cattle (farming), landfill and rice paddies.</dd>
+        <dt>Water vapour (H₂O)</dt><dd>Always present; amount depends on temperature.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>How the greenhouse effect works</h3>
+    <p>Here is the chain of events you should be able to describe — in the right order:</p>
+    <p><strong>1.</strong> Energy from the Sun reaches the Earth as <strong>short-wavelength radiation</strong> (including visible light), and much of it passes straight through the atmosphere. <strong>2.</strong> The Earth's surface <strong>absorbs</strong> this energy and warms up. <strong>3.</strong> The warm Earth <strong>radiates energy back out</strong>, but now as <strong>longer-wavelength infrared</strong> radiation. <strong>4.</strong> Greenhouse gases <strong>absorb</strong> this outgoing infrared and then <strong>re-radiate it in all directions</strong> — including back towards the Earth. That trapped energy keeps the surface warmer than it would otherwise be.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE GREENHOUSE EFFECT</text>
+        <!-- sun -->
+        <circle cx="60" cy="60" r="22" fill="#C8A24A"/>
+        <text x="60" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">Sun</text>
+        <!-- earth surface -->
+        <rect x="40" y="230" width="480" height="30" fill="#2C5F2D"/>
+        <text x="280" y="250" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Earth's surface</text>
+        <!-- atmosphere band -->
+        <line x1="40" y1="150" x2="520" y2="150" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="5 4"/>
+        <text x="510" y="144" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">greenhouse gases</text>
+        <!-- incoming short-wave arrow -->
+        <line x1="82" y1="80" x2="200" y2="228" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="204,233 191,225 199,217" fill="#C8A24A"/>
+        <text x="120" y="150" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#C8A24A">short-wave in</text>
+        <!-- outgoing infrared, partly escaping -->
+        <line x1="320" y1="228" x2="360" y2="150" stroke="#B85042" stroke-width="3"/>
+        <polygon points="362,145 355,159 348,151" fill="#B85042"/>
+        <text x="370" y="195" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">infrared out</text>
+        <!-- re-radiated back down -->
+        <line x1="360" y1="150" x2="320" y2="226" stroke="#B85042" stroke-width="3" stroke-dasharray="4 3"/>
+        <polygon points="318,231 320,216 329,222" fill="#B85042"/>
+        <text x="395" y="215" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">re-radiated back</text>
+      </svg>
+      <div class="caption">Short-wave radiation in → surface warms → infrared out → greenhouse gases absorb &amp; re-radiate it</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — it's not "the same light bouncing back"</h4>
+      <p>The greenhouse effect is about a <strong>change of wavelength</strong>. Short-wavelength radiation comes in; the Earth re-emits it as <strong>longer-wavelength infrared</strong>; the greenhouse gases <strong>absorb the infrared and re-radiate it</strong>. Don't say "gases reflect the heat" — they <strong>absorb and re-emit</strong> it. And don't confuse this with the hole in the ozone layer — that's a different thing.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which row correctly describes the radiation in the greenhouse effect?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Long-wave in from the Sun; short-wave infrared out from Earth</span></li>
+        <li><span class="letter">B</span><span>Short-wave in from the Sun; long-wave infrared out from Earth, absorbed by greenhouse gases</span></li>
+        <li><span class="letter">C</span><span>Greenhouse gases reflect sunlight back into space</span></li>
+        <li><span class="letter">D</span><span>The Sun emits infrared which is trapped at the surface</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Short-wavelength radiation comes in and warms the surface; the Earth radiates <em>longer-wavelength infrared</em>, which greenhouse gases absorb and re-radiate. A reverses the wavelengths; C says "reflect" (it's absorb + re-emit).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the three greenhouse gases you need to know.</summary><div class="ans"><strong>Carbon dioxide (CO₂)</strong>, <strong>methane (CH₄)</strong> and <strong>water vapour (H₂O)</strong>.</div></details></li>
+      <li><details><summary>Why are greenhouse gases important even though there is only a little of them?</summary><div class="ans">They <strong>absorb the infrared radiation</strong> the Earth emits and re-radiate some of it back, keeping the Earth <strong>warm enough to support life</strong>.</div></details></li>
+      <li><details><summary>Describe the greenhouse effect in the correct order.</summary><div class="ans">Short-wavelength radiation from the Sun is <strong>absorbed</strong> by the Earth → the Earth re-emits it as <strong>long-wavelength infrared</strong> → greenhouse gases <strong>absorb and re-radiate</strong> this infrared, including back to the surface.</div></details></li>
+      <li><details><summary>Give one human source each of carbon dioxide and methane.</summary><div class="ans">CO₂: <strong>burning fossil fuels</strong> (or deforestation). Methane: <strong>cattle/farming</strong> (or landfill, or rice paddies).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — HUMAN ACTIVITY & CLIMATE CHANGE (4.9.2.2 / 4.9.2.3)           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.9.2 · Climate change &amp; carbon footprint</div>
+    <h2 class="lesson-title">Human activity &amp; <em>climate change</em></h2>
+    <p class="lesson-promise">Why rising greenhouse gases change the climate, how to judge the evidence carefully, and what a carbon footprint is — plus why cutting it is so hard.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>More greenhouse gases, more warming</h3>
+    <p>Over the last century, human activities have <strong>increased the amounts of carbon dioxide and methane</strong> in the atmosphere. The main causes are:</p>
+    <p><strong>Carbon dioxide</strong> — from <strong>burning fossil fuels</strong> (in power stations, cars and industry) and from <strong>deforestation</strong> (fewer trees means less CO₂ is removed by photosynthesis). <strong>Methane</strong> — from <strong>farming livestock</strong> (especially cattle), <strong>landfill</strong> sites and growing rice.</p>
+    <p>Based on peer-reviewed evidence, scientists believe that this extra greenhouse gas is causing the average temperature of the Earth's surface to <strong>increase</strong> — this is <strong>global climate change</strong>.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — judging the evidence</h4>
+      <p>Climate models are <strong>complicated</strong> and only use parts of the whole system, so it's hard to be sure. Treat claims carefully: trust <strong>peer-reviewed</strong> evidence over opinions. Watch out for claims based on <strong>speculation</strong>, <strong>biased</strong> sources, an <strong>incomplete picture</strong>, or reports that <strong>simplify</strong> the science (e.g. in some parts of the media). That doesn't mean ignoring the science — the scientific consensus is that human activity is driving the warming.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The effects of climate change</h3>
+    <p>An increase in average global temperature may lead to several <strong>potential effects</strong>. You should be able to describe some — and recognise that the size of each is uncertain:</p>
+    <p>Polar <strong>ice caps and glaciers melt</strong>, and warmer water expands, so <strong>sea levels rise</strong> — increasing <strong>flooding</strong> of low-lying land. <strong>Weather patterns change</strong>, giving more frequent and severe <strong>storms</strong>. Changes in the amount and timing of <strong>rainfall</strong> affect where crops can grow. <strong>Temperature and water stress</strong> change the <strong>distribution of wildlife</strong> and can reduce <strong>biodiversity</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="380" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">POSSIBLE EFFECTS OF WARMING</text>
+        <!-- centre -->
+        <circle cx="380" cy="120" r="46" fill="#B85042"/>
+        <text x="380" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">warmer</text>
+        <text x="380" y="132" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Earth</text>
+        <!-- four effects -->
+        <line x1="334" y1="100" x2="248" y2="60" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="240" y="58" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">ice melts → sea level rises</text>
+        <line x1="334" y1="140" x2="248" y2="185" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="240" y="188" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">more flooding</text>
+        <line x1="426" y1="100" x2="512" y2="60" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="520" y="58" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">severe storms, rainfall shifts</text>
+        <line x1="426" y1="140" x2="512" y2="185" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="520" y="188" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">wildlife &amp; crops affected</text>
+      </svg>
+      <div class="caption">Higher average temperature → a range of knock-on effects (sizes uncertain)</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Carbon footprint — and why it's hard to cut</h3>
+    <p>The <strong>carbon footprint</strong> is the <strong>total amount of carbon dioxide and other greenhouse gases</strong> emitted over the full life cycle of a product, service or event. (Notice it isn't only CO₂ — it includes methane and the rest.)</p>
+    <p>We can <strong>reduce</strong> the carbon footprint by cutting these emissions, for example by using <strong>renewable energy</strong> or nuclear instead of fossil fuels, increasing <strong>energy efficiency</strong>, <strong>capturing and storing carbon dioxide</strong>, and using <strong>taxes or laws (carbon caps)</strong> to limit emissions.</p>
+    <p>But reductions are <strong>hard to achieve in practice</strong>. Why? Because of the <strong>scientific disagreement</strong> over the causes and consequences, a lack of <strong>international cooperation</strong>, the <strong>economic cost</strong> and the impact on people's <strong>lifestyles and jobs</strong>, plus the slow pace of developing and rolling out new <strong>technology</strong> and educating the public.</p>
+
+    <div class="worked">
+      <h4>How to answer — "why is cutting emissions difficult?"</h4>
+      <p class="q">Suggest reasons why it is hard to reduce the world's carbon footprint. (How to structure it.)</p>
+      <div class="step"><span class="label">Cost</span><span class="v">New low-carbon technology and infrastructure is expensive.</span></div>
+      <div class="step"><span class="label">People</span><span class="v">It affects lifestyles and jobs; countries must cooperate but often won't.</span></div>
+      <div class="step answer"><span class="label">Doubt</span><span class="v">Disagreement over the science slows political action — so progress is slow.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which statement about a carbon footprint is correct?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It only measures carbon dioxide</span></li>
+        <li><span class="letter">B</span><span>It is the total greenhouse gas emitted over a product's whole life cycle</span></li>
+        <li><span class="letter">C</span><span>It is the mass of carbon in a fuel before burning</span></li>
+        <li><span class="letter">D</span><span>It is reduced by deforestation</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> A carbon footprint is the <em>total</em> of CO₂ <strong>and other greenhouse gases</strong> over the full life cycle. A is the common trap (it isn't only CO₂). Deforestation <em>increases</em> it.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Name two human activities that increase atmospheric carbon dioxide.</summary><div class="ans"><strong>Burning fossil fuels</strong> and <strong>deforestation</strong> (cutting down trees, so less CO₂ is removed by photosynthesis).</div></details></li>
+      <li><details><summary>Define carbon footprint.</summary><div class="ans">The <strong>total amount of carbon dioxide and other greenhouse gases</strong> emitted over the <strong>full life cycle</strong> of a product, service or event.</div></details></li>
+      <li><details><summary>Give two potential effects of global climate change.</summary><div class="ans">Any two of: <strong>rising sea levels and flooding</strong>, melting ice caps, more severe <strong>storms</strong>, changes in <strong>rainfall</strong> affecting crops, changes to <strong>wildlife distribution / lower biodiversity</strong>.</div></details></li>
+      <li><details><summary>State two ways to reduce a carbon footprint.</summary><div class="ans">Any two of: use <strong>renewable/nuclear energy</strong> instead of fossil fuels, increase <strong>energy efficiency</strong>, <strong>carbon capture and storage</strong>, <strong>carbon taxes or caps</strong>.</div></details></li>
+      <li><details><summary>Give two reasons why reducing emissions is difficult.</summary><div class="ans">Any two of: high <strong>economic cost</strong>, need for <strong>international cooperation</strong>, impact on <strong>lifestyles and jobs</strong>, <strong>scientific disagreement</strong>, slow <strong>technology</strong> rollout / lack of public education.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — ATMOSPHERIC POLLUTANTS FROM BURNING FUELS (4.9.3)             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.9.3 · Pollutants from fuels</div>
+    <h2 class="lesson-title">Pollutants from <em>burning fuels</em></h2>
+    <p class="lesson-promise">What comes out when fuels burn — carbon monoxide, soot, sulfur dioxide and oxides of nitrogen — where each comes from, and the harm it does.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Complete vs incomplete combustion</h3>
+    <p>Most fuels contain <strong>carbon</strong> and <strong>hydrogen</strong> (they are hydrocarbons), and many also contain some <strong>sulfur</strong> as an impurity. When a fuel burns, the atoms in it combine with oxygen — and the products depend on <strong>how much oxygen</strong> is available.</p>
+    <p>In <strong>complete combustion</strong>, there is plenty of oxygen, so the carbon becomes <strong>carbon dioxide</strong> and the hydrogen becomes <strong>water</strong>. These aren't pollutants in the toxic sense (though CO₂ is a greenhouse gas). The trouble starts when there <strong>isn't enough oxygen</strong> — <strong>incomplete combustion</strong> — which produces <strong>carbon monoxide</strong> and <strong>particulates (soot)</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PLENTY OF OXYGEN VS NOT ENOUGH</text>
+        <!-- complete panel -->
+        <rect x="30" y="44" width="240" height="160" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="150" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">COMPLETE</text>
+        <text x="150" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">lots of oxygen</text>
+        <text x="150" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">→ carbon dioxide</text>
+        <text x="150" y="156" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">→ water</text>
+        <text x="150" y="186" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">clean blue flame</text>
+        <!-- incomplete panel -->
+        <rect x="290" y="44" width="240" height="160" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="410" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">INCOMPLETE</text>
+        <text x="410" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">too little oxygen</text>
+        <text x="410" y="124" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">→ carbon monoxide</text>
+        <text x="410" y="148" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">→ soot (particulates)</text>
+        <text x="410" y="172" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">→ water</text>
+        <text x="410" y="194" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">smoky yellow flame</text>
+      </svg>
+      <div class="caption">Less oxygen → incomplete combustion → carbon monoxide and soot</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The four pollutants and their effects</h3>
+    <p>You need to know <strong>four pollutants</strong>, where each comes from, and the harm each causes.</p>
+
+    <div class="keywords">
+      <h4>Pollutants — source and effect</h4>
+      <dl>
+        <dt>Carbon monoxide (CO)</dt><dd>From <strong>incomplete combustion</strong>. A <strong>toxic gas</strong> — colourless and odourless, so hard to detect. It reduces the oxygen your blood can carry.</dd>
+        <dt>Particulates (soot)</dt><dd>Carbon and unburnt fuel from <strong>incomplete combustion</strong>. Cause <strong>global dimming</strong> and breathing/lung problems (respiratory disease).</dd>
+        <dt>Sulfur dioxide (SO₂)</dt><dd>From <strong>sulfur impurities</strong> in the fuel burning. Causes <strong>acid rain</strong> and breathing problems.</dd>
+        <dt>Oxides of nitrogen (NOₓ)</dt><dd>Formed in hot engines when <strong>nitrogen and oxygen in the air react</strong>. Cause <strong>acid rain</strong> and breathing problems.</dd>
+      </dl>
+    </div>
+
+    <p>Two important details: <strong>sulfur dioxide</strong> and <strong>oxides of nitrogen</strong> both dissolve in rain to make <strong>acid rain</strong>, which damages buildings, trees and lakes. And <strong>oxides of nitrogen don't come from the fuel</strong> — they form because the <strong>high temperatures</strong> inside an engine make the nitrogen and oxygen already in the air react together.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WHICH POLLUTANT DOES WHAT</text>
+        <!-- column headers -->
+        <text x="160" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Pollutant</text>
+        <text x="400" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Main harm</text>
+        <line x1="40" y1="62" x2="520" y2="62" stroke="#CFD8E3" stroke-width="1.5"/>
+        <!-- rows -->
+        <text x="60" y="86" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Carbon monoxide</text>
+        <text x="300" y="86" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#B85042">toxic — less oxygen in blood</text>
+        <text x="60" y="116" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Particulates (soot)</text>
+        <text x="300" y="116" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#B85042">global dimming · lung disease</text>
+        <text x="60" y="146" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Sulfur dioxide</text>
+        <text x="300" y="146" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#B85042">acid rain · breathing problems</text>
+        <text x="60" y="176" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Oxides of nitrogen</text>
+        <text x="300" y="176" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#B85042">acid rain · breathing problems</text>
+      </svg>
+      <div class="caption">Learn the pollutant–harm pairings: CO is toxic, soot dims &amp; harms lungs, SO₂ and NOₓ cause acid rain</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — easy mix-ups</h4>
+      <p><strong>Carbon dioxide is not a pollutant in this list</strong> — it's a greenhouse gas (Topic 2). The toxic gas is <strong>carbon monoxide</strong> (CO), from <strong>incomplete</strong> combustion. <strong>Sulfur dioxide comes from the fuel</strong> (sulfur impurities), but <strong>oxides of nitrogen come from the air</strong> reacting in hot engines — a favourite exam distinction. The two acid-rain gases are <strong>SO₂ and NOₓ</strong>, not CO.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — exam technique</h4>
+      <p class="q">A car engine releases a toxic gas that is colourless and has no smell. Name it, explain how it forms, and why it is dangerous.</p>
+      <div class="step"><span class="label">Name</span><span class="v">Carbon monoxide (CO).</span></div>
+      <div class="step"><span class="label">How</span><span class="v">Incomplete combustion of the fuel — not enough oxygen for full burning.</span></div>
+      <div class="step answer"><span class="label">Why</span><span class="v">It is toxic: it reduces the oxygen the blood can carry, and you can't smell it to be warned.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Where do the oxides of nitrogen from a car come from?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Nitrogen impurities in the fuel</span></li>
+        <li><span class="letter">B</span><span>Nitrogen and oxygen in the air reacting in the hot engine</span></li>
+        <li><span class="letter">C</span><span>Incomplete combustion of the carbon in the fuel</span></li>
+        <li><span class="letter">D</span><span>Sulfur reacting with oxygen</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The <em>high temperature</em> in the engine makes nitrogen and oxygen from the <strong>air</strong> react. It's not from the fuel. C describes soot/CO; D describes sulfur dioxide.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Name the two products of complete combustion of a hydrocarbon.</summary><div class="ans"><strong>Carbon dioxide</strong> and <strong>water</strong> (water vapour).</div></details></li>
+      <li><details><summary>Which two pollutants are produced by incomplete combustion?</summary><div class="ans"><strong>Carbon monoxide</strong> and <strong>particulates (soot / solid carbon and unburnt fuel)</strong>.</div></details></li>
+      <li><details><summary>Why is carbon monoxide especially dangerous?</summary><div class="ans">It is <strong>toxic</strong> and is <strong>colourless and odourless</strong>, so it is hard to detect; it reduces the amount of <strong>oxygen the blood can carry</strong>.</div></details></li>
+      <li><details><summary>Which two gases cause acid rain, and where does each come from?</summary><div class="ans"><strong>Sulfur dioxide</strong> (from sulfur impurities in the fuel) and <strong>oxides of nitrogen</strong> (from nitrogen and oxygen in the air reacting in hot engines).</div></details></li>
+      <li><details><summary>State one problem caused by particulates (soot) in the air.</summary><div class="ans"><strong>Global dimming</strong> (reflecting sunlight) and/or <strong>respiratory (breathing/lung) problems</strong> in humans.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Chemistry Paper 2 · C9 Chemistry of the Atmosphere</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'c9-atmosphere-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=11562698-09b9-442f-a948-a4266d0712a8&amp;ref=interactive-science&amp;from=c9-atmosphere-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=c9-atmosphere-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

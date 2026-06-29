@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rate &amp; Extent of Chemical Change (C6) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for C6 Rate & Extent of Chemical Change — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Chemistry Paper 2 · C6 Rate &amp; Extent of Chemical Change</div>
+    <h1>Rate of reaction, <em>for the exam.</em></h1>
+    <p class="tag">The whole of C6 — measuring rate, collision theory, the factors that speed reactions up, catalysts, and reversible reactions that settle into equilibrium. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Measuring rate</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Factors &amp; collisions</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Required practical</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Catalysts</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Reversible &amp; equilibrium</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — CALCULATING & MEASURING RATE  (4.6.1.1 / 4.6.1.2)             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · C6 · Calculating &amp; measuring rate</div>
+    <h2 class="lesson-title">Calculating &amp; <em>measuring</em> rate</h2>
+    <p class="lesson-promise">By the end of this topic you'll work out a mean rate of reaction, choose how to follow a reaction, and read rate off a graph.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What "rate" means</h3>
+    <p>The <strong>rate of reaction</strong> is how quickly reactants are used up, or how quickly products are made. A fast reaction (like an explosion) finishes in a fraction of a second; a slow one (like rusting) can take years.</p>
+    <p>To put a number on it, you measure how much a reactant or product changes over a known time. That gives you the <strong>mean (average) rate</strong>:</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>mean rate = quantity of reactant used (or product formed) ÷ time taken <span class="badge recall">recall</span></dt>
+        <dd>The quantity can be a mass (g) or a gas volume (cm³). So units are usually <strong>g/s</strong> or <strong>cm³/s</strong> (and mol/s if you're given moles).</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — mean rate from a gas volume</h4>
+      <p class="q">A reaction produces 48 cm³ of gas in 60 s. Calculate the mean rate of reaction.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">mean rate = volume of gas ÷ time</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 48 ÷ 60</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 0.8 cm³/s</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — rate is per second, not a total</h4>
+      <p>Rate is a quantity <strong>divided by time</strong> — never just the amount made. "48 cm³" is not a rate; "0.8 cm³/s" is. Always include the time, and always give a unit like g/s or cm³/s.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Following a reaction</h3>
+    <p>To measure rate you have to <strong>follow</strong> the reaction over time. There are three common methods, and which one you pick depends on what changes during the reaction.</p>
+    <p><strong>Measuring gas volume</strong> — collect the gas given off in a gas syringe (or over water) and record the volume every few seconds. <strong>Measuring mass loss</strong> — stand the flask on a balance; if a gas escapes, the mass falls, so record the mass every few seconds. <strong>Measuring a colour change / cloudiness</strong> — time how long a cross takes to disappear as a precipitate forms (a turbidity method).</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TWO WAYS TO FOLLOW A REACTION</text>
+        <!-- left panel: gas syringe -->
+        <text x="150" y="52" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Gas syringe</text>
+        <rect x="60" y="150" width="70" height="60" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="95" y="185" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">flask</text>
+        <line x1="130" y1="160" x2="180" y2="160" stroke="#1E2761" stroke-width="2"/>
+        <rect x="180" y="148" width="90" height="24" rx="3" fill="none" stroke="#2C5F2D" stroke-width="2"/>
+        <rect x="180" y="148" width="40" height="24" fill="#DDEBDD"/>
+        <line x1="220" y1="148" x2="220" y2="172" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="225" y="140" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#2C5F2D">gas pushes plunger</text>
+        <!-- right panel: balance -->
+        <text x="410" y="52" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Mass on a balance</text>
+        <!-- escaping gas arrows -->
+        <line x1="400" y1="70" x2="400" y2="100" stroke="#B85042" stroke-width="2"/>
+        <polygon points="400,66 394,80 406,80" fill="#B85042"/>
+        <line x1="420" y1="75" x2="420" y2="100" stroke="#B85042" stroke-width="2"/>
+        <polygon points="420,71 414,85 426,85" fill="#B85042"/>
+        <text x="455" y="86" font-family="IBM Plex Mono,monospace" font-size="9" fill="#B85042">gas escapes</text>
+        <rect x="365" y="105" width="70" height="55" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="335" y="165" width="130" height="22" rx="3" fill="#1E2761"/>
+        <text x="400" y="205" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1E2761">mass falls</text>
+      </svg>
+      <div class="caption">Gas given off can be measured by volume (syringe) or by the mass it carries away</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Marble chips react with acid, giving off carbon dioxide. Which method would <em>not</em> work to follow this reaction?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Collecting the gas in a gas syringe and recording its volume</span></li>
+        <li><span class="letter">B</span><span>Standing the flask on a balance and recording the mass loss</span></li>
+        <li><span class="letter">C</span><span>Timing how long a cross under the flask takes to disappear</span></li>
+        <li><span class="letter">D</span><span>Recording the volume of gas given off every 10 seconds</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> The "disappearing cross" method needs the mixture to turn <em>cloudy</em> (a precipitate forming, as with sodium thiosulfate). Marble chips and acid stay clear, so there's nothing to hide the cross. The gas methods (A, B, D) all work here.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Reading rate off a graph</h3>
+    <p>If you plot the amount of product (or reactant) against time, the <strong>steepness of the line tells you the rate</strong>. A steep line means fast; a shallow line means slow. The line is steepest <strong>at the start</strong> (most reactant present) and <strong>levels off</strong> when the reaction finishes.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">VOLUME OF GAS AGAINST TIME</text>
+        <!-- axes -->
+        <line x1="70" y1="210" x2="470" y2="210" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="70" y1="210" x2="70" y2="50" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="270" y="238" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">time →</text>
+        <text x="40" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370" transform="rotate(-90 40 130)">volume of gas →</text>
+        <!-- curve: steep then levels off -->
+        <path d="M70 210 Q150 70 250 65 T470 60" fill="none" stroke="#B85042" stroke-width="3"/>
+        <!-- steep start label -->
+        <line x1="120" y1="120" x2="200" y2="100" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="208" y="100" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">steep = fastest (start)</text>
+        <!-- levels off label -->
+        <line x1="380" y1="62" x2="360" y2="120" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="300" y="138" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">flat = reaction finished</text>
+      </svg>
+      <div class="caption">Steepest at the start, then flattens as reactants run out</div>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — finding rate from the gradient of a graph</h4>
+      <p>On Higher tier you may be asked for the rate at a <strong>particular moment</strong>, not just the mean. For a straight part of the graph the rate is simply the <strong>gradient</strong> (change in y ÷ change in x).</p>
+      <p>For a curve, draw a <strong>tangent</strong> — a straight line that just touches the curve at the point you want — then find the gradient of that tangent. A steeper tangent means a faster instantaneous rate. The tangent at the very start gives the fastest rate of all.</p>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Write the equation for mean rate of reaction.</summary><div class="ans">mean rate = <strong>quantity of reactant used (or product formed) ÷ time taken</strong>. Units such as <strong>g/s</strong> or <strong>cm³/s</strong>.</div></details></li>
+      <li><details><summary>A reaction loses 1.2 g of mass in 40 s. Calculate the mean rate.</summary><div class="ans">mean rate = 1.2 ÷ 40 = <strong>0.03 g/s</strong>.</div></details></li>
+      <li><details><summary>Name three ways of following the progress of a reaction.</summary><div class="ans">Measuring the <strong>volume of gas</strong> given off, measuring the <strong>loss in mass</strong>, and timing a <strong>colour change / cloudiness</strong> (disappearing cross).</div></details></li>
+      <li><details><summary>On a graph of gas volume against time, where is the reaction fastest?</summary><div class="ans">Where the line is <strong>steepest</strong> — at the <strong>start</strong>, when the most reactant is present. It levels off as the reactants are used up.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — FACTORS AFFECTING RATE & COLLISION THEORY  (4.6.1.2)          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · C6 · Factors &amp; collision theory</div>
+    <h2 class="lesson-title">Factors &amp; <em>collision</em> theory</h2>
+    <p class="lesson-promise">The four things that speed reactions up — and the one idea, collisions, that explains every one of them.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Collision theory</h3>
+    <p>For particles to react, they must <strong>collide</strong> — and they must collide with enough energy. The minimum energy needed for a collision to lead to a reaction is the <strong>activation energy</strong>.</p>
+    <p>So anything that makes collisions happen <strong>more often</strong>, or with <strong>more energy</strong>, speeds the reaction up. That single idea explains all four factors below.</p>
+
+    <div class="keywords">
+      <h4>The four factors that change rate</h4>
+      <dl>
+        <dt>Concentration (of solutions)</dt><dd>More concentrated → particles closer together → more frequent collisions.</dd>
+        <dt>Pressure (of gases)</dt><dd>Higher pressure squeezes gas particles closer → more frequent collisions.</dd>
+        <dt>Surface area</dt><dd>Breaking a solid into smaller pieces exposes more particles → more frequent collisions.</dd>
+        <dt>Temperature</dt><dd>Hotter particles move faster, so collisions are more frequent <em>and</em> more energetic.</dd>
+        <dt>Catalyst</dt><dd>Provides an easier route with a lower activation energy (see Topic 4).</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">MORE CONCENTRATED → MORE COLLISIONS</text>
+        <!-- low concentration panel -->
+        <rect x="50" y="50" width="200" height="150" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="150" y="72" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Dilute (low conc.)</text>
+        <circle cx="95" cy="110" r="9" fill="#B85042"/>
+        <circle cx="170" cy="100" r="9" fill="#B85042"/>
+        <circle cx="120" cy="160" r="9" fill="#B85042"/>
+        <circle cx="200" cy="160" r="9" fill="#B85042"/>
+        <text x="150" y="192" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">few particles</text>
+        <!-- high concentration panel -->
+        <rect x="310" y="50" width="200" height="150" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="410" y="72" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">Concentrated (high conc.)</text>
+        <circle cx="350" cy="100" r="9" fill="#B85042"/>
+        <circle cx="380" cy="125" r="9" fill="#B85042"/>
+        <circle cx="415" cy="100" r="9" fill="#B85042"/>
+        <circle cx="450" cy="120" r="9" fill="#B85042"/>
+        <circle cx="360" cy="160" r="9" fill="#B85042"/>
+        <circle cx="400" cy="170" r="9" fill="#B85042"/>
+        <circle cx="445" cy="160" r="9" fill="#B85042"/>
+        <circle cx="475" cy="135" r="9" fill="#B85042"/>
+        <text x="410" y="192" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">more particles, same volume</text>
+      </svg>
+      <div class="caption">The same volume holds more particles, so collisions happen more often</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — temperature does two things</h4>
+      <p>Most factors work by making collisions <strong>more frequent</strong>. <strong>Temperature is special</strong>: heating makes particles collide more often <em>and</em> gives a greater fraction of them enough energy to react (more collisions reach the activation energy). Mention <em>both</em> for full marks. Also: pressure only matters for <strong>gases</strong>, and surface area only for <strong>solids</strong>.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A student grinds a solid reactant into a fine powder. Why does this speed up the reaction?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The particles gain more energy</span></li>
+        <li><span class="letter">B</span><span>A larger surface area means more frequent collisions</span></li>
+        <li><span class="letter">C</span><span>The activation energy is lowered</span></li>
+        <li><span class="letter">D</span><span>The concentration of the solid increases</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Powdering exposes more of the solid's particles, increasing the <em>surface area</em>, so collisions with the other reactant are more frequent. It doesn't change the particles' energy (A), doesn't lower the activation energy — only a catalyst does that (C), and solids don't have a "concentration" (D).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Explaining a result</h3>
+    <p>Exam questions love to ask <em>why</em> a change sped a reaction up. A good answer always links the change to <strong>collisions</strong>. Use the chain: the change → particles closer / faster → more frequent (or more energetic) collisions → faster rate.</p>
+
+    <div class="worked">
+      <h4>Worked example — explaining the effect of temperature</h4>
+      <p class="q">Explain, in terms of particles, why a reaction is faster at 50 °C than at 20 °C.</p>
+      <div class="step"><span class="label">Point 1</span><span class="v">At 50 °C the particles have more energy, so they move faster.</span></div>
+      <div class="step"><span class="label">Point 2</span><span class="v">They collide more often, AND more collisions have at least the activation energy.</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">More successful collisions per second → faster rate.</span></div>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What two things must be true for a collision to cause a reaction?</summary><div class="ans">The particles must <strong>collide</strong>, and they must collide with at least the <strong>activation energy</strong> (the minimum energy needed to react).</div></details></li>
+      <li><details><summary>List the four factors (other than a catalyst) that affect rate.</summary><div class="ans"><strong>Concentration</strong> of solutions, <strong>pressure</strong> of gases, <strong>surface area</strong> of solids, and <strong>temperature</strong>.</div></details></li>
+      <li><details><summary>Why does increasing the concentration of a solution speed up a reaction?</summary><div class="ans">There are more reactant particles in the same volume, so collisions are <strong>more frequent</strong> → faster rate.</div></details></li>
+      <li><details><summary>In what way is temperature different from the other factors?</summary><div class="ans">It makes collisions both <strong>more frequent and more energetic</strong> — a greater proportion of collisions reach the activation energy. The others mainly change how <strong>often</strong> particles collide.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — REQUIRED PRACTICAL: EFFECT OF CONCENTRATION ON RATE  (4.6.1.2) -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · C6 · Required practical — rate</div>
+    <h2 class="lesson-title">Required practical — <em>concentration</em> &amp; rate</h2>
+    <p class="lesson-promise">The investigation you'll be examined on — how concentration changes the rate, measured two different ways.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The disappearing-cross method</h3>
+    <p>The classic version uses <strong>sodium thiosulfate</strong> and <strong>hydrochloric acid</strong>. They react to make a pale yellow precipitate of sulfur, which slowly turns the mixture <strong>cloudy</strong>. You time how long it takes for the cloudiness to hide a cross drawn under the flask.</p>
+
+    <div class="rp">
+      <h4>Effect of concentration on rate (thiosulfate + acid)</h4>
+      <p><strong>Aim:</strong> investigate how changing the concentration of a reactant affects the rate of reaction.</p>
+      <ol>
+        <li>Draw a <strong>cross</strong> on paper and stand a conical flask on top of it.</li>
+        <li>Measure a fixed volume of <strong>sodium thiosulfate</strong> solution into the flask. Record its concentration.</li>
+        <li>Add the <strong>hydrochloric acid</strong> and <strong>start a stopwatch</strong> at once.</li>
+        <li>Look down through the flask and <strong>stop the watch</strong> the moment the cross disappears. Record the time.</li>
+        <li>Repeat with <strong>different concentrations</strong> of thiosulfate (diluting with water), keeping everything else the same.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> keep the <strong>temperature, volumes and the same observer</strong> constant so concentration is the only variable. A <strong>shorter time</strong> means a faster rate, so rate ∝ 1 ÷ time. Judging "when the cross disappears" is subjective — using a light sensor and data logger makes it more reliable.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TIMING THE DISAPPEARING CROSS</text>
+        <!-- start: clear -->
+        <text x="160" y="56" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Start — clear</text>
+        <rect x="110" y="70" width="100" height="90" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="135" y1="175" x2="185" y2="175" stroke="#B85042" stroke-width="3"/>
+        <line x1="160" y1="165" x2="160" y2="185" stroke="#B85042" stroke-width="3"/>
+        <text x="160" y="205" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">cross visible</text>
+        <!-- arrow -->
+        <line x1="240" y1="120" x2="320" y2="120" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="326,120 312,114 312,126" fill="#C8A24A"/>
+        <text x="283" y="110" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">cloudy</text>
+        <!-- end: cloudy -->
+        <text x="400" y="56" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">End — cloudy</text>
+        <rect x="350" y="70" width="100" height="90" rx="4" fill="#C8A24A" opacity="0.55" stroke="#1E2761" stroke-width="2"/>
+        <text x="400" y="205" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">cross hidden — stop watch</text>
+      </svg>
+      <div class="caption">A higher concentration hides the cross sooner — a shorter time means a faster rate</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — short time means fast rate</h4>
+      <p>The disappearing-cross method measures a <strong>time</strong>, not a rate directly. A <strong>shorter</strong> time means a <strong>faster</strong> rate, so the relationship is rate ∝ 1 ÷ time. Don't say "the higher concentration took longer" — it takes <em>less</em> time. And it's a fair test only if temperature and volumes are kept constant.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The gas-volume alternative</h3>
+    <p>You can investigate the same idea with <strong>marble chips (calcium carbonate) and hydrochloric acid</strong>, which give off carbon dioxide. Here you measure the <strong>volume of gas</strong> (or the mass lost) at set times and compare how steeply the graph rises for different acid concentrations.</p>
+
+    <div class="worked">
+      <h4>Worked example — comparing two concentrations</h4>
+      <p class="q">With 1.0 mol/dm³ acid, 60 cm³ of gas is collected in 30 s. With 2.0 mol/dm³ acid, the same 60 cm³ comes off in 15 s. Compare the rates.</p>
+      <div class="step"><span class="label">Rate (1.0)</span><span class="v">60 ÷ 30 = 2.0 cm³/s</span></div>
+      <div class="step"><span class="label">Rate (2.0)</span><span class="v">60 ÷ 15 = 4.0 cm³/s</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">Doubling the concentration doubled the rate (2.0 → 4.0 cm³/s).</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">In the thiosulfate practical, which is the dependent variable you measure?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The concentration of the thiosulfate</span></li>
+        <li><span class="letter">B</span><span>The temperature of the mixture</span></li>
+        <li><span class="letter">C</span><span>The time taken for the cross to disappear</span></li>
+        <li><span class="letter">D</span><span>The volume of acid added</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> You <em>change</em> the concentration (the independent variable) and <em>measure</em> the time for the cross to vanish (the dependent variable). Temperature and volumes are <em>control</em> variables — kept the same to make it a fair test.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>In the thiosulfate + acid practical, what do you actually time?</summary><div class="ans">How long it takes for the mixture to turn cloudy enough to <strong>hide a cross</strong> drawn under the flask.</div></details></li>
+      <li><details><summary>How is the measured time related to the rate?</summary><div class="ans">A <strong>shorter time means a faster rate</strong> — rate is proportional to 1 ÷ time.</div></details></li>
+      <li><details><summary>Name two variables you must keep the same for a fair test.</summary><div class="ans">Any two of: <strong>temperature, total volume, the volume of acid, the same observer/judgement of "disappeared".</strong></div></details></li>
+      <li><details><summary>Suggest one way to make the disappearing-cross method more reliable.</summary><div class="ans">Use a <strong>light sensor and data logger</strong> instead of judging by eye, removing the subjective decision about when the cross has gone.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — CATALYSTS  (4.6.1.3)                                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · C6 · Catalysts</div>
+    <h2 class="lesson-title">Catalysts — a <em>lower</em> energy route</h2>
+    <p class="lesson-promise">How a catalyst speeds a reaction without being used up — and the energy diagram examiners want you to label.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What a catalyst does</h3>
+    <p>A <strong>catalyst</strong> speeds up a reaction <strong>without being used up</strong> in it. Because it isn't consumed, the same small amount works over and over, and there's the same mass of catalyst at the end as at the start.</p>
+    <p>It works by providing a <strong>different reaction pathway with a lower activation energy</strong>. With a lower energy barrier, a greater proportion of collisions now have enough energy to react — so the rate goes up.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">A CATALYST LOWERS THE ACTIVATION ENERGY</text>
+        <!-- axes -->
+        <line x1="60" y1="210" x2="500" y2="210" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="60" y1="210" x2="60" y2="50" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="238" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">progress of reaction →</text>
+        <text x="34" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370" transform="rotate(-90 34 130)">energy →</text>
+        <!-- without catalyst (tall hump) -->
+        <path d="M90 160 C170 160 180 70 250 70 C320 70 330 185 440 185" fill="none" stroke="#B85042" stroke-width="3"/>
+        <text x="250" y="58" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">without catalyst</text>
+        <!-- with catalyst (lower hump) -->
+        <path d="M90 160 C160 160 175 120 250 120 C325 120 335 185 440 185" fill="none" stroke="#2C5F2D" stroke-width="3" stroke-dasharray="6 4"/>
+        <line x1="250" y1="153" x2="250" y2="123" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="250" y="167" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">with catalyst (lower E&#8336;)</text>
+        <!-- reactants / products labels -->
+        <text x="95" y="178" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">reactants</text>
+        <text x="395" y="203" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">products</text>
+      </svg>
+      <div class="caption">Same reactants and products — the catalyst just gives a lower hump to climb over</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — what a catalyst does NOT do</h4>
+      <p>A catalyst is <strong>not used up</strong> and does <strong>not</strong> appear in the chemical equation. It does <strong>not change the products</strong>, and for a reversible reaction it does <strong>not</strong> change the position of equilibrium — it just gets there <em>faster</em>. Don't say it "gives the particles more energy"; it <em>lowers the activation energy</em> they need.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which statement about catalysts is correct?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>A catalyst increases the energy of the colliding particles</span></li>
+        <li><span class="letter">B</span><span>A catalyst is used up, so you must keep adding more</span></li>
+        <li><span class="letter">C</span><span>A catalyst provides a route with a lower activation energy</span></li>
+        <li><span class="letter">D</span><span>A catalyst increases the amount of product formed</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> A catalyst offers an alternative pathway with a <em>lower activation energy</em>, so more collisions succeed. It is <em>not</em> used up (B), doesn't add energy to the particles (A), and doesn't change how much product you end up with (D) — only how <em>fast</em> you get there.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Enzymes — biological catalysts</h3>
+    <p>Living things use <strong>enzymes</strong> as catalysts. They speed up reactions in the body (and in industry, like fermentation) at low temperatures, which saves energy. Like all catalysts, they aren't used up and they lower the activation energy.</p>
+
+    <div class="worked">
+      <h4>Worked example — proving a catalyst isn't used up</h4>
+      <p class="q">A reaction is run with 0.5 g of a catalyst. Explain what you'd expect to find about the catalyst at the end, and why.</p>
+      <div class="step"><span class="label">Observation</span><span class="v">Still 0.5 g of catalyst, chemically unchanged.</span></div>
+      <div class="step"><span class="label">Reason</span><span class="v">It takes part in the mechanism but is regenerated, so it isn't consumed.</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">A small mass can catalyse a large amount of reaction.</span></div>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define a catalyst.</summary><div class="ans">A substance that <strong>speeds up a reaction without being used up</strong> in it.</div></details></li>
+      <li><details><summary>How does a catalyst speed up a reaction?</summary><div class="ans">It provides a <strong>different pathway with a lower activation energy</strong>, so a greater proportion of collisions are successful.</div></details></li>
+      <li><details><summary>Does a catalyst appear in the balanced chemical equation? Explain.</summary><div class="ans"><strong>No</strong> — it isn't used up, so it doesn't appear as a reactant or product (it's sometimes written above the arrow).</div></details></li>
+      <li><details><summary>What name is given to the biological catalysts found in living organisms?</summary><div class="ans"><strong>Enzymes.</strong></div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — REVERSIBLE REACTIONS & EQUILIBRIUM  (4.6.2)                   -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · C6 · Reversible reactions &amp; equilibrium</div>
+    <h2 class="lesson-title">Reversible reactions &amp; <em>equilibrium</em></h2>
+    <p class="lesson-promise">Reactions that can go both ways, why energy changes are reversed, and how a sealed system settles into a balance.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Reactions that go both ways</h3>
+    <p>In a <strong>reversible reaction</strong>, the products can react together to remake the reactants. We show this with a special <strong>double arrow</strong> (⇌) instead of a single one.</p>
+    <p>A useful example is hydrated copper sulfate. Heat the blue crystals and they turn white, driving off water; add water back and they turn blue again — the same change, run in reverse.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">A REVERSIBLE CHANGE</text>
+        <!-- left: blue hydrated -->
+        <rect x="60" y="70" width="120" height="70" rx="6" fill="#1E2761"/>
+        <text x="120" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#FCFAF4">blue</text>
+        <text x="120" y="120" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#EDF2FA">hydrated</text>
+        <!-- forward arrow (heat) -->
+        <line x1="195" y1="92" x2="365" y2="92" stroke="#B85042" stroke-width="2.5"/>
+        <polygon points="372,92 358,86 358,98" fill="#B85042"/>
+        <text x="280" y="84" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#B85042">heat — drives off water</text>
+        <!-- back arrow (add water) -->
+        <line x1="365" y1="120" x2="195" y2="120" stroke="#2C5F2D" stroke-width="2.5"/>
+        <polygon points="188,120 202,114 202,126" fill="#2C5F2D"/>
+        <text x="280" y="138" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#2C5F2D">add water</text>
+        <!-- right: white anhydrous -->
+        <rect x="380" y="70" width="120" height="70" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="440" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">white</text>
+        <text x="440" y="120" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">anhydrous + water</text>
+      </svg>
+      <div class="caption">Blue hydrated copper sulfate ⇌ white anhydrous copper sulfate + water</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the energy change is reversed too</h4>
+      <p>If the forward reaction is <strong>exothermic</strong> (gives out energy), the backward reaction is <strong>endothermic</strong> (takes in energy) by exactly the same amount — and vice versa. So if heating drives a change one way, cooling lets it go back. Don't say both directions release energy.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Dynamic equilibrium</h3>
+    <p>If a reversible reaction happens in a <strong>closed system</strong> (nothing gets in or out), it eventually reaches <strong>equilibrium</strong>. At equilibrium the forward and backward reactions are still happening, but at the <strong>same rate</strong>, so the amounts of reactants and products <strong>stay constant</strong>.</p>
+    <p>This is called <strong>dynamic</strong> equilibrium: "dynamic" because the reactions never stop, "equilibrium" because nothing appears to change. It doesn't mean equal amounts of reactant and product — just unchanging amounts.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">RATES BECOME EQUAL AT EQUILIBRIUM</text>
+        <!-- axes -->
+        <line x1="60" y1="180" x2="500" y2="180" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="60" y1="180" x2="60" y2="50" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="205" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">time →</text>
+        <text x="34" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370" transform="rotate(-90 34 120)">rate →</text>
+        <!-- forward rate: starts high, falls -->
+        <path d="M60 60 Q160 130 320 138 T480 140" fill="none" stroke="#B85042" stroke-width="3"/>
+        <text x="150" y="80" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">forward rate</text>
+        <!-- backward rate: starts low, rises -->
+        <path d="M60 175 Q160 150 320 142 T480 140" fill="none" stroke="#2C5F2D" stroke-width="3"/>
+        <text x="150" y="172" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">backward rate</text>
+        <!-- equilibrium line -->
+        <line x1="320" y1="140" x2="320" y2="180" stroke="#C8A24A" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="395" y="115" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#C8A24A">rates equal — equilibrium</text>
+      </svg>
+      <div class="caption">When the forward and backward rates become equal, amounts stop changing</div>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — Le Chatelier's principle</h4>
+      <p>If you change the conditions of a system at equilibrium, the position of equilibrium <strong>shifts to oppose the change</strong>. This is <strong>Le Chatelier's principle</strong>, and it lets you predict which way a reaction will move.</p>
+      <p><strong>Concentration:</strong> add more of a reactant and the equilibrium shifts to make <em>more product</em> (using the added reactant up). Remove a product and it shifts to make more product.</p>
+      <p><strong>Temperature:</strong> raise the temperature and equilibrium shifts in the <em>endothermic</em> direction (the one that takes energy in); lower it and it shifts the <em>exothermic</em> way.</p>
+      <p><strong>Pressure (gases only):</strong> raise the pressure and equilibrium shifts to the side with <em>fewer gas molecules</em>; lower it and it shifts to the side with more.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — applying Le Chatelier (Higher)</h4>
+      <p class="q">For N₂ + 3H₂ ⇌ 2NH₃, predict the effect of <em>increasing the pressure</em> on the amount of ammonia.</p>
+      <div class="step"><span class="label">Count molecules</span><span class="v">Left = 4 gas molecules, right = 2 gas molecules.</span></div>
+      <div class="step"><span class="label">Apply rule</span><span class="v">More pressure → shift to the side with fewer molecules (the right).</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">Equilibrium shifts right → more ammonia is made.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A reversible reaction in a sealed flask reaches equilibrium. Which statement is true?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Both reactions have stopped</span></li>
+        <li><span class="letter">B</span><span>There are equal amounts of reactants and products</span></li>
+        <li><span class="letter">C</span><span>The forward and backward reactions happen at the same rate</span></li>
+        <li><span class="letter">D</span><span>Only the forward reaction is still happening</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> At dynamic equilibrium both reactions continue, but at <em>equal rates</em>, so the amounts stay constant. The reactions haven't stopped (A, D), and "constant amounts" does <em>not</em> mean "equal amounts" (B).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What symbol shows that a reaction is reversible?</summary><div class="ans">A <strong>double arrow, ⇌</strong>, instead of a single arrow.</div></details></li>
+      <li><details><summary>If the forward reaction is exothermic, what can you say about the backward reaction?</summary><div class="ans">It is <strong>endothermic</strong>, taking in the <strong>same amount</strong> of energy that the forward reaction gave out.</div></details></li>
+      <li><details><summary>Describe what "dynamic equilibrium" means.</summary><div class="ans">In a closed system, the <strong>forward and backward reactions occur at the same rate</strong>, so the amounts of reactants and products <strong>stay constant</strong> (the reactions don't stop).</div></details></li>
+      <li><details><summary>Why must the system be closed to reach equilibrium?</summary><div class="ans">So that <strong>no reactant or product can escape</strong> — both directions stay possible and can balance.</div></details></li>
+      <li><details><summary>[HT] Using Le Chatelier's principle, what happens if you increase the concentration of a reactant?</summary><div class="ans">The equilibrium <strong>shifts towards the products</strong> to oppose the change (using up the added reactant), making more product.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Chemistry Paper 2 · C6 Rate &amp; Extent of Chemical Change</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'c6-rate-of-reaction-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=b187ae8f-27ee-467a-b538-c1d859d68afe&amp;ref=interactive-science&amp;from=c6-rate-of-reaction-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=c6-rate-of-reaction-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

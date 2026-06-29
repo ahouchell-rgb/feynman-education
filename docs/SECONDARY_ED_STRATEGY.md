@@ -1,6 +1,6 @@
 # Owning the secondary-education infrastructure — product & GTM strategy
 
-*A strategy and implementation plan for the Feynman Education ecosystem (Feynman / ScienceKit + retrieval-app.com + interactive-science.com). UK secondary science, expanding outward.*
+*A strategy and implementation plan for the Houchell Education ecosystem (Houchell / ScienceKit + retrieval-app.com + interactive-science.com). UK secondary science, expanding outward.*
 
 ---
 
@@ -63,8 +63,8 @@ difference between "an app schools use" and "the infrastructure schools run on."
 
 | Layer | Product today | Where it lives |
 |---|---|---|
-| **Plan** | Curriculum/units/SoW, timetable (A/B cycle, holidays), "this week" home | Feynman (`curriculum`, `get_teaching_week`) |
-| **Deliver** | Slide editor (text/shapes/tables/charts/KaTeX/video/embeds/timers), Present mode w/ Apple Pencil inking, PPTX & Google Slides / Drive / M365 import-export | Feynman (`SlideEditor`, `present`, `exportPptx`) |
+| **Plan** | Curriculum/units/SoW, timetable (A/B cycle, holidays), "this week" home | Houchell (`curriculum`, `get_teaching_week`) |
+| **Deliver** | Slide editor (text/shapes/tables/charts/KaTeX/video/embeds/timers), Present mode w/ Apple Pencil inking, PPTX & Google Slides / Drive / M365 import-export | Houchell (`SlideEditor`, `present`, `exportPptx`) |
 | **Practice** | Retrieval / spaced practice; slides → questions generator | retrieval-app.com, `deck-to-questions` |
 | **Diagnose** | Class weak topics, unit gaps, exam-paper upload gap-finder (multimodal) | `ClassWeakTopics`, `UnitGaps`, `PaperGaps` |
 | **Close the loop** | AI feedforward sheets + auto half-term feedforward decks (cron) | `/api/feedforward`, `/api/cron/halfterm-feedforward` |
@@ -114,7 +114,7 @@ Effort = rough build cost on your current stack (★ = small / reuses existing; 
 ### Parent-facing (D2C engine)
 
 1. **Weekly Parent Progress Report** — ★ · auto email/PDF per child: what was taught, mastery by topic, "3 questions to ask at dinner," 1 weak topic + a home-practice link. *Reuses the feedforward generator + mark-as-taught. Ship first.*
-2. **Synced Home Practice ("Feynman Home")** — ★★ · the retrieval app for the child at home, **mapped to their actual class sequence and gaps** (not a generic question bank). The differentiator vs Seneca/Sparx.
+2. **Synced Home Practice ("Houchell Home")** — ★★ · the retrieval app for the child at home, **mapped to their actual class sequence and gaps** (not a generic question bank). The differentiator vs Seneca/Sparx.
 3. **Personalised Revision Pack generator** — ★★ · printable/interactive booklet auto-built from a child's *real* weak objectives via `resource_map`. Sell per-pack or in the subscription. Peaks every exam season.
 4. **Predicted-grade / target tracker** — ★★ · parent dashboard showing trajectory vs target grade and what would move it. High emotional willingness-to-pay near exams.
 

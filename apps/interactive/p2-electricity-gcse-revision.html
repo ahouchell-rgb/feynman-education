@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electricity (P2) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for P2 Electricity — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Paper 1 · P2 Electricity</div>
+    <h1>Electricity, <em>for the exam.</em></h1>
+    <p class="tag">The whole of P2 — charge and current, resistance and potential difference, series and parallel circuits, I–V characteristics, mains and power. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Charge &amp; current</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Resistance &amp; p.d.</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Series &amp; parallel</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">I–V characteristics</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Mains electricity</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Energy &amp; power</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — CIRCUIT SYMBOLS, CHARGE & CURRENT  (4.2.1.1 / 4.2.1.2)        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.2.1 · Charge &amp; current</div>
+    <h2 class="lesson-title">Circuit symbols, <em>charge</em> &amp; current</h2>
+    <p class="lesson-promise">By the end of this topic you'll read a circuit diagram, say exactly what current <em>is</em>, and link current, charge and time with one equation you have to recall.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What a circuit is</h3>
+    <p>An electric <strong>current</strong> is a <strong>flow of electrical charge</strong>. For current to flow you need two things: a <strong>complete (closed) circuit</strong> with no gaps, and a <strong>source of potential difference</strong> (such as a cell or battery) to push the charge round.</p>
+    <p>Engineers draw circuits using standard <strong>circuit symbols</strong> so anyone can read them. You need to recognise and draw the common ones.</p>
+
+    <div class="keywords">
+      <h4>Circuit symbols to know</h4>
+      <dl>
+        <dt>Cell / battery</dt><dd>The source of potential difference. A battery is two or more cells.</dd>
+        <dt>Switch</dt><dd>Opens (breaks) or closes (completes) the circuit.</dd>
+        <dt>Resistor / variable resistor</dt><dd>Limits current; the variable one can be adjusted.</dd>
+        <dt>Lamp</dt><dd>Transfers energy as light when current flows.</dd>
+        <dt>Ammeter / voltmeter</dt><dd>Ammeter measures current (in series); voltmeter measures p.d. (in parallel).</dd>
+        <dt>Diode / LED · thermistor · LDR</dt><dd>Diode lets current flow one way; thermistor and LDR change resistance with temperature/light.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SIX SYMBOLS YOU MUST KNOW</text>
+        <!-- cell -->
+        <line x1="50" y1="70" x2="80" y2="70" stroke="#1E2761" stroke-width="2"/>
+        <line x1="80" y1="55" x2="80" y2="85" stroke="#1E2761" stroke-width="2"/>
+        <line x1="92" y1="62" x2="92" y2="78" stroke="#1E2761" stroke-width="2"/>
+        <line x1="92" y1="70" x2="122" y2="70" stroke="#1E2761" stroke-width="2"/>
+        <text x="86" y="108" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">cell</text>
+        <!-- switch -->
+        <line x1="200" y1="70" x2="230" y2="70" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="230" cy="70" r="3" fill="#1E2761"/>
+        <line x1="230" y1="70" x2="258" y2="56" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="262" cy="70" r="3" fill="#1E2761"/>
+        <line x1="262" y1="70" x2="292" y2="70" stroke="#1E2761" stroke-width="2"/>
+        <text x="246" y="108" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">switch</text>
+        <!-- resistor -->
+        <line x1="370" y1="70" x2="395" y2="70" stroke="#1E2761" stroke-width="2"/>
+        <rect x="395" y="60" width="70" height="20" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <line x1="465" y1="70" x2="490" y2="70" stroke="#1E2761" stroke-width="2"/>
+        <text x="430" y="108" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">resistor</text>
+        <!-- lamp -->
+        <line x1="50" y1="180" x2="78" y2="180" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="93" cy="180" r="15" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <line x1="83" y1="170" x2="103" y2="190" stroke="#1E2761" stroke-width="2"/>
+        <line x1="103" y1="170" x2="83" y2="190" stroke="#1E2761" stroke-width="2"/>
+        <line x1="108" y1="180" x2="136" y2="180" stroke="#1E2761" stroke-width="2"/>
+        <text x="93" y="218" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">lamp</text>
+        <!-- ammeter -->
+        <line x1="200" y1="180" x2="226" y2="180" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="246" cy="180" r="16" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <text x="246" y="185" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">A</text>
+        <line x1="266" y1="180" x2="292" y2="180" stroke="#1E2761" stroke-width="2"/>
+        <text x="246" y="218" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">ammeter</text>
+        <!-- voltmeter -->
+        <line x1="370" y1="180" x2="396" y2="180" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="416" cy="180" r="16" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <text x="416" y="185" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">V</text>
+        <line x1="436" y1="180" x2="462" y2="180" stroke="#1E2761" stroke-width="2"/>
+        <text x="416" y="218" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">voltmeter</text>
+      </svg>
+      <div class="caption">Standard AQA circuit symbols — learn to recognise and draw each one</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — conventional current vs electron flow</h4>
+      <p><strong>Conventional current</strong> flows from <strong>+ to −</strong> around the circuit (this is the direction you draw and use in the exam). The electrons themselves actually drift the <em>other</em> way (− to +), but unless a question asks specifically, always use conventional current: positive to negative.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Linking charge, current and time</h3>
+    <p>Current is the <strong>rate of flow of charge</strong> — how much charge passes a point each second. Charge is measured in <strong>coulombs (C)</strong>, current in <strong>amps (A)</strong>, and 1 amp = 1 coulomb per second.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>Q = I t <span class="badge recall">recall</span></dt>
+        <dd>charge flow (C) = current (A) × time (s)</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — charge through a lamp</h4>
+      <p class="q">A current of 0.5 A flows through a lamp for 120 s. Calculate the charge that passes through it.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">Q = I t</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 0.5 × 120</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 60 C</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — time must be in seconds</h4>
+      <p>Time goes in as <strong>seconds</strong>, not minutes. A 2-minute flow is <strong>120 s</strong>. If a question gives minutes or hours, convert first or your answer will be out by a factor of 60 (or 3600).</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A charge of 90 C flows through a wire in 30 s. What is the current?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>2700 A</span></li>
+        <li><span class="letter">B</span><span>3 A</span></li>
+        <li><span class="letter">C</span><span>0.33 A</span></li>
+        <li><span class="letter">D</span><span>60 A</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 3 A.</strong> Rearrange Q = I t to I = Q ÷ t = 90 ÷ 30 = 3 A. Answer A is the slip of multiplying instead of dividing; C divides the wrong way round.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is an electric current?</summary><div class="ans">A <strong>flow of electrical charge</strong>. It needs a complete circuit and a source of potential difference to drive it.</div></details></li>
+      <li><details><summary>State the equation linking charge, current and time, with units.</summary><div class="ans">Q = I t. Charge in <strong>coulombs (C)</strong>, current in <strong>amps (A)</strong>, time in <strong>seconds (s)</strong>.</div></details></li>
+      <li><details><summary>A current of 4 A flows for 5 minutes. Calculate the charge that flows.</summary><div class="ans">Time = 5 × 60 = 300 s. Q = I t = 4 × 300 = <strong>1200 C</strong>.</div></details></li>
+      <li><details><summary>In which direction does conventional current flow?</summary><div class="ans">From the <strong>positive (+) terminal to the negative (−) terminal</strong> around the circuit.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — RESISTANCE & POTENTIAL DIFFERENCE  (4.2.1.3) + RP             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.2.1.3 · Resistance &amp; p.d.</div>
+    <h2 class="lesson-title">Resistance &amp; <em>potential difference</em></h2>
+    <p class="lesson-promise">The most-used equation in the whole topic — V = I R — plus the required practical that shows resistance grows with length.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Potential difference, current and resistance</h3>
+    <p><strong>Potential difference</strong> (p.d.), measured in <strong>volts (V)</strong>, is the energy transferred per unit charge as it moves between two points — it's the "push" driving the current. <strong>Resistance</strong>, measured in <strong>ohms (Ω)</strong>, is how hard it is for current to flow. The bigger the resistance, the smaller the current for a given p.d.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>V = I R <span class="badge recall">recall</span></dt>
+        <dd>potential difference (V) = current (A) × resistance (Ω)</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — finding resistance</h4>
+      <p class="q">A p.d. of 6 V drives a current of 0.4 A through a resistor. Calculate its resistance.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">V = I R → R = V ÷ I</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 6 ÷ 0.4</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 15 Ω</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — rearrange before you panic</h4>
+      <p>V = I R can find any of the three. To get current, <strong>I = V ÷ R</strong>; to get resistance, <strong>R = V ÷ I</strong>. The classic mistake is dividing the wrong way: resistance is the <em>p.d.</em> on top, divided by the <em>current</em>. Keep the units in: volts ÷ amps gives ohms.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A 12 V supply drives 3 A through a heater. What is the heater's resistance?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>36 Ω</span></li>
+        <li><span class="letter">B</span><span>0.25 Ω</span></li>
+        <li><span class="letter">C</span><span>4 Ω</span></li>
+        <li><span class="letter">D</span><span>15 Ω</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 4 Ω.</strong> R = V ÷ I = 12 ÷ 3 = 4 Ω. Answer A multiplies instead of dividing; B divides the wrong way round.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>How resistance depends on length</h3>
+    <p>If you make a wire <strong>longer</strong>, its resistance goes up. In fact resistance is <strong>directly proportional to length</strong>: double the length, double the resistance. The required practical lets you test this and get a straight-line graph through the origin.</p>
+
+    <div class="rp">
+      <h4>Resistance of a wire vs its length</h4>
+      <p><strong>Aim:</strong> investigate how the resistance of a wire depends on its length.</p>
+      <ol>
+        <li>Set up a circuit with a <strong>battery</strong>, an <strong>ammeter in series</strong> with the test wire, and a <strong>voltmeter across</strong> the test wire.</li>
+        <li>Tape the wire to a <strong>metre ruler</strong> and connect with a flying lead so you can choose the length.</li>
+        <li>Set the length to 10 cm. Close the switch <strong>briefly</strong>, read the current (I) and p.d. (V), then open it again.</li>
+        <li>Calculate resistance with <span class="formula">R = V ÷ I</span> for that length.</li>
+        <li>Repeat for lengths up to 100 cm (e.g. every 10 cm). Plot <strong>resistance (y) against length (x)</strong>.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> only switch on for short bursts so the wire doesn't <strong>heat up</strong> (heating raises the resistance and spoils the pattern). A straight line through the origin shows resistance ∝ length.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">RESISTANCE INCREASES WITH LENGTH</text>
+        <!-- axes -->
+        <line x1="80" y1="190" x2="80" y2="50" stroke="#1E2761" stroke-width="2"/>
+        <line x1="80" y1="190" x2="470" y2="190" stroke="#1E2761" stroke-width="2"/>
+        <!-- straight line through origin -->
+        <line x1="80" y1="190" x2="440" y2="70" stroke="#B85042" stroke-width="3"/>
+        <!-- points -->
+        <circle cx="170" cy="160" r="4" fill="#1E2761"/>
+        <circle cx="260" cy="130" r="4" fill="#1E2761"/>
+        <circle cx="350" cy="100" r="4" fill="#1E2761"/>
+        <circle cx="440" cy="70" r="4" fill="#1E2761"/>
+        <!-- axis labels -->
+        <text x="265" y="218" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">length of wire (cm)</text>
+        <text x="40" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370" transform="rotate(-90 40 120)">resistance (Ω)</text>
+        <!-- annotation -->
+        <line x1="455" y1="80" x2="500" y2="80" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="505" y="76" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">straight</text>
+        <text x="505" y="92" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">line</text>
+      </svg>
+      <div class="caption">A straight line through the origin means resistance is directly proportional to length</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A 20 cm length of a wire has a resistance of 4 Ω. What is the resistance of 60 cm of the same wire?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>4 Ω</span></li>
+        <li><span class="letter">B</span><span>1.3 Ω</span></li>
+        <li><span class="letter">C</span><span>12 Ω</span></li>
+        <li><span class="letter">D</span><span>8 Ω</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 12 Ω.</strong> Resistance ∝ length. The wire is 3× longer (60 ÷ 20 = 3), so the resistance is 3 × 4 = 12 Ω.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>State the equation linking p.d., current and resistance.</summary><div class="ans">V = I R: potential difference (V) = current (A) × resistance (Ω).</div></details></li>
+      <li><details><summary>A 9 V battery drives 1.5 A through a bulb. Calculate the bulb's resistance.</summary><div class="ans">R = V ÷ I = 9 ÷ 1.5 = <strong>6 Ω</strong>.</div></details></li>
+      <li><details><summary>In the wire required practical, why must the wire only be switched on briefly?</summary><div class="ans">A continuous current <strong>heats the wire</strong>, which raises its resistance and changes the readings — so switch on only long enough to take each reading.</div></details></li>
+      <li><details><summary>How does the resistance of a wire change as its length increases?</summary><div class="ans">It <strong>increases in direct proportion</strong> — double the length, double the resistance (a straight line through the origin).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — SERIES & PARALLEL CIRCUITS  (4.2.2)                           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.2.2 · Series &amp; parallel</div>
+    <h2 class="lesson-title">Series &amp; <em>parallel</em> circuits</h2>
+    <p class="lesson-promise">The rules for current, p.d. and resistance in each type — and why adding a bulb in parallel doesn't dim the others.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Series circuits</h3>
+    <p>In a <strong>series</strong> circuit there's just one loop — one path for the current. Components are connected end to end, so if one breaks, they all stop.</p>
+    <p>The <strong>current is the same</strong> everywhere in a series circuit. The <strong>total p.d. is shared</strong> between the components (it adds up to the supply p.d.). And the <strong>resistances add together</strong>: R<sub>total</sub> = R<sub>1</sub> + R<sub>2</sub> + …, so adding a resistor always increases total resistance.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SERIES — ONE LOOP</text>
+        <!-- loop -->
+        <rect x="90" y="60" width="380" height="100" rx="4" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <!-- cell on left -->
+        <line x1="90" y1="100" x2="90" y2="120" stroke="#FCFAF4" stroke-width="6"/>
+        <line x1="84" y1="100" x2="96" y2="100" stroke="#1E2761" stroke-width="2"/>
+        <line x1="88" y1="120" x2="92" y2="120" stroke="#1E2761" stroke-width="2"/>
+        <text x="60" y="115" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">cell</text>
+        <!-- resistor 1 top -->
+        <rect x="200" y="50" width="60" height="20" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+        <text x="230" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1E2761">R₁</text>
+        <!-- resistor 2 top -->
+        <rect x="300" y="50" width="60" height="20" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+        <text x="330" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1E2761">R₂</text>
+        <!-- current label -->
+        <text x="280" y="185" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#B85042">same current I everywhere · p.d. shared · R = R₁ + R₂</text>
+      </svg>
+      <div class="caption">Series: one path — current the same, p.d. shared, resistances add</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — total resistance in series</h4>
+      <p class="q">Two resistors, 4 Ω and 6 Ω, are connected in series to a 20 V supply. Find the total resistance and the current.</p>
+      <div class="step"><span class="label">Total R</span><span class="v">R = R₁ + R₂ = 4 + 6 = 10 Ω</span></div>
+      <div class="step"><span class="label">Current</span><span class="v">I = V ÷ R = 20 ÷ 10</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">R = 10 Ω, I = 2 A</span></div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Parallel circuits</h3>
+    <p>In a <strong>parallel</strong> circuit there's more than one branch, so the current splits. Each component gets its own loop back to the cell, so one breaking doesn't stop the others — that's why home wiring and Christmas lights use parallel.</p>
+    <p>The <strong>p.d. is the same across each branch</strong> (equal to the supply). The <strong>total current is shared</strong> between the branches and the branch currents add up to the total. Adding a resistor in parallel actually <strong>lowers the total resistance</strong>, because you've given the current another path.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PARALLEL — TWO BRANCHES</text>
+        <!-- outer wires -->
+        <line x1="90" y1="60" x2="90" y2="170" stroke="#1E2761" stroke-width="2"/>
+        <line x1="470" y1="60" x2="470" y2="170" stroke="#1E2761" stroke-width="2"/>
+        <line x1="90" y1="60" x2="470" y2="60" stroke="#1E2761" stroke-width="2"/>
+        <line x1="90" y1="170" x2="470" y2="170" stroke="#1E2761" stroke-width="2"/>
+        <!-- cell on left -->
+        <line x1="84" y1="105" x2="96" y2="105" stroke="#1E2761" stroke-width="2"/>
+        <line x1="88" y1="125" x2="92" y2="125" stroke="#1E2761" stroke-width="2"/>
+        <text x="60" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">cell</text>
+        <!-- branch 1 -->
+        <line x1="230" y1="60" x2="230" y2="98" stroke="#1E2761" stroke-width="2"/>
+        <rect x="200" y="98" width="60" height="20" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+        <line x1="230" y1="118" x2="230" y2="170" stroke="#1E2761" stroke-width="2"/>
+        <text x="270" y="86" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1E2761">R₁</text>
+        <!-- branch 2 -->
+        <line x1="350" y1="60" x2="350" y2="98" stroke="#1E2761" stroke-width="2"/>
+        <rect x="320" y="98" width="60" height="20" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+        <line x1="350" y1="118" x2="350" y2="170" stroke="#1E2761" stroke-width="2"/>
+        <text x="390" y="86" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1E2761">R₂</text>
+        <text x="280" y="200" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#B85042">same p.d. across each branch · branch currents add to the total</text>
+      </svg>
+      <div class="caption">Parallel: separate branches — p.d. the same, currents add, total resistance falls</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — parallel resistance goes DOWN</h4>
+      <p>The surprising one: adding a resistor <strong>in parallel reduces</strong> the total resistance below that of the smallest resistor, because you've opened up another route for the current. Don't add parallel resistances like you would in series — that only works for series.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Three identical lamps are connected in parallel to a 6 V battery. What is the p.d. across each lamp?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>2 V</span></li>
+        <li><span class="letter">B</span><span>18 V</span></li>
+        <li><span class="letter">C</span><span>6 V</span></li>
+        <li><span class="letter">D</span><span>0 V</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 6 V.</strong> In parallel the p.d. across each branch is the <em>same</em> as the supply, so every lamp gets the full 6 V. (In <em>series</em> the 6 V would be shared, giving 2 V each — answer A is that trap.)</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>In a series circuit, what is true about the current?</summary><div class="ans">It is the <strong>same everywhere</strong> in the circuit (one path, so the same current flows through every component).</div></details></li>
+      <li><details><summary>How do you find the total resistance of resistors in series?</summary><div class="ans"><strong>Add them up</strong>: R<sub>total</sub> = R<sub>1</sub> + R<sub>2</sub> + … The total is always bigger than any single resistor.</div></details></li>
+      <li><details><summary>What is the p.d. across each branch of a parallel circuit?</summary><div class="ans">The <strong>same</strong> for every branch, and equal to the supply p.d.</div></details></li>
+      <li><details><summary>Two 8 Ω resistors are connected in series to a 16 V supply. Find the current.</summary><div class="ans">R = 8 + 8 = 16 Ω. I = V ÷ R = 16 ÷ 16 = <strong>1 A</strong>.</div></details></li>
+      <li><details><summary>Why does adding a resistor in parallel decrease the total resistance?</summary><div class="ans">It gives the current an <strong>extra path</strong>, so more current can flow overall for the same p.d. — which means a lower total resistance.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — I–V CHARACTERISTICS  (4.2.1.3 / 4.2.1.4) + RP                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.2.1.4 · I–V characteristics</div>
+    <h2 class="lesson-title">I–V <em>characteristics</em></h2>
+    <p class="lesson-promise">Reading the shape of a current–p.d. graph for a resistor, lamp and diode — plus thermistors, LDRs, and the required practical that produces them.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Three classic graphs</h3>
+    <p>An <strong>I–V graph</strong> (current against potential difference) shows how a component behaves. The shape tells you whether its resistance stays constant.</p>
+    <p>An <strong>ohmic conductor</strong> (a fixed resistor at constant temperature) gives a <strong>straight line through the origin</strong> — current is directly proportional to p.d., so the resistance is constant.</p>
+    <p>A <strong>filament lamp</strong> gives an <strong>S-shaped curve</strong>. As current increases the filament gets hotter, so its <strong>resistance increases</strong> and the line bends over.</p>
+    <p>A <strong>diode</strong> only lets current flow <strong>one way</strong>. It has a very high resistance in the reverse direction, so the graph is flat (no current) until the p.d. is forward and large enough.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THREE I–V CHARACTERISTICS</text>
+        <!-- panel 1: resistor -->
+        <line x1="60" y1="200" x2="60" y2="70" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="30" y1="135" x2="150" y2="135" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="40" y1="190" x2="120" y2="80" stroke="#B85042" stroke-width="3"/>
+        <text x="90" y="225" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">resistor</text>
+        <text x="90" y="55" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">straight line</text>
+        <!-- panel 2: filament lamp -->
+        <line x1="220" y1="200" x2="220" y2="70" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="190" y1="135" x2="310" y2="135" stroke="#1E2761" stroke-width="1.5"/>
+        <path d="M200 185 C220 150 230 142 250 135 C270 128 280 120 290 85" fill="none" stroke="#B85042" stroke-width="3"/>
+        <text x="250" y="225" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">filament lamp</text>
+        <text x="250" y="55" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">S-shaped curve</text>
+        <!-- panel 3: diode -->
+        <line x1="390" y1="200" x2="390" y2="70" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="350" y1="135" x2="500" y2="135" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="355" y1="135" x2="425" y2="135" stroke="#B85042" stroke-width="3"/>
+        <path d="M425 135 C445 132 455 110 460 80" fill="none" stroke="#B85042" stroke-width="3"/>
+        <text x="430" y="225" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">diode</text>
+        <text x="430" y="55" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">one direction only</text>
+      </svg>
+      <div class="caption">Each axis is current (y) against p.d. (x) — the shape reveals how resistance behaves</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the lamp's resistance rises</h4>
+      <p>The filament lamp curve bends because the wire <strong>heats up</strong>, raising its resistance. A common slip is to read the flattening as the resistance <em>falling</em> — it's the opposite. A steeper-then-shallower curve means resistance is <strong>increasing</strong> with current.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Thermistors and LDRs</h3>
+    <p>Two components change resistance with their surroundings, which makes them useful as sensors:</p>
+    <p>A <strong>thermistor</strong>'s resistance <strong>falls as temperature rises</strong>. Used in thermostats and fire alarms — when it gets hot, more current flows.</p>
+    <p>An <strong>LDR</strong> (light-dependent resistor)'s resistance <strong>falls as light gets brighter</strong>. Used in automatic lights and camera exposure — in the dark its resistance is high.</p>
+
+    <div class="keywords">
+      <h4>Sensing components</h4>
+      <dl>
+        <dt>Thermistor</dt><dd>Resistance decreases as temperature increases. Used in temperature sensors and thermostats.</dd>
+        <dt>LDR</dt><dd>Resistance decreases as light intensity increases. Used in light sensors and automatic street lights.</dd>
+      </dl>
+    </div>
+
+    <div class="rp">
+      <h4>I–V characteristics of a resistor, a filament lamp and a diode</h4>
+      <p><strong>Aim:</strong> investigate how the current through a component varies with the p.d. across it.</p>
+      <ol>
+        <li>Connect the component in series with an <strong>ammeter</strong> and a <strong>variable resistor</strong>, with a <strong>voltmeter across</strong> the component.</li>
+        <li>Adjust the variable resistor to change the p.d. Record several pairs of <strong>current and p.d.</strong> readings.</li>
+        <li><strong>Reverse the connections</strong> to the component (or swap the cell) to get negative p.d. values too.</li>
+        <li>Plot <strong>current (y) against p.d. (x)</strong> for each component.</li>
+        <li>Repeat for the fixed resistor, the filament lamp and the diode.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> only switch on briefly so components (especially the lamp) don't overheat between readings. Take repeats and average to reduce random error.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A component gives a straight line through the origin on an I–V graph at constant temperature. What is it?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>A filament lamp</span></li>
+        <li><span class="letter">B</span><span>A diode</span></li>
+        <li><span class="letter">C</span><span>An ohmic conductor (fixed resistor)</span></li>
+        <li><span class="letter">D</span><span>A thermistor being heated</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — an ohmic conductor.</strong> A straight line through the origin means current ∝ p.d., so the resistance is constant. The lamp curves (heating), the diode only conducts one way.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Describe the I–V graph of an ohmic conductor.</summary><div class="ans">A <strong>straight line through the origin</strong> — current is directly proportional to p.d., so the resistance stays constant.</div></details></li>
+      <li><details><summary>Why does the filament lamp graph curve?</summary><div class="ans">As current increases the filament <strong>heats up</strong>, so its <strong>resistance increases</strong> and the line bends over (an S-shape).</div></details></li>
+      <li><details><summary>What does a diode do, and what does its I–V graph look like?</summary><div class="ans">It only lets current flow <strong>one way</strong>. The graph shows almost no current in reverse, then a sharp rise once the forward p.d. is large enough.</div></details></li>
+      <li><details><summary>What happens to a thermistor's resistance as it gets hotter?</summary><div class="ans">It <strong>decreases</strong> — so more current flows. (An LDR's resistance decreases as it gets brighter.)</div></details></li>
+      <li><details><summary>In the I–V required practical, what does the variable resistor do?</summary><div class="ans">It lets you <strong>change the p.d.</strong> across (and current through) the component, so you can take a range of readings.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — MAINS ELECTRICITY  (4.2.4)                                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.2.4 · Mains electricity</div>
+    <h2 class="lesson-title">Mains <em>electricity</em></h2>
+    <p class="lesson-promise">a.c. vs d.c., the UK mains numbers you must quote, and the job of each of the three wires in a plug — plus why the earth wire saves lives.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>a.c., d.c. and the UK mains</h3>
+    <p><strong>Direct current (d.c.)</strong> flows in <strong>one direction only</strong> — it's what cells and batteries supply. <strong>Alternating current (a.c.)</strong> constantly <strong>changes direction</strong>, back and forth. <strong>Mains electricity is a.c.</strong>, produced by generators.</p>
+    <p>You must remember the UK mains figures: a <strong>frequency of 50 Hz</strong> (it swaps direction 50 times a second) and a <strong>potential difference of about 230 V</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">d.c. vs a.c.</text>
+        <!-- d.c. panel -->
+        <text x="140" y="48" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">direct current (d.c.)</text>
+        <line x1="40" y1="110" x2="240" y2="110" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="40" y1="80" x2="240" y2="80" stroke="#B85042" stroke-width="3"/>
+        <text x="140" y="150" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">steady — one direction</text>
+        <text x="140" y="172" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">cells &amp; batteries</text>
+        <!-- a.c. panel -->
+        <text x="420" y="48" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">alternating current (a.c.)</text>
+        <line x1="320" y1="95" x2="500" y2="95" stroke="#1E2761" stroke-width="1" stroke-dasharray="3 3"/>
+        <path d="M320 95 Q340 60 360 95 T400 95 T440 95 T480 95" fill="none" stroke="#2C5F2D" stroke-width="3"/>
+        <text x="420" y="150" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">swaps direction 50×/s</text>
+        <text x="420" y="172" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">UK mains: 230 V · 50 Hz</text>
+      </svg>
+      <div class="caption">Mains is alternating current at 50 Hz and about 230 V</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — learn the mains numbers</h4>
+      <p>These two values are straight recall marks: <strong>230 V</strong> and <strong>50 Hz</strong>. Don't mix them up (50 V / 230 Hz is wrong). And remember a.c. = mains, d.c. = battery — not the reverse.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The three-pin plug</h3>
+    <p>A mains cable has three wires, each with a job and a colour you must learn:</p>
+    <p>The <strong>live wire (brown)</strong> carries the alternating p.d. from the supply — it's at about 230 V and is the dangerous one. The <strong>neutral wire (blue)</strong> completes the circuit and stays at close to 0 V. The <strong>earth wire (green &amp; yellow)</strong> is a safety wire — it carries no current normally and only does anything if there's a fault.</p>
+    <p>If a fault connects the live wire to a metal case, the <strong>earth wire</strong> carries the current safely away to the ground, and the large current blows the <strong>fuse</strong>, breaking the circuit so you don't get a shock.</p>
+
+    <div class="keywords">
+      <h4>The three wires</h4>
+      <dl>
+        <dt>Live — brown</dt><dd>Carries the 230 V alternating p.d. from the supply. The dangerous wire.</dd>
+        <dt>Neutral — blue</dt><dd>Completes the circuit; near 0 V.</dd>
+        <dt>Earth — green &amp; yellow</dt><dd>Safety wire to the case; carries current only in a fault, stopping the case becoming live.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE THREE-PIN PLUG</text>
+        <!-- plug body -->
+        <rect x="210" y="60" width="140" height="120" rx="10" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- earth pin (top) -->
+        <rect x="272" y="40" width="16" height="30" rx="3" fill="#2C5F2D"/>
+        <line x1="288" y1="48" x2="430" y2="48" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="436" y="52" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">earth (green/yellow)</text>
+        <!-- live pin (bottom left) -->
+        <rect x="232" y="170" width="16" height="30" rx="3" fill="#B85042"/>
+        <line x1="240" y1="200" x2="120" y2="216" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="114" y="220" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">live (brown)</text>
+        <!-- neutral pin (bottom right) -->
+        <rect x="312" y="170" width="16" height="30" rx="3" fill="#1E2761"/>
+        <line x1="320" y1="200" x2="440" y2="216" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="446" y="220" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">neutral (blue)</text>
+        <!-- fuse hint -->
+        <rect x="246" y="100" width="50" height="16" rx="2" fill="#FCFAF4" stroke="#C8A24A" stroke-width="2"/>
+        <text x="271" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">fuse</text>
+      </svg>
+      <div class="caption">Live (brown), neutral (blue) and earth (green &amp; yellow); a fuse sits in the live wire</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why is the earth wire connected to the metal case of an appliance?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>To carry the working current during normal use</span></li>
+        <li><span class="letter">B</span><span>To stop the case becoming live in a fault, carrying current safely away</span></li>
+        <li><span class="letter">C</span><span>To increase the p.d. across the appliance</span></li>
+        <li><span class="letter">D</span><span>To turn the alternating current into direct current</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The earth wire carries <em>no</em> current in normal use. If the live wire touches the case, the earth wire carries the current safely to the ground and the large current blows the fuse, so the case can't give you a shock.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>State the difference between a.c. and d.c.</summary><div class="ans"><strong>a.c.</strong> (alternating current) keeps changing direction; <strong>d.c.</strong> (direct current) flows one way only. Mains is a.c.; cells give d.c.</div></details></li>
+      <li><details><summary>Give the frequency and potential difference of the UK mains supply.</summary><div class="ans"><strong>50 Hz</strong> and about <strong>230 V</strong>.</div></details></li>
+      <li><details><summary>Name the three wires in a mains cable and their colours.</summary><div class="ans"><strong>Live</strong> (brown), <strong>neutral</strong> (blue) and <strong>earth</strong> (green &amp; yellow).</div></details></li>
+      <li><details><summary>Why can the live wire be dangerous even when an appliance is switched off?</summary><div class="ans">It is still at the supply p.d. (about <strong>230 V</strong>) relative to earth, so touching it could give a shock as your body provides a path to the ground.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — ENERGY & POWER IN CIRCUITS  (4.2.3 / 4.2.4)                   -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.2.4 · Energy &amp; power</div>
+    <h2 class="lesson-title">Energy &amp; <em>power</em> in circuits</h2>
+    <p class="lesson-promise">Four equations that connect power, current, p.d., charge and energy — two to recall, two to use — and how to pick the right one.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Power in a circuit</h3>
+    <p><strong>Power</strong> is the rate of energy transfer — energy transferred per second, in <strong>watts (W)</strong>. The more powerful an appliance, the faster it transfers energy from the mains. Two equations give the power of a device in a circuit.</p>
+
+    <div class="eqbox">
+      <h4>Power equations</h4>
+      <dl>
+        <dt>P = V I <span class="badge recall">recall</span></dt>
+        <dd>power (W) = potential difference (V) × current (A)</dd>
+        <dt>P = I² R <span class="badge recall">recall</span></dt>
+        <dd>power (W) = current² (A²) × resistance (Ω) — handy when you know the current and resistance</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — power of a kettle</h4>
+      <p class="q">A kettle runs from the 230 V mains and draws a current of 10 A. Calculate its power.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">P = V I</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 230 × 10</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 2300 W  (2.3 kW)</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — square the current in P = I²R</h4>
+      <p>In <strong>P = I² R</strong> it's the <em>current</em> that's squared, not the resistance. Square I first, then multiply by R. Because of the square, doubling the current gives <strong>four times</strong> the power dissipated — which is why thick, low-resistance cables matter for high currents.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A current of 3 A flows through a 5 Ω heating element. What power is dissipated?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>15 W</span></li>
+        <li><span class="letter">B</span><span>45 W</span></li>
+        <li><span class="letter">C</span><span>75 W</span></li>
+        <li><span class="letter">D</span><span>225 W</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 45 W.</strong> P = I² R = 3² × 5 = 9 × 5 = 45 W. Answer A is the mistake of not squaring the current (3 × 5 = 15).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Energy transferred</h3>
+    <p>To find the <strong>total energy</strong> an appliance transfers, you can use either the power and time, or the charge and p.d. Both give energy in <strong>joules (J)</strong>.</p>
+
+    <div class="eqbox">
+      <h4>Energy equations</h4>
+      <dl>
+        <dt>E = P t <span class="badge given">given</span></dt>
+        <dd>energy transferred (J) = power (W) × time (s)</dd>
+        <dt>E = Q V <span class="badge given">given</span></dt>
+        <dd>energy transferred (J) = charge flow (C) × potential difference (V)</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — energy from charge and p.d.</h4>
+      <p class="q">A charge of 300 C flows through a 12 V motor. How much energy is transferred?</p>
+      <div class="step"><span class="label">Equation</span><span class="v">E = Q V</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 300 × 12</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 3600 J</span></div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — energy from power and time</h4>
+      <p class="q">A 2000 W kettle is switched on for 90 s. Calculate the energy transferred.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">E = P t</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 2000 × 90</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 180 000 J  (180 kJ)</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — pick the equation that fits the data</h4>
+      <p>Use <strong>E = P t</strong> when you're told the power; use <strong>E = Q V</strong> when you're told the charge. If you're given p.d. and current but not power, find power first with P = V I, then E = P t. Time always goes in as <strong>seconds</strong>.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A 60 W lamp is left on for 5 minutes. How much energy does it transfer?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>300 J</span></li>
+        <li><span class="letter">B</span><span>18 000 J</span></li>
+        <li><span class="letter">C</span><span>12 J</span></li>
+        <li><span class="letter">D</span><span>3600 J</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 18 000 J.</strong> First convert: 5 min = 300 s. E = P t = 60 × 300 = 18 000 J. Answer A forgets to convert minutes to seconds (60 × 5).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Write the two power equations for a circuit.</summary><div class="ans">P = V I (power = p.d. × current) and P = I² R (power = current² × resistance). Both give power in <strong>watts</strong>.</div></details></li>
+      <li><details><summary>A 230 V hairdryer draws 5 A. Calculate its power.</summary><div class="ans">P = V I = 230 × 5 = <strong>1150 W</strong> (1.15 kW).</div></details></li>
+      <li><details><summary>A 1500 W heater runs for 2 minutes. Calculate the energy transferred.</summary><div class="ans">Time = 120 s. E = P t = 1500 × 120 = <strong>180 000 J</strong> (180 kJ).</div></details></li>
+      <li><details><summary>240 C of charge flows through a 9 V battery. How much energy is transferred?</summary><div class="ans">E = Q V = 240 × 9 = <strong>2160 J</strong>.</div></details></li>
+      <li><details><summary>A 2 A current flows through a 6 Ω resistor. Calculate the power dissipated.</summary><div class="ans">P = I² R = 2² × 6 = 4 × 6 = <strong>24 W</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Paper 1 · P2 Electricity</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'p2-electricity-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=7d626032-ad67-499c-ac8e-c39afbad4a09&amp;ref=interactive-science&amp;from=p2-electricity-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=p2-electricity-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elements &amp; Compounds — Year 7 Revision</title>
+<meta name="description" content="A Year 7 chemistry revision booklet on elements and compounds — six short topics covering elements and chemical symbols, compounds, reading chemical formulae, naming compounds, how compounds differ from their elements, and mixtures versus compounds.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Year 7 · Chemistry · Elements &amp; Compounds</div>
+    <h1>Elements &amp; compounds, <em>but bitesize.</em></h1>
+    <p class="tag">A revision booklet — six short topics, from what an element is to telling compounds and mixtures apart.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Take it one topic at a time.</strong> There are six topics. Each one is short — about 10 minutes. Do one or two a day.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Elements &amp; symbols</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Compounds</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Reading formulae</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Naming compounds</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Compounds vs elements</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Mixtures vs compounds</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — ELEMENTS & CHEMICAL SYMBOLS                                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · Chemistry · Elements</div>
+    <h2 class="lesson-title">Elements &amp; <em>chemical symbols</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what an element is, where they all live, and how to write a chemical symbol the right way round.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What an element is</h3>
+    <p>Everything around you is made of tiny particles called <strong>atoms</strong>. An atom is the smallest particle of a substance — far too small to see, even under a normal microscope. (If you want the details of what's <em>inside</em> an atom, that's the job of the atoms booklet — here we care about how atoms build up the materials around us.)</p>
+    <p>Some substances are made of only <strong>one type of atom</strong>. We call those substances <strong>elements</strong>. Gold is made only of gold atoms. Oxygen is made only of oxygen atoms. Carbon is made only of carbon atoms. An element can't be broken down into anything simpler by a chemical reaction — it's already as simple as it gets.</p>
+    <p>There are around <strong>118 elements</strong> known to science, and every single one of them is laid out on a chart called the <strong>periodic table</strong>. About 90 of them occur naturally; the rest have been made in laboratories. Everything in the universe — you, the sea, the air, the stars — is built from this small set of building blocks.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Atom</dt>
+        <dd>The smallest particle of an element. Too small to see.</dd>
+        <dt>Element</dt>
+        <dd>A substance made of only one type of atom. Cannot be broken down into anything simpler by a chemical reaction.</dd>
+        <dt>Periodic table</dt>
+        <dd>The chart that lists all the elements — around 118 of them — and organises them by their properties.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Chemical symbols</h3>
+    <p>Writing out "sodium" or "magnesium" every time would be slow, and not every chemist speaks English. So every element has a short <strong>chemical symbol</strong> — a code of one or two letters that scientists everywhere understand.</p>
+    <p>There's one rule you must never break. If the symbol has two letters, the <strong>first letter is ALWAYS a capital</strong>, and the <strong>second letter is ALWAYS lower-case</strong>. So carbon is <strong>C</strong>, calcium is <strong>Ca</strong>, and cobalt is <strong>Co</strong>. The capitals matter: get them wrong and you've written a different chemical entirely.</p>
+    <p>A few symbols look like they came from nowhere. That's because they come from the element's old <strong>Latin</strong> name, not its English one. Sodium is <strong>Na</strong> (from <em>natrium</em>), potassium is <strong>K</strong> (from <em>kalium</em>), iron is <strong>Fe</strong> (from <em>ferrum</em>), and lead is <strong>Pb</strong> (from <em>plumbum</em> — the same root as "plumber", who once worked with lead pipes).</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Tile: Carbon -->
+        <g>
+          <rect x="30" y="40" width="90" height="100" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="75" y="62" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">6</text>
+          <text x="75" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="34" font-weight="700" fill="#1E2761">C</text>
+          <text x="75" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">carbon</text>
+        </g>
+        <!-- Tile: Calcium -->
+        <g>
+          <rect x="135" y="40" width="90" height="100" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="180" y="62" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">20</text>
+          <text x="180" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="32" font-weight="700" fill="#1E2761">Ca</text>
+          <text x="180" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">calcium</text>
+        </g>
+        <!-- Tile: Cobalt -->
+        <g>
+          <rect x="240" y="40" width="90" height="100" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="285" y="62" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">27</text>
+          <text x="285" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="32" font-weight="700" fill="#1E2761">Co</text>
+          <text x="285" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">cobalt</text>
+        </g>
+        <!-- Tile: Sodium (Latin) -->
+        <g>
+          <rect x="360" y="40" width="90" height="100" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+          <text x="405" y="62" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">11</text>
+          <text x="405" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="32" font-weight="700" fill="#1E2761">Na</text>
+          <text x="405" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">sodium</text>
+        </g>
+        <!-- Tile: Iron (Latin) -->
+        <g>
+          <rect x="465" y="40" width="90" height="100" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+          <text x="510" y="62" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">26</text>
+          <text x="510" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="32" font-weight="700" fill="#1E2761">Fe</text>
+          <text x="510" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">iron</text>
+        </g>
+        <!-- Labels -->
+        <text x="180" y="170" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#1E2761" letter-spacing="1">CAP THEN lower-case</text>
+        <text x="465" y="170" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#C8A24A" letter-spacing="1">FROM LATIN NAMES</text>
+        <text x="280" y="205" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">First letter big, second letter small — every single time.</text>
+      </svg>
+      <div class="caption">Reading a periodic-table tile · symbol convention</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — capital letters change the meaning</h4>
+      <p>The case of each letter is not decoration — it's information. <strong>Co</strong> (capital C, small o) is the element <strong>cobalt</strong>. But <strong>CO</strong> (two capitals) means a carbon atom joined to an oxygen atom — that's <strong>carbon monoxide</strong>, a poisonous gas. One slip of the pen turns a metal into a gas. Always write the first letter big and the second letter small.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A student writes the symbol for cobalt as "CO". What have they actually written, and what's the correct symbol?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It's fine — capitals don't matter for symbols</span></li>
+        <li><span class="letter">B</span><span>They've written carbon monoxide (CO); cobalt should be Co</span></li>
+        <li><span class="letter">C</span><span>They've written carbon (C); cobalt should be CO</span></li>
+        <li><span class="letter">D</span><span>They've written calcium; cobalt should be Cb</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — they've written carbon monoxide.</strong> Two capitals (CO) means carbon (C) joined to oxygen (O). The element cobalt is one symbol: a capital C followed by a small o, written <strong>Co</strong>. The case of the letters is the whole difference. <em>Capitals tell you where one element ends and the next begins.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is an element?</summary>
+        <div class="ans">A substance made of <strong>only one type of atom</strong>. It can't be broken down into anything simpler by a chemical reaction.</div>
+      </details></li>
+      <li><details>
+        <summary>Roughly how many elements are there, and where are they all listed?</summary>
+        <div class="ans">Around <strong>118</strong> elements, all listed on the <strong>periodic table</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the rule for writing a two-letter chemical symbol?</summary>
+        <div class="ans">The <strong>first letter is a capital</strong> and the <strong>second letter is lower-case</strong> — e.g. Ca, Mg, Cl.</div>
+      </details></li>
+      <li><details>
+        <summary>Why does sodium have the symbol Na and not So or Sd?</summary>
+        <div class="ans">Because the symbol comes from sodium's old <strong>Latin name, <em>natrium</em></strong>. Several elements use Latin-based symbols (e.g. K for potassium, Fe for iron, Pb for lead).</div>
+      </details></li>
+      <li><details>
+        <summary>Give the symbols for iron, potassium and lead.</summary>
+        <div class="ans">Iron = <strong>Fe</strong>, potassium = <strong>K</strong>, lead = <strong>Pb</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Explain the difference between "Co" and "CO".</summary>
+        <div class="ans"><strong>Co</strong> (capital C, small o) is the element <strong>cobalt</strong>. <strong>CO</strong> (two capitals) is <strong>carbon monoxide</strong> — a carbon atom joined to an oxygen atom. The capital letters change the meaning completely.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — COMPOUNDS                                                      -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · Chemistry · Compounds</div>
+    <h2 class="lesson-title">What is a <em>compound</em>?</h2>
+    <p class="lesson-promise">By the end of this topic you'll know what a compound is, how it's different from an element, and why it can only be split up by a chemical reaction.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Joining atoms together</h3>
+    <p>An element is made of just one type of atom. But most of the substances you meet every day aren't pure elements — they're made of <strong>different</strong> atoms joined together. When atoms of two or more different elements <strong>chemically join</strong>, we get a <strong>compound</strong>.</p>
+    <p>"Chemically join" is the key phrase. The atoms aren't just sitting next to each other — they are <strong>bonded</strong> together, locked into a new substance with its own name and its own properties. Think of it like welding two pieces of metal: once they're welded, you can't just pull them apart with your hands.</p>
+    <p>Take <strong>water</strong>. Water is a compound. Each tiny particle of water is two hydrogen atoms bonded to one oxygen atom — that's why we write it <strong>H<sub>2</sub>O</strong>. Hydrogen on its own is a flammable gas and oxygen on its own is a gas you breathe, but bonded together they make a liquid you can drink.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <!-- Separate atoms -->
+        <g>
+          <circle cx="60" cy="80" r="20" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="60" y="85" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="16" font-weight="700" fill="#1E2761">H</text>
+          <circle cx="60" cy="135" r="20" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="60" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="16" font-weight="700" fill="#1E2761">H</text>
+          <circle cx="130" cy="108" r="26" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+          <text x="130" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="18" font-weight="700" fill="#B85042">O</text>
+          <text x="95" y="185" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="1">2 ELEMENTS, SEPARATE</text>
+        </g>
+
+        <!-- Arrow -->
+        <g transform="translate(250,108)">
+          <line x1="-40" y1="0" x2="40" y2="0" stroke="#C8A24A" stroke-width="3"/>
+          <path d="M 40 0 L 28 -8 L 28 8 Z" fill="#C8A24A"/>
+          <text x="0" y="-14" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">bond</text>
+        </g>
+
+        <!-- Bonded compound: water molecule -->
+        <g transform="translate(420,108)">
+          <line x1="0" y1="0" x2="-36" y2="-26" stroke="#1E2761" stroke-width="3"/>
+          <line x1="0" y1="0" x2="-36" y2="26" stroke="#1E2761" stroke-width="3"/>
+          <circle cx="0" cy="0" r="28" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+          <text x="0" y="6" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="20" font-weight="700" fill="#B85042">O</text>
+          <circle cx="-36" cy="-26" r="18" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="-36" y="-21" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">H</text>
+          <circle cx="-36" cy="26" r="18" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="-36" y="31" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">H</text>
+          <text x="40" y="6" font-family="IBM Plex Mono,monospace" font-size="18" font-weight="700" fill="#1E2761">H₂O</text>
+        </g>
+        <text x="420" y="193" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#1E2761" letter-spacing="1">1 COMPOUND, BONDED</text>
+      </svg>
+      <div class="caption">Atoms of different elements bond to form a compound</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Compound</dt>
+        <dd>A substance made of two or more <em>different</em> elements chemically joined (bonded) together.</dd>
+        <dt>Chemical bond</dt>
+        <dd>The strong join that holds the atoms in a compound together.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Splitting a compound up</h3>
+    <p>Because the atoms in a compound are bonded together, you <strong>can't separate them by physical means</strong> — no amount of filtering, sieving, or picking would split water back into hydrogen and oxygen. The only way to break a compound apart is with a <strong>chemical reaction</strong>.</p>
+    <p>Here are three compounds you'll see again and again. Notice how each is made of different elements bonded together:</p>
+
+    <div class="keywords">
+      <h4>Three compounds to know</h4>
+      <dl>
+        <dt>Water — H<sub>2</sub>O</dt>
+        <dd>Hydrogen + oxygen. A liquid you can drink.</dd>
+        <dt>Carbon dioxide — CO<sub>2</sub></dt>
+        <dd>Carbon + oxygen. The gas you breathe out.</dd>
+        <dt>Sodium chloride — NaCl</dt>
+        <dd>Sodium + chlorine. Ordinary table salt.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — a compound is NOT just a mixture of elements</h4>
+      <p>It is tempting to think a compound is "elements jumbled together". It isn't. In a compound the atoms are <strong>chemically bonded</strong>, in a <strong>fixed ratio</strong>, and the result is a brand-new substance that's hard to separate. In a mixture (which we'll meet later) the substances are just mingled, not bonded, and can be pulled apart easily. Bonded and fixed = compound. Just mingled = mixture.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Carbon dioxide has the formula CO<sub>2</sub>. Which statement is correct?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It's an element, because it has a single name</span></li>
+        <li><span class="letter">B</span><span>It's a compound — two different elements (carbon and oxygen) bonded together</span></li>
+        <li><span class="letter">C</span><span>It's a mixture of carbon and oxygen that you could filter apart</span></li>
+        <li><span class="letter">D</span><span>It's a compound, but you could separate it just by leaving it to settle</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — it's a compound.</strong> Carbon dioxide is carbon and oxygen, two different elements, chemically bonded together in a fixed ratio of one carbon to two oxygen. <em>C and D are wrong because a bonded compound can only be split by a chemical reaction, never by filtering or settling.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is a compound?</summary>
+        <div class="ans">A substance made of <strong>two or more different elements chemically joined (bonded) together</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>What does "chemically joined" mean?</summary>
+        <div class="ans">The atoms are held together by <strong>chemical bonds</strong> — they're not just sitting next to each other, they're locked into a new substance.</div>
+      </details></li>
+      <li><details>
+        <summary>How can a compound be split back into its elements?</summary>
+        <div class="ans">Only by a <strong>chemical reaction</strong>. It can't be separated by physical means like filtering or sieving.</div>
+      </details></li>
+      <li><details>
+        <summary>Name the two elements in water, and write its formula.</summary>
+        <div class="ans"><strong>Hydrogen and oxygen.</strong> Formula: <strong>H₂O</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Sodium chloride is table salt. Which two elements is it made of?</summary>
+        <div class="ans"><strong>Sodium and chlorine</strong> (formula NaCl).</div>
+      </details></li>
+      <li><details>
+        <summary>A pupil says "carbon dioxide is an element because it's a single gas". Are they right?</summary>
+        <div class="ans"><strong>No.</strong> Carbon dioxide is a <strong>compound</strong> — two different elements (carbon and oxygen) bonded together. An element is made of only one type of atom.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — CHEMICAL FORMULAE                                              -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · Chemistry · Formulae</div>
+    <h2 class="lesson-title">Reading <em>chemical formulae</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll be able to read a formula, count the atoms in it, and handle the brackets that trip people up.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What the small numbers mean</h3>
+    <p>A <strong>chemical formula</strong> tells you exactly which atoms a compound is made of, and how many of each. The symbols tell you <em>which</em> elements; the little numbers tell you <em>how many</em>.</p>
+    <p>Those little numbers are called <strong>subscripts</strong>, and the golden rule is: a subscript <strong>multiplies only the atom written just before it</strong>. If there's no number, it means "just one".</p>
+    <p>Take <strong>H<sub>2</sub>O</strong>. The little 2 sits after the H, so it means two hydrogen atoms. The O has no number, so it means one oxygen atom. Total: <strong>2 hydrogen + 1 oxygen = 3 atoms</strong> in all.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Big formula H2O -->
+        <text x="190" y="90" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="56" font-weight="700" fill="#1E2761">H<tspan font-size="34" baseline-shift="-18">2</tspan>O</text>
+        <!-- Annotation for the 2 -->
+        <line x1="178" y1="100" x2="155" y2="150" stroke="#B85042" stroke-width="1.5"/>
+        <text x="120" y="170" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#B85042">the 2 belongs to H →</text>
+        <text x="120" y="184" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">2 hydrogen atoms</text>
+        <!-- Annotation for the O -->
+        <line x1="225" y1="70" x2="280" y2="40" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="345" y="38" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">no number after O →</text>
+        <text x="345" y="52" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">just 1 oxygen atom</text>
+        <!-- Total -->
+        <rect x="360" y="100" width="170" height="60" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="445" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#2C5F2D">total atoms</text>
+        <text x="445" y="148" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="18" font-weight="700" fill="#2C5F2D">2 + 1 = 3</text>
+      </svg>
+      <div class="caption">A subscript multiplies only the atom right before it</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Chemical formula</dt>
+        <dd>A way of writing which atoms a compound is made of, and how many of each.</dd>
+        <dt>Subscript</dt>
+        <dd>The small number after a symbol. It multiplies only the atom directly before it. No number means one.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Counting atoms — step by step</h3>
+    <p>To count the atoms in any formula, go along it left to right. For each symbol, read off its subscript (or count it as one if there's no number). Let's do a couple cleanly, the same way every time.</p>
+
+    <div class="worked">
+      <h4>Worked example 1 — H<sub>2</sub>O (water)</h4>
+      <p class="q">How many atoms of each element are in <strong>H<sub>2</sub>O</strong>, and how many atoms in total?</p>
+      <div class="step"><div class="label">Hydrogen</div><div class="v">H has a subscript of 2 → 2 hydrogen atoms</div></div>
+      <div class="step"><div class="label">Oxygen</div><div class="v">O has no number → 1 oxygen atom</div></div>
+      <div class="step answer"><div class="label">Total</div><div class="v">2 + 1 = 3 atoms</div></div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example 2 — CO<sub>2</sub> (carbon dioxide)</h4>
+      <p class="q">How many atoms of each element are in <strong>CO<sub>2</sub></strong>, and how many atoms in total?</p>
+      <div class="step"><div class="label">Carbon</div><div class="v">C has no number → 1 carbon atom</div></div>
+      <div class="step"><div class="label">Oxygen</div><div class="v">O has a subscript of 2 → 2 oxygen atoms</div></div>
+      <div class="step answer"><div class="label">Total</div><div class="v">1 + 2 = 3 atoms</div></div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Brackets</h3>
+    <p>Sometimes a formula has <strong>brackets</strong> with a number outside. The rule is just as tidy: the number outside the bracket <strong>multiplies everything inside the bracket</strong>.</p>
+    <p>Take <strong>Ca(OH)<sub>2</sub></strong> — calcium hydroxide. The 2 outside the bracket applies to <em>both</em> the O and the H inside it. So there are two O atoms and two H atoms, plus the single Ca out front.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Big formula -->
+        <text x="180" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="46" font-weight="700" fill="#1E2761">Ca(OH)<tspan font-size="28" baseline-shift="-16">2</tspan></text>
+        <!-- Bracket highlight -->
+        <rect x="118" y="42" width="86" height="50" rx="4" fill="none" stroke="#C8A24A" stroke-width="2" stroke-dasharray="4 3"/>
+        <text x="161" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#C8A24A">the 2 multiplies</text>
+        <text x="161" y="132" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#C8A24A">everything in the bracket</text>
+        <!-- Breakdown -->
+        <g font-family="IBM Plex Mono,monospace" font-size="14" fill="#1A1A1A">
+          <text x="300" y="55" fill="#1E2761" font-weight="700">Ca</text>
+          <text x="340" y="55">→ 1 calcium</text>
+          <text x="300" y="80" fill="#1E2761" font-weight="700">O × 2</text>
+          <text x="360" y="80">→ 2 oxygen</text>
+          <text x="300" y="105" fill="#1E2761" font-weight="700">H × 2</text>
+          <text x="360" y="105">→ 2 hydrogen</text>
+        </g>
+        <rect x="295" y="125" width="220" height="50" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="405" y="148" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#2C5F2D">total atoms</text>
+        <text x="405" y="166" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" font-weight="700" fill="#2C5F2D">1 + 2 + 2 = 5</text>
+      </svg>
+      <div class="caption">A number outside a bracket multiplies everything inside</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example 3 — Ca(OH)<sub>2</sub> (calcium hydroxide)</h4>
+      <p class="q">How many atoms of each element are in <strong>Ca(OH)<sub>2</sub></strong>, and how many atoms in total?</p>
+      <div class="step"><div class="label">Calcium</div><div class="v">Ca is outside the bracket, no number → 1 calcium atom</div></div>
+      <div class="step"><div class="label">Oxygen</div><div class="v">O is inside the bracket × 2 → 2 oxygen atoms</div></div>
+      <div class="step"><div class="label">Hydrogen</div><div class="v">H is inside the bracket × 2 → 2 hydrogen atoms</div></div>
+      <div class="step answer"><div class="label">Total</div><div class="v">1 + 2 + 2 = 5 atoms</div></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — a subscript only multiplies what's right before it</h4>
+      <p>In <strong>CO<sub>2</sub></strong> the 2 belongs to the oxygen only — there is still just <strong>one</strong> carbon, not two. People sometimes double everything when they see a number. The subscript multiplies the <em>single symbol before it</em> (or, if there's a bracket, everything inside that bracket) — nothing else.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">How many atoms in total are in <strong>Mg(NO<sub>3</sub>)<sub>2</sub></strong> (magnesium nitrate)?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>4 atoms (just count the symbols)</span></li>
+        <li><span class="letter">B</span><span>6 atoms (forgot to double the bracket)</span></li>
+        <li><span class="letter">C</span><span>9 atoms (1 Mg + 2 N + 6 O)</span></li>
+        <li><span class="letter">D</span><span>5 atoms (used the wrong rule for brackets)</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 9 atoms.</strong> Mg is 1. Inside the bracket is NO₃ (1 nitrogen, 3 oxygen), and the 2 outside doubles all of it: 2 nitrogen and 6 oxygen. Total = 1 + 2 + 6 = 9. <em>The number outside the bracket multiplies every atom inside it, including the oxygen that already has its own subscript of 3.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What does a subscript (the small number) in a formula tell you?</summary>
+        <div class="ans">How many of the atom <strong>directly before it</strong> there are. No number means one.</div>
+      </details></li>
+      <li><details>
+        <summary>How many atoms in total are in H₂O?</summary>
+        <div class="ans">2 hydrogen + 1 oxygen = <strong>3 atoms</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>How many atoms in total are in CO₂?</summary>
+        <div class="ans">1 carbon + 2 oxygen = <strong>3 atoms</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>How many of each atom are in NaCl?</summary>
+        <div class="ans">1 sodium + 1 chlorine = <strong>2 atoms</strong> in total (neither has a subscript, so one of each).</div>
+      </details></li>
+      <li><details>
+        <summary>How many atoms in total are in Ca(OH)₂?</summary>
+        <div class="ans">1 calcium + 2 oxygen + 2 hydrogen = <strong>5 atoms</strong>. The 2 doubles everything inside the bracket.</div>
+      </details></li>
+      <li><details>
+        <summary>How many oxygen atoms are in H₂SO₄ (sulfuric acid)?</summary>
+        <div class="ans">The 4 sits after the O, so there are <strong>4 oxygen atoms</strong>. (In total H₂SO₄ has 2 H + 1 S + 4 O = 7 atoms.)</div>
+      </details></li>
+      <li><details>
+        <summary>A pupil says CO₂ has two carbon atoms. What mistake have they made?</summary>
+        <div class="ans">The subscript 2 multiplies <strong>only the oxygen</strong>, which comes just before it. There is still only <strong>one carbon</strong> atom. CO₂ is 1 carbon and 2 oxygen.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — NAMING COMPOUNDS                                               -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · Chemistry · Naming</div>
+    <h2 class="lesson-title">Naming <em>compounds</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll be able to name simple compounds using the KS3 rules — -ide endings, prefixes, and what an -ate ending tells you.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Metal + non-metal → -ide</h3>
+    <p>The names of compounds aren't random — they follow rules, and once you know the rules you can name lots of compounds without being told.</p>
+    <p>The first rule: when a <strong>metal joins a non-metal</strong>, the metal keeps its name, and the non-metal's ending changes to <strong>-ide</strong>. So when sodium (a metal) joins chlorine (a non-metal), chlorine becomes <strong>chlor<u>ide</u></strong>, and the compound is <strong>sodium chloride</strong>.</p>
+    <p>The same pattern works everywhere: magnesium + oxygen → magnesium <strong>oxide</strong>; iron + sulfur → iron <strong>sulfide</strong>; potassium + bromine → potassium <strong>bromide</strong>.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>-ide ending</dt>
+        <dd>Shows a compound of just two elements — a metal and a non-metal (e.g. sodium chloride, magnesium oxide).</dd>
+        <dt>Metal / non-metal</dt>
+        <dd>Metals sit on the left of the periodic table; non-metals on the right. The metal's name stays the same; the non-metal gets the -ide ending.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Two non-metals → prefixes</h3>
+    <p>When <strong>two non-metals</strong> join, we sometimes need to say <em>how many</em> of each atom there are. We do that with <strong>prefixes</strong> — little words stuck on the front: <strong>mono-</strong> means one, <strong>di-</strong> means two, <strong>tri-</strong> means three.</p>
+    <p>That's why <strong>CO<sub>2</sub></strong> is called carbon <strong>di</strong>oxide — "di" tells you there are two oxygen atoms. And <strong>CO</strong> is carbon <strong>mon</strong>oxide — "mono" tells you there's just one. The prefix is doing the counting for you.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 270" xmlns="http://www.w3.org/2000/svg">
+        <!-- Decision flow -->
+        <!-- Start box -->
+        <rect x="180" y="14" width="200" height="40" rx="6" fill="#1E2761"/>
+        <text x="280" y="39" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#F8F4EC">A compound of 2 elements</text>
+        <!-- Down arrow -->
+        <line x1="280" y1="54" x2="280" y2="74" stroke="#5C6370" stroke-width="2"/>
+        <path d="M 280 74 L 274 64 L 286 64 Z" fill="#5C6370"/>
+        <!-- Question -->
+        <rect x="170" y="74" width="220" height="36" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+        <text x="280" y="97" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Is one of them a metal?</text>
+        <!-- Branch left: diagonal arrow from question box out to top of left outcome box -->
+        <line x1="200" y1="110" x2="115" y2="196" stroke="#5C6370" stroke-width="2"/>
+        <path d="M 115 200 L 110 188 L 122 191 Z" fill="#5C6370"/>
+        <!-- Branch right: diagonal arrow out to top of right outcome box -->
+        <line x1="360" y1="110" x2="447" y2="196" stroke="#5C6370" stroke-width="2"/>
+        <path d="M 447 200 L 440 191 L 452 188 Z" fill="#5C6370"/>
+        <!-- Branch labels sit in the clear central gap between the diverging arrows -->
+        <text x="215" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#2C5F2D">YES</text>
+        <text x="215" y="166" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#2C5F2D">metal + non-metal</text>
+        <text x="345" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">NO</text>
+        <text x="345" y="166" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#B85042">two non-metals</text>
+        <!-- Outcome boxes -->
+        <rect x="20" y="200" width="190" height="56" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="115" y="223" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">non-metal ends in <tspan font-weight="700" fill="#B85042">-ide</tspan></text>
+        <text x="115" y="243" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">Na + Cl → sodium chloride</text>
+        <rect x="350" y="200" width="195" height="56" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="447" y="223" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">use <tspan font-weight="700" fill="#B85042">prefixes</tspan> + -ide</text>
+        <text x="447" y="243" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">CO₂ → carbon dioxide</text>
+      </svg>
+      <div class="caption">Naming rules as a decision · two-element compounds</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>The -ate ending</h3>
+    <p>Some compound names end in <strong>-ate</strong> instead of -ide. That ending is a clue: an <strong>-ate ending means oxygen is present</strong> in the compound, usually as part of a group of atoms alongside another element.</p>
+    <p>So <strong>copper sulf<u>ate</u></strong> contains copper, sulfur <em>and</em> oxygen — the "-ate" tells you the oxygen is in there. <strong>Calcium carbon<u>ate</u></strong> (the main compound in chalk and limestone) contains calcium, carbon <em>and</em> oxygen. Compare that with calcium <strong>sulfide</strong>, which is just calcium and sulfur — no oxygen, so it gets the plain -ide ending.</p>
+
+    <div class="keywords">
+      <h4>Quick rule recap</h4>
+      <dl>
+        <dt>-ide</dt>
+        <dd>Two elements only, no oxygen (e.g. sodium chloride, magnesium oxide). Note: an <em>oxide</em> is the special -ide for oxygen itself.</dd>
+        <dt>prefixes (mono-, di-, tri-)</dt>
+        <dd>Used between two non-metals to show how many atoms (e.g. carbon dioxide, carbon monoxide).</dd>
+        <dt>-ate</dt>
+        <dd>Tells you oxygen is present alongside other elements (e.g. copper sulfate, calcium carbonate).</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — -ide and -ate are not the same ending</h4>
+      <p>One letter changes the whole meaning. Sodium chlor<strong>ide</strong> (NaCl) is just sodium and chlorine. Sodium chlor<strong>ate</strong> also contains <strong>oxygen</strong>. If a name ends in <strong>-ate</strong>, oxygen is in the compound; if it ends in <strong>-ide</strong> (and isn't an oxide), there's no oxygen. Read the ending carefully.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A compound is called <strong>magnesium carbonate</strong>. Which elements must it contain?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Magnesium and carbon only</span></li>
+        <li><span class="letter">B</span><span>Magnesium, carbon and oxygen</span></li>
+        <li><span class="letter">C</span><span>Magnesium and oxygen only</span></li>
+        <li><span class="letter">D</span><span>Magnesium and chlorine</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — magnesium, carbon and oxygen.</strong> The "-ate" ending is the giveaway: it tells you <strong>oxygen is present</strong>. "Carbonate" means carbon and oxygen together, joined to the magnesium. <em>If it were magnesium carbide it would just be magnesium and carbon, with no oxygen.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is the name of the compound made when a metal joins a non-metal?</summary>
+        <div class="ans">The non-metal's ending changes to <strong>-ide</strong>, e.g. sodium + chlorine → sodium <strong>chloride</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Name the compound formed from magnesium and oxygen.</summary>
+        <div class="ans"><strong>Magnesium oxide</strong> (oxygen becomes "oxide").</div>
+      </details></li>
+      <li><details>
+        <summary>What do the prefixes mono- and di- mean?</summary>
+        <div class="ans"><strong>Mono-</strong> means one, <strong>di-</strong> means two. They tell you how many atoms when two non-metals join.</div>
+      </details></li>
+      <li><details>
+        <summary>Why is CO₂ called carbon dioxide but CO is called carbon monoxide?</summary>
+        <div class="ans">CO₂ has <strong>two</strong> oxygen atoms, so "di-". CO has just <strong>one</strong> oxygen atom, so "mono-".</div>
+      </details></li>
+      <li><details>
+        <summary>What does an -ate ending tell you about a compound?</summary>
+        <div class="ans">That <strong>oxygen is present</strong> in the compound (alongside the other elements), e.g. copper sulfate, calcium carbonate.</div>
+      </details></li>
+      <li><details>
+        <summary>Which elements are in calcium carbonate?</summary>
+        <div class="ans"><strong>Calcium, carbon and oxygen.</strong> The "-ate" tells you oxygen is in there.</div>
+      </details></li>
+      <li><details>
+        <summary>What's the difference between sodium chloride and sodium chlorate?</summary>
+        <div class="ans">Sodium chlor<strong>ide</strong> is just sodium and chlorine. Sodium chlor<strong>ate</strong> also contains <strong>oxygen</strong> — that's what the -ate ending signals.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — COMPOUNDS VS THE ELEMENTS THAT FORM THEM                       -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · Chemistry · Properties</div>
+    <h2 class="lesson-title">Compounds vs the <em>elements</em> that form them</h2>
+    <p class="lesson-promise">By the end of this topic you'll understand why a compound behaves nothing like the elements it's made from, and what a chemical change really is.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>A brand-new substance</h3>
+    <p>Here's one of the most surprising ideas in chemistry: a compound's <strong>properties are completely different</strong> from the properties of the elements it's made of. When elements bond, you don't get a blend of the two — you get something genuinely new.</p>
+    <p>The classic example is table salt, <strong>sodium chloride</strong>. Look at what it's made from:</p>
+    <p>· <strong>Sodium</strong> on its own is a soft, silvery metal so reactive it bursts into flame if you drop it in water.<br>
+    · <strong>Chlorine</strong> on its own is a choking, poisonous green gas — it was once used as a weapon.</p>
+    <p>Bond them together and you get <strong>sodium chloride</strong>: a harmless white solid you sprinkle on your chips. An explosive metal and a poisonous gas combine to make something you can eat. That's how dramatically a compound can differ from its elements.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Sodium -->
+        <g>
+          <rect x="20" y="50" width="150" height="80" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="95" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="16" font-weight="700" fill="#1E2761">Sodium (Na)</text>
+          <text x="95" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#B85042">explosive metal</text>
+          <text x="95" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">reacts with water</text>
+        </g>
+        <!-- Plus -->
+        <text x="190" y="98" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="28" font-weight="300" fill="#1E2761">+</text>
+        <!-- Chlorine -->
+        <g>
+          <rect x="210" y="50" width="150" height="80" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="285" y="80" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="16" font-weight="700" fill="#1E2761">Chlorine (Cl₂)</text>
+          <text x="285" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#B85042">poisonous gas</text>
+          <text x="285" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">green, choking</text>
+        </g>
+        <!-- Arrow -->
+        <g transform="translate(400,90)">
+          <line x1="-15" y1="0" x2="30" y2="0" stroke="#C8A24A" stroke-width="3"/>
+          <path d="M 30 0 L 18 -7 L 18 7 Z" fill="#C8A24A"/>
+          <text x="8" y="-12" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">react</text>
+        </g>
+        <!-- Salt -->
+        <g>
+          <rect x="435" y="50" width="115" height="80" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+          <text x="492" y="78" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#2C5F2D">NaCl</text>
+          <text x="492" y="98" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">table salt</text>
+          <text x="492" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">safe to eat</text>
+        </g>
+        <text x="280" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">An explosive metal + a poisonous gas → something on your dinner.</text>
+      </svg>
+      <div class="caption">A compound's properties are nothing like its elements'</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Property</dt>
+        <dd>A feature of a substance — how it looks, whether it's a solid/liquid/gas, how it reacts, and so on.</dd>
+        <dt>New substance</dt>
+        <dd>When elements bond into a compound, the result has its own, completely new set of properties.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Chemical change vs physical change</h3>
+    <p>Why are the properties so different? Because making a compound is a <strong>chemical change</strong>. In a chemical change, atoms are rearranged and new bonds form, so a brand-new substance is made — and it's <strong>very hard to reverse</strong>.</p>
+    <p>That's different from a <strong>physical change</strong>, like melting ice or dissolving sugar in tea. In a physical change <strong>no new substance is made</strong> — the molecules are the same, just rearranged or moved about — and it's usually <strong>easy to reverse</strong> (you can freeze the water again, or boil off the tea to get the sugar back).</p>
+
+    <div class="keywords">
+      <h4>Chemical change vs physical change</h4>
+      <dl>
+        <dt>Chemical change</dt>
+        <dd>A new substance is made; bonds form or break; usually hard to reverse (e.g. sodium + chlorine → salt; burning; rusting).</dd>
+        <dt>Physical change</dt>
+        <dd>No new substance is made; easy to reverse (e.g. melting, freezing, dissolving).</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the elements "disappear" into the compound</h4>
+      <p>Once sodium and chlorine have reacted, you <strong>cannot see the metal or the gas any more</strong> — they're gone, locked into the new compound. Don't expect a compound to be "a bit metal and a bit gas". It's one new substance with its own properties. Getting the original elements back needs a <strong>chemical reaction</strong> (here, passing electricity through molten salt), not just a stir or a sieve.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Iron is a magnetic metal. Sulfur is a yellow powder. They are heated together and react to make iron sulfide. What can you say about iron sulfide?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It is still magnetic and still yellow, like the elements</span></li>
+        <li><span class="letter">B</span><span>It is a new compound with its own properties, not magnetic and not yellow</span></li>
+        <li><span class="letter">C</span><span>It is a mixture you could separate again with a magnet</span></li>
+        <li><span class="letter">D</span><span>It is the same as the iron, just dirtier</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — it's a new compound with its own properties.</strong> A chemical reaction has happened, so iron sulfide is a brand-new substance — a dull grey solid that is <strong>not magnetic</strong>. <em>C is the trap: before they react you have a mixture of iron and sulfur that a magnet could separate, but once they've reacted into a compound the magnet won't pull the iron out any more.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>How do a compound's properties compare with the properties of its elements?</summary>
+        <div class="ans">They are <strong>completely different</strong>. A compound is a new substance with its own properties, not a blend of the elements.</div>
+      </details></li>
+      <li><details>
+        <summary>Describe sodium and chlorine on their own.</summary>
+        <div class="ans"><strong>Sodium</strong> is a soft, reactive metal (it can explode in water). <strong>Chlorine</strong> is a poisonous green gas.</div>
+      </details></li>
+      <li><details>
+        <summary>What is sodium chloride like, and why is this surprising?</summary>
+        <div class="ans">It's a harmless white solid — <strong>table salt</strong>. Surprising because it's made from an explosive metal and a poisonous gas, yet is safe to eat.</div>
+      </details></li>
+      <li><details>
+        <summary>What is a chemical change?</summary>
+        <div class="ans">A change where a <strong>new substance is made</strong> (bonds form or break). It is usually <strong>hard to reverse</strong> — e.g. burning, rusting, sodium reacting with chlorine.</div>
+      </details></li>
+      <li><details>
+        <summary>Give two examples of a physical change.</summary>
+        <div class="ans">Any two from: <strong>melting, freezing, boiling, dissolving</strong>. No new substance is made, and they're easy to reverse.</div>
+      </details></li>
+      <li><details>
+        <summary>Iron filings and sulfur are mixed, then heated until they react. Why can a magnet pick the iron out before heating but not after?</summary>
+        <div class="ans">Before heating it's a <strong>mixture</strong>, so the iron keeps its magnetism. After heating they've reacted into the <strong>compound iron sulfide</strong>, a new substance that is <strong>not magnetic</strong> — the iron is no longer there as iron.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — MIXTURES VS COMPOUNDS                                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · Chemistry · Mixtures</div>
+    <h2 class="lesson-title">Mixtures vs <em>compounds</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll be able to tell a mixture from a compound, and explain why one is easy to separate and the other is not.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What makes a mixture different</h3>
+    <p>You've seen that a compound is chemically bonded. A <strong>mixture</strong> is the opposite kind of thing: it's just two or more substances <strong>mixed together but NOT chemically joined</strong>. The particles are mingled, but there are no bonds between the different substances.</p>
+    <p>Three differences are worth learning by heart:</p>
+    <p>· A compound is joined in a <strong>fixed ratio</strong> (water is always 2 hydrogen to 1 oxygen). A mixture can be in <strong>any ratio</strong> — you can make tea weak or strong.<br>
+    · A compound is <strong>chemically bonded</strong>. A mixture is <strong>not bonded</strong> — the substances keep their own properties.<br>
+    · A compound is <strong>hard to separate</strong> (needs a chemical reaction). A mixture is <strong>easy to separate</strong> by physical means like filtering, evaporating or using a magnet.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Compound side -->
+        <g>
+          <rect x="20" y="20" width="240" height="160" rx="8" fill="#FCFAF4" stroke="#1E2761" stroke-width="2"/>
+          <text x="140" y="42" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">COMPOUND</text>
+          <!-- bonded pairs (same repeated unit) -->
+          <g>
+            <!-- unit 1 -->
+            <circle cx="80" cy="80" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+            <line x1="93" y1="80" x2="107" y2="80" stroke="#1E2761" stroke-width="2"/>
+            <circle cx="120" cy="80" r="13" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+            <!-- unit 2 -->
+            <circle cx="170" cy="80" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+            <line x1="183" y1="80" x2="197" y2="80" stroke="#1E2761" stroke-width="2"/>
+            <circle cx="210" cy="80" r="13" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+            <!-- unit 3 -->
+            <circle cx="100" cy="125" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+            <line x1="113" y1="125" x2="127" y2="125" stroke="#1E2761" stroke-width="2"/>
+            <circle cx="140" cy="125" r="13" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+            <!-- unit 4 -->
+            <circle cx="180" cy="125" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+            <line x1="193" y1="125" x2="207" y2="125" stroke="#1E2761" stroke-width="2"/>
+            <circle cx="220" cy="125" r="13" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+          </g>
+          <text x="140" y="166" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">bonded · fixed ratio · hard to separate</text>
+        </g>
+
+        <!-- Mixture side -->
+        <g>
+          <rect x="300" y="20" width="240" height="160" rx="8" fill="#FCFAF4" stroke="#B85042" stroke-width="2"/>
+          <text x="420" y="42" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">MIXTURE</text>
+          <!-- loose, unbonded, mixed atoms (no lines) -->
+          <g>
+            <circle cx="345" cy="75" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+            <circle cx="395" cy="68" r="13" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+            <circle cx="445" cy="82" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+            <circle cx="500" cy="70" r="13" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+            <circle cx="360" cy="120" r="13" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+            <circle cx="410" cy="128" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+            <circle cx="465" cy="118" r="13" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+            <circle cx="505" cy="128" r="13" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+          </g>
+          <text x="420" y="166" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">not bonded · any ratio · easy to separate</text>
+        </g>
+        <text x="280" y="205" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">Lines = bonds. The mixture has none.</text>
+      </svg>
+      <div class="caption">Compound vs mixture · the particle picture</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Mixture</dt>
+        <dd>Two or more substances mixed together but <em>not</em> chemically joined. Each substance keeps its own properties.</dd>
+        <dt>Fixed ratio</dt>
+        <dd>The set number of each atom in a compound (e.g. always 2 H to 1 O in water). Mixtures have no fixed ratio.</dd>
+        <dt>Physical separation</dt>
+        <dd>Separating a mixture without a chemical reaction — e.g. filtering, evaporating, using a magnet.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Everyday mixtures</h3>
+    <p>Mixtures are everywhere. Two important examples:</p>
+    <p><strong>Air</strong> is a mixture of gases — mostly nitrogen (about 78%) and oxygen (about 21%), with small amounts of others. The gases are mingled but <strong>not bonded</strong>, which is why we can separate them (factories chill air until the gases turn to liquid and boil off one by one).</p>
+    <p><strong>Sea water</strong> is a mixture of water and dissolved salt (plus other bits). Because the salt is only mixed in, not bonded into the water, you can get it back easily: let the water <strong>evaporate</strong> and the salt is left behind. That's exactly how sea salt is made.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "a compound is just a mixture of elements"</h4>
+      <p>This is the big misconception. A compound is <strong>NOT</strong> just a mixture of its elements. In a compound the atoms are <strong>chemically bonded</strong>, locked in a <strong>fixed ratio</strong>, and are <strong>hard to separate</strong>. In a mixture the substances are simply mingled, in <strong>any ratio</strong>, <strong>not bonded</strong>, and <strong>easy to separate</strong>. Bonded and fixed = compound. Just mixed = mixture.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Sand and salt are stirred together in a jar. Salt dissolves in water; sand does not. How would you separate this, and what does it tell you?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>You can't separate it — it's now a compound</span></li>
+        <li><span class="letter">B</span><span>Add water to dissolve the salt, filter out the sand, then evaporate the water to get the salt — it's a mixture</span></li>
+        <li><span class="letter">C</span><span>Heat it strongly so the sand and salt react together</span></li>
+        <li><span class="letter">D</span><span>Use a magnet to pull the salt out</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — dissolve, filter, then evaporate.</strong> Because sand and salt are only <strong>mixed</strong> (not bonded), you can separate them by physical means: dissolve the salt in water, filter off the sand, then evaporate the water to recover the salt. The fact that it separates so easily tells you it's a <strong>mixture, not a compound</strong>.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is a mixture?</summary>
+        <div class="ans">Two or more substances <strong>mixed together but not chemically joined</strong>. Each substance keeps its own properties.</div>
+      </details></li>
+      <li><details>
+        <summary>Give three differences between a compound and a mixture.</summary>
+        <div class="ans">A compound is <strong>bonded</strong>, in a <strong>fixed ratio</strong>, and <strong>hard to separate</strong>. A mixture is <strong>not bonded</strong>, in <strong>any ratio</strong>, and <strong>easy to separate</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>How can a mixture be separated?</summary>
+        <div class="ans">By <strong>physical means</strong> — e.g. filtering, evaporating, or using a magnet. No chemical reaction is needed.</div>
+      </details></li>
+      <li><details>
+        <summary>Is air a mixture or a compound? Explain.</summary>
+        <div class="ans">A <strong>mixture</strong> — mostly nitrogen and oxygen, mingled but <strong>not bonded</strong>, so the gases can be separated.</div>
+      </details></li>
+      <li><details>
+        <summary>How would you get the salt out of sea water, and what does this prove?</summary>
+        <div class="ans">Let the water <strong>evaporate</strong>; the salt is left behind. This proves sea water is a <strong>mixture</strong> — the salt was only dissolved in, not chemically bonded.</div>
+      </details></li>
+      <li><details>
+        <summary>Water is always 2 hydrogen to 1 oxygen. Why does this show it's a compound, not a mixture?</summary>
+        <div class="ans">Because it has a <strong>fixed ratio</strong>. Mixtures can be in any ratio; only a compound is locked into a fixed ratio of atoms.</div>
+      </details></li>
+      <li><details>
+        <summary>A pupil writes: "A compound is just a mixture of elements." Correct them.</summary>
+        <div class="ans"><strong>No.</strong> In a compound the elements are <strong>chemically bonded</strong>, in a <strong>fixed ratio</strong>, and <strong>hard to separate</strong>. In a mixture they are just mingled, in any ratio, not bonded, and easy to separate.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>Year 7 Chemistry · Elements &amp; Compounds</p>
+  <p>A revision booklet</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'elements-compounds-y7-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=e9cc62ba-a2a4-a8aa-8464-51e8a27f7623&amp;ref=interactive-science&amp;from=elements-and-compounds-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=elements-and-compounds-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

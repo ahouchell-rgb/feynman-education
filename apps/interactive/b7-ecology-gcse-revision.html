@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecology (B7) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for B7 Ecology — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Biology Paper 2 · B7 Ecology</div>
+    <h1>Ecology, <em>for the exam.</em></h1>
+    <p class="tag">The whole of B7 — communities and competition, adaptations, sampling, the carbon and water cycles, biodiversity, and how we protect it. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Communities</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Adaptations</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Sampling</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Carbon cycle</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Water cycle</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Human impact</a>
+    <a href="#lesson-7" class="nav-pill" data-lesson="7">Conservation</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — COMMUNITIES & INTERDEPENDENCE (4.7.1.1)                       -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.7.1 · Communities</div>
+    <h2 class="lesson-title">Communities &amp; <em>interdependence</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll use the words ecosystem, community and population correctly, and explain what living things compete for and why they depend on each other.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Levels of organisation</h3>
+    <p>Ecology has a ladder of words and examiners want them used precisely. A <strong>habitat</strong> is the place where an organism lives. A <strong>population</strong> is all the organisms of <em>one species</em> in a habitat. A <strong>community</strong> is all the populations of <em>different species</em> living together.</p>
+    <p>An <strong>ecosystem</strong> is the community of living things <em>plus</em> the non-living surroundings they interact with. So an ecosystem is alive <em>and</em> non-living together — a pond, a wood, a rock pool.</p>
+
+    <div class="keywords">
+      <h4>The words you must use precisely</h4>
+      <dl>
+        <dt>Population</dt><dd>All the members of one species in an area.</dd>
+        <dt>Community</dt><dd>All the populations of different species in an area.</dd>
+        <dt>Ecosystem</dt><dd>The community plus the non-living (abiotic) environment.</dd>
+        <dt>Abiotic factor</dt><dd>A non-living condition — light, temperature, water, pH.</dd>
+        <dt>Biotic factor</dt><dd>A living factor — food, predators, disease, competition.</dd>
+        <dt>Interdependence</dt><dd>Species relying on each other for food, shelter, pollination, seed dispersal.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">FROM POPULATION TO ECOSYSTEM</text>
+        <!-- nested boxes -->
+        <rect x="40" y="50" width="480" height="150" rx="6" fill="none" stroke="#1E2761" stroke-width="2"/>
+        <rect x="60" y="75" width="360" height="110" rx="5" fill="#EDF2FA" stroke="#B85042" stroke-width="2"/>
+        <rect x="80" y="100" width="150" height="70" rx="4" fill="#FCFAF4" stroke="#2C5F2D" stroke-width="2"/>
+        <!-- labels in clear space -->
+        <text x="155" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">Population</text>
+        <text x="320" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">Community</text>
+        <text x="465" y="66" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Ecosystem</text>
+        <line x1="465" y1="72" x2="465" y2="50" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="320" y="155" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">+ abiotic surroundings = ecosystem</text>
+      </svg>
+      <div class="caption">One species → many species → many species plus their non-living surroundings</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — community vs ecosystem</h4>
+      <p>A <strong>community</strong> is only the <em>living</em> things. An <strong>ecosystem</strong> adds the <strong>non-living</strong> parts (water, light, soil, temperature). If a question says "ecosystem", remember to mention abiotic factors. Don't muddle "population" (one species) with "community" (many species).</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Competition &amp; interdependence</h3>
+    <p>To survive and breed, organisms need resources — and where resources are limited, they <strong>compete</strong> for them. <strong>Plants compete</strong> for light, water, mineral ions and space. <strong>Animals compete</strong> for food, mates and territory.</p>
+    <p>Species also rely on each other. This is <strong>interdependence</strong>: animals depend on plants for food and oxygen, plants depend on animals for pollination and seed dispersal. A community where every species depends on others and stays roughly steady is described as a <strong>stable community</strong> — the populations and abiotic conditions stay in balance over time.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which of these is an <em>abiotic</em> factor that two plants might compete for?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>A predator that eats them</span></li>
+        <li><span class="letter">B</span><span>Light intensity</span></li>
+        <li><span class="letter">C</span><span>A disease spreading through the population</span></li>
+        <li><span class="letter">D</span><span>The number of pollinating insects</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — light intensity.</strong> Abiotic means non-living, and plants compete for light, water, space and mineral ions. A, C and D are all <em>biotic</em> (living) factors.</div>
+      </details>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — what plants and animals compete for</h4>
+      <p>Plants do <strong>not</strong> compete for food — they make their own by photosynthesis. They compete for <strong>light, water, space and mineral ions</strong>. Animals compete for <strong>food, mates and territory</strong>. Mixing these up loses easy marks.</p>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define the term "community".</summary><div class="ans">All the <strong>populations of different species</strong> living and interacting in the same area.</div></details></li>
+      <li><details><summary>Give two abiotic and two biotic factors.</summary><div class="ans">Abiotic (non-living): e.g. <strong>light intensity, temperature, water, pH, mineral ions</strong>. Biotic (living): e.g. <strong>food availability, predators, disease, competition</strong>.</div></details></li>
+      <li><details><summary>State three things plants compete for.</summary><div class="ans">Any three of: <strong>light, water, space, mineral ions</strong>. (Not food — plants make their own.)</div></details></li>
+      <li><details><summary>What is a stable community?</summary><div class="ans">One where the <strong>species and abiotic conditions stay in balance</strong>, so population sizes stay roughly constant over time.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — ADAPTATIONS (4.7.1.2)                                         -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.7.1 · Adaptations</div>
+    <h2 class="lesson-title">Adaptations &amp; <em>extremophiles</em></h2>
+    <p class="lesson-promise">The three kinds of adaptation, and the organisms that thrive where almost nothing else can.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Three types of adaptation</h3>
+    <p>An <strong>adaptation</strong> is a feature that helps an organism survive and reproduce in its environment. AQA splits them into three kinds, and you should be able to give an example of each.</p>
+    <p><strong>Structural</strong> adaptations are features of the body — shape, colour, body parts. A camel's thick foot pads spread its weight on sand; a polar bear's white fur is camouflage. <strong>Behavioural</strong> adaptations are the way an organism acts — birds migrating to warmer places, or animals being active at night to avoid the heat. <strong>Functional</strong> adaptations happen inside the body — how it works, such as a camel producing very little, concentrated urine to save water, or some animals slowing their metabolism to hibernate.</p>
+
+    <div class="keywords">
+      <h4>The three types — one example each</h4>
+      <dl>
+        <dt>Structural</dt><dd>A physical feature: thick fur, large surface area, sharp claws, spines.</dd>
+        <dt>Behavioural</dt><dd>The way it behaves: migration, hibernation, hunting at night.</dd>
+        <dt>Functional</dt><dd>A body process: concentrated urine, antifreeze chemicals, controlled metabolism.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THREE WAYS TO BE ADAPTED</text>
+        <!-- three panels -->
+        <rect x="30" y="45" width="160" height="140" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="200" y="45" width="160" height="140" rx="5" fill="#FCFAF4" stroke="#B85042" stroke-width="2"/>
+        <rect x="370" y="45" width="160" height="140" rx="5" fill="#FCFAF4" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="110" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">Structural</text>
+        <text x="280" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">Behavioural</text>
+        <text x="450" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">Functional</text>
+        <text x="110" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">thick fur</text>
+        <text x="110" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">large ears</text>
+        <text x="280" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">migration</text>
+        <text x="280" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">hibernation</text>
+        <text x="450" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">concentrated</text>
+        <text x="450" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">urine</text>
+      </svg>
+      <div class="caption">Structural = body shape · Behavioural = how it acts · Functional = how it works inside</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — structural vs functional</h4>
+      <p>If it's a <strong>part of the body you can see</strong> (fur, claws, a shape), it's <strong>structural</strong>. If it's a <strong>process happening inside</strong> (making concentrated urine, antifreeze in the blood), it's <strong>functional</strong>. Behavioural is about <em>what the animal does</em>. Read the example carefully before you label it.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Extremophiles</h3>
+    <p>Some organisms — mostly bacteria — are adapted to live in <strong>extreme conditions</strong> that would kill most life. These are called <strong>extremophiles</strong>. They survive very high temperatures (such as deep-sea volcanic vents), very high pressure, or very salty (high-salt) water.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A desert fox is active only at night, when it is cooler. What type of adaptation is this?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Structural</span></li>
+        <li><span class="letter">B</span><span>Functional</span></li>
+        <li><span class="letter">C</span><span>Behavioural</span></li>
+        <li><span class="letter">D</span><span>Extremophilic</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — behavioural.</strong> Being active at night is something the fox <em>does</em> (its behaviour), which helps it avoid the daytime heat and save water.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the three types of adaptation.</summary><div class="ans"><strong>Structural</strong> (body features), <strong>behavioural</strong> (the way it acts) and <strong>functional</strong> (internal body processes).</div></details></li>
+      <li><details><summary>A cactus has a thick waxy stem to reduce water loss. Which type of adaptation is this?</summary><div class="ans"><strong>Structural</strong> — it is a physical feature of the plant's body.</div></details></li>
+      <li><details><summary>What is an extremophile?</summary><div class="ans">An organism (usually a bacterium) <strong>adapted to live in extreme conditions</strong> such as high temperature, high pressure or high salt concentration.</div></details></li>
+      <li><details><summary>Suggest one functional adaptation of a camel.</summary><div class="ans">Producing <strong>small amounts of concentrated urine</strong> (or very little sweat) to conserve water — an internal process.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — ORGANISATION & SAMPLING (4.7.2) + REQUIRED PRACTICAL          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.7.2 · Organisation &amp; sampling</div>
+    <h2 class="lesson-title">Food chains &amp; <em>sampling</em></h2>
+    <p class="lesson-promise">How energy flows through a food chain, why predator and prey numbers rise and fall together, and the required practical for measuring how many organisms live where.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Food chains &amp; trophic levels</h3>
+    <p>A <strong>food chain</strong> shows what eats what. It always starts with a <strong>producer</strong> — usually a green plant or algae that makes its own food by <strong>photosynthesis</strong>. Producers are eaten by <strong>primary consumers</strong> (herbivores), which are eaten by <strong>secondary consumers</strong>, then <strong>tertiary consumers</strong>. A consumer that kills and eats another animal is a <strong>predator</strong>; the one eaten is its <strong>prey</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">A SIMPLE FOOD CHAIN</text>
+        <!-- boxes -->
+        <rect x="20" y="55" width="110" height="44" rx="5" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <rect x="170" y="55" width="110" height="44" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="320" y="55" width="110" height="44" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="450" y="55" width="100" height="44" rx="5" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="75" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">grass</text>
+        <text x="225" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">rabbit</text>
+        <text x="375" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">fox</text>
+        <text x="500" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">eagle</text>
+        <!-- arrows -->
+        <line x1="130" y1="77" x2="168" y2="77" stroke="#C8A24A" stroke-width="2.5"/><polygon points="170,77 160,72 160,82" fill="#C8A24A"/>
+        <line x1="280" y1="77" x2="318" y2="77" stroke="#C8A24A" stroke-width="2.5"/><polygon points="320,77 310,72 310,82" fill="#C8A24A"/>
+        <line x1="430" y1="77" x2="448" y2="77" stroke="#C8A24A" stroke-width="2.5"/><polygon points="450,77 440,72 440,82" fill="#C8A24A"/>
+        <text x="75" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">producer</text>
+        <text x="225" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">primary</text>
+        <text x="375" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">secondary</text>
+        <text x="500" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">tertiary</text>
+      </svg>
+      <div class="caption">Arrows point in the direction energy flows — from the food to the feeder</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — which way the arrows point</h4>
+      <p>The arrows in a food chain show the way <strong>energy and biomass flow</strong> — from the thing being eaten <em>to</em> the thing eating it. So an arrow always points <strong>towards the predator</strong>, not towards the food. Drawing it backwards is a common slip.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Predator–prey cycles</h3>
+    <p>In a stable community, the numbers of predators and their prey rise and fall in <strong>cycles</strong>. When there is plenty of prey, predators have lots of food, so the predator population grows. More predators eat more prey, so the prey numbers fall. With less food, predator numbers then fall — which lets the prey recover, and the cycle repeats.</p>
+    <p>The two graphs stay <strong>out of step</strong>: the predator peak comes <em>slightly after</em> the prey peak, because the predators take time to respond to the change in food.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PREDATOR FOLLOWS PREY</text>
+        <!-- axes -->
+        <line x1="55" y1="40" x2="55" y2="165" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="55" y1="165" x2="520" y2="165" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="48" y="105" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370" transform="rotate(-90 48 105)">number</text>
+        <text x="285" y="185" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">time</text>
+        <!-- prey wave (green) — peaks lead -->
+        <path d="M55 100 C95 60 130 60 170 100 C210 140 245 140 285 100 C325 60 360 60 400 100 C440 140 475 140 515 100" fill="none" stroke="#2C5F2D" stroke-width="2.5"/>
+        <!-- predator wave (red) — shifted right so peaks lag the prey -->
+        <path d="M55 130 C95 118 110 100 150 120 C195 142 230 142 270 120 C310 98 330 100 370 120 C415 142 450 142 490 120 C505 116 510 112 515 110" fill="none" stroke="#B85042" stroke-width="2.5"/>
+        <!-- legend in clear space -->
+        <line x1="360" y1="48" x2="385" y2="48" stroke="#2C5F2D" stroke-width="2.5"/>
+        <text x="392" y="52" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#2C5F2D">prey</text>
+        <line x1="440" y1="48" x2="465" y2="48" stroke="#B85042" stroke-width="2.5"/>
+        <text x="472" y="52" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#B85042">predator</text>
+      </svg>
+      <div class="caption">Predator numbers peak just after prey numbers — they lag slightly behind</div>
+    </div>
+
+    <div class="rp">
+      <h4>Population sampling — quadrats and a transect</h4>
+      <p><strong>Aim:</strong> measure how the distribution and abundance of a species varies across a habitat using random sampling (a quadrat) and sampling along a line (a transect).</p>
+      <p><strong>Random sampling with a quadrat (to find abundance):</strong></p>
+      <ol>
+        <li>Use a <strong>random method</strong> to choose positions — e.g. generate random coordinates with a calculator and lay out two tape measures as axes. This avoids bias.</li>
+        <li>Place a <strong>quadrat</strong> (a square frame) at each coordinate.</li>
+        <li>Count the number of the chosen organism, or estimate <strong>percentage cover</strong>, inside the quadrat.</li>
+        <li>Repeat many times, then find the <strong>mean per quadrat</strong>. Multiply by the total number of quadrats that would fit the whole area to estimate the total population.</li>
+      </ol>
+      <p><strong>Transect (to study how a species changes across an area):</strong></p>
+      <ol>
+        <li>Lay a <strong>tape measure (a line transect)</strong> across the area you want to study, e.g. from a path to under a tree.</li>
+        <li>Place a quadrat at regular intervals along the line and record the organisms (or % cover) each time.</li>
+        <li>Plot the results against distance to show how abundance changes — this shows the effect of a changing abiotic factor such as light or trampling.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> use a <strong>large number of samples</strong> and a genuinely <strong>random</strong> method to make the mean reliable and avoid bias.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — estimating a population</h4>
+      <p class="q">A field is 1000 m². A 0.5 m × 0.5 m quadrat (0.25 m²) is placed 10 times. The counts of daisies are: 4, 6, 5, 3, 7, 5, 4, 6, 5, 5. Estimate the total number of daisies in the field.</p>
+      <div class="step"><span class="label">Mean</span><span class="v">total = 50; mean = 50 ÷ 10 = 5 daisies per quadrat</span></div>
+      <div class="step"><span class="label">Per m²</span><span class="v">each quadrat = 0.25 m², so per m² = 5 ÷ 0.25 = 20</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">20 × 1000 = 20 000 daisies (estimated)</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">You want to estimate the abundance of buttercups evenly across a field. Which is the best method?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Place quadrats only where you can see lots of buttercups</span></li>
+        <li><span class="letter">B</span><span>Place quadrats at random coordinates and find the mean</span></li>
+        <li><span class="letter">C</span><span>Lay a single transect and count once</span></li>
+        <li><span class="letter">D</span><span>Count every buttercup in the field by hand</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> For overall abundance you use <em>random</em> quadrat sampling so the result isn't biased, then scale the mean up. A is biased; a transect (C) is for studying change <em>across</em> an area, not overall abundance; counting everything (D) is impractical.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What is a producer, and how does it make food?</summary><div class="ans">An organism (usually a green plant or algae) at the <strong>start of a food chain</strong> that makes its own food by <strong>photosynthesis</strong>.</div></details></li>
+      <li><details><summary>In a food chain, which way do the arrows point?</summary><div class="ans">In the direction <strong>energy/biomass flows</strong> — from the organism being eaten <strong>to</strong> the one eating it (towards the predator).</div></details></li>
+      <li><details><summary>Why does the predator population peak slightly after the prey population?</summary><div class="ans">Predators need plenty of prey to breed, so their numbers rise <strong>after</strong> the prey numbers rise — there is a time lag.</div></details></li>
+      <li><details><summary>Why is random sampling used with quadrats?</summary><div class="ans">To <strong>avoid bias</strong>, so the sample fairly represents the whole area and the estimate is reliable.</div></details></li>
+      <li><details><summary>When would you use a transect rather than random quadrats?</summary><div class="ans">When studying <strong>how abundance changes across an area</strong> (e.g. as an abiotic factor like light or trampling changes), not for overall abundance.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — THE CARBON CYCLE (4.7.2.4)                                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.7.2 · The carbon cycle</div>
+    <h2 class="lesson-title">The <em>carbon</em> cycle</h2>
+    <p class="lesson-promise">How carbon is recycled endlessly between the air, living things and the ground — and the four processes that move it.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Carbon goes round and round</h3>
+    <p>Carbon is constantly recycled. It moves out of the air, into living things, and back to the air again. There are four processes you must know — and you should be able to say whether each one <em>removes</em> carbon dioxide from the air or <em>returns</em> it.</p>
+    <p><strong>Photosynthesis</strong> removes carbon dioxide from the air: plants and algae take in CO₂ and lock the carbon into glucose and then into their tissues. This is the <em>only</em> process that removes CO₂ from the atmosphere. <strong>Respiration</strong> returns CO₂ to the air — every living thing (plants, animals and microorganisms) respires. <strong>Combustion</strong> (burning fuels and wood) returns CO₂ to the air. <strong>Decomposition</strong> returns it too: when decomposers (microorganisms) break down dead matter and waste, they respire and release CO₂.</p>
+
+    <div class="keywords">
+      <h4>Carbon in or carbon out?</h4>
+      <dl>
+        <dt>Photosynthesis</dt><dd>Removes CO₂ from the air (the only process that does).</dd>
+        <dt>Respiration</dt><dd>Returns CO₂ to the air — in all living organisms.</dd>
+        <dt>Combustion</dt><dd>Returns CO₂ — burning fuels and wood.</dd>
+        <dt>Decomposition</dt><dd>Returns CO₂ — microorganisms respiring as they break down dead matter.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE CARBON CYCLE</text>
+        <!-- atmosphere box -->
+        <rect x="190" y="38" width="180" height="40" rx="20" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="63" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">CO₂ in the air</text>
+        <!-- plants -->
+        <rect x="40" y="150" width="130" height="44" rx="5" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="105" y="177" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">plants</text>
+        <!-- animals -->
+        <rect x="215" y="150" width="130" height="44" rx="5" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="280" y="177" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">animals</text>
+        <!-- decomposers / fuels -->
+        <rect x="390" y="150" width="150" height="44" rx="5" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+        <text x="465" y="172" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">dead matter</text>
+        <text x="465" y="187" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">&amp; fuels</text>
+        <!-- arrows with labels in clear space -->
+        <line x1="200" y1="78" x2="120" y2="148" stroke="#2C5F2D" stroke-width="2"/><polygon points="118,150 126,140 130,148" fill="#2C5F2D"/>
+        <text x="120" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#2C5F2D">photosynthesis</text>
+        <line x1="280" y1="148" x2="280" y2="80" stroke="#B85042" stroke-width="2"/><polygon points="280,78 275,88 285,88" fill="#B85042"/>
+        <text x="335" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#B85042">respiration</text>
+        <line x1="450" y1="148" x2="360" y2="80" stroke="#C8A24A" stroke-width="2"/><polygon points="358,78 362,89 369,82" fill="#C8A24A"/>
+        <text x="450" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#C8A24A">combustion /</text>
+        <text x="450" y="131" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#C8A24A">decomposition</text>
+        <!-- eaten arrow -->
+        <line x1="170" y1="172" x2="213" y2="172" stroke="#5C6370" stroke-width="1.5"/><polygon points="215,172 205,167 205,177" fill="#5C6370"/>
+        <text x="192" y="143" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">eaten</text>
+      </svg>
+      <div class="caption">Photosynthesis takes carbon out of the air; respiration, combustion and decomposition put it back</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — only one process removes CO₂</h4>
+      <p><strong>Photosynthesis is the only process that takes carbon dioxide out of the air.</strong> Respiration, combustion and decomposition all <em>return</em> it. Also remember <strong>decomposers respire</strong> — that's why decomposition releases CO₂. And plants respire too, not just photosynthesise.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which process is the <em>only</em> one that removes carbon dioxide from the atmosphere?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Respiration</span></li>
+        <li><span class="letter">B</span><span>Combustion</span></li>
+        <li><span class="letter">C</span><span>Photosynthesis</span></li>
+        <li><span class="letter">D</span><span>Decomposition</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — photosynthesis.</strong> Plants and algae take CO₂ out of the air to make glucose. The other three all <em>release</em> CO₂ back into the air.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the four processes in the carbon cycle.</summary><div class="ans"><strong>Photosynthesis, respiration, combustion</strong> and <strong>decomposition</strong>.</div></details></li>
+      <li><details><summary>Which process returns carbon to the air during the breakdown of dead organisms?</summary><div class="ans"><strong>Decomposition</strong> — decomposers (microorganisms) <strong>respire</strong> as they break down dead matter, releasing CO₂.</div></details></li>
+      <li><details><summary>Do plants only photosynthesise?</summary><div class="ans">No — plants also <strong>respire</strong> (all the time), returning some CO₂ to the air.</div></details></li>
+      <li><details><summary>How is carbon passed from plants to animals?</summary><div class="ans">When animals <strong>eat</strong> the plants (or eat other animals), the carbon in the food is passed along the food chain.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — THE WATER CYCLE (4.7.2.4)                                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.7.2 · The water cycle</div>
+    <h2 class="lesson-title">The <em>water</em> cycle</h2>
+    <p class="lesson-promise">How the Sun drives water round the planet, providing fresh water for life on land.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The journey of water</h3>
+    <p>The water cycle provides <strong>fresh water</strong> for plants and animals on land before it drains back to the sea, and it keeps going round and round. The energy that drives it comes from the <strong>Sun</strong>.</p>
+    <p>Energy from the Sun makes water <strong>evaporate</strong> from the seas, lakes and rivers, turning liquid water into water vapour. As the vapour rises and cools, it <strong>condenses</strong> back into tiny droplets, forming clouds. The water then falls as <strong>precipitation</strong> — rain, snow or hail. Some of this water is taken up by plants and returned to the air by transpiration; the rest runs back into rivers and the sea, and the cycle repeats.</p>
+
+    <div class="keywords">
+      <h4>The three key processes</h4>
+      <dl>
+        <dt>Evaporation</dt><dd>The Sun's energy turns liquid water into water vapour.</dd>
+        <dt>Condensation</dt><dd>Rising vapour cools and turns back into liquid droplets (clouds).</dd>
+        <dt>Precipitation</dt><dd>Water falls as rain, snow or hail.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE WATER CYCLE</text>
+        <!-- sun -->
+        <circle cx="70" cy="55" r="20" fill="#C8A24A"/>
+        <text x="70" y="92" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">Sun</text>
+        <!-- sea -->
+        <rect x="30" y="190" width="230" height="40" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="145" y="216" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">sea</text>
+        <!-- cloud -->
+        <ellipse cx="370" cy="70" rx="70" ry="26" fill="#FCFAF4" stroke="#5C6370" stroke-width="1.5"/>
+        <text x="370" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#5C6370">cloud</text>
+        <!-- land -->
+        <rect x="260" y="190" width="270" height="40" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="1.5"/>
+        <text x="395" y="216" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">land</text>
+        <!-- evaporation arrow -->
+        <line x1="150" y1="188" x2="150" y2="100" stroke="#B85042" stroke-width="2"/><polygon points="150,96 145,108 155,108" fill="#B85042"/>
+        <text x="150" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#B85042">evaporation</text>
+        <!-- condensation arrow -->
+        <line x1="200" y1="95" x2="295" y2="70" stroke="#1E2761" stroke-width="2"/><polygon points="299,69 287,67 290,77" fill="#1E2761"/>
+        <text x="248" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#1E2761">condensation</text>
+        <!-- precipitation arrows -->
+        <line x1="350" y1="98" x2="350" y2="186" stroke="#2C5F2D" stroke-width="2"/><polygon points="350,188 345,176 355,176" fill="#2C5F2D"/>
+        <line x1="395" y1="98" x2="395" y2="186" stroke="#2C5F2D" stroke-width="2"/><polygon points="395,188 390,176 400,176" fill="#2C5F2D"/>
+        <text x="455" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#2C5F2D">precipitation</text>
+      </svg>
+      <div class="caption">The Sun's energy evaporates water; it condenses into clouds, then falls as precipitation</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — evaporation vs condensation</h4>
+      <p><strong>Evaporation</strong> is liquid → vapour (needs energy from the Sun). <strong>Condensation</strong> is vapour → liquid (happens as the air <em>cools</em>). Pupils often swap these. And remember the energy source is the <strong>Sun</strong> — that's a common one-mark question.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">In the water cycle, what makes water vapour turn back into liquid droplets to form clouds?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It is heated by the Sun</span></li>
+        <li><span class="letter">B</span><span>It cools down as it rises — condensation</span></li>
+        <li><span class="letter">C</span><span>It precipitates straight away</span></li>
+        <li><span class="letter">D</span><span>It evaporates higher up</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> As vapour rises it <em>cools</em>, so it <strong>condenses</strong> back into liquid droplets, forming clouds. Heating (A) drives evaporation, the opposite change.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 3 questions</div>
+    <ol>
+      <li><details><summary>What provides the energy for the water cycle?</summary><div class="ans">Energy from the <strong>Sun</strong>.</div></details></li>
+      <li><details><summary>Put these in order: condensation, precipitation, evaporation.</summary><div class="ans"><strong>Evaporation → condensation → precipitation</strong> (then water drains back and it repeats).</div></details></li>
+      <li><details><summary>Why is the water cycle important for life on land?</summary><div class="ans">It provides <strong>fresh water</strong> for plants and animals before the water drains back to the sea.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — BIODIVERSITY & HUMAN IMPACT (4.7.3)                           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.7.3 · Human impact</div>
+    <h2 class="lesson-title">Biodiversity &amp; <em>human</em> impact</h2>
+    <p class="lesson-promise">What biodiversity is, the three kinds of pollution, why land use and deforestation matter, and how global warming threatens species.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Biodiversity &amp; pollution</h3>
+    <p><strong>Biodiversity</strong> is the variety of all the different species of organisms on Earth, or within an ecosystem. <strong>High biodiversity makes ecosystems more stable</strong>, because species depend on each other less for any single resource. Many human activities are reducing biodiversity, and that is a serious problem for the future.</p>
+    <p>A rapidly growing human population uses more resources, and we produce more waste and <strong>pollution</strong>. Pollution kills plants and animals and reduces biodiversity. It happens in three places:</p>
+    <p><strong>Water</strong> — by sewage, fertiliser run-off and toxic chemicals. <strong>Land</strong> — by landfill and toxic chemicals such as pesticides and herbicides. <strong>Air</strong> — by smoke and acidic gases like sulfur dioxide.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THREE PLACES WE POLLUTE</text>
+        <!-- water -->
+        <rect x="30" y="50" width="150" height="80" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="105" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">Water</text>
+        <text x="105" y="104" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">sewage,</text>
+        <text x="105" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">fertiliser</text>
+        <!-- land -->
+        <rect x="205" y="50" width="150" height="80" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="280" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">Land</text>
+        <text x="280" y="104" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">landfill,</text>
+        <text x="280" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">pesticides</text>
+        <!-- air -->
+        <rect x="380" y="50" width="150" height="80" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="455" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">Air</text>
+        <text x="455" y="104" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">smoke,</text>
+        <text x="455" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">acidic gases</text>
+      </svg>
+      <div class="caption">Pollution reduces biodiversity by killing plants and animals — in water, on land and in the air</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — biodiversity isn't just "lots of animals"</h4>
+      <p>Biodiversity means the <strong>variety of different species</strong>, not just numbers. An area can have many organisms but <em>low</em> biodiversity if they're all the same species. High biodiversity makes an ecosystem more <strong>stable</strong>, so reducing it is risky for us too.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Land use, deforestation &amp; global warming</h3>
+    <p>Humans reduce the land and resources available for other organisms by using more for <strong>building, quarrying, farming and dumping waste</strong>. The destruction of <strong>peat bogs</strong> to produce compost is one example — it also releases the stored carbon as CO₂, adding to the problem.</p>
+    <p><strong>Deforestation</strong> — cutting down large areas of forest, often in tropical regions — happens to clear land for farming (cattle and rice) and to grow crops for biofuels. It causes <strong>more carbon dioxide</strong> to be released (from burning and from the activity of decomposers), <strong>reduces the rate at which CO₂ is removed</strong> from the air by photosynthesis, and <strong>reduces biodiversity</strong> by destroying habitats.</p>
+    <p>Levels of carbon dioxide and methane in the atmosphere are increasing, and these are <strong>greenhouse gases</strong>. They cause <strong>global warming</strong>: a rise in the average temperature of the Earth. The consequences include changing climates, rising sea levels (from melting ice and the expansion of warmer water), and changes to the distribution of species — meaning some species lose their habitats and biodiversity falls.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which is <em>not</em> a direct effect of deforestation?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Less carbon dioxide is removed from the air by photosynthesis</span></li>
+        <li><span class="letter">B</span><span>More carbon dioxide is released into the air</span></li>
+        <li><span class="letter">C</span><span>Biodiversity is reduced as habitats are destroyed</span></li>
+        <li><span class="letter">D</span><span>The Sun stops providing energy for the water cycle</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>D.</strong> The Sun keeps driving the water cycle regardless. Deforestation <em>does</em> reduce CO₂ removal (A), release more CO₂ (B), and cut biodiversity (C).</div>
+      </details>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "greenhouse" vs "ozone"</h4>
+      <p>Global warming is caused by <strong>greenhouse gases</strong> (carbon dioxide and methane) trapping heat — it is <em>not</em> the same as the ozone layer or "the ozone hole". Don't bring ozone into a global-warming answer; AQA wants CO₂ and methane.</p>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Define biodiversity.</summary><div class="ans">The <strong>variety of different species</strong> of organisms on Earth, or within an ecosystem.</div></details></li>
+      <li><details><summary>Name the three places pollution occurs and give one cause of each.</summary><div class="ans"><strong>Water</strong> (sewage/fertiliser), <strong>land</strong> (landfill/pesticides), <strong>air</strong> (smoke/acidic gases).</div></details></li>
+      <li><details><summary>Give two reasons deforestation increases atmospheric CO₂.</summary><div class="ans">Burning the trees releases CO₂, and decomposers release more CO₂; also <strong>fewer trees means less CO₂ removed</strong> by photosynthesis.</div></details></li>
+      <li><details><summary>Name the two greenhouse gases you need to know.</summary><div class="ans"><strong>Carbon dioxide</strong> and <strong>methane</strong>.</div></details></li>
+      <li><details><summary>Give two consequences of global warming for living things.</summary><div class="ans">Any two: <strong>loss of habitats, changes to species' distribution, reduced biodiversity, rising sea levels</strong> flooding land.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 7 — MAINTAINING BIODIVERSITY (4.7.3.5)                            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-7">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 07 · 4.7.3 · Conservation</div>
+    <h2 class="lesson-title">Maintaining <em>biodiversity</em></h2>
+    <p class="lesson-promise">The programmes that protect species and habitats — and why it sometimes comes down to a trade-off.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Protecting what's left</h3>
+    <p>Scientists and governments run programmes to reduce the loss of biodiversity. You need to know the main methods and be able to say what each one achieves.</p>
+    <p><strong>Breeding programmes</strong> for endangered species help keep their numbers up (for example in zoos). <strong>Protecting and regenerating rare habitats</strong> — such as mangroves, heathland and coral reefs — keeps whole communities alive. <strong>Reintroducing field margins and hedgerows</strong> in farmland, where farmers grow only one type of crop, gives more species somewhere to live. <strong>Reducing deforestation</strong> and the carbon emissions that go with it protects forests and the climate. And <strong>recycling resources</strong> rather than dumping waste in landfill reduces pollution.</p>
+
+    <div class="keywords">
+      <h4>Ways to maintain biodiversity</h4>
+      <dl>
+        <dt>Breeding programmes</dt><dd>Captive breeding of endangered species to boost numbers.</dd>
+        <dt>Protecting habitats</dt><dd>Conserving and regenerating rare habitats and the species in them.</dd>
+        <dt>Field margins &amp; hedgerows</dt><dd>Leaving wild strips on farmland for more species.</dd>
+        <dt>Reducing deforestation</dt><dd>Protecting forests and cutting carbon emissions.</dd>
+        <dt>Recycling</dt><dd>Reusing resources instead of sending waste to landfill.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">REFORESTATION RESTORES BIODIVERSITY</text>
+        <!-- before panel -->
+        <rect x="40" y="45" width="210" height="110" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="145" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">Before</text>
+        <line x1="55" y1="135" x2="235" y2="135" stroke="#5C6370" stroke-width="1.5"/>
+        <!-- a couple of stumps -->
+        <rect x="90" y="125" width="8" height="10" fill="#5C6370"/>
+        <rect x="180" y="125" width="8" height="10" fill="#5C6370"/>
+        <text x="145" y="105" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">bare, few species</text>
+        <!-- after panel -->
+        <rect x="310" y="45" width="210" height="110" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="415" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">After</text>
+        <line x1="325" y1="135" x2="505" y2="135" stroke="#5C6370" stroke-width="1.5"/>
+        <!-- trees -->
+        <polygon points="355,135 345,108 365,108" fill="#2C5F2D"/>
+        <polygon points="415,135 403,100 427,100" fill="#2C5F2D"/>
+        <polygon points="475,135 465,108 485,108" fill="#2C5F2D"/>
+        <text x="415" y="88" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#2C5F2D">replanted, more species</text>
+      </svg>
+      <div class="caption">Reforestation rebuilds habitats, so more species can return — biodiversity recovers</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — explain why, not just what</h4>
+      <p>An exam answer for "how do field margins maintain biodiversity?" needs the <em>reason</em>: they provide <strong>habitats and food for a wider variety of species</strong> on land that would otherwise be a single crop. State the method <strong>and</strong> what it does for the species.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The trade-off</h3>
+    <p>Conservation can be expensive and is sometimes in <strong>conflict</strong> with the pressures of feeding and housing a growing human population, or with local economic interests. Decisions often involve a <strong>trade-off</strong> between protecting biodiversity and the costs to people. In the exam you may be asked to weigh up both sides using data — so look for the figures and refer to them.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A farmer leaves wild field margins around their crops. How does this help maintain biodiversity?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It increases the crop yield directly</span></li>
+        <li><span class="letter">B</span><span>It provides extra habitats and food for a wider range of species</span></li>
+        <li><span class="letter">C</span><span>It removes carbon dioxide from the atmosphere</span></li>
+        <li><span class="letter">D</span><span>It stops the water cycle from happening</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The wild margins give <em>more species</em> somewhere to live and feed, on land that would otherwise be a single crop — so biodiversity rises.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 7 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Give three ways humans can maintain biodiversity.</summary><div class="ans">Any three: <strong>breeding programmes</strong> for endangered species, <strong>protecting/regenerating rare habitats</strong>, <strong>field margins and hedgerows</strong>, <strong>reducing deforestation</strong>, <strong>recycling</strong> instead of landfill.</div></details></li>
+      <li><details><summary>How does reforestation help biodiversity?</summary><div class="ans">It <strong>restores habitats</strong>, so more species can return — and the new trees also remove CO₂ by photosynthesis.</div></details></li>
+      <li><details><summary>Why is high biodiversity good for an ecosystem?</summary><div class="ans">It makes the ecosystem more <strong>stable</strong>, as species depend less on each other for any single resource.</div></details></li>
+      <li><details><summary>Why are conservation decisions often a trade-off?</summary><div class="ans">Protecting biodiversity can <strong>conflict with the cost</strong> and the needs of a growing population (food, housing, money), so the benefits and costs must be weighed up.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="7">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Biology Paper 2 · B7 Ecology</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'b7-ecology-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=8df5fab6-6a9b-4468-8d54-8293f1417618&amp;ref=interactive-science&amp;from=b7-ecology-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=b7-ecology-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

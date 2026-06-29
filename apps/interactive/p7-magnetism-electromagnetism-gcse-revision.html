@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnetism &amp; Electromagnetism (P7) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for P7 Magnetism & Electromagnetism — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Paper 2 · P7 Magnetism &amp; Electromagnetism</div>
+    <h1>Magnetism, <em>for the exam.</em></h1>
+    <p class="tag">The whole of P7 — magnetic poles and fields, the field around a wire and a solenoid, electromagnets, the motor effect and how a motor spins. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Magnets &amp; fields</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Field of a current</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">The motor effect</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">The electric motor</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — PERMANENT & INDUCED MAGNETS (4.7.1.1 / 4.7.1.2)               -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · P7 · Magnets &amp; fields</div>
+    <h2 class="lesson-title">Permanent &amp; <em>induced</em> magnets</h2>
+    <p class="lesson-promise">By the end of this topic you'll explain attraction and repulsion, sketch a bar magnet's field, tell permanent from induced magnets, and plot a field with a compass.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Poles, attraction and repulsion</h3>
+    <p>Every magnet has two <strong>poles</strong> — a <strong>north pole</strong> and a <strong>south pole</strong>. The poles are where the magnetic forces are strongest. When you bring two magnets together, the rule is simple: <strong>like poles repel</strong> (N–N or S–S push apart) and <strong>unlike poles attract</strong> (N–S pull together).</p>
+    <p>Attraction and repulsion between two poles is an example of a <strong>non-contact force</strong> — the magnets affect each other without touching. The force acts through the <strong>magnetic field</strong> that surrounds every magnet.</p>
+
+    <div class="keywords">
+      <h4>Words to nail</h4>
+      <dl>
+        <dt>Permanent magnet</dt><dd>Produces its own magnetic field all the time — e.g. a bar magnet or a fridge magnet.</dd>
+        <dt>Induced magnet</dt><dd>A material that becomes a magnet only while it is <em>in</em> a magnetic field.</dd>
+        <dt>Magnetic material</dt><dd>Iron, steel, cobalt and nickel — these can be magnetised.</dd>
+        <dt>Magnetic field</dt><dd>The region around a magnet where another magnet or magnetic material feels a force.</dd>
+      </dl>
+    </div>
+
+    <p>Some materials are <strong>induced magnets</strong>. A piece of iron isn't a magnet on its own, but bring a magnet near it and the iron becomes magnetised while it's in the field. An induced magnet is <strong>always attracted</strong> to the magnet that induced it — never repelled. Take the magnet away and most of the magnetism quickly disappears.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">LIKE REPEL · UNLIKE ATTRACT</text>
+        <!-- repel pair -->
+        <text x="150" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#5C6370">like poles</text>
+        <rect x="80" y="70" width="60" height="26" fill="#B85042"/>
+        <text x="110" y="88" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#fff">N</text>
+        <rect x="160" y="70" width="60" height="26" fill="#1E2761"/>
+        <text x="190" y="88" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#fff">N</text>
+        <line x1="148" y1="115" x2="132" y2="115" stroke="#5C6370" stroke-width="2"/>
+        <polygon points="128,115 138,110 138,120" fill="#5C6370"/>
+        <line x1="152" y1="115" x2="168" y2="115" stroke="#5C6370" stroke-width="2"/>
+        <polygon points="172,115 162,110 162,120" fill="#5C6370"/>
+        <text x="150" y="138" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">repel</text>
+        <!-- attract pair -->
+        <text x="410" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#5C6370">unlike poles</text>
+        <rect x="340" y="70" width="60" height="26" fill="#B85042"/>
+        <text x="370" y="88" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#fff">N</text>
+        <rect x="420" y="70" width="60" height="26" fill="#1E2761"/>
+        <text x="450" y="88" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#fff">S</text>
+        <line x1="392" y1="115" x2="408" y2="115" stroke="#5C6370" stroke-width="2"/>
+        <polygon points="412,115 402,110 402,120" fill="#5C6370"/>
+        <line x1="428" y1="115" x2="412" y2="115" stroke="#5C6370" stroke-width="2"/>
+        <polygon points="408,115 418,110 418,120" fill="#5C6370"/>
+        <text x="410" y="138" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">attract</text>
+      </svg>
+      <div class="caption">Like poles repel; unlike poles attract — both are non-contact forces</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — induced magnets only attract</h4>
+      <p>An <strong>induced</strong> magnet (like a steel paperclip near a magnet) is <strong>always attracted</strong>, never repelled. Repulsion only ever happens between two magnets that already have their own poles. So if two objects repel, you know <em>both</em> must be permanent magnets — a useful test in the exam.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Two objects, X and Y, repel each other when brought close. What can you conclude?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>X is a magnet and Y is an unmagnetised iron bar</span></li>
+        <li><span class="letter">B</span><span>Both X and Y are permanent magnets</span></li>
+        <li><span class="letter">C</span><span>Both X and Y are induced magnets</span></li>
+        <li><span class="letter">D</span><span>Neither object is magnetic</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Repulsion only happens between two magnets with their own poles, so both must be <em>permanent</em> magnets. An induced magnet (A) is only ever attracted, so it could never cause repulsion.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The field of a bar magnet</h3>
+    <p>A <strong>magnetic field</strong> is shown using <strong>field lines</strong>. The lines always point <strong>from north to south</strong> outside the magnet. Where the lines are <strong>closer together</strong>, the field is <strong>stronger</strong> — so the field is strongest at the poles. The lines never cross.</p>
+    <p>You can plot the field with a small <strong>plotting compass</strong>. A compass needle is a tiny magnet, so it lines up with the field and its (north) tip points along a field line. Move it around the magnet, mark the direction at each spot, and join the marks to draw the lines.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">FIELD OF A BAR MAGNET</text>
+        <!-- magnet -->
+        <rect x="220" y="118" width="60" height="34" fill="#B85042"/>
+        <text x="250" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#fff">N</text>
+        <rect x="280" y="118" width="60" height="34" fill="#1E2761"/>
+        <text x="310" y="140" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#fff">S</text>
+        <!-- field loops, N(left) -> S(right) -->
+        <path d="M220 135 C150 60, 410 60, 340 135" fill="none" stroke="#5C6370" stroke-width="1.6"/>
+        <path d="M220 135 C170 95, 390 95, 340 135" fill="none" stroke="#5C6370" stroke-width="1.6"/>
+        <path d="M220 135 C150 210, 410 210, 340 135" fill="none" stroke="#5C6370" stroke-width="1.6"/>
+        <path d="M220 135 C170 175, 390 175, 340 135" fill="none" stroke="#5C6370" stroke-width="1.6"/>
+        <!-- arrowheads pointing N->S (left to right along tops/bottoms) -->
+        <polygon points="282,63 272,60 276,70" fill="#5C6370"/>
+        <polygon points="282,207 272,210 276,200" fill="#5C6370"/>
+        <text x="490" y="130" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">lines point</text>
+        <text x="490" y="148" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">N → S</text>
+      </svg>
+      <div class="caption">Field lines run from N to S outside the magnet; closer lines = stronger field</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — direction and spacing</h4>
+      <p>Field lines always have an <strong>arrow</strong> and always point <strong>from N to S</strong> (outside the magnet). Don't draw them touching or crossing. The <strong>spacing</strong> shows strength — packed lines mean a strong field, spread-out lines mean a weak one. Earth itself behaves like a giant bar magnet, which is why a compass points (roughly) north.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">On a field-line diagram, what does it tell you when the lines are drawn close together?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The field is weak there</span></li>
+        <li><span class="letter">B</span><span>The field is strong there</span></li>
+        <li><span class="letter">C</span><span>There is no field there</span></li>
+        <li><span class="letter">D</span><span>The poles have swapped over</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — strong.</strong> The closer the field lines, the stronger the magnetic field. That's why the lines bunch up at the poles, where the field is strongest.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>State the rule for the force between two magnetic poles.</summary><div class="ans">Like poles <strong>repel</strong>, unlike poles <strong>attract</strong>. It is a <strong>non-contact</strong> force.</div></details></li>
+      <li><details><summary>What is the difference between a permanent magnet and an induced magnet?</summary><div class="ans">A <strong>permanent</strong> magnet makes its own field all the time. An <strong>induced</strong> magnet only becomes magnetic while it is in a magnetic field, and loses most of its magnetism when removed.</div></details></li>
+      <li><details><summary>Which way do magnetic field lines point, and what does their spacing show?</summary><div class="ans">From <strong>north to south</strong> outside the magnet. Closer lines mean a <strong>stronger</strong> field.</div></details></li>
+      <li><details><summary>How would you use a plotting compass to find the shape of a magnet's field?</summary><div class="ans">Place the compass near the magnet, mark the direction the needle points, move it on and repeat, then join the dots into field lines. The needle lines up with the field because it is itself a small magnet.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — MAGNETIC FIELD OF A CURRENT (4.7.2.1)                         -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · P7 · Field of a current</div>
+    <h2 class="lesson-title">The magnetic field of a <em>current</em></h2>
+    <p class="lesson-promise">A current makes its own magnetic field — round a wire, and a strong, uniform one through a solenoid. Plus what makes electromagnets so useful.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The field around a straight wire</h3>
+    <p>When a current flows through a wire, it creates a <strong>magnetic field</strong> around the wire. The field lines are <strong>concentric circles</strong> in flat rings around the wire, at right angles to it. The field gets <strong>weaker</strong> the further you go from the wire, so the circles are drawn further apart further out.</p>
+    <p>Two things make the field <strong>stronger</strong>: a <strong>bigger current</strong>, and being <strong>closer</strong> to the wire. Reverse the direction of the current and the field lines reverse direction too.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">FIELD AROUND A STRAIGHT WIRE</text>
+        <!-- wire (vertical) -->
+        <line x1="280" y1="45" x2="280" y2="210" stroke="#B85042" stroke-width="4"/>
+        <text x="296" y="55" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">current-carrying wire</text>
+        <!-- concentric circles (as ellipses to show flat rings) -->
+        <ellipse cx="280" cy="130" rx="38" ry="14" fill="none" stroke="#1E2761" stroke-width="1.6"/>
+        <ellipse cx="280" cy="130" rx="74" ry="26" fill="none" stroke="#5C6370" stroke-width="1.4"/>
+        <ellipse cx="280" cy="130" rx="112" ry="40" fill="none" stroke="#CFD8E3" stroke-width="1.3"/>
+        <!-- direction arrows on inner ring -->
+        <polygon points="318,128 308,123 308,133" fill="#1E2761"/>
+        <polygon points="242,132 252,127 252,137" fill="#1E2761"/>
+        <text x="120" y="134" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">rings get</text>
+        <text x="120" y="152" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">weaker outward</text>
+      </svg>
+      <div class="caption">Concentric circles around the wire — stronger near the wire, weaker further out</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — circles, not straight lines</h4>
+      <p>The field round a single straight wire is a set of <strong>circles</strong> wrapped around it, not a bar-magnet shape and not straight lines along the wire. People also forget the field has a <em>direction</em>: flip the current and every arrow flips too.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Solenoids and electromagnets</h3>
+    <p>Wind the wire into a coil — a <strong>solenoid</strong> — and the fields from all the loops add together. Inside the solenoid this makes a <strong>strong, uniform field</strong> (the field lines are straight, evenly spaced and all in the same direction). Outside, the field looks just like a <strong>bar magnet's</strong> field, with a north pole at one end and a south pole at the other.</p>
+    <p>Put an <strong>iron core</strong> inside the solenoid and the field becomes much stronger — this is an <strong>electromagnet</strong>. The huge advantage of an electromagnet is that it can be <strong>switched on and off</strong> with the current, and its strength can be changed. That's why electromagnets are used in <strong>scrapyard cranes</strong> (pick up and drop cars), <strong>electric bells</strong> and <strong>relays</strong> (a small current switches a larger circuit).</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SOLENOID FIELD = BAR-MAGNET FIELD</text>
+        <!-- coil loops -->
+        <g stroke="#B85042" stroke-width="3" fill="none">
+          <ellipse cx="200" cy="120" rx="9" ry="34"/>
+          <ellipse cx="232" cy="120" rx="9" ry="34"/>
+          <ellipse cx="264" cy="120" rx="9" ry="34"/>
+          <ellipse cx="296" cy="120" rx="9" ry="34"/>
+          <ellipse cx="328" cy="120" rx="9" ry="34"/>
+          <ellipse cx="360" cy="120" rx="9" ry="34"/>
+        </g>
+        <!-- uniform internal field -->
+        <line x1="210" y1="120" x2="350" y2="120" stroke="#1E2761" stroke-width="1.6"/>
+        <polygon points="354,120 344,115 344,125" fill="#1E2761"/>
+        <text x="280" y="173" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E2761">uniform field inside</text>
+        <!-- pole labels -->
+        <text x="170" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">N</text>
+        <text x="392" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">S</text>
+        <!-- external loop hint -->
+        <path d="M170 120 C120 40, 440 40, 388 120" fill="none" stroke="#CFD8E3" stroke-width="1.4"/>
+        <path d="M170 120 C120 200, 440 200, 388 120" fill="none" stroke="#CFD8E3" stroke-width="1.4"/>
+        <text x="470" y="124" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">add an iron</text>
+        <text x="470" y="142" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">core → stronger</text>
+      </svg>
+      <div class="caption">Strong uniform field inside the coil; outside it behaves like a bar magnet</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — what makes an electromagnet</h4>
+      <p>A solenoid <em>with an iron core</em> is an electromagnet. Don't confuse it with a permanent magnet: the electromagnet only works <strong>while current flows</strong>, and that's the whole point — you can <strong>turn it on and off</strong>. To make it stronger: more current, more turns on the coil, or an iron core.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why is an electromagnet, not a permanent magnet, used in a scrapyard crane?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It is cheaper to make than a permanent magnet</span></li>
+        <li><span class="letter">B</span><span>It can be switched off to release the load</span></li>
+        <li><span class="letter">C</span><span>It never needs any electricity</span></li>
+        <li><span class="letter">D</span><span>It attracts every material, not just metals</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The current can be switched off so the crane <em>drops</em> the metal where you want it — a permanent magnet would never let go. (It only attracts magnetic materials like iron and steel, so D is wrong.)</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Describe the shape of the magnetic field around a long straight current-carrying wire.</summary><div class="ans">A set of <strong>concentric circles</strong> in flat rings around the wire, getting weaker (further apart) the further you are from the wire.</div></details></li>
+      <li><details><summary>Give two ways to make the field around a wire stronger.</summary><div class="ans">Increase the <strong>current</strong>, or get <strong>closer</strong> to the wire.</div></details></li>
+      <li><details><summary>Describe the field of a solenoid, inside and outside.</summary><div class="ans"><strong>Inside:</strong> a strong, <strong>uniform</strong> field (straight, evenly spaced lines). <strong>Outside:</strong> like a <strong>bar magnet</strong>, with a N and S pole at the ends.</div></details></li>
+      <li><details><summary>Give one use of an electromagnet and state why a permanent magnet could not do the job.</summary><div class="ans">A <strong>scrapyard crane</strong> (or bell/relay). A permanent magnet couldn't be <strong>switched off</strong> to release the load, and you couldn't change its strength.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — THE MOTOR EFFECT (4.7.2.2)                                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · P7 · The motor effect</div>
+    <h2 class="lesson-title">The <em>motor</em> effect</h2>
+    <p class="lesson-promise">Put a current in a magnetic field and the wire feels a force. The force you can calculate, the rule that gives its direction, and how to make it bigger.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>A force on a wire</h3>
+    <p>A wire carrying a current has its own magnetic field. Place that wire in <strong>another</strong> magnetic field (say between the poles of a magnet) and the two fields interact. The result is a <strong>force on the wire</strong> that pushes it out of the field. This is the <strong>motor effect</strong>.</p>
+    <p>The force is <strong>biggest</strong> when the wire is at <strong>90° (right angles)</strong> to the magnetic field. If the wire lies <strong>along</strong> the field (parallel to it), the force is <strong>zero</strong>. You can make the force larger by increasing the <strong>current</strong> or using a <strong>stronger</strong> magnetic field.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>F = B I L <span class="badge given">given</span></dt>
+        <dd>force on the conductor (N) = magnetic flux density (T) × current (A) × length of wire in the field (m). The field is measured in <strong>tesla (T)</strong>. This only applies when the wire is at right angles to the field.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">CURRENT IN A FIELD → FORCE</text>
+        <!-- magnet poles -->
+        <rect x="120" y="60" width="46" height="110" fill="#B85042"/>
+        <text x="143" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#fff">N</text>
+        <rect x="394" y="60" width="46" height="110" fill="#1E2761"/>
+        <text x="417" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#fff">S</text>
+        <!-- field lines N->S -->
+        <g stroke="#CFD8E3" stroke-width="1.5">
+          <line x1="166" y1="85" x2="394" y2="85"/>
+          <line x1="166" y1="115" x2="394" y2="115"/>
+          <line x1="166" y1="145" x2="394" y2="145"/>
+        </g>
+        <polygon points="300,85 290,81 290,89" fill="#CFD8E3"/>
+        <polygon points="300,145 290,141 290,149" fill="#CFD8E3"/>
+        <!-- wire (into page, dot) -->
+        <circle cx="280" cy="115" r="9" fill="#fff" stroke="#1E2761" stroke-width="2.5"/>
+        <circle cx="280" cy="115" r="2.5" fill="#1E2761"/>
+        <text x="280" y="162" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E2761">current out of page</text>
+        <!-- force arrow up -->
+        <line x1="280" y1="104" x2="280" y2="46" stroke="#2C5F2D" stroke-width="3"/>
+        <polygon points="280,40 274,54 286,54" fill="#2C5F2D"/>
+        <text x="294" y="50" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">force F</text>
+      </svg>
+      <div class="caption">Force is at right angles to both the current and the field</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — right angles matter</h4>
+      <p>The motor-effect force is only a maximum when the wire is at <strong>90° to the field</strong>. Line the wire up <em>parallel</em> to the field and there's <strong>no force at all</strong>. Also: in F = B I L, the length L is just the bit of wire that's actually <strong>inside</strong> the field, and B is in <strong>tesla (T)</strong> — don't mix it up with the current.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Finding the direction and size</h3>
+
+    <div class="higher">
+      <h4>Higher tier — Fleming's left-hand rule &amp; calculating F = B I L</h4>
+      <p>To find the <strong>direction</strong> of the force, use <strong>Fleming's left-hand rule</strong>. Hold the thumb and first two fingers of your <strong>left</strong> hand at right angles to each other: <strong>First finger = Field</strong> (N→S), <strong>seCond finger = Current</strong>, and the <strong>thuMb = Motion</strong> (the force). Point the first finger along the field and the second finger along the current, and your thumb shows which way the wire is pushed.</p>
+      <p>Higher-tier questions also expect you to <strong>rearrange and use F = B I L</strong> — for example finding the field strength B from a measured force, or the force from B, I and L. Watch your units: force in newtons, B in tesla, current in amps, length in metres.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — force on a wire (Higher)</h4>
+      <p class="q">A wire of length 0.05 m carries a current of 3 A at right angles to a magnetic field of flux density 0.2 T. Calculate the force on the wire.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">F = B I L</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 0.2 × 3 × 0.05</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 0.03 N</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A 0.1 m length of wire carries 4 A at right angles to a 0.5 T field. What is the force on it?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>0.2 N</span></li>
+        <li><span class="letter">B</span><span>2 N</span></li>
+        <li><span class="letter">C</span><span>0.02 N</span></li>
+        <li><span class="letter">D</span><span>20 N</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — 0.2 N.</strong> F = B I L = 0.5 × 4 × 0.1 = 0.2 N. Make sure the length is in metres before you multiply.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is the motor effect?</summary><div class="ans">When a <strong>current-carrying wire</strong> is placed in a magnetic field, the two fields interact and the wire experiences a <strong>force</strong>.</div></details></li>
+      <li><details><summary>State the equation for the force on a conductor and the unit of magnetic flux density.</summary><div class="ans">F = B I L. Magnetic flux density B is measured in <strong>tesla (T)</strong>.</div></details></li>
+      <li><details><summary>How can you make the force on the wire bigger?</summary><div class="ans">Increase the <strong>current</strong>, use a <strong>stronger field</strong> (bigger B), and keep the wire at <strong>90°</strong> to the field.</div></details></li>
+      <li><details><summary>A 0.2 m wire carries 5 A at right angles to a 0.3 T field. Calculate the force. <em>(Higher)</em></summary><div class="ans">F = B I L = 0.3 × 5 × 0.2 = <strong>0.3 N</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — THE ELECTRIC MOTOR (4.7.2.3)                                  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · P7 · The electric motor</div>
+    <h2 class="lesson-title">The electric <em>motor</em></h2>
+    <p class="lesson-promise">Take the motor effect, put it on a coil, and you get continuous spinning. The forces, the trick that keeps it turning, and how to speed it up.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Forces that turn a coil</h3>
+    <p>An <strong>electric motor</strong> uses the motor effect to make a <strong>coil spin</strong>. The coil sits between the poles of a magnet. When a current flows, each side of the coil is a current-carrying wire in a field, so each side feels a force (from F = B I L).</p>
+    <p>Here's the clever part: current flows in <strong>opposite directions</strong> on the two sides of the coil. So one side is pushed <strong>up</strong> and the other is pushed <strong>down</strong>. These two opposite forces make the coil <strong>rotate</strong> — they create a turning effect (a moment) about the axle.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">OPPOSITE FORCES SPIN THE COIL</text>
+        <!-- magnet poles -->
+        <rect x="70" y="55" width="40" height="120" fill="#B85042"/>
+        <text x="90" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#fff">N</text>
+        <rect x="450" y="55" width="40" height="120" fill="#1E2761"/>
+        <text x="470" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#fff">S</text>
+        <!-- coil rectangle -->
+        <rect x="220" y="70" width="120" height="90" fill="none" stroke="#5C6370" stroke-width="2.5"/>
+        <text x="280" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">coil</text>
+        <!-- left side force up -->
+        <line x1="220" y1="115" x2="220" y2="52" stroke="#2C5F2D" stroke-width="3"/>
+        <polygon points="220,46 214,60 226,60" fill="#2C5F2D"/>
+        <text x="204" y="50" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">force up</text>
+        <!-- right side force down -->
+        <line x1="340" y1="115" x2="340" y2="178" stroke="#2C5F2D" stroke-width="3"/>
+        <polygon points="340,184 334,170 346,170" fill="#2C5F2D"/>
+        <text x="356" y="184" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">force down</text>
+        <!-- rotation arrow -->
+        <path d="M252 200 A 40 14 0 0 0 308 200" fill="none" stroke="#C8A24A" stroke-width="2"/>
+        <polygon points="308,200 298,194 300,206" fill="#C8A24A"/>
+        <text x="280" y="220" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">coil rotates</text>
+      </svg>
+      <div class="caption">One side pushed up, the other down — the coil turns</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the coil would stall</h4>
+      <p>Without help, the coil would only swing half a turn and stop, because the forces would then hold it still. A motor fixes this with a <strong>split-ring commutator</strong>: it <strong>swaps the current direction</strong> in the coil every half turn, so the force on each side keeps pushing it the <em>same way round</em>. That's what makes the spinning continuous.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">What is the job of the split-ring commutator in a d.c. motor?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It increases the size of the magnetic field</span></li>
+        <li><span class="letter">B</span><span>It reverses the current in the coil every half turn to keep it spinning the same way</span></li>
+        <li><span class="letter">C</span><span>It stops the coil from getting too hot</span></li>
+        <li><span class="letter">D</span><span>It changes the coil into a permanent magnet</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Every half turn the commutator swaps the current direction in the coil, so the force on each side always pushes the coil round the <em>same way</em> — giving continuous rotation instead of the coil stalling.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Speeding it up and changing direction</h3>
+    <p>Because the turning force comes from F = B I L acting on the coil, you can make the motor <strong>spin faster</strong> (turn with more force) by increasing the <strong>current</strong>, using a <strong>stronger magnet</strong>, or adding <strong>more turns</strong> to the coil.</p>
+    <p>To make the motor turn the <strong>other way</strong>, you <strong>reverse the direction of the current</strong> <em>or</em> <strong>reverse the magnetic field</strong> (swap the poles). Reversing the force direction reverses the rotation.</p>
+
+    <div class="worked">
+      <h4>Worked example — force on one side of a motor coil (Higher)</h4>
+      <p class="q">One side of a motor coil is 0.04 m long and carries a current of 2.5 A in a field of 0.30 T. Calculate the force on that side.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">F = B I L</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 0.30 × 2.5 × 0.04</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 0.03 N (on each side, in opposite directions)</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which change would make a simple d.c. motor spin in the opposite direction?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Increase the current</span></li>
+        <li><span class="letter">B</span><span>Add more turns to the coil</span></li>
+        <li><span class="letter">C</span><span>Reverse the direction of the current</span></li>
+        <li><span class="letter">D</span><span>Use a longer piece of wire for the coil</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> Reversing the current (or swapping the magnet's poles) reverses the force on each side, so the coil spins the other way. A, B and D would change how <em>fast</em> or hard it turns, not the <em>direction</em>.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Why do the two sides of a motor coil experience forces in opposite directions?</summary><div class="ans">The current flows in <strong>opposite directions</strong> on the two sides, so the motor-effect force on one side is up and on the other is down — creating a turning effect.</div></details></li>
+      <li><details><summary>What does the split-ring commutator do?</summary><div class="ans">It <strong>reverses the current</strong> in the coil every half turn so the coil keeps rotating the <strong>same way</strong> instead of stopping.</div></details></li>
+      <li><details><summary>Give three ways to make a motor turn faster (with a greater turning force).</summary><div class="ans">Increase the <strong>current</strong>, use a <strong>stronger magnetic field</strong>, and add <strong>more turns</strong> to the coil.</div></details></li>
+      <li><details><summary>State two ways to reverse the direction a motor spins.</summary><div class="ans">Reverse the <strong>current direction</strong>, or reverse the <strong>magnetic field</strong> (swap the magnet's poles).</div></details></li>
+      <li><details><summary>A motor coil side of length 0.05 m carries 3 A in a 0.4 T field. Find the force on it. <em>(Higher)</em></summary><div class="ans">F = B I L = 0.4 × 3 × 0.05 = <strong>0.06 N</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Paper 2 · P7 Magnetism &amp; Electromagnetism</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'p7-magnetism-electromagnetism-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=4f97b092-441b-4d2a-89a8-af49af8dda2e&amp;ref=interactive-science&amp;from=p7-magnetism-electromagnetism-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=p7-magnetism-electromagnetism-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pressure in a liquid — depth & density</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;--navy-soft:#2a3478;--warm:#F8F4EC;--warm-deep:#EFE8D6;
+  --paper:#FCFAF4;--soft-blue:#EDF2FA;--ink:#1A1A1A;--muted:#5C6370;
+  --rule:#CFD8E3;--accent:#B85042;--accent-soft:#F4DAD7;--success:#2C5F2D;
+  --success-soft:#DDEBDD;--gold:#C8A24A;--gold-soft:#F2E6BD;--bone:#BBA86F;
+  --display:'Instrument Serif',Georgia,serif;
+  --body:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono','Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{margin:0;background:var(--paper);font-family:var(--body);color:var(--ink);font-weight:300}
+.wrap{padding:16px;max-width:700px;margin:0 auto}
+.instruction{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.layout{display:flex;gap:18px;align-items:stretch}
+.diagram{flex:0 0 auto;width:250px}
+svg{width:100%;height:auto;display:block}
+.panel{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:10px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;
+  background:var(--navy);color:var(--warm);border:0;padding:9px 14px;cursor:pointer;transition:background .2s;border-radius:2px}
+button:hover{background:var(--accent)}
+button.on{background:var(--accent)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.slider-row{display:flex;flex-direction:column;gap:4px}
+.slider-row label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
+.readouts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.read{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:8px 10px}
+.read .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.read .v{font-family:var(--display);font-size:24px;color:var(--navy);line-height:1.1}
+.read .v .u{font-size:13px;font-family:var(--mono);color:var(--muted)}
+.eqn{background:var(--paper);border:1px solid var(--rule);border-left:3px solid var(--gold);padding:8px 10px;font-family:var(--mono);font-size:12px;color:var(--ink);line-height:1.6}
+.eqn b{color:var(--accent);font-weight:500}
+.state{background:var(--paper);border:1px solid var(--rule);padding:10px 12px;font-size:14px;line-height:1.45}
+.state b{color:var(--accent);font-weight:500}
+.takeaway{font-family:var(--display);font-style:italic;font-size:17px;color:var(--muted);margin-top:14px;line-height:1.35;border-top:1px solid var(--rule);padding-top:10px}
+.takeaway b{color:var(--accent);font-style:normal;font-weight:400}
+.lbl{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;fill:var(--muted)}
+.scaleN{font-family:var(--mono);font-size:8px;fill:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="instruction">Drag the sensor down — watch how hard the liquid pushes on it</p>
+  <div class="layout">
+    <div class="diagram">
+      <svg viewBox="0 0 252 268" role="img" aria-label="A tank of liquid with a pressure sensor at an adjustable depth; arrows show the liquid pushing on the sensor from every direction.">
+        <!-- tank -->
+        <rect x="66" y="40" width="120" height="212" fill="none" stroke="var(--rule)" stroke-width="2"/>
+        <!-- liquid -->
+        <rect id="liquid" x="67" y="56" width="118" height="195" fill="var(--soft-blue)"/>
+        <line id="surface" x1="66" y1="56" x2="186" y2="56" stroke="#9DB2D6" stroke-width="2"/>
+        <text class="lbl" x="126" y="50" text-anchor="middle" style="fill:#7d8aa0">surface</text>
+        <!-- depth scale -->
+        <g id="scale"></g>
+        <!-- pressure arrows around the sensor (pushed in from all sides) -->
+        <g id="arrows" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" fill="none"></g>
+        <!-- sensor -->
+        <g id="sensor">
+          <circle cx="126" cy="120" r="9" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+          <circle cx="126" cy="120" r="2.5" fill="var(--accent)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="panel">
+      <div class="controls">
+        <span style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">Liquid:</span>
+        <button class="liq on" data-rho="1000" data-name="water">Water</button>
+        <button class="liq" data-rho="1030" data-name="sea water">Sea water</button>
+        <button class="liq" data-rho="920" data-name="oil">Oil</button>
+      </div>
+      <div class="slider-row">
+        <label for="depth">Depth below the surface</label>
+        <input type="range" id="depth" min="0" max="100" value="32" aria-label="Depth below the surface, 0 to 12 metres">
+      </div>
+      <div class="readouts">
+        <div class="read"><div class="k">Depth (h)</div><div class="v"><span id="depthV">4.0</span> <span class="u">m</span></div></div>
+        <div class="read"><div class="k">Pressure</div><div class="v"><span id="presV">39</span> <span class="u">kPa</span></div></div>
+      </div>
+      <div class="eqn">pressure = density &times; g &times; depth<br><b id="eqnVals">39 000 Pa = 1000 &times; 9.8 &times; 4.0</b></div>
+      <div class="state" id="state">The sensor is near the surface — only a little liquid is above it, so the pressure is low.</div>
+    </div>
+  </div>
+  <p class="takeaway">The deeper you go, the more liquid is <b>above</b> you pushing down — so the pressure <b>increases with depth</b>. It pushes <b>equally in every direction</b>.</p>
+</div>
+<script>
+(function(){
+  var G=9.8, MAXH=12;            // g (N/kg), maximum depth shown (m)
+  var SURF=56, BOTTOM=251;       // svg y of surface and tank floor
+  var rho=1000, rhoName='water';
+  var depth=document.getElementById('depth');
+  var sensor=document.getElementById('sensor'), arrows=document.getElementById('arrows');
+  var depthV=document.getElementById('depthV'), presV=document.getElementById('presV');
+  var eqnVals=document.getElementById('eqnVals'), state=document.getElementById('state');
+
+  // depth scale ticks (0,4,8,12 m) down the left edge
+  (function(){var g=document.getElementById('scale'),html='';
+    for(var m=0;m<=MAXH;m+=4){var y=SURF+(m/MAXH)*(BOTTOM-SURF);
+      html+='<line x1="60" y1="'+y.toFixed(1)+'" x2="66" y2="'+y.toFixed(1)+'" stroke="var(--rule)" stroke-width="1"/>';
+      html+='<text class="scaleN" x="57" y="'+(y+3).toFixed(1)+'" text-anchor="end">'+m+'m</text>';}
+    g.innerHTML=html;})();
+
+  function fmt(n){return n.toLocaleString('en-GB');}
+
+  function render(){
+    var t=depth.value/100, h=t*MAXH;                 // depth in metres
+    var y=SURF+t*(BOTTOM-SURF-12)+6;                  // svg y of the sensor (kept inside the tank)
+    sensor.setAttribute('transform','translate(0,'+(y-120).toFixed(1)+')');
+
+    var p=rho*G*h;                                    // pressure in pascals
+    // arrow length grows with pressure (cap so it stays tidy)
+    var L=4+Math.min(26, p/6000);
+    var cx=126, cy=y, r=9, gap=3;
+    function arrow(dx,dy){ // arrow pointing INWARD toward the sensor edge, length L
+      var ux=dx, uy=dy, tipx=cx+ux*(r+gap), tipy=cy+uy*(r+gap);
+      var bx=cx+ux*(r+gap+L), by=cy+uy*(r+gap+L);
+      var head=4, ox=-uy, oy=ux; // perpendicular for the arrowhead
+      return '<path d="M'+bx.toFixed(1)+' '+by.toFixed(1)+' L'+tipx.toFixed(1)+' '+tipy.toFixed(1)+
+        ' M'+tipx.toFixed(1)+' '+tipy.toFixed(1)+' l'+((ux*head+ox*head).toFixed(1))+' '+((uy*head+oy*head).toFixed(1))+
+        ' M'+tipx.toFixed(1)+' '+tipy.toFixed(1)+' l'+((ux*head-ox*head).toFixed(1))+' '+((uy*head-oy*head).toFixed(1))+'"/>';
+    }
+    arrows.innerHTML=arrow(0,-1)+arrow(0,1)+arrow(-1,0)+arrow(1,0); // up, down, left, right
+
+    depthV.textContent=h.toFixed(1);
+    presV.textContent=Math.round(p/1000);
+    eqnVals.innerHTML=fmt(Math.round(p))+' Pa = '+fmt(rho)+' &times; 9.8 &times; '+h.toFixed(1);
+
+    if(h<2) state.innerHTML='Near the <b>surface</b> there is little liquid above the sensor, so the pressure is <b>low</b>.';
+    else if(h<8) state.innerHTML='Going deeper, more '+rhoName+' sits above the sensor, so the pressure <b>climbs</b>. It still pushes the same amount in <b>every direction</b>.';
+    else state.innerHTML='<b>Deep down</b>, a tall column of '+rhoName+' presses on the sensor — the pressure is <b>high</b>. This is why deep-sea divers and dam walls must withstand huge forces.';
+  }
+
+  depth.addEventListener('input',render);
+  Array.prototype.forEach.call(document.querySelectorAll('.liq'),function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.liq').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on'); rho=+b.dataset.rho; rhoName=b.dataset.name; render();
+    });
+  });
+  render();
+})();
+</script>
+<!--ISCI-RESIZE-SENDER:START (auto-injected by add_resize.py; do not edit)-->
+<script>/* interactive-science: report our height so a host iframe can auto-fit */
+(function(){if(window.parent===window)return;var last=0,t=0;function H(){var d=document.documentElement,b=document.body;return Math.ceil(Math.max(d.scrollHeight,b?b.scrollHeight:0,b?b.offsetHeight:0,d.getBoundingClientRect().height));}function send(){var h=H();if(h>0&&h!==last){last=h;try{parent.postMessage({type:'iscience:resize',height:h},'*');}catch(e){}}}function schedule(){clearTimeout(t);t=setTimeout(send,50);}if(document.readyState!=='loading')schedule();document.addEventListener('DOMContentLoaded',schedule);window.addEventListener('load',function(){[0,200,600,1200,2500].forEach(function(ms){setTimeout(send,ms);});});window.addEventListener('resize',schedule);['click','input','change','transitionend'].forEach(function(ev){document.addEventListener(ev,schedule,true);});if(window.ResizeObserver){try{var ro=new ResizeObserver(schedule);ro.observe(document.documentElement);if(document.body)ro.observe(document.body);}catch(e){}}if(window.MutationObserver){try{new MutationObserver(schedule).observe(document.documentElement,{subtree:true,childList:true,attributes:true,characterData:true});}catch(e){}}})();</script>
+<!--ISCI-RESIZE-SENDER:END-->
+</body>
+</html>

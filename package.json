@@ -1,29 +1,22 @@
 {
-  "name": "sciencekit",
-  "version": "0.1.0",
+  "name": "houchell",
+  "version": "0.0.0",
   "private": true,
+  "packageManager": "npm@11.6.2",
+  "description": "Houchell monorepo: the web app, retrieval-practice app, the static interactive-science site, and the shared DB contract.",
+  "workspaces": [
+    "apps/houchell",
+    "apps/retrieval",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "test": "vitest run",
-    "test:watch": "vitest"
-  },
-  "dependencies": {
-    "dompurify": "^3.4.11",
-    "jszip": "^3.10.1",
-    "katex": "^0.16.47",
-    "next": "14.2.3",
-    "pptxgenjs": "^4.0.1",
-    "react": "^18",
-    "react-dom": "^18"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "build:interactive": "python3 apps/interactive/build.py"
   },
   "devDependencies": {
-    "@types/node": "^25.9.3",
-    "@types/react": "^18.3.31",
-    "@types/react-dom": "^18.3.7",
-    "jsdom": "^29.1.1",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.8"
+    "turbo": "^2.0.0"
   }
 }

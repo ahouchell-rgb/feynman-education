@@ -13,7 +13,7 @@
 | | **feynman-education** (this) | **retrieval-app** | **interactive-science** |
 |---|---|---|---|
 | GitHub | `ahouchell-rgb/feynman-education` | `ahouchell-rgb/retrieval-app` | `ahouchell-rgb/interactive-science` |
-| Domain | `app.feynman.education` | `retrieval-app.com` | `interactive-science.com` |
+| Domain | `app.houchelleducation.com` | `retrieval-app.com` | `interactive-science.com` |
 | Stack | Next 14 · App Router · **TypeScript** · npm · vitest | Next 14 · App Router · **JavaScript** · npm · vitest | **Static HTML built by Python** (`build.py`) — no Node, no framework |
 | DB assets | `supabase/migrations/` (40, `YYYYMMDD_name.sql`) | `db/migrations/` (64, `YYYYMMDD_NN_name.sql`) **+ `supabase/functions/` (Deno edge fns)** | none |
 | Owns | callers of the retrieval RPCs; crons; MIS; billing | **the RPCs** (`class_weak_topics`, `student_weak_topics`, …), the `SK_API_KEY` gate, marking edge fns | `resources.json` manifest, `retrieval_topics` slug→UUID map, iframe embeds |
@@ -64,18 +64,18 @@ then do the monorepo. Don't build monorepo tooling around `SK_API_KEY` — it's 
 ```
 feynman/                              # monorepo root
 ├─ apps/
-│  ├─ feynman/                        # this app (TS Next)        → app.feynman.education
+│  ├─ feynman/                        # this app (TS Next)        → app.houchelleducation.com
 │  │  ├─ src/  next.config.mjs  vercel.json   # crons live here
-│  │  └─ package.json                 # "@feynman/web"
-│  ├─ retrieval/                      # retrieval-app (JS Next)   → practice.feynman.education
+│  │  └─ package.json                 # "@houchell/web"
+│  ├─ retrieval/                      # retrieval-app (JS Next)   → practice.houchelleducation.com
 │  │  ├─ src/                         # JS — stays JS; no forced TS migration
 │  │  ├─ supabase/functions/          # Deno edge fns — own deploy step
-│  │  └─ package.json                 # "@feynman/retrieval"
-│  └─ interactive/                    # static site (Python)      → interactive.feynman.education
+│  │  └─ package.json                 # "@houchell/retrieval"
+│  └─ interactive/                    # static site (Python)      → interactive.houchelleducation.com
 │     ├─ *.html  interactives/  resources.json  build.py
 │     └─ (NOT a workspace package — built by `python build.py`)
 ├─ packages/
-│  └─ db/                             # @feynman/db — THE source of truth (the real prize)
+│  └─ db/                             # @houchell/db — THE source of truth (the real prize)
 │     ├─ migrations/                  # ONE ordered set: feynman(40) + retrieval(64) reconciled
 │     ├─ functions/                   # edge fns live with the schema they touch (or keep in app)
 │     ├─ contracts/retrieval.ts       # RPC signatures the apps depend on (typed)
@@ -83,7 +83,7 @@ feynman/                              # monorepo root
 │     └─ contract.test.ts             # FAILS CI if a required RPC is missing / wrong-arity
 ├─ .github/workflows/ci.yml           # turbo build + repo-wide secret-scan + db contract test
 ├─ turbo.json                         # orchestrates the 2 Node apps; runs interactive's py build
-├─ pnpm-workspace.yaml                # packages: apps/feynman, apps/retrieval, packages/*
+├─ pnpm-workspace.yaml                # packages: apps/houchell, apps/retrieval, packages/*
 │                                     #   (interactive is NOT listed — it has no package.json)
 └─ package.json
 ```
@@ -116,7 +116,7 @@ What the package gives you:
    objective-mastery RPCs. `contract.test.ts` applies all migrations to an ephemeral Postgres in
    CI and fails red if any is missing or wrong-arity. **This converts today's silent prod fallback
    into a build error** — and it would have caught the rehearsal bug where two enums didn't move.
-3. **Generated types committed** from the unified schema, imported by `apps/feynman` (TS). The JS
+3. **Generated types committed** from the unified schema, imported by `apps/houchell` (TS). The JS
    app and the Python site don't consume types, but the schema is still their single source.
 
 ```ts
@@ -175,9 +175,9 @@ build command. Either way it is **not** a JS workspace member.
 
 | Project | Root Directory | Domain | Notes |
 |---|---|---|---|
-| feynman-web | `apps/feynman` | `app.feynman.education` | crons in its `vercel.json` |
-| feynman-practice | `apps/retrieval` | `practice.feynman.education` | **+ separate `supabase functions deploy`** for the edge fns |
-| feynman-interactive | `apps/interactive` | `interactive.feynman.education` | static; build command `python3 build.py` |
+| feynman-web | `apps/houchell` | `app.houchelleducation.com` | crons in its `vercel.json` |
+| feynman-practice | `apps/retrieval` | `practice.houchelleducation.com` | **+ separate `supabase functions deploy`** for the edge fns |
+| feynman-interactive | `apps/interactive` | `interactive.houchelleducation.com` | static; build command `python3 build.py` |
 
 Each project: set **Root Directory** to the subdir, **Ignored Build Step** = `npx turbo-ignore`
 (or a path filter for interactive), move that app's env into the project. Note the env-var names
@@ -203,7 +203,7 @@ Phase A  ── DB UNIFICATION  ✅ DONE (verified live 2026-06-23) — see §1
 
 Phase B  ── MONOREPO (the move)
             • git switch -c chore/monorepo off main
-            • git mv this app → apps/feynman (history preserved, same repo)
+            • git mv this app → apps/houchell (history preserved, same repo)
             • git subtree add --prefix=apps/retrieval   retrieval   main   (full history)
             • git subtree add --prefix=apps/interactive interactive main   (full history)
             • build packages/db = reconciled migrations + contracts + contract.test.ts  ← do FIRST
@@ -212,7 +212,7 @@ Phase B  ── MONOREPO (the move)
 
 Phase C  ── DOMAINS (incremental, reversible)
             • add app/practice/interactive subdomains to each Vercel project (keep old domains)
-            • session cookie on .feynman.education → first-party across all three (supports the
+            • session cookie on .houchelleducation.com → first-party across all three (supports the
               "one Auth pool" the unification already created)
             • re-register OAuth redirect URIs (Google/MS), Resend From-domain
             • 301 the old .com domains → subdomains (keep .com registered + redirecting; a

@@ -1,5 +1,5 @@
 {
-  "name": "feynman",
+  "name": "houchell",
   "private": true,
   "version": "0.0.0",
   "packageManager": "pnpm@9.12.3",
@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "workspaces": [
-    "apps/feynman",
+    "apps/houchell",
     "apps/retrieval",
     "packages/*"
   ],

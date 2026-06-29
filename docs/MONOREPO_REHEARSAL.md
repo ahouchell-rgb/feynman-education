@@ -7,9 +7,9 @@ repos were left untouched. Companion to `MONOREPO_AND_DOMAIN_PLAN.md` — read t
 
 The consolidated monorepo assembled and **built end-to-end locally with no env vars or secrets**:
 
-- `git mv` app → `apps/feynman/` — **history preserved** (`git log --follow` traces through the rename).
+- `git mv` app → `apps/houchell/` — **history preserved** (`git log --follow` traces through the rename).
 - subtree-add of retrieval + interactive — succeeded (with the corrections below).
-- `pnpm install` at root — 3 workspace members (`sciencekit`, `retrieval-app`, `@feynman/db`), 263 pkgs, ~27s.
+- `pnpm install` at root — 3 workspace members (`sciencekit`, `retrieval-app`, `@houchell/db`), 263 pkgs, ~27s.
 - **`pnpm exec turbo run build` → `2 successful, 2 total`, exit 0** — both Next apps compiled (feynman prerendered 57 routes).
 - `python3 apps/interactive/build.py` → exit 0.
 - `packages/db` contract test runs; fails only on `DATABASE_URL is required` (env-gated, expected — needs the CI Postgres).
@@ -27,13 +27,13 @@ No application-code blocker was hit. The only failures were environmental (corep
 
 | # | Conflict | Fix |
 |---|---|---|
-| 1 | Root `package.json` on the foundations branch is still the *app's* manifest (`sciencekit`) | Replace with a true workspace-root manifest (`packageManager`, turbo devdep + scripts) when the app moves to `apps/feynman` |
+| 1 | Root `package.json` on the foundations branch is still the *app's* manifest (`sciencekit`) | Replace with a true workspace-root manifest (`packageManager`, turbo devdep + scripts) when the app moves to `apps/houchell` |
 | 2 | Dead per-app `package-lock.json` (npm) under a pnpm workspace | Delete `apps/*/package-lock.json`; commit one root `pnpm-lock.yaml`; pin `packageManager`/`engines` |
-| 3 | Package names differ from plan (`sciencekit`/`retrieval-app` vs `@feynman/web`/`@feynman/retrieval`) | Naming decision only — no build clash |
+| 3 | Package names differ from plan (`sciencekit`/`retrieval-app` vs `@houchell/web`/`@houchell/retrieval`) | Naming decision only — no build clash |
 | 4 | Supabase env names diverge (`NEXT_PUBLIC_SK_*` vs `NEXT_PUBLIC_SUPA_*`) | Reconcile per `ENV_RECONCILIATION.md`; confirm `SK_API_KEY` fully removed (Phase 5 dependency) |
-| 5 | Two migration sets/conventions; `@feynman/db` is an **orphan** (no app depends on it) | Wire `"@feynman/db": "workspace:*"` into feynman + import committed types; seed bodies (`seed-bodies.sh`) |
+| 5 | Two migration sets/conventions; `@houchell/db` is an **orphan** (no app depends on it) | Wire `"@houchell/db": "workspace:*"` into feynman + import committed types; seed bodies (`seed-bodies.sh`) |
 | 6 | `build.py` regenerates `sitemap.xml` → the §5 `build && git diff --exit-code` CI check fails day one; domain hardcoded | Pre-run build.py & commit output before adding the check; parameterize `interactive-science.com` for Phase C |
-| 7 | retrieval `next.config.js` CSP `frame-ancestors` hardcodes `science-kit.vercel.app` / `interactive-science.com` | Add `*.feynman.education` ahead of Phase C or booklet→practice iframes break |
+| 7 | retrieval `next.config.js` CSP `frame-ancestors` hardcodes `science-kit.vercel.app` / `interactive-science.com` | Add `*.houchelleducation.com` ahead of Phase C or booklet→practice iframes break |
 
 **Confirmed non-issues:** no `vercel.json`, `.github/workflows`, or `public/` collisions; retrieval is plain JS (no tsconfig merge); feynman tsconfig (`@/* → ./src/*`) is monorepo-safe.
 
@@ -43,8 +43,8 @@ No application-code blocker was hit. The only failures were environmental (corep
 3. Delete per-app npm locks; commit one root `pnpm-lock.yaml`; pin the package manager.
 4. Pre-run `build.py`, commit its output, then add the idempotency CI check; parameterize the domain.
 5. Reconcile Supabase env names (`ENV_RECONCILIATION.md`); confirm `SK_API_KEY` gone (Phase 5).
-6. Wire `@feynman/db` into feynman (`workspace:*` + import types); seed migration bodies.
-7. Update retrieval CSP `frame-ancestors` for `*.feynman.education`.
+6. Wire `@houchell/db` into feynman (`workspace:*` + import types); seed migration bodies.
+7. Update retrieval CSP `frame-ancestors` for `*.houchelleducation.com`.
 8. Tune turbo cache outputs (rerun showed 0 cache hits) for CI speed.
 
 ## What this de-risks

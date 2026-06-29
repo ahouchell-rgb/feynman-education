@@ -18,13 +18,13 @@
   <rect width="1600" height="1040" fill="#f3eee2"/>
 
   <!-- Header -->
-  <text x="40" y="50" class="t h" font-size="34">Feynman Education — ecosystem &amp; what we built</text>
+  <text x="40" y="50" class="t h" font-size="34">Houchell Education — ecosystem &amp; what we built</text>
   <text x="40" y="78" class="mut" font-size="16">Secondary-ed infrastructure on one data spine. <tspan class="new" font-weight="700">●</tspan> = built this session · plain = pre-existing.</text>
 
   <!-- Sources row -->
   <g font-size="13">
     <rect x="40"   y="100" width="470" height="74" rx="8" class="card"/>
-    <text x="58" y="126" class="t h" font-size="15">Feynman / ScienceKit</text>
+    <text x="58" y="126" class="t h" font-size="15">Houchell / ScienceKit</text>
     <text x="58" y="150" class="mut">Curriculum · SoW · timetable · slide editor · present</text>
     <text x="58" y="167" class="dim mono" font-size="11">PLAN → DELIVER</text>
 

@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skeleton &amp; Muscles — Year 7 Revision</title>
+<meta name="description" content="A Year 7 biology revision booklet on the human skeleton and muscles — five short topics covering the skeleton and its jobs, joints, how muscles move us, antagonistic pairs, and measuring muscle strength with graphs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Year 7 · Biology · Skeleton &amp; Muscles</div>
+    <h1>Skeleton &amp; muscles, <em>but bitesize.</em></h1>
+    <p class="tag">A revision booklet — five short topics, from the bones that hold you up to the muscle pairs that move you.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Take it one topic at a time.</strong> There are five topics. Each one is short — about 10 minutes. Do one or two a day.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">The skeleton</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Joints</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">How muscles move us</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Antagonistic pairs</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Measuring strength</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — THE SKELETON & ITS FUNCTIONS                                  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · Biology · Skeleton</div>
+    <h2 class="lesson-title">The skeleton &amp; its <em>functions</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know the four jobs your skeleton does, and be able to name some of the bones that do them.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Why we have a skeleton</h3>
+    <p>Imagine taking all the bones out of your body. You'd collapse into a soft heap on the floor — like a tent with no poles. Your <strong>skeleton</strong> is the frame of around 206 bones that holds you up and lets you move.</p>
+    <p>But holding you up is only one of its jobs. The skeleton does <strong>four</strong> important things, and you need to know all of them.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ghost silhouette: faint real human body outline behind the schematic -->
+        <g fill="#C9806A" fill-opacity="0.15" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- head -->
+          <ellipse cx="200" cy="40" rx="22" ry="26"/>
+          <!-- neck + torso: shoulders, chest, waist, hips -->
+          <path d="M 188 62 C 187 70 186 74 184 78
+                   C 162 82 150 96 148 118
+                   C 147 138 152 158 158 178
+                   C 162 192 161 200 170 210
+                   C 162 224 162 244 168 252
+                   C 178 256 222 256 232 252
+                   C 238 244 238 224 230 210
+                   C 239 200 238 192 242 178
+                   C 248 158 253 138 252 118
+                   C 250 96 238 82 216 78
+                   C 214 74 213 70 212 62 Z"/>
+          <!-- left arm -->
+          <path d="M 152 110 C 138 128 130 162 124 198 C 121 214 119 222 122 224 C 130 226 134 218 137 204 C 144 168 152 138 162 122 Z"/>
+          <!-- right arm -->
+          <path d="M 248 110 C 262 128 270 162 276 198 C 279 214 281 222 278 224 C 270 226 266 218 263 204 C 256 168 248 138 238 122 Z"/>
+          <!-- left leg -->
+          <path d="M 196 250 C 190 272 182 296 178 314 C 176 318 168 318 167 314 C 168 290 172 266 178 248 Z"/>
+          <!-- right leg -->
+          <path d="M 204 250 C 210 272 218 296 222 314 C 224 318 232 318 233 314 C 232 290 228 266 222 248 Z"/>
+        </g>
+        <!-- Schematic human skeleton -->
+        <g stroke="#1E2761" stroke-width="2" fill="#EDF2FA">
+          <!-- Skull -->
+          <ellipse cx="200" cy="42" rx="26" ry="30"/>
+          <!-- Jaw line -->
+          <line x1="182" y1="58" x2="218" y2="58"/>
+          <!-- Spine -->
+          <rect x="195" y="72" width="10" height="120" rx="3"/>
+          <!-- Spine segments -->
+          <g stroke="#1E2761" stroke-width="1" opacity="0.5">
+            <line x1="195" y1="92" x2="205" y2="92"/>
+            <line x1="195" y1="112" x2="205" y2="112"/>
+            <line x1="195" y1="132" x2="205" y2="132"/>
+            <line x1="195" y1="152" x2="205" y2="152"/>
+            <line x1="195" y1="172" x2="205" y2="172"/>
+          </g>
+          <!-- Rib cage -->
+          <g fill="none">
+            <path d="M 200 90 C 150 100 150 150 178 168"/>
+            <path d="M 200 90 C 250 100 250 150 222 168"/>
+            <path d="M 200 104 C 158 112 158 152 180 166"/>
+            <path d="M 200 104 C 242 112 242 152 220 166"/>
+            <path d="M 200 118 C 165 124 165 154 182 164"/>
+            <path d="M 200 118 C 235 124 235 154 218 164"/>
+          </g>
+          <!-- Pelvis -->
+          <path d="M 175 196 C 170 218 188 224 200 218 C 212 224 230 218 225 196 Z"/>
+          <!-- Left arm (humerus + forearm) -->
+          <line x1="168" y1="100" x2="140" y2="160"/>
+          <line x1="140" y1="160" x2="128" y2="216"/>
+          <!-- Right arm -->
+          <line x1="232" y1="100" x2="260" y2="160"/>
+          <line x1="260" y1="160" x2="272" y2="216"/>
+          <!-- Left leg (femur + lower leg) -->
+          <line x1="186" y1="216" x2="176" y2="270"/>
+          <line x1="176" y1="270" x2="172" y2="312"/>
+          <!-- Right leg -->
+          <line x1="214" y1="216" x2="224" y2="270"/>
+          <line x1="224" y1="270" x2="228" y2="312"/>
+        </g>
+        <!-- Bone labels with leader lines -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761" font-weight="700">
+          <text x="300" y="46" text-anchor="start">skull</text>
+          <text x="300" y="118" text-anchor="start">ribs</text>
+          <text x="300" y="150" text-anchor="start">spine (vertebrae)</text>
+          <text x="300" y="206" text-anchor="start">pelvis</text>
+          <text x="40" y="128" text-anchor="start">humerus</text>
+          <text x="40" y="252" text-anchor="start">femur</text>
+        </g>
+        <g stroke="#C8A24A" stroke-width="1">
+          <line x1="226" y1="42" x2="298" y2="42"/>
+          <line x1="234" y1="115" x2="298" y2="115"/>
+          <line x1="208" y1="140" x2="298" y2="146"/>
+          <line x1="228" y1="205" x2="298" y2="203"/>
+          <line x1="150" y1="135" x2="98" y2="128"/>
+          <line x1="181" y1="243" x2="98" y2="252"/>
+        </g>
+      </svg>
+      <div class="caption">Some bones you should be able to name · a schematic skeleton, about 206 bones in all</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Skeleton</dt>
+        <dd>The frame of bones inside the body. An adult has about 206 of them.</dd>
+        <dt>Bone</dt>
+        <dd>A hard, strong, <em>living</em> tissue. Bones have their own blood supply and can grow and repair.</dd>
+        <dt>Vertebrae</dt>
+        <dd>The small bones stacked up to form the spine (backbone).</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The four jobs of the skeleton</h3>
+    <p>Here are the four functions. A neat way to remember them: <strong>support, protection, movement, and making blood</strong>.</p>
+    <p><strong>1. Support.</strong> The skeleton holds the body up and gives it its shape. Without a rigid frame you couldn't stand.</p>
+    <p><strong>2. Protection.</strong> Bones form a hard case around your softest, most important organs. The <strong>skull</strong> protects the brain. The <strong>ribs</strong> protect the heart and lungs. The <strong>backbone</strong> (spine) protects the spinal cord.</p>
+    <p><strong>3. Movement.</strong> Bones give your muscles something firm to pull on. Muscles are attached to bones, so when a muscle pulls, the bone moves.</p>
+    <p><strong>4. Making blood cells.</strong> Inside some of your bigger bones is a soft tissue called <strong>bone marrow</strong>. This is where new <strong>blood cells</strong> are made — proof that bones are very much alive.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Four labelled boxes for the four jobs -->
+        <g font-family="IBM Plex Sans,sans-serif">
+          <!-- Box 1: Support -->
+          <rect x="20" y="40" width="120" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="80" y="62" text-anchor="middle" font-size="28">&#129460;</text>
+          <text x="80" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#1E2761">SUPPORT</text>
+          <text x="80" y="122" text-anchor="middle" font-size="10" fill="#5C6370">holds you up</text>
+          <text x="80" y="136" text-anchor="middle" font-size="10" fill="#5C6370">&amp; gives shape</text>
+          <!-- Box 2: Protection -->
+          <rect x="155" y="40" width="120" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="215" y="64" text-anchor="middle" font-size="26">&#128737;</text>
+          <text x="215" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#1E2761">PROTECTION</text>
+          <text x="215" y="122" text-anchor="middle" font-size="10" fill="#5C6370">skull&#8594;brain,</text>
+          <text x="215" y="136" text-anchor="middle" font-size="10" fill="#5C6370">ribs&#8594;heart/lungs</text>
+          <!-- Box 3: Movement -->
+          <rect x="290" y="40" width="120" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <text x="350" y="64" text-anchor="middle" font-size="26">&#127939;</text>
+          <text x="350" y="100" text-anchor="middle" font-size="13" font-weight="700" fill="#1E2761">MOVEMENT</text>
+          <text x="350" y="122" text-anchor="middle" font-size="10" fill="#5C6370">muscles pull</text>
+          <text x="350" y="136" text-anchor="middle" font-size="10" fill="#5C6370">on bones</text>
+          <!-- Box 4: Making blood -->
+          <rect x="425" y="40" width="120" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <circle cx="485" cy="62" r="9" fill="#B85042"/>
+          <circle cx="498" cy="68" r="6" fill="#B85042" opacity="0.7"/>
+          <text x="485" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#1E2761">MAKING BLOOD</text>
+          <text x="485" y="122" text-anchor="middle" font-size="10" fill="#5C6370">blood cells made</text>
+          <text x="485" y="136" text-anchor="middle" font-size="10" fill="#5C6370">in bone marrow</text>
+        </g>
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" font-weight="700" fill="#5C6370" letter-spacing="2">THE FOUR JOBS OF THE SKELETON</text>
+      </svg>
+      <div class="caption">Support · protection · movement · making blood cells</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — bones are not dry and dead</h4>
+      <p>It's easy to think of bones as dry sticks, like the ones a dog chews. But living bone is <strong>not dead</strong>. It has a <strong>blood supply</strong>, it can grow and heal when it breaks, and the marrow inside it <strong>makes new blood cells</strong>. Bone is a living tissue.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which job of the skeleton is being described: "the ribs form a cage around the heart and lungs"?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Support</span></li>
+        <li><span class="letter">B</span><span>Protection</span></li>
+        <li><span class="letter">C</span><span>Movement</span></li>
+        <li><span class="letter">D</span><span>Making blood cells</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — Protection.</strong> The ribs shield the heart and lungs from being damaged. <em>Remember: skull protects the brain, ribs protect the heart and lungs, and the backbone protects the spinal cord.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>State the four jobs of the skeleton.</summary>
+        <div class="ans"><strong>Support</strong> (holds the body up), <strong>protection</strong> (of soft organs), <strong>movement</strong> (anchors muscles), and <strong>making blood cells</strong> (in bone marrow).</div>
+      </details></li>
+      <li><details>
+        <summary>Which bone protects the brain?</summary>
+        <div class="ans">The <strong>skull</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Which bones protect the heart and lungs?</summary>
+        <div class="ans">The <strong>ribs</strong> (the rib cage).</div>
+      </details></li>
+      <li><details>
+        <summary>Where in the body are new blood cells made?</summary>
+        <div class="ans">In the <strong>bone marrow</strong>, the soft tissue inside some bones.</div>
+      </details></li>
+      <li><details>
+        <summary>Name the bone in your upper arm and the bone in your upper leg.</summary>
+        <div class="ans">The <strong>humerus</strong> (upper arm) and the <strong>femur</strong> (upper leg / thigh bone).</div>
+      </details></li>
+      <li><details>
+        <summary>A pupil says "bones are dead, like the dry ones a dog chews." Why is this wrong?</summary>
+        <div class="ans">Living bone is a <strong>living tissue</strong>. It has a <strong>blood supply</strong>, it grows and repairs itself, and the marrow inside it <strong>makes blood cells</strong>.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — JOINTS                                                        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · Biology · Skeleton</div>
+    <h2 class="lesson-title"><em>Joints</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know what a joint is, the difference between hinge and ball-and-socket joints, and the job of ligaments, cartilage and synovial fluid.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What is a joint?</h3>
+    <p>If your skeleton were a single solid piece, you couldn't bend at all. Luckily it isn't. A <strong>joint</strong> is a place where <strong>two bones meet</strong>. Joints are what let you bend, twist and turn.</p>
+    <p>Not all joints move the same way. Two types you need to know are the <strong>hinge joint</strong> and the <strong>ball-and-socket joint</strong>.</p>
+    <p>A <strong>hinge joint</strong> works like the hinge on a door — it bends one way only. Your <strong>elbow</strong> and your <strong>knee</strong> are hinge joints. They let you bend and straighten, but you can't rotate your forearm at the elbow.</p>
+    <p>A <strong>ball-and-socket joint</strong> has a rounded "ball" on one bone that sits in a cup-shaped "socket" on another. This lets the bone <strong>rotate</strong> in almost any direction. Your <strong>shoulder</strong> and your <strong>hip</strong> are ball-and-socket joints — that's why you can swing your arm round in a full circle.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 392" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ghost silhouettes: faint real bone-ends (knobbly epiphyses) behind each schematic joint -->
+        <g fill="#C9806A" fill-opacity="0.16" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- HINGE: upper bone with knobbly lower end -->
+          <path d="M 120 64 C 112 64 110 80 112 110 C 113 138 116 158 122 170
+                   C 116 176 110 184 112 192 C 116 200 128 202 138 198
+                   C 146 196 152 188 152 178 C 162 162 164 138 164 110
+                   C 165 80 163 64 154 64 C 145 64 145 74 137 74 C 129 74 130 64 120 64 Z"/>
+          <!-- HINGE: lower bone with knobbly proximal (joint) end -->
+          <path d="M 150 196 C 142 192 134 196 132 206 C 130 216 134 226 144 230
+                   C 156 234 172 234 198 234 C 226 234 248 232 254 226
+                   C 258 220 256 210 250 208 C 240 206 226 208 200 208
+                   C 178 208 164 206 158 200 C 156 198 154 196 150 196 Z"/>
+          <!-- BALL & SOCKET: rounded ball-head bulging slightly beyond the schematic ball -->
+          <circle cx="420" cy="148" r="36" fill-opacity="0.22"/>
+          <!-- BALL & SOCKET: shaft of the lower bone -->
+          <path d="M 401 178 C 397 200 397 228 403 246 C 409 252 431 252 437 246
+                   C 443 228 443 200 439 178 C 433 172 407 172 401 178 Z"/>
+        </g>
+        <!-- Divider between the two panels -->
+        <line x1="280" y1="60" x2="280" y2="300" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- ============ HINGE JOINT (left panel) ============ -->
+        <g>
+          <text x="140" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">HINGE JOINT</text>
+
+          <!-- Upper bone (vertical) -->
+          <rect x="118" y="70" width="44" height="100" rx="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Lower bone (horizontal, meeting at the joint) -->
+          <rect x="140" y="196" width="110" height="40" rx="16" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+
+          <!-- Cartilage: smooth gold caps on the two bone ends at the joint surface -->
+          <path d="M 122 174 q 18 11 38 0" fill="none" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 152 202 q -10 14 0 28" fill="none" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+
+          <!-- Ligament: red band clearly bridging upper bone to lower bone -->
+          <path d="M 126 150 C 108 182 120 210 170 222" fill="none" stroke="#B85042" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 156 150 C 178 176 188 206 214 220" fill="none" stroke="#B85042" stroke-width="4" stroke-linecap="round"/>
+
+          <!-- Bend-direction arrow (clear of bones & labels) -->
+          <path d="M 232 168 A 34 34 0 0 1 232 230" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+          <path d="M 226 226 L 233 234 L 224 235 Z" fill="#5C6370"/>
+
+          <text x="140" y="324" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">bends one way only</text>
+          <text x="140" y="340" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">(elbow, knee)</text>
+        </g>
+
+        <!-- ============ BALL-AND-SOCKET JOINT (right panel) ============ -->
+        <g>
+          <text x="420" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">BALL &amp; SOCKET JOINT</text>
+
+          <!-- Socket bone: a clear cup opening downward over the ball -->
+          <path d="M 360 70 h 120 a 14 14 0 0 1 14 14 v 34 a 74 60 0 0 1 -148 0 v -34 a 14 14 0 0 1 14 -14 Z"
+                fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Ball + lower bone (one piece) sitting in the socket -->
+          <circle cx="420" cy="150" r="30" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <rect x="404" y="176" width="32" height="74" rx="12" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+
+          <!-- Cartilage: gold lining curve along the socket/ball contact surface -->
+          <path d="M 392 138 a 30 30 0 0 0 56 0" fill="none" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+
+          <!-- Ligament: red band bridging socket bone to lower bone, on each side -->
+          <path d="M 372 120 C 360 156 380 196 410 206" fill="none" stroke="#B85042" stroke-width="4" stroke-linecap="round"/>
+          <path d="M 468 120 C 480 156 460 196 430 206" fill="none" stroke="#B85042" stroke-width="4" stroke-linecap="round"/>
+
+          <!-- Rotation arrows (both directions, clear of art) -->
+          <path d="M 350 196 A 60 60 0 0 1 366 240" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+          <path d="M 360 234 L 367 242 L 358 243 Z" fill="#5C6370"/>
+          <path d="M 490 196 A 60 60 0 0 0 474 240" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+          <path d="M 480 234 L 473 242 L 482 243 Z" fill="#5C6370"/>
+
+          <text x="420" y="324" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">rotates many ways</text>
+          <text x="420" y="340" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">(shoulder, hip)</text>
+        </g>
+
+        <!-- Legend: own clear strip at the foot, centred -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">
+          <line x1="158" y1="372" x2="180" y2="372" stroke="#B85042" stroke-width="4" stroke-linecap="round"/>
+          <text x="188" y="376" text-anchor="start">ligament — joins bone to bone</text>
+          <line x1="158" y1="388" x2="180" y2="388" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <text x="188" y="392" text-anchor="start">cartilage — cushions the joint surface</text>
+        </g>
+      </svg>
+      <div class="caption">Hinge vs ball-and-socket — ligament (red) bridges the bones; cartilage (gold) caps the joint surface</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Joint</dt>
+        <dd>A place where two bones meet, allowing movement.</dd>
+        <dt>Hinge joint</dt>
+        <dd>A joint that bends one way only, like a door hinge. E.g. elbow and knee.</dd>
+        <dt>Ball-and-socket joint</dt>
+        <dd>A joint where a rounded "ball" sits in a cup-shaped "socket", allowing rotation. E.g. shoulder and hip.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The parts inside a joint</h3>
+    <p>If bones simply rubbed together, they would wear away and it would be painful. So joints have some clever parts that hold the bones together and keep them moving smoothly.</p>
+    <p><strong>Ligaments</strong> are tough, slightly stretchy bands that join <strong>bone to bone</strong>. They hold the joint together so the bones don't pull apart.</p>
+    <p><strong>Cartilage</strong> is a smooth, rubbery layer that covers the <strong>ends of the bones</strong>. It cushions them and stops them grinding against each other.</p>
+    <p><strong>Synovial fluid</strong> is a slippery liquid inside the joint. It works like oil, <strong>lubricating</strong> the joint so the bones slide easily.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 2</h4>
+      <dl>
+        <dt>Ligament</dt>
+        <dd>A tough band that joins <strong>bone to bone</strong> and holds the joint together.</dd>
+        <dt>Cartilage</dt>
+        <dd>A smooth, rubbery layer on the ends of bones that cushions them.</dd>
+        <dt>Synovial fluid</dt>
+        <dd>A slippery liquid that lubricates the joint, like oil.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — ligaments vs tendons</h4>
+      <p>These two sound similar but do different jobs. A <strong>ligament</strong> joins <strong>bone to bone</strong> (it's in this topic, holding a joint together). A <strong>tendon</strong> joins <strong>muscle to bone</strong> (you'll meet it in the next topic). A handy memory trick: liga<strong>ment</strong>s link bones, ten<strong>d</strong>ons attach to muscles for moving.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which part of a joint is the slippery liquid that lubricates the bones so they slide smoothly?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Cartilage</span></li>
+        <li><span class="letter">B</span><span>Ligament</span></li>
+        <li><span class="letter">C</span><span>Synovial fluid</span></li>
+        <li><span class="letter">D</span><span>Bone marrow</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — synovial fluid.</strong> It works like oil, letting the bones slide easily. <em>Cartilage cushions the ends, ligaments hold the bones together, and bone marrow (from Topic 1) makes blood cells — nothing to do with lubrication.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is a joint?</summary>
+        <div class="ans">A place where <strong>two bones meet</strong>, allowing movement.</div>
+      </details></li>
+      <li><details>
+        <summary>Name the two types of joint you need to know, and give an example of each.</summary>
+        <div class="ans"><strong>Hinge joint</strong> (e.g. elbow or knee) and <strong>ball-and-socket joint</strong> (e.g. shoulder or hip).</div>
+      </details></li>
+      <li><details>
+        <summary>Why can you swing your arm round in a full circle at the shoulder, but only bend your elbow one way?</summary>
+        <div class="ans">The shoulder is a <strong>ball-and-socket joint</strong>, which rotates in many directions. The elbow is a <strong>hinge joint</strong>, which only bends one way.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the job of a ligament?</summary>
+        <div class="ans">It joins <strong>bone to bone</strong> and holds the joint together.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the job of cartilage in a joint?</summary>
+        <div class="ans">It is a smooth, rubbery layer on the <strong>ends of the bones</strong> that cushions them and stops them grinding together.</div>
+      </details></li>
+      <li><details>
+        <summary>What does synovial fluid do?</summary>
+        <div class="ans">It <strong>lubricates</strong> the joint (like oil) so the bones slide smoothly.</div>
+      </details></li>
+      <li><details>
+        <summary>Explain the difference between a ligament and a tendon.</summary>
+        <div class="ans">A <strong>ligament</strong> joins <strong>bone to bone</strong>. A <strong>tendon</strong> joins <strong>muscle to bone</strong>.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — MUSCLES & HOW WE MOVE                                         -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · Biology · Muscles</div>
+    <h2 class="lesson-title">Muscles &amp; <em>how we move</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know how muscles make bones move, the one thing a muscle can and can't do, and what a tendon is for.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>How a muscle moves a bone</h3>
+    <p>A <strong>muscle</strong> is a bundle of tissue that can change length. When a muscle gets a signal from the nerves, it <strong>contracts</strong> — meaning it gets <strong>shorter and fatter</strong>. As it shortens, it <strong>pulls</strong> on the bone it's attached to, and the bone moves.</p>
+    <p>Muscles aren't joined straight onto bone. They're connected by a <strong>tendon</strong> — a tough cord that links the <strong>muscle to the bone</strong>. When the muscle contracts, it pulls the tendon, and the tendon pulls the bone.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ghost silhouettes: faint real muscle bellies + knobbly long-bone behind each row -->
+        <g fill-opacity="0.16" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- RELAXED row: slim spindle muscle belly behind the schematic muscle -->
+          <path d="M 196 72 C 216 56 312 56 332 72 C 312 88 216 88 196 72 Z"
+                fill="#C9806A" stroke="#C9806A"/>
+          <!-- RELAXED row: knobbly long-bone behind the movable bone -->
+          <path d="M 352 72 C 348 64 350 60 358 60 C 366 60 366 66 374 67
+                   C 470 67 506 67 512 64 C 520 62 524 66 524 72 C 524 78 520 82 512 80
+                   C 506 77 470 77 374 77 C 366 78 366 84 358 84 C 350 84 348 80 352 72 Z"
+                fill="#E7B7A8" stroke="#C9806A"/>
+          <!-- CONTRACTED row: fat teardrop muscle belly behind the schematic muscle -->
+          <path d="M 196 230 C 214 198 298 198 316 230 C 298 262 214 262 196 230 Z"
+                fill="#C9806A" stroke="#C9806A"/>
+          <!-- CONTRACTED row: knobbly long-bone behind the raised movable bone -->
+          <g transform="rotate(-26 350 230)">
+            <path d="M 350 230 C 346 222 348 218 356 218 C 364 218 364 224 372 225
+                     C 470 225 506 225 512 222 C 520 220 524 224 524 230 C 524 236 520 240 512 238
+                     C 506 235 470 235 372 235 C 364 236 364 242 356 242 C 348 242 346 238 350 230 Z"
+                  fill="#E7B7A8" stroke="#C9806A"/>
+          </g>
+        </g>
+        <!-- ============ ROW 1 — RELAXED ============ -->
+        <g>
+          <!-- Heading above the row, in clear space -->
+          <text x="40" y="34" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#5C6370" letter-spacing="1.5">RELAXED — LONG &amp; THIN</text>
+          <!-- Anchored (fixed) bone, left -->
+          <rect x="40" y="64" width="140" height="16" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Movable bone, right (straight, at rest) -->
+          <rect x="350" y="64" width="170" height="16" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Tendons (gold) joining muscle ends to each bone -->
+          <line x1="180" y1="72" x2="212" y2="72" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <line x1="348" y1="72" x2="316" y2="72" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <!-- Muscle (long, slim) -->
+          <ellipse cx="264" cy="72" rx="56" ry="16" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+          <text x="264" y="76" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">muscle</text>
+        </g>
+
+        <!-- Separator between the two states -->
+        <line x1="40" y1="140" x2="520" y2="140" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- ============ ROW 2 — CONTRACTED ============ -->
+        <g>
+          <!-- Heading above the row, in clear space -->
+          <text x="40" y="178" text-anchor="start" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#5C6370" letter-spacing="1.5">CONTRACTED — SHORT &amp; FAT, PULLS</text>
+          <!-- Anchored (fixed) bone, left -->
+          <rect x="40" y="222" width="140" height="16" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Movable bone, right — pulled up to an angle -->
+          <rect x="350" y="222" width="170" height="16" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2" transform="rotate(-26 350 230)"/>
+          <!-- Tendons -->
+          <line x1="172" y1="230" x2="208" y2="230" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <line x1="334" y1="216" x2="306" y2="226" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <!-- Muscle (short, fat) -->
+          <ellipse cx="256" cy="230" rx="48" ry="24" fill="#B85042" stroke="#B85042" stroke-width="2"/>
+          <text x="256" y="234" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#FCFAF4">muscle</text>
+          <!-- Pull arrow showing the bone swinging up (clear of bone & label) -->
+          <path d="M 430 196 A 60 60 0 0 0 392 156" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+          <path d="M 398 161 L 390 154 L 399 152 Z" fill="#5C6370"/>
+          <text x="442" y="180" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">bone is</text>
+          <text x="442" y="196" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">pulled up</text>
+        </g>
+
+        <!-- Legend in its own clear strip at the foot -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">
+          <line x1="120" y1="296" x2="142" y2="296" stroke="#C8A24A" stroke-width="5" stroke-linecap="round"/>
+          <text x="150" y="300" text-anchor="start">tendon (muscle to bone)</text>
+          <rect x="332" y="290" width="20" height="12" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+          <text x="360" y="300" text-anchor="start">bone</text>
+        </g>
+      </svg>
+      <div class="caption">A muscle contracting and pulling a bone via the tendon</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Muscle</dt>
+        <dd>A tissue that can contract (shorten) to pull on a bone.</dd>
+        <dt>Contract</dt>
+        <dd>When a muscle gets shorter and fatter, pulling on whatever it's attached to.</dd>
+        <dt>Tendon</dt>
+        <dd>A tough cord that joins a <strong>muscle to a bone</strong>.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Muscles can only pull</h3>
+    <p>Here's the most important idea in this whole unit, and the one most pupils get wrong:</p>
+    <p style="text-align:center"><span class="formula">A muscle can only PULL. It can never push.</span></p>
+    <p>When a muscle contracts, it pulls a bone towards it. But a muscle <strong>cannot push</strong> a bone back. To relax, all a muscle can do is stop pulling and go limp — and going limp doesn't push anything.</p>
+    <p>So how do you move a bone <em>back</em> again? You need a <strong>second muscle</strong> on the other side to pull it the other way. That's the big idea we'll meet in the next topic: muscles have to work in <strong>pairs</strong>.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — muscles cannot push</h4>
+      <p>It feels like your muscles must push, because you can push a door open. But the pushing comes from muscles <strong>pulling on bones</strong> that act like levers — not from the muscle itself pushing. A muscle only ever <strong>pulls</strong>. This is exactly why we need pairs of muscles to move a bone back and forth.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A muscle contracts. What does this mean and what does it do to the bone?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It gets longer and pushes the bone away</span></li>
+        <li><span class="letter">B</span><span>It gets shorter and pulls the bone</span></li>
+        <li><span class="letter">C</span><span>It stays the same length but pushes harder</span></li>
+        <li><span class="letter">D</span><span>It gets shorter and pushes the bone</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — it gets shorter and pulls the bone.</strong> Contracting always means <em>shortening</em>, and a muscle can only ever <em>pull</em>, never push. <em>D is the trap — the "shorter" part is right but muscles never push.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What does it mean when a muscle "contracts"?</summary>
+        <div class="ans">It gets <strong>shorter and fatter</strong>, and <strong>pulls</strong> on the bone it is attached to.</div>
+      </details></li>
+      <li><details>
+        <summary>Can a muscle push? Explain.</summary>
+        <div class="ans"><strong>No</strong> — a muscle can <strong>only pull</strong>, never push. To relax it just stops pulling and goes limp.</div>
+      </details></li>
+      <li><details>
+        <summary>What is a tendon and what does it join?</summary>
+        <div class="ans">A tough cord that joins a <strong>muscle to a bone</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Describe the steps that happen when a muscle moves a bone.</summary>
+        <div class="ans">The muscle <strong>contracts</strong> (shortens), it <strong>pulls on the tendon</strong>, and the tendon <strong>pulls the bone</strong> so it moves.</div>
+      </details></li>
+      <li><details>
+        <summary>Because a muscle can only pull, how must muscles be arranged to move a bone back and forth?</summary>
+        <div class="ans">They must work in <strong>pairs</strong>, with one muscle on each side pulling in opposite directions.</div>
+      </details></li>
+      <li><details>
+        <summary>What is the difference between a tendon and a ligament?</summary>
+        <div class="ans">A <strong>tendon</strong> joins muscle to bone; a <strong>ligament</strong> joins bone to bone.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — ANTAGONISTIC MUSCLE PAIRS                                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · Biology · Muscles</div>
+    <h2 class="lesson-title">Antagonistic <em>muscle pairs</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll know why muscles work in pairs, and be able to explain exactly what the biceps and triceps do when you bend and straighten your arm.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Why muscles work in pairs</h3>
+    <p>From the last topic, you know a muscle can only <strong>pull</strong>. One muscle on its own could pull a bone one way — but nothing would pull it back. That's the problem a pair solves.</p>
+    <p>Muscles are arranged in <strong>antagonistic pairs</strong>: two muscles on opposite sides of a joint that <strong>pull in opposite directions</strong>. The word "antagonistic" means "working against each other" — when one pulls, the other relaxes, and vice versa.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Antagonistic pair</dt>
+        <dd>Two muscles that work against each other, pulling a bone in opposite directions.</dd>
+        <dt>Relax</dt>
+        <dd>When a muscle stops contracting and goes back to its longer, limp shape.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The biceps and triceps</h3>
+    <p>The classic example is in your upper arm. The <strong>biceps</strong> is on the front; the <strong>triceps</strong> is on the back. They form an antagonistic pair across the elbow joint.</p>
+    <p><strong>To bend the arm</strong> (raise the forearm): the <strong>biceps contracts</strong> and pulls the forearm up, while the <strong>triceps relaxes</strong>.</p>
+    <p><strong>To straighten the arm</strong> (lower the forearm): the <strong>triceps contracts</strong> and pulls the forearm back down, while the <strong>biceps relaxes</strong>.</p>
+    <p>Notice the pattern: in each movement, <strong>one muscle contracts while its partner relaxes</strong>. They never both pull hard at the same time.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ghost silhouettes: faint real bent/straight arm with biceps & triceps bellies -->
+        <g fill="#C9806A" fill-opacity="0.15" stroke="#C9806A" stroke-opacity="0.3" stroke-width="1.5">
+          <!-- BENDING: bent-arm flesh silhouette (upper arm down, forearm angled up to the right) -->
+          <path d="M 92 46 C 82 64 82 100 92 130
+                   C 100 152 116 168 138 176
+                   C 168 188 210 200 240 208
+                   C 250 211 256 206 252 198
+                   C 246 188 214 176 188 166
+                   C 168 158 156 146 150 128
+                   C 144 102 144 66 138 48
+                   C 132 40 100 40 92 46 Z"/>
+          <!-- BENDING: biceps belly bulge (front of upper arm) -->
+          <ellipse cx="103" cy="98" rx="17" ry="38"/>
+          <!-- STRAIGHTENING: straight-arm flesh silhouette (upper arm + forearm in line) -->
+          <path d="M 360 46 C 350 64 350 104 358 138
+                   C 360 168 360 196 366 214
+                   C 372 220 420 220 426 214
+                   C 432 196 432 168 434 138
+                   C 442 104 442 64 432 46
+                   C 424 40 368 40 360 46 Z"/>
+          <!-- STRAIGHTENING: triceps belly bulge (back of upper arm) -->
+          <ellipse cx="416" cy="96" rx="17" ry="38"/>
+        </g>
+        <!-- ARM BENDING (left) -->
+        <g>
+          <text x="150" y="26" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">BENDING THE ARM</text>
+          <!-- Upper arm bone (vertical) -->
+          <rect x="120" y="40" width="16" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Forearm bone (raised) -->
+          <rect x="120" y="135" width="16" height="100" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2" transform="rotate(-58 128 142)"/>
+          <!-- Biceps (front, CONTRACTED = short & fat) -->
+          <ellipse cx="105" cy="95" rx="14" ry="34" fill="#B85042" stroke="#B85042" stroke-width="2"/>
+          <text x="78" y="92" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#B85042">biceps</text>
+          <text x="78" y="106" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#B85042">CONTRACTS</text>
+          <!-- Triceps (back, RELAXED = long & thin) -->
+          <ellipse cx="150" cy="95" rx="9" ry="44" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+          <text x="172" y="92" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#5C6370">triceps</text>
+          <text x="172" y="106" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">relaxes</text>
+          <text x="150" y="225" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">forearm raised</text>
+        </g>
+
+        <!-- Divider -->
+        <line x1="280" y1="40" x2="280" y2="210" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- ARM STRAIGHTENING (right) -->
+        <g>
+          <text x="410" y="26" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">STRAIGHTENING THE ARM</text>
+          <!-- Upper arm bone -->
+          <rect x="385" y="40" width="16" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Forearm bone (lowered, straight) -->
+          <rect x="385" y="148" width="16" height="62" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+          <!-- Biceps (front, RELAXED) -->
+          <ellipse cx="370" cy="95" rx="9" ry="44" fill="#F4DAD7" stroke="#B85042" stroke-width="1.5"/>
+          <text x="345" y="92" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#5C6370">biceps</text>
+          <text x="345" y="106" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">relaxes</text>
+          <!-- Triceps (back, CONTRACTED) -->
+          <ellipse cx="415" cy="95" rx="14" ry="34" fill="#B85042" stroke="#B85042" stroke-width="2"/>
+          <text x="438" y="92" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="10" font-weight="700" fill="#B85042">triceps</text>
+          <text x="438" y="106" text-anchor="start" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#B85042">CONTRACTS</text>
+          <text x="410" y="225" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">forearm lowered</text>
+        </g>
+      </svg>
+      <div class="caption">Biceps &amp; triceps — an antagonistic pair</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — both muscles never pull at once</h4>
+      <p>A common mistake is to say "the biceps and triceps both contract to move the arm." They don't. Because muscles can <strong>only pull</strong>, in an antagonistic pair <strong>one contracts while the other relaxes</strong>. If they both pulled hard at the same time, the arm would be locked stiff and couldn't move.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">To <strong>straighten</strong> your arm at the elbow, what do the biceps and triceps do?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Biceps contracts, triceps relaxes</span></li>
+        <li><span class="letter">B</span><span>Triceps contracts, biceps relaxes</span></li>
+        <li><span class="letter">C</span><span>Both contract together</span></li>
+        <li><span class="letter">D</span><span>Both relax together</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — triceps contracts, biceps relaxes.</strong> The triceps (on the back of the arm) pulls the forearm down to straighten it, while the biceps relaxes. <em>A is the opposite movement — that bends the arm. Remember: triceps straightens, biceps bends.</em></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">6 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What is an antagonistic muscle pair?</summary>
+        <div class="ans">Two muscles on opposite sides of a joint that <strong>pull in opposite directions</strong> — when one contracts, the other relaxes.</div>
+      </details></li>
+      <li><details>
+        <summary>Why do muscles have to work in pairs?</summary>
+        <div class="ans">Because a muscle can <strong>only pull, not push</strong>. One muscle pulls the bone one way; a second is needed to pull it back the other way.</div>
+      </details></li>
+      <li><details>
+        <summary>Name the antagonistic pair in the upper arm.</summary>
+        <div class="ans">The <strong>biceps</strong> (front) and the <strong>triceps</strong> (back).</div>
+      </details></li>
+      <li><details>
+        <summary>To bend the arm, what do the biceps and triceps do?</summary>
+        <div class="ans">The <strong>biceps contracts</strong> (pulling the forearm up) and the <strong>triceps relaxes</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>To straighten the arm, what do the biceps and triceps do?</summary>
+        <div class="ans">The <strong>triceps contracts</strong> (pulling the forearm down) and the <strong>biceps relaxes</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>A pupil writes: "to lift a heavy box, the biceps and triceps both contract hard." Correct them.</summary>
+        <div class="ans">Wrong — in an antagonistic pair <strong>only one contracts while the other relaxes</strong>. To lift the box the <strong>biceps contracts</strong> and the <strong>triceps relaxes</strong>. If both pulled at once the arm would be locked.</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — MEASURING MUSCLE STRENGTH (WORKING WITH DATA)                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · Biology · Working with data</div>
+    <h2 class="lesson-title">Measuring <em>muscle strength</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll be able to record results in a table, plot them on a graph, draw a line of best fit, and read values off the graph.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The muscle-strength practical</h3>
+    <p>How do you measure how strong a muscle is? A common school experiment uses a <strong>hand-grip dynamometer</strong> — a device you squeeze as hard as you can, which reads off the force in <strong>newtons (N)</strong>. The bigger the squeeze, the bigger the number.</p>
+    <p>Suppose a class investigates whether older pupils have a stronger grip. They measure the grip strength of pupils of different ages and write the results in a <strong>table</strong>.</p>
+
+    <div class="worked">
+      <h4>Results table — grip strength by age</h4>
+      <div class="step"><div class="label">Age (yrs)</div><div class="v">7 &nbsp;&nbsp; 9 &nbsp;&nbsp; 11 &nbsp;&nbsp; 13 &nbsp;&nbsp; 15</div></div>
+      <div class="step"><div class="label">Grip (N)</div><div class="v">90 &nbsp; 130 &nbsp; 170 &nbsp; 190 &nbsp; 250</div></div>
+    </div>
+
+    <p>A table is tidy, but it's hard to spot the <strong>pattern</strong> just by reading numbers. That's why we draw a <strong>graph</strong> — a picture of the data makes the trend jump out.</p>
+
+    <div class="keywords">
+      <h4>Keywords for Part 1</h4>
+      <dl>
+        <dt>Data</dt>
+        <dd>The measurements (results) collected in an experiment.</dd>
+        <dt>Variable</dt>
+        <dd>Something that changes or is measured. Here: age and grip strength.</dd>
+        <dt>Newton (N)</dt>
+        <dd>The unit of force — used here to measure how hard the muscle squeezes.</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Plotting a graph &amp; the line of best fit</h3>
+    <p>To turn the table into a graph, plot each pair of numbers as a point: age along the bottom (the <strong>x-axis</strong>), grip strength up the side (the <strong>y-axis</strong>). Each pupil becomes one cross on the grid.</p>
+    <p>The points don't sit in a perfectly straight line — real measurements never do. So instead of joining the dots, you draw a single straight <strong>line of best fit</strong>: a line that passes as close to as many points as possible, with roughly the same number of points above and below it.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Axes -->
+        <line x1="80" y1="250" x2="500" y2="250" stroke="#1E2761" stroke-width="2"/>
+        <line x1="80" y1="250" x2="80" y2="40" stroke="#1E2761" stroke-width="2"/>
+        <!-- Y gridlines + labels (grip 0..300 by 50) -->
+        <g font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">
+          <line x1="80" y1="215" x2="500" y2="215" stroke="#CFD8E3" stroke-width="1"/>
+          <line x1="80" y1="180" x2="500" y2="180" stroke="#CFD8E3" stroke-width="1"/>
+          <line x1="80" y1="145" x2="500" y2="145" stroke="#CFD8E3" stroke-width="1"/>
+          <line x1="80" y1="110" x2="500" y2="110" stroke="#CFD8E3" stroke-width="1"/>
+          <line x1="80" y1="75" x2="500" y2="75" stroke="#CFD8E3" stroke-width="1"/>
+          <text x="72" y="254" text-anchor="end">0</text>
+          <text x="72" y="219" text-anchor="end">50</text>
+          <text x="72" y="184" text-anchor="end">100</text>
+          <text x="72" y="149" text-anchor="end">150</text>
+          <text x="72" y="114" text-anchor="end">200</text>
+          <text x="72" y="79" text-anchor="end">250</text>
+        </g>
+        <!-- X labels (age 7,9,11,13,15) -->
+        <g font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370" text-anchor="middle">
+          <text x="140" y="266">7</text>
+          <text x="220" y="266">9</text>
+          <text x="300" y="266">11</text>
+          <text x="380" y="266">13</text>
+          <text x="460" y="266">15</text>
+        </g>
+        <!-- Axis titles -->
+        <text x="290" y="290" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Age (years)</text>
+        <text x="26" y="145" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761" transform="rotate(-90 26 145)">Grip strength (N)</text>
+        <!-- Data points (age, grip): map x = 80 + (age-7)/2*80 ; y = 250 - grip/50*35 -->
+        <!-- (7,90)->x140,y187 (9,130)->x220,y159 (11,170)->x300,y131 (13,190)->x380,y117 (15,250)->x460,y75 -->
+        <g stroke="#B85042" stroke-width="2.5">
+          <line x1="134" y1="181" x2="146" y2="193"/><line x1="146" y1="181" x2="134" y2="193"/>
+          <line x1="214" y1="153" x2="226" y2="165"/><line x1="226" y1="153" x2="214" y2="165"/>
+          <line x1="294" y1="125" x2="306" y2="137"/><line x1="306" y1="125" x2="294" y2="137"/>
+          <line x1="374" y1="111" x2="386" y2="123"/><line x1="386" y1="111" x2="374" y2="123"/>
+          <line x1="454" y1="69" x2="466" y2="81"/><line x1="466" y1="69" x2="454" y2="81"/>
+        </g>
+        <!-- Line of best fit -->
+        <line x1="120" y1="190" x2="475" y2="72" stroke="#1E2761" stroke-width="2"/>
+        <text x="430" y="118" text-anchor="start" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#1E2761">line of best fit</text>
+        <line x1="428" y1="114" x2="408" y2="96" stroke="#1E2761" stroke-width="1"/>
+      </svg>
+      <div class="caption">A scatter graph with a line of best fit</div>
+    </div>
+
+    <p>The line of best fit slopes <strong>upwards</strong>. That tells us the pattern: as age increases, grip strength tends to <strong>increase</strong> too. Older pupils generally have a stronger grip.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — don't "dot-to-dot" the points</h4>
+      <p>A line of best fit is a single <strong>straight line</strong> drawn through the middle of the points — <em>not</em> a zig-zag joining every dot. Joining the dots makes the data look bumpier than it really is and hides the overall trend. Draw one smooth straight line with about as many points above it as below.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Reading values off the graph</h3>
+    <p>Once you've drawn the line of best fit, you can use it to <strong>predict</strong> values you didn't measure. To find the likely grip strength of a 12-year-old, go up from <strong>12</strong> on the age axis until you hit the line, then go across to read the grip strength.</p>
+
+    <div class="worked">
+      <h4>Worked example — reading off the graph</h4>
+      <p class="q">Use the line of best fit to estimate the grip strength of a <strong>12-year-old</strong>.</p>
+      <div class="step"><div class="label">Find</div><div class="v">on the age axis, find 12 years</div></div>
+      <div class="step"><div class="label">Up</div><div class="v">go straight up from 12 until you reach the line of best fit</div></div>
+      <div class="step"><div class="label">Across</div><div class="v">go across to the grip axis and read the value</div></div>
+      <div class="step answer"><div class="label">Answer</div><div class="v">about 180 N</div></div>
+    </div>
+
+    <p>This is reading <em>between</em> points we measured — the answer is an estimate, but the line of best fit gives us a sensible one because it follows the overall trend.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Two pupils' grip strengths are read off the line of best fit: a 9-year-old gives 130 N and a 15-year-old gives 250 N. What does comparing them tell you?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The 9-year-old has the stronger grip</span></li>
+        <li><span class="letter">B</span><span>The older pupil has the stronger grip — strength increases with age</span></li>
+        <li><span class="letter">C</span><span>Their grip strengths are the same</span></li>
+        <li><span class="letter">D</span><span>You can't compare values from a graph</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — the older pupil has the stronger grip.</strong> 250 N is bigger than 130 N, and because the line of best fit slopes upwards, grip strength <em>increases</em> with age. Comparing values read off a graph is exactly what the line of best fit is for.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <h3 class="quiz-head">Test <em>yourself</em></h3>
+    <p class="quiz-sub">7 questions · click to reveal each answer</p>
+    <ol>
+      <li><details>
+        <summary>What piece of equipment is used to measure grip strength, and in what unit?</summary>
+        <div class="ans">A <strong>hand-grip dynamometer</strong>, measuring force in <strong>newtons (N)</strong>.</div>
+      </details></li>
+      <li><details>
+        <summary>Why is a graph more useful than a table for spotting a pattern?</summary>
+        <div class="ans">A graph turns the numbers into a <strong>picture</strong>, so the overall <strong>trend</strong> (pattern) is much easier to see than from a list of numbers.</div>
+      </details></li>
+      <li><details>
+        <summary>On the grip-strength graph, which variable goes on the x-axis and which on the y-axis?</summary>
+        <div class="ans"><strong>Age</strong> goes on the x-axis (bottom); <strong>grip strength</strong> goes on the y-axis (side).</div>
+      </details></li>
+      <li><details>
+        <summary>What is a line of best fit?</summary>
+        <div class="ans">A single <strong>straight line</strong> drawn through the middle of the plotted points, passing as close to as many as possible, with roughly equal numbers above and below.</div>
+      </details></li>
+      <li><details>
+        <summary>Why should you NOT join the dots point-to-point?</summary>
+        <div class="ans">Joining the dots makes the data look bumpier than it is and <strong>hides the overall trend</strong>. A single straight line of best fit shows the real pattern.</div>
+      </details></li>
+      <li><details>
+        <summary>The line of best fit slopes upwards. What does this tell you about age and grip strength?</summary>
+        <div class="ans">As age <strong>increases</strong>, grip strength tends to <strong>increase</strong> too. Older pupils generally have a stronger grip.</div>
+      </details></li>
+      <li><details>
+        <summary>Describe how you would use the graph to estimate the grip strength of an 11-year-old.</summary>
+        <div class="ans">Find <strong>11</strong> on the age axis, go <strong>straight up</strong> to the line of best fit, then go <strong>across</strong> to read the grip strength on the y-axis (about <strong>170 N</strong>).</div>
+      </details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>Year 7 Biology · Skeleton &amp; Muscles</p>
+  <p>A revision booklet</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'skeleton-muscles-y7-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=3356f7f2-10e1-9df1-ca9f-32d4fbe12239&amp;ref=interactive-science&amp;from=skeleton-and-muscles-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=skeleton-and-muscles-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>
