@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Using Resources (C10) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for C10 Using Resources — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Chemistry Paper 2 · C10 Using Resources</div>
+    <h1>Using resources, <em>for the exam.</em></h1>
+    <p class="tag">The whole of C10 — finite and renewable resources, making water safe to drink, cleaning waste water, life cycle assessment, and stopping iron from rusting. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Finite &amp; renewable</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Potable water</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Waste water</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Life cycle &amp; reuse</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Corrosion</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — FINITE VS RENEWABLE RESOURCES (5.10.1.1)                      -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · C10 · Finite &amp; renewable</div>
+    <h2 class="lesson-title">Finite, renewable &amp; <em>sustainable</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll sort resources into finite and renewable, say what chemistry does for us, and explain what "sustainable development" actually means.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What the Earth gives us</h3>
+    <p>Humans use the Earth's resources to keep warm, to build, to move around, and to stay healthy. These resources come from the <strong>Earth, the oceans and the atmosphere</strong>. Some are natural; many are processed or improved by chemistry.</p>
+    <p>A <strong>finite</strong> (non-renewable) resource is one that is being used up faster than it forms — once it's gone, it's gone on a human timescale. <strong>Fossil fuels</strong> (coal, oil, gas), <strong>metal ores</strong> and many <strong>minerals</strong> are finite. A <strong>renewable</strong> resource is one that re-forms at a similar rate to the rate we use it, such as <strong>timber</strong> from replanted forests.</p>
+    <p><strong>Natural products</strong> — like rubber, cotton, wood and natural fertilisers — were once our only option. Chemistry now provides <strong>synthetic</strong> alternatives and improvements: synthetic rubber, man-made fabrics, fertilisers made in industry, and a huge range of materials. The job of the chemist is to make these processes more efficient and to use less of the finite resources.</p>
+
+    <div class="keywords">
+      <h4>Key terms</h4>
+      <dl>
+        <dt>Finite resource</dt><dd>Used up faster than it forms — e.g. crude oil, metal ores.</dd>
+        <dt>Renewable resource</dt><dd>Re-forms as fast as we use it — e.g. timber from managed forests.</dd>
+        <dt>Sustainable development</dt><dd>Meeting today's needs without stopping future generations meeting theirs.</dd>
+        <dt>Natural product</dt><dd>A resource taken directly from living things or the Earth, e.g. cotton, natural rubber.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SORTING THE RESOURCES</text>
+        <!-- finite column -->
+        <rect x="40" y="44" width="220" height="156" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="150" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">FINITE</text>
+        <text x="150" y="94" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Crude oil</text>
+        <text x="150" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Coal &amp; natural gas</text>
+        <text x="150" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Metal ores</text>
+        <text x="150" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Minerals</text>
+        <!-- renewable column -->
+        <rect x="300" y="44" width="220" height="156" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="410" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">RENEWABLE</text>
+        <text x="410" y="94" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Timber</text>
+        <text x="410" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Cotton &amp; wool</text>
+        <text x="410" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Natural rubber</text>
+        <text x="410" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Fresh water (managed)</text>
+      </svg>
+      <div class="caption">Finite resources run out; renewable ones re-form at the rate we use them</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "renewable" is not "sustainable"</h4>
+      <p>A resource can be <strong>renewable</strong> in principle but still used <em>un</em>sustainably — chopping down a forest faster than it regrows is a good example. <strong>Sustainable development</strong> is about the <em>rate</em> of use, not just where the resource comes from. Also, don't confuse a <strong>finite resource</strong> with one that's about to run out tomorrow — it just means it isn't being replaced.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Sustainable development &amp; the chemist's job</h3>
+    <p><strong>Sustainable development</strong> meets the needs of people today without damaging the ability of future generations to meet their own needs. In chemistry that means using <strong>less energy</strong>, using <strong>fewer finite resources</strong>, and producing <strong>less waste</strong>.</p>
+    <p>Examples you should be able to give: extracting copper from <strong>low-grade ores</strong> using phytomining and bioleaching (instead of digging up scarce high-grade ore), <strong>recycling</strong> metals and glass rather than making them from raw materials, and finding ways to use a <strong>smaller quantity</strong> of a finite raw material per product.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which statement about sustainable development is correct?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It means only ever using renewable resources.</span></li>
+        <li><span class="letter">B</span><span>It means using resources so future generations can still meet their needs.</span></li>
+        <li><span class="letter">C</span><span>It means we can never use finite resources at all.</span></li>
+        <li><span class="letter">D</span><span>It means recycling is the only allowed process.</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Sustainable development is about meeting present needs <em>without</em> stopping future generations meeting theirs. We can still use finite resources — the aim is to use less of them, use less energy, and make less waste (so A, C and D are too strict).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is the difference between a finite and a renewable resource?</summary><div class="ans">A <strong>finite</strong> resource is used up faster than it forms (e.g. crude oil, metal ores); a <strong>renewable</strong> resource re-forms at about the rate we use it (e.g. timber).</div></details></li>
+      <li><details><summary>Define sustainable development.</summary><div class="ans">Development that meets the <strong>needs of the present</strong> without stopping <strong>future generations</strong> meeting their own needs.</div></details></li>
+      <li><details><summary>Give one way chemistry helps us use resources more sustainably.</summary><div class="ans">Any sensible answer, e.g. <strong>recycling</strong> metals/glass, extracting copper from <strong>low-grade ores</strong>, or making products with <strong>less</strong> finite raw material, energy or waste.</div></details></li>
+      <li><details><summary>Name two natural products and the synthetic materials chemistry can replace them with.</summary><div class="ans">E.g. <strong>natural rubber → synthetic rubber</strong>, and <strong>cotton/wool → man-made (synthetic) fabrics</strong>. (Natural fertilisers can also be replaced by industrially made ones.)</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — POTABLE WATER (5.10.1.2) + REQUIRED PRACTICAL                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · C10 · Potable water</div>
+    <h2 class="lesson-title">Making water <em>safe</em> to drink</h2>
+    <p class="lesson-promise">What "potable" really means, how we treat fresh water and sea water — and the required practical that analyses and purifies a water sample.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Potable is not pure</h3>
+    <p><strong>Potable water</strong> is water that is safe to drink. It is <strong>not</strong> the same as pure water: potable water still contains small amounts of <strong>dissolved salts</strong> and other substances — it just has low enough levels of dissolved solids and harmful microbes to be safe.</p>
+    <p>Good-quality potable water should have a <strong>pH between 6.5 and 8.5</strong>, low levels of dissolved salts, and no harmful microbes. In the UK most potable water comes from <strong>fresh water</strong> — rain water that collects in <strong>reservoirs, lakes and rivers</strong>, and in <strong>aquifers</strong> (rocks that trap groundwater).</p>
+
+    <div class="keywords">
+      <h4>Key terms</h4>
+      <dl>
+        <dt>Potable water</dt><dd>Water that is safe to drink — low in dissolved solids and microbes, but not pure.</dd>
+        <dt>Pure water</dt><dd>Only H₂O molecules — no dissolved substances at all.</dd>
+        <dt>Sterilising agent</dt><dd>A chemical or treatment that kills microbes, e.g. chlorine, ozone or UV light.</dd>
+        <dt>Desalination</dt><dd>Removing dissolved salts from sea water to make it potable.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TREATING FRESH WATER</text>
+        <!-- stage 1 -->
+        <rect x="30" y="70" width="120" height="56" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="90" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">1. Filtration</text>
+        <text x="90" y="113" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">remove solids</text>
+        <!-- arrow -->
+        <line x1="150" y1="98" x2="200" y2="98" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="206,98 192,92 192,104" fill="#C8A24A"/>
+        <!-- stage 2 -->
+        <rect x="210" y="70" width="120" height="56" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="270" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">2. Sterilise</text>
+        <text x="270" y="113" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">kill microbes</text>
+        <!-- arrow -->
+        <line x1="330" y1="98" x2="380" y2="98" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="386,98 372,92 372,104" fill="#C8A24A"/>
+        <!-- result -->
+        <rect x="390" y="70" width="140" height="56" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="460" y="95" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">Potable water</text>
+        <text x="460" y="113" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">safe to drink</text>
+        <text x="280" y="168" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Sterilise with chlorine, ozone or ultraviolet light</text>
+      </svg>
+      <div class="caption">Fresh-water treatment: filter out solids, then sterilise to kill microbes</div>
+    </div>
+
+    <p>So treating <strong>fresh water</strong> takes two steps: pass it through <strong>filter beds</strong> to remove solid bits, then <strong>sterilise</strong> it to kill microbes. UK water companies sterilise using <strong>chlorine, ozone or ultraviolet light</strong>.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — potable ≠ pure</h4>
+      <p>A classic exam trap: pupils write that potable water is "pure water". It isn't — <strong>potable water still contains dissolved substances</strong>. Pure water contains <em>only</em> water molecules. Also, you <strong>filter then sterilise</strong> — filtration removes solids but does <em>not</em> kill microbes, so the order matters.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>When fresh water is scarce — desalination</h3>
+    <p>Where there isn't much fresh water, countries treat <strong>sea water</strong> instead. Removing the dissolved salts is called <strong>desalination</strong>. It can be done by <strong>distillation</strong> (boil the sea water and condense the pure water vapour) or by <strong>reverse osmosis</strong> (push water through a membrane that traps the salt ions).</p>
+    <p>The big drawback is <strong>energy</strong>: both methods need a lot of energy (distillation has to boil the water; reverse osmosis needs high pressure). That makes desalination <strong>expensive</strong>, so it's mainly used where fresh water is genuinely short.</p>
+
+    <div class="rp">
+      <h4>Analysis &amp; purification of water samples</h4>
+      <p><strong>Aim:</strong> analyse water samples for pH and dissolved solids, then purify a sample by distillation.</p>
+      <ol>
+        <li><strong>Test the pH</strong> of each water sample with universal indicator paper (or a pH meter) and record the value.</li>
+        <li><strong>Find the dissolved solids:</strong> weigh an empty evaporating basin. Measure a fixed volume of the sample into it.</li>
+        <li><strong>Evaporate</strong> the water gently (water bath, then dry fully) so only the dissolved solids are left. Re-weigh the basin — the increase in mass is the mass of dissolved solids.</li>
+        <li><strong>Distil</strong> a fresh portion of the sample: heat the water in a flask, let the vapour pass through a condenser, and collect the pure water that drips out.</li>
+        <li>Re-test the <strong>distilled</strong> water for pH and dissolved solids — it should now be close to neutral with no dissolved solids.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> use the <strong>same volume</strong> for every sample so the dissolved-solids results can be compared fairly, and let each basin dry completely before re-weighing. The distilled sample proves the method works — it has the lowest pH change and the least dissolved solid.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SIMPLE DISTILLATION</text>
+        <!-- flask -->
+        <path d="M70 150 q0 30 30 30 q30 0 30 -30 l-12 -40 v-30 h-24 v30 z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- heat -->
+        <path d="M88 188 q4 10 8 0 q4 10 8 0" fill="none" stroke="#B85042" stroke-width="2"/>
+        <text x="100" y="212" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">salty water</text>
+        <!-- delivery to condenser -->
+        <line x1="100" y1="80" x2="100" y2="64" stroke="#1E2761" stroke-width="2"/>
+        <line x1="100" y1="64" x2="300" y2="64" stroke="#1E2761" stroke-width="2"/>
+        <!-- condenser -->
+        <rect x="300" y="54" width="150" height="22" rx="4" fill="#EDF2FA" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="375" y="46" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">condenser (cooled)</text>
+        <!-- to beaker -->
+        <line x1="450" y1="65" x2="478" y2="65" stroke="#1E2761" stroke-width="2"/>
+        <line x1="478" y1="65" x2="478" y2="150" stroke="#1E2761" stroke-width="2"/>
+        <!-- beaker -->
+        <rect x="450" y="150" width="60" height="44" fill="#DDEBDD" stroke="#1E2761" stroke-width="2"/>
+        <text x="480" y="210" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#2C5F2D">pure water</text>
+      </svg>
+      <div class="caption">Distillation: boil off the water, cool the vapour, collect pure water — salts stay behind</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A coastal town with very little fresh water wants drinking water from the sea. Which is the main disadvantage of desalination?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It cannot remove the dissolved salts.</span></li>
+        <li><span class="letter">B</span><span>It uses large amounts of energy, so it is expensive.</span></li>
+        <li><span class="letter">C</span><span>It leaves the water full of microbes.</span></li>
+        <li><span class="letter">D</span><span>Sea water is already potable, so it is pointless.</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Distillation must boil the water and reverse osmosis needs high pressure — both use a lot of <em>energy</em>, which makes desalination expensive. A is wrong (it <em>does</em> remove the salts) and D is wrong (sea water is not potable — it's far too salty).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What is meant by potable water, and how is it different from pure water?</summary><div class="ans">Potable water is water that is <strong>safe to drink</strong> — low in dissolved solids and microbes. It still contains <strong>dissolved substances</strong>, whereas pure water is <strong>only H₂O</strong>.</div></details></li>
+      <li><details><summary>Describe the two steps used to treat fresh water in the UK.</summary><div class="ans"><strong>1. Filtration</strong> through filter beds to remove solids; <strong>2. Sterilisation</strong> to kill microbes (using chlorine, ozone or UV light).</div></details></li>
+      <li><details><summary>Name two methods of desalinating sea water.</summary><div class="ans"><strong>Distillation</strong> (boil and condense) and <strong>reverse osmosis</strong> (push water through a membrane).</div></details></li>
+      <li><details><summary>Why is desalination not used everywhere?</summary><div class="ans">It uses <strong>large amounts of energy</strong>, so it is <strong>expensive</strong>. It's mainly used where fresh water is scarce.</div></details></li>
+      <li><details><summary>In the required practical, how do you find the mass of dissolved solids in a water sample?</summary><div class="ans">Weigh an empty evaporating basin, add a fixed volume of the sample, <strong>evaporate the water</strong>, then re-weigh. The <strong>increase in mass</strong> is the mass of dissolved solids.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — WASTE WATER TREATMENT (5.10.1.3)                              -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · C10 · Waste water</div>
+    <h2 class="lesson-title">Cleaning <em>waste</em> water</h2>
+    <p class="lesson-promise">Where sewage and industrial effluent go, the order of the treatment stages, and why this is easier than desalination.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Sewage treatment, step by step</h3>
+    <p>Homes, farms and factories produce huge volumes of <strong>waste water</strong> that must be cleaned before it's returned to rivers and the sea. Sewage contains <strong>organic matter</strong> and <strong>harmful microbes</strong>; agricultural and industrial waste can also contain <strong>harmful chemicals</strong>.</p>
+    <p>Sewage treatment works in a set order:</p>
+    <p><strong>Screening &amp; grit removal</strong> takes out large solids and grit. <strong>Sedimentation</strong> lets the waste settle into a liquid (<strong>effluent</strong>) on top and a solid (<strong>sludge</strong>) at the bottom. The effluent is treated by <strong>aerobic digestion</strong> (air is bubbled through so bacteria break down organic matter and harmful microbes). The sludge is treated by <strong>anaerobic digestion</strong> (bacteria break it down <em>without</em> air, which also produces methane gas as a fuel and a fertiliser as a by-product).</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SEWAGE TREATMENT STAGES</text>
+        <!-- step 1 -->
+        <rect x="30" y="44" width="180" height="40" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="120" y="69" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">1. Screening &amp; grit removal</text>
+        <line x1="120" y1="84" x2="120" y2="100" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="120,106 114,92 126,92" fill="#C8A24A"/>
+        <!-- step 2 -->
+        <rect x="30" y="106" width="180" height="40" rx="5" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="120" y="131" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">2. Sedimentation</text>
+        <!-- split into effluent / sludge -->
+        <line x1="120" y1="146" x2="120" y2="162" stroke="#5C6370" stroke-width="2"/>
+        <line x1="120" y1="162" x2="330" y2="162" stroke="#5C6370" stroke-width="2"/>
+        <line x1="120" y1="162" x2="120" y2="178" stroke="#5C6370" stroke-width="2"/>
+        <!-- effluent branch -->
+        <rect x="250" y="106" width="160" height="40" rx="5" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="330" y="124" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">Effluent (liquid)</text>
+        <text x="330" y="139" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">aerobic digestion</text>
+        <line x1="330" y1="146" x2="330" y2="162" stroke="#2C5F2D" stroke-width="2"/>
+        <!-- sludge branch -->
+        <rect x="40" y="178" width="160" height="40" rx="5" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="120" y="196" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">Sludge (solid)</text>
+        <text x="120" y="211" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">anaerobic digestion</text>
+      </svg>
+      <div class="caption">Sedimentation splits waste into effluent (treated with air) and sludge (treated without air)</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Key terms</h4>
+      <dl>
+        <dt>Effluent</dt><dd>The liquid that floats above the settled sludge — treated by aerobic digestion.</dd>
+        <dt>Sludge</dt><dd>The solid that settles at the bottom — treated by anaerobic digestion.</dd>
+        <dt>Aerobic digestion</dt><dd>Bacteria break down waste <em>with</em> oxygen (air bubbled through).</dd>
+        <dt>Anaerobic digestion</dt><dd>Bacteria break down waste <em>without</em> oxygen, producing methane and fertiliser.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — aerobic vs anaerobic</h4>
+      <p>Don't mix these up. <strong>Aerobic</strong> means <em>with</em> air/oxygen — used on the liquid <strong>effluent</strong>. <strong>Anaerobic</strong> means <em>without</em> air — used on the solid <strong>sludge</strong>, and it gives off useful methane. A memory hook: <em>an</em>aerobic has the <em>"an"</em> for "absent air".</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Choosing where to get your water</h3>
+    <p>It's worth comparing the three sources by how much treatment — and energy — each needs. <strong>Ground water</strong> from aquifers usually only needs sterilising. <strong>Waste water</strong> needs the full sewage treatment above. <strong>Sea water</strong> needs desalination, which uses the most energy of all.</p>
+    <p>The general rule: the more <strong>contaminated</strong> the starting water, the more <strong>energy and processing</strong> it takes to make it potable. That's why treating sewage to return it to rivers is far cheaper than desalinating sea water — but still uses much more energy than simply sterilising clean ground water.</p>
+
+    <div class="worked">
+      <h4>Worked example — comparing two water sources</h4>
+      <p class="q">A country can take drinking water either from a clean aquifer or by desalinating sea water. Explain which uses less energy and why.</p>
+      <div class="step"><span class="label">Aquifer</span><span class="v">Ground water is already fairly clean — usually only needs sterilising.</span></div>
+      <div class="step"><span class="label">Sea water</span><span class="v">Must remove dissolved salts by distillation or reverse osmosis — lots of energy.</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">The aquifer uses far less energy, because it needs much less treatment.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">In sewage treatment, what happens during sedimentation?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Microbes are killed by adding chlorine.</span></li>
+        <li><span class="letter">B</span><span>The waste settles into liquid effluent on top and solid sludge below.</span></li>
+        <li><span class="letter">C</span><span>Salts are removed from the water.</span></li>
+        <li><span class="letter">D</span><span>Air is bubbled through to break down the sludge.</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Sedimentation lets the waste <em>settle</em>, separating it into <strong>effluent</strong> (liquid) and <strong>sludge</strong> (solid). The two are then digested differently — effluent aerobically, sludge anaerobically. (A and C describe other processes; D mixes up the air step.)</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>List the main stages of sewage treatment in order.</summary><div class="ans"><strong>Screening &amp; grit removal → sedimentation → aerobic digestion of the effluent → anaerobic digestion of the sludge.</strong></div></details></li>
+      <li><details><summary>What is the difference between aerobic and anaerobic digestion?</summary><div class="ans"><strong>Aerobic</strong> digestion uses bacteria <em>with</em> oxygen (air); <strong>anaerobic</strong> digestion uses bacteria <em>without</em> oxygen and also produces methane.</div></details></li>
+      <li><details><summary>Why might industrial waste water need extra treatment beyond normal sewage?</summary><div class="ans">It can contain <strong>harmful chemicals</strong>, which must be removed before the water is released into rivers or the sea.</div></details></li>
+      <li><details><summary>Put these in order of energy needed to make potable water: sea water, ground water, waste water.</summary><div class="ans">Least → most: <strong>ground water</strong> (just sterilise) → <strong>waste water</strong> (full sewage treatment) → <strong>sea water</strong> (desalination).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — LIFE CYCLE ASSESSMENT & REDUCING USE (5.10.2)                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · C10 · Life cycle &amp; reuse</div>
+    <h2 class="lesson-title">Life cycle assessment &amp; <em>reducing</em> use</h2>
+    <p class="lesson-promise">The four stages of an LCA, why it's never fully objective, and the difference between reduce, reuse and recycle.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The four stages of an LCA</h3>
+    <p>A <strong>life cycle assessment (LCA)</strong> works out the environmental impact of a product across its whole life — "from cradle to grave". You assess <strong>four stages</strong>:</p>
+    <p><strong>1. Extracting and processing the raw materials</strong> — this uses energy and resources, and can pollute land, water and air. <strong>2. Manufacturing and packaging</strong> the product. <strong>3. Using the product</strong> over its lifetime (including energy used and any waste). <strong>4. Disposal at the end of life</strong> — landfill, transport to the dump, and whether it can be recycled.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">LIFE CYCLE ASSESSMENT — 4 STAGES</text>
+        <!-- stage 1 -->
+        <rect x="22" y="80" width="120" height="50" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="82" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">1. Raw</text>
+        <text x="82" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">materials</text>
+        <line x1="142" y1="105" x2="166" y2="105" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="172,105 158,99 158,111" fill="#C8A24A"/>
+        <!-- stage 2 -->
+        <rect x="172" y="80" width="120" height="50" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="232" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">2. Make &amp;</text>
+        <text x="232" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">package</text>
+        <line x1="292" y1="105" x2="316" y2="105" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="322,105 308,99 308,111" fill="#C8A24A"/>
+        <!-- stage 3 -->
+        <rect x="322" y="80" width="100" height="50" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="372" y="108" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">3. Use</text>
+        <line x1="422" y1="105" x2="446" y2="105" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="452,105 438,99 438,111" fill="#C8A24A"/>
+        <!-- stage 4 -->
+        <rect x="452" y="80" width="90" height="50" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="497" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">4. Dispose</text>
+        <text x="497" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">/ recycle</text>
+        <text x="280" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">At each stage: energy, water, resources used and waste produced</text>
+      </svg>
+      <div class="caption">An LCA scores each of the four life stages for its environmental impact</div>
+    </div>
+
+    <p>At every stage you consider how much <strong>energy and raw material</strong> is used, and how much <strong>waste and pollution</strong> (including carbon dioxide and other gases) is produced.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — LCAs are not fully objective</h4>
+      <p>Some parts of an LCA can be measured easily (energy used, mass of material). But <strong>"environmental impact" involves value judgements</strong> — how do you compare water pollution with air pollution? Because of this, an LCA is <strong>not completely objective</strong>, and selective or biased LCAs are sometimes used for <strong>advertising</strong> to make a product look greener than it is.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Reduce, reuse, recycle</h3>
+    <p>We can cut the use of finite resources, energy, waste and pollution by handling materials more carefully. The order of preference is <strong>reduce</strong>, then <strong>reuse</strong>, then <strong>recycle</strong>:</p>
+    <p><strong>Reduce</strong> — use less material in the first place (e.g. lighter packaging). This saves the most resources. <strong>Reuse</strong> — use the same item again without reprocessing it (e.g. refilling a glass bottle). <strong>Recycle</strong> — process a used material into a new product. For <strong>metals</strong>, this means melting and re-forming them; the amount of separating needed depends on the metal and what it's wanted for. <strong>Glass</strong> bottles can be crushed, melted and re-shaped into new glass products.</p>
+    <p>Recycling metals saves the <strong>finite ore</strong> and uses <strong>much less energy</strong> than extracting the metal from its ore in the first place — a key reason it's worth doing.</p>
+
+    <div class="keywords">
+      <h4>Key terms</h4>
+      <dl>
+        <dt>Life cycle assessment</dt><dd>Working out a product's total environmental impact across its whole life.</dd>
+        <dt>Reduce</dt><dd>Use less material — the best option, as it saves the most resources.</dd>
+        <dt>Reuse</dt><dd>Use an item again as it is, without reprocessing.</dd>
+        <dt>Recycle</dt><dd>Reprocess a used material into a new product, saving ore and energy.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — comparing plastic and paper bags with an LCA</h4>
+      <p class="q">A shop compares plastic and paper carrier bags. Which two LCA stages would you look at to decide which is "greener"?</p>
+      <div class="step"><span class="label">Raw materials</span><span class="v">Plastic comes from crude oil (finite); paper from trees (renewable, if replanted).</span></div>
+      <div class="step"><span class="label">Disposal</span><span class="v">Plastic lasts a long time in landfill; paper rots and can be recycled more easily.</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">Compare both across all four stages — there's no single "right" answer, as it depends which impacts you weight most.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which is usually the <em>best</em> way to cut the use of a finite resource?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Recycle the product after use.</span></li>
+        <li><span class="letter">B</span><span>Reuse the product as it is.</span></li>
+        <li><span class="letter">C</span><span>Reduce the amount of material used in the first place.</span></li>
+        <li><span class="letter">D</span><span>Send the product to landfill.</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — reduce.</strong> Using less material saves the most resources and energy of all. Reusing (B) is next best, then recycling (A). Landfill (D) wastes the resource entirely.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the four stages assessed in a life cycle assessment.</summary><div class="ans"><strong>1. Extracting &amp; processing raw materials, 2. manufacturing &amp; packaging, 3. using the product, 4. disposal</strong> (cradle to grave).</div></details></li>
+      <li><details><summary>Why is an LCA not completely objective?</summary><div class="ans">Judging "environmental impact" involves <strong>value judgements</strong> (e.g. comparing different types of pollution), so the result isn't purely factual. Biased LCAs can be used in <strong>advertising</strong>.</div></details></li>
+      <li><details><summary>Put reduce, reuse and recycle in order of preference, best first.</summary><div class="ans"><strong>Reduce → reuse → recycle.</strong> Reducing saves the most resources and energy.</div></details></li>
+      <li><details><summary>Give two benefits of recycling metals instead of extracting them from ore.</summary><div class="ans">It saves the <strong>finite ore</strong> and uses <strong>much less energy</strong> (and produces less waste/pollution).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — CORROSION & ITS PREVENTION (5.10.3 / 5.4.3.4)                 -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · C10 · Corrosion</div>
+    <h2 class="lesson-title">Corrosion &amp; how to <em>stop</em> it</h2>
+    <p class="lesson-promise">What rusting needs, the experiment that proves it, and the two big ideas for protection — barriers and sacrificial metals.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Rusting needs water and oxygen</h3>
+    <p><strong>Corrosion</strong> is the destruction of a metal by reactions with substances in its surroundings. The corrosion of iron and steel is called <strong>rusting</strong>. Rust is <strong>hydrated iron(III) oxide</strong>.</p>
+    <p>The key fact: <strong>iron rusts only when both water AND oxygen are present.</strong> Remove either one and the iron will not rust. (Salt water and acids speed rusting up, but they aren't needed for it to happen.) You can prove this with three test tubes — only the nail with access to <em>both</em> air and water rusts.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE THREE-TUBE RUSTING TEST</text>
+        <!-- tube A: water + air -->
+        <rect x="50" y="50" width="60" height="150" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="50" y="120" width="60" height="80" rx="0" fill="#cfe0f5"/>
+        <line x1="68" y1="100" x2="92" y2="150" stroke="#B85042" stroke-width="3"/>
+        <text x="80" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">A: water + air</text>
+        <text x="80" y="218" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#B85042">RUSTS</text>
+        <!-- tube B: water only (boiled, oil sealed) -->
+        <rect x="250" y="50" width="60" height="150" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="250" y="100" width="60" height="100" rx="0" fill="#cfe0f5"/>
+        <rect x="250" y="100" width="60" height="10" fill="#C8A24A"/>
+        <line x1="268" y1="120" x2="292" y2="170" stroke="#5C6370" stroke-width="3"/>
+        <text x="280" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">B: no air</text>
+        <text x="280" y="218" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">no rust</text>
+        <!-- tube C: dry air only (drying agent) -->
+        <rect x="450" y="50" width="60" height="150" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="450" y="160" width="60" height="40" fill="#F2E6BD"/>
+        <line x1="468" y1="90" x2="492" y2="140" stroke="#5C6370" stroke-width="3"/>
+        <text x="480" y="40" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">C: no water</text>
+        <text x="480" y="218" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">no rust</text>
+      </svg>
+      <div class="caption">Only tube A (water + air) rusts. B has no air (oil seal); C has no water (drying agent)</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Key terms</h4>
+      <dl>
+        <dt>Corrosion</dt><dd>A metal being destroyed by reaction with its surroundings.</dd>
+        <dt>Rusting</dt><dd>The corrosion of iron/steel; needs both water and oxygen.</dd>
+        <dt>Rust</dt><dd>Hydrated iron(III) oxide — flaky, so it doesn't protect the iron underneath.</dd>
+        <dt>Sacrificial protection</dt><dd>Attaching a more reactive metal that corrodes instead of the iron.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — rust flakes off; aluminium doesn't</h4>
+      <p>Rust is <strong>flaky</strong>, so it falls away and exposes fresh iron to keep rusting. Compare this with <strong>aluminium</strong>: its oxide layer is <strong>not flaky</strong> — it sticks to the surface and stops further corrosion, so aluminium does <em>not</em> corrode away even though it's a reactive metal. Also remember rusting needs <strong>both</strong> water and oxygen — naming just one loses the mark.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Two ways to stop rust</h3>
+    <p>There are two big strategies, and you should be able to explain both.</p>
+    <p><strong>1. Barrier methods</strong> keep out the water and oxygen. <strong>Painting</strong>, coating with <strong>oil or grease</strong>, and covering with <strong>plastic</strong> all work — but only while the coating is unbroken. If a painted surface is scratched, rusting starts at the scratch.</p>
+    <p><strong>2. Sacrificial protection</strong> uses a <strong>more reactive metal</strong> in contact with the iron. The more reactive metal corrodes <em>instead</em> of the iron — it is "sacrificed". <strong>Galvanising</strong> (coating iron with <strong>zinc</strong>) does both jobs at once: the zinc is a barrier <em>and</em>, because zinc is more reactive than iron, it protects the iron sacrificially even if the layer is scratched.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">GALVANISING: ZINC PROTECTS THE IRON</text>
+        <!-- iron core -->
+        <rect x="180" y="80" width="200" height="50" fill="#5C6370"/>
+        <text x="280" y="110" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#FCFAF4">iron / steel</text>
+        <!-- zinc coat -->
+        <rect x="170" y="70" width="220" height="10" fill="#2C5F2D"/>
+        <rect x="170" y="130" width="220" height="10" fill="#2C5F2D"/>
+        <line x1="390" y1="75" x2="470" y2="60" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="476" y="64" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">zinc layer</text>
+        <!-- scratch -->
+        <rect x="270" y="70" width="6" height="10" fill="#B85042"/>
+        <line x1="273" y1="70" x2="120" y2="56" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="114" y="60" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#B85042">even if scratched...</text>
+        <text x="280" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">zinc is more reactive, so it corrodes instead of the iron</text>
+      </svg>
+      <div class="caption">Zinc acts as a barrier and as sacrificial protection — it corrodes before the iron does</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — explaining sacrificial protection</h4>
+      <p class="q">A steel ship's hull has blocks of zinc bolted to it. Explain how this stops the steel rusting.</p>
+      <div class="step"><span class="label">Reactivity</span><span class="v">Zinc is more reactive than iron (the main metal in steel).</span></div>
+      <div class="step"><span class="label">What happens</span><span class="v">The zinc corrodes instead of the iron — it is the "sacrificial" metal.</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">As long as zinc remains, the steel is protected. The zinc blocks are replaced when used up.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why does galvanising protect iron even when the zinc layer gets scratched, but painting does not?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Zinc is harder than paint.</span></li>
+        <li><span class="letter">B</span><span>Zinc is more reactive than iron, so it corrodes sacrificially in place of the iron.</span></li>
+        <li><span class="letter">C</span><span>Paint contains water, so it makes iron rust faster.</span></li>
+        <li><span class="letter">D</span><span>Zinc reacts with the rust and removes it.</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Paint is only a <em>barrier</em> — scratch it and the exposed iron rusts. Zinc is <strong>more reactive</strong> than iron, so it corrodes <em>instead</em> of the iron (sacrificial protection) even where the layer is broken.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What two substances are needed for iron to rust?</summary><div class="ans"><strong>Water and oxygen</strong> (air). Remove either one and the iron will not rust.</div></details></li>
+      <li><details><summary>What is the chemical name for rust?</summary><div class="ans"><strong>Hydrated iron(III) oxide.</strong></div></details></li>
+      <li><details><summary>Why does aluminium not corrode away, even though it is reactive?</summary><div class="ans">Its oxide layer is <strong>not flaky</strong> — it sticks to the surface and protects the metal underneath. (Rust is flaky and falls off, so iron keeps rusting.)</div></details></li>
+      <li><details><summary>Describe two barrier methods for preventing rust.</summary><div class="ans">Any two of: <strong>painting</strong>, coating with <strong>oil or grease</strong>, or covering with <strong>plastic</strong> — all keep out water and oxygen.</div></details></li>
+      <li><details><summary>Explain how sacrificial protection works.</summary><div class="ans">A <strong>more reactive metal</strong> (e.g. zinc or magnesium) is placed in contact with the iron. It <strong>corrodes instead of</strong> the iron, so the iron is protected until the sacrificial metal is used up.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Chemistry Paper 2 · C10 Using Resources</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'c10-using-resources-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=d22bc2b9-d977-4d48-b811-6731d97aaa92&amp;ref=interactive-science&amp;from=c10-using-resources-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=c10-using-resources-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organisation (B2) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for B2 Organisation — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Biology Paper 1 · B2 Organisation</div>
+    <h1>Organisation, <em>for the exam.</em></h1>
+    <p class="tag">The whole of B2 — cells into tissues and organs, enzymes and digestion, the heart, blood and lungs, disease and risk, and how plants move water and food. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Organisation &amp; enzymes</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Digestive enzymes</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Digestion &amp; food tests</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Heart &amp; vessels</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Blood</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Lungs &amp; gas exchange</a>
+    <a href="#lesson-7" class="nav-pill" data-lesson="7">Disease &amp; health</a>
+    <a href="#lesson-8" class="nav-pill" data-lesson="8">Plant transport</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — LEVELS OF ORGANISATION & ENZYMES                             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · B2 · Organisation &amp; enzymes</div>
+    <h2 class="lesson-title">Levels of <em>organisation</em> &amp; enzymes</h2>
+    <p class="lesson-promise">How cells build up into whole organisms — and why enzymes are fussy about shape, temperature and pH.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>From cells to organ systems</h3>
+    <p>Living things are organised in levels, each built from the one below. A <strong>cell</strong> is the basic building block. A group of similar cells working together is a <strong>tissue</strong>. Several tissues working together form an <strong>organ</strong>. A group of organs working together is an <strong>organ system</strong>, and organ systems together make the whole <strong>organism</strong>.</p>
+    <p>For example, the stomach is an <strong>organ</strong>: it contains muscular tissue to churn food, glandular tissue to make digestive juices, and epithelial tissue lining the inside. The stomach is one organ in the <strong>digestive system</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 130" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">LEVELS OF ORGANISATION</text>
+        <rect x="20" y="55" width="84" height="34" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="62" y="76" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">cell</text>
+        <rect x="130" y="55" width="84" height="34" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="172" y="76" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">tissue</text>
+        <rect x="240" y="55" width="84" height="34" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="282" y="76" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">organ</text>
+        <rect x="350" y="55" width="94" height="34" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="397" y="72" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">organ</text>
+        <text x="397" y="84" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">system</text>
+        <rect x="470" y="55" width="74" height="34" rx="4" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="507" y="76" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">organism</text>
+        <line x1="104" y1="72" x2="128" y2="72" stroke="#C8A24A" stroke-width="2"/><polygon points="130,72 122,68 122,76" fill="#C8A24A"/>
+        <line x1="214" y1="72" x2="238" y2="72" stroke="#C8A24A" stroke-width="2"/><polygon points="240,72 232,68 232,76" fill="#C8A24A"/>
+        <line x1="324" y1="72" x2="348" y2="72" stroke="#C8A24A" stroke-width="2"/><polygon points="350,72 342,68 342,76" fill="#C8A24A"/>
+        <line x1="444" y1="72" x2="468" y2="72" stroke="#C8A24A" stroke-width="2"/><polygon points="470,72 462,68 462,76" fill="#C8A24A"/>
+      </svg>
+      <div class="caption">Each level is built from the one before it</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Keywords</h4>
+      <dl>
+        <dt>Tissue</dt><dd>A group of similar cells working together to do one job.</dd>
+        <dt>Organ</dt><dd>A group of different tissues working together (e.g. the stomach).</dd>
+        <dt>Organ system</dt><dd>A group of organs working together (e.g. the digestive system).</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>What enzymes do</h3>
+    <p>An <strong>enzyme</strong> is a biological <strong>catalyst</strong> — it speeds up a reaction without being used up. Enzymes are large <strong>protein</strong> molecules made by living cells, and each has a special shape with a gap called the <strong>active site</strong>.</p>
+    <p>The molecule an enzyme works on is its <strong>substrate</strong>. Only a substrate with the matching shape fits the active site — this is the <strong>lock-and-key</strong> idea. Because the fit is so specific, <strong>each enzyme only catalyses one type of reaction</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 170" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">LOCK AND KEY</text>
+        <text x="120" y="45" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">substrate fits</text>
+        <path d="M60 90 h70 v-22 h22 v22 h28 v40 h-120 z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="125" y="55" width="22" height="22" fill="#B85042"/>
+        <text x="120" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">active site = substrate</text>
+        <text x="420" y="45" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#5C6370">wrong shape</text>
+        <path d="M360 90 h70 v-22 h22 v22 h28 v40 h-120 z" fill="#EDF2FA" stroke="#5C6370" stroke-width="2"/>
+        <circle cx="436" cy="60" r="13" fill="#5C6370"/>
+        <text x="420" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">does not fit — no reaction</text>
+      </svg>
+      <div class="caption">Only a matching substrate fits the active site</div>
+    </div>
+
+    <p>Enzymes work best at a particular temperature and pH — their <strong>optimum</strong>. Raise the temperature and reactions speed up at first, because molecules collide more often. But too hot and the enzyme is ruined: the active site changes shape so the substrate no longer fits. This is called <strong>denaturation</strong>. The wrong pH denatures an enzyme too.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">RATE vs TEMPERATURE</text>
+        <line x1="70" y1="170" x2="510" y2="170" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="70" y1="170" x2="70" y2="45" stroke="#1E2761" stroke-width="1.5"/>
+        <path d="M70 165 Q200 150 270 70 Q290 48 305 47 Q330 50 360 165" fill="none" stroke="#B85042" stroke-width="2.5"/>
+        <line x1="305" y1="47" x2="305" y2="170" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="305" y="186" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#2C5F2D">optimum</text>
+        <text x="290" y="40" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">denatures →</text>
+        <text x="50" y="105" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370" transform="rotate(-90 50 105)">rate</text>
+        <text x="290" y="196" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="0" fill="#5C6370"> </text>
+        <text x="490" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">temperature</text>
+      </svg>
+      <div class="caption">Rate rises to an optimum, then falls sharply as the enzyme denatures</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "denatured", not "killed"</h4>
+      <p>Enzymes are <strong>molecules</strong>, not alive — so they can't be "killed". When overheated they are <strong>denatured</strong>: the active site changes shape and the substrate no longer fits. And denaturing is <strong>permanent</strong> — cooling the enzyme back down does not bring it back.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why does an enzyme stop working when heated well above its optimum?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The enzyme is used up in the reaction</span></li>
+        <li><span class="letter">B</span><span>The active site changes shape, so the substrate no longer fits</span></li>
+        <li><span class="letter">C</span><span>The substrate is killed by the heat</span></li>
+        <li><span class="letter">D</span><span>The enzyme turns into a substrate</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> High temperature <em>denatures</em> the enzyme — its active site changes shape so the substrate can't bind. A is wrong because catalysts aren't used up; C and D use nonsense terms.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Investigating enzyme rate</h3>
+    <p>You can measure how a condition such as <strong>pH</strong> changes how fast amylase breaks down starch. The trick is to use <strong>iodine solution</strong>: it goes blue-black with starch, but stays orange-brown once all the starch is gone — so the colour tells you when the reaction has finished.</p>
+
+    <div class="rp">
+      <h4>Effect of pH on the rate of amylase breaking down starch</h4>
+      <p><strong>Aim:</strong> investigate how pH affects the rate at which amylase digests starch.</p>
+      <ol>
+        <li>Add a drop of <strong>iodine solution</strong> to each well of a spotting tile.</li>
+        <li>Mix <strong>amylase</strong>, <strong>starch</strong> solution and a <strong>buffer</strong> at a set pH in a test tube. Start a stopwatch.</li>
+        <li>Every 10 seconds, move a drop of the mixture into a fresh iodine well.</li>
+        <li>The iodine stays <strong>blue-black</strong> while starch is present. Record the <strong>time</strong> when it first stays orange-brown — that's when all the starch has been digested.</li>
+        <li>Repeat at different pH values. <strong>Rate</strong> = 1000 ÷ time (s), or simply compare the times.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> use a <strong>water bath</strong> to keep the temperature constant, and keep the <strong>volumes and concentrations</strong> of amylase and starch the same each time — only the pH should change.</p>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — calculating rate from time</h4>
+      <p class="q">At pH 6 the starch was fully digested in 40 s; at pH 9 it took 200 s. Compare the rates using rate = 1000 ÷ time.</p>
+      <div class="step"><span class="label">pH 6</span><span class="v">rate = 1000 ÷ 40 = 25 (per s)</span></div>
+      <div class="step"><span class="label">pH 9</span><span class="v">rate = 1000 ÷ 200 = 5 (per s)</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">pH 6 is faster — the optimum is nearer pH 6</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — shorter time means faster rate</h4>
+      <p>A <strong>shorter</strong> time to clear the starch means a <strong>faster</strong> rate, not a slower one. Don't read the graph backwards. And remember the iodine is the <em>indicator</em> here — it's not being digested.</p>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Put these in order, smallest first: organ, cell, organism, tissue, organ system.</summary><div class="ans">Cell → <strong>tissue</strong> → organ → <strong>organ system</strong> → organism.</div></details></li>
+      <li><details><summary>What is an enzyme, and what is it made of?</summary><div class="ans">A biological <strong>catalyst</strong> that speeds up reactions without being used up. Enzymes are <strong>proteins</strong>.</div></details></li>
+      <li><details><summary>Explain the lock-and-key model.</summary><div class="ans">Each enzyme has an <strong>active site</strong> with a specific shape. Only a <strong>substrate</strong> with the matching shape fits, so each enzyme catalyses just one reaction.</div></details></li>
+      <li><details><summary>State two things that can denature an enzyme.</summary><div class="ans">Too high a <strong>temperature</strong> and the wrong <strong>pH</strong> — both change the shape of the active site.</div></details></li>
+      <li><details><summary>In the amylase practical, how do you know all the starch has been digested?</summary><div class="ans">The <strong>iodine stops going blue-black</strong> and stays orange-brown — there's no starch left to react with.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — ENZYMES IN DIGESTION                                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · B2 · Digestive enzymes</div>
+    <h2 class="lesson-title">Enzymes in <em>digestion</em></h2>
+    <p class="lesson-promise">The three enzyme groups, what they break down, where they're made — and the trick role of bile.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Breaking big molecules down</h3>
+    <p>The food you eat is made of large, insoluble molecules. Digestive <strong>enzymes</strong> break them down into small, soluble molecules that can be absorbed into the blood. There are three groups, each with its own substrate and products.</p>
+
+    <div class="keywords">
+      <h4>The three enzyme groups</h4>
+      <dl>
+        <dt>Carbohydrase</dt><dd>Breaks down carbohydrates. <strong>Amylase</strong> breaks <strong>starch</strong> into <strong>sugars</strong>.</dd>
+        <dt>Protease</dt><dd>Breaks down <strong>proteins</strong> into <strong>amino acids</strong>.</dd>
+        <dt>Lipase</dt><dd>Breaks down <strong>lipids</strong> (fats and oils) into <strong>fatty acids</strong> and <strong>glycerol</strong>.</dd>
+      </dl>
+    </div>
+
+    <p>Each enzyme is made in particular places. <strong>Amylase</strong> is made in the <strong>salivary glands</strong>, the <strong>pancreas</strong> and the <strong>small intestine</strong>. <strong>Protease</strong> is made in the <strong>stomach</strong> (where it is called pepsin), the <strong>pancreas</strong> and the <strong>small intestine</strong>. <strong>Lipase</strong> is made in the <strong>pancreas</strong> and the <strong>small intestine</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">BIG MOLECULES → SMALL MOLECULES</text>
+        <text x="90" y="60" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">starch</text>
+        <line x1="150" y1="55" x2="260" y2="55" stroke="#C8A24A" stroke-width="2"/><polygon points="262,55 254,51 254,59" fill="#C8A24A"/>
+        <text x="205" y="48" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#B85042">amylase</text>
+        <text x="320" y="60" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">sugars</text>
+        <text x="90" y="105" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">protein</text>
+        <line x1="150" y1="100" x2="260" y2="100" stroke="#C8A24A" stroke-width="2"/><polygon points="262,100 254,96 254,104" fill="#C8A24A"/>
+        <text x="205" y="93" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#B85042">protease</text>
+        <text x="320" y="105" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">amino acids</text>
+        <text x="90" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">lipid</text>
+        <line x1="150" y1="145" x2="260" y2="145" stroke="#C8A24A" stroke-width="2"/><polygon points="262,145 254,141 254,149" fill="#C8A24A"/>
+        <text x="205" y="138" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#B85042">lipase</text>
+        <text x="320" y="150" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">fatty acids + glycerol</text>
+      </svg>
+      <div class="caption">Each enzyme group has its own substrate and products</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — name the products exactly</h4>
+      <p>Lipids break into <strong>fatty acids and glycerol</strong> — you need <em>both</em> for the mark. Proteins give <strong>amino acids</strong> (not "proteins broken up"). Starch gives <strong>sugars</strong> (such as glucose/maltose), not "energy".</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The job of bile</h3>
+    <p><strong>Bile</strong> is made in the <strong>liver</strong> and stored in the <strong>gall bladder</strong>. It is released into the small intestine, where it does two things. First, it is <strong>alkaline</strong>, so it <strong>neutralises</strong> the acid that arrives from the stomach — this gives the right pH for the enzymes in the small intestine to work.</p>
+    <p>Second, bile <strong>emulsifies</strong> fat: it breaks large fat droplets into many tiny droplets. This gives a much larger <strong>surface area</strong> for lipase to work on, so fat is digested faster. Note that bile is <strong>not</strong> an enzyme — it doesn't break any chemical bonds itself.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — bile is not an enzyme</h4>
+      <p>Bile <strong>does not digest fat</strong> — it only emulsifies it (increases surface area) and neutralises stomach acid. The actual breakdown of fat is done by <strong>lipase</strong>. Saying "bile digests fat" loses the mark.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">How does bile help with the digestion of fat?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It breaks fat into fatty acids and glycerol</span></li>
+        <li><span class="letter">B</span><span>It emulsifies fat, increasing surface area for lipase</span></li>
+        <li><span class="letter">C</span><span>It makes the small intestine acidic</span></li>
+        <li><span class="letter">D</span><span>It is the enzyme that digests fat</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Bile <em>emulsifies</em> fat — breaks it into tiny droplets with a bigger surface area, so lipase works faster. It also makes conditions <em>alkaline</em> (so C is wrong), and it is not an enzyme (so A and D are wrong).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the products when (a) amylase, (b) protease and (c) lipase act.</summary><div class="ans">(a) <strong>Sugars</strong>; (b) <strong>amino acids</strong>; (c) <strong>fatty acids and glycerol</strong>.</div></details></li>
+      <li><details><summary>Where is amylase made?</summary><div class="ans">The <strong>salivary glands</strong>, the <strong>pancreas</strong> and the <strong>small intestine</strong>.</div></details></li>
+      <li><details><summary>Where is bile made and where is it stored?</summary><div class="ans">Made in the <strong>liver</strong>, stored in the <strong>gall bladder</strong>.</div></details></li>
+      <li><details><summary>Give the two functions of bile.</summary><div class="ans">It <strong>neutralises</strong> stomach acid (it's alkaline, giving the right pH) and it <strong>emulsifies</strong> fat (bigger surface area for lipase).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — THE DIGESTIVE SYSTEM & FOOD TESTS  + REQUIRED PRACTICAL       -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · B2 · Digestion &amp; food tests</div>
+    <h2 class="lesson-title">The digestive <em>system</em> &amp; food tests</h2>
+    <p class="lesson-promise">The organs that handle your food, what each one does — and the four tests that tell you what's in a sample.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The organs of the digestive system</h3>
+    <p>The digestive system is an <strong>organ system</strong> in which several organs work together to break down and absorb food. Food travels through a long tube and is digested along the way.</p>
+
+    <div class="keywords">
+      <h4>The organs and their roles</h4>
+      <dl>
+        <dt>Mouth &amp; salivary glands</dt><dd>Teeth break food up; salivary amylase begins digesting starch.</dd>
+        <dt>Stomach</dt><dd>Muscular walls churn food; makes protease and hydrochloric acid.</dd>
+        <dt>Liver &amp; gall bladder</dt><dd>Make and store bile.</dd>
+        <dt>Pancreas</dt><dd>Makes amylase, protease and lipase and releases them into the small intestine.</dd>
+        <dt>Small intestine</dt><dd>Where digestion finishes and small soluble molecules are absorbed into the blood.</dd>
+        <dt>Large intestine</dt><dd>Absorbs water; the rest is egested as faeces.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE DIGESTIVE SYSTEM</text>
+        <!-- gut tube -->
+        <circle cx="150" cy="55" r="14" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <line x1="150" y1="69" x2="150" y2="110" stroke="#1E2761" stroke-width="3"/>
+        <path d="M150 110 q-30 18 0 40 q30 18 0 36" fill="none" stroke="#B85042" stroke-width="6"/>
+        <ellipse cx="150" cy="125" rx="26" ry="18" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <path d="M150 186 q-40 26 -8 60" fill="none" stroke="#1E2761" stroke-width="4"/>
+        <rect x="92" y="150" width="116" height="64" rx="10" fill="none" stroke="#2C5F2D" stroke-width="2" stroke-dasharray="4 4"/>
+        <!-- leaders -->
+        <line x1="164" y1="55" x2="300" y2="55" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="306" y="59" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">mouth &amp; salivary glands</text>
+        <line x1="176" y1="125" x2="300" y2="100" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="306" y="104" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">stomach (acid + protease)</text>
+        <line x1="208" y1="182" x2="300" y2="150" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="306" y="154" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">small intestine (absorbs food)</text>
+        <line x1="150" y1="240" x2="300" y2="200" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="306" y="204" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">large intestine (absorbs water)</text>
+      </svg>
+      <div class="caption">Food passes down the gut; digestion finishes in the small intestine</div>
+    </div>
+
+    <p>The lining of the small intestine is folded into millions of tiny finger-like <strong>villi</strong>. They give a huge <strong>surface area</strong>, have a <strong>thin wall</strong> (one cell thick) and a rich <strong>blood supply</strong> — all of which speed up the <strong>absorption</strong> of digested food.</p>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Testing food for its molecules</h3>
+    <p>You can test a food sample to find out which molecules it contains. Each test gives a colour change. Learn the reagent, the colour change and which molecule it shows.</p>
+
+    <div class="keywords">
+      <h4>The four food tests</h4>
+      <dl>
+        <dt>Sugars (Benedict's)</dt><dd>Add Benedict's solution and heat in a water bath. Blue → green → yellow → <strong>brick-red</strong> if reducing sugar is present.</dd>
+        <dt>Starch (iodine)</dt><dd>Add iodine solution. Orange-brown → <strong>blue-black</strong> if starch is present.</dd>
+        <dt>Protein (Biuret)</dt><dd>Add Biuret solution. Blue → <strong>purple/lilac</strong> if protein is present.</dd>
+        <dt>Lipids (emulsion)</dt><dd>Add ethanol, then water. A <strong>cloudy white emulsion</strong> forms if lipid is present.</dd>
+      </dl>
+    </div>
+
+    <div class="rp">
+      <h4>Food tests</h4>
+      <p><strong>Aim:</strong> use qualitative reagents to test a food sample for sugars, starch, protein and lipids.</p>
+      <ol>
+        <li>Make a food sample: grind the food and mix with a little water to make a solution.</li>
+        <li><strong>Sugars:</strong> add <strong>Benedict's solution</strong> and heat in a water bath (~75&nbsp;°C) for a few minutes. A reducing sugar turns it <strong>brick-red</strong>.</li>
+        <li><strong>Starch:</strong> add a few drops of <strong>iodine solution</strong>. Starch turns it <strong>blue-black</strong>.</li>
+        <li><strong>Protein:</strong> add <strong>Biuret solution</strong>. Protein turns it <strong>purple/lilac</strong>.</li>
+        <li><strong>Lipids:</strong> add <strong>ethanol</strong>, shake, then add water. A lipid gives a <strong>cloudy white emulsion</strong>.</li>
+      </ol>
+      <p><strong>Control / improve:</strong> always run a <strong>control</strong> with distilled water (no food) to show the negative colour. Keep <strong>volumes equal</strong> between samples so colour changes can be compared fairly. These tests are <strong>qualitative</strong> — they show whether a molecule is present, not how much.</p>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — match the colour to the test</h4>
+      <p>It's easy to swap these. Remember: <strong>iodine → blue-black for starch</strong>; <strong>Benedict's → brick-red for sugar</strong> (needs heating); <strong>Biuret → purple for protein</strong>; <strong>emulsion → cloudy white for lipid</strong>. Only Benedict's needs a water bath.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A student adds iodine solution to a sample and it turns blue-black. What does this show?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The sample contains protein</span></li>
+        <li><span class="letter">B</span><span>The sample contains a reducing sugar</span></li>
+        <li><span class="letter">C</span><span>The sample contains starch</span></li>
+        <li><span class="letter">D</span><span>The sample contains a lipid</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — starch.</strong> Iodine turns from orange-brown to <em>blue-black</em> when starch is present. Protein uses Biuret (purple), sugar uses Benedict's (brick-red), lipid uses the emulsion test (cloudy white).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Where in the gut is most digested food absorbed, and name one adaptation.</summary><div class="ans">The <strong>small intestine</strong>. Adaptations: <strong>villi</strong> give a large surface area, a thin (one-cell) wall, and a good blood supply.</div></details></li>
+      <li><details><summary>Which food test needs heating in a water bath?</summary><div class="ans">The <strong>Benedict's test</strong> for reducing sugars.</div></details></li>
+      <li><details><summary>State the reagent and positive result for protein.</summary><div class="ans"><strong>Biuret solution</strong>; turns from blue to <strong>purple/lilac</strong>.</div></details></li>
+      <li><details><summary>Describe the positive result of the test for lipids.</summary><div class="ans">After adding ethanol then water, a <strong>cloudy white emulsion</strong> forms.</div></details></li>
+      <li><details><summary>What does the large intestine do?</summary><div class="ans">It <strong>absorbs water</strong> from the undigested material; the remaining waste is egested as faeces.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — THE HEART & BLOOD VESSELS                                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · B2 · Heart &amp; vessels</div>
+    <h2 class="lesson-title">The <em>heart</em> &amp; blood vessels</h2>
+    <p class="lesson-promise">Why we have a double circulation, and how the three types of vessel are built for their jobs.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The heart &amp; double circulation</h3>
+    <p>The heart is an <strong>organ</strong> made mostly of <strong>muscle</strong> that pumps blood around the body. Humans have a <strong>double circulation</strong>: the blood passes through the heart <strong>twice</strong> for one trip around the body.</p>
+    <p>One loop carries blood from the heart to the <strong>lungs</strong> to pick up oxygen and return. The other loop carries oxygenated blood from the heart to the rest of the <strong>body</strong> and back. A double circulation keeps the pressure high so blood reaches the body quickly and efficiently.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">DOUBLE CIRCULATION</text>
+        <!-- heart in middle -->
+        <rect x="240" y="80" width="80" height="60" rx="8" fill="#B85042" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="115" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#fff">HEART</text>
+        <!-- lungs -->
+        <ellipse cx="120" cy="70" rx="60" ry="34" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="120" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">LUNGS</text>
+        <!-- body -->
+        <ellipse cx="440" cy="150" rx="60" ry="34" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="440" y="154" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">BODY</text>
+        <!-- heart to lungs -->
+        <path d="M242 90 Q150 80 150 96" fill="none" stroke="#5C6370" stroke-width="2.5"/><polygon points="150,104 145,92 156,93" fill="#5C6370"/>
+        <path d="M120 104 Q200 130 240 120" fill="none" stroke="#B85042" stroke-width="2.5"/><polygon points="240,118 228,116 232,127" fill="#B85042"/>
+        <!-- heart to body -->
+        <path d="M318 100 Q420 100 426 124" fill="none" stroke="#B85042" stroke-width="2.5"/><polygon points="426,124 416,116 426,113" fill="#B85042"/>
+        <path d="M440 116 Q360 90 320 110" fill="none" stroke="#5C6370" stroke-width="2.5"/><polygon points="322,110 332,103 332,114" fill="#5C6370"/>
+        <text x="120" y="120" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">picks up O₂</text>
+        <text x="350" y="137" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">delivers O₂</text>
+      </svg>
+      <div class="caption">Blood passes through the heart twice — once via the lungs, once via the body</div>
+    </div>
+
+    <p>The heart's natural resting rhythm is set by a group of cells in the right atrium called the <strong>pacemaker</strong>. If it fails, doctors can fit an <strong>artificial pacemaker</strong> — a small electrical device that keeps the heartbeat regular.</p>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The three blood vessels</h3>
+    <p>There are three types of blood vessel, each adapted to its job.</p>
+
+    <div class="keywords">
+      <h4>Arteries, veins &amp; capillaries</h4>
+      <dl>
+        <dt>Arteries</dt><dd>Carry blood <strong>away</strong> from the heart, at high pressure. Thick, muscular, elastic walls; small lumen.</dd>
+        <dt>Veins</dt><dd>Carry blood <strong>back</strong> to the heart, at low pressure. Thinner walls, large lumen, and <strong>valves</strong> to stop backflow.</dd>
+        <dt>Capillaries</dt><dd>Tiny vessels where substances are exchanged. Walls just <strong>one cell thick</strong> for a short diffusion distance.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 184" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THREE VESSELS, THREE WALLS</text>
+        <!-- artery -->
+        <circle cx="100" cy="86" r="46" fill="#F4DAD7" stroke="#B85042" stroke-width="9"/>
+        <circle cx="100" cy="86" r="16" fill="#fff"/>
+        <text x="100" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">artery</text>
+        <text x="100" y="168" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">thick wall</text>
+        <!-- vein -->
+        <circle cx="280" cy="86" r="46" fill="#EDF2FA" stroke="#1E2761" stroke-width="4"/>
+        <circle cx="280" cy="86" r="34" fill="#fff"/>
+        <text x="280" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">vein</text>
+        <text x="280" y="168" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">large lumen + valves</text>
+        <!-- capillary -->
+        <circle cx="460" cy="86" r="22" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <circle cx="460" cy="86" r="14" fill="#fff"/>
+        <text x="460" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">capillary</text>
+        <text x="460" y="168" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5C6370">1 cell thick</text>
+      </svg>
+      <div class="caption">Cross-sections: thick artery wall, wide vein with valves, tiny thin capillary</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — arteries Away, veins back</h4>
+      <p>Don't link arteries to "oxygenated" and veins to "deoxygenated" by default. Arteries carry blood <strong>away</strong> from the heart and veins carry it <strong>back</strong> — that's the rule. (The <em>pulmonary</em> artery carries deoxygenated blood, and the pulmonary vein carries oxygenated blood, so the oxygen rule has exceptions.)</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which feature is found in veins but not arteries, and why?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Thick muscular walls, to withstand high pressure</span></li>
+        <li><span class="letter">B</span><span>Valves, to stop blood flowing backwards</span></li>
+        <li><span class="letter">C</span><span>Walls one cell thick, for exchange</span></li>
+        <li><span class="letter">D</span><span>A very small lumen, to raise pressure</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — valves.</strong> Veins carry low-pressure blood back to the heart, so valves stop it flowing backwards. Thick walls and a small lumen describe arteries; one-cell-thick walls describe capillaries.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is meant by a double circulation?</summary><div class="ans">Blood passes through the heart <strong>twice</strong> per circuit of the body — one loop to the <strong>lungs</strong>, one loop to the rest of the <strong>body</strong>.</div></details></li>
+      <li><details><summary>Give two ways an artery is adapted to its job.</summary><div class="ans">Thick, <strong>muscular and elastic walls</strong> to cope with high pressure, and a relatively <strong>small lumen</strong>.</div></details></li>
+      <li><details><summary>Why are capillary walls only one cell thick?</summary><div class="ans">To give a <strong>short diffusion distance</strong>, so substances (like oxygen and glucose) are exchanged quickly with the surrounding cells.</div></details></li>
+      <li><details><summary>What controls the natural resting heart rate?</summary><div class="ans">A group of cells called the <strong>pacemaker</strong> in the right atrium. An <strong>artificial pacemaker</strong> can be fitted if it fails.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — BLOOD                                                         -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · B2 · Blood</div>
+    <h2 class="lesson-title"><em>Blood</em> &amp; its components</h2>
+    <p class="lesson-promise">Blood is a tissue made of four parts — learn what each one carries or does.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The four components of blood</h3>
+    <p>Blood is a <strong>tissue</strong>. It is a straw-coloured liquid called <strong>plasma</strong> with three kinds of cell suspended in it: red blood cells, white blood cells and platelets.</p>
+
+    <div class="keywords">
+      <h4>What's in blood</h4>
+      <dl>
+        <dt>Plasma</dt><dd>The liquid that <strong>transports</strong> everything — dissolved carbon dioxide, the soluble products of digestion (like glucose), urea, hormones and the blood cells.</dd>
+        <dt>Red blood cells</dt><dd>Carry <strong>oxygen</strong> using <strong>haemoglobin</strong>. They have no nucleus and a biconcave shape — both increase the room for oxygen.</dd>
+        <dt>White blood cells</dt><dd>Part of the immune system — they defend against pathogens (some engulf microbes, some make antibodies).</dd>
+        <dt>Platelets</dt><dd>Small fragments that help the blood to <strong>clot</strong> at a wound.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE COMPONENTS OF BLOOD</text>
+        <!-- plasma background -->
+        <rect x="40" y="40" width="480" height="120" rx="8" fill="#F2E6BD" opacity="0.4" stroke="#C8A24A" stroke-width="1.5"/>
+        <text x="95" y="58" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">plasma (liquid)</text>
+        <!-- red cell -->
+        <ellipse cx="120" cy="110" rx="30" ry="20" fill="#B85042"/>
+        <ellipse cx="120" cy="110" rx="11" ry="8" fill="#F4DAD7"/>
+        <text x="120" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">red cell</text>
+        <!-- white cell -->
+        <circle cx="270" cy="105" r="26" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="270" cy="105" r="12" fill="#1E2761"/>
+        <text x="270" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">white cell</text>
+        <!-- platelets -->
+        <circle cx="410" cy="95" r="6" fill="#2C5F2D"/>
+        <circle cx="430" cy="110" r="6" fill="#2C5F2D"/>
+        <circle cx="420" cy="78" r="6" fill="#2C5F2D"/>
+        <text x="420" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">platelets</text>
+      </svg>
+      <div class="caption">Three cell types suspended in the liquid plasma</div>
+    </div>
+
+    <p>Red blood cells are beautifully adapted to carry oxygen. They have <strong>no nucleus</strong>, leaving more room for haemoglobin; their <strong>biconcave disc</strong> shape gives a large surface area for oxygen to diffuse across; and they are <strong>packed with haemoglobin</strong>, which binds oxygen in the lungs and releases it in the tissues.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — plasma carries CO₂, not O₂</h4>
+      <p><strong>Oxygen is carried by red blood cells</strong> (on haemoglobin), but <strong>carbon dioxide is carried mainly in the plasma</strong>. Also: white blood cells are bigger and <em>have</em> a nucleus, while red cells do not. Don't mix them up.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why does a red blood cell have no nucleus?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>So it can engulf pathogens</span></li>
+        <li><span class="letter">B</span><span>To leave more room for haemoglobin to carry oxygen</span></li>
+        <li><span class="letter">C</span><span>To help blood clot at a wound</span></li>
+        <li><span class="letter">D</span><span>So it can carry carbon dioxide</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Losing the nucleus leaves more space for <em>haemoglobin</em>, so each cell carries more oxygen. Engulfing pathogens is a white cell job (A); clotting is the platelets' job (C).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the four components of blood.</summary><div class="ans"><strong>Plasma</strong>, <strong>red blood cells</strong>, <strong>white blood cells</strong> and <strong>platelets</strong>.</div></details></li>
+      <li><details><summary>Name three things carried by the plasma.</summary><div class="ans">Any three of: <strong>carbon dioxide</strong>, <strong>glucose</strong> (products of digestion), <strong>urea</strong>, hormones, and the blood cells.</div></details></li>
+      <li><details><summary>State the role of platelets.</summary><div class="ans">They help the blood to <strong>clot</strong> at a wound, which stops bleeding and keeps pathogens out.</div></details></li>
+      <li><details><summary>Give two adaptations of a red blood cell for carrying oxygen.</summary><div class="ans">Any two: <strong>no nucleus</strong> (more room for haemoglobin), <strong>biconcave shape</strong> (large surface area), and full of <strong>haemoglobin</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — LUNGS & GAS EXCHANGE                                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · B2 · Lungs &amp; gas exchange</div>
+    <h2 class="lesson-title">Lungs &amp; <em>gas exchange</em></h2>
+    <p class="lesson-promise">How the alveoli are built to swap oxygen and carbon dioxide as fast as possible.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The breathing system</h3>
+    <p>The lungs are the organs of <strong>gas exchange</strong>. Air travels in through the <strong>trachea</strong>, which splits into two <strong>bronchi</strong>, then into smaller <strong>bronchioles</strong>, ending in millions of tiny air sacs called <strong>alveoli</strong>.</p>
+    <p>At the alveoli, <strong>oxygen diffuses</strong> from the air into the blood, and <strong>carbon dioxide diffuses</strong> from the blood into the air to be breathed out. The job is to make this exchange happen as quickly as possible.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">GAS EXCHANGE AT AN ALVEOLUS</text>
+        <!-- alveolus -->
+        <circle cx="170" cy="115" r="68" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="170" y="119" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">alveolus</text>
+        <text x="170" y="136" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">air in</text>
+        <!-- capillary -->
+        <path d="M238 90 q70 0 70 30 q0 30 -70 30" fill="none" stroke="#B85042" stroke-width="14"/>
+        <text x="330" y="110" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">capillary</text>
+        <text x="330" y="128" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">blood flowing past</text>
+        <!-- O2 arrow into blood -->
+        <line x1="240" y1="100" x2="288" y2="100" stroke="#2C5F2D" stroke-width="2.5"/><polygon points="290,100 280,96 280,104" fill="#2C5F2D"/>
+        <text x="264" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#2C5F2D">O₂</text>
+        <!-- CO2 arrow into alveolus -->
+        <line x1="288" y1="148" x2="240" y2="148" stroke="#5C6370" stroke-width="2.5"/><polygon points="238,148 248,144 248,152" fill="#5C6370"/>
+        <text x="264" y="166" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="700" fill="#5C6370">CO₂</text>
+      </svg>
+      <div class="caption">Oxygen diffuses into the blood; carbon dioxide diffuses out</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>How alveoli are adapted</h3>
+    <p>The alveoli are superbly adapted to maximise the rate of diffusion. Learn these four adaptations and what each one does:</p>
+
+    <div class="keywords">
+      <h4>Alveolus adaptations</h4>
+      <dl>
+        <dt>Large surface area</dt><dd>Millions of alveoli mean lots of space for gases to diffuse across.</dd>
+        <dt>Thin walls (one cell thick)</dt><dd>A short diffusion distance, so gases cross quickly.</dd>
+        <dt>Rich blood supply</dt><dd>A dense network of capillaries keeps a steep concentration gradient.</dd>
+        <dt>Moist lining</dt><dd>Gases dissolve so they can diffuse across the surface.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — link the feature to the reason</h4>
+      <p>Don't just list features — say what each <strong>does</strong>. For full marks: "<strong>thin walls</strong> give a <strong>short diffusion distance</strong>"; "many alveoli give a <strong>large surface area</strong>"; "good blood supply <strong>maintains the concentration gradient</strong>". The exam wants the feature <em>and</em> the effect.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why does a good blood supply make gas exchange faster?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It increases the diffusion distance</span></li>
+        <li><span class="letter">B</span><span>It keeps a steep concentration gradient, so diffusion stays fast</span></li>
+        <li><span class="letter">C</span><span>It makes the alveoli walls thicker</span></li>
+        <li><span class="letter">D</span><span>It removes the moist lining</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Blood constantly carries oxygen away and brings carbon dioxide, keeping a <em>steep concentration gradient</em> between blood and air — so diffusion stays rapid. A and C would slow exchange; D would stop it.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Where in the lungs does gas exchange happen?</summary><div class="ans">In the <strong>alveoli</strong> (tiny air sacs).</div></details></li>
+      <li><details><summary>Which gas diffuses into the blood and which diffuses out, at the alveoli?</summary><div class="ans"><strong>Oxygen</strong> diffuses into the blood; <strong>carbon dioxide</strong> diffuses out of the blood into the air.</div></details></li>
+      <li><details><summary>Give two adaptations of the alveoli and what each does.</summary><div class="ans">Any two: <strong>large surface area</strong> (more space to diffuse), <strong>thin walls</strong> (short diffusion distance), <strong>good blood supply</strong> (steep gradient), <strong>moist lining</strong> (gases dissolve).</div></details></li>
+      <li><details><summary>By what process do gases move across the alveolus wall?</summary><div class="ans"><strong>Diffusion</strong> — gases move from a high to a low concentration.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 7 — NON-COMMUNICABLE DISEASE & HEALTH                             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-7">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 07 · B2 · Disease &amp; health</div>
+    <h2 class="lesson-title">Non-communicable <em>disease</em> &amp; health</h2>
+    <p class="lesson-promise">Risk factors, the disease that clogs the heart's own arteries, and the difference between two kinds of tumour.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Health and risk factors</h3>
+    <p><strong>Health</strong> is the state of physical and mental wellbeing. Diseases are a major cause of ill health. A <strong>communicable</strong> disease can be spread between people (caused by pathogens); a <strong>non-communicable</strong> disease cannot be spread — it tends to last a long time and worsen slowly.</p>
+    <p>A <strong>risk factor</strong> is anything that increases the chance of getting a disease. Some are aspects of <strong>lifestyle</strong> (such as diet, smoking and exercise); others are substances in the body or environment. Risk factors are <strong>correlated</strong> with disease, but a correlation does not always prove that one thing <strong>causes</strong> the other.</p>
+
+    <div class="keywords">
+      <h4>Some risk factors and their effects</h4>
+      <dl>
+        <dt>Smoking</dt><dd>Linked to lung disease and lung cancer, and to cardiovascular disease.</dd>
+        <dt>Poor diet / obesity</dt><dd>Linked to type 2 diabetes and cardiovascular disease.</dd>
+        <dt>Alcohol</dt><dd>Linked to liver disease and effects on brain function.</dd>
+        <dt>Carcinogens (e.g. in tobacco) &amp; ionising radiation</dt><dd>Can increase the risk of some cancers.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — correlation isn't proof of cause</h4>
+      <p>A risk factor being <strong>linked</strong> to a disease doesn't on its own prove it <strong>causes</strong> it. To show cause, scientists look for a clear <strong>mechanism</strong> (how it would happen) as well as the statistical link. Use careful wording: "increases the risk of", not "always causes".</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Coronary heart disease &amp; cancer</h3>
+    <p>In <strong>coronary heart disease (CHD)</strong>, layers of fatty material build up inside the <strong>coronary arteries</strong> — the vessels that supply the heart muscle itself. This narrows them, so less blood (and less oxygen) reaches the heart muscle, which can cause chest pain or a heart attack.</p>
+    <p>One treatment is a <strong>stent</strong> — a tube inserted to hold a narrowed artery open so blood flows freely. Another is <strong>statins</strong> — drugs that reduce blood cholesterol, slowing the build-up of fatty deposits.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 160" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">A CORONARY ARTERY</text>
+        <!-- healthy -->
+        <text x="150" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">healthy — open</text>
+        <rect x="70" y="70" width="160" height="44" rx="22" fill="#B85042"/>
+        <rect x="84" y="84" width="132" height="16" rx="8" fill="#fff"/>
+        <text x="150" y="132" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">wide lumen, good flow</text>
+        <!-- blocked -->
+        <text x="410" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">narrowed by fat</text>
+        <rect x="330" y="70" width="160" height="44" rx="22" fill="#B85042"/>
+        <rect x="344" y="84" width="132" height="16" rx="8" fill="#F2E6BD"/>
+        <rect x="392" y="86" width="36" height="12" rx="6" fill="#fff"/>
+        <text x="410" y="132" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">narrow lumen, less oxygen</text>
+      </svg>
+      <div class="caption">Fatty build-up narrows the coronary artery, starving the heart muscle of oxygen</div>
+    </div>
+
+    <p>A <strong>tumour</strong> forms when cells divide uncontrollably. There are two kinds. A <strong>benign</strong> tumour stays in one place inside a membrane and does not spread — it is usually not dangerous. A <strong>malignant</strong> tumour is a cancer: its cells invade neighbouring tissues and can spread in the blood to other parts of the body, forming secondary tumours.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 150" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">BENIGN vs MALIGNANT</text>
+        <!-- benign -->
+        <circle cx="140" cy="80" r="40" fill="none" stroke="#2C5F2D" stroke-width="2" stroke-dasharray="4 3"/>
+        <circle cx="140" cy="80" r="26" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="140" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">benign — stays put</text>
+        <!-- malignant -->
+        <circle cx="400" cy="80" r="26" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <circle cx="450" cy="60" r="8" fill="#B85042"/>
+        <circle cx="460" cy="95" r="7" fill="#B85042"/>
+        <circle cx="430" cy="110" r="6" fill="#B85042"/>
+        <line x1="424" y1="72" x2="444" y2="62" stroke="#B85042" stroke-width="1.5"/>
+        <line x1="424" y1="88" x2="454" y2="92" stroke="#B85042" stroke-width="1.5"/>
+        <text x="410" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">malignant — spreads</text>
+      </svg>
+      <div class="caption">Benign tumours stay in one place; malignant (cancer) cells spread to form secondary tumours</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">What is the key difference between a benign and a malignant tumour?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Benign tumours spread; malignant ones stay in one place</span></li>
+        <li><span class="letter">B</span><span>Malignant tumours invade other tissues and spread; benign ones do not</span></li>
+        <li><span class="letter">C</span><span>Only benign tumours are made of cells</span></li>
+        <li><span class="letter">D</span><span>There is no real difference</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> A <em>malignant</em> tumour is a cancer — it invades nearby tissue and spreads in the blood to form secondary tumours. A <em>benign</em> tumour stays in one place and is usually not dangerous. Option A has them the wrong way round.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 7 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What is a risk factor?</summary><div class="ans">Anything that <strong>increases the chance</strong> of developing a disease (e.g. smoking, poor diet, alcohol, carcinogens).</div></details></li>
+      <li><details><summary>What happens to the coronary arteries in coronary heart disease?</summary><div class="ans">Layers of <strong>fatty material build up</strong>, narrowing them, so less <strong>oxygen</strong> reaches the heart muscle.</div></details></li>
+      <li><details><summary>Name two treatments for coronary heart disease.</summary><div class="ans"><strong>Stents</strong> (hold the artery open) and <strong>statins</strong> (lower blood cholesterol).</div></details></li>
+      <li><details><summary>Describe the difference between a benign and a malignant tumour.</summary><div class="ans"><strong>Benign</strong> stays in one place and doesn't invade other tissue; <strong>malignant</strong> (cancer) invades and <strong>spreads</strong> to form secondary tumours.</div></details></li>
+      <li><details><summary>Why is "a risk factor causes a disease" sometimes too strong a statement?</summary><div class="ans">A risk factor is often only <strong>correlated</strong> with a disease. To prove cause you also need a <strong>mechanism</strong> showing how it leads to the disease.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="7">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 8 — PLANT TISSUES & TRANSPORT                                     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-8">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 08 · B2 · Plant transport</div>
+    <h2 class="lesson-title">Plant tissues &amp; <em>transport</em></h2>
+    <p class="lesson-promise">How a leaf is built for photosynthesis, and how plants move water up and food around.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Leaf structure &amp; plant tissues</h3>
+    <p>A leaf is a plant <strong>organ</strong> adapted for <strong>photosynthesis</strong>. It contains several tissues. The <strong>upper epidermis</strong> is transparent to let light through. Below it, the <strong>palisade mesophyll</strong> is packed with chloroplasts to absorb light. The <strong>spongy mesophyll</strong> has air spaces for gases to diffuse, and <strong>guard cells</strong> control tiny pores called <strong>stomata</strong> on the underside.</p>
+    <p>Running through the plant are two transport tissues. <strong>Xylem</strong> carries <strong>water and dissolved mineral ions</strong> up from the roots to the leaves. <strong>Phloem</strong> carries <strong>dissolved sugars</strong> (food made in the leaves) to the rest of the plant.</p>
+
+    <div class="diagram">
+      <svg viewBox="-45 0 690 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">INSIDE A LEAF</text>
+        <rect x="120" y="40" width="320" height="22" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <rect x="120" y="62" width="320" height="40" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="1.5"/>
+        <rect x="120" y="102" width="320" height="44" fill="#F2E6BD" opacity="0.5" stroke="#C8A24A" stroke-width="1.5"/>
+        <rect x="120" y="146" width="320" height="18" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- chloroplasts in palisade -->
+        <ellipse cx="160" cy="82" rx="7" ry="11" fill="#2C5F2D"/><ellipse cx="200" cy="82" rx="7" ry="11" fill="#2C5F2D"/><ellipse cx="240" cy="82" rx="7" ry="11" fill="#2C5F2D"/>
+        <!-- air space -->
+        <circle cx="180" cy="124" r="9" fill="#fff" stroke="#C8A24A"/><circle cx="240" cy="124" r="9" fill="#fff" stroke="#C8A24A"/>
+        <!-- stoma -->
+        <path d="M280 164 q8 8 16 0" fill="none" stroke="#2C5F2D" stroke-width="3"/>
+        <path d="M288 164 v8" stroke="#1E2761" stroke-width="2"/>
+        <!-- leaders -->
+        <line x1="120" y1="51" x2="60" y2="51" stroke="#CFD8E3" stroke-width="1"/><text x="55" y="55" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">upper epidermis</text>
+        <line x1="120" y1="82" x2="60" y2="90" stroke="#CFD8E3" stroke-width="1"/><text x="55" y="94" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">palisade</text>
+        <line x1="440" y1="124" x2="500" y2="124" stroke="#CFD8E3" stroke-width="1"/><text x="505" y="128" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">spongy (air spaces)</text>
+        <line x1="296" y1="170" x2="500" y2="170" stroke="#CFD8E3" stroke-width="1"/><text x="505" y="174" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">stoma &amp; guard cells</text>
+      </svg>
+      <div class="caption">Each leaf tissue is adapted for its part in photosynthesis</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Transpiration &amp; translocation</h3>
+    <p><strong>Transpiration</strong> is the loss of water vapour from a plant, mostly through the stomata in the leaves. As water evaporates from the leaves, more water is pulled up through the xylem from the roots — this is the <strong>transpiration stream</strong>. It supplies water for photosynthesis and keeps the plant cool and supported.</p>
+    <p>The rate of transpiration <strong>increases</strong> with higher temperature, more wind (air movement), lower humidity and brighter light. The <strong>guard cells</strong> control water loss: in the light they swell and open the stomata to let carbon dioxide in; in the dark, or when water is short, they close the stomata to reduce water loss.</p>
+    <p><strong>Translocation</strong> is the transport of dissolved sugars (and other foods) through the <strong>phloem</strong>, from the leaves where they are made to other parts of the plant — for use straight away, or for storage.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TWO TRANSPORT TISSUES</text>
+        <!-- stem -->
+        <rect x="250" y="40" width="22" height="150" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- leaf -->
+        <ellipse cx="200" cy="55" rx="46" ry="22" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="200" y="59" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">leaf</text>
+        <!-- roots -->
+        <path d="M261 190 l-20 16 M261 190 l20 16 M261 190 l0 18" stroke="#1E2761" stroke-width="2" fill="none"/>
+        <text x="261" y="208" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">roots</text>
+        <!-- xylem arrow up -->
+        <line x1="300" y1="180" x2="300" y2="70" stroke="#B85042" stroke-width="3"/><polygon points="300,64 295,78 305,78" fill="#B85042"/>
+        <text x="350" y="100" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">xylem</text>
+        <text x="350" y="118" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">water up</text>
+        <!-- phloem arrow both -->
+        <line x1="225" y1="80" x2="225" y2="175" stroke="#2C5F2D" stroke-width="3"/><polygon points="225,180 220,166 230,166" fill="#2C5F2D"/>
+        <text x="80" y="130" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">phloem</text>
+        <text x="80" y="148" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">sugars to other parts</text>
+      </svg>
+      <div class="caption">Xylem moves water up; phloem moves dissolved sugars around the plant</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — don't swap xylem and phloem</h4>
+      <p>A classic mix-up. <strong>Xylem = water</strong> (and mineral ions), one way <strong>up</strong> from the roots. <strong>Phloem = food</strong> (dissolved sugars), moved <strong>around</strong> the plant — this is <strong>translocation</strong>. A memory hook: pho<strong>o</strong>d for ph<strong>l</strong>oem.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which set of conditions would give the fastest rate of transpiration?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Cold, still, humid, dark</span></li>
+        <li><span class="letter">B</span><span>Hot, windy, dry, bright</span></li>
+        <li><span class="letter">C</span><span>Cold, windy, humid, bright</span></li>
+        <li><span class="letter">D</span><span>Hot, still, humid, dark</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — hot, windy, dry, bright.</strong> Transpiration rises with <em>higher temperature, more air movement, lower humidity and brighter light</em> (which opens the stomata). A has the opposite of all four.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 8 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What does xylem carry, and in which direction?</summary><div class="ans"><strong>Water and dissolved mineral ions</strong>, carried <strong>up</strong> from the roots to the leaves.</div></details></li>
+      <li><details><summary>What is translocation?</summary><div class="ans">The transport of <strong>dissolved sugars</strong> (food) through the <strong>phloem</strong>, from the leaves to the rest of the plant.</div></details></li>
+      <li><details><summary>What controls the opening and closing of stomata?</summary><div class="ans">The <strong>guard cells</strong> — they open the stomata in the light and close them when it's dark or water is short.</div></details></li>
+      <li><details><summary>Name two factors that increase the rate of transpiration.</summary><div class="ans">Any two: higher <strong>temperature</strong>, more <strong>wind/air movement</strong>, lower <strong>humidity</strong>, brighter <strong>light</strong>.</div></details></li>
+      <li><details><summary>Why is the palisade mesophyll near the top of the leaf, and what is it full of?</summary><div class="ans">It's near the top to absorb the most light, and it is packed with <strong>chloroplasts</strong> for photosynthesis.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="8">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Biology Paper 1 · B2 Organisation</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'b2-organisation-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=0c6ed3d1-ce7e-43ea-8754-0f3d8fb1a23d&amp;ref=interactive-science&amp;from=b2-organisation-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=b2-organisation-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

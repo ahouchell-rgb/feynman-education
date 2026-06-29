@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bonding, Structure &amp; Properties (C2) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for C2 Bonding, Structure & Properties — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Chemistry Paper 1 · C2 Bonding, Structure &amp; Properties</div>
+    <h1>Bonding, <em>structure, properties.</em></h1>
+    <p class="tag">The whole of C2 — the three kinds of bonding, dot-and-cross diagrams, why diamond is hard and graphite conducts, alloys, nanoparticles and the limits of every model you'll draw.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Three bonds</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Ionic bonding</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Covalent bonding</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Structures &amp; properties</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Graphene &amp; fullerenes</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Metals &amp; alloys</a>
+    <a href="#lesson-7" class="nav-pill" data-lesson="7">States &amp; nanoparticles</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — THE THREE TYPES OF BONDING (4.2.1.1)                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.2.1.1 · Three types of bonding</div>
+    <h2 class="lesson-title">The three types of <em>chemical bond</em></h2>
+    <p class="lesson-promise">Ionic, covalent or metallic? Get this one decision right from the elements involved and half of C2 falls into place.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Three bonds, three rules</h3>
+    <p>There are only <strong>three types of strong chemical bond</strong>, and which one forms depends entirely on whether the atoms are <strong>metals</strong> or <strong>non-metals</strong>. Learn the three rules below and you can predict the bonding in almost anything.</p>
+    <p><strong>Ionic bonding</strong> happens between a <strong>metal and a non-metal</strong>. The metal atom <em>gives</em> electrons to the non-metal atom. This makes charged particles called <strong>ions</strong>, held together by the attraction between opposite charges.</p>
+    <p><strong>Covalent bonding</strong> happens between <strong>two non-metals</strong>. The atoms <em>share</em> pairs of electrons rather than transferring them.</p>
+    <p><strong>Metallic bonding</strong> happens in <strong>metals and alloys</strong> — between metal atoms only.</p>
+
+    <div class="keywords">
+      <h4>The decision in one line</h4>
+      <dl>
+        <dt>Metal + non-metal</dt><dd>Ionic — electrons are transferred, ions form.</dd>
+        <dt>Non-metal + non-metal</dt><dd>Covalent — electrons are shared.</dd>
+        <dt>Metal + metal (or just a metal)</dt><dd>Metallic — a "sea" of shared electrons.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WHICH BOND FORMS?</text>
+        <!-- ionic panel -->
+        <rect x="30" y="44" width="160" height="180" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="110" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">IONIC</text>
+        <text x="110" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">metal +</text>
+        <text x="110" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">non-metal</text>
+        <text x="110" y="150" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#5C6370">electrons</text>
+        <text x="110" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#5C6370">transferred</text>
+        <text x="110" y="202" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#B85042">e.g. NaCl</text>
+        <!-- covalent panel -->
+        <rect x="200" y="44" width="160" height="180" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">COVALENT</text>
+        <text x="280" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">non-metal +</text>
+        <text x="280" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">non-metal</text>
+        <text x="280" y="150" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#5C6370">electrons</text>
+        <text x="280" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#5C6370">shared</text>
+        <text x="280" y="202" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E2761">e.g. H₂O</text>
+        <!-- metallic panel -->
+        <rect x="370" y="44" width="160" height="180" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="450" y="70" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">METALLIC</text>
+        <text x="450" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">metal +</text>
+        <text x="450" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">metal</text>
+        <text x="450" y="150" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#5C6370">sea of</text>
+        <text x="450" y="170" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="15" fill="#5C6370">electrons</text>
+        <text x="450" y="202" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#2C5F2D">e.g. copper</text>
+      </svg>
+      <div class="caption">Read the elements first — the bond type follows from metal vs non-metal</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — start with the periodic table</h4>
+      <p>Don't guess the bonding from the name. Find each element on the <strong>periodic table</strong>: metals sit to the <em>left</em> of the zig-zag line, non-metals to the <em>right</em>. So magnesium oxide is metal + non-metal = <strong>ionic</strong>, while carbon dioxide is non-metal + non-metal = <strong>covalent</strong>. Hydrogen behaves as a non-metal here.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">What type of bonding holds together potassium chloride (KCl)?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Covalent — the atoms share electrons</span></li>
+        <li><span class="letter">B</span><span>Metallic — both are in the metal block</span></li>
+        <li><span class="letter">C</span><span>Ionic — potassium is a metal, chlorine is a non-metal</span></li>
+        <li><span class="letter">D</span><span>No bonding — they're just mixed together</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — Ionic.</strong> Potassium is a metal (Group 1) and chlorine is a non-metal (Group 7). Metal + non-metal always means <em>ionic</em> bonding: the metal transfers electrons to the non-metal.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the three types of strong chemical bond.</summary><div class="ans"><strong>Ionic</strong>, <strong>covalent</strong> and <strong>metallic</strong>.</div></details></li>
+      <li><details><summary>What type of bonding forms between a metal and a non-metal?</summary><div class="ans"><strong>Ionic</strong> — electrons are <strong>transferred</strong> from the metal to the non-metal, forming ions.</div></details></li>
+      <li><details><summary>In which type of bonding are electrons shared rather than transferred?</summary><div class="ans"><strong>Covalent</strong> bonding (between two non-metals). Metallic bonding also involves shared, delocalised electrons.</div></details></li>
+      <li><details><summary>State the bonding in (a) iron, (b) water, (c) sodium chloride.</summary><div class="ans">(a) Iron = <strong>metallic</strong>. (b) Water = <strong>covalent</strong> (two non-metals). (c) Sodium chloride = <strong>ionic</strong> (metal + non-metal).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — IONIC BONDING (4.2.1.2 / 4.2.2.2 / 4.2.2.3)                   -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.2.1.2 · Ionic bonding</div>
+    <h2 class="lesson-title">Ionic <em>bonding</em> &amp; lattices</h2>
+    <p class="lesson-promise">How dot-and-cross diagrams work, why ionic compounds have such high melting points, and the one rule for when they conduct.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Transferring electrons</h3>
+    <p>When a metal reacts with a non-metal, the metal atoms <strong>lose</strong> their outer electrons and the non-metal atoms <strong>gain</strong> them. Both then have a full outer shell, like a noble gas. Losing or gaining electrons makes them charged — they become <strong>ions</strong>.</p>
+    <p>A metal atom that loses electrons becomes a <strong>positive ion</strong> (a cation). A non-metal atom that gains electrons becomes a <strong>negative ion</strong> (an anion). The number of electrons transferred matches the group: Group 1 forms 1+, Group 2 forms 2+, Group 6 forms 2−, Group 7 forms 1−.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SODIUM + CHLORINE → SODIUM CHLORIDE</text>
+        <!-- sodium atom -->
+        <circle cx="110" cy="120" r="46" fill="none" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="110" y="124" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">Na</text>
+        <circle cx="156" cy="120" r="4" fill="#B85042"/>
+        <text x="110" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">1 outer electron</text>
+        <!-- transfer arrow -->
+        <line x1="170" y1="120" x2="240" y2="120" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="246,120 232,114 232,126" fill="#C8A24A"/>
+        <text x="205" y="108" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">transfer</text>
+        <!-- chlorine atom -->
+        <circle cx="320" cy="120" r="46" fill="none" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="320" y="124" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">Cl</text>
+        <circle cx="320" cy="74" r="4" fill="#1E2761"/><circle cx="350" cy="90" r="4" fill="#1E2761"/>
+        <circle cx="366" cy="120" r="4" fill="#1E2761"/><circle cx="350" cy="150" r="4" fill="#1E2761"/>
+        <circle cx="320" cy="166" r="4" fill="#1E2761"/><circle cx="290" cy="150" r="4" fill="#1E2761"/>
+        <circle cx="274" cy="120" r="4" fill="#B85042"/>
+        <text x="320" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">7 outer electrons</text>
+        <!-- result -->
+        <text x="468" y="110" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#B85042">Na⁺</text>
+        <text x="468" y="138" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#1E2761">Cl⁻</text>
+        <text x="468" y="170" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">both full shells</text>
+      </svg>
+      <div class="caption">Dot-and-cross: one electron moves Na → Cl, giving a Na⁺ and a Cl⁻ ion</div>
+    </div>
+
+    <p>A <strong>dot-and-cross diagram</strong> shows electrons from one atom as dots and from the other as crosses, so you can track exactly where each electron came from. For ionic bonding you draw the ions in <strong>square brackets</strong> with the charge written outside, top-right.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — get the charge the right way round</h4>
+      <p>A <strong>metal</strong> loses electrons to become <strong>positive</strong> — this trips people up because "losing" sounds negative. Remember: lose negative electrons, end up positive. And the formula must be <strong>neutral overall</strong>, so magnesium chloride is MgCl₂ (one Mg²⁺ needs two Cl⁻ to balance).</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Giant ionic lattices &amp; properties</h3>
+    <p>Ionic compounds don't exist as little molecules. The ions pack into a <strong>giant ionic lattice</strong> — a regular, repeating 3-D arrangement where every positive ion is surrounded by negative ions and vice-versa. The electrostatic forces of attraction act in <strong>all directions</strong>.</p>
+    <p>Those forces are <strong>strong</strong>, so it takes a lot of energy to break them. That explains the properties:</p>
+    <p><strong>High melting and boiling points</strong> — lots of energy is needed to overcome the many strong attractions. <strong>Conduct electricity when molten or dissolved, but not when solid</strong> — the ions are charged, so they can carry charge only when they are <em>free to move</em>. In a solid they're locked in place.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">GIANT IONIC LATTICE</text>
+        <!-- 4x4 grid of alternating ions -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" text-anchor="middle">
+          <circle cx="180" cy="55" r="16" fill="#B85042"/><text x="180" y="60" fill="#fff">+</text>
+          <circle cx="240" cy="55" r="20" fill="#1E2761"/><text x="240" y="60" fill="#fff">−</text>
+          <circle cx="300" cy="55" r="16" fill="#B85042"/><text x="300" y="60" fill="#fff">+</text>
+          <circle cx="360" cy="55" r="20" fill="#1E2761"/><text x="360" y="60" fill="#fff">−</text>
+          <circle cx="180" cy="115" r="20" fill="#1E2761"/><text x="180" y="120" fill="#fff">−</text>
+          <circle cx="240" cy="115" r="16" fill="#B85042"/><text x="240" y="120" fill="#fff">+</text>
+          <circle cx="300" cy="115" r="20" fill="#1E2761"/><text x="300" y="120" fill="#fff">−</text>
+          <circle cx="360" cy="115" r="16" fill="#B85042"/><text x="360" y="120" fill="#fff">+</text>
+          <circle cx="180" cy="175" r="16" fill="#B85042"/><text x="180" y="180" fill="#fff">+</text>
+          <circle cx="240" cy="175" r="20" fill="#1E2761"/><text x="240" y="180" fill="#fff">−</text>
+          <circle cx="300" cy="175" r="16" fill="#B85042"/><text x="300" y="180" fill="#fff">+</text>
+          <circle cx="360" cy="175" r="20" fill="#1E2761"/><text x="360" y="180" fill="#fff">−</text>
+        </g>
+        <line x1="400" y1="115" x2="470" y2="115" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="478" y="104" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">strong attraction</text>
+        <text x="478" y="120" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">in all directions</text>
+        <text x="478" y="136" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">→ high mp</text>
+      </svg>
+      <div class="caption">Opposite charges alternate in a regular repeating 3-D pattern</div>
+    </div>
+
+    <div class="worked">
+      <h4>Exam technique — explain a property in three steps</h4>
+      <p class="q">Why does sodium chloride have a high melting point? (3 marks)</p>
+      <div class="step"><span class="label">Structure</span><span class="v">It has a giant ionic lattice of oppositely charged ions.</span></div>
+      <div class="step"><span class="label">Force</span><span class="v">There are strong electrostatic forces of attraction between the ions, acting in all directions.</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">A lot of energy is needed to break these many strong bonds, so the melting point is high.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why does solid sodium chloride <em>not</em> conduct electricity, but molten sodium chloride does?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Melting it adds extra electrons that can move</span></li>
+        <li><span class="letter">B</span><span>In the solid the ions are fixed; when molten the ions are free to move and carry charge</span></li>
+        <li><span class="letter">C</span><span>The solid has no charged particles at all</span></li>
+        <li><span class="letter">D</span><span>Melting turns the ions into a sea of delocalised electrons</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Ionic compounds conduct only when their charged ions are <em>free to move</em> — that is, when molten or dissolved. In the solid lattice the ions are locked in place, so it can't conduct.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What is an ion?</summary><div class="ans">An atom (or group of atoms) that has <strong>lost or gained electrons</strong>, giving it an overall <strong>charge</strong>.</div></details></li>
+      <li><details><summary>What charge does a Group 2 metal ion have, and why?</summary><div class="ans"><strong>2+</strong>. Group 2 atoms lose their <strong>two</strong> outer electrons to gain a full outer shell.</div></details></li>
+      <li><details><summary>Describe the structure of an ionic compound.</summary><div class="ans">A <strong>giant ionic lattice</strong> — a regular repeating 3-D arrangement of oppositely charged ions held by strong electrostatic forces acting in all directions.</div></details></li>
+      <li><details><summary>Explain why ionic compounds have high melting points.</summary><div class="ans">Strong electrostatic forces between the many oppositely charged ions need a <strong>large amount of energy</strong> to overcome.</div></details></li>
+      <li><details><summary>When can an ionic compound conduct electricity?</summary><div class="ans">Only when <strong>molten or dissolved in water</strong>, because then the charged ions are <strong>free to move</strong>. Not when solid.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — COVALENT BONDING (4.2.1.3 / 4.2.2.4)                          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.2.1.3 · Covalent bonding</div>
+    <h2 class="lesson-title">Covalent <em>bonding</em></h2>
+    <p class="lesson-promise">Sharing electrons in small molecules — how to draw the diagrams and how to count the bonds.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Sharing a pair of electrons</h3>
+    <p>When two <strong>non-metal</strong> atoms bond, neither will give up its electrons — so instead they <strong>share</strong>. A <strong>covalent bond</strong> is a <strong>shared pair of electrons</strong>. Each shared pair lets both atoms count those electrons towards a full outer shell.</p>
+    <p>Each atom usually forms enough bonds to fill its outer shell. Hydrogen forms 1 bond, chlorine 1, oxygen 2, nitrogen 3 and carbon 4. A <strong>double bond</strong> is two shared pairs (four electrons), as in O₂ and CO₂.</p>
+
+    <div class="keywords">
+      <h4>Three ways to draw the same molecule</h4>
+      <dl>
+        <dt>Dot-and-cross</dt><dd>Shows the shared electrons and which atom each came from (the overlap region holds the bonding pair).</dd>
+        <dt>Displayed formula</dt><dd>Each shared pair is drawn as a single line; a double bond is two lines.</dd>
+        <dt>Molecular formula</dt><dd>Just the count of each atom, e.g. H₂O, CO₂, CH₄.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WATER, H₂O — DOT-AND-CROSS</text>
+        <!-- central O -->
+        <circle cx="280" cy="120" r="42" fill="none" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="16" font-weight="700" fill="#1E2761">O</text>
+        <!-- left H -->
+        <circle cx="222" cy="120" r="30" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+        <text x="196" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#5C6370">H</text>
+        <!-- right H -->
+        <circle cx="338" cy="120" r="30" fill="none" stroke="#5C6370" stroke-width="1.5"/>
+        <text x="364" y="125" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="14" font-weight="700" fill="#5C6370">H</text>
+        <!-- shared pairs in the overlap: dot from O, cross from H -->
+        <circle cx="246" cy="113" r="3.5" fill="#1E2761"/>
+        <text x="246" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" fill="#B85042">×</text>
+        <circle cx="314" cy="113" r="3.5" fill="#1E2761"/>
+        <text x="314" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" fill="#B85042">×</text>
+        <!-- non-bonding pairs on O -->
+        <circle cx="266" cy="84" r="3.5" fill="#1E2761"/><circle cx="294" cy="84" r="3.5" fill="#1E2761"/>
+        <circle cx="266" cy="156" r="3.5" fill="#1E2761"/><circle cx="294" cy="156" r="3.5" fill="#1E2761"/>
+        <!-- key -->
+        <line x1="120" y1="190" x2="440" y2="190" stroke="#CFD8E3" stroke-width="1"/>
+        <circle cx="180" cy="205" r="3.5" fill="#1E2761"/><text x="192" y="209" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">= oxygen electron</text>
+        <text x="330" y="209" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" fill="#B85042">×</text><text x="345" y="209" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">= hydrogen electron</text>
+      </svg>
+      <div class="caption">Each O–H bond is one shared pair: one dot + one cross in the overlap</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — covalent bonds are strong, but molecules aren't sticky to each other</h4>
+      <p>The <strong>covalent bonds inside</strong> a molecule are strong. But the forces <strong>between separate molecules</strong> (intermolecular forces) are <em>weak</em>. That difference explains everything about small molecules in the next topic — so don't mix the two up.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">How many covalent bonds, and of what kind, are there in a molecule of carbon dioxide, CO₂?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Two single bonds</span></li>
+        <li><span class="letter">B</span><span>Two double bonds (one to each oxygen)</span></li>
+        <li><span class="letter">C</span><span>One double bond only</span></li>
+        <li><span class="letter">D</span><span>Four single bonds</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — two double bonds.</strong> Carbon needs 4 bonds and each oxygen needs 2, so carbon forms a <em>double</em> bond (two shared pairs) to each oxygen: O=C=O.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is a covalent bond?</summary><div class="ans">A <strong>shared pair of electrons</strong> between two non-metal atoms.</div></details></li>
+      <li><details><summary>In a dot-and-cross diagram, why are dots and crosses used?</summary><div class="ans">To show <strong>which atom each electron came from</strong>. The bonding pair sits in the overlap, counting towards both atoms' outer shells.</div></details></li>
+      <li><details><summary>How many covalent bonds does a carbon atom form in methane, CH₄?</summary><div class="ans"><strong>Four</strong> single bonds — one to each hydrogen — giving carbon a full outer shell of 8.</div></details></li>
+      <li><details><summary>What is a double bond?</summary><div class="ans"><strong>Two</strong> shared pairs of electrons (four electrons) between the same two atoms, e.g. O=O in oxygen.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — STRUCTURES & PROPERTIES (4.2.2.x)                             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.2.2 · Structures &amp; properties</div>
+    <h2 class="lesson-title"><em>Structure</em> decides properties</h2>
+    <p class="lesson-promise">Small molecules, polymers and giant covalent structures — and why diamond is the hardest thing you'll study yet graphite slides apart.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Small molecules &amp; polymers</h3>
+    <p><strong>Small molecules</strong> (like H₂O, CO₂, Cl₂) have strong covalent bonds <em>inside</em> each molecule, but only <strong>weak intermolecular forces</strong> <em>between</em> molecules. When these substances melt or boil, it's only the <strong>weak forces between molecules</strong> that break — not the covalent bonds. That's why they have <strong>low melting and boiling points</strong> and are often gases or liquids at room temperature.</p>
+    <p>As molecules get <strong>bigger</strong>, the intermolecular forces get <strong>stronger</strong>, so melting and boiling points <strong>rise</strong>. None of these substances conduct electricity, because the molecules are <strong>not charged</strong> and there are no free electrons.</p>
+    <p><strong>Polymers</strong> are very large molecules — long chains of many repeating units joined by covalent bonds. The intermolecular forces between these long chains are large, so polymers are usually <strong>solid</strong> at room temperature.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SMALL MOLECULES: STRONG INSIDE, WEAK BETWEEN</text>
+        <!-- molecule 1 -->
+        <circle cx="150" cy="80" r="14" fill="#1E2761"/><circle cx="184" cy="80" r="14" fill="#1E2761"/>
+        <line x1="164" y1="80" x2="170" y2="80" stroke="#B85042" stroke-width="4"/>
+        <text x="167" y="58" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#B85042">strong bond</text>
+        <!-- molecule 2 -->
+        <circle cx="320" cy="80" r="14" fill="#1E2761"/><circle cx="354" cy="80" r="14" fill="#1E2761"/>
+        <line x1="334" y1="80" x2="340" y2="80" stroke="#B85042" stroke-width="4"/>
+        <!-- molecule 3 -->
+        <circle cx="235" cy="150" r="14" fill="#1E2761"/><circle cx="269" cy="150" r="14" fill="#1E2761"/>
+        <line x1="249" y1="150" x2="255" y2="150" stroke="#B85042" stroke-width="4"/>
+        <!-- weak forces (dashed) -->
+        <line x1="198" y1="80" x2="306" y2="80" stroke="#5C6370" stroke-width="1.2" stroke-dasharray="4 4"/>
+        <line x1="180" y1="96" x2="240" y2="138" stroke="#5C6370" stroke-width="1.2" stroke-dasharray="4 4"/>
+        <line x1="328" y1="96" x2="270" y2="138" stroke="#5C6370" stroke-width="1.2" stroke-dasharray="4 4"/>
+        <text x="252" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#5C6370">weak forces</text>
+        <text x="460" y="108" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">melt the weak</text>
+        <text x="460" y="126" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">forces, not</text>
+        <text x="460" y="144" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">the bonds</text>
+      </svg>
+      <div class="caption">Melting breaks the weak forces between molecules — so the mp is low</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — you do NOT break covalent bonds when these melt</h4>
+      <p>The classic exam error: "the covalent bonds break when it melts." <strong>Wrong.</strong> For a small molecule, only the <strong>weak intermolecular forces</strong> are overcome on melting or boiling. The strong covalent bonds stay intact — that's exactly why so little energy (and a low temperature) is needed.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Giant covalent structures</h3>
+    <p>In a <strong>giant covalent structure</strong>, a huge number of atoms are joined by <strong>strong covalent bonds</strong> in a continuous network. Breaking it means breaking <em>covalent bonds</em>, so these substances have <strong>very high melting points</strong>. The three you must know are <strong>diamond</strong>, <strong>graphite</strong> and <strong>silicon dioxide</strong>.</p>
+    <p><strong>Diamond:</strong> each carbon is covalently bonded to <strong>four</strong> others in a rigid 3-D lattice. This makes it <strong>very hard</strong> with a very high melting point. It does <strong>not conduct electricity</strong> — every outer electron is held in a bond.</p>
+    <p><strong>Graphite:</strong> each carbon bonds to only <strong>three</strong> others, forming flat <strong>layers of hexagons</strong>. The layers are held together by weak forces, so they can <strong>slide</strong> over each other — that's why graphite is soft and slippery (a good lubricant). One electron per atom is <strong>delocalised</strong>, so graphite <strong>conducts electricity and thermal energy</strong>.</p>
+    <p><strong>Silicon dioxide</strong> (silica, the structure of sand) is a giant covalent lattice of silicon and oxygen — hard, with a very high melting point.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">DIAMOND vs GRAPHITE — SAME ATOM, DIFFERENT STRUCTURE</text>
+        <!-- diamond panel -->
+        <rect x="30" y="40" width="230" height="180" rx="6" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="145" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">DIAMOND</text>
+        <!-- tetrahedral-ish network -->
+        <g stroke="#1E2761" stroke-width="1.5">
+          <line x1="145" y1="90" x2="100" y2="130"/><line x1="145" y1="90" x2="190" y2="130"/><line x1="145" y1="90" x2="145" y2="140"/>
+          <line x1="100" y1="130" x2="80" y2="175"/><line x1="190" y1="130" x2="210" y2="175"/><line x1="145" y1="140" x2="145" y2="185"/>
+          <line x1="100" y1="130" x2="145" y2="140"/><line x1="190" y1="130" x2="145" y2="140"/>
+        </g>
+        <g fill="#1E2761">
+          <circle cx="145" cy="90" r="7"/><circle cx="100" cy="130" r="7"/><circle cx="190" cy="130" r="7"/><circle cx="145" cy="140" r="7"/>
+          <circle cx="80" cy="175" r="7"/><circle cx="210" cy="175" r="7"/><circle cx="145" cy="185" r="7"/>
+        </g>
+        <text x="145" y="208" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">4 bonds each → hard</text>
+        <!-- graphite panel -->
+        <rect x="300" y="40" width="230" height="180" rx="6" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="415" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">GRAPHITE</text>
+        <!-- three stacked layers -->
+        <g stroke="#1E2761" stroke-width="1.5" fill="none">
+          <path d="M330 92 H500"/><path d="M330 130 H500"/><path d="M330 168 H500"/>
+        </g>
+        <g fill="#1E2761">
+          <circle cx="345" cy="92" r="4"/><circle cx="385" cy="92" r="4"/><circle cx="425" cy="92" r="4"/><circle cx="465" cy="92" r="4"/>
+          <circle cx="345" cy="130" r="4"/><circle cx="385" cy="130" r="4"/><circle cx="425" cy="130" r="4"/><circle cx="465" cy="130" r="4"/>
+          <circle cx="345" cy="168" r="4"/><circle cx="385" cy="168" r="4"/><circle cx="425" cy="168" r="4"/><circle cx="465" cy="168" r="4"/>
+        </g>
+        <text x="415" y="208" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">layers slide → soft, conducts</text>
+      </svg>
+      <div class="caption">Both are pure carbon — the bonding pattern, not the atom, sets the properties</div>
+    </div>
+
+    <div class="worked">
+      <h4>Exam technique — explain why graphite conducts but diamond doesn't</h4>
+      <p class="q">Diamond and graphite are both made only of carbon. Explain why graphite conducts electricity but diamond does not. (3 marks)</p>
+      <div class="step"><span class="label">Diamond</span><span class="v">Each carbon forms 4 covalent bonds, so all outer electrons are held in bonds — none free to move.</span></div>
+      <div class="step"><span class="label">Graphite</span><span class="v">Each carbon forms only 3 bonds, leaving 1 electron per atom delocalised.</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">In graphite these delocalised electrons are free to move and carry charge, so it conducts; diamond has none, so it doesn't.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why is graphite soft and slippery enough to use as a lubricant?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Its covalent bonds are weak</span></li>
+        <li><span class="letter">B</span><span>It is made of small molecules with weak forces</span></li>
+        <li><span class="letter">C</span><span>It has layers held together by weak forces, so the layers can slide over each other</span></li>
+        <li><span class="letter">D</span><span>It is an ionic lattice that breaks easily</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> Within each layer the bonding is strong, but the <em>layers</em> are held together by only weak forces, so they slide apart easily. (The covalent bonds themselves are strong — option A is the trap.)</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Why do small molecular substances have low melting and boiling points?</summary><div class="ans">They have only <strong>weak intermolecular forces</strong> between molecules, which take little energy to overcome. The strong covalent bonds inside are not broken.</div></details></li>
+      <li><details><summary>What happens to melting point as molecules get larger?</summary><div class="ans">It <strong>increases</strong> — bigger molecules have <strong>stronger intermolecular forces</strong>.</div></details></li>
+      <li><details><summary>Why is diamond very hard with a very high melting point?</summary><div class="ans">It is a <strong>giant covalent structure</strong> where each carbon forms <strong>four strong covalent bonds</strong>; breaking it means breaking many covalent bonds.</div></details></li>
+      <li><details><summary>Why does graphite conduct electricity?</summary><div class="ans">Each carbon bonds to only three others, leaving <strong>one delocalised electron per atom</strong> that is free to move and carry charge.</div></details></li>
+      <li><details><summary>Do small molecules conduct electricity? Explain.</summary><div class="ans"><strong>No</strong> — the molecules carry <strong>no overall charge</strong> and there are no free electrons or ions to move.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — GRAPHENE & FULLERENES (4.2.2.6)                               -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.2.2.6 · Graphene &amp; fullerenes</div>
+    <h2 class="lesson-title">Graphene &amp; <em>fullerenes</em></h2>
+    <p class="lesson-promise">The newest forms of carbon — a single sheet, hollow balls and tiny tubes — and what makes them useful.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Graphene — one layer</h3>
+    <p><strong>Graphene</strong> is a <strong>single layer of graphite</strong> — just one sheet of carbon atoms arranged in hexagons, one atom thick. Like graphite, each carbon bonds to three others, leaving a delocalised electron, so graphene <strong>conducts electricity</strong>. It is also <strong>very strong</strong> for its mass. These properties make it useful in <strong>electronics</strong> and in <strong>composite materials</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 190" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">GRAPHENE — A SINGLE HEXAGONAL SHEET</text>
+        <g stroke="#1E2761" stroke-width="1.5" fill="none">
+          <polygon points="150,60 185,45 220,60 220,95 185,110 150,95"/>
+          <polygon points="220,60 255,45 290,60 290,95 255,110 220,95"/>
+          <polygon points="290,60 325,45 360,60 360,95 325,110 290,95"/>
+          <polygon points="185,110 220,95 255,110 255,145 220,160 185,145"/>
+          <polygon points="255,110 290,95 325,110 325,145 290,160 255,145"/>
+        </g>
+        <g fill="#1E2761">
+          <circle cx="150" cy="60" r="4"/><circle cx="185" cy="45" r="4"/><circle cx="220" cy="60" r="4"/><circle cx="255" cy="45" r="4"/>
+          <circle cx="290" cy="60" r="4"/><circle cx="325" cy="45" r="4"/><circle cx="360" cy="60" r="4"/>
+          <circle cx="150" cy="95" r="4"/><circle cx="220" cy="95" r="4"/><circle cx="290" cy="95" r="4"/><circle cx="360" cy="95" r="4"/>
+          <circle cx="185" cy="110" r="4"/><circle cx="255" cy="110" r="4"/><circle cx="325" cy="110" r="4"/>
+          <circle cx="185" cy="145" r="4"/><circle cx="220" cy="160" r="4"/><circle cx="255" cy="145" r="4"/><circle cx="290" cy="160" r="4"/><circle cx="325" cy="145" r="4"/>
+        </g>
+        <line x1="370" y1="100" x2="430" y2="100" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="438" y="90" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1E2761">one atom thick</text>
+        <text x="438" y="106" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">strong &amp; conducts</text>
+      </svg>
+      <div class="caption">Graphene is a single sheet of the hexagonal layers found in graphite</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Fullerenes &amp; nanotubes</h3>
+    <p><strong>Fullerenes</strong> are molecules of carbon shaped as <strong>hollow balls or tubes</strong>. Their structures are based mainly on hexagonal rings of carbon (with some rings of five or seven atoms to allow them to curve). The first one discovered was <strong>Buckminsterfullerene (C₆₀)</strong> — a hollow sphere of 60 carbon atoms, the most stable fullerene.</p>
+    <p>Fullerenes can be used to <strong>deliver drugs</strong> into the body (a molecule can be carried inside the cage), as <strong>lubricants</strong>, and as <strong>catalysts</strong> because of their huge surface area.</p>
+    <p><strong>Carbon nanotubes</strong> are cylindrical fullerenes — long tubes with a very high <strong>length-to-diameter ratio</strong>. They have useful properties for <strong>nanotechnology</strong>, <strong>electronics</strong> and <strong>materials</strong>: they conduct both electricity and heat, and have very high <strong>tensile strength</strong> (they resist being pulled apart), so they can reinforce materials.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">BUCKYBALL (C₆₀) vs NANOTUBE</text>
+        <!-- buckyball -->
+        <text x="150" y="48" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Buckminsterfullerene C₆₀</text>
+        <circle cx="150" cy="120" r="48" fill="none" stroke="#1E2761" stroke-width="1.5"/>
+        <g stroke="#1E2761" stroke-width="1.2" fill="none">
+          <polygon points="150,82 172,98 164,124 136,124 128,98"/>
+          <line x1="150" y1="82" x2="150" y2="72"/><line x1="172" y1="98" x2="188" y2="92"/>
+          <line x1="164" y1="124" x2="180" y2="140"/><line x1="136" y1="124" x2="120" y2="140"/><line x1="128" y1="98" x2="112" y2="92"/>
+        </g>
+        <text x="150" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">hollow sphere, 60 C atoms</text>
+        <!-- nanotube -->
+        <text x="410" y="48" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Carbon nanotube</text>
+        <ellipse cx="320" cy="120" rx="14" ry="34" fill="none" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="320" y1="86" x2="500" y2="86" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="320" y1="154" x2="500" y2="154" stroke="#1E2761" stroke-width="1.5"/>
+        <ellipse cx="500" cy="120" rx="14" ry="34" fill="none" stroke="#1E2761" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <g stroke="#CFD8E3" stroke-width="0.8" fill="none">
+          <line x1="360" y1="86" x2="360" y2="154"/><line x1="410" y1="86" x2="410" y2="154"/><line x1="460" y1="86" x2="460" y2="154"/>
+        </g>
+        <text x="410" y="186" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">long, strong, conducting tube</text>
+      </svg>
+      <div class="caption">Fullerenes are hollow cages or tubes built from rings of carbon</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — these are still just carbon</h4>
+      <p>Graphene, fullerenes and nanotubes are all <strong>forms of carbon</strong> with strong covalent bonds — like diamond and graphite. Don't call them metals or alloys. And remember graphene is a <em>single</em> graphite layer; a fullerene is a <em>closed cage or tube</em>, not a flat sheet.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which statement about Buckminsterfullerene (C₆₀) is correct?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It is a giant ionic lattice</span></li>
+        <li><span class="letter">B</span><span>It is a hollow molecule of 60 carbon atoms shaped like a ball</span></li>
+        <li><span class="letter">C</span><span>It is a single flat sheet one atom thick</span></li>
+        <li><span class="letter">D</span><span>It is a metal that conducts because of free electrons</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> C₆₀ is a <em>fullerene</em>: a hollow spherical molecule of 60 carbon atoms. A single flat sheet (option C) describes graphene, not a buckyball.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is graphene?</summary><div class="ans">A <strong>single layer of graphite</strong> — one sheet of hexagonally arranged carbon atoms, one atom thick. It is strong and conducts electricity.</div></details></li>
+      <li><details><summary>What is a fullerene?</summary><div class="ans">A molecule of carbon shaped as a <strong>hollow ball or tube</strong>, based mainly on rings of carbon atoms. C₆₀ (Buckminsterfullerene) was the first discovered.</div></details></li>
+      <li><details><summary>Give two uses of fullerenes.</summary><div class="ans">Any two of: <strong>drug delivery</strong> (carried inside the cage), <strong>lubricants</strong>, <strong>catalysts</strong> (large surface area).</div></details></li>
+      <li><details><summary>Why are carbon nanotubes useful for reinforcing materials?</summary><div class="ans">They have very high <strong>tensile strength</strong> (resist being pulled apart) along with a high length-to-diameter ratio, and conduct heat and electricity.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — METALLIC BONDING & ALLOYS (4.2.1.5 / 4.2.2.7 / 4.2.3.1)       -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.2.1.5 · Metals &amp; alloys</div>
+    <h2 class="lesson-title">Metallic bonding &amp; <em>alloys</em></h2>
+    <p class="lesson-promise">The "sea of electrons" that explains why metals conduct and bend — and why mixing in another metal makes them harder.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The sea of delocalised electrons</h3>
+    <p>In a metal, the atoms are packed in a regular arrangement. The outer electrons leave their atoms and become <strong>delocalised</strong> — free to move throughout the whole structure. This leaves a lattice of <strong>positive metal ions</strong> sitting in a <strong>"sea" of delocalised electrons</strong>.</p>
+    <p><strong>Metallic bonding</strong> is the strong electrostatic attraction between the <strong>positive ions</strong> and the <strong>delocalised electrons</strong>. It explains the key properties:</p>
+    <p><strong>Good conductors of electricity and heat</strong> — the delocalised electrons are free to move and carry charge and energy through the metal. <strong>High melting and boiling points</strong> — the metallic bonds are strong. <strong>Malleable</strong> (can be bent and shaped) — the layers of ions can slide over each other without breaking the bonding.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">METALLIC BONDING — IONS IN A SEA OF ELECTRONS</text>
+        <rect x="120" y="40" width="320" height="140" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <!-- positive ions grid -->
+        <g font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" text-anchor="middle">
+          <circle cx="170" cy="80" r="15" fill="#B85042"/><text x="170" y="85" fill="#fff">+</text>
+          <circle cx="245" cy="80" r="15" fill="#B85042"/><text x="245" y="85" fill="#fff">+</text>
+          <circle cx="320" cy="80" r="15" fill="#B85042"/><text x="320" y="85" fill="#fff">+</text>
+          <circle cx="395" cy="80" r="15" fill="#B85042"/><text x="395" y="85" fill="#fff">+</text>
+          <circle cx="170" cy="140" r="15" fill="#B85042"/><text x="170" y="145" fill="#fff">+</text>
+          <circle cx="245" cy="140" r="15" fill="#B85042"/><text x="245" y="145" fill="#fff">+</text>
+          <circle cx="320" cy="140" r="15" fill="#B85042"/><text x="320" y="145" fill="#fff">+</text>
+          <circle cx="395" cy="140" r="15" fill="#B85042"/><text x="395" y="145" fill="#fff">+</text>
+        </g>
+        <!-- delocalised electrons scattered -->
+        <g fill="#1E2761">
+          <circle cx="207" cy="64" r="3"/><circle cx="282" cy="98" r="3"/><circle cx="357" cy="62" r="3"/>
+          <circle cx="207" cy="124" r="3"/><circle cx="282" cy="158" r="3"/><circle cx="357" cy="122" r="3"/>
+          <circle cx="148" cy="110" r="3"/><circle cx="420" cy="110" r="3"/><circle cx="320" cy="110" r="3"/><circle cx="245" cy="110" r="3"/>
+        </g>
+        <text x="280" y="200" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">small dots = delocalised electrons, free to move</text>
+      </svg>
+      <div class="caption">Positive ions in fixed positions; delocalised electrons move freely between them</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — it's the electrons that carry the charge</h4>
+      <p>Metals conduct because of the <strong>delocalised electrons</strong>, which are free to move — <em>not</em> because the ions move. Don't say "the ions flow". When you explain malleability, the point is that the <strong>layers of ions slide</strong> while the sea of electrons holds everything together.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Why alloys are harder</h3>
+    <p>A <strong>pure metal</strong> has atoms of the <strong>same size</strong> arranged in neat layers, so the layers slide over each other easily — pure metals are soft. An <strong>alloy</strong> is a <strong>mixture of a metal with at least one other element</strong> (often another metal). The added atoms are a <strong>different size</strong>, so they <strong>distort the layers</strong> and stop them sliding so easily. This makes alloys <strong>harder</strong> than the pure metal, which is why most metals we use day to day are alloys.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PURE METAL vs ALLOY</text>
+        <!-- pure metal panel -->
+        <rect x="30" y="40" width="230" height="170" rx="6" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="145" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">PURE METAL</text>
+        <g fill="#B85042">
+          <circle cx="80" cy="90" r="12"/><circle cx="115" cy="90" r="12"/><circle cx="150" cy="90" r="12"/><circle cx="185" cy="90" r="12"/><circle cx="220" cy="90" r="12"/>
+          <circle cx="80" cy="125" r="12"/><circle cx="115" cy="125" r="12"/><circle cx="150" cy="125" r="12"/><circle cx="185" cy="125" r="12"/><circle cx="220" cy="125" r="12"/>
+          <circle cx="80" cy="160" r="12"/><circle cx="115" cy="160" r="12"/><circle cx="150" cy="160" r="12"/><circle cx="185" cy="160" r="12"/><circle cx="220" cy="160" r="12"/>
+        </g>
+        <text x="145" y="196" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">neat layers slide → soft</text>
+        <!-- alloy panel -->
+        <rect x="300" y="40" width="230" height="170" rx="6" fill="#FCFAF4" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="415" y="62" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">ALLOY</text>
+        <g fill="#B85042">
+          <circle cx="350" cy="90" r="12"/><circle cx="385" cy="92" r="12"/><circle cx="427" cy="88" r="12"/><circle cx="462" cy="92" r="12"/>
+          <circle cx="352" cy="128" r="12"/><circle cx="420" cy="126" r="12"/><circle cx="458" cy="130" r="12"/>
+          <circle cx="350" cy="164" r="12"/><circle cx="385" cy="166" r="12"/><circle cx="425" cy="162" r="12"/><circle cx="460" cy="166" r="12"/>
+        </g>
+        <!-- larger different atoms -->
+        <g fill="#2C5F2D">
+          <circle cx="497" cy="90" r="17"/><circle cx="385" cy="128" r="17"/><circle cx="497" cy="164" r="17"/>
+        </g>
+        <text x="415" y="196" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">different sizes distort layers → harder</text>
+      </svg>
+      <div class="caption">A bigger added atom (green) disrupts the regular layers, so they can't slide</div>
+    </div>
+
+    <div class="worked">
+      <h4>Exam technique — explain why an alloy is harder than the pure metal</h4>
+      <p class="q">Explain, in terms of structure, why brass (an alloy) is harder than pure copper. (3 marks)</p>
+      <div class="step"><span class="label">Pure metal</span><span class="v">Copper atoms are all the same size and form regular layers that slide easily.</span></div>
+      <div class="step"><span class="label">Alloy</span><span class="v">Brass also contains zinc atoms of a different size.</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">The different-sized atoms distort the layers so they can't slide over each other, making brass harder.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why is an alloy usually harder than the pure metal it is made from?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Alloys have stronger covalent bonds</span></li>
+        <li><span class="letter">B</span><span>The different-sized atoms distort the layers so they can't slide as easily</span></li>
+        <li><span class="letter">C</span><span>Alloys have more delocalised electrons</span></li>
+        <li><span class="letter">D</span><span>Alloys are held together by ionic bonds</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> An alloy contains atoms of <em>different sizes</em>. These distort the regular layers of metal ions, so the layers can no longer slide over each other easily — making the alloy harder.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Describe metallic bonding.</summary><div class="ans">A lattice of <strong>positive metal ions</strong> held together by a <strong>sea of delocalised electrons</strong>; the bond is the electrostatic attraction between them.</div></details></li>
+      <li><details><summary>Why do metals conduct electricity?</summary><div class="ans">The <strong>delocalised electrons</strong> are free to move through the structure and carry charge.</div></details></li>
+      <li><details><summary>Why are metals malleable?</summary><div class="ans">The <strong>layers of ions can slide</strong> over one another without breaking the metallic bonding, so the metal can be bent and shaped.</div></details></li>
+      <li><details><summary>What is an alloy?</summary><div class="ans">A <strong>mixture of a metal with at least one other element</strong> (often another metal).</div></details></li>
+      <li><details><summary>Explain why alloys are harder than pure metals.</summary><div class="ans">The added atoms are a <strong>different size</strong>, so they <strong>distort the layers</strong> of atoms and stop them sliding easily.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 7 — STATES OF MATTER & NANOPARTICLES (4.2.2.1 / 4.2.4.x)          -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-7">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 07 · 4.2.2.1 · States &amp; nanoparticles</div>
+    <h2 class="lesson-title">States of matter &amp; <em>nanoparticles</em></h2>
+    <p class="lesson-promise">How changes of state work, why every model you draw is a bit wrong, and what makes nanoparticles special.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Changes of state &amp; the limits of models</h3>
+    <p>In the <strong>solid</strong>, <strong>liquid</strong> and <strong>gas</strong> states, the particles are the same — only their <strong>arrangement, movement and the energy in them</strong> change. Heating gives particles more energy; at a high enough temperature the forces between them are overcome and the state changes. Melting and boiling happen when there is enough energy to overcome the forces of attraction <em>between particles</em>.</p>
+    <p>The more energy needed to break those forces, the <strong>higher the melting and boiling points</strong>. So the strength of the forces tells you the state at room temperature.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SOLID → LIQUID → GAS</text>
+        <!-- solid -->
+        <rect x="30" y="50" width="150" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="105" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">SOLID</text>
+        <g fill="#B85042">
+          <circle cx="70" cy="100" r="8"/><circle cx="100" cy="100" r="8"/><circle cx="130" cy="100" r="8"/>
+          <circle cx="70" cy="130" r="8"/><circle cx="100" cy="130" r="8"/><circle cx="130" cy="130" r="8"/>
+        </g>
+        <text x="105" y="153" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">fixed, regular, vibrate</text>
+        <!-- liquid -->
+        <rect x="205" y="50" width="150" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">LIQUID</text>
+        <g fill="#B85042">
+          <circle cx="240" cy="105" r="8"/><circle cx="268" cy="120" r="8"/><circle cx="300" cy="102" r="8"/>
+          <circle cx="248" cy="138" r="8"/><circle cx="290" cy="138" r="8"/><circle cx="322" cy="124" r="8"/>
+        </g>
+        <text x="280" y="155" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">touching, can flow</text>
+        <!-- gas -->
+        <rect x="380" y="50" width="150" height="110" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="455" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">GAS</text>
+        <g fill="#B85042">
+          <circle cx="405" cy="95" r="8"/><circle cx="470" cy="105" r="8"/><circle cx="500" cy="92" r="8"/>
+          <circle cx="425" cy="140" r="8"/><circle cx="485" cy="145" r="8"/>
+        </g>
+        <text x="455" y="155" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">far apart, fast, random</text>
+      </svg>
+      <div class="caption">Same particles — only the spacing, order and energy change between states</div>
+    </div>
+
+    <p>The diagram above is the <strong>particle model</strong>, and it has <strong>limits</strong>. It treats particles as solid spheres with no forces between them, but in reality particles are not solid, not all spheres, and the <strong>forces between them vary</strong> from substance to substance. State symbols (s), (l), (g) and (aq) tell you the state.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — no model is perfect</h4>
+      <p>If asked for <strong>limitations of the particle model</strong>, say: the particles aren't really solid spheres, there are no <em>gaps of nothing</em> (the spaces aren't empty in the way drawn), and the <strong>forces between particles aren't shown</strong>. The same goes for dot-and-cross diagrams — they show electron <em>arrangement</em>, not the real 3-D shape of a molecule.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Nanoparticles &amp; nanoscience</h3>
+    <p><strong>Nanoscience</strong> is the study of very small particles — <strong>nanoparticles</strong>, which are between 1 and 100 <strong>nanometres (nm)</strong> across (1 nm = 10⁻⁹ m). They contain only a few hundred atoms. For comparison: <strong>coarse particles</strong> (dust, PM10) are about 1×10⁻⁵ to 2.5×10⁻⁶ m; <strong>fine particles</strong> (PM2.5) are 100 nm to 2500 nm.</p>
+    <p>The special thing about nanoparticles is their <strong>surface area to volume ratio</strong>. As a particle gets smaller, this ratio gets <strong>much larger</strong> — in fact, if the side of a cube is divided by 10, the surface area to volume ratio increases by 10. This means nanoparticles can be very effective <strong>catalysts</strong>, and that smaller amounts may be needed than for the same material in bulk.</p>
+    <p>Uses include <strong>catalysts</strong>, <strong>sun creams</strong>, <strong>cosmetics</strong>, <strong>deodorants</strong> and <strong>medicine</strong>. But because nanoparticles are so new, their effects on health and the environment are <strong>not fully understood</strong>, so there are concerns about their long-term safety.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SMALLER PARTICLES → MORE SURFACE PER VOLUME</text>
+        <!-- one big cube -->
+        <rect x="80" y="70" width="90" height="90" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="125" y="180" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">1 large block</text>
+        <text x="125" y="60" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">low SA : V</text>
+        <!-- arrow -->
+        <line x1="200" y1="115" x2="270" y2="115" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="276,115 262,109 262,121" fill="#C8A24A"/>
+        <text x="237" y="104" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">divide up</text>
+        <!-- many small cubes -->
+        <g fill="#B85042" stroke="#1E2761" stroke-width="1">
+          <rect x="320" y="70" width="26" height="26"/><rect x="352" y="70" width="26" height="26"/><rect x="384" y="70" width="26" height="26"/>
+          <rect x="320" y="102" width="26" height="26"/><rect x="352" y="102" width="26" height="26"/><rect x="384" y="102" width="26" height="26"/>
+          <rect x="320" y="134" width="26" height="26"/><rect x="352" y="134" width="26" height="26"/><rect x="384" y="134" width="26" height="26"/>
+        </g>
+        <text x="365" y="180" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">many tiny particles</text>
+        <text x="365" y="60" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">high SA : V</text>
+      </svg>
+      <div class="caption">Same total volume, far more exposed surface — why nanoparticles are reactive</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — surface area to volume ratio of a cube</h4>
+      <p class="q">A cube has sides of 2 nm. Find its surface area, volume, and surface area to volume ratio.</p>
+      <div class="step"><span class="label">Surface area</span><span class="v">6 × (2 × 2) = 6 × 4 = 24 nm²</span></div>
+      <div class="step"><span class="label">Volume</span><span class="v">2 × 2 × 2 = 8 nm³</span></div>
+      <div class="step answer"><span class="label">SA : V</span><span class="v">24 ÷ 8 = 3  (a 10 nm cube gives only 0.6 — smaller means a bigger ratio)</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why can a very small mass of a nanoparticle catalyst be as effective as a much larger mass of the normal material?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Nanoparticles react more because they are charged</span></li>
+        <li><span class="letter">B</span><span>Nanoparticles have a very high surface area to volume ratio, exposing more atoms to react</span></li>
+        <li><span class="letter">C</span><span>Nanoparticles are made of different elements</span></li>
+        <li><span class="letter">D</span><span>Smaller particles weigh more per atom</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Their very high <em>surface area to volume ratio</em> means a large fraction of their atoms are at the surface, where reactions happen — so less material achieves the same effect.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 7 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What changes (and what stays the same) between the solid, liquid and gas states?</summary><div class="ans">The <strong>particles are the same</strong>; what changes is their <strong>arrangement, movement and energy</strong>.</div></details></li>
+      <li><details><summary>Give two limitations of the particle model.</summary><div class="ans">Any two: particles aren't really <strong>solid spheres</strong>; the model ignores the <strong>forces between particles</strong>; the spaces between particles aren't truly empty.</div></details></li>
+      <li><details><summary>What size are nanoparticles?</summary><div class="ans">Between <strong>1 and 100 nm</strong> across (1 nm = 10⁻⁹ m) — containing only a few hundred atoms.</div></details></li>
+      <li><details><summary>What happens to the surface area to volume ratio as a particle gets smaller?</summary><div class="ans">It gets <strong>much larger</strong>. Dividing the side length by 10 increases the ratio by 10.</div></details></li>
+      <li><details><summary>Give one use of nanoparticles and one reason for caution.</summary><div class="ans">Use: any of <strong>catalysts, sun creams, cosmetics, medicine</strong>. Caution: their effects on <strong>health and the environment are not fully understood</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="7">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Chemistry Paper 1 · C2 Bonding, Structure &amp; Properties</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'c2-bonding-structure-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=94ac04ee-0f4c-4e42-b327-0d1c5b0f0428&amp;ref=interactive-science&amp;from=c2-bonding-structure-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=c2-bonding-structure-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

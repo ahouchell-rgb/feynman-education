@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy (P1) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for P1 Energy — eight topics covering energy stores and transfers, kinetic and gravitational potential energy, elastic energy, specific heat capacity, power, dissipation, efficiency and energy resources. Higher-tier content flagged; covers Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Paper 1 · P1 Energy</div>
+    <h1>Energy, <em>for the exam.</em></h1>
+    <p class="tag">The whole of P1 — stores and transfers, the equations you have to recall, specific heat capacity, power, efficiency and energy resources. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Stores &amp; transfers</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">Kinetic &amp; GPE</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Elastic energy</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Specific heat</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Power</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Transfers &amp; waste</a>
+    <a href="#lesson-7" class="nav-pill" data-lesson="7">Efficiency</a>
+    <a href="#lesson-8" class="nav-pill" data-lesson="8">Energy resources</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — ENERGY STORES & SYSTEMS  (4.1.1.1)                            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.1.1.1 · Stores &amp; systems</div>
+    <h2 class="lesson-title">Energy <em>stores</em> and transfers</h2>
+    <p class="lesson-promise">By the end of this topic you'll name the energy stores, describe how energy is transferred between them, and stop saying energy is "made" or "used up".</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Energy is stored, then transferred</h3>
+    <p>Energy is never created or destroyed — it just moves around. To talk about it clearly, physicists describe energy as sitting in <strong>stores</strong>. When something happens, energy is <strong>transferred</strong> from one store to another.</p>
+    <p>A <strong>system</strong> is just the object, or group of objects, you've decided to look at. When a system changes, you can describe the change as energy moving between stores.</p>
+
+    <div class="keywords">
+      <h4>The eight energy stores</h4>
+      <dl>
+        <dt>Kinetic</dt><dd>Anything moving.</dd>
+        <dt>Thermal (internal)</dt><dd>The hotter something is, the more it has.</dd>
+        <dt>Chemical</dt><dd>In fuels, food and batteries — released by reactions.</dd>
+        <dt>Gravitational potential</dt><dd>Anything lifted up in a gravitational field.</dd>
+        <dt>Elastic potential</dt><dd>In stretched or squashed springs and bands.</dd>
+        <dt>Electrostatic / Magnetic / Nuclear</dt><dd>In separated charges, magnets, and atomic nuclei.</dd>
+      </dl>
+    </div>
+
+    <p>Energy is transferred in one of four ways. You need all four:</p>
+    <p><strong>Mechanically</strong> — by a force doing work (pushing, pulling, stretching). <strong>Electrically</strong> — by a current doing work. <strong>By heating</strong> — from a hotter object to a cooler one. <strong>By radiation</strong> — carried away as waves, e.g. light or sound.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">A FALLING BALL</text>
+        <!-- top ball -->
+        <circle cx="130" cy="60" r="16" fill="#B85042"/>
+        <line x1="180" y1="60" x2="300" y2="60" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="310" y="56" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Gravitational store: FULL</text>
+        <text x="310" y="72" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">Kinetic store: empty</text>
+        <!-- bottom ball -->
+        <circle cx="130" cy="180" r="16" fill="#B85042"/>
+        <line x1="180" y1="180" x2="300" y2="180" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="310" y="176" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Kinetic store: FULL</text>
+        <text x="310" y="192" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">Gravitational store: empty</text>
+        <!-- transfer arrow -->
+        <line x1="130" y1="82" x2="130" y2="158" stroke="#C8A24A" stroke-width="3"/>
+        <polygon points="130,164 124,150 136,150" fill="#C8A24A"/>
+        <text x="118" y="124" text-anchor="end" font-family="Instrument Serif,serif" font-style="italic" font-size="14" fill="#5C6370">falls</text>
+      </svg>
+      <div class="caption">As it falls: gravitational store → kinetic store</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the words examiners want</h4>
+      <p>Energy is <strong>transferred between stores</strong>, never "created", "made", "used up" or "lost". Don't write "heat energy" — write "energy in the thermal store" or "transferred by heating". Don't write "sound energy" — sound is a way energy is <strong>transferred</strong> (by radiation), not a store.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A battery-powered fan is switched on. Which describes the main transfer?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Electrical store → kinetic store</span></li>
+        <li><span class="letter">B</span><span>Chemical store of the battery → kinetic store of the blades (transferred electrically)</span></li>
+        <li><span class="letter">C</span><span>Kinetic energy is created by the motor</span></li>
+        <li><span class="letter">D</span><span>Heat energy → movement energy</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The store is the <em>chemical</em> store of the battery (there's no "electrical store"). It's transferred <em>electrically</em> by the current to the <em>kinetic</em> store of the blades. C and D use the banned words "created" and "heat energy".</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Describing changes in a system</h3>
+    <p>A common exam task: "Describe the energy transfers." Always say <em>which store</em> falls, <em>which store</em> rises, and <em>how</em> it was transferred.</p>
+
+    <div class="worked">
+      <h4>Worked example — a car braking to a stop</h4>
+      <p class="q">A moving car brakes and stops. Describe the energy transfer.</p>
+      <div class="step"><span class="label">Before</span><span class="v">Energy is in the kinetic store of the car.</span></div>
+      <div class="step"><span class="label">Transfer</span><span class="v">Friction at the brakes does work — transferred mechanically, then by heating.</span></div>
+      <div class="step answer"><span class="label">After</span><span class="v">Energy is in the thermal store of the brakes &amp; surroundings (dissipated).</span></div>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the four ways energy can be transferred.</summary><div class="ans">Mechanically (by a force), <strong>electrically</strong> (by a current), <strong>by heating</strong>, and <strong>by radiation</strong>.</div></details></li>
+      <li><details><summary>A child at the top of a slide slides down. Name the store that decreases and the store that increases.</summary><div class="ans">Gravitational potential store <strong>decreases</strong>; kinetic store <strong>increases</strong> (some is also dissipated to a thermal store by friction).</div></details></li>
+      <li><details><summary>Why is "the energy was lost" a poor answer?</summary><div class="ans">Energy can't be destroyed. It is <strong>dissipated</strong> — transferred to the surroundings (usually a thermal store) where it's spread out and no longer useful.</div></details></li>
+      <li><details><summary>A kettle boils water. State the store that empties, the store that fills, and how energy is transferred.</summary><div class="ans">Chemical/electrical supply → the <strong>thermal store of the water</strong> increases; energy is transferred <strong>electrically</strong> (then by heating within the water).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — KINETIC & GRAVITATIONAL POTENTIAL ENERGY (4.1.1.2)            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.1.1.2 · KE &amp; GPE</div>
+    <h2 class="lesson-title">Kinetic &amp; <em>gravitational</em> energy</h2>
+    <p class="lesson-promise">Two equations you must recall — and the classic trick of swapping between them when something falls.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The two equations to recall</h3>
+
+    <div class="eqbox">
+      <h4>Equations</h4>
+      <dl>
+        <dt>E<sub>k</sub> = ½ m v² <span class="badge recall">recall</span></dt>
+        <dd>kinetic energy (J) = ½ × mass (kg) × speed² (m/s)²</dd>
+        <dt>E<sub>p</sub> = m g h <span class="badge recall">recall</span></dt>
+        <dd>g.p.e. (J) = mass (kg) × gravitational field strength (N/kg) × height (m). Use g = 9.8 N/kg.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — kinetic energy of a car</h4>
+      <p class="q">A 1500 kg car travels at 20 m/s. Calculate its kinetic energy.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">E&#8342; = ½ m v²</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= ½ × 1500 × 20²  = ½ × 1500 × 400</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 300 000 J  (300 kJ)</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — square the speed</h4>
+      <p>It's <strong>v²</strong>, not v. Square the speed <em>before</em> you multiply. And because of the square, <strong>doubling the speed quadruples the kinetic energy</strong> — that's why stopping distances grow so fast. Speed must be in m/s, not km/h.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">DOUBLE THE SPEED → 4× THE KE</text>
+        <line x1="70" y1="170" x2="500" y2="170" stroke="#CFD8E3" stroke-width="1.5"/>
+        <!-- bar at speed v -->
+        <rect x="150" y="140" width="70" height="30" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="185" y="190" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">speed v</text>
+        <text x="185" y="130" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1E2761">1 unit</text>
+        <!-- bar at speed 2v -->
+        <rect x="340" y="50" width="70" height="120" fill="#B85042" opacity="0.85"/>
+        <text x="375" y="190" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">speed 2v</text>
+        <text x="375" y="40" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">4 units</text>
+      </svg>
+      <div class="caption">Kinetic energy depends on speed squared</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The falling-object trick</h3>
+    <p>When something falls (and you ignore air resistance), the energy leaving the gravitational store <strong>equals</strong> the energy arriving in the kinetic store. Set the two equal and you can find a missing speed or height.</p>
+
+    <div class="worked">
+      <h4>Worked example — speed of a falling ball</h4>
+      <p class="q">A 0.5 kg ball is dropped from a height of 1.8 m. Find its speed as it lands (ignore air resistance, g = 9.8 N/kg).</p>
+      <div class="step"><span class="label">Idea</span><span class="v">g.p.e. lost = kinetic energy gained → mgh = ½mv²</span></div>
+      <div class="step"><span class="label">g.p.e.</span><span class="v">E&#8345; = 0.5 × 9.8 × 1.8 = 8.82 J</span></div>
+      <div class="step"><span class="label">Rearrange</span><span class="v">v = √(2 × E&#8342; ÷ m) = √(2 × 8.82 ÷ 0.5)</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">v = √35.28 = 5.9 m/s</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A 2 kg bag is lifted 3 m onto a shelf. How much energy is transferred to its gravitational store? (g = 9.8 N/kg)</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>6 J</span></li>
+        <li><span class="letter">B</span><span>58.8 J</span></li>
+        <li><span class="letter">C</span><span>29.4 J</span></li>
+        <li><span class="letter">D</span><span>5.88 J</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 58.8 J.</strong> E&#8345; = m g h = 2 × 9.8 × 3 = 58.8 J. (Answer C is the mistake of using g = 4.9; D is a decimal-point slip.)</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Write the kinetic energy equation and state the unit of each quantity.</summary><div class="ans">E<sub>k</sub> = ½ m v². Kinetic energy in <strong>joules (J)</strong>, mass in <strong>kg</strong>, speed in <strong>m/s</strong>.</div></details></li>
+      <li><details><summary>A 0.2 kg apple falls 2 m. Calculate the energy transferred from its gravitational store. (g = 9.8 N/kg)</summary><div class="ans">E<sub>p</sub> = m g h = 0.2 × 9.8 × 2 = <strong>3.92 J</strong>.</div></details></li>
+      <li><details><summary>A cyclist doubles their speed. What happens to their kinetic energy?</summary><div class="ans">It becomes <strong>four times bigger</strong> (KE ∝ v²). This is a favourite exam point.</div></details></li>
+      <li><details><summary>A 70 kg skydiver is moving at 50 m/s. Calculate the kinetic energy.</summary><div class="ans">E<sub>k</sub> = ½ × 70 × 50² = ½ × 70 × 2500 = <strong>87 500 J</strong> (87.5 kJ).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — ELASTIC POTENTIAL ENERGY (4.1.1.2)                            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.1.1.2 · Elastic energy</div>
+    <h2 class="lesson-title">Elastic <em>potential</em> energy</h2>
+    <p class="lesson-promise">The energy stored in a stretched or squashed spring — one given equation, and the small print that catches people out.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Storing energy in a spring</h3>
+    <p>Stretch or compress a spring and you transfer energy (mechanically, by the force) into its <strong>elastic potential store</strong>. Let go and that energy is transferred back out.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>E<sub>e</sub> = ½ k e² <span class="badge given">given</span></dt>
+        <dd>elastic potential energy (J) = ½ × spring constant (N/m) × extension² (m)². Valid only while the limit of proportionality has <em>not</em> been exceeded.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- wall -->
+        <rect x="40" y="40" width="14" height="120" fill="#1E2761"/>
+        <!-- natural length spring -->
+        <text x="200" y="55" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#5C6370">natural length</text>
+        <path d="M54 75 H110 l10 -10 l20 20 l20 -20 l20 20 l20 -10 H230" fill="none" stroke="#5C6370" stroke-width="2"/>
+        <line x1="230" y1="60" x2="230" y2="90" stroke="#CFD8E3" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <!-- stretched spring -->
+        <text x="230" y="135" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">stretched</text>
+        <path d="M54 155 H120 l14 -10 l28 20 l28 -20 l28 20 l28 -10 H330" fill="none" stroke="#B85042" stroke-width="2"/>
+        <rect x="330" y="140" width="22" height="30" fill="#B85042"/>
+        <!-- extension dimension -->
+        <line x1="230" y1="180" x2="330" y2="180" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="230" y1="175" x2="230" y2="185" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="330" y1="175" x2="330" y2="185" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="197" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#1E2761">extension e</text>
+      </svg>
+      <div class="caption">Extension e is measured from the natural (unstretched) length</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example</h4>
+      <p class="q">A spring of spring constant 200 N/m is stretched by 0.10 m. Calculate the elastic potential energy stored.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">E&#8337; = ½ k e²</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= ½ × 200 × 0.10²  = ½ × 200 × 0.01</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 1.0 J</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — square the extension</h4>
+      <p>It's the <strong>extension</strong> that's squared (e²), not the spring constant. Extension must be in <strong>metres</strong> (a 10 cm stretch is 0.10 m). This equation is on the sheet, so you don't have to memorise it — but you do have to use it correctly.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A spring (k = 50 N/m) is stretched by 0.20 m. The elastic potential energy stored is:</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>5 J</span></li>
+        <li><span class="letter">B</span><span>1 J</span></li>
+        <li><span class="letter">C</span><span>10 J</span></li>
+        <li><span class="letter">D</span><span>2 J</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 1 J.</strong> E<sub>e</sub> = ½ × 50 × 0.20² = ½ × 50 × 0.04 = 1 J. Answer A forgets to square the extension (½ × 50 × 0.2 = 5).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 3 questions</div>
+    <ol>
+      <li><details><summary>What is the elastic potential energy equation, and which quantity is squared?</summary><div class="ans">E<sub>e</sub> = ½ k e². The <strong>extension e</strong> is squared.</div></details></li>
+      <li><details><summary>A spring (k = 30 N/m) is compressed by 0.40 m. Calculate the elastic potential energy.</summary><div class="ans">E<sub>e</sub> = ½ × 30 × 0.40² = ½ × 30 × 0.16 = <strong>2.4 J</strong>.</div></details></li>
+      <li><details><summary>Why does the equation only work below the limit of proportionality?</summary><div class="ans">Beyond that limit the spring no longer extends in proportion to the force (it deforms permanently), so the simple ½ k e² relationship breaks down.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — SPECIFIC HEAT CAPACITY (4.1.1.3) + REQUIRED PRACTICAL         -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.1.1.3 · Specific heat capacity</div>
+    <h2 class="lesson-title">Specific <em>heat capacity</em></h2>
+    <p class="lesson-promise">Why water takes so long to heat up — one given equation, and the required practical that measures it.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What it means</h3>
+    <p>The <strong>specific heat capacity</strong> of a material is the energy needed to raise the temperature of <strong>1 kg</strong> of it by <strong>1 °C</strong>. Water's is high (4200 J/kg °C), which is why it takes a lot of energy to heat — and why it's good for storing energy in heating systems.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>ΔE = m c Δθ <span class="badge given">given</span></dt>
+        <dd>change in thermal energy (J) = mass (kg) × specific heat capacity (J/kg °C) × temperature change (°C)</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — heating water</h4>
+      <p class="q">How much energy is needed to heat 2 kg of water from 20 °C to 50 °C? (c = 4200 J/kg °C)</p>
+      <div class="step"><span class="label">Δθ</span><span class="v">temperature change = 50 − 20 = 30 °C</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">ΔE = m c Δθ = 2 × 4200 × 30</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 252 000 J  (252 kJ)</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — Δθ is the change</h4>
+      <p>Δθ means the <strong>change</strong> in temperature, not the final temperature. Subtract start from finish first. The unit J/kg °C tells you the equation: joules per (kg × °C), so multiply by both.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Measuring it</h3>
+
+    <div class="rp">
+      <h4>Specific heat capacity of a metal block</h4>
+      <p><strong>Aim:</strong> determine the specific heat capacity of a material.</p>
+      <ol>
+        <li>Measure the <strong>mass</strong> of the metal block with a balance.</li>
+        <li>Put an <strong>immersion heater</strong> in one hole and a <strong>thermometer</strong> in the other (add a drop of oil to the thermometer hole for good thermal contact). Record the starting temperature.</li>
+        <li>Connect the heater through a <strong>joulemeter</strong> (or use power × time) to measure the energy supplied. Switch on for a set time.</li>
+        <li>Record the highest temperature reached, then find Δθ.</li>
+        <li>Calculate: <span class="formula">c = ΔE ÷ (m × Δθ)</span></li>
+      </ol>
+      <p><strong>Control / improve:</strong> wrap the block in <strong>insulation</strong> to reduce energy lost to the surroundings. Because some energy still escapes, the measured value is usually a little <strong>higher</strong> than the true value.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- block -->
+        <rect x="200" y="90" width="160" height="110" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- insulation hint -->
+        <rect x="188" y="78" width="184" height="134" rx="6" fill="none" stroke="#C8A24A" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="280" y="150" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">metal block</text>
+        <text x="280" y="168" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">mass m</text>
+        <!-- heater -->
+        <rect x="230" y="30" width="14" height="64" fill="#B85042"/>
+        <line x1="237" y1="30" x2="120" y2="30" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="114" y="34" text-anchor="end" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">immersion heater</text>
+        <!-- thermometer -->
+        <rect x="318" y="20" width="8" height="74" fill="#2C5F2D"/>
+        <circle cx="322" cy="96" r="7" fill="#2C5F2D"/>
+        <line x1="326" y1="30" x2="440" y2="30" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="446" y="34" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">thermometer</text>
+      </svg>
+      <div class="caption">Apparatus (insulation dashed) — energy in measured by a joulemeter, or power × time</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">It takes 9000 J to raise 0.5 kg of a metal by 40 °C. What is its specific heat capacity?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>180 J/kg °C</span></li>
+        <li><span class="letter">B</span><span>450 J/kg °C</span></li>
+        <li><span class="letter">C</span><span>720 J/kg °C</span></li>
+        <li><span class="letter">D</span><span>4500 J/kg °C</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 450 J/kg °C.</strong> c = ΔE ÷ (m × Δθ) = 9000 ÷ (0.5 × 40) = 9000 ÷ 20 = 450 J/kg °C.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define specific heat capacity.</summary><div class="ans">The energy needed to raise the temperature of <strong>1 kg of a substance by 1 °C</strong>.</div></details></li>
+      <li><details><summary>Calculate the energy to heat 0.5 kg of aluminium (c = 900 J/kg °C) by 20 °C.</summary><div class="ans">ΔE = m c Δθ = 0.5 × 900 × 20 = <strong>9000 J</strong>.</div></details></li>
+      <li><details><summary>In the required practical, why is the measured value usually too high?</summary><div class="ans">Some energy from the heater is transferred to the surroundings instead of the block, so the apparatus seems to need <strong>more energy</strong> per degree than it really does. Insulation reduces this.</div></details></li>
+      <li><details><summary>Why does water make a good coolant and storage heater?</summary><div class="ans">Its <strong>high specific heat capacity</strong> means it can absorb/store a lot of energy with only a small temperature change.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — POWER (4.1.1.4)                                               -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.1.1.4 · Power</div>
+    <h2 class="lesson-title">Power — the <em>rate</em> of transfer</h2>
+    <p class="lesson-promise">Two equations, one unit, and the difference between being powerful and transferring a lot of energy.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Energy per second</h3>
+    <p><strong>Power is the rate of energy transfer</strong> — the energy transferred (or work done) every second. It's measured in <strong>watts (W)</strong>, where <strong>1 watt = 1 joule per second</strong>.</p>
+
+    <div class="eqbox">
+      <h4>Equations</h4>
+      <dl>
+        <dt>P = E / t <span class="badge recall">recall</span></dt>
+        <dd>power (W) = energy transferred (J) ÷ time (s)</dd>
+        <dt>P = W / t <span class="badge recall">recall</span></dt>
+        <dd>power (W) = work done (J) ÷ time (s) — same idea, since work done is energy transferred</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — power of a motor</h4>
+      <p class="q">A motor transfers 4800 J of energy in 8 s. Calculate its power.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">P = E ÷ t</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 4800 ÷ 8</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 600 W</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — power isn't energy</h4>
+      <p>A 60 W lamp left on for an hour transfers <strong>more total energy</strong> than a 2000 W kettle on for 30 s — but the kettle is far <strong>more powerful</strong>. <strong>Power = rate; energy = total.</strong> Two machines that do the same job, the more powerful one does it in <em>less time</em>.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SAME JOB, DIFFERENT TIME</text>
+        <!-- crane A -->
+        <text x="150" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Crane A</text>
+        <rect x="80" y="70" width="140" height="22" fill="#B85042"/>
+        <text x="150" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">lifts in 4 s</text>
+        <text x="150" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">higher power</text>
+        <!-- crane B -->
+        <text x="410" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">Crane B</text>
+        <rect x="340" y="70" width="140" height="22" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="410" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5C6370">lifts in 12 s</text>
+        <text x="410" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">lower power</text>
+        <text x="280" y="165" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Both transfer the same energy — A just does it faster.</text>
+      </svg>
+      <div class="caption">More power = same energy transferred in less time</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A light bulb transfers 1800 J in 30 s. What is its power?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>54 000 W</span></li>
+        <li><span class="letter">B</span><span>60 W</span></li>
+        <li><span class="letter">C</span><span>600 W</span></li>
+        <li><span class="letter">D</span><span>6 W</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 60 W.</strong> P = E ÷ t = 1800 ÷ 30 = 60 W. Answer A is the slip of <em>multiplying</em> instead of dividing.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define power and state its unit.</summary><div class="ans">Power is the <strong>rate of energy transfer</strong> (energy transferred per second). Unit: the <strong>watt (W)</strong> = 1 J/s.</div></details></li>
+      <li><details><summary>A kettle transfers 360 000 J in 120 s. Calculate its power.</summary><div class="ans">P = E ÷ t = 360 000 ÷ 120 = <strong>3000 W</strong> (3 kW).</div></details></li>
+      <li><details><summary>Motor A and motor B both raise the same load to the same shelf, but A is quicker. Which has the greater power?</summary><div class="ans"><strong>Motor A.</strong> Same energy transferred in less time means greater power.</div></details></li>
+      <li><details><summary>A crane does 90 000 J of work in 30 s. Find its power output.</summary><div class="ans">P = W ÷ t = 90 000 ÷ 30 = <strong>3000 W</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — ENERGY TRANSFERS & REDUCING WASTE (4.1.2.1)                   -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.1.2.1 · Transfers &amp; dissipation</div>
+    <h2 class="lesson-title">Conservation &amp; <em>wasted</em> energy</h2>
+    <p class="lesson-promise">Energy is always conserved — but a lot of it ends up spread out and useless. How we cut that down.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Conservation &amp; dissipation</h3>
+    <p>The <strong>principle of conservation of energy</strong>: energy cannot be created or destroyed, only transferred, stored or dissipated. In a <strong>closed system</strong>, the total energy never changes.</p>
+    <p>But in any real transfer, some energy is <strong>dissipated</strong> — transferred to the surroundings, usually by heating, where it spreads out and becomes useless. We loosely call this "wasted" energy. It isn't destroyed; it's just no longer useful.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- system box -->
+        <rect x="60" y="70" width="150" height="70" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="135" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">device</text>
+        <text x="135" y="118" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">input energy</text>
+        <!-- useful arrow -->
+        <line x1="210" y1="90" x2="360" y2="90" stroke="#2C5F2D" stroke-width="5"/>
+        <polygon points="368,90 354,83 354,97" fill="#2C5F2D"/>
+        <text x="380" y="94" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">useful transfer</text>
+        <!-- wasted arrows -->
+        <line x1="200" y1="140" x2="240" y2="180" stroke="#B85042" stroke-width="2"/>
+        <line x1="160" y1="140" x2="160" y2="185" stroke="#B85042" stroke-width="2"/>
+        <line x1="120" y1="140" x2="90" y2="180" stroke="#B85042" stroke-width="2"/>
+        <text x="300" y="178" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#B85042">dissipated to surroundings (by heating)</text>
+      </svg>
+      <div class="caption">Useful output + dissipated energy = total input (energy is conserved)</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "wasted" doesn't mean "destroyed"</h4>
+      <p>Wasted energy is still there — it's been <strong>dissipated</strong> to the surroundings and spread thinly, so we can't usefully get it back. Saying it was "lost" or "destroyed" loses marks. Total energy is always conserved.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Reducing unwanted transfers</h3>
+    <p>Two big ways to cut wasted energy:</p>
+    <p><strong>Lubrication</strong> — oil or grease between moving parts reduces <strong>friction</strong>, so less energy is dissipated by heating.</p>
+    <p><strong>Insulation</strong> — materials with <strong>low thermal conductivity</strong> slow the transfer of energy by heating, keeping warmth in (or out).</p>
+    <p><strong>Thermal conductivity</strong> is how quickly a material conducts energy. A building cools more slowly if its walls are <strong>thick</strong> and have a <strong>low thermal conductivity</strong>.</p>
+
+    <div class="keywords">
+      <h4>Keywords</h4>
+      <dl>
+        <dt>Dissipated</dt><dd>Transferred to the surroundings and spread out, so it's no longer useful.</dd>
+        <dt>Lubrication</dt><dd>Reducing friction between surfaces (e.g. with oil) to cut energy wasted by heating.</dd>
+        <dt>Thermal conductivity</dt><dd>How readily a material transfers energy by conduction — low means a good insulator.</dd>
+      </dl>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Two houses are identical except house X has thicker walls of lower thermal conductivity. Which cools down faster on a cold night?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>House X — thicker walls trap more cold</span></li>
+        <li><span class="letter">B</span><span>The other house — its walls conduct energy out faster</span></li>
+        <li><span class="letter">C</span><span>They cool at the same rate</span></li>
+        <li><span class="letter">D</span><span>You can't tell without the temperatures</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> House X has thicker walls <em>and</em> lower thermal conductivity, so it loses energy by heating more slowly. The other house conducts energy out faster, so it cools faster.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>State the principle of conservation of energy.</summary><div class="ans">Energy cannot be <strong>created or destroyed</strong>, only transferred, stored or dissipated. (In a closed system the total stays constant.)</div></details></li>
+      <li><details><summary>What does "dissipated" mean?</summary><div class="ans">Energy transferred to the <strong>surroundings</strong> (usually by heating) and spread out, so it's no longer useful.</div></details></li>
+      <li><details><summary>Give two ways to reduce unwanted energy transfers in a machine.</summary><div class="ans"><strong>Lubrication</strong> (reduces friction) and <strong>insulation</strong> / using low-thermal-conductivity materials (reduces transfer by heating).</div></details></li>
+      <li><details><summary>Name two wall properties that slow the cooling of a building.</summary><div class="ans">Greater wall <strong>thickness</strong> and <strong>lower thermal conductivity</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 7 — EFFICIENCY (4.1.2.2)  + HT FLAG                               -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-7">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 07 · 4.1.2.2 · Efficiency</div>
+    <h2 class="lesson-title"><em>Efficiency</em></h2>
+    <p class="lesson-promise">What fraction of the energy went where you wanted it — and the Higher-tier version using power.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The efficiency equation</h3>
+    <p><strong>Efficiency</strong> is the fraction of the input energy that is transferred <strong>usefully</strong>. The rest is dissipated.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>efficiency = useful output energy transfer ÷ total input energy transfer <span class="badge recall">recall</span></dt>
+        <dd>Answer is a decimal between 0 and 1 — multiply by 100 for a percentage.</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example</h4>
+      <p class="q">A motor is supplied with 200 J. Of this, 50 J is usefully transferred to the kinetic store. Calculate the efficiency.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">efficiency = useful ÷ total</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 50 ÷ 200 = 0.25</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 0.25, or 25%</span></div>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 190" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SANKEY: WHERE THE ENERGY GOES</text>
+        <!-- input bar -->
+        <rect x="40" y="60" width="80" height="80" fill="#1E2761"/>
+        <text x="80" y="158" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E2761">input 200 J</text>
+        <!-- useful branch -->
+        <rect x="120" y="60" width="220" height="20" fill="#2C5F2D"/>
+        <text x="350" y="74" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#2C5F2D">useful 50 J (25%)</text>
+        <!-- wasted branch -->
+        <rect x="120" y="80" width="220" height="60" fill="#B85042" opacity="0.8"/>
+        <text x="350" y="115" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#B85042">wasted 150 J (75%)</text>
+      </svg>
+      <div class="caption">A Sankey diagram: arrow width shows the amount of energy</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — efficiency can't beat 100%</h4>
+      <p>Efficiency is always <strong>less than 1 (100%)</strong> because some energy is always dissipated. If you calculate more than 1, you've divided the wrong way round — useful goes <em>on top</em>.</p>
+    </div>
+
+    <div class="higher">
+      <h4>Higher tier — efficiency from power</h4>
+      <p>On Higher tier you can also use the power form:</p>
+      <p style="text-align:center"><span class="formula">efficiency = useful power output ÷ total power input</span></p>
+      <p><strong>Example:</strong> a pump draws 500 W and usefully outputs 350 W. Efficiency = 350 ÷ 500 = <strong>0.70 = 70%</strong>.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Improving efficiency</h3>
+    <p>To make a device more efficient, reduce the energy it wastes: <strong>lubricate</strong> moving parts to cut friction, <strong>insulate</strong> to cut energy transferred by heating, and reduce air resistance or use lower-resistance wires. Every one of these moves more of the input into the useful output.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A lamp is supplied with 80 J and usefully transfers 8 J as light. What is its efficiency?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>0.1 (10%)</span></li>
+        <li><span class="letter">B</span><span>10 (1000%)</span></li>
+        <li><span class="letter">C</span><span>0.9 (90%)</span></li>
+        <li><span class="letter">D</span><span>0.8 (80%)</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — 0.1, or 10%.</strong> efficiency = useful ÷ total = 8 ÷ 80 = 0.1. (Filament lamps really are this wasteful — most energy is dissipated by heating.)</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 7 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Write the (Foundation) efficiency equation.</summary><div class="ans">efficiency = <strong>useful output energy transfer ÷ total input energy transfer</strong> (× 100 for %).</div></details></li>
+      <li><details><summary>A device wastes 120 J out of 150 J input. Calculate its efficiency.</summary><div class="ans">Useful = 150 − 120 = 30 J. Efficiency = 30 ÷ 150 = <strong>0.2 = 20%</strong>.</div></details></li>
+      <li><details><summary>[HT] A machine has a useful power output of 240 W from a total input power of 800 W. Find the efficiency.</summary><div class="ans">efficiency = 240 ÷ 800 = <strong>0.30 = 30%</strong>.</div></details></li>
+      <li><details><summary>Give one way to make an electric drill more efficient.</summary><div class="ans">Any sensible reduction of waste, e.g. <strong>lubricate the moving parts</strong> to reduce friction (so less energy is dissipated by heating).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="7">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 8 — NATIONAL & GLOBAL ENERGY RESOURCES (4.1.3)                    -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-8">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 08 · 4.1.3 · Energy resources</div>
+    <h2 class="lesson-title">Energy <em>resources</em></h2>
+    <p class="lesson-promise">Renewable vs non-renewable, what we use them for, and how to write a balanced evaluation — the no-maths topic that needs the most thinking.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Renewable vs non-renewable</h3>
+    <p>A <strong>non-renewable</strong> resource is finite — once used, it's gone on a human timescale. A <strong>renewable</strong> resource is replenished as fast as (or faster than) it's used.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <!-- non-renewable column -->
+        <rect x="40" y="40" width="220" height="150" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="150" y="64" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">NON-RENEWABLE</text>
+        <text x="150" y="92" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Coal</text>
+        <text x="150" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Oil</text>
+        <text x="150" y="136" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Natural gas</text>
+        <text x="150" y="158" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" fill="#1A1A1A">Nuclear fuel</text>
+        <!-- renewable column -->
+        <rect x="300" y="40" width="220" height="150" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="410" y="64" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">RENEWABLE</text>
+        <text x="410" y="86" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Solar · Wind · Hydro</text>
+        <text x="410" y="108" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Tidal · Waves</text>
+        <text x="410" y="130" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Geothermal</text>
+        <text x="410" y="152" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Bio-fuel</text>
+      </svg>
+      <div class="caption">The resources you need to know, sorted by type</div>
+    </div>
+
+    <p>The three main uses are <strong>transport</strong>, <strong>generating electricity</strong>, and <strong>heating</strong>. Most transport still relies on oil (petrol/diesel); electricity comes from a changing mix; heating uses gas, electricity and increasingly heat pumps.</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — common traps</h4>
+      <p><strong>Nuclear is non-renewable</strong> (uranium is finite) but it's <strong>low-carbon</strong> — don't confuse "renewable" with "clean". <strong>Bio-fuels are renewable</strong> and roughly carbon-neutral, but growing them uses land. "Renewable" does <em>not</em> mean "no environmental impact".</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Reliability, impact &amp; trends</h3>
+    <p><strong>Reliability:</strong> fossil fuels and nuclear can supply power on demand; tidal and geothermal are predictable; but wind and solar are <strong>intermittent</strong> — they only work when it's windy or sunny.</p>
+    <p><strong>Environmental impact:</strong> burning fossil fuels releases <strong>carbon dioxide</strong> (a greenhouse gas, driving climate change) and other pollutants; nuclear produces dangerous <strong>radioactive waste</strong> and carries a small risk of major accidents; wind farms, hydroelectric dams and tidal barrages affect habitats and landscapes.</p>
+    <p><strong>Trends:</strong> use of renewables is <strong>increasing</strong> as concern grows about climate change and as fossil fuels run low. But switching is slowed by cost, reliability and the scale of existing infrastructure. <em>Science can describe the options and consequences; the final decisions also involve economic, political, social and ethical factors.</em></p>
+
+    <div class="worked">
+      <h4>How to answer an "evaluate" question</h4>
+      <p class="q">"Evaluate the use of wind power for generating electricity." (How to structure it.)</p>
+      <div class="step"><span class="label">For</span><span class="v">Renewable, no CO₂ when running, low running costs.</span></div>
+      <div class="step"><span class="label">Against</span><span class="v">Intermittent (no wind = no power), visual/noise impact, high set-up cost.</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">Give a justified judgement — e.g. good as part of a mix, but needs backup for calm days.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which resource is non-renewable but does <em>not</em> release carbon dioxide when generating electricity?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Natural gas</span></li>
+        <li><span class="letter">B</span><span>Nuclear</span></li>
+        <li><span class="letter">C</span><span>Wind</span></li>
+        <li><span class="letter">D</span><span>Coal</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — Nuclear.</strong> Uranium is finite (so non-renewable), but the reactor releases no CO₂ in use. Its drawback is radioactive waste. Wind is low-carbon too, but it <em>is</em> renewable.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 8 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Give two non-renewable and two renewable energy resources.</summary><div class="ans">Non-renewable: any two of coal, oil, natural gas, nuclear fuel. Renewable: any two of solar, wind, hydroelectric, tidal, waves, geothermal, bio-fuel.</div></details></li>
+      <li><details><summary>Why are wind and solar described as unreliable?</summary><div class="ans">They are <strong>intermittent</strong> — they only generate when it's windy or sunny, so supply doesn't always match demand.</div></details></li>
+      <li><details><summary>State one environmental drawback of (a) fossil fuels and (b) nuclear power.</summary><div class="ans">(a) Burning releases <strong>CO₂</strong> and pollutants (climate change). (b) Produces <strong>radioactive waste</strong> and a risk of accidents.</div></details></li>
+      <li><details><summary>Why are decisions about energy resources not purely scientific?</summary><div class="ans">They also involve <strong>economic, political, social and ethical</strong> factors — science sets out the options and consequences, but people weigh up the trade-offs.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="8">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Paper 1 · P1 Energy</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'energy-gcse-p1-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=0a404d27-af38-4c89-883d-e3985da2d01a&amp;ref=interactive-science&amp;from=energy-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=energy-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inheritance, Variation &amp; Evolution (B6) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for B6 Inheritance, Variation & Evolution — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Paper 2 · B6 Inheritance, Variation &amp; Evolution</div>
+    <h1>Inheritance, <em>variation &amp; evolution.</em></h1>
+    <p class="tag">The whole of B6 — reproduction and meiosis, DNA and the genome, genetic crosses, variation and mutation, evolution by natural selection, the evidence for it, and how we classify life. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Reproduction &amp; meiosis</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">DNA &amp; the genome</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Genetic terms</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Genetic crosses</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Variation &amp; mutation</a>
+    <a href="#lesson-6" class="nav-pill" data-lesson="6">Evolution</a>
+    <a href="#lesson-7" class="nav-pill" data-lesson="7">Evidence &amp; extinction</a>
+    <a href="#lesson-8" class="nav-pill" data-lesson="8">Classification</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — SEXUAL & ASEXUAL REPRODUCTION; MEIOSIS  (4.6.1.1–4.6.1.2)     -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.6.1 · Reproduction &amp; meiosis</div>
+    <h2 class="lesson-title">Reproduction &amp; <em>meiosis</em></h2>
+    <p class="lesson-promise">By the end of this topic you'll tell sexual and asexual reproduction apart, and explain how meiosis halves the chromosome number and makes every gamete different.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Two ways to reproduce</h3>
+    <p><strong>Sexual reproduction</strong> involves the joining (fusion) of male and female <strong>gametes</strong>: the sperm and egg cell in animals, pollen and egg cells in flowering plants. Because there are two parents, the offspring get a <strong>mixture</strong> of genes from each — so they show <strong>variation</strong> and are not identical to either parent.</p>
+    <p><strong>Asexual reproduction</strong> involves only <strong>one parent</strong> and no gametes. There is no mixing of genetic information, so the offspring are <strong>genetically identical</strong> to the parent — they are <strong>clones</strong>. Only one type of cell division, <strong>mitosis</strong>, is involved.</p>
+
+    <div class="keywords">
+      <h4>Sexual vs asexual</h4>
+      <dl>
+        <dt>Gamete</dt><dd>A sex cell (sperm or egg) with half the normal number of chromosomes.</dd>
+        <dt>Fertilisation</dt><dd>The fusion of a male and a female gamete to form a fertilised egg.</dd>
+        <dt>Clone</dt><dd>An offspring genetically identical to its single parent.</dd>
+        <dt>Variation</dt><dd>Differences between individuals — produced by sexual reproduction.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">TWO WAYS TO REPRODUCE</text>
+        <!-- sexual panel -->
+        <rect x="30" y="36" width="240" height="184" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="150" y="58" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">SEXUAL — two parents</text>
+        <circle cx="95" cy="92" r="14" fill="#B85042"/>
+        <circle cx="205" cy="92" r="14" fill="#2C5F2D"/>
+        <text x="95" y="124" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">sperm</text>
+        <text x="205" y="124" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">egg</text>
+        <line x1="111" y1="92" x2="189" y2="92" stroke="#C8A24A" stroke-width="2"/>
+        <circle cx="150" cy="160" r="18" fill="#C8A24A"/>
+        <line x1="95" y1="106" x2="143" y2="146" stroke="#CFD8E3" stroke-width="1.5"/>
+        <line x1="205" y1="106" x2="157" y2="146" stroke="#CFD8E3" stroke-width="1.5"/>
+        <text x="150" y="200" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">offspring vary</text>
+        <!-- asexual panel -->
+        <rect x="290" y="36" width="240" height="184" rx="6" fill="#FCFAF4" stroke="#5C6370" stroke-width="2"/>
+        <text x="410" y="58" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#5C6370">ASEXUAL — one parent</text>
+        <circle cx="410" cy="92" r="16" fill="#B85042"/>
+        <line x1="410" y1="108" x2="410" y2="138" stroke="#C8A24A" stroke-width="2"/>
+        <polygon points="410,144 404,130 416,130" fill="#C8A24A"/>
+        <circle cx="368" cy="170" r="13" fill="#B85042"/>
+        <circle cx="410" cy="170" r="13" fill="#B85042"/>
+        <circle cx="452" cy="170" r="13" fill="#B85042"/>
+        <text x="410" y="206" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">identical clones</text>
+      </svg>
+      <div class="caption">Sexual mixes two parents' genes; asexual copies one parent exactly</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — asexual offspring are clones, not "similar"</h4>
+      <p>Offspring from asexual reproduction are <strong>genetically identical</strong> to the parent, not just alike — there is <strong>no genetic variation</strong> at all. Don't say sexual reproduction "needs two cells"; say it needs the <strong>fusion of two gametes</strong>. And remember plants and many organisms can do <em>both</em>: strawberry plants make seeds (sexual) <em>and</em> runners (asexual).</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Meiosis — making gametes</h3>
+    <p>Gametes are made by a special type of cell division called <strong>meiosis</strong>, which happens only in the reproductive organs (ovaries and testes). Your body cells each have <strong>23 pairs</strong> of chromosomes — that's the <strong>diploid</strong> number, 46. Meiosis <strong>halves</strong> this number so each gamete has just one of each pair — the <strong>haploid</strong> number, 23.</p>
+    <p>Here's why halving matters: when a sperm fertilises an egg, their chromosomes combine. Half plus half restores the full number, so the fertilised egg has 46 again. Meiosis also <strong>shuffles the genes</strong>, so all the gametes are genetically different — this is a major source of variation.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">MEIOSIS — ONE CELL → FOUR GAMETES</text>
+        <!-- parent cell -->
+        <circle cx="90" cy="120" r="34" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="80" y="104" width="6" height="32" rx="3" fill="#B85042"/>
+        <rect x="94" y="104" width="6" height="32" rx="3" fill="#2C5F2D"/>
+        <text x="90" y="180" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">cell (diploid)</text>
+        <text x="90" y="196" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">46 chromosomes</text>
+        <!-- arrow -->
+        <line x1="130" y1="120" x2="240" y2="120" stroke="#C8A24A" stroke-width="2"/>
+        <polygon points="246,120 232,114 232,126" fill="#C8A24A"/>
+        <text x="188" y="110" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">two divisions</text>
+        <!-- four gametes -->
+        <circle cx="320" cy="70" r="20" fill="#FCFAF4" stroke="#5C6370" stroke-width="1.5"/>
+        <rect x="317" y="62" width="6" height="16" rx="3" fill="#B85042"/>
+        <circle cx="320" cy="170" r="20" fill="#FCFAF4" stroke="#5C6370" stroke-width="1.5"/>
+        <rect x="317" y="162" width="6" height="16" rx="3" fill="#2C5F2D"/>
+        <circle cx="400" cy="70" r="20" fill="#FCFAF4" stroke="#5C6370" stroke-width="1.5"/>
+        <rect x="397" y="62" width="6" height="16" rx="3" fill="#2C5F2D"/>
+        <circle cx="400" cy="170" r="20" fill="#FCFAF4" stroke="#5C6370" stroke-width="1.5"/>
+        <rect x="397" y="62" width="6" height="16" rx="3" fill="#B85042"/>
+        <rect x="397" y="162" width="6" height="16" rx="3" fill="#B85042"/>
+        <text x="470" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">4 gametes</text>
+        <text x="470" y="132" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="700" fill="#1E2761">(haploid)</text>
+        <text x="470" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">23 each · all different</text>
+      </svg>
+      <div class="caption">Meiosis: chromosome number is halved, and four genetically different gametes form</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — meiosis vs mitosis</h4>
+      <p><strong>Meiosis</strong> makes gametes, halves the chromosome number, and produces <strong>four non-identical</strong> cells. <strong>Mitosis</strong> (from B1) makes body cells for growth and repair, keeps the number the <em>same</em>, and produces <strong>two identical</strong> cells. The names are nearly identical, so read the question twice.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A human body cell has 46 chromosomes. How many will be in a sperm cell, and why?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>46 — sperm are normal body cells</span></li>
+        <li><span class="letter">B</span><span>92 — the number doubles before fertilisation</span></li>
+        <li><span class="letter">C</span><span>23 — meiosis halves the number so fertilisation restores 46</span></li>
+        <li><span class="letter">D</span><span>23 — but only in males</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — 23.</strong> Gametes are made by meiosis, which <em>halves</em> the chromosome number. When two gametes fuse at fertilisation, 23 + 23 restores the full 46. That's true for eggs as well as sperm.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Give two differences between sexual and asexual reproduction.</summary><div class="ans">Sexual involves <strong>two parents</strong> and the <strong>fusion of gametes</strong>, giving offspring with <strong>variation</strong>. Asexual involves <strong>one parent</strong>, <strong>no gametes</strong>, and gives <strong>genetically identical clones</strong>.</div></details></li>
+      <li><details><summary>Where does meiosis take place and what does it produce?</summary><div class="ans">In the <strong>reproductive organs</strong> (ovaries and testes). It produces <strong>gametes</strong> (sex cells) with half the chromosome number.</div></details></li>
+      <li><details><summary>Why is it important that gametes have half the number of chromosomes?</summary><div class="ans">So that at <strong>fertilisation</strong> the two gametes combine to restore the full (diploid) number — the offspring isn't left with double the chromosomes.</div></details></li>
+      <li><details><summary>Name the type of cell division used in asexual reproduction.</summary><div class="ans"><strong>Mitosis</strong> — it copies the parent exactly, so the offspring are clones.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — DNA & THE GENOME  (4.6.1.3–4.6.1.4)                           -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.6.1 · DNA &amp; the genome</div>
+    <h2 class="lesson-title">DNA &amp; the <em>genome</em></h2>
+    <p class="lesson-promise">From the double helix down to a single gene — and why mapping the whole human genome matters.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>From DNA to gene to chromosome</h3>
+    <p>The genetic material in the nucleus of a cell is made of a chemical called <strong>DNA</strong>. DNA is a <strong>polymer</strong> made of two strands forming a <strong>double helix</strong> (a twisted ladder shape).</p>
+    <p>The DNA is contained in structures called <strong>chromosomes</strong>. A <strong>gene</strong> is a small section of DNA on a chromosome. Each gene <strong>codes for a particular sequence of amino acids</strong>, which join together to make a specific <strong>protein</strong>. Your proteins decide how your cells — and so your whole body — are built and work.</p>
+
+    <div class="keywords">
+      <h4>Three levels of organisation</h4>
+      <dl>
+        <dt>DNA</dt><dd>The chemical (a polymer) the whole code is written in; shaped as a double helix.</dd>
+        <dt>Gene</dt><dd>A short section of DNA that codes for one protein.</dd>
+        <dt>Chromosome</dt><dd>A long, coiled-up molecule of DNA carrying many genes.</dd>
+        <dt>Genome</dt><dd>The entire genetic material (all the DNA) of an organism.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">CELL → NUCLEUS → CHROMOSOME → GENE</text>
+        <!-- cell -->
+        <circle cx="80" cy="120" r="40" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="80" cy="120" r="16" fill="#C8A24A"/>
+        <text x="80" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">cell + nucleus</text>
+        <line x1="122" y1="120" x2="170" y2="120" stroke="#CFD8E3" stroke-width="1.5"/>
+        <!-- chromosome -->
+        <path d="M210 90 q14 30 0 60 M232 90 q-14 30 0 60" fill="none" stroke="#B85042" stroke-width="6" stroke-linecap="round"/>
+        <text x="221" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">chromosome</text>
+        <line x1="250" y1="120" x2="298" y2="120" stroke="#CFD8E3" stroke-width="1.5"/>
+        <!-- double helix (gene) -->
+        <path d="M330 86 C360 104 360 136 390 154 M330 154 C360 136 360 104 390 86" fill="none" stroke="#2C5F2D" stroke-width="3"/>
+        <line x1="338" y1="98" x2="382" y2="98" stroke="#5C6370" stroke-width="1.5"/>
+        <line x1="345" y1="120" x2="375" y2="120" stroke="#5C6370" stroke-width="1.5"/>
+        <line x1="338" y1="142" x2="382" y2="142" stroke="#5C6370" stroke-width="1.5"/>
+        <text x="360" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">gene = DNA</text>
+        <text x="360" y="194" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">double helix</text>
+        <!-- protein -->
+        <line x1="412" y1="120" x2="448" y2="120" stroke="#CFD8E3" stroke-width="1.5"/>
+        <circle cx="468" cy="106" r="9" fill="#C8A24A"/>
+        <circle cx="486" cy="120" r="9" fill="#C8A24A"/>
+        <circle cx="476" cy="138" r="9" fill="#C8A24A"/>
+        <text x="478" y="178" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">codes a protein</text>
+      </svg>
+      <div class="caption">A gene is a length of DNA that codes for a protein; chromosomes carry many genes</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — keep the words in order</h4>
+      <p>From biggest to smallest: <strong>genome → chromosome → gene → DNA base sequence</strong>. A gene is a <em>part of</em> a chromosome, not the other way round. And DNA codes for <strong>proteins</strong> (via sequences of amino acids) — not "characteristics" directly. The characteristics come from the proteins.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The genome and why it's useful</h3>
+    <p>The <strong>genome</strong> of an organism is its <strong>entire genetic material</strong>. The whole human genome has now been studied, and this has had a big impact on medicine and biology. You need three reasons why understanding it is important:</p>
+    <p>It lets scientists <strong>search for genes linked to different diseases</strong>; it helps in <strong>understanding and treating inherited disorders</strong>; and it is used to <strong>trace human migration patterns</strong> from the past.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which statement correctly defines the genome?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>A single gene that controls one characteristic</span></li>
+        <li><span class="letter">B</span><span>The entire genetic material of an organism</span></li>
+        <li><span class="letter">C</span><span>One pair of chromosomes</span></li>
+        <li><span class="letter">D</span><span>The proteins made by a cell</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> The genome is <em>all</em> the DNA of an organism — every chromosome and every gene. A is a single gene, C is just one pair of chromosomes, and D mixes up the code (DNA) with the product (proteins).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Describe the structure of DNA.</summary><div class="ans">DNA is a <strong>polymer</strong> made of <strong>two strands</strong> coiled into a <strong>double helix</strong>. It is contained in chromosomes.</div></details></li>
+      <li><details><summary>What is a gene?</summary><div class="ans">A <strong>small section of DNA</strong> on a chromosome that codes for a <strong>particular sequence of amino acids</strong>, which makes a specific <strong>protein</strong>.</div></details></li>
+      <li><details><summary>Define the term "genome".</summary><div class="ans">The <strong>entire genetic material</strong> (all the DNA) of an organism.</div></details></li>
+      <li><details><summary>Give two reasons understanding the human genome is important.</summary><div class="ans">Any two of: <strong>finding genes linked to diseases</strong>, <strong>understanding and treating inherited disorders</strong>, and <strong>tracing human migration</strong> in the past.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — GENETIC TERMS  (4.6.1.5)                                      -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.6.1.5 · Genetic vocabulary</div>
+    <h2 class="lesson-title">The <em>language</em> of genetics</h2>
+    <p class="lesson-promise">Genotype, phenotype, dominant, recessive — get these words exact and the rest of B6 falls into place.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The words you must know cold</h3>
+    <p>Most characteristics are controlled by many genes working together, but some are controlled by a <strong>single gene</strong> — and those are the ones used in exam crosses. To handle them you need a precise vocabulary.</p>
+    <p>Different versions of the same gene are called <strong>alleles</strong>. You have two of each gene — one inherited from each parent — so you have two alleles for each characteristic. A <strong>dominant</strong> allele is always expressed even if only one copy is present; a <strong>recessive</strong> allele is only expressed if <strong>two copies</strong> are present (no dominant allele to mask it).</p>
+
+    <div class="keywords">
+      <h4>The core vocabulary</h4>
+      <dl>
+        <dt>Gene</dt><dd>A section of DNA coding for a protein / characteristic.</dd>
+        <dt>Allele</dt><dd>A different version (form) of the same gene.</dd>
+        <dt>Dominant</dt><dd>Expressed even with just one copy — written as a CAPITAL letter (e.g. B).</dd>
+        <dt>Recessive</dt><dd>Only expressed when both alleles are recessive — written lower case (e.g. b).</dd>
+        <dt>Homozygous</dt><dd>Two of the <em>same</em> allele (BB or bb).</dd>
+        <dt>Heterozygous</dt><dd>Two <em>different</em> alleles (Bb).</dd>
+        <dt>Genotype</dt><dd>The combination of alleles an organism has (e.g. Bb).</dd>
+        <dt>Phenotype</dt><dd>The characteristic you actually see (e.g. brown eyes).</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">GENOTYPE → PHENOTYPE</text>
+        <!-- BB -->
+        <rect x="40" y="44" width="140" height="60" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="110" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="20" font-weight="700" fill="#1E2761">BB</text>
+        <text x="110" y="124" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">homozygous dominant</text>
+        <text x="110" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">brown eyes</text>
+        <!-- Bb -->
+        <rect x="210" y="44" width="140" height="60" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="280" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="20" font-weight="700" fill="#1E2761">Bb</text>
+        <text x="280" y="124" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">heterozygous</text>
+        <text x="280" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">brown eyes</text>
+        <!-- bb -->
+        <rect x="380" y="44" width="140" height="60" rx="6" fill="#FCFAF4" stroke="#5C6370" stroke-width="2"/>
+        <text x="450" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="20" font-weight="700" fill="#5C6370">bb</text>
+        <text x="450" y="124" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">homozygous recessive</text>
+        <text x="450" y="160" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">blue eyes</text>
+        <text x="280" y="194" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">One dominant allele is enough to give the dominant phenotype.</text>
+      </svg>
+      <div class="caption">Genotype is the alleles; phenotype is the feature you see</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — genotype vs phenotype</h4>
+      <p><strong>Genotype</strong> = the alleles (the letters, e.g. Bb). <strong>Phenotype</strong> = the physical characteristic (e.g. brown eyes). Notice that <strong>BB and Bb give the same phenotype</strong> — you can't always tell the genotype just by looking. A recessive characteristic only appears when the genotype is <strong>homozygous recessive</strong> (bb).</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">An organism has the genotype Tt. Which terms correctly describe it?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Homozygous, shows the recessive characteristic</span></li>
+        <li><span class="letter">B</span><span>Heterozygous, shows the dominant characteristic</span></li>
+        <li><span class="letter">C</span><span>Heterozygous, shows the recessive characteristic</span></li>
+        <li><span class="letter">D</span><span>Homozygous dominant</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Tt has two <em>different</em> alleles, so it's <strong>heterozygous</strong>. Because T (dominant) is present, the <strong>dominant</strong> characteristic is shown — the recessive t is masked.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is an allele?</summary><div class="ans">A <strong>different version (form) of the same gene</strong>.</div></details></li>
+      <li><details><summary>Explain the difference between homozygous and heterozygous.</summary><div class="ans"><strong>Homozygous</strong> = two of the same allele (BB or bb). <strong>Heterozygous</strong> = two different alleles (Bb).</div></details></li>
+      <li><details><summary>A recessive characteristic only shows when the genotype is…?</summary><div class="ans"><strong>Homozygous recessive</strong> (e.g. bb) — there must be no dominant allele to mask it.</div></details></li>
+      <li><details><summary>Define genotype and phenotype.</summary><div class="ans"><strong>Genotype</strong> = the combination of alleles present. <strong>Phenotype</strong> = the characteristic that is actually expressed (what you see).</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — GENETIC CROSSES  (4.6.1.5–4.6.1.6)                            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.6.1.6 · Genetic crosses</div>
+    <h2 class="lesson-title">Punnett squares &amp; <em>inherited disorders</em></h2>
+    <p class="lesson-promise">Draw the grid, read off the ratios, and apply it to two real disorders and to how sex is decided.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>How to do a genetic cross</h3>
+    <p>A <strong>Punnett square</strong> predicts the offspring of a cross. Each parent puts <strong>one allele</strong> into each gamete (they're haploid, remember). The grid pairs every possible egg with every possible sperm, showing the genotypes the offspring could have, and in what ratio.</p>
+
+    <div class="worked">
+      <h4>Worked example — a monohybrid cross</h4>
+      <p class="q">Both parents are heterozygous for a trait (Bb × Bb), where B (brown) is dominant over b (blue). Predict the offspring.</p>
+      <div class="step"><span class="label">Gametes</span><span class="v">Each parent can pass on B or b.</span></div>
+      <div class="step"><span class="label">Grid</span><span class="v">Bb × Bb → BB, Bb, Bb, bb</span></div>
+      <div class="step"><span class="label">Genotype</span><span class="v">1 BB : 2 Bb : 1 bb</span></div>
+      <div class="step answer"><span class="label">Phenotype</span><span class="v">3 brown : 1 blue  (a 75% / 25% chance)</span></div>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PUNNETT SQUARE — Bb × Bb</text>
+        <!-- parent labels -->
+        <text x="300" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#5C6370">B</text>
+        <text x="400" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#5C6370">b</text>
+        <text x="210" y="115" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#5C6370">B</text>
+        <text x="210" y="190" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#5C6370">b</text>
+        <!-- grid -->
+        <rect x="250" y="70" width="100" height="75" fill="#F4DAD7" stroke="#1E2761" stroke-width="2"/>
+        <rect x="350" y="70" width="100" height="75" fill="#F4DAD7" stroke="#1E2761" stroke-width="2"/>
+        <rect x="250" y="145" width="100" height="75" fill="#F4DAD7" stroke="#1E2761" stroke-width="2"/>
+        <rect x="350" y="145" width="100" height="75" fill="#DDEBDD" stroke="#1E2761" stroke-width="2"/>
+        <text x="300" y="115" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="18" font-weight="700" fill="#1E2761">BB</text>
+        <text x="400" y="115" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="18" font-weight="700" fill="#1E2761">Bb</text>
+        <text x="300" y="190" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="18" font-weight="700" fill="#1E2761">Bb</text>
+        <text x="400" y="190" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="18" font-weight="700" fill="#2C5F2D">bb</text>
+        <!-- key -->
+        <rect x="40" y="80" width="16" height="16" fill="#F4DAD7" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="64" y="93" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">brown (3)</text>
+        <rect x="40" y="110" width="16" height="16" fill="#DDEBDD" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="64" y="123" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">blue (1)</text>
+      </svg>
+      <div class="caption">3 brown : 1 blue — the classic ratio from two heterozygous parents</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — ratios are probabilities</h4>
+      <p>A 3 : 1 ratio means each offspring has a <strong>75% chance</strong> of brown, not that 3 of every 4 babies <em>will</em> be brown. Real families are small, so the actual numbers can differ — it's a <strong>probability</strong>. You can give the answer as a ratio, a fraction, a percentage or a decimal.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Inherited disorders</h3>
+    <p>Some disorders are caused by the inheritance of certain alleles. You need two:</p>
+    <p><strong>Polydactyly</strong> (having extra fingers or toes) is caused by a <strong>dominant</strong> allele — so a child can inherit it from just <strong>one</strong> affected parent. <strong>Cystic fibrosis</strong> (a disorder of cell membranes affecting the lungs and digestion) is caused by a <strong>recessive</strong> allele — so a child must inherit <strong>two</strong> copies, one from each parent, to have it. A person with just one recessive allele is a <strong>carrier</strong>: unaffected, but able to pass it on.</p>
+
+    <div class="worked">
+      <h4>Worked example — two carrier parents (cystic fibrosis)</h4>
+      <p class="q">Both parents are carriers of cystic fibrosis (Ff), where f is the recessive faulty allele. What is the chance a child is affected?</p>
+      <div class="step"><span class="label">Cross</span><span class="v">Ff × Ff → FF, Ff, Ff, ff</span></div>
+      <div class="step"><span class="label">Affected</span><span class="v">Only ff has the disorder (needs two recessive alleles).</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">1 in 4 = 25% chance affected (and 2 in 4 are carriers)</span></div>
+    </div>
+
+    <p><strong>Embryo screening:</strong> embryos made by IVF can be tested for the alleles that cause genetic disorders. This raises <strong>economic, social and ethical</strong> issues you may be asked to discuss — for example the cost, whether it is right to choose embryos, and worries about where "screening out" disorders might lead.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A child has cystic fibrosis but neither parent has the disorder. What does this tell you about the parents?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Both parents must be carriers (Ff)</span></li>
+        <li><span class="letter">B</span><span>One parent has the disorder</span></li>
+        <li><span class="letter">C</span><span>The allele is dominant</span></li>
+        <li><span class="letter">D</span><span>It must be a new mutation in the child</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A.</strong> The child is ff, so each parent gave one f allele. Since neither parent is affected, each must be <strong>Ff — a carrier</strong>. The allele is recessive (a dominant disorder, like polydactyly, would show in a parent).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Sex determination</h3>
+    <p>Of your 23 pairs of chromosomes, <strong>22 pairs</strong> control your ordinary characteristics. The <strong>23rd pair</strong> are the <strong>sex chromosomes</strong>. In females they are the same, <strong>XX</strong>; in males they are different, <strong>XY</strong>.</p>
+    <p>All eggs carry an <strong>X</strong>. Sperm carry <strong>either an X or a Y</strong>. So the sperm decides the sex of the child — and a Punnett square shows a <strong>50 : 50</strong> ratio of males to females.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 226" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SEX DETERMINATION — XX × XY</text>
+        <text x="300" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#5C6370">X (egg)</text>
+        <text x="400" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="700" fill="#5C6370">X (egg)</text>
+        <text x="205" y="113" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#5C6370">X sperm</text>
+        <text x="205" y="188" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" font-weight="700" fill="#5C6370">Y sperm</text>
+        <rect x="250" y="68" width="100" height="75" fill="#F4DAD7" stroke="#1E2761" stroke-width="2"/>
+        <rect x="350" y="68" width="100" height="75" fill="#F4DAD7" stroke="#1E2761" stroke-width="2"/>
+        <rect x="250" y="143" width="100" height="75" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="350" y="143" width="100" height="75" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="300" y="105" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" font-weight="700" fill="#B85042">XX</text>
+        <text x="400" y="105" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" font-weight="700" fill="#B85042">XX</text>
+        <text x="300" y="180" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" font-weight="700" fill="#1E2761">XY</text>
+        <text x="400" y="180" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" font-weight="700" fill="#1E2761">XY</text>
+        <text x="300" y="133" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">female</text>
+        <text x="400" y="133" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">female</text>
+        <text x="300" y="208" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">male</text>
+        <text x="400" y="208" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#5C6370">male</text>
+      </svg>
+      <div class="caption">Two XX (female) : two XY (male) — a 50 : 50 ratio</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Which gamete determines the sex of a baby, and why?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The egg — it can carry X or Y</span></li>
+        <li><span class="letter">B</span><span>The sperm — it can carry X or Y</span></li>
+        <li><span class="letter">C</span><span>Both equally, as both carry X or Y</span></li>
+        <li><span class="letter">D</span><span>Neither — sex is set after birth</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — the sperm.</strong> All eggs carry an X. Sperm carry <em>either</em> an X or a Y, so it's the sperm that decides whether the child is XX (female) or XY (male).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Two heterozygous tall pea plants (Tt) are crossed. T (tall) is dominant. State the phenotype ratio of the offspring.</summary><div class="ans">Tt × Tt → 1 TT : 2 Tt : 1 tt, giving <strong>3 tall : 1 short</strong>.</div></details></li>
+      <li><details><summary>Is polydactyly caused by a dominant or recessive allele?</summary><div class="ans"><strong>Dominant</strong> — so it can be inherited from just one affected parent.</div></details></li>
+      <li><details><summary>Why must a child inherit two recessive alleles to have cystic fibrosis?</summary><div class="ans">The allele is <strong>recessive</strong>, so it is only expressed when there is <strong>no dominant allele</strong> to mask it — the genotype must be homozygous recessive.</div></details></li>
+      <li><details><summary>What are the sex chromosomes of a typical female and a typical male?</summary><div class="ans">Female = <strong>XX</strong>; male = <strong>XY</strong>.</div></details></li>
+      <li><details><summary>A 3 : 1 ratio is predicted, but a family has four affected children. Explain.</summary><div class="ans">The ratio is a <strong>probability</strong> for each child, not a guarantee. With small numbers the actual outcome can differ from the predicted ratio.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — VARIATION & MUTATION  (4.6.2.1)                               -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.6.2.1 · Variation &amp; mutation</div>
+    <h2 class="lesson-title">Variation &amp; <em>mutation</em></h2>
+    <p class="lesson-promise">Where differences between individuals come from — your genes, your environment, or both — and what a mutation actually does.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Three causes of variation</h3>
+    <p>The differences in the characteristics of individuals in a population are called <strong>variation</strong>. There are three causes you need:</p>
+    <p><strong>Genetic</strong> variation comes from differences in the genes (alleles) you inherit — e.g. natural eye colour or blood group. <strong>Environmental</strong> variation comes from the conditions you grow up in — e.g. a scar, a sun tan, or a language you speak. Most variation is caused by a <strong>combination of genes and the environment</strong> — e.g. your height (set partly by genes, partly by your diet).</p>
+
+    <div class="keywords">
+      <h4>Causes of variation</h4>
+      <dl>
+        <dt>Genetic</dt><dd>Caused by the alleles inherited from your parents.</dd>
+        <dt>Environmental</dt><dd>Caused by the conditions an organism lives or develops in.</dd>
+        <dt>Both</dt><dd>Most characteristics — genes set a range, the environment fills it in.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WHAT CAUSES THE VARIATION?</text>
+        <!-- genetic -->
+        <rect x="30" y="40" width="150" height="120" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="105" y="64" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">GENETIC</text>
+        <text x="105" y="92" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">blood group</text>
+        <text x="105" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">natural eye colour</text>
+        <text x="105" y="142" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">genes only</text>
+        <!-- both -->
+        <rect x="205" y="40" width="150" height="120" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+        <text x="280" y="64" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">BOTH</text>
+        <text x="280" y="92" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">height</text>
+        <text x="280" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">body mass</text>
+        <text x="280" y="142" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">genes + environment</text>
+        <!-- environmental -->
+        <rect x="380" y="40" width="150" height="120" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="455" y="64" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">ENVIRONMENTAL</text>
+        <text x="455" y="92" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">a scar</text>
+        <text x="455" y="114" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">a sun tan</text>
+        <text x="455" y="142" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">environment only</text>
+      </svg>
+      <div class="caption">Three sources of variation — most features sit in the middle box</div>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Mutation</h3>
+    <p>There is usually <strong>extensive genetic variation</strong> within a population of a species, and it is constantly being added to by <strong>mutations</strong>. A mutation is a <strong>random change in the DNA</strong> (the base sequence). Mutations occur continuously.</p>
+    <p>Most mutations have <strong>no effect</strong> on the phenotype; some influence it <strong>a little</strong>; and very rarely a single mutation will significantly affect the phenotype. Very occasionally a mutation produces a new characteristic that is <strong>beneficial</strong> — and this is the raw material that <strong>natural selection</strong> acts on (Topic 6).</p>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — mutations are random, not "for a reason"</h4>
+      <p>Mutations are <strong>random changes</strong> — they don't happen <em>because</em> an organism needs them. Most do nothing; only rarely is one beneficial (or harmful). Don't write that an animal "developed" a feature because it wanted or needed it — the variation appears first by chance, then natural selection does the choosing.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A pair of identical twins are raised in different countries; one is much taller. What kind of variation is this difference?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Purely genetic — twins have different genes</span></li>
+        <li><span class="letter">B</span><span>Environmental — same genes, so the difference is from their surroundings (e.g. diet)</span></li>
+        <li><span class="letter">C</span><span>Caused by a mutation in one twin</span></li>
+        <li><span class="letter">D</span><span>Impossible — identical twins are always the same height</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — environmental.</strong> Identical twins have the <em>same</em> genes, so any difference between them must come from the <strong>environment</strong> (here, most likely diet). Height is normally a "both" trait, but when the genes are identical, the genetic part is removed.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Name the three causes of variation.</summary><div class="ans"><strong>Genetic</strong> (the alleles inherited), <strong>environmental</strong> (the conditions lived in), and a <strong>combination of both</strong>.</div></details></li>
+      <li><details><summary>What is a mutation?</summary><div class="ans">A <strong>random change in the DNA</strong> (the base sequence). Mutations occur continuously.</div></details></li>
+      <li><details><summary>Describe the usual effect of a mutation on the phenotype.</summary><div class="ans">Most have <strong>no effect</strong>; some change it a little; very rarely a single mutation significantly changes the phenotype.</div></details></li>
+      <li><details><summary>Give one example each of genetic-only and environmental-only variation.</summary><div class="ans">Genetic-only: e.g. <strong>blood group</strong> or natural eye colour. Environmental-only: e.g. a <strong>scar</strong>, a sun tan, or a spoken accent.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 6 — EVOLUTION BY NATURAL SELECTION  (4.6.2.2–4.6.2.5)             -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-6">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 06 · 4.6.2 · Evolution &amp; selective breeding</div>
+    <h2 class="lesson-title">Evolution by <em>natural selection</em></h2>
+    <p class="lesson-promise">Darwin's big idea in four clean steps — plus the ways humans steer it through selective breeding and genetic engineering.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Darwin's theory</h3>
+    <p><strong>Evolution</strong> is a change in the inherited characteristics of a population over time, through a process of <strong>natural selection</strong>, which may result in the formation of a new species. The theory was proposed by <strong>Charles Darwin</strong> after the observations he made on his round-the-world voyage. Learn it as four steps:</p>
+    <p><strong>1. Variation</strong> — individuals in a species show variation (from mutations). <strong>2. Competition &amp; survival</strong> — those with characteristics best <strong>suited (adapted)</strong> to the environment are more likely to <strong>survive</strong> and breed. <strong>3. Inheritance</strong> — the survivors <strong>pass on</strong> their successful alleles to their offspring. <strong>4. Change over time</strong> — over many generations the helpful alleles become more common, so the species gradually changes.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">NATURAL SELECTION — FOUR STEPS</text>
+        <rect x="20" y="60" width="120" height="100" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="80" y="86" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">1</text>
+        <text x="80" y="112" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">variation</text>
+        <text x="80" y="132" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">exists</text>
+        <rect x="160" y="60" width="120" height="100" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="220" y="86" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">2</text>
+        <text x="220" y="112" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">best suited</text>
+        <text x="220" y="132" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">survive</text>
+        <rect x="300" y="60" width="120" height="100" rx="6" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="360" y="86" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">3</text>
+        <text x="360" y="112" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">pass on</text>
+        <text x="360" y="132" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">alleles</text>
+        <rect x="440" y="60" width="120" height="100" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="500" y="86" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#B85042">4</text>
+        <text x="500" y="112" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">species</text>
+        <text x="500" y="132" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">changes</text>
+        <text x="150" y="115" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" fill="#C8A24A">→</text>
+        <text x="290" y="115" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" fill="#C8A24A">→</text>
+        <text x="430" y="115" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" fill="#C8A24A">→</text>
+        <text x="280" y="200" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Repeat over many generations → the population evolves.</text>
+      </svg>
+      <div class="caption">Natural selection: variation, survival of the best-suited, inheritance, change</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — organisms don't choose to adapt</h4>
+      <p>Animals don't "try to" change or grow features because they need them. The variation appears <strong>first, by random mutation</strong>; the environment then <strong>selects</strong> the individuals that happen to be best suited. Say "better adapted individuals were <strong>more likely to survive and reproduce</strong>", not "they evolved longer necks to reach the leaves".</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Selective breeding</h3>
+    <p><strong>Selective breeding</strong> (artificial selection) is when humans breed plants and animals for <strong>chosen useful characteristics</strong>. It's the same idea as natural selection, but <strong>we</strong> do the choosing. The steps: <strong>choose</strong> parents with the desired feature → <strong>breed</strong> them together → <strong>select</strong> the best offspring → <strong>repeat over many generations</strong> until all the offspring show the feature.</p>
+    <p>We selectively breed for things like cows that give more milk, disease-resistant crops, dogs with a gentle nature, and large or unusual flowers. The drawback is <strong>inbreeding</strong>: closely related organisms share alleles, so there is <strong>reduced variation</strong>. This can make a whole breed prone to the same <strong>disease</strong> or <strong>inherited defect</strong>.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">What is the main problem caused by repeated selective breeding (inbreeding)?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It speeds up random mutation</span></li>
+        <li><span class="letter">B</span><span>It reduces variation, so a breed is more prone to disease or defects</span></li>
+        <li><span class="letter">C</span><span>It always produces clones</span></li>
+        <li><span class="letter">D</span><span>It changes the animal's DNA directly with enzymes</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Breeding close relatives over and over reduces the gene pool, so there's <strong>less genetic variation</strong>. That can leave a whole breed vulnerable to the same <strong>disease</strong> or <strong>inherited defect</strong>. (D describes genetic engineering, not selective breeding.)</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Genetic engineering</h3>
+    <p><strong>Genetic engineering</strong> is a process that <strong>changes the genome</strong> of an organism by transferring a <strong>gene</strong> for a desired characteristic from one organism to another. Plant crops have been engineered to be <strong>resistant to disease, insects or herbicides</strong>, or to produce <strong>bigger, better fruits</strong>. Crops that have had their genes modified are called <strong>genetically modified (GM)</strong> crops. Bacteria have been engineered to produce useful substances such as <strong>human insulin</strong> to treat diabetes.</p>
+    <p>You should be able to weigh up the <strong>benefits and risks</strong>. <strong>Benefits:</strong> bigger yields, more nutritious food, and medicines like insulin. <strong>Concerns:</strong> some worry about effects on populations of <strong>wild flowers and insects</strong>, and about long-term <strong>effects on human health</strong> that may not yet be known. As with embryo screening, these involve ethical as well as scientific issues.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SELECTIVE BREEDING vs GENETIC ENGINEERING</text>
+        <!-- selective breeding -->
+        <rect x="30" y="44" width="230" height="130" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+        <text x="145" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">SELECTIVE BREEDING</text>
+        <text x="145" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">choose &amp; breed parents</text>
+        <text x="145" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">over many generations</text>
+        <text x="145" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">slow · whole organisms</text>
+        <!-- genetic engineering -->
+        <rect x="300" y="44" width="230" height="130" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="415" y="68" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">GENETIC ENGINEERING</text>
+        <text x="415" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">transfer a single gene</text>
+        <text x="415" y="118" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">into another organism</text>
+        <text x="415" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">fast · direct to the genome</text>
+      </svg>
+      <div class="caption">Both change characteristics — one by choosing parents, one by moving a gene</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Bacteria are altered to make human insulin. Which process is this, and what is changed?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Selective breeding — choosing the best bacteria to breed</span></li>
+        <li><span class="letter">B</span><span>Natural selection — the bacteria adapt to make insulin</span></li>
+        <li><span class="letter">C</span><span>Genetic engineering — a gene is transferred into the bacteria's genome</span></li>
+        <li><span class="letter">D</span><span>Mutation — a random change makes insulin</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — genetic engineering.</strong> The human insulin <em>gene</em> is transferred into the bacterium, changing its <strong>genome</strong> so it makes the protein. This is direct gene transfer, not breeding or chance.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 6 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>Define evolution.</summary><div class="ans">A <strong>change in the inherited characteristics of a population over time</strong>, through natural selection, which may result in the formation of a new species.</div></details></li>
+      <li><details><summary>Outline the steps of natural selection.</summary><div class="ans"><strong>Variation</strong> exists → the best-<strong>adapted</strong> individuals <strong>survive and breed</strong> → they <strong>pass on</strong> their alleles → over generations the population <strong>changes</strong>.</div></details></li>
+      <li><details><summary>What is selective breeding?</summary><div class="ans">Humans <strong>choosing and breeding</strong> plants/animals with desired characteristics over many generations (artificial selection).</div></details></li>
+      <li><details><summary>State one benefit and one risk of genetically modified crops.</summary><div class="ans">Benefit: e.g. <strong>higher yield</strong>, disease/insect resistance, or more nutritious food. Risk: e.g. possible effects on <strong>wild flowers and insects</strong>, or uncertain effects on <strong>human health</strong>.</div></details></li>
+      <li><details><summary>Give one disadvantage of selective breeding.</summary><div class="ans"><strong>Inbreeding</strong> reduces variation, making a breed more prone to the same <strong>disease or inherited defect</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="6">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 7 — EVIDENCE & EXTINCTION  (4.6.3.1–4.6.3.4)                      -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-7">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 07 · 4.6.3 · Evidence &amp; extinction</div>
+    <h2 class="lesson-title">Evidence &amp; <em>extinction</em></h2>
+    <p class="lesson-promise">The fossils that record the past, the fast-evolving bacteria you can watch today, and what tips a species over the edge.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Evidence from fossils</h3>
+    <p><strong>Fossils</strong> are the remains of organisms from millions of years ago, found in rocks. They form in several ways: from <strong>parts of organisms that have not decayed</strong> (because one or more conditions for decay were absent), when parts of the organism are <strong>replaced by minerals</strong> as they decay, and as <strong>preserved traces</strong> of organisms — such as footprints, burrows and rootlet traces.</p>
+    <p>Fossils let scientists see how organisms have <strong>changed over time</strong> — strong evidence for evolution. But we can't be certain how life <strong>began</strong>, because many early organisms were <strong>soft-bodied</strong> (so left few fossils) and many fossils have been <strong>destroyed by geological activity</strong>. The fossil record is therefore <strong>incomplete</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">FOSSILS IN ROCK LAYERS (STRATA)</text>
+        <!-- strata -->
+        <rect x="80" y="40" width="400" height="30" fill="#EDF2FA" stroke="#CFD8E3" stroke-width="1"/>
+        <rect x="80" y="70" width="400" height="30" fill="#F2E6BD" stroke="#CFD8E3" stroke-width="1"/>
+        <rect x="80" y="100" width="400" height="30" fill="#DDEBDD" stroke="#CFD8E3" stroke-width="1"/>
+        <rect x="80" y="130" width="400" height="30" fill="#F4DAD7" stroke="#CFD8E3" stroke-width="1"/>
+        <!-- fossils -->
+        <circle cx="160" cy="55" r="7" fill="#1E2761"/>
+        <circle cx="260" cy="85" r="9" fill="#1E2761"/>
+        <circle cx="360" cy="115" r="11" fill="#1E2761"/>
+        <circle cx="200" cy="145" r="13" fill="#1E2761"/>
+        <!-- age arrow -->
+        <line x1="500" y1="48" x2="500" y2="152" stroke="#B85042" stroke-width="2"/>
+        <polygon points="500,158 494,144 506,144" fill="#B85042"/>
+        <text x="516" y="60" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">newer</text>
+        <text x="516" y="150" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#5C6370">older</text>
+        <text x="280" y="186" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">Deeper layers are older — fossils record change through time.</text>
+      </svg>
+      <div class="caption">Lower (older) strata hold earlier organisms; the record shows gradual change</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — "incomplete", not "wrong"</h4>
+      <p>The fossil record having gaps does <strong>not</strong> mean evolution is unproven. The gaps exist because soft-bodied early life rarely fossilised and many fossils were destroyed — not because the evidence is faulty. Fossils still give clear evidence that organisms have <strong>changed over time</strong>.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Antibiotic-resistant bacteria</h3>
+    <p>Bacteria evolve fast because they reproduce quickly, so we can watch natural selection happen in real time. <strong>Antibiotic-resistant bacteria</strong> are evolution in action. By chance, a random <strong>mutation</strong> makes a few bacteria resistant to an antibiotic. When the antibiotic is used, the non-resistant bacteria are killed but the <strong>resistant ones survive and reproduce</strong>, passing the resistance allele on. Soon the whole population is resistant. A well-known example is <strong>MRSA</strong>.</p>
+    <p>To slow this down: doctors should <strong>not over-prescribe</strong> antibiotics (and not use them for viral infections), and patients should <strong>complete the full course</strong> so that all the bacteria are killed and none survive to breed.</p>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why does stopping an antibiotic course early help resistance spread?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>The antibiotic causes new mutations</span></li>
+        <li><span class="letter">B</span><span>The most resistant bacteria survive and reproduce, passing on resistance</span></li>
+        <li><span class="letter">C</span><span>Bacteria choose to become resistant when threatened</span></li>
+        <li><span class="letter">D</span><span>The body stops making white blood cells</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Stopping early leaves the <em>most resistant</em> bacteria alive. They survive and <strong>reproduce</strong>, passing the resistance allele to the next generation — natural selection in fast-forward. The antibiotic <em>selects</em>; it doesn't cause the mutation.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 3</span>Extinction</h3>
+    <p><strong>Extinction</strong> means there are <strong>no remaining individuals of a species</strong> still alive. A species becomes extinct when it can no longer survive the conditions it faces. The factors that can cause extinction include:</p>
+    <p>A <strong>new predator</strong>, a <strong>new disease</strong>, a <strong>new (more successful) competitor</strong>, a <strong>change in the environment</strong> (e.g. climate change), a <strong>single catastrophic event</strong> (such as a volcanic eruption or a collision with an asteroid), and the <strong>destruction of habitats</strong>.</p>
+
+    <div class="keywords">
+      <h4>Causes of extinction</h4>
+      <dl>
+        <dt>New predator / disease / competitor</dt><dd>The species is out-eaten, infected, or out-competed.</dd>
+        <dt>Environmental change</dt><dd>Conditions change faster than the species can adapt.</dd>
+        <dt>Catastrophic event</dt><dd>A volcanic eruption or asteroid strike wipes the species out.</dd>
+      </dl>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">What does it mean for a species to be extinct?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Its numbers are falling but some survive</span></li>
+        <li><span class="letter">B</span><span>There are no remaining individuals of that species alive</span></li>
+        <li><span class="letter">C</span><span>It has evolved into a new species</span></li>
+        <li><span class="letter">D</span><span>It lives only in zoos</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Extinction means <em>no</em> individuals of the species remain alive anywhere. A is "endangered", not extinct.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 7 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Give two ways a fossil can form.</summary><div class="ans">Any two of: from <strong>parts that didn't decay</strong> (a condition for decay was missing), from parts <strong>replaced by minerals</strong>, or as <strong>traces</strong> such as footprints and burrows.</div></details></li>
+      <li><details><summary>Why can't scientists be sure how life on Earth began?</summary><div class="ans">Many early organisms were <strong>soft-bodied</strong> and left few fossils, and many fossils were <strong>destroyed by geological activity</strong> — so the fossil record is <strong>incomplete</strong>.</div></details></li>
+      <li><details><summary>Explain how a population of bacteria becomes antibiotic-resistant.</summary><div class="ans">A random <strong>mutation</strong> makes some bacteria resistant; the antibiotic kills the rest; the <strong>resistant ones survive and reproduce</strong>, passing on the resistance — natural selection.</div></details></li>
+      <li><details><summary>Give three factors that could cause a species to become extinct.</summary><div class="ans">Any three of: new <strong>predator</strong>, new <strong>disease</strong>, new <strong>competitor</strong>, <strong>environmental change</strong>, a <strong>catastrophic event</strong>, or <strong>habitat destruction</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="7">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 8 — CLASSIFICATION  (4.6.4)                                       -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-8">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 08 · 4.6.4 · Classification</div>
+    <h2 class="lesson-title">Classifying <em>living things</em></h2>
+    <p class="lesson-promise">From Linnaeus's tidy kingdoms to the three domains revealed by modern DNA — and the naming system you still use today.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The Linnaean system</h3>
+    <p>Long before we knew about DNA, the scientist <strong>Carl Linnaeus</strong> classified living things into groups based on their <strong>structure and characteristics</strong>. In the <strong>Linnaean system</strong>, organisms are divided into a <strong>kingdom</strong>, then increasingly small groups: <strong>kingdom → phylum → class → order → family → genus → species</strong>.</p>
+    <p>Organisms are named by the <strong>binomial system</strong>, using two Latin words: the <strong>genus</strong> (with a capital letter) and the <strong>species</strong> (lower case) — for example <em>Homo sapiens</em>. This gives every species a single, internationally agreed name.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">THE LINNAEAN GROUPS (BIG → SMALL)</text>
+        <rect x="80" y="34" width="400" height="24" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="51" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Kingdom</text>
+        <rect x="110" y="62" width="340" height="24" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="79" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Phylum</text>
+        <rect x="140" y="90" width="280" height="24" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="107" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Class</text>
+        <rect x="170" y="118" width="220" height="24" fill="#EDF2FA" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="280" y="135" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Order</text>
+        <rect x="195" y="146" width="170" height="24" fill="#F2E6BD" stroke="#C8A24A" stroke-width="1.5"/>
+        <text x="280" y="163" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Family</text>
+        <rect x="215" y="174" width="130" height="24" fill="#F2E6BD" stroke="#C8A24A" stroke-width="1.5"/>
+        <text x="280" y="191" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">Genus</text>
+        <rect x="235" y="202" width="90" height="24" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="1.5"/>
+        <text x="280" y="219" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#2C5F2D">Species</text>
+        <text x="280" y="244" text-anchor="middle" font-family="Instrument Serif,serif" font-style="italic" font-size="12" fill="#5C6370">The binomial name uses the last two: Genus + species.</text>
+      </svg>
+      <div class="caption">Seven nested groups; the binomial name comes from genus and species</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — the binomial format</h4>
+      <p>The two-part name is the <strong>genus</strong> (capital first letter) then the <strong>species</strong> (lower case), e.g. <em>Homo sapiens</em> — usually written in italics. A memory trick for the order Kingdom-Phylum-Class-Order-Family-Genus-Species: "<em>King Philip Came Over For Good Soup</em>".</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>The three domains</h3>
+    <p>As microscopes and the understanding of <strong>biochemical processes</strong> improved, classification became more detailed. Then evidence from studying the <strong>chemistry of cells</strong> (including DNA) led <strong>Carl Woese</strong> to propose the <strong>three-domain system</strong>. Organisms are now divided into three large groups called <strong>domains</strong>:</p>
+    <p><strong>Archaea</strong> — primitive bacteria, often living in extreme places like hot springs. <strong>Bacteria</strong> — the "true bacteria". <strong>Eukaryota</strong> — everything whose cells have a nucleus: protists, fungi, plants and animals.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">WOESE'S THREE DOMAINS</text>
+        <rect x="30" y="44" width="160" height="110" rx="6" fill="#F4DAD7" stroke="#B85042" stroke-width="2"/>
+        <text x="110" y="72" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">ARCHAEA</text>
+        <text x="110" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">primitive bacteria</text>
+        <text x="110" y="122" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">extreme places</text>
+        <rect x="200" y="44" width="160" height="110" rx="6" fill="#F2E6BD" stroke="#C8A24A" stroke-width="2"/>
+        <text x="280" y="72" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">BACTERIA</text>
+        <text x="280" y="100" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">true bacteria</text>
+        <text x="280" y="122" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1A1A1A">no nucleus</text>
+        <rect x="370" y="44" width="160" height="110" rx="6" fill="#DDEBDD" stroke="#2C5F2D" stroke-width="2"/>
+        <text x="450" y="72" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">EUKARYOTA</text>
+        <text x="450" y="96" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">protists · fungi</text>
+        <text x="450" y="116" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#1A1A1A">plants · animals</text>
+        <text x="450" y="136" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">cells have a nucleus</text>
+      </svg>
+      <div class="caption">The three domains, proposed by Woese from the chemistry of cells</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — why classification changed</h4>
+      <p>Linnaeus grouped organisms by their <strong>visible structure</strong>. The newer three-domain system came from <strong>chemical and DNA evidence</strong>, which technology made available. So the reason the system changed is improved <strong>technology and evidence</strong> — not that Linnaeus was simply "wrong".</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Who proposed the three-domain system, and what evidence led to it?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Linnaeus, using visible body structure</span></li>
+        <li><span class="letter">B</span><span>Darwin, using fossils</span></li>
+        <li><span class="letter">C</span><span>Woese, using the chemistry of cells and DNA</span></li>
+        <li><span class="letter">D</span><span>Mendel, using pea-plant crosses</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C — Carl Woese.</strong> Improved evidence from the <strong>chemistry of cells</strong>, including DNA, let Woese propose the three domains: Archaea, Bacteria and Eukaryota. Linnaeus used visible structure (A), which is the older system.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 8 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>List the Linnaean groups from largest to smallest.</summary><div class="ans"><strong>Kingdom → phylum → class → order → family → genus → species</strong>.</div></details></li>
+      <li><details><summary>How is an organism named in the binomial system?</summary><div class="ans">By two Latin words: the <strong>genus</strong> (capital letter) then the <strong>species</strong> (lower case), e.g. <em>Homo sapiens</em>.</div></details></li>
+      <li><details><summary>Name the three domains of the Woese system.</summary><div class="ans"><strong>Archaea</strong>, <strong>Bacteria</strong>, and <strong>Eukaryota</strong>.</div></details></li>
+      <li><details><summary>Why did classification systems change over time?</summary><div class="ans">Improvements in <strong>microscopes and biochemical / DNA evidence</strong> revealed relationships that visible structure alone could not show.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="8">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Paper 2 · B6 Inheritance, Variation &amp; Evolution</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'b6-inheritance-variation-evolution-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=027bdbd1-ebe7-4842-9008-86baaf1cb3ba&amp;ref=interactive-science&amp;from=b6-inheritance-variation-evolution-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=b6-inheritance-variation-evolution-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>

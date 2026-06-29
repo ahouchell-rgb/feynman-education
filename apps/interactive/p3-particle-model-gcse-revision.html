@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Particle Model of Matter (P3) — GCSE AQA Combined Science Revision</title>
+<meta name="description" content="A GCSE AQA Combined Science (Trilogy) revision booklet for P3 Particle Model of Matter — worked examples, required practicals, Higher-tier content flagged, and quick quizzes. Foundation and Higher.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E2761;
+  --navy-soft:#2a3478;
+  --warm:#F8F4EC;
+  --warm-deep:#EFE8D6;
+  --paper:#FCFAF4;
+  --soft-blue:#EDF2FA;
+  --ink:#1A1A1A;
+  --muted:#5C6370;
+  --rule:#CFD8E3;
+  --accent:#B85042;
+  --accent-soft:#F4DAD7;
+  --success:#2C5F2D;
+  --success-soft:#DDEBDD;
+  --gold:#C8A24A;
+  --gold-soft:#F2E6BD;
+  --display: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  font-weight:300;
+  font-size:17px;
+  line-height:1.65;
+  color:var(--ink);
+  background:var(--warm);
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(30,39,97,0.04), transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(184,80,66,0.04), transparent 50%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--navy);color:var(--warm);padding:48px 24px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 30%,rgba(75,30,160,0.25),transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(184,80,66,0.18),transparent 60%);pointer-events:none}
+.hero-inner{max-width:720px;margin:0 auto;position:relative;z-index:1}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(248,244,236,0.55);margin-bottom:20px}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(40px,8vw,68px);line-height:1.0;letter-spacing:-0.015em;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .tag{font-family:var(--display);font-style:italic;font-size:clamp(18px,3.5vw,22px);color:rgba(248,244,236,0.75);font-weight:400;max-width:520px}
+.pace-banner{margin-top:36px;padding:18px 22px;border:1px solid rgba(248,244,236,0.2);border-left:3px solid var(--gold);background:rgba(0,0,0,0.15);display:flex;gap:14px;align-items:flex-start}
+.pace-banner .pace-icon{font-family:var(--display);font-size:30px;line-height:1;color:var(--gold);flex:0 0 auto}
+.pace-banner p{font-size:15px;line-height:1.5;color:rgba(248,244,236,0.92)}
+.pace-banner strong{color:var(--warm);font-weight:500}
+
+/* ---------- LESSON NAV ---------- */
+.lesson-nav{position:sticky;top:0;z-index:100;background:rgba(252,250,244,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);text-decoration:none;border-radius:100px;transition:all 0.2s;font-weight:500;white-space:nowrap}
+.nav-pill:hover{border-color:var(--navy);color:var(--navy)}
+.nav-pill.done{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.nav-pill.done::before{content:'✓ ';font-weight:600}
+
+/* ---------- LESSON ---------- */
+main{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+.lesson{margin-bottom:64px;scroll-margin-top:80px}
+.lesson-head{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--rule);position:relative}
+.lesson-num{font-family:var(--mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.lesson-title{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,46px);line-height:1.05;color:var(--navy);letter-spacing:-0.01em;margin-bottom:14px}
+.lesson-title em{font-style:italic}
+.lesson-promise{font-family:var(--display);font-style:italic;font-size:19px;color:var(--muted);line-height:1.4;max-width:540px}
+
+/* ---------- SECTION ---------- */
+.section{margin-bottom:42px}
+.section-head{font-family:var(--display);font-weight:400;font-size:26px;line-height:1.15;color:var(--navy);margin-bottom:16px;letter-spacing:-0.005em}
+.section-head .num{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.2em;display:block;margin-bottom:6px}
+.section p{margin-bottom:16px;font-size:17px}
+.section p strong{font-weight:500;color:var(--navy);background:linear-gradient(180deg,transparent 60%,rgba(200,162,74,0.25) 60%);padding:0 2px}
+
+/* ---------- KEYWORD BOX ---------- */
+.keywords{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:20px 22px;margin:24px 0}
+.keywords h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.keywords dl{display:grid;gap:10px}
+.keywords dt{font-family:var(--display);font-size:20px;font-style:italic;color:var(--navy);font-weight:400}
+.keywords dd{font-size:15px;color:var(--ink);margin-bottom:6px}
+
+/* ---------- HINGE QUESTION ---------- */
+.hinge{background:var(--paper);border:1px solid var(--rule);padding:22px 24px;margin:28px 0;position:relative}
+.hinge-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;margin-bottom:12px;font-weight:500}
+.hinge-q{font-family:var(--display);font-size:22px;line-height:1.3;color:var(--navy);margin-bottom:14px;font-weight:400}
+.choices{list-style:none;display:grid;gap:8px;margin-bottom:16px}
+.choices li{font-size:15px;padding:10px 14px;background:var(--warm);border:1px solid var(--rule);display:flex;gap:10px;align-items:flex-start}
+.choices li .letter{font-family:var(--mono);font-weight:500;color:var(--accent);flex:0 0 auto}
+.reveal{width:100%;background:transparent}
+.reveal summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:10px 0;border-top:1px dashed var(--rule);display:flex;align-items:center;gap:10px;transition:color 0.2s;font-weight:500;user-select:none}
+.reveal summary::-webkit-details-marker{display:none}
+.reveal summary::before{content:'+';font-family:var(--display);font-size:18px;color:var(--accent);width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent);border-radius:50%;transition:transform 0.25s}
+.reveal[open] summary::before{transform:rotate(45deg)}
+.reveal summary:hover{color:var(--navy)}
+.reveal-body{padding:14px 16px;margin-top:10px;background:var(--success-soft);border-left:3px solid var(--success);font-size:15px;line-height:1.55;color:var(--ink)}
+.reveal-body strong{color:var(--success);font-weight:500}
+.reveal-body em{color:var(--muted);font-style:italic;font-size:13px;display:block;margin-top:8px}
+
+/* ---------- WATCH OUT ---------- */
+.watch-out{background:var(--accent-soft);border:1px solid #E6BCB7;border-left:3px solid var(--accent);padding:18px 22px;margin:24px 0}
+.watch-out h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:500}
+.watch-out p{font-size:15px;line-height:1.5;margin:0}
+.watch-out p+p{margin-top:8px}
+
+/* ---------- WORKED EXAMPLE / FORMULA ---------- */
+.worked{background:var(--paper);border:1px solid var(--rule);padding:22px;margin:24px 0}
+.worked h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:14px;font-weight:500}
+.worked .q{font-size:16px;margin-bottom:14px;line-height:1.5;color:var(--ink);font-weight:400}
+.worked .step{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:8px 0;border-bottom:1px dashed var(--rule);align-items:baseline}
+.worked .step:last-child{border-bottom:0;padding-bottom:0}
+.worked .step .label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.worked .step .v{font-family:var(--mono);font-size:14px;color:var(--ink);line-height:1.5}
+.worked .step.answer .v{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--success);background:var(--success-soft);padding:4px 10px;display:inline-block}
+.formula{font-family:var(--mono);font-size:15px;background:var(--soft-blue);padding:8px 12px;display:inline-block;margin:4px 0;color:var(--navy);font-weight:500}
+
+/* ---------- INLINE DIAGRAM ---------- */
+.diagram{margin:18px 0;padding:20px;background:var(--paper);border:1px solid var(--rule);text-align:center}
+.diagram svg{display:inline-block;width:100%;max-width:560px;height:auto}
+.diagram .caption{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:10px;font-weight:500}
+
+/* ---------- QUIZ ---------- */
+.quiz{background:var(--paper);border:1px solid var(--rule);margin-top:36px;padding:28px 24px 24px}
+.quiz-head{font-family:var(--display);font-size:26px;color:var(--navy);margin-bottom:6px;font-weight:400}
+.quiz-head em{font-style:italic}
+.quiz-sub{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.quiz ol{list-style:none;counter-reset:q;display:grid;gap:10px}
+.quiz li{counter-increment:q;border:1px solid var(--rule);background:var(--warm)}
+.quiz details summary{cursor:pointer;list-style:none;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.45;user-select:none}
+.quiz details summary::-webkit-details-marker{display:none}
+.quiz details summary::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:13px;font-weight:500;color:var(--accent);flex:0 0 auto;padding-top:2px}
+.quiz details summary::after{content:'show answer';font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-left:auto;flex:0 0 auto;padding-top:4px;white-space:nowrap;align-self:flex-start}
+.quiz details[open] summary::after{content:'hide';}
+.quiz details summary:hover::after{color:var(--accent)}
+.quiz .ans{padding:0 18px 16px 50px;font-size:15px;color:var(--success);line-height:1.5;border-top:1px dashed var(--rule);padding-top:14px;margin-top:4px}
+.quiz .ans strong{font-weight:600}
+
+/* ---------- DONE BUTTON ---------- */
+.done-btn{display:block;width:100%;margin-top:24px;padding:14px;background:var(--navy);color:var(--warm);border:0;font-family:var(--mono);font-size:12px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;font-weight:500}
+.done-btn:hover{background:var(--accent)}
+.done-btn.is-done{background:var(--success);cursor:default}
+.done-btn.is-done::before{content:'✓ '}
+
+/* ---------- DIVIDER ---------- */
+.section-rule{height:1px;background:var(--rule);margin:36px 0;position:relative}
+.section-rule::after{content:'⁂';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--warm);padding:0 14px;color:var(--accent);font-size:18px}
+
+/* ---------- FOOTER ---------- */
+footer{text-align:center;padding:48px 24px;background:var(--navy);color:rgba(248,244,236,0.6)}
+footer p{font-size:13px;line-height:1.5;margin-bottom:6px}
+footer .sig{font-family:var(--display);font-style:italic;font-size:18px;color:var(--gold);margin-bottom:14px}
+
+/* ---------- SMALL SCREENS ---------- */
+@media (max-width:540px){
+  body{font-size:16px}
+  .hero{padding:36px 20px 44px}
+  main{padding:32px 18px 60px}
+  .keywords,.hinge,.watch-out,.worked{padding:18px 18px}
+  .lesson{margin-bottom:48px}
+  .quiz{padding:22px 16px 18px}
+  .quiz details summary{padding:12px 14px;font-size:15px}
+  .quiz .ans{padding-left:42px;padding-right:14px}
+  .worked .step{grid-template-columns:64px 1fr;gap:10px}
+}
+
+@media print{
+  .lesson-nav,.pace-banner,.done-btn{display:none}
+  body{background:white}
+  details[open] summary::after,details>summary::after{content:''}
+  details>.ans,details>.reveal-body{display:block !important}
+}
+
+/* ---------- GCSE ADD-ONS ---------- */
+.eqbox{background:var(--soft-blue);border:1px solid #C9D7ED;border-left:3px solid var(--navy);padding:18px 22px;margin:24px 0}
+.eqbox h4{font-family:var(--mono);font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;font-weight:500}
+.eqbox dl{display:grid;gap:14px}
+.eqbox dt{font-family:var(--mono);font-size:15px;color:var(--navy);font-weight:500;line-height:1.4}
+.eqbox dd{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45}
+.eqbox .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.eqbox .badge.recall{color:#fff;background:var(--accent)}
+.eqbox .badge.given{color:var(--navy);background:var(--gold-soft);border:1px solid var(--gold)}
+
+/* Higher-tier-only callout */
+.higher{background:#F1ECFA;border:1px solid #D8CCEF;border-left:3px solid #6A4FB8;padding:18px 22px;margin:24px 0}
+.higher h4{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#5a3fa8;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.higher h4::before{content:'HT';font-family:var(--mono);font-size:10px;font-weight:700;color:#fff;background:#6A4FB8;padding:2px 7px;border-radius:3px;letter-spacing:0.08em}
+.higher p{font-size:15px;line-height:1.55;margin:0}
+.higher p+p{margin-top:8px}
+.higher .formula{background:#E7DEF7;color:#4a2f96}
+
+/* Required-practical callout */
+.rp{background:#E9F4F1;border:1px solid #BFE0D6;border-left:3px solid #1E7A5E;padding:20px 22px;margin:24px 0}
+.rp h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#16614a;margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.rp h4::before{content:'REQUIRED PRACTICAL';font-family:var(--mono);font-size:9px;font-weight:700;color:#fff;background:#1E7A5E;padding:3px 8px;border-radius:3px;letter-spacing:0.06em}
+.rp p{font-size:15px;line-height:1.55;margin-bottom:10px}
+.rp ol,.rp ul{margin:6px 0 12px 22px}
+.rp li{font-size:15px;line-height:1.5;margin-bottom:6px}
+.rp .formula{margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">GCSE · AQA Combined Science · Physics Paper 1 · P3 Particle Model of Matter</div>
+    <h1>The particle model, <em>for the exam.</em></h1>
+    <p class="tag">The whole of P3 — density and how to measure it, states of matter and changes of state, internal energy and specific heat capacity, latent heat, and how gas particles make pressure. Built for both tiers.</p>
+    <div class="pace-banner">
+      <span class="pace-icon">i</span>
+      <p><strong>Both tiers in one booklet.</strong> Everything here is for Foundation <em>and</em> Higher. Anything that's <strong>Higher tier only</strong> sits in a purple <span style="color:#cbb8f0">HT</span> box — Foundation students can skip those. Green boxes are <strong>required practicals</strong>. Do one topic at a time; each is about 10–15 minutes.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="lesson-nav">
+  <div class="nav-inner">
+    <a href="#lesson-1" class="nav-pill" data-lesson="1">Density</a>
+    <a href="#lesson-2" class="nav-pill" data-lesson="2">States &amp; changes</a>
+    <a href="#lesson-3" class="nav-pill" data-lesson="3">Internal energy &amp; SHC</a>
+    <a href="#lesson-4" class="nav-pill" data-lesson="4">Latent heat</a>
+    <a href="#lesson-5" class="nav-pill" data-lesson="5">Gas particles</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 1 — DENSITY (4.3.1.1) + REQUIRED PRACTICAL                        -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-1">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 01 · 4.3.1.1 · Density</div>
+    <h2 class="lesson-title">Density — <em>mass</em> packed into space</h2>
+    <p class="lesson-promise">One equation you must recall, a clear sense of what density actually means, and the required practical for finding it — including awkward shapes.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>What density tells you</h3>
+    <p>The <strong>density</strong> of a material is how much <strong>mass</strong> is packed into each unit of <strong>volume</strong>. A dense material has a lot of mass squeezed into a small space; a low-density material is "lighter for its size".</p>
+    <p>Density depends on two things: how <strong>heavy</strong> the individual particles are, and how <strong>closely packed</strong> they are. That's why the same material is usually densest as a <strong>solid</strong> and least dense as a <strong>gas</strong> — the particles spread far apart in a gas.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>ρ = m / V <span class="badge recall">recall</span></dt>
+        <dd>density (kg/m³) = mass (kg) ÷ volume (m³). The symbol ρ is the Greek letter "rho". Density can also be given in g/cm³.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">SAME-SIZE BOXES, DIFFERENT DENSITY</text>
+        <!-- low density box -->
+        <rect x="70" y="55" width="140" height="140" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="105" cy="90" r="9" fill="#5C6370"/>
+        <circle cx="160" cy="100" r="9" fill="#5C6370"/>
+        <circle cx="120" cy="150" r="9" fill="#5C6370"/>
+        <circle cx="175" cy="160" r="9" fill="#5C6370"/>
+        <text x="140" y="215" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#5C6370">low density</text>
+        <!-- high density box -->
+        <rect x="350" y="55" width="140" height="140" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <circle cx="378" cy="82" r="9" fill="#B85042"/>
+        <circle cx="410" cy="82" r="9" fill="#B85042"/>
+        <circle cx="442" cy="82" r="9" fill="#B85042"/>
+        <circle cx="470" cy="86" r="9" fill="#B85042"/>
+        <circle cx="378" cy="115" r="9" fill="#B85042"/>
+        <circle cx="410" cy="115" r="9" fill="#B85042"/>
+        <circle cx="442" cy="115" r="9" fill="#B85042"/>
+        <circle cx="470" cy="119" r="9" fill="#B85042"/>
+        <circle cx="378" cy="148" r="9" fill="#B85042"/>
+        <circle cx="410" cy="148" r="9" fill="#B85042"/>
+        <circle cx="442" cy="148" r="9" fill="#B85042"/>
+        <circle cx="470" cy="152" r="9" fill="#B85042"/>
+        <circle cx="394" cy="178" r="9" fill="#B85042"/>
+        <circle cx="426" cy="178" r="9" fill="#B85042"/>
+        <text x="420" y="215" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#B85042">high density</text>
+      </svg>
+      <div class="caption">Same volume — more mass packed in means a higher density</div>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — density of a block</h4>
+      <p class="q">A metal block has a mass of 540 g and a volume of 200 cm³. Calculate its density.</p>
+      <div class="step"><span class="label">Equation</span><span class="v">ρ = m ÷ V</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 540 ÷ 200</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 2.7 g/cm³</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — keep your units consistent</h4>
+      <p>Don't mix grams with cubic metres. If mass is in <strong>g</strong> and volume in <strong>cm³</strong>, density comes out in <strong>g/cm³</strong>. If mass is in <strong>kg</strong> and volume in <strong>m³</strong>, you get <strong>kg/m³</strong>. Water is <strong>1 g/cm³</strong> (= 1000 kg/m³) — a handy check. Anything denser than water sinks in it.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A liquid has a mass of 80 g and a volume of 100 cm³. What is its density, and will it float on water?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>0.8 g/cm³ — it floats on water</span></li>
+        <li><span class="letter">B</span><span>1.25 g/cm³ — it sinks in water</span></li>
+        <li><span class="letter">C</span><span>0.8 g/cm³ — it sinks in water</span></li>
+        <li><span class="letter">D</span><span>8 g/cm³ — it floats on water</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>A — 0.8 g/cm³, floats.</strong> ρ = m ÷ V = 80 ÷ 100 = 0.8 g/cm³. That's <em>less</em> than water's 1 g/cm³, so it floats. B is the upside-down division (V ÷ m).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Measuring density</h3>
+    <p>To find a density you always need two measurements: the <strong>mass</strong> (from a balance) and the <strong>volume</strong>. Getting the volume is the tricky part — and it depends on the shape.</p>
+
+    <div class="rp">
+      <h4>Determining the density of solids and liquids</h4>
+      <p><strong>Aim:</strong> measure the density of a regular solid, an irregular solid and a liquid.</p>
+      <ol>
+        <li><strong>Regular solid</strong> (e.g. a cube): find the <strong>mass</strong> on a balance, then measure the sides with a ruler and calculate the <strong>volume</strong> (e.g. length × width × height).</li>
+        <li><strong>Irregular solid</strong>: find the <strong>mass</strong>, then use a <strong>displacement (eureka) can</strong> — lower the object in and collect the water that overflows in a measuring cylinder. That volume of water equals the object's volume.</li>
+        <li><strong>Liquid</strong>: place an empty measuring cylinder on the balance and <strong>zero it</strong>. Pour in a known volume of the liquid and read its mass.</li>
+        <li>For each, calculate: <span class="formula">ρ = m ÷ V</span></li>
+      </ol>
+      <p><strong>Control / improve:</strong> dry the irregular solid before weighing, and read the measuring cylinder at eye level (bottom of the <strong>meniscus</strong>) to avoid a parallax error. Trapped air bubbles on the object make the volume read too high.</p>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="22" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">DISPLACEMENT FOR AN IRREGULAR SOLID</text>
+        <!-- eureka can -->
+        <rect x="90" y="70" width="120" height="120" rx="3" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="92" y="95" width="116" height="95" fill="#C8D9F0"/>
+        <!-- spout -->
+        <path d="M210 100 h26 v10 h-26 z" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <!-- object inside -->
+        <path d="M120 130 l24 -8 l22 14 l-10 24 l-30 4 z" fill="#B85042"/>
+        <text x="150" y="210" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" font-weight="700" fill="#1E2761">eureka can</text>
+        <!-- water stream -->
+        <line x1="236" y1="110" x2="236" y2="160" stroke="#C8D9F0" stroke-width="4"/>
+        <!-- measuring cylinder -->
+        <rect x="320" y="120" width="50" height="90" rx="3" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <rect x="322" y="170" width="46" height="40" fill="#C8D9F0"/>
+        <line x1="370" y1="140" x2="395" y2="140" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="401" y="144" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#1E2761">collected water</text>
+        <line x1="370" y1="190" x2="395" y2="190" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="401" y="194" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">volume = object</text>
+      </svg>
+      <div class="caption">The overflow water volume equals the volume of the submerged object</div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A stone is lowered into a eureka can; 30 cm³ of water overflows. The stone's mass is 90 g. Its density is:</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>0.33 g/cm³</span></li>
+        <li><span class="letter">B</span><span>3 g/cm³</span></li>
+        <li><span class="letter">C</span><span>2700 g/cm³</span></li>
+        <li><span class="letter">D</span><span>120 g/cm³</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 3 g/cm³.</strong> The displaced water (30 cm³) is the stone's volume. ρ = m ÷ V = 90 ÷ 30 = 3 g/cm³. A divides the wrong way round; D adds instead of dividing.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 1 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Write the density equation and give the SI unit of each quantity.</summary><div class="ans">ρ = m ÷ V. Density in <strong>kg/m³</strong>, mass in <strong>kg</strong>, volume in <strong>m³</strong> (g/cm³ is also accepted).</div></details></li>
+      <li><details><summary>How do you find the volume of an irregular solid?</summary><div class="ans">By <strong>displacement</strong>: lower it into a eureka can and measure the volume of water that overflows. That volume equals the object's volume.</div></details></li>
+      <li><details><summary>A 250 cm³ sample of oil has a mass of 230 g. Calculate its density.</summary><div class="ans">ρ = m ÷ V = 230 ÷ 250 = <strong>0.92 g/cm³</strong>. (Less than water, so the oil floats.)</div></details></li>
+      <li><details><summary>Why is the same material usually denser as a solid than as a gas?</summary><div class="ans">In a solid the particles are <strong>packed closely together</strong>; in a gas they're <strong>far apart</strong>, so the same mass fills a much larger volume — lower density.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="1">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 2 — STATES OF MATTER & CHANGES OF STATE (4.3.1.2 / 4.3.1.3)       -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-2">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 02 · 4.3.1.2 · States &amp; changes</div>
+    <h2 class="lesson-title">States of matter &amp; <em>changes</em> of state</h2>
+    <p class="lesson-promise">How particles are arranged in solids, liquids and gases — and why melting or boiling is a physical change where mass is conserved.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>The three states</h3>
+    <p>The <strong>particle model</strong> pictures matter as tiny particles. What's different between the three states is how those particles are <strong>arranged</strong>, how <strong>close</strong> they are, and how much they <strong>move</strong>.</p>
+    <p>In a <strong>solid</strong>, particles are packed in a regular pattern, touching, and only <strong>vibrate</strong> in fixed positions — so a solid keeps its shape and volume. In a <strong>liquid</strong>, particles are still close and touching but are <strong>randomly arranged</strong> and can move past each other — so a liquid flows and takes the shape of its container. In a <strong>gas</strong>, particles are <strong>far apart</strong> and move quickly in all directions — so a gas spreads to fill any space.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PARTICLE ARRANGEMENT</text>
+        <!-- SOLID -->
+        <rect x="40" y="45" width="130" height="120" rx="3" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <g fill="#1E2761">
+          <circle cx="62" cy="67" r="8"/><circle cx="88" cy="67" r="8"/><circle cx="114" cy="67" r="8"/><circle cx="140" cy="67" r="8"/>
+          <circle cx="62" cy="93" r="8"/><circle cx="88" cy="93" r="8"/><circle cx="114" cy="93" r="8"/><circle cx="140" cy="93" r="8"/>
+          <circle cx="62" cy="119" r="8"/><circle cx="88" cy="119" r="8"/><circle cx="114" cy="119" r="8"/><circle cx="140" cy="119" r="8"/>
+          <circle cx="62" cy="145" r="8"/><circle cx="88" cy="145" r="8"/><circle cx="114" cy="145" r="8"/><circle cx="140" cy="145" r="8"/>
+        </g>
+        <text x="105" y="190" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">SOLID</text>
+        <text x="105" y="208" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">regular · vibrate</text>
+        <!-- LIQUID -->
+        <rect x="215" y="45" width="130" height="120" rx="3" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <g fill="#B85042">
+          <circle cx="238" cy="72" r="8"/><circle cx="266" cy="64" r="8"/><circle cx="296" cy="74" r="8"/><circle cx="324" cy="66" r="8"/>
+          <circle cx="244" cy="98" r="8"/><circle cx="276" cy="94" r="8"/><circle cx="308" cy="100" r="8"/>
+          <circle cx="234" cy="124" r="8"/><circle cx="262" cy="120" r="8"/><circle cx="294" cy="126" r="8"/><circle cx="324" cy="122" r="8"/>
+          <circle cx="250" cy="148" r="8"/><circle cx="284" cy="146" r="8"/><circle cx="316" cy="150" r="8"/>
+        </g>
+        <text x="280" y="190" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#B85042">LIQUID</text>
+        <text x="280" y="208" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">close · flow</text>
+        <!-- GAS -->
+        <rect x="390" y="45" width="130" height="120" rx="3" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <g fill="#2C5F2D">
+          <circle cx="415" cy="62" r="8"/><circle cx="478" cy="70" r="8"/>
+          <circle cx="445" cy="100" r="8"/><circle cx="500" cy="108" r="8"/>
+          <circle cx="408" cy="120" r="8"/><circle cx="468" cy="138" r="8"/>
+          <circle cx="430" cy="150" r="8"/>
+        </g>
+        <text x="455" y="190" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#2C5F2D">GAS</text>
+        <text x="455" y="208" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5C6370">far apart · fast</text>
+      </svg>
+      <div class="caption">Same particles — only the spacing, arrangement and movement change</div>
+    </div>
+
+    <div class="keywords">
+      <h4>Naming the changes of state</h4>
+      <dl>
+        <dt>Melting / Freezing</dt><dd>Solid ⇌ liquid.</dd>
+        <dt>Boiling (evaporating) / Condensing</dt><dd>Liquid ⇌ gas.</dd>
+        <dt>Sublimation</dt><dd>Solid straight to gas (and back) without passing through liquid.</dd>
+      </dl>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — a change of state is physical, not chemical</h4>
+      <p>Melting, boiling and condensing are <strong>physical changes</strong>. The substance is the <strong>same material</strong> afterwards — only the arrangement of particles has changed, so the change can be <strong>reversed</strong>. This is different from a chemical change, which makes a new substance.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Mass is conserved</h3>
+    <p>When a substance changes state, <strong>no particles are created or destroyed</strong> — they just move apart or together. So the <strong>mass stays the same</strong>. If 18 g of ice melts, you get 18 g of water; boil it and you get 18 g of steam.</p>
+    <p>Because the particles are the same, the change can be <strong>reversed</strong> and the material recovers its original properties. The density usually changes (the particles spread out), but the mass does not.</p>
+
+    <div class="worked">
+      <h4>Worked example — mass through a change of state</h4>
+      <p class="q">A sealed flask contains 250 g of water. All of it is boiled into steam, which stays trapped in the flask. What is the mass of steam?</p>
+      <div class="step"><span class="label">Idea</span><span class="v">Boiling is a physical change — no particles are gained or lost.</span></div>
+      <div class="step"><span class="label">So</span><span class="v">mass of steam = mass of water (conserved)</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 250 g</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">Why is melting described as a physical change rather than a chemical change?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Because energy is transferred to the substance</span></li>
+        <li><span class="letter">B</span><span>Because a new substance is made when it melts</span></li>
+        <li><span class="letter">C</span><span>Because the same substance remains and the change can be reversed</span></li>
+        <li><span class="letter">D</span><span>Because the mass increases as it melts</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>C.</strong> No new substance forms — the particles are unchanged, just rearranged, so it's a physical change and reverses on freezing. B describes a chemical change; D is wrong because mass is <em>conserved</em>.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 2 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Describe the arrangement and movement of particles in a solid.</summary><div class="ans">Packed closely in a <strong>regular pattern</strong>, touching, and <strong>vibrating</strong> about fixed positions. The solid keeps a fixed shape and volume.</div></details></li>
+      <li><details><summary>Name the change of state from gas to liquid, and from solid to liquid.</summary><div class="ans">Gas → liquid is <strong>condensing</strong>; solid → liquid is <strong>melting</strong>.</div></details></li>
+      <li><details><summary>What happens to the mass of a substance when it changes state? Explain why.</summary><div class="ans">It <strong>stays the same</strong> (mass is conserved). No particles are created or destroyed — they only rearrange.</div></details></li>
+      <li><details><summary>Why can a change of state be reversed?</summary><div class="ans">It's a <strong>physical change</strong> — the substance is unchanged, so cooling or heating it back returns it to its original state with the same properties.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="2">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 3 — INTERNAL ENERGY & SPECIFIC HEAT CAPACITY (4.3.2.1 / 4.3.2.2)  -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-3">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 03 · 4.3.2.1 · Internal energy &amp; SHC</div>
+    <h2 class="lesson-title">Internal energy &amp; <em>specific heat capacity</em></h2>
+    <p class="lesson-promise">What "internal energy" really means, and the given equation that links energy, mass and temperature change.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Energy stored by particles</h3>
+    <p>The <strong>internal energy</strong> of a system is the <strong>total</strong> energy stored by its particles. It's made of two parts: the <strong>kinetic energy</strong> of the particles (their movement) and the <strong>potential energy</strong> from how they're arranged (the spacing and bonds between them).</p>
+    <p>Heat a substance and you transfer energy to its particles. That energy does one of two things. Either it raises the <strong>temperature</strong> — the particles move faster, so their <strong>kinetic energy</strong> rises. Or, at a change of state, it goes into <strong>breaking the forces</strong> between particles — that's <strong>potential energy</strong>, and the temperature stays the same (you'll meet that in Topic 4).</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">INTERNAL ENERGY = KE + PE OF PARTICLES</text>
+        <!-- KE box -->
+        <rect x="60" y="50" width="180" height="110" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="150" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">kinetic part</text>
+        <circle cx="110" cy="110" r="10" fill="#B85042"/>
+        <circle cx="170" cy="120" r="10" fill="#B85042"/>
+        <line x1="125" y1="105" x2="148" y2="98" stroke="#C8A24A" stroke-width="2"/>
+        <polygon points="152,97 143,95 146,103" fill="#C8A24A"/>
+        <text x="150" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">particles moving</text>
+        <!-- plus -->
+        <text x="280" y="115" text-anchor="middle" font-family="Instrument Serif,serif" font-size="34" fill="#5C6370">+</text>
+        <!-- PE box -->
+        <rect x="320" y="50" width="180" height="110" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2"/>
+        <text x="410" y="74" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="13" font-weight="700" fill="#1E2761">potential part</text>
+        <circle cx="375" cy="112" r="10" fill="#2C5F2D"/>
+        <circle cx="445" cy="112" r="10" fill="#2C5F2D"/>
+        <line x1="387" y1="112" x2="433" y2="112" stroke="#C8A24A" stroke-width="2" stroke-dasharray="4 3"/>
+        <text x="410" y="150" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#5C6370">spacing &amp; bonds</text>
+      </svg>
+      <div class="caption">Internal energy is the total kinetic + potential energy of all the particles</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — heat, temperature and energy aren't the same word</h4>
+      <p><strong>Temperature</strong> is a measure of the average <strong>kinetic energy</strong> of the particles. <strong>Internal energy</strong> is the <strong>total</strong> energy of all of them — so a big bath of warm water has more internal energy than a small cup of boiling water, even though the cup is hotter. Don't write "heat energy"; write "internal energy" or "energy transferred by heating".</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Specific heat capacity</h3>
+    <p>The <strong>specific heat capacity</strong> of a substance is the energy needed to raise the temperature of <strong>1 kg</strong> of it by <strong>1 °C</strong>. Water's is high (about 4200 J/kg °C), which is why it takes so long to heat up and why it's good for carrying energy around in heating systems.</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>ΔE = m c Δθ <span class="badge given">given</span></dt>
+        <dd>change in thermal energy (J) = mass (kg) × specific heat capacity (J/kg °C) × temperature change (°C). The symbol Δ (delta) means "change in".</dd>
+      </dl>
+    </div>
+
+    <div class="worked">
+      <h4>Worked example — heating water</h4>
+      <p class="q">How much energy is needed to raise the temperature of 3 kg of water from 18 °C to 38 °C? (c = 4200 J/kg °C)</p>
+      <div class="step"><span class="label">Δθ</span><span class="v">temperature change = 38 − 18 = 20 °C</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">ΔE = m c Δθ = 3 × 4200 × 20</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 252 000 J  (252 kJ)</span></div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — Δθ is the change, not the final value</h4>
+      <p>Δθ means the <strong>change</strong> in temperature, so subtract the start from the finish first. The unit J/kg °C is a recipe for the equation: it's joules per (kg × °C), so you multiply mass by c by Δθ.</p>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">2 kg of a metal needs 16 000 J to warm up by 20 °C. What is its specific heat capacity?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>160 J/kg °C</span></li>
+        <li><span class="letter">B</span><span>400 J/kg °C</span></li>
+        <li><span class="letter">C</span><span>640 000 J/kg °C</span></li>
+        <li><span class="letter">D</span><span>800 J/kg °C</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B — 400 J/kg °C.</strong> Rearrange ΔE = m c Δθ to c = ΔE ÷ (m × Δθ) = 16 000 ÷ (2 × 20) = 16 000 ÷ 40 = 400 J/kg °C. C is the slip of multiplying instead of dividing.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 3 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>What is meant by the internal energy of a system?</summary><div class="ans">The <strong>total</strong> energy stored by its particles — the sum of their <strong>kinetic</strong> energy (movement) and <strong>potential</strong> energy (spacing/arrangement).</div></details></li>
+      <li><details><summary>Define specific heat capacity.</summary><div class="ans">The energy needed to raise the temperature of <strong>1 kg of a substance by 1 °C</strong> (unit J/kg °C).</div></details></li>
+      <li><details><summary>Calculate the energy to heat 0.5 kg of aluminium (c = 900 J/kg °C) by 30 °C.</summary><div class="ans">ΔE = m c Δθ = 0.5 × 900 × 30 = <strong>13 500 J</strong>.</div></details></li>
+      <li><details><summary>A small cup of boiling water and a large bath of warm water — which has the greater internal energy? Explain.</summary><div class="ans">The <strong>bath</strong>. Internal energy is the <em>total</em> for all particles; the bath has far more particles, so even at a lower temperature its total energy is greater.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="3">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 4 — SPECIFIC LATENT HEAT (4.3.2.3)                                -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-4">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 04 · 4.3.2.3 · Latent heat</div>
+    <h2 class="lesson-title">Specific <em>latent heat</em></h2>
+    <p class="lesson-promise">Why a melting ice cube stays at 0 °C even as you heat it — energy that changes state without changing temperature.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Energy with no temperature change</h3>
+    <p>When a substance is melting or boiling, you keep transferring energy to it — but the <strong>temperature does not rise</strong>. All the energy goes into <strong>breaking the forces</strong> between particles (their potential energy), not into making them move faster. This energy is called <strong>latent heat</strong> ("latent" means hidden).</p>
+    <p>The <strong>specific latent heat</strong> of a substance is the energy needed to change the state of <strong>1 kg</strong> of it with <strong>no change in temperature</strong>. There are two values: the <strong>specific latent heat of fusion</strong> (for melting/freezing) and the <strong>specific latent heat of vaporisation</strong> (for boiling/condensing).</p>
+
+    <div class="eqbox">
+      <h4>Equation</h4>
+      <dl>
+        <dt>E = m L <span class="badge given">given</span></dt>
+        <dd>energy for a change of state (J) = mass (kg) × specific latent heat (J/kg). Use L for fusion when melting/freezing, and L for vaporisation when boiling/condensing.</dd>
+      </dl>
+    </div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 240" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">HEATING CURVE — FLAT BITS ARE STATE CHANGES</text>
+        <!-- axes -->
+        <line x1="60" y1="200" x2="520" y2="200" stroke="#1E2761" stroke-width="1.5"/>
+        <line x1="60" y1="40" x2="60" y2="200" stroke="#1E2761" stroke-width="1.5"/>
+        <text x="290" y="228" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370">energy supplied →</text>
+        <text x="28" y="120" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="12" fill="#5C6370" transform="rotate(-90 28 120)">temperature →</text>
+        <!-- curve: rise, flat (melt), rise, flat (boil), rise -->
+        <polyline points="60,185 120,150 200,150 280,95 400,95 470,60" fill="none" stroke="#B85042" stroke-width="3"/>
+        <!-- flat labels -->
+        <line x1="160" y1="150" x2="160" y2="120" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="160" y="114" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E2761">melting</text>
+        <line x1="340" y1="95" x2="340" y2="65" stroke="#CFD8E3" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="340" y="59" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E2761">boiling</text>
+      </svg>
+      <div class="caption">On a flat section the energy goes into changing state — temperature holds steady</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — latent heat vs specific heat capacity</h4>
+      <p>Use <strong>ΔE = m c Δθ</strong> only when the temperature is <strong>changing</strong>. Use <strong>E = m L</strong> only during a <strong>change of state</strong>, where the temperature is <strong>constant</strong>. Mixing them up is a classic error — check whether the temperature is moving or holding still.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Using E = m L</h3>
+
+    <div class="worked">
+      <h4>Worked example — melting ice</h4>
+      <p class="q">How much energy is needed to melt 0.40 kg of ice at 0 °C? (specific latent heat of fusion of water = 334 000 J/kg)</p>
+      <div class="step"><span class="label">Equation</span><span class="v">E = m L</span></div>
+      <div class="step"><span class="label">Sub in</span><span class="v">= 0.40 × 334 000</span></div>
+      <div class="step answer"><span class="label">Answer</span><span class="v">= 133 600 J  (≈ 134 kJ)</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A pan of water is boiling steadily at 100 °C while a hob keeps heating it. What happens to the temperature of the water?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>It keeps rising above 100 °C</span></li>
+        <li><span class="letter">B</span><span>It stays at 100 °C until all the water has boiled away</span></li>
+        <li><span class="letter">C</span><span>It falls because energy is being lost</span></li>
+        <li><span class="letter">D</span><span>It rises slowly as steam forms</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> During boiling all the supplied energy breaks the forces between particles (latent heat of vaporisation), so the temperature <em>stays at 100 °C</em> until the change of state is complete.</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 4 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 4 questions</div>
+    <ol>
+      <li><details><summary>Define the specific latent heat of a substance.</summary><div class="ans">The energy needed to change the state of <strong>1 kg</strong> of the substance with <strong>no change in temperature</strong> (unit J/kg).</div></details></li>
+      <li><details><summary>Why does the temperature stay constant while a substance melts?</summary><div class="ans">The energy supplied goes into <strong>breaking the forces between particles</strong> (raising their potential energy), not into speeding them up — so the temperature doesn't change.</div></details></li>
+      <li><details><summary>Calculate the energy to boil away 0.20 kg of water at 100 °C. (L of vaporisation = 2 260 000 J/kg)</summary><div class="ans">E = m L = 0.20 × 2 260 000 = <strong>452 000 J</strong>.</div></details></li>
+      <li><details><summary>Which equation do you use when the temperature is changing, and which when it is constant during a change of state?</summary><div class="ans">Changing temperature: <strong>ΔE = m c Δθ</strong>. Constant temperature (change of state): <strong>E = m L</strong>.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="4">Mark this topic complete</button>
+  </div>
+</section>
+
+<!-- ===================================================================== -->
+<!-- TOPIC 5 — PARTICLE MOTION IN GASES (4.3.3.1)                            -->
+<!-- ===================================================================== -->
+<section class="lesson" id="lesson-5">
+  <div class="lesson-head">
+    <div class="lesson-num">Topic 05 · 4.3.3.1 · Gas particles</div>
+    <h2 class="lesson-title">Particle motion <em>in gases</em></h2>
+    <p class="lesson-promise">How fast-moving particles create gas pressure, and why heating a gas raises its temperature and its pressure.</p>
+  </div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 1</span>Temperature and particle energy</h3>
+    <p>The particles in a gas are spread out and move <strong>quickly in random directions</strong>. The <strong>temperature</strong> of the gas is linked to the average <strong>kinetic energy</strong> of those particles: the higher the temperature, the <strong>faster</strong> the particles move on average, so the more kinetic energy they have.</p>
+    <p>Gas <strong>pressure</strong> comes from particles <strong>colliding with the walls</strong> of the container. Each collision pushes on the wall. The pressure is the total effect of all those collisions over the wall's area.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="280" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="#1E2761" letter-spacing="1">PRESSURE = PARTICLES HITTING THE WALLS</text>
+        <!-- container -->
+        <rect x="120" y="45" width="320" height="140" rx="4" fill="#EDF2FA" stroke="#1E2761" stroke-width="2.5"/>
+        <!-- particles -->
+        <circle cx="180" cy="80" r="9" fill="#B85042"/>
+        <circle cx="260" cy="120" r="9" fill="#B85042"/>
+        <circle cx="330" cy="75" r="9" fill="#B85042"/>
+        <circle cx="380" cy="150" r="9" fill="#B85042"/>
+        <circle cx="220" cy="160" r="9" fill="#B85042"/>
+        <circle cx="300" cy="160" r="9" fill="#B85042"/>
+        <!-- velocity arrows -->
+        <line x1="189" y1="76" x2="208" y2="66" stroke="#C8A24A" stroke-width="2"/>
+        <polygon points="212,64 203,63 206,71" fill="#C8A24A"/>
+        <line x1="251" y1="120" x2="230" y2="120" stroke="#C8A24A" stroke-width="2"/>
+        <polygon points="226,120 235,116 235,124" fill="#C8A24A"/>
+        <line x1="338" y1="69" x2="356" y2="56" stroke="#C8A24A" stroke-width="2"/>
+        <polygon points="360,53 351,53 354,61" fill="#C8A24A"/>
+        <!-- collision marks on wall -->
+        <line x1="441" y1="78" x2="470" y2="78" stroke="#CFD8E3" stroke-width="1"/>
+        <text x="475" y="82" font-family="Instrument Serif,serif" font-style="italic" font-size="13" fill="#5C6370">hits = push</text>
+      </svg>
+      <div class="caption">Random, fast-moving particles hit the walls in all directions — each collision exerts a tiny force, and together they make the pressure</div>
+    </div>
+
+    <div class="watch-out">
+      <h4>⚠ Watch out — pressure is collisions, not "air pushing"</h4>
+      <p>Gas pressure is caused by particles <strong>colliding with the container walls</strong>, not by the gas "pressing" as a lump. To explain a pressure change, talk about how <strong>often</strong> particles hit the walls and how <strong>hard</strong> (how fast) they hit. The force from each collision acts at <strong>right angles (90°)</strong> to the wall.</p>
+    </div>
+  </div>
+
+  <div class="section-rule"></div>
+
+  <div class="section">
+    <h3 class="section-head"><span class="num">Part 2</span>Heating a gas at constant volume</h3>
+    <p>Heat a gas in a <strong>sealed, rigid container</strong> (so the volume can't change) and you transfer energy to the particles. They speed up — their average <strong>kinetic energy rises</strong>, which is the same as saying the <strong>temperature rises</strong>.</p>
+    <p>Faster particles hit the walls <strong>more often</strong> and <strong>harder</strong>. More frequent, harder collisions mean a <strong>greater pressure</strong>. So at constant volume, <strong>increasing the temperature increases the pressure</strong>.</p>
+
+    <div class="worked">
+      <h4>Worked example — explaining a pressure rise</h4>
+      <p class="q">A gas is sealed in a fixed-volume can and warmed. Explain, in particle terms, why the pressure rises.</p>
+      <div class="step"><span class="label">Step 1</span><span class="v">Heating raises the particles' average kinetic energy, so they move faster.</span></div>
+      <div class="step"><span class="label">Step 2</span><span class="v">Faster particles hit the walls more often and with more force per hit.</span></div>
+      <div class="step answer"><span class="label">Conclusion</span><span class="v">More frequent, harder collisions → higher pressure.</span></div>
+    </div>
+
+    <div class="hinge">
+      <span class="hinge-tag">Quick check</span>
+      <p class="hinge-q">A fixed amount of gas in a sealed rigid container is cooled down. What happens to the pressure, and why?</p>
+      <ul class="choices">
+        <li><span class="letter">A</span><span>Pressure rises — particles slow down and bunch up</span></li>
+        <li><span class="letter">B</span><span>Pressure falls — particles move slower, so collisions are less frequent and less forceful</span></li>
+        <li><span class="letter">C</span><span>Pressure stays the same — the number of particles is unchanged</span></li>
+        <li><span class="letter">D</span><span>Pressure falls — particles are destroyed by the cooling</span></li>
+      </ul>
+      <details class="reveal">
+        <summary>Show answer</summary>
+        <div class="reveal-body"><strong>B.</strong> Cooling lowers the average kinetic energy, so particles move slower. They hit the walls <em>less often</em> and with <em>less force</em>, so the pressure falls. Particles are never destroyed (D), and the count being constant doesn't keep pressure fixed (C).</div>
+      </details>
+    </div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-head">Topic 5 — <em>quick quiz</em></div>
+    <div class="quiz-sub">Click to reveal · 5 questions</div>
+    <ol>
+      <li><details><summary>What causes the pressure of a gas on its container?</summary><div class="ans">The <strong>collisions of gas particles with the walls</strong> of the container. Each collision exerts a small force; together they create the pressure.</div></details></li>
+      <li><details><summary>How is the temperature of a gas related to its particles?</summary><div class="ans">Temperature is linked to the <strong>average kinetic energy</strong> of the particles — higher temperature means the particles move <strong>faster</strong> on average.</div></details></li>
+      <li><details><summary>A sealed rigid container of gas is heated. Explain why the pressure increases.</summary><div class="ans">The particles gain kinetic energy and move <strong>faster</strong>, so they hit the walls <strong>more often and harder</strong> — increasing the pressure.</div></details></li>
+      <li><details><summary>In which direction does the force from a particle act when it hits a wall?</summary><div class="ans">At <strong>right angles (90°)</strong> to the surface of the wall.</div></details></li>
+      <li><details><summary>Why does the pressure fall when a fixed mass of gas at constant volume is cooled?</summary><div class="ans">Cooling lowers the average kinetic energy, so particles move slower and collide with the walls <strong>less often and with less force</strong> — lower pressure.</div></details></li>
+    </ol>
+    <button class="done-btn" data-lesson-done="5">Mark this topic complete</button>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="sig">⁂</div>
+  <p>GCSE · AQA Combined Science (Trilogy) · Physics Paper 1 · P3 Particle Model of Matter</p>
+  <p>A revision booklet · Foundation &amp; Higher</p>
+</footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'p3-particle-model-gcse-done';
+  var done = {};
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) done = JSON.parse(raw);
+  } catch(e) {}
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(done)); } catch(e){}
+  }
+
+  function refresh(){
+    document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]){
+        btn.classList.add('is-done');
+        btn.textContent = '✓ Done — nice work';
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(function(pill){
+      var n = pill.getAttribute('data-lesson');
+      if (done[n]) pill.classList.add('done');
+      else pill.classList.remove('done');
+    });
+  }
+
+  document.querySelectorAll('[data-lesson-done]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var n = btn.getAttribute('data-lesson-done');
+      if (done[n]) return;
+      done[n] = true;
+      save();
+      refresh();
+    });
+  });
+
+  refresh();
+})();
+</script>
+
+<!--ISCI-RETRIEVAL-WIDGET:START (auto-injected by add_retrieval_widget.py; do not edit)-->
+<section style="max-width:680px;margin:48px auto 8px;padding:22px 24px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;box-sizing:border-box;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Practice &middot; retrieval</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;color:#1d2a20;">Check you&rsquo;ve actually got it.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Answer a few questions and get instant, marked feedback &mdash; no login needed.</div>
+  <iframe id="isci-rp-frame" src="https://retrieval-app.com/embed/practice?topic=5eef9c7e-83f2-447f-8aac-4cfe4b671ad7&amp;ref=interactive-science&amp;from=p3-particle-model-gcse-revision" title="Retrieval practice" loading="lazy" style="width:100%;height:520px;border:0;display:block;border-radius:8px;background:#fff;"></iframe>
+</section>
+<script>
+(function(){var f=document.getElementById('isci-rp-frame');if(!f)return;window.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='iscience:resize'&&f.contentWindow===e.source&&d.height>0&&d.height<20000){f.style.height=Math.ceil(d.height)+'px';}});})();
+</script>
+<!--ISCI-RETRIEVAL-WIDGET:END-->
+<!--ISCI-RETRIEVAL-CTA:START (auto-injected by add_retrieval_cta.py; do not edit)-->
+<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;border:1px solid #d7ddd4;border-left:4px solid #2E7D4F;border-radius:12px;background:#f6f9f4;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#1d2a20;box-sizing:border-box;line-height:1.5;">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#2E7D4F;font-weight:700;margin-bottom:6px;">Make it stick</div>
+  <div style="font-size:19px;font-weight:600;line-height:1.35;margin-bottom:6px;">You&rsquo;ve revised it &mdash; now lock it into memory.</div>
+  <div style="font-size:14px;color:#48564a;margin-bottom:16px;">Practise this topic with short, self-marking retrieval questions, spaced just right so it actually sticks.</div>
+  <a href="https://retrieval-app.com?ref=interactive-science&from=p3-particle-model-gcse-revision" style="display:inline-block;background:#2E7D4F;color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 20px;border-radius:8px;">Practise this in the retrieval app &rarr;</a>
+</aside>
+<!--ISCI-RETRIEVAL-CTA:END-->
+</body>
+</html>
