@@ -18,7 +18,8 @@ import {
   fetchTaughtThisWeek, fetchWeakTopics, generateParentReportHtml, weekStartISO, weekLabel,
 } from "@/lib/parentReport";
 import { sendEmail, emailConfigured } from "@/lib/email";
-import { cronAuthorized, recordCronRun } from "@/lib/serverHelpers";
+import { cronAuthorized, recordCronRun, SK_ANON, SK_URL } from "@/lib/serverHelpers";
+import { RETRIEVAL_ORIGIN as RET_ORIGIN } from "@/lib/interactive";
 import { reportError } from "@/lib/observe";
 
 const JOB = "weekly-parent-report";
@@ -26,9 +27,6 @@ const JOB = "weekly-parent-report";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
-const RET_ORIGIN = process.env.NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN || "https://retrieval-app.com";
 const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_ORIGIN || "";  // this app's own URL, for portal + unsubscribe links
 
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });

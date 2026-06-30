@@ -10,7 +10,7 @@
  * `instantiateStarter` deep-clones one of these into a fresh deck (new deck id +
  * fresh slide/element ids via ensureIds) for either store — Supabase or guest. */
 
-import { uid, ensureIds } from "@/components/slideEditor/constants";
+import { uid, ensureIds, RET_APP_ORIGIN } from "@/components/slideEditor/constants";
 
 // A slide body is the same shape a TEMPLATE build() returns: an optional
 // per-slide background plus an array of editor elements. Ids are minted on
@@ -97,7 +97,7 @@ const exitTicketSlide = (): StarterSlide => ({
 const retrievalSlide = (): StarterSlide => ({
   elements: [
     { type: "text", x: 50, y: 26, width: 860, height: 50, text: "Retrieval", fontSize: 36, bold: true, color: "#1a1714" },
-    { type: "retrieval", x: 50, y: 88, width: 860, height: 424, url: "https://retrieval-app.com" },
+    { type: "retrieval", x: 50, y: 88, width: 860, height: 424, url: RET_APP_ORIGIN },
   ],
 });
 

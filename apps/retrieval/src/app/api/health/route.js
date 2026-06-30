@@ -4,12 +4,13 @@
 // AI marking silently falling back to local fuzzy matching (Anthropic
 // key/billing). Returns 200 when marking is healthy, 503 otherwise — point a
 // monitor at GET /api/health and alert on 503.
+import { SUPA_URL as SUPA, SUPA_ANON as ANON } from "../../../lib/supaConfig";
+
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
 
-// Public Supabase ref + anon key (already shipped in the browser bundle; RLS protects data).
-const SUPA = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
+// Public Supabase ref + anon key (already shipped in the browser bundle; RLS
+// protects data) — sourced from the shared, env-overridable ./lib/supaConfig.
 
 const HEALTHY = new Set(["ai", "ai_double_check_confirmed", "ai_double_check_overturned", "numerical_match", "exact_match", "cache"]);
 

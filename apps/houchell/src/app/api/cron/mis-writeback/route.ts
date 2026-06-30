@@ -4,7 +4,7 @@
 //   CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, WONDE_TOKEN
 
 import { wondeConfigured, runWriteback } from "@/lib/wonde";
-import { cronAuthorized, recordCronRun } from "@/lib/serverHelpers";
+import { cronAuthorized, recordCronRun, SK_URL } from "@/lib/serverHelpers";
 import { reportError } from "@/lib/observe";
 
 const JOB = "mis-writeback";
@@ -12,7 +12,6 @@ const JOB = "mis-writeback";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });
 
 export async function GET(req: Request) {

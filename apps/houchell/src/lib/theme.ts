@@ -24,6 +24,26 @@ export const C = {
   serif: "'Instrument Serif', Georgia, serif",
 };
 
+// ─── Canonical design scales ───
+// These are the single source of truth for spacing, corner radius and type
+// sizes. The values match what's already most common across the app's inline
+// styles, so they're drop-in. NEW code should pull from these instead of
+// hardcoding pixel values; existing inline styles are being migrated lazily.
+export const SPACING = {
+  xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, huge: 40,
+} as const;
+
+export const RADIUS = {
+  sm: 4, md: 6, lg: 8, xl: 12, pill: 999,
+} as const;
+
+// Font-size scale (px). Alias `FONT_SIZE` is provided for readability.
+export const TYPE = {
+  micro: 10, tiny: 11, xs: 12, sm: 13, base: 14, md: 16, lg: 18,
+  xl: 22, xxl: 24, h2: 28, h1: 44,
+} as const;
+export const FONT_SIZE = TYPE;
+
 // Discipline accents, brightened for the dark theme so they read on navy.
 export const DISC = {
   biology:   { color: "#54d6a8", bg: "rgba(84,214,168,0.14)",  label: "Biology" },

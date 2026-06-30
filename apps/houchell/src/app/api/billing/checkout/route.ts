@@ -4,11 +4,10 @@
 //   or  { portal: true }    → returns { url } to the billing portal (manage/cancel)
 
 import { stripeConfigured, createCheckoutSession, createPortalSession } from "@/lib/stripe";
+import { SK_ANON, SK_URL } from "@/lib/serverHelpers";
 
 export const runtime = "nodejs";
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 const APP_ORIGIN = process.env.NEXT_PUBLIC_APP_ORIGIN || "";
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });
 

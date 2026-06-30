@@ -37,3 +37,40 @@ export async function getEntitlement(opts: { skUrl: string; apikey: string; bear
 export function can(ent: Entitlement, feature: string): boolean {
   return !!ent.features?.[feature];
 }
+
+// ---------------------------------------------------------------------------
+// Home-learning course (Springboard) — parent D2C premium tier.
+//
+// The parent portal is password-less (magic-link token), so it never carries a
+// server-resolved `Entitlement`. This helper mirrors the `can()` convention but
+// reads the premium flag straight off the portal payload, so the gate lives in
+// one place and DEFAULTS TO FREE: if nothing in the payload proves premium, the
+// parent sees the free tier and the upgrade surface stays visible. Flipping a
+// child to premium is a pure data change (no UI change needed) once the billing
+// seam below is wired.
+//
+// Feature key on a paid plan's `features` map; also the per-link/portal flag the
+// premium tier sets once a parent subscribes.
+export const HOME_COURSE_PREMIUM_FEATURE = "home_course_premium";
+
+/** Minimal shape this gate needs from the parent-portal payload. Kept loose so
+ *  the portal page can pass its own `Child[]` without a type dependency. */
+export interface HomeCoursePremiumInput {
+  // Optional server-resolved entitlement (teacher-side callers may have one).
+  entitlement?: Entitlement | null;
+  // Parent-portal children; premium is true if ANY linked child is flagged.
+  children?: Array<{ home?: { premium?: boolean } | null } | null> | null;
+}
+
+/** True only when the caller has the paid home-learning tier. Everyone else —
+ *  including every current user — gets `false` (the free tier). */
+export function hasHomeCoursePremium(input: HomeCoursePremiumInput | null | undefined): boolean {
+  if (!input) return false;
+  if (input.entitlement && input.entitlement.active && can(input.entitlement, HOME_COURSE_PREMIUM_FEATURE)) {
+    return true;
+  }
+  if (Array.isArray(input.children)) {
+    return input.children.some((c) => !!c?.home?.premium);
+  }
+  return false;
+}

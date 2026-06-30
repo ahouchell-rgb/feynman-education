@@ -5,7 +5,7 @@
 //   CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, SK_API_KEY
 
 import { mapPool } from "@/lib/trustBenchmark";
-import { cronAuthorized, recordCronRun, withTimeout, RETRIEVAL_TIMEOUT_MS } from "@/lib/serverHelpers";
+import { cronAuthorized, recordCronRun, withTimeout, RETRIEVAL_TIMEOUT_MS, SK_URL } from "@/lib/serverHelpers";
 import { reportError } from "@/lib/observe";
 
 const JOB = "school-snapshots";
@@ -13,7 +13,6 @@ const JOB = "school-snapshots";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json" } });
 
 export async function GET(req: Request) {

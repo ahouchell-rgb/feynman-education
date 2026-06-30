@@ -2,6 +2,7 @@
  * Extracted from SlideEditor.tsx so the editor file is the component logic only,
  * and so these (templates, formula palettes, caret helpers) can be reused/tested
  * without mounting the editor. No React, no JSX. */
+import { RETRIEVAL_ORIGIN } from "@/lib/interactive";
 
 // Collision-proof id: a per-session counter guarantees uniqueness even when
 // many ids are minted in the same tick (templates, AI, slide clone). The old
@@ -105,7 +106,9 @@ export function parseVideo(url) {
 }
 
 // Retrieval app embedded live in Present (teacher picks topics inside it).
-export const RET_APP_ORIGIN = "https://retrieval-app.com";
+// Env-driven (NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN) via the shared @/lib/interactive
+// origin, with the prod domain as the literal fallback.
+export const RET_APP_ORIGIN = RETRIEVAL_ORIGIN;
 
 // Deck themes — applied across every slide (background + text fonts/colours).
 export const THEMES = [
@@ -176,7 +179,7 @@ export const TEMPLATES = [
   ] }) },
   { label: "Retrieval", build: () => ({ elements: [
     { type: "text", x: 50, y: 26, width: 860, height: 50, text: "Retrieval", fontSize: 36, bold: true, color: "#1a1714" },
-    { type: "retrieval", x: 50, y: 88, width: 860, height: 424, url: "https://retrieval-app.com" },
+    { type: "retrieval", x: 50, y: 88, width: 860, height: 424, url: RET_APP_ORIGIN },
   ] }) },
 ];
 

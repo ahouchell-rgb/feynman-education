@@ -12,14 +12,13 @@
 
 import { NextResponse } from "next/server";
 import { supaRest } from "@/lib/supabaseRest";
+import { SK_ANON, SK_URL } from "@/lib/serverHelpers";
 
 const TENANT = process.env.MICROSOFT_TENANT;
 const CLIENT_ID = process.env.MICROSOFT_CLIENT_ID;
 const CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET;
 
-const SK_URL = process.env.NEXT_PUBLIC_SK_URL || "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const SK_ANON_KEY = process.env.NEXT_PUBLIC_SK_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
+const SK_ANON_KEY = SK_ANON;
 const SK_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export async function POST(req) {

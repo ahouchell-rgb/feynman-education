@@ -6,6 +6,7 @@ import "katex/dist/katex.min.css";
 import { C } from "@/lib/theme";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { RETRIEVAL_ORIGIN } from "@/lib/interactive";
 
 /* The fixed virtual canvas every element is positioned within. */
 export const VW = 960, VH = 540;
@@ -309,7 +310,7 @@ function VideoFrame({ el }) {
    retrieval app blocks embedding (X-Frame-Options / CSP frame-ancestors). */
 function RetrievalFrame({ el }) {
   const stop = (e) => e.stopPropagation();
-  const url = el.url || "https://retrieval-app.com";
+  const url = el.url || RETRIEVAL_ORIGIN;
   return (
     <div style={{ width: "100%", height: "100%", position: "relative", background: "#fff" }} onClick={stop} onMouseDown={stop}>
       <iframe src={url} title="retrieval"

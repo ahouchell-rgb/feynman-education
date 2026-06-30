@@ -16,12 +16,10 @@
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 import { rollupRetrieval, blendObjectiveMastery, crosswalkMap, type AssessmentObjective } from "@/lib/mastery";
 import { reportError } from "@/lib/observe";
 import { mapPool } from "@/lib/trustBenchmark";
-import { withTimeout, RETRIEVAL_TIMEOUT_MS } from "@/lib/serverHelpers";
+import { withTimeout, RETRIEVAL_TIMEOUT_MS, SK_ANON, SK_URL } from "@/lib/serverHelpers";
 
 /** Whole days since an ISO date (yyyy-mm-dd), or null. */
 function daysSince(isoDate?: string | null): number | null {

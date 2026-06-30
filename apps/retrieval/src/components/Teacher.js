@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { sb } from "../lib/supabase";
 import { C } from "../lib/theme";
+import { markingTimeSaved } from "../lib/roi";
 import { isHoD, isModerator } from "../lib/roles";
 import { planAllows } from "../lib/plans";
 import { STAR_INTERVAL, WEEKLY_TARGET, getWeekBounds } from "../lib/week";
@@ -51,6 +52,7 @@ export function Teacher({ user }) {
   const [expandedQuestionStat, setExpandedQuestionStat] = useState(null); // question_id with wrong answers panel open
   const [topicBank, setTopicBank] = useState({}); // topic_id → count of non-archived questions (coverage denominator)
   const [expandedSpread, setExpandedSpread] = useState(null); // topic_id with per-student spread panel open
+  const [showRoiHow, setShowRoiHow] = useState(false); // "how this is calculated" footnote for the time-saved tile
   // Marking flag review state
   const [expandedFlag, setExpandedFlag] = useState(null); // flag_id being reviewed
   const [flagNote, setFlagNote] = useState(""); // teacher's optional note on the active review
@@ -736,6 +738,28 @@ export function Teacher({ user }) {
                   </div>
                 </div>
               </div>
+
+              {/* MARKING TIME SAVED — quantifies the "get your marking time back" promise for this class */}
+              {(() => {
+                const roi = markingTimeSaved(dash.tR);
+                if (roi.responsesMarked === 0) return null;
+                return (
+                  <Card style={{ padding: "16px 18px", marginBottom: 12, borderColor: `${C.grn}55`, borderLeft: `4px solid ${C.grn}`, background: C.grnS }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.grn} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+                      <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", color: C.grn }}>Marking time saved · estimate</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginTop: 10 }}>
+                      <span style={{ fontFamily: C.serif, fontSize: 40, fontWeight: 600, lineHeight: .9, color: C.grn, fontVariantNumeric: "tabular-nums" }}>~{roi.label}</span>
+                      <span style={{ fontFamily: C.serif, fontSize: 15, lineHeight: 1.25, color: C.txt }}>of marking handed back on this class</span>
+                    </div>
+                    <button onClick={() => setShowRoiHow(v => !v)} style={{ marginTop: 10, padding: 0, background: "none", border: "none", color: C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", textDecoration: "underline" }}>
+                      {showRoiHow ? "Hide" : "How this is calculated"}
+                    </button>
+                    {showRoiHow && <div style={{ marginTop: 8, fontSize: 11, color: C.mid, lineHeight: 1.55 }}>{roi.footnote}</div>}
+                  </Card>
+                );
+              })()}
 
               {/* ACTION HERO — concerns lead the dashboard (v4 hierarchy) */}
               {(() => {

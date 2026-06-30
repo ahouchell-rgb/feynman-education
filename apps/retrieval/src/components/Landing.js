@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { C } from "../lib/theme";
 import { SUPA_URL, SUPA_KEY } from "../lib/supabase";
 import { sessionId } from "../lib/anonSession";
@@ -8,10 +9,13 @@ import { sessionId } from "../lib/anonSession";
 //   • For schools — prospective schools → /pricing (the pilot / quote funnel)
 // Returning users with a saved session skip this and land straight in the app.
 //
-// pupilArrival ({ ref, from }) — set when a pupil clicked a STATIC booklet CTA on
-// interactive-science.com. We swap the hero to pupil-facing copy + a direct "create a
+// pupilArrival ({ ref, from, topic }) — set when a pupil clicked a STATIC booklet CTA
+// on interactive-science.com. We swap the hero to pupil-facing copy + a direct "create a
 // free account" path (not the schools pricing page), and emit funnel telemetry so the
 // booklet → signup conversion is measured (the static path was previously untracked).
+// When the booklet mapped a retrieval topic (?topic=<uuid>), we also surface a "practise
+// it now" CTA that deep-links into that topic's live practice widget, mirroring the
+// param format embed/practice resolves (?topic=<uuid>&ref=…&from=…).
 
 const BRAND = "Houchell Education";
 
@@ -41,12 +45,28 @@ export function Landing({ onLogin, pupilArrival }) {
     background: primary ? C.pri : "transparent", color: primary ? "#fff" : C.pri, fontFamily: "inherit",
   });
 
+  // Funnel: a real pupil arrived from a static booklet CTA. Reuse the booklet_viewed
+  // event-name convention (same top-of-funnel meaning embed/practice records for the
+  // live widget), so the previously-untracked static path now shows up in the dashboard.
+  useEffect(() => {
+    if (pupilArrival) emitFunnel("booklet_viewed", { ref: pupilArrival.ref, from_source: pupilArrival.from, topic_id: pupilArrival.topic });
+  }, [pupilArrival]);
+
   // Pupil "create a free account" — measure the conversion, then open the signup tab.
-  // (The booklet_viewed top-of-funnel is recorded on the booklet page itself by
-  // add_funnel_analytics.py, so we only record the conversion here.)
   const pupilSignup = () => {
-    if (pupilArrival) emitFunnel("signup_clicked", { ref: pupilArrival.ref, from_source: pupilArrival.from });
+    if (pupilArrival) emitFunnel("signup_clicked", { ref: pupilArrival.ref, from_source: pupilArrival.from, topic_id: pupilArrival.topic });
     onLogin({ signup: true });
+  };
+
+  // Deep-link into the mapped topic's live practice (the same anonymous widget the
+  // booklet embeds), carrying attribution in the format embed/practice resolves. We
+  // record widget_opened — the existing "opened the practice widget" funnel step.
+  const topicId = pupilArrival?.topic || null;
+  const practiceUrl = topicId
+    ? `/embed/practice?topic=${encodeURIComponent(topicId)}&ref=${encodeURIComponent(pupilArrival.ref)}${pupilArrival.from ? `&from=${encodeURIComponent(pupilArrival.from)}` : ""}`
+    : null;
+  const pupilPractise = () => {
+    emitFunnel("widget_opened", { ref: pupilArrival.ref, from_source: pupilArrival.from, topic_id: topicId });
   };
 
   if (pupilArrival) {
@@ -66,7 +86,10 @@ export function Landing({ onLogin, pupilArrival }) {
               You&rsquo;ve revised it — now make it stick. Create a free account to keep practising in your own words, get instant marked feedback, and have each question come back to you spaced just right.
             </p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 28, flexWrap: "wrap" }}>
-              <button onClick={pupilSignup} style={btn(true)}>Create a free account</button>
+              {practiceUrl ? (
+                <a href={practiceUrl} onClick={pupilPractise} style={btn(true)}>Practise it now →</a>
+              ) : null}
+              <button onClick={pupilSignup} style={btn(!practiceUrl)}>Create a free account</button>
               <button onClick={() => onLogin()} style={btn(false)}>I already have one — log in</button>
             </div>
             <div style={{ fontSize: 12.5, color: C.dim, marginTop: 18 }}>Free to start. Got a class code from your teacher? You can join your class after signing in.</div>

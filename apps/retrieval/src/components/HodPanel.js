@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { detectFakeAnswer } from "../lib/marking";
 import { sb, SUPA_URL, SUPA_KEY } from "../lib/supabase";
+import { markingTimeSaved } from "../lib/roi";
 import { C } from "../lib/theme";
 import { Btn, Card, Dateline, Deck, Headline, Inp, Kicker, Pill, TA } from "./ui";
 
@@ -19,6 +20,7 @@ export function HodPanel({ user }) {
   const [flagNote, setFlagNote] = useState("");
   const [flagBusy, setFlagBusy] = useState(null);
   const [drill, setDrill] = useState(null); // {classId, tid, className, topicName} — class-matrix cell drilldown
+  const [showRoiHow, setShowRoiHow] = useState(false); // "how this is calculated" footnote for the time-saved tile
   // Tier-1.5: HoD self-serve team onboarding (add a teacher to your school/department)
   const [showAddTeacher, setShowAddTeacher] = useState(false);
   const [newTeacher, setNewTeacher] = useState({ email: "", display_name: "", password: "" });
@@ -332,6 +334,28 @@ export function HodPanel({ user }) {
               <div style={{ fontFamily: C.serif, fontSize: 30, fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1, color: deptAccuracy >= 70 ? C.grn : deptAccuracy >= 50 ? C.amb : C.red }}>{deptAccuracy}<span style={{ fontSize: 16, color: C.dim }}>%</span></div>
             </div>
           </div>
+
+          {/* MARKING TIME SAVED — quantifies the "get your marking time back" promise across the department */}
+          {(() => {
+            const roi = markingTimeSaved(validResps.length);
+            if (roi.responsesMarked === 0) return null;
+            return (
+              <div style={{ background: `linear-gradient(135deg, ${C.grnS}, transparent)`, border: `1px solid ${C.grn}33`, borderLeft: `4px solid ${C.grn}`, borderRadius: "0 6px 6px 0", padding: "16px 18px", marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.grn} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
+                  <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", color: C.grn }}>Marking time saved · estimate</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginTop: 10 }}>
+                  <span style={{ fontFamily: C.serif, fontSize: 44, fontWeight: 600, lineHeight: .9, color: C.grn, fontVariantNumeric: "tabular-nums" }}>~{roi.label}</span>
+                  <span style={{ fontFamily: C.serif, fontSize: 16, lineHeight: 1.25, color: C.txt }}>of staff marking handed back across your department</span>
+                </div>
+                <button onClick={() => setShowRoiHow(v => !v)} style={{ marginTop: 10, padding: 0, background: "none", border: "none", color: C.dim, fontSize: 11, cursor: "pointer", fontFamily: "inherit", textDecoration: "underline" }}>
+                  {showRoiHow ? "Hide" : "How this is calculated"}
+                </button>
+                {showRoiHow && <div style={{ marginTop: 8, fontSize: 11, color: C.mid, lineHeight: 1.55 }}>{roi.footnote}</div>}
+              </div>
+            );
+          })()}
 
           {/* View tabs */}
           <div style={{ display: "flex", gap: 6, marginBottom: 12, overflowX: "auto" }}>

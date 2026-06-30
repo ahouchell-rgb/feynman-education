@@ -3,10 +3,14 @@
 // across ~20 route handlers, so a fix lands once. Pure functions here are unit
 // tested in serverHelpers.test.ts.
 
-export const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
+// Single source of truth for the Supabase anchor URL + anon key across the
+// whole houchell app. Env-overridable; the literals below are the current prod
+// values kept as fallbacks so runtime behaviour is identical when no env is set.
+export const SK_URL = process.env.NEXT_PUBLIC_SUPA_URL || "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 // Public anon key (same as src/lib/sk) — safe in source; used as the apikey
 // header alongside the caller's bearer.
 export const SK_ANON =
+  process.env.NEXT_PUBLIC_SUPA_ANON ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 
 export const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
@@ -222,12 +226,24 @@ export async function logTokenUsage(userId: string, usage: any): Promise<void> {
   if (!key || !userId) return;
   const input = (usage?.input_tokens || 0) + (usage?.cache_read_input_tokens || 0) + (usage?.cache_creation_input_tokens || 0);
   try {
-    await fetch(`${SK_URL}/rest/v1/rpc/increment_token_usage`, {
+    const res = await fetch(`${SK_URL}/rest/v1/rpc/increment_token_usage`, {
       method: "POST",
       headers: { "content-type": "application/json", apikey: key, Authorization: `Bearer ${key}` },
       body: JSON.stringify({ p_teacher_id: userId, p_day: todayISO(), p_input: input, p_output: usage?.output_tokens || 0 }),
     });
-  } catch { /* best-effort */ }
+    // A non-OK fetch still RESOLVES, so without this guard a failed RPC (bad SQL,
+    // RLS, RPC renamed/missing) silently "succeeds": daily_token_usage gets 0 rows
+    // and any AI cap then reads zero. Stay fire-and-forget (don't block the caller),
+    // but make the failure observable — log status + a body snippet like the other
+    // helpers (recordCronRun / skAdmin) do, instead of swallowing it.
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      console.error(JSON.stringify({ level: "warn", at: new Date().toISOString(), message: "logTokenUsage RPC failed", status: res.status, body: detail.slice(0, 200) }));
+    }
+  } catch (e: any) {
+    // Network throw — still best-effort, but greppable rather than silent.
+    console.error(JSON.stringify({ level: "warn", at: new Date().toISOString(), message: "logTokenUsage threw", err: e?.message }));
+  }
 }
 
 export const json = (obj: unknown, status = 200) =>

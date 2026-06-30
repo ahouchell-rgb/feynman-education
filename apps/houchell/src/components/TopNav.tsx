@@ -37,7 +37,7 @@ export function TopNav({ onOpenVisualiser, onOpenSearch }) {
     { href: "/parents", label: "Parents" },
     { href: "/home-course", label: "Home course" },
     { href: "/assessments", label: "Assess" },
-    { href: "/teacher", label: "My classes" },
+    { href: "/teacher", label: "My mastery" },
     { href: "/school", label: "School" },
     ...(profile?.trust_role === "trust_lead" ? [{ href: "/trust", label: "Trust" }] : []),
     { href: "/manage", label: "Manage" },
@@ -96,12 +96,12 @@ export function TopNav({ onOpenVisualiser, onOpenSearch }) {
         {/* Secondary teacher row */}
         {inTeacher && (
           <div style={{ borderTop: `1px solid ${C.rule}`, background: "rgba(4,11,22,0.5)" }}>
-            <div style={{ width: "min(1180px, calc(100% - 36px))", margin: "0 auto", display: "flex", gap: 6, alignItems: "center", padding: "10px 0", overflowX: "auto" }}>
+            <div style={{ width: "min(1180px, calc(100% - 36px))", margin: "0 auto", display: "flex", gap: 6, alignItems: "center", padding: "10px 0", overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none", msOverflowStyle: "none" }}>
               {teacherTabs.map(t => {
                 const active = pathname === t.href || (t.href === "/curriculum" && pathname?.startsWith("/unit/"));
                 return (
                   <Link key={t.href + t.label} href={t.href} aria-current={active ? "page" : undefined}
-                    style={{ padding: "6px 13px", borderRadius: 999, fontFamily: C.mono, fontSize: 11.5, fontWeight: active ? 600 : 500, letterSpacing: "0.01em", color: active ? C.accentFg : C.muted, background: active ? C.accent : "rgba(255,255,255,0.04)", border: `1px solid ${active ? "transparent" : C.border}`, textDecoration: "none", whiteSpace: "nowrap", transition: "all .14s ease" }}>
+                    style={{ flex: "0 0 auto", padding: "6px 13px", borderRadius: 999, fontFamily: C.mono, fontSize: 11.5, fontWeight: active ? 600 : 500, letterSpacing: "0.01em", color: active ? C.accentFg : C.muted, background: active ? C.accent : "rgba(255,255,255,0.04)", border: `1px solid ${active ? "transparent" : C.border}`, textDecoration: "none", whiteSpace: "nowrap", transition: "all .14s ease" }}>
                     {t.label}
                   </Link>
                 );

@@ -11,6 +11,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@houchell/db": "*",
     "dompurify": "^3.4.11",
     "jszip": "^3.10.1",
     "katex": "^0.16.47",

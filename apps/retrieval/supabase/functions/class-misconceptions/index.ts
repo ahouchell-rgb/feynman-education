@@ -14,6 +14,7 @@
 // so re-opening the panel is free.
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { corsHeaders } from "../_shared/cors.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -26,12 +27,6 @@ const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const MODEL = "claude-sonnet-4-6";
 const MAX_OUTPUT_TOKENS = 1800;
 const MAX_QUESTIONS = 24;          // cap prompt size / cost — the weakest questions first
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
 
 const SYSTEM_PROMPT = `You are an experienced UK secondary science teacher (AQA, KS3/GCSE) reviewing your class's WRONG answers to short retrieval-practice questions. Your job is to surface the few SPECIFIC misconceptions behind the mistakes — the faulty idea the pupils actually hold — not to restate that they got it wrong.
 

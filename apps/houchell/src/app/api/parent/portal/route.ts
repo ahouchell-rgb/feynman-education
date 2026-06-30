@@ -12,10 +12,10 @@
 //
 // Env: SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN (practise link).
 
-export const runtime = "nodejs";
+import { SK_URL } from "@/lib/serverHelpers";
+import { RETRIEVAL_ORIGIN as RET_ORIGIN } from "@/lib/interactive";
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const RET_ORIGIN = process.env.NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN || "https://retrieval-app.com";
+export const runtime = "nodejs";
 
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 

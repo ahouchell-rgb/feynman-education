@@ -5,6 +5,7 @@ import { sk } from "@/lib/sk";
 import { guestFind } from "@/lib/guestDecks";
 import { StaticSlide, VW, VH, revealCount, slideHasVisualiser, deckHasVisualiser, probeCameraPermission, TIMER_TOGGLE_EVENT } from "@/components/SlideStage";
 import { cacheDeck, readCachedDeck } from "@/lib/deckCache";
+import { C } from "@/lib/theme";
 
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 const pickBtn = { padding: "10px 22px", fontSize: 15, fontWeight: 600, color: "#fff", background: "#1a1714", border: "none", borderRadius: 8, cursor: "pointer" };
@@ -354,7 +355,7 @@ export default function PresentPage() {
               <button onClick={openNotes} title="Open notes in a separate window (for a second screen)"
                 style={{ marginLeft: "auto", fontSize: 11, color: "#aaa", background: "none", border: "1px solid #333", borderRadius: 5, padding: "3px 8px", cursor: "pointer" }}>⧉ Pop out notes</button>
             </div>
-            <div style={{ fontSize: 15, lineHeight: 1.5, color: slide.notes ? "#e8e8e8" : "#666", whiteSpace: "pre-wrap" }}>
+            <div style={{ fontSize: 15, lineHeight: 1.5, color: slide.notes ? "#e8e8e8" : C.muted, whiteSpace: "pre-wrap" }}>
               {slide.notes || "No notes for this slide."}
             </div>
           </div>
@@ -363,7 +364,7 @@ export default function PresentPage() {
             <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "#777", marginBottom: 6 }}>Next</div>
             {slides[i + 1]
               ? <div style={{ borderRadius: 6, overflow: "hidden", border: "1px solid #2a2a2a", lineHeight: 0 }}><StaticSlide slide={slides[i + 1]} width={336} master={deck?.master} index={i + 1} total={slides.length} title={deck?.title} /></div>
-              : <div style={{ fontSize: 13, color: "#666" }}>End of deck</div>}
+              : <div style={{ fontSize: 13, color: C.muted }}>End of deck</div>}
           </div>
         </div>
       )}
@@ -499,11 +500,11 @@ export default function PresentPage() {
       )}
 
       {/* status / hint bar */}
-      <div style={{ position: "fixed", bottom: 12, right: 16, fontFamily: "monospace", fontSize: 12, color: "#777" }}>
+      <div style={{ position: "fixed", bottom: 12, right: 16, fontFamily: "monospace", fontSize: 12, color: C.dim }}>
         {i + 1} / {slides.length}{(pen || (penDraw && (touchCapable || penSeen))) ? " · ✎" : ""}
       </div>
       {!touchCapable && (
-      <div style={{ position: "fixed", bottom: 12, left: 16, fontFamily: "monospace", fontSize: 11, color: "#555" }}>
+      <div style={{ position: "fixed", bottom: 12, left: 16, fontFamily: "monospace", fontSize: 11, color: C.dim }}>
         ← → move · S notes · G grid · B/W blank · P pen · T timer · U undo · C clear · N names · Esc exit
       </div>
       )}

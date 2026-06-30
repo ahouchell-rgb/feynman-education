@@ -4,6 +4,18 @@
   "private": true,
   "type": "module",
   "description": "Single source of truth for the unified anchor schema: the ordered migration ledger, the RPC contract the apps depend on, and the contract test that turns cross-repo drift into a red CI check.",
+  "main": "./contracts/rpcs.mjs",
+  "exports": {
+    ".": "./contracts/rpcs.mjs",
+    "./contracts/rpcs": "./contracts/rpcs.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "contracts",
+    "lib",
+    "migrations",
+    "scripts"
+  ],
   "scripts": {
     "test": "node --test",
     "verify:live": "node scripts/verify-rpcs.mjs",

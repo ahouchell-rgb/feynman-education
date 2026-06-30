@@ -1,11 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+import { corsHeaders } from "../_shared/cors.ts";
+import { assertStrongPassword } from "../_shared/password.ts";
 
 function generatePassword(): string {
   const words = ["Atom","Wave","Cell","Gene","Star","Bolt","Flux","Nova","Prism","Quark","Solar","Ionic","Lunar","Pixel","Comet","Hydro","Orbit","Pulse","Radar","Sonic"];
@@ -133,7 +129,11 @@ Deno.serve(async (req: Request) => {
       const name = String(new_display_name || "").trim();
       const password = String(new_password || "").trim();
       if (!email || !name || !password) return new Response(JSON.stringify({ error: "Missing email, name, or temporary password" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      if (password.length < 6) return new Response(JSON.stringify({ error: "Temporary password must be at least 6 characters" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      // Staff-account password floor (A2): >=10 chars + not in the HIBP breach list.
+      // The admin API bypasses the dashboard's leaked-password protection, so we
+      // enforce it here. Fail-open on a HIBP outage; the length floor always holds.
+      const createPwErr = await assertStrongPassword(password);
+      if (createPwErr) return new Response(JSON.stringify({ error: createPwErr }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return new Response(JSON.stringify({ error: "Invalid email format" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       // Resolve the new teacher's tenant. A HoD's invitee joins the HoD's school +
       // department; a moderator may optionally target a school via body.school_id.
@@ -244,7 +244,12 @@ Deno.serve(async (req: Request) => {
       if (!isModerator) return new Response(JSON.stringify({ error: "Only admins can reset teacher passwords" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const { teacher_id } = body;
       if (!teacher_id || !new_password) return new Response(JSON.stringify({ error: "Missing teacher_id or new_password" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      if (String(new_password).length < 6) return new Response(JSON.stringify({ error: "Password must be at least 6 characters" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      // Staff-account password floor (A2): >=10 chars + not in the HIBP breach list.
+      // Mirrors create_teacher — the admin updateUser call below also bypasses the
+      // dashboard's leaked-password protection. Fail-open on a HIBP outage; the
+      // length floor always holds.
+      const resetPwErr = await assertStrongPassword(String(new_password));
+      if (resetPwErr) return new Response(JSON.stringify({ error: resetPwErr }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const { data: tp } = await supabase.from("profiles").select("role").eq("id", teacher_id).single();
       if (!tp) return new Response(JSON.stringify({ error: "Account not found" }), { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       if (tp.role !== "teacher" && tp.role !== "hod") return new Response(JSON.stringify({ error: "That account is not a teacher (role: " + tp.role + ")" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });

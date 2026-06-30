@@ -11,7 +11,10 @@ if already present, otherwise inserted before </body>. Re-run any time — safe.
     band would be clipped off-screen and never seen.
   - Reads resources.json to personalise the copy by subject (cat) and to pick up
     the destination URL from site.retrieval_url (single source of truth), and tags
-    the link with ?ref=interactive-science&from=<page> for attribution.
+    the link with ?ref=interactive-science&from=<page> for attribution. When the
+    booklet's slug has a retrieval topic mapped (site.retrieval_topics), it also
+    carries &topic=<uuid> so the landing can deep-link straight into that topic's
+    practice instead of the generic schools page.
 
 Usage:  python3 add_retrieval_cta.py
 """
@@ -38,9 +41,11 @@ SUBJECT = {
 FULLSCREEN_RE = re.compile(r"(?:html|body)[^{]{0,80}\{[^{}]{0,400}?overflow\s*:\s*hidden", re.I)
 
 
-def cta_block(slug, subject_word, retrieval_url):
+def cta_block(slug, subject_word, retrieval_url, topic_id=None):
     sep = "&" if "?" in retrieval_url else "?"
     url = f"{retrieval_url}{sep}ref=interactive-science&from={slug}"
+    if topic_id:
+        url += f"&topic={topic_id}"
     return (
         f"{START} (auto-injected by add_retrieval_cta.py; do not edit)-->\n"
         '<aside style="max-width:680px;margin:48px auto 32px;padding:24px 28px;'
@@ -81,7 +86,11 @@ def inject(path, block):
 
 def main():
     manifest = json.load(open(os.path.join(HERE, "resources.json"), encoding="utf-8"))
-    retrieval_url = manifest.get("site", {}).get("retrieval_url", "https://retrieval-app.com")
+    site = manifest.get("site", {})
+    retrieval_url = site.get("retrieval_url", "https://retrieval-app.com")
+    # booklet-slug -> retrieval-app topic UUID (single source of truth, same map the
+    # live widget injector uses). Booklets without an entry just omit &topic=.
+    retrieval_topics = site.get("retrieval_topics", {})
     by_href = {}
     for section in manifest.get("sections", []):
         for item in section.get("items", []):
@@ -103,12 +112,13 @@ def main():
         item = by_href.get(name, {})
         subject_word = SUBJECT.get(item.get("cat"), "this topic")
         slug = name[:-5] if name.endswith(".html") else name
-        action = inject(path, cta_block(slug, subject_word, retrieval_url))
+        topic_id = retrieval_topics.get(slug)
+        action = inject(path, cta_block(slug, subject_word, retrieval_url, topic_id))
         if action in counts:
             counts[action] += 1
         else:
             counts["skip-other"] += 1
-        print("cta  ", name, "->", action, f"({subject_word})")
+        print("cta  ", name, "->", action, f"({subject_word}{', +topic' if topic_id else ''})")
 
     print("\n" + ", ".join(f"{k}: {v}" for k, v in counts.items()))
 

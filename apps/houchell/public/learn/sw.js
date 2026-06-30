@@ -1,9 +1,12 @@
 // Houchell KS3 Science — offline service worker.
 // Cache-first for the app shell (so it works offline + installs as a PWA),
 // and runtime-cache other GETs (e.g. Google Fonts) as they're fetched.
-const CACHE = "feynman-sci-v3";
+// v4: precache the newly-extracted content.js (item C8) + add streak-reminder
+//     notification handlers (item C9). Bumping CACHE evicts the old v3 shell.
+const CACHE = "feynman-sci-v4";
 const SHELL = [
   "springboard.html",
+  "content.js",
   "magnetism-intro-interactive.html",
   "manifest.webmanifest",
   "icon-192.png",
@@ -35,6 +38,54 @@ self.addEventListener("fetch", (e) => {
         caches.open(CACHE).then((c) => { try { c.put(req, copy); } catch (_) {} });
         return res;
       }).catch(() => caches.match("springboard.html"));
+    })
+  );
+});
+
+// ---- Streak reminders (item C9) ----------------------------------------------
+// LOCAL ONLY: there is no push server and no Web Push subscription here. The page
+// drives reminders directly (reg.showNotification when it's open), and where the
+// browser supports Periodic Background Sync the SW can also wake ~daily to remind
+// even when the app is closed. A true closed-app guarantee would need a real push
+// server, which is intentionally out of scope.
+
+const REMINDER_TITLE = "Houchell · KS3 Science";
+
+// Periodic Background Sync (Chromium-only, best-effort — the browser decides if/when
+// it fires). The SW cannot read localStorage, so the open page is the source of truth
+// for the streak count; if a page is open it has already fired its own foreground
+// reminder, so the SW only shows the generic nudge in the closed-app case.
+self.addEventListener("periodicsync", (e) => {
+  if (e.tag === "streak-reminder") {
+    e.waitUntil(showStreakReminder());
+  }
+});
+
+async function showStreakReminder() {
+  try {
+    const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    if (clients.length > 0) return; // page is open and handles its own reminder
+  } catch (_) {}
+  return self.registration.showNotification(REMINDER_TITLE, {
+    body: "🔥 Keep your streak alive — 2 minutes of science?",
+    tag: "streak-reminder",
+    renotify: true,
+    icon: "icon-192.png",
+    badge: "icon-192.png",
+    data: { url: "springboard.html" }
+  });
+}
+
+// Clicking the notification focuses an open tab or opens the learn app.
+self.addEventListener("notificationclick", (e) => {
+  e.notification.close();
+  const target = (e.notification.data && e.notification.data.url) || "springboard.html";
+  e.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+      for (const c of clients) {
+        if (c.url.includes("springboard.html") && "focus" in c) return c.focus();
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(target);
     })
   );
 });

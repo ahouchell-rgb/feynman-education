@@ -24,9 +24,8 @@
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 import { rollupRetrieval, blendObjectiveMastery, crosswalkMap } from "@/lib/mastery";
+import { SK_ANON, SK_URL } from "@/lib/serverHelpers";
 
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 

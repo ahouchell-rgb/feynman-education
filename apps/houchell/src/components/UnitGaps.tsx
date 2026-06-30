@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ret, sk } from "@/lib/sk";
 import { C } from "@/lib/theme";
 import { Btn, Card } from "@/lib/primitives";
+import { INTERACTIVE_ORIGIN } from "@/lib/interactive";
 
 // Placeholder shown in the freshly-opened print tab while the sheet loads.
 const SHEET_LOADING_HTML = "<!doctype html><meta charset=utf-8><title>Feedforward</title><body style='margin:0;font:16px/1.5 system-ui,sans-serif;color:#555;display:flex;align-items:center;justify-content:center;height:100vh'>Generating your sheet…</body>";
@@ -190,7 +191,7 @@ export function UnitGaps({ unitId, unitTitle, lessonId, contextClass }: UnitGaps
             <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               <span style={{ fontFamily: C.mono, fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: ".06em" }}>Re-teach</span>
               {reteach.map((r) => (
-                <a key={r.href} href={`${(r.origin || "https://interactive-science.com").replace(/\/$/, "")}/${r.href}`} target="_blank" rel="noreferrer"
+                <a key={r.href} href={`${(r.origin || INTERACTIVE_ORIGIN).replace(/\/$/, "")}/${r.href}`} target="_blank" rel="noreferrer"
                   style={{ fontSize: 12, color: C.blu, textDecoration: "none", border: `1px solid ${C.border}`, borderRadius: 6, padding: "3px 9px" }}>
                   {r.name} ↗
                 </a>
