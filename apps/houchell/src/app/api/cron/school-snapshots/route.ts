@@ -5,6 +5,7 @@
 //   CRON_SECRET, SUPABASE_SERVICE_ROLE_KEY, SK_API_KEY
 
 import { mapPool } from "@/lib/trustBenchmark";
+import { summariseSchoolSnapshot } from "@/lib/dashboards";
 import { cronAuthorized, recordCronRun, withTimeout, RETRIEVAL_TIMEOUT_MS, SK_URL } from "@/lib/serverHelpers";
 import { reportError } from "@/lib/observe";
 
@@ -68,15 +69,7 @@ export async function GET(req: Request) {
         return { avg, weak };
       });
 
-      const avgs = perClass.map((c) => c.avg).filter((v): v is number => v != null);
-      const schoolAvg = avgs.length ? Math.round(avgs.reduce((a, b) => a + b, 0) / avgs.length) : null;
-
-      const tally = new Map<string, { name: string; sum: number; n: number; classes: number }>();
-      for (const c of perClass) for (const w of c.weak) {
-        const e = tally.get(w.topic_id) || { name: w.topic_name, sum: 0, n: 0, classes: 0 };
-        e.sum += w.pct; e.n += 1; e.classes += 1; tally.set(w.topic_id, e);
-      }
-      const objectives = [...tally.values()].map((e) => ({ topic_name: e.name, avg: Math.round(e.sum / e.n), classes: e.classes })).sort((a, b) => a.avg - b.avg).slice(0, 12);
+      const { schoolAvg, objectives } = summariseSchoolSnapshot(perClass);
 
       const r = await fetch(`${SK_URL}/rest/v1/school_benchmark_snapshots?on_conflict=school_id,taken_on`, {
         method: "POST",
