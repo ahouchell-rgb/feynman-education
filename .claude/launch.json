@@ -1,6 +1,7 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "houchell", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 3000 }
+    { "name": "houchell", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 3000 },
+    { "name": "learn-static", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8011", "--directory", "apps/houchell/public/learn"], "port": 8011 }
   ]
 }
