@@ -11,8 +11,9 @@
 // cleanly (mirrors src/lib/email.ts). All DB writes here use the Supabase
 // service role and target STAGING tables only — never live owner-scoped data.
 
+import { SK_URL } from "@/lib/serverHelpers";
+
 const WONDE_BASE = "https://api.wonde.com/v1.0";
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 // Per-page timeout so a hung MIS request can't stall the sync cron indefinitely
 // (wondeAll loops up to 200 pages). Wonde can be slow under load, so this is
 // generous; the AbortController cancels the in-flight fetch on expiry.

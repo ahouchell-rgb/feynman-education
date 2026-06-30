@@ -12,6 +12,7 @@
 import { supaRest } from "@/lib/supabaseRest";
 import { SUBJECT_SELECT, subjectName } from "@/lib/subject";
 import { SK_URL, SK_ANON, bearerToken, requireUserId, extractHtml, anthropicText, logTokenUsage, callAnthropic, json as j } from "@/lib/serverHelpers";
+import { INTERACTIVE_ORIGIN } from "@/lib/interactive";
 import { enforceAiBudget } from "@/lib/aiBudget";
 import { maybeFactcheck } from "@/lib/factcheck";
 import { getEntitlement, can } from "@/lib/entitlements";
@@ -75,7 +76,7 @@ export async function POST(req: Request) {
   const resLines = (Array.isArray(resources) ? resources : []).filter((r: any) => {
     const k = (r.name || r.href || "").toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true;
   }).map((r: any) => {
-    const base = (r.origin || "https://interactive-science.com").replace(/\/$/, "");
+    const base = (r.origin || INTERACTIVE_ORIGIN).replace(/\/$/, "");
     const url = /^https?:/i.test(r.href) ? r.href : `${base}/${String(r.href).replace(/^\//, "")}`;
     return `- ${r.name || r.href}${r.rtype ? ` (${r.rtype})` : ""} → ${url}`;
   }).join("\n");

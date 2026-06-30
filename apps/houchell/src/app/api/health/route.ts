@@ -15,12 +15,14 @@
 // yet" is a valid cold-start state).
 
 import { SK_URL, SK_ANON } from "@/lib/serverHelpers";
+import { RETRIEVAL_ORIGIN } from "@/lib/interactive";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const RET_APP_ORIGIN =
-  process.env.RET_APP_ORIGIN || process.env.NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN || "https://retrieval-app.com";
+// RET_APP_ORIGIN takes precedence (legacy override); otherwise the shared
+// retrieval origin (NEXT_PUBLIC_RETRIEVAL_APP_ORIGIN + literal fallback).
+const RET_APP_ORIGIN = process.env.RET_APP_ORIGIN || RETRIEVAL_ORIGIN;
 
 // The cron jobs we expect to leave a heartbeat in cron_runs.
 const JOBS = [

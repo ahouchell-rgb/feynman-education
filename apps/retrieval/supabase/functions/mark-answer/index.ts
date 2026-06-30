@@ -2,6 +2,8 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { BASE_RETRIEVAL } from "../_shared/marking/base-retrieval.ts";
 import { overlayFor } from "../_shared/marking/registry.ts";
+import { corsHeaders } from "../_shared/cors.ts";
+import { getAuthedUid, resolveSchoolId } from "../_shared/auth.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const MODEL = "claude-haiku-4-5-20251001";
@@ -11,12 +13,6 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const sb = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
   ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false, autoRefreshToken: false } })
   : null;
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
 
 // Cache safety thresholds
 const CONFIRMATION_THRESHOLD = 3;       // entries become authoritative at this many independent confirmations
@@ -75,23 +71,9 @@ function passesLengthFloor(studentAnswer: string, modelAnswer: string): boolean 
   return studentWords.length / modelWords.length >= MIN_LENGTH_RATIO;
 }
 
-// Resolve the school that owns a class, so every usage row can be attributed to a
-// school (exact per-school cost + fair-use metering). Cached in module scope: a class
-// never changes school within a warm instance, so this is one DB lookup per class, not
-// per request — the deterministic fast paths stay fast.
+// Module-scope cache for resolveSchoolId (../_shared/auth.ts): a class never changes
+// school within a warm instance, so this is one DB lookup per class, not per request.
 const schoolIdCache = new Map<string, string | null>();
-async function resolveSchoolId(class_id: string | undefined): Promise<string | null> {
-  if (!sb || !class_id) return null;
-  if (schoolIdCache.has(class_id)) return schoolIdCache.get(class_id) ?? null;
-  try {
-    const { data } = await sb.from("classes").select("school_id").eq("id", class_id).single();
-    const sid = (data?.school_id as string) ?? null;
-    schoolIdCache.set(class_id, sid);
-    return sid;
-  } catch {
-    return null;
-  }
-}
 
 // Resolve the subject's marker_profile (subjects.marker_profile) so the marker loads
 // the right prompt overlay. Authoritative: question -> topic -> subject, else class ->
@@ -307,23 +289,6 @@ async function recordCacheConfirmation(question_id: string, normalised: string, 
   }
 }
 
-// Identify the calling pupil from their Supabase JWT. Returns null when there is
-// no user token (e.g. older clients that send only the anon apikey), in which
-// case the function stays a pure marking endpoint and records nothing.
-async function getAuthedUid(req: Request): Promise<string | null> {
-  if (!sb) return null;
-  const authz = req.headers.get("Authorization") || "";
-  const m = authz.match(/^Bearer\s+(.+)$/i);
-  if (!m) return null;
-  try {
-    const { data, error } = await sb.auth.getUser(m[1]);
-    if (error || !data?.user) return null;
-    return data.user.id;
-  } catch {
-    return null;
-  }
-}
-
 // Write the marked response server-side (service role), but ONLY for the
 // authenticated pupil and ONLY in a class they belong to. This is what makes the
 // grade authoritative: the stored is_correct / marks_awarded come from here, not
@@ -383,7 +348,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const maxMarks = Number(marks) || 1;
-    const schoolId = await resolveSchoolId(class_id);
+    const schoolId = await resolveSchoolId(sb, schoolIdCache, class_id);
 
     // ── Build the verdict (this is the only place the grade is decided) ──
     let verdict: { correct: boolean; marks_awarded: number; feedback: string; flagged: boolean; source: string; confidence?: string };
@@ -481,7 +446,7 @@ Deno.serve(async (req: Request) => {
     }
 
     // ── Record server-side (authenticated pupil, their own class only) ──
-    const uid = await getAuthedUid(req);
+    const uid = await getAuthedUid(sb, req);
     // Never persist a backstop "verdict" as a grade — it isn't one.
     const response_id = verdict.source === "cap_backstop" ? null : await recordResponse(uid, question_id, class_id, student_answer, verdict);
 

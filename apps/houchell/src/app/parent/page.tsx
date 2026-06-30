@@ -3,6 +3,8 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { pupilProgressLine } from "@/lib/pupilProgress";
 import { AccessibilityMenu, useApplyAccessibilityPrefs } from "@/components/AccessibilityMenu";
+import { HomeCoursePremiumCard } from "@/components/HomeCoursePremiumCard";
+import { hasHomeCoursePremium } from "@/lib/entitlements";
 
 // Public, password-less parent portal. Reached via the token in the weekly
 // report emails: /parent?t=<token>. Lists the parent's consented children,
@@ -15,7 +17,9 @@ const COL = {
 
 interface Report { id: string; weekStart: string; html: string; emailed: boolean; }
 interface Weak { topic_id: string; topic_name: string; pct: number; practiseUrl: string | null; }
-interface Home { enabled: boolean; weak: Weak[]; targetGrade: string | null; recentScore: number | null; }
+// `premium` drives the D2C upgrade gate (hasHomeCoursePremium). The portal API
+// does not set it yet, so it is undefined for everyone → free tier by default.
+interface Home { enabled: boolean; weak: Weak[]; targetGrade: string | null; recentScore: number | null; premium?: boolean; }
 interface Course { xp: number; crowns: number; streak: number; updatedAt: string | null }
 interface Child { linkId: string; studentName: string; classLabel: string; practiseUrl: string | null; unsubscribeToken: string; reports: Report[]; home?: Home; course?: Course | null; }
 
@@ -200,6 +204,14 @@ function PortalInner() {
         </span>
         <span style={{ color: COL.green, fontWeight: 600, fontSize: 14, whiteSpace: "nowrap" }}>Open →</span>
       </a>
+
+      {/* D2C premium upgrade surface. Gated on hasHomeCoursePremium, which
+          defaults to FALSE for everyone (the portal payload carries no premium
+          flag yet) — so current users see the free tier + this upsell, and
+          premium parents won't see it once a child is flagged premium. */}
+      {!hasHomeCoursePremium({ children: data.children }) && (
+        <HomeCoursePremiumCard token={token} />
+      )}
 
       {data.children.map((c) => <ChildCard key={c.linkId} child={c} token={token} />)}
       <p style={{ fontSize: 11, color: COL.dim, textAlign: "center", marginTop: 24 }}>

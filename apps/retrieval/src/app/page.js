@@ -23,7 +23,7 @@ export default function App() {
   const [showSupport, setShowSupport] = useState(false);
   const [welcome, setWelcome] = useState(null);   // arrived from a public interactive-science booklet (widget handoff)
   const [authSignup, setAuthSignup] = useState(false); // open auth on the signup tab (pupil arriving from a booklet)
-  const [pupilArrival, setPupilArrival] = useState(null); // { ref, from } — clicked a static booklet CTA
+  const [pupilArrival, setPupilArrival] = useState(null); // { ref, from, topic } — clicked a static booklet CTA
 
   // Re-establish a persisted session on load so a refresh doesn't bounce to login.
   useEffect(() => {
@@ -60,15 +60,17 @@ export default function App() {
     } catch { /* ignore */ }
   }, []);
 
-  // A pupil who clicked a STATIC booklet CTA arrives with ?ref=interactive-science&from=<slug>
-  // (no ?isci handoff — that's the widget path above). Show the Landing in pupil mode so they
-  // get the right message + a direct signup, instead of the schools marketing copy.
+  // A pupil who clicked a STATIC booklet CTA arrives with
+  // ?ref=interactive-science&from=<slug>[&topic=<uuid>] (no ?isci handoff — that's the
+  // widget path above). Show the Landing in pupil mode so they get the right message +
+  // a direct signup (and, when the booklet mapped a topic, a deep-link into that topic's
+  // practice) instead of the schools marketing copy.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const p = new URLSearchParams(window.location.search);
     if (p.get("isci") === "1") return; // widget handoff is handled above
     const ref = p.get("ref");
-    if (ref) setPupilArrival({ ref, from: p.get("from") || null });
+    if (ref) setPupilArrival({ ref, from: p.get("from") || null, topic: p.get("topic") || null });
   }, []);
 
   if (restoring) return <div style={{ minHeight: "100dvh", background: C.bg }} />;

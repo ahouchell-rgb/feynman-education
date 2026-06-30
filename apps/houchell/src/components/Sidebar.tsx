@@ -92,7 +92,7 @@ export function Sidebar({ onOpenVisualiser, onOpenSearch }) {
             { href: "/home-course", label: "Home course" },
             { href: "/assessments", label: "Assess" },
             // Teacher's own private, owner-scoped insight view of their classes.
-            { href: "/teacher", label: "My classes" },
+            { href: "/teacher", label: "My mastery" },
             // School: dashboard for hod/slt, self-serve onboarding for everyone else.
             { href: "/school", label: "School" },
             // Trust dashboard is only for MAT leaders.

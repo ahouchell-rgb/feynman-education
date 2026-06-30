@@ -2,7 +2,7 @@
 // Writes a privileged-action record with the service role. Never throws — an
 // audit hiccup must not fail the user's action.
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
+import { SK_URL } from "@/lib/serverHelpers";
 
 export async function audit(actorId: string | null, action: string, target?: string | null, detail?: Record<string, any>): Promise<void> {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;

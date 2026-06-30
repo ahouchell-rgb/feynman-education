@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { sk } from "@/lib/sk";
 import { C } from "@/lib/theme";
 import { Card } from "@/lib/primitives";
+import { INTERACTIVE_ORIGIN } from "@/lib/interactive";
 
 interface Props {
   unitId?: string | null;
@@ -15,7 +16,7 @@ interface Res {
   level: string; tag: string; accent: string; section: string; origin: string;
 }
 
-const resUrl = (r: Res) => `${(r.origin || "https://interactive-science.com").replace(/\/$/, "")}/${r.href}`;
+const resUrl = (r: Res) => `${(r.origin || INTERACTIVE_ORIGIN).replace(/\/$/, "")}/${r.href}`;
 
 /**
  * UnitResources — surfaces the interactive-science.com tools, revision booklets,

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { sk, useAuth } from "@/lib/sk";
 import { C, DISC, DAYS, isoDate } from "@/lib/theme";
-import { Btn } from "@/lib/primitives";
 import { AppShell } from "@/components/AppShell";
 import { Landing } from "@/components/Landing";
 
@@ -110,15 +109,30 @@ function HomeContent() {
           <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>Tap to open.</p>
           <NextLessonCard lesson={nextLesson} onClick={() => openLessonOrUnit(nextLesson)} />
         </>
+      ) : (data.lessons || []).length === 0 ? (
+        <button onClick={() => router.push("/setup")} style={{ width: "100%", padding: "32px 32px", borderRadius: 12, background: C.surface, border: `1px solid ${C.accent}`, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 24, transition: "all .12s", position: "relative" }}
+          onMouseEnter={e => e.currentTarget.style.background = C.bg}
+          onMouseLeave={e => e.currentTarget.style.background = C.surface}>
+          <span style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: C.accent, borderRadius: "12px 0 0 12px" }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: "0.18em", color: C.accent, fontWeight: 600, textTransform: "uppercase", marginBottom: 10 }}>Get started</div>
+            <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 36, lineHeight: 1.05, letterSpacing: "-0.02em", color: C.text, marginBottom: 8 }}>
+              Welcome — set up your <em style={{ fontStyle: "italic", color: C.accent }}>classes & timetable</em>
+            </h1>
+            <p style={{ fontSize: 14, color: C.muted, maxWidth: "52ch", lineHeight: 1.55 }}>
+              Add your classes and timetable slots and your teaching week will appear here automatically.
+            </p>
+          </div>
+          <span style={{ color: C.accent, fontSize: 22 }}>→</span>
+        </button>
       ) : (
         <>
           <h1 style={{ fontFamily: C.serif, fontWeight: 400, fontSize: 44, lineHeight: 1.0, letterSpacing: "-0.02em", marginBottom: 8 }}>
-            {(data.lessons || []).length === 0 ? "Nothing scheduled." : "All caught up."}
+            All caught up.
           </h1>
           <p style={{ fontSize: 14, color: C.muted, marginBottom: 28, maxWidth: "52ch", lineHeight: 1.55 }}>
-            {(data.lessons || []).length === 0 ? "Add classes and timetable slots to see your week here." : "Every lesson this week is marked taught."}
+            Every lesson this week is marked taught.
           </p>
-          {(data.lessons || []).length === 0 && <Btn onClick={() => router.push("/setup")}>Open setup →</Btn>}
         </>
       )}
 

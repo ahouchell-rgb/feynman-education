@@ -5,9 +5,10 @@
 // POST-only (and behind a confirm screen) so email link-prefetchers can't
 // auto-unsubscribe by following a GET. Service-role write, token-scoped.
 
+import { SK_URL } from "@/lib/serverHelpers";
+
 export const runtime = "nodejs";
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 
 export async function POST(req: Request) {

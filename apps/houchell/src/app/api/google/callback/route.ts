@@ -14,12 +14,12 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { supaRest } from "@/lib/supabaseRest";
+import { SK_URL } from "@/lib/serverHelpers";
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const STATE_SECRET = process.env.GOOGLE_STATE_SECRET || CLIENT_SECRET;
 
-const SK_URL = process.env.NEXT_PUBLIC_SK_URL || "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const SK_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const STATE_MAX_AGE_MS = 10 * 60 * 1000; // 10 minutes

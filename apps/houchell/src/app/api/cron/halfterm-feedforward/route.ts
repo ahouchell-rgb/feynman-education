@@ -11,7 +11,7 @@
 //   ANTHROPIC_API_KEY           — scaffolds
 //   SK_API_KEY                  — the x-sciencekit-key shared secret that gates the retrieval RPCs
 import { buildFeedforwardPptx } from "@/lib/feedforwardPptx";
-import { cronAuthorized, recordCronRun, withTimeout, RETRIEVAL_TIMEOUT_MS } from "@/lib/serverHelpers";
+import { cronAuthorized, recordCronRun, withTimeout, RETRIEVAL_TIMEOUT_MS, SK_ANON, SK_URL } from "@/lib/serverHelpers";
 import { reportError } from "@/lib/observe";
 
 const JOB = "halfterm-feedforward";
@@ -19,10 +19,8 @@ const JOB = "halfterm-feedforward";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
-const RET_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const RET_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
+const RET_URL = SK_URL;
+const RET_KEY = SK_ANON;
 const SK_API_KEY = process.env.SK_API_KEY || "";  // x-sciencekit-key shared secret — set in Vercel env (gates the retrieval RPCs)
 const MODEL = "claude-sonnet-4-6";
 

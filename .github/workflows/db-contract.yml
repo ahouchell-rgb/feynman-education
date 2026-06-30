@@ -44,17 +44,43 @@ jobs:
           node-version: 20
       - name: Install (pg only)
         run: npm install --no-audit --no-fund
+      # Secret-free check #1: migrations/ ↔ canonical anchor ledger.
+      # Runs every time; no DB or credentials needed.
       - name: Ledger ↔ migrations consistency
         run: npm run check:ledger
+      # Secret-free check #2: the RPC contract list is well-formed and importable.
+      # Asserts the shape of contracts/rpcs.mjs (names unique, args present) without
+      # touching a DB — so even before SQL bodies are seeded, contract drift in the
+      # list itself fails CI.
+      - name: RPC contract shape (no DB)
+        run: |
+          node --input-type=module -e '
+            import { REQUIRED_RPCS } from "./contracts/rpcs.mjs";
+            import assert from "node:assert/strict";
+            assert(Array.isArray(REQUIRED_RPCS) && REQUIRED_RPCS.length > 0, "REQUIRED_RPCS empty");
+            const names = REQUIRED_RPCS.map((r) => r.name);
+            assert.equal(new Set(names).size, names.length, "duplicate RPC name in contract");
+            for (const r of REQUIRED_RPCS) {
+              assert(typeof r.name === "string" && r.name, "RPC missing name");
+              assert("args" in r, `RPC ${r.name} missing args (use null to skip signature)`);
+              assert(["retrieval", "feynman"].includes(r.origin), `RPC ${r.name} bad origin`);
+            }
+            console.log(`RPC contract shape OK — ${REQUIRED_RPCS.length} RPCs.`);
+          '
       - name: Apply migrations to ephemeral Postgres
         id: apply
         run: node lib/applyMigrations.mjs
+      # Full live-signature contract test. Needs the SQL bodies seeded into
+      # migrations/ (supabase db pull against the anchor — see migrations/README.md)
+      # so applyMigrations can build the ephemeral DB. No external secret is needed
+      # (the Postgres service above is local), only the seeded SQL. Equivalent to
+      # `npm test -w @houchell/db` from the repo root.
       - name: Contract test (only once SQL bodies are seeded)
         if: steps.apply.outputs.seeded == 'true'
         run: npm test
       - name: Note unseeded state
         if: steps.apply.outputs.seeded != 'true'
-        run: echo "::notice::Migrations not seeded yet (supabase db pull) — ledger check ran; contract test skipped. See packages/db/migrations/README.md."
+        run: echo "::notice::Migrations not seeded yet (supabase db pull) — ledger + RPC-shape checks ran; full signature test skipped. See packages/db/migrations/README.md."
 
   # Manual, secret-gated: prove the LIVE anchor still honours the contract (read-only).
   verify-live:

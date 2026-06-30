@@ -1,12 +1,12 @@
 import { detectFakeAnswer, localMark } from "./marking";
+import { SUPA_URL as SUPA_URL_, SUPA_ANON } from "./supaConfig";
 
-// Supabase project URL + anon key. The anon key is public by design (it is
-// shipped to the browser and RLS is what protects data), but reading it from
-// env lets you rotate it / point at a different project without code changes.
-// Falls back to the original literals so existing deployments keep working
-// even if NEXT_PUBLIC_SUPA_* aren't set. See .env.example.
-export const SUPA_URL = process.env.NEXT_PUBLIC_SUPA_URL || "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-export const SUPA_KEY = process.env.NEXT_PUBLIC_SUPA_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
+// Supabase project URL + anon key — the single source of truth now lives in
+// ./supaConfig (env-overridable via NEXT_PUBLIC_SUPA_*, with the prod literals as
+// fallbacks). Re-exported here under the names this module's importers already
+// use so nothing downstream changes.
+export const SUPA_URL = SUPA_URL_;
+export const SUPA_KEY = SUPA_ANON;
 
 /* ─── Paginated fetch ───
  * A single PostgREST request is capped at the server's max-rows, and these

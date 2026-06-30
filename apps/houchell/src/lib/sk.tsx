@@ -6,11 +6,16 @@ import { buildRestUrl, restError } from "./supabaseRest";
 /* ─── Config — UNIFIED (Phase 3): one project = the retrieval-app anchor. ───
    The teacher app's data + auth now live in the anchor, so SK_* point there.
    RET_* are kept as aliases (retrieval IS the anchor) so existing imports compile.
-   The x-sciencekit-key shared secret is NOT exported here: this is a "use client"
-   module, so any literal would be bundled into client JS. Server routes/crons read
-   it from process.env.SK_API_KEY instead; client calls rely on the user JWT + RLS. */
-export const SK_URL  = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-export const SK_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
+   The anchor URL + anon key are NOT redeclared here: they live once in
+   serverHelpers (env-overridable, with the prod literals as fallback) and are
+   re-exported under the names this module's importers already use. serverHelpers
+   has no node-only imports — these two constants are derived from NEXT_PUBLIC_*
+   env (safe to inline into client JS). The x-sciencekit-key shared secret is
+   still NOT exported here: server routes/crons read it from process.env.SK_API_KEY
+   instead; client calls rely on the user JWT + RLS. */
+import { SK_URL as SK_URL_, SK_ANON as SK_ANON_ } from "./serverHelpers";
+export const SK_URL  = SK_URL_;
+export const SK_KEY  = SK_ANON_;
 export const RET_URL = SK_URL;
 export const RET_KEY = SK_KEY;
 

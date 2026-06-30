@@ -5,10 +5,10 @@
 // access beyond the authenticated user's own actions. SLT/school-wide audit
 // visibility is a documented follow-up.
 
+import { SK_ANON, SK_URL } from "@/lib/serverHelpers";
+
 export const runtime = "nodejs";
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
-const SK_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2enVrd294cWhjeGF4dHpyeml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDUyNTIsImV4cCI6MjA4OTkyMTI1Mn0.PtT24EfMfTckYaq9jXBPRuCsG6utWMLcHs9H8buM70c";
 
 export async function GET(req: Request) {
   const auth = req.headers.get("authorization") || "";

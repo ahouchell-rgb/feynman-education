@@ -7,7 +7,12 @@
 // the auth / metering / cost-backstop logic instead of duplicating it (the kind of
 // edge-function copy-paste the ecosystem review flagged).
 
-export const SUPA_URL = process.env.NEXT_PUBLIC_SUPA_URL || "https://uvzukwoxqhcxaxtzrziy.supabase.co";
+import { SUPA_URL as SUPA_URL_ } from "./supaConfig";
+
+// Shared anchor URL (env-overridable; literal fallback lives once in ./supaConfig).
+export const SUPA_URL = SUPA_URL_;
+// ANON_KEY intentionally has NO literal fallback here — server auth-validation
+// must use the explicitly-configured public key (or be undefined), unchanged.
 export const ANON_KEY = process.env.NEXT_PUBLIC_SUPA_KEY;
 export const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 export const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;

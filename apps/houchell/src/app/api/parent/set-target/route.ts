@@ -3,9 +3,10 @@
 // Validates that the guardian access token owns the link, then writes the
 // target. Service-role write; no parent account required.
 
+import { SK_URL } from "@/lib/serverHelpers";
+
 export const runtime = "nodejs";
 
-const SK_URL = "https://uvzukwoxqhcxaxtzrziy.supabase.co";
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 
 async function admin(method: string, path: string, body?: any) {

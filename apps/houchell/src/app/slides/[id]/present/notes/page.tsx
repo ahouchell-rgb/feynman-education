@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { C } from "@/lib/theme";
 
 /* Lightweight presenter-notes pop-out (item 6). A teacher running laptop +
    projector pops this out to their laptop screen to read speaker notes off the
@@ -39,14 +40,14 @@ export default function PresenterNotesPage() {
       </div>
 
       <div style={{ flex: 1, overflowY: "auto" }}>
-        <div style={{ fontSize: 22, lineHeight: 1.55, whiteSpace: "pre-wrap", color: state?.notes ? "#f0f0f0" : "#666" }}>
+        <div style={{ fontSize: 22, lineHeight: 1.55, whiteSpace: "pre-wrap", color: state?.notes ? "#f0f0f0" : C.muted }}>
           {state ? (state.notes || "No notes for this slide.") : "Waiting for the presentation…"}
         </div>
       </div>
 
       <div style={{ borderTop: "1px solid #2a2a2a", paddingTop: 14 }}>
         <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "#777", marginBottom: 6 }}>Next</div>
-        <div style={{ fontSize: 17, color: state?.isEnd ? "#666" : "#cfe4ef" }}>
+        <div style={{ fontSize: 17, color: state?.isEnd ? C.muted : "#cfe4ef" }}>
           {state ? (state.isEnd ? "End of deck" : (state.next || "—")) : "—"}
         </div>
       </div>

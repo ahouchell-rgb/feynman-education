@@ -2,6 +2,8 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { BASE_PAPER } from "../_shared/marking/base-paper.ts";
 import { overlayFor } from "../_shared/marking/registry.ts";
+import { corsHeaders } from "../_shared/cors.ts";
+import { getAuthedUid, resolveSchoolId } from "../_shared/auth.ts";
 
 const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const MODEL = "claude-haiku-4-5-20251001";
@@ -12,41 +14,9 @@ const sb = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
   ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false, autoRefreshToken: false } })
   : null;
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-
-// Identify the calling pupil from their Supabase JWT (older clients send only the
-// anon apikey → null, and we then just mark without recording).
-async function getAuthedUid(req: Request): Promise<string | null> {
-  if (!sb) return null;
-  const m = (req.headers.get("Authorization") || "").match(/^Bearer\s+(.+)$/i);
-  if (!m) return null;
-  try {
-    const { data, error } = await sb.auth.getUser(m[1]);
-    if (error || !data?.user) return null;
-    return data.user.id;
-  } catch { return null; }
-}
-
-// Resolve the school behind a paper attempt's class, so usage is attributed and the
-// fair-use backstop can apply. Cached in module scope (a class never changes school
-// within a warm instance), mirroring mark-answer.
+// Module-scope cache for resolveSchoolId (../_shared/auth.ts): a class never changes
+// school within a warm instance, mirroring mark-answer.
 const schoolIdCache = new Map<string, string | null>();
-async function resolveSchoolId(class_id: string | undefined | null): Promise<string | null> {
-  if (!sb || !class_id) return null;
-  if (schoolIdCache.has(class_id)) return schoolIdCache.get(class_id) ?? null;
-  try {
-    const { data } = await sb.from("classes").select("school_id").eq("id", class_id).single();
-    const sid = (data?.school_id as string) ?? null;
-    schoolIdCache.set(class_id, sid);
-    return sid;
-  } catch {
-    return null;
-  }
-}
 
 // Resolve the paper's marker_profile (papers.subject_id -> subjects.marker_profile) so
 // the marker loads the right prompt overlay. Module-scope cached by paper id (a paper
@@ -156,7 +126,7 @@ Deno.serve(async (req: Request) => {
     // volume with a fabricated marking-point list — and the attempt must be the
     // calling pupil's own.
     if (!sb) return json({ error: "Server not configured." }, 500);
-    const uid = await getAuthedUid(req);
+    const uid = await getAuthedUid(sb, req);
     if (!uid) return json({ error: "Sign in to submit an answer." }, 401);
     if (!attempt_id || !paper_question_id) {
       return json({ error: "attempt_id and paper_question_id are required" }, 400);
@@ -189,7 +159,7 @@ Deno.serve(async (req: Request) => {
 
     // Hard cost backstop (same as mark-answer): a school >3x its fair-use allowance
     // skips the paid call and records nothing. Fails open; never catches normal use.
-    const schoolId = await resolveSchoolId(att.data.class_id as string);
+    const schoolId = await resolveSchoolId(sb, schoolIdCache, att.data.class_id as string);
     if (await overBackstop(schoolId)) {
       return json({ marks_awarded: 0, awarded_points: [], feedback: "Marking is paused for your school right now — please let your teacher know.", flagged: false, source: "cap_backstop", recorded: false, response_id: null });
     }

@@ -2,6 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { BASE_RETRIEVAL } from "../_shared/marking/base-retrieval.ts";
 import { overlayFor } from "../_shared/marking/registry.ts";
+import { corsHeaders } from "../_shared/cors.ts";
 
 /* mark-preview — ANONYMOUS, ungated retrieval marking for the public revision
  * booklets on interactive-science.com.
@@ -30,12 +31,6 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const sb = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
   ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false, autoRefreshToken: false } })
   : null;
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
 
 // Anonymous cost guard: max marks one IP can trigger per day. Overridable via env.
 const ANON_DAILY_LIMIT = Number(Deno.env.get("ANON_MARK_DAILY_LIMIT")) || 30;
