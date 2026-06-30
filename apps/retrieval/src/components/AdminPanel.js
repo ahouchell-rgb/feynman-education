@@ -7,7 +7,7 @@ import { Teacher } from "./Teacher";
 import { CostDashboard } from "./CostDashboard";
 import { FunnelDashboard } from "./FunnelDashboard";
 import { SchoolsPanel } from "./SchoolsPanel";
-import { Badge, Btn, Headline, Inp, Pill, Stat, StatTile } from "./ui";
+import { Badge, Btn, Card, Headline, Inp, Pill, Stat, StatTile } from "./ui";
 
 export function AdminPanel({ user }) {
   const [loading, setLoading] = useState(true);
