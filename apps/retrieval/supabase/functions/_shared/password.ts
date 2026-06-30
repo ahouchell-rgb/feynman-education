@@ -25,6 +25,18 @@
 
 export const MIN_PASSWORD_LENGTH = 10;
 
+// Student-account password floor. Pupils are NOT staff: they hold no third-party
+// PII, and a 10-char + HIBP requirement is too heavy for a child's login (and
+// would frustrate the classroom reset flow). So students get a MODEST length-only
+// floor — a real guard against empty / 1-char passwords, but no breach check.
+//
+// The floor (6) is deliberately set at or below what generatePassword() in
+// manage-student/index.ts can produce: its shortest output is a 4-char word + 2
+// digits + 1 symbol = 7 chars. Keeping the floor <= 7 means every legitimately
+// bulk-generated student password still satisfies it, so this guard never blocks
+// a system-issued credential.
+export const MIN_STUDENT_PASSWORD_LENGTH = 6;
+
 const HIBP_RANGE_URL = "https://api.pwnedpasswords.com/range/";
 
 // SHA-1 the password and return the uppercase hex digest. HIBP indexes by
@@ -82,6 +94,18 @@ export async function assertStrongPassword(password: string): Promise<string | n
   }
   if (await isPwned(pw)) {
     return "That password has appeared in a known data breach — please choose a different one";
+  }
+  return null;
+}
+
+// Validate a STUDENT password. Length-only floor (no HIBP, no 10-char staff
+// requirement) — see MIN_STUDENT_PASSWORD_LENGTH above for the rationale and why
+// the floor is kept consistent with generatePassword(). Returns an error string
+// suitable for returning to the client, or null if the password is acceptable.
+export function assertStudentPassword(password: string): string | null {
+  const pw = String(password ?? "");
+  if (pw.length < MIN_STUDENT_PASSWORD_LENGTH) {
+    return `Password must be at least ${MIN_STUDENT_PASSWORD_LENGTH} characters`;
   }
   return null;
 }

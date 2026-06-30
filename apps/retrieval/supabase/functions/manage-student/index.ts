@@ -1,7 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
-import { assertStrongPassword } from "../_shared/password.ts";
+import { assertStrongPassword, assertStudentPassword } from "../_shared/password.ts";
 
 function generatePassword(): string {
   const words = ["Atom","Wave","Cell","Gene","Star","Bolt","Flux","Nova","Prism","Quark","Solar","Ionic","Lunar","Pixel","Comet","Hydro","Orbit","Pulse","Radar","Sonic"];
@@ -216,6 +216,13 @@ Deno.serve(async (req: Request) => {
 
     if (action === "reset_password") {
       if (!student_id || !new_password) return new Response(JSON.stringify({ error: "Missing student_id or new_password" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      // Student password floor: length-only, NO HIBP/10-char staff check. Pupils
+      // aren't staff (no PII), so the heavy staff floor is overkill — but without
+      // any check a pupil password could be set empty/trivial. The floor is kept
+      // consistent with generatePassword()'s ~7-char output so system-issued
+      // credentials always pass. See assertStudentPassword in _shared/password.ts.
+      const studentPwErr = assertStudentPassword(String(new_password));
+      if (studentPwErr) return new Response(JSON.stringify({ error: studentPwErr }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       // Tenant-isolation guard: a non-moderator may only reset a pupil they teach.
       if (!isModerator && !(await callerTeachesStudent(supabase, caller.id, student_id))) return new Response(JSON.stringify({ error: "You can only reset the password of a pupil you teach" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       const { error } = await supabase.auth.admin.updateUser(student_id, { password: new_password });
