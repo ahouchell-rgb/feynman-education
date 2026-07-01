@@ -36,7 +36,10 @@ correct spine and it has held across a large surface.
 **The structural tensions:**
 - **Two repos, one schema.** Several RPCs the app calls (`student_weak_topics`,
   `class_intervention_list`, `class_weak_topics` gating) live in the *retrieval-app* repo, not
-  here. The contract is documented but **not enforced** — drift will cause silent fallbacks.
+  here. The contract is now enforced from **both ends** in `packages/db`: `contract.test.mjs`
+  checks the *schema* honours every signature (needs a DB), and `callsites.test.mjs` checks the
+  *app* only calls declared RPCs with declared params (no DB — runs on every push). Drift is a red
+  check, not a silent fallback.
 - **One database, all tenants.** Every school/trust shares the anchor; RLS is the only
   isolation boundary. Fine now, but the blast radius (a bad policy, a `SECURITY DEFINER` bug)
   is the whole customer base.
@@ -62,9 +65,11 @@ correct spine and it has held across a large surface.
 ## 4. Weaknesses, debt & risks (be honest)
 
 ### Correctness / robustness
-- **Thin test coverage.** 25 tests predate all of this; **none of the new routes, RPCs, or
-  RLS policies are tested.** The riskiest things (security-definer gating, RLS isolation,
-  webhook signature, write-back retries) have zero automated checks.
+- **Test coverage is improving but uneven.** The pure logic is now covered (helpers + the
+  extracted dashboard transforms in `lib/dashboards.ts` — staleness, snapshot/intervention
+  aggregation — plus the static RPC call-site contract). Still untested: the **DB-side security
+  surface** (security-definer gating, RLS isolation, webhook signature, write-back retries), which
+  needs an integration harness against a seeded test DB.
 - **Boilerplate duplication.** `SK_URL` + the anon key + the auth-check + usage-logging block
   are copy-pasted across ~20 routes; `extractHtml`/prompt scaffolding across ~5 generators.
   A bug fixed in one isn't fixed in all.
@@ -73,8 +78,10 @@ correct spine and it has held across a large surface.
 ### Performance / scale
 - Live SLT dashboard + intervention export **fan out per class** (bounded pool, but O(classes)
   retrieval calls per page load). At a large MAT this is slow and hammers retrieval.
-- Snapshots exist but the **dashboards still recompute live** rather than serving the snapshot
-  first — the "instant load" goal is set up but not switched on.
+- Snapshots are switched on: both overview routes are snapshot-first (server + client `?live`
+  hydrate) with a freshness guard (`snapshotIsFresh`, `MAX_SNAPSHOT_AGE_DAYS`) that falls through
+  to live when the weekly cron has gone stale. The **intervention export still fans out live** per
+  class (by design — it's per-pupil action data — but a candidate for an aggregate snapshot later).
 - AI cost: per-teacher spend is *visible* but there is **no enforced per-org budget or model
   routing** — margin risk as usage scales.
 

@@ -1,8 +1,16 @@
 # @houchell/db
 
-The single source of truth for the unified anchor schema — and the contract test that turns
+The single source of truth for the unified anchor schema — and the contract tests that turn
 cross-repo RPC drift from a **silent production fallback** into a **red CI check**. This is the
 centerpiece of Phase B in [`docs/MONOREPO_AND_DOMAIN_PLAN.md`](../../docs/MONOREPO_AND_DOMAIN_PLAN.md).
+
+The guard has two halves that meet in the middle at `contracts/rpcs.mjs`:
+
+- **`contract.test.mjs`** — does the *database* honour the contract? Every RPC exists with the
+  expected signature. Needs a Postgres (the ephemeral one CI builds, or a read-only anchor URI).
+- **`callsites.test.mjs`** — does the *app* stay inside the contract? Every RPC the houchell code
+  calls is declared, and every parameter it passes is one the contract knows about. Needs **no DB**,
+  so it runs on every push via `turbo run test` and fails the moment a call site drifts.
 
 > Prepared, uncommitted. Written in `.mjs` on purpose: the app repo's `tsc` globs `**/*.ts` and
 > its vitest is scoped to `src/**`, so nothing here touches the current security branch's CI. In
@@ -13,7 +21,9 @@ centerpiece of Phase B in [`docs/MONOREPO_AND_DOMAIN_PLAN.md`](../../docs/MONORE
 | File | What it is |
 |---|---|
 | `contracts/rpcs.mjs` | The 25 RPCs the feynman app calls, with **exact live signatures** captured from the anchor 2026-06-23. |
-| `contract.test.mjs` | `node --test`: asserts every required RPC exists with the expected signature. |
+| `contract.test.mjs` | `node --test`: asserts every required RPC exists on the DB with the expected signature. **Needs a DB.** |
+| `callsites.test.mjs` | `node --test`: asserts the houchell app only *calls* RPCs in the contract, with declared params. **No DB** — runs on every push. |
+| `lib/scanCallsites.mjs` | Pure static scanner backing the call-site test (finds every `rpc()` / `/rest/v1/rpc/<name>` site). |
 | `lib/checkRpcs.mjs` | Shared check (ok / missing / mismatched) backing the test and the verify script. |
 | `lib/applyMigrations.mjs` | Replays `migrations/*.sql` in ledger order (CI builds the ephemeral DB with this). |
 | `lib/pg.mjs` | `DATABASE_URL` connection helper (TLS for `*.supabase.co`). |

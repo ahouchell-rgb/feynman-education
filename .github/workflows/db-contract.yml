@@ -1,17 +1,21 @@
 name: db-contract
 
 # Turns cross-repo RPC drift from a silent production fallback into a red check.
-# Path-filtered to packages/db/** so it stays out of the way of unrelated branches.
+# Path-filtered so it stays out of the way of unrelated branches — but it also
+# triggers on apps/houchell/src/** because the static call-site check reads the
+# app source (a new/renamed RPC call must re-run this).
 # See docs/MONOREPO_AND_DOMAIN_PLAN.md §5 and packages/db/README.md.
 
 on:
   push:
     paths:
       - "packages/db/**"
+      - "apps/houchell/src/**"
       - ".github/workflows/db-contract.yml"
   pull_request:
     paths:
       - "packages/db/**"
+      - "apps/houchell/src/**"
       - ".github/workflows/db-contract.yml"
   workflow_dispatch: {}
 
@@ -67,6 +71,11 @@ jobs:
             }
             console.log(`RPC contract shape OK — ${REQUIRED_RPCS.length} RPCs.`);
           '
+      # Secret-free check #3: the houchell app's RPC call sites stay inside the
+      # contract (no undeclared RPC, no unknown parameter). Reads app source, needs
+      # no DB — this is the half of the cross-repo guard that runs on every change.
+      - name: Call-site contract (no DB)
+        run: npm run check:callsites
       - name: Apply migrations to ephemeral Postgres
         id: apply
         run: node lib/applyMigrations.mjs

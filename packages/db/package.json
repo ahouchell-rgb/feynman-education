@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "test": "node --test",
+    "check:callsites": "node --test callsites.test.mjs",
     "verify:live": "node scripts/verify-rpcs.mjs",
     "check:ledger": "node scripts/check-ledger.mjs",
     "apply": "node lib/applyMigrations.mjs"

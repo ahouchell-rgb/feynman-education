@@ -17,17 +17,10 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 import { rollupRetrieval, blendObjectiveMastery, crosswalkMap, type AssessmentObjective } from "@/lib/mastery";
+import { daysSince, schoolSnapshotObjectives, snapshotIsFresh } from "@/lib/dashboards";
 import { reportError } from "@/lib/observe";
 import { mapPool } from "@/lib/trustBenchmark";
 import { withTimeout, RETRIEVAL_TIMEOUT_MS, SK_ANON, SK_URL } from "@/lib/serverHelpers";
-
-/** Whole days since an ISO date (yyyy-mm-dd), or null. */
-function daysSince(isoDate?: string | null): number | null {
-  if (!isoDate) return null;
-  const t = Date.parse(`${isoDate}T00:00:00Z`);
-  if (isNaN(t)) return null;
-  return Math.max(0, Math.floor((Date.now() - t) / 864e5));
-}
 
 const j = (o: any, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 
@@ -112,12 +105,11 @@ export async function GET(req: Request) {
     try {
       snap = (await rest(`school_benchmark_snapshots?school_id=eq.${profile.school_id}&select=taken_on,school_avg,payload&order=taken_on.desc&limit=1`, token))?.[0];
     } catch { /* no snapshot table / row */ }
-    if (snap) {
-      const snapObjectives = (snap.payload?.objectives || []).map((o: any) => ({
-        topic_name: o.topic_name, pct_correct: o.avg, marked: null, classes: o.classes,
-      }));
+    // Freshness guard: a too-old snapshot (weekly cron broken) falls through to
+    // the live path rather than paint stale numbers as if current.
+    if (snap && snapshotIsFresh(snap.taken_on)) {
       const objectiveMastery = blendObjectiveMastery(
-        rollupRetrieval([snapObjectives]),
+        rollupRetrieval([schoolSnapshotObjectives(snap.payload)]),
         assessObjectives,
       );
       return j({

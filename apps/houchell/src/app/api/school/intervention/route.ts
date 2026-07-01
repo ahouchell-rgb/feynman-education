@@ -16,6 +16,7 @@
 //   repo. Until it ships this route returns enabled:true with no rows + a note.
 
 import { mapPool } from "@/lib/trustBenchmark";
+import { groupInterventionByObjective } from "@/lib/dashboards";
 import { withTimeout, RETRIEVAL_TIMEOUT_MS, SK_ANON, SK_URL } from "@/lib/serverHelpers";
 
 export const runtime = "nodejs";
@@ -91,14 +92,7 @@ export async function GET(req: Request) {
   if (topicFilter) rows = rows.filter((r) => (r.topic_name || "").toLowerCase().includes(topicFilter));
 
   // Group by objective for the on-screen summary.
-  const byObjMap = new Map<string, { topic_name: string; pupils: number; sum: number }>();
-  for (const r of rows) {
-    const e = byObjMap.get(r.topic_name) || { topic_name: r.topic_name, pupils: 0, sum: 0 };
-    e.pupils += 1; e.sum += r.pct_correct; byObjMap.set(r.topic_name, e);
-  }
-  const byObjective = [...byObjMap.values()]
-    .map((e) => ({ topic_name: e.topic_name, pupils: e.pupils, avg: Math.round(e.sum / e.pupils) }))
-    .sort((a, b) => b.pupils - a.pupils);
+  const byObjective = groupInterventionByObjective(rows);
 
   return j({
     enabled: true, threshold, topic: topicFilter || undefined, total: rows.length, byObjective, rows,
