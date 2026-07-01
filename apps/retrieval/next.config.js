@@ -3,12 +3,15 @@
 // Origins allowed to EMBED this app in an <iframe> — the ScienceKit lesson page
 // AND the interactive-science.com revision booklets embed retrieval practice
 // (/embed/practice). Space-separated origin list.
-// Defaults to the confirmed ScienceKit + interactive-science origins; override
-// with ALLOWED_FRAME_ANCESTORS for other hosts. The *.vercel.app wildcard covers
-// preview deployments — tighten to specific origins if you want it stricter.
+// Defaults to the confirmed ScienceKit + interactive-science origins, plus the
+// houchelleducation.com subdomains the estate is cutting over to (Phase C of
+// docs/MONOREPO_AND_DOMAIN_PLAN.md) so the lesson-page embed keeps working
+// after the domain move. Override with ALLOWED_FRAME_ANCESTORS for other
+// hosts. The *.vercel.app wildcard covers preview deployments — tighten to
+// specific origins if you want it stricter.
 // localhost:8000 is the interactive-science static site served locally for the
 // pilot (python -m http.server 8000).
-const frameAncestors = `'self' ${process.env.ALLOWED_FRAME_ANCESTORS || "https://science-kit.vercel.app https://*.vercel.app https://interactive-science.com https://*.interactive-science.com http://localhost:3000 http://localhost:8000"}`.trim();
+const frameAncestors = `'self' ${process.env.ALLOWED_FRAME_ANCESTORS || "https://science-kit.vercel.app https://*.vercel.app https://interactive-science.com https://*.interactive-science.com https://houchelleducation.com https://*.houchelleducation.com http://localhost:3000 http://localhost:8000"}`.trim();
 
 const nextConfig = {
   reactStrictMode: true,
