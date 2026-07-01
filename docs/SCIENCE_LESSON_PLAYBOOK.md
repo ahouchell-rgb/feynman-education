@@ -375,6 +375,8 @@ Wiliam (2011) frames the exit ticket as the bridge between lessons: 1–3 questi
 
 ## 9. A worked 60-minute lesson
 
+> **Companion document:** [EXAMPLE_SCIENCE_LESSON.md](./EXAMPLE_SCIENCE_LESSON.md) expands this table into a full annotated lesson — verbatim questions, teacher script, visualiser plan, and a design-decision note (with research warrant) for every choice, including what was deliberately left out.
+
 A synthesis of everything above into one exemplar science lesson — *Year 9, rates of reaction: effect of concentration* — with the research warrant for each move.
 
 | Time | Phase | What the teacher does | Research warrant |
