@@ -376,6 +376,16 @@
   .scheme .spt.on .pt-t{ font-weight:600; }
   .exam-score{ margin-top:12px; padding:9px 14px; border-radius:999px; background:var(--navy); color:#fff; display:inline-block; font-size:14px; }
   .exam-score b{ font-size:16px; }
+  .exam-head{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .exam-head .exam-marks{ margin-bottom:0; }
+  .lvl{ font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 9px; border-radius:999px; background:rgba(44,95,45,.16); color:var(--green); }
+  .lvl.exam{ background:rgba(180,52,30,.14); color:var(--wrong); }
+  .exam-coach.ghost{ background:rgba(180,52,30,.05); border-color:var(--line-2); font-size:13.5px; }
+  .exam-plan{ background:rgba(44,95,45,.06); border:1px solid var(--line-2); border-radius:14px; padding:12px 16px 14px; margin-top:12px; }
+  .plan-h{ font-size:13.5px; font-weight:700; color:var(--ink); margin-bottom:8px; line-height:1.4; }
+  .plan-list{ margin:0; padding-left:20px; }
+  .plan-list li{ font-size:14px; color:var(--ink); line-height:1.42; padding:3px 0; }
+  .plan-note{ margin-top:9px; font-size:12.5px; color:var(--grey); font-style:italic; }
 
   /* categorise */
   .cat-pool{ display:flex; flex-wrap:wrap; gap:9px; margin:14px 0 16px; min-height:46px; padding:8px; border:1.5px dashed var(--line); border-radius:14px; }
@@ -545,6 +555,9 @@
   .exam-coach{ background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.14); }
   .exam-coach .cw{ background:var(--accent); color:#06111f; }
   .exam-ta{ background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.18); }
+  .exam-plan{ background:rgba(88,224,194,.06); border-color:rgba(255,255,255,.14); }
+  .lvl{ background:rgba(88,224,194,.16); color:#58e0c2; }
+  .lvl.exam{ background:rgba(255,150,120,.16); color:#ff9678; }
   .scheme .spt:hover{ background:rgba(255,255,255,.06); }
   .scheme .spt .tick{ border-color:rgba(255,255,255,.28); }
   .scheme .spt.on .tick{ background:#58e0c2; border-color:#58e0c2; color:#06111f; }
@@ -2300,14 +2313,26 @@ function pointInAnswer(ans, point){
   const hits=sig.filter(w=>a.includes(w.length>6?w.slice(0,w.length-2):w));
   return hits.length>=Math.min(2,sig.length);
 }
+// First time on an exam question (or after a "revise") the learner is GUIDED: the
+// success criteria are shown up front as a plan to write against. Once they've scored
+// it well, later encounters run under exam conditions — write blind, then mark. This
+// is the ladder that builds a pupil up to answering a 6-marker cold.
+function examGuided(qid){ if(!qid) return true; const e=State.s&&State.s.exam&&State.s.exam[qid]; return !(e && e.rating==="good"); }
 function viewExam(s){
   const tip=examTip(s.q);
-  const n=(s.scheme||[]).length;
+  const pts=s.scheme||[]; const n=pts.length;
+  const guided=examGuided(s.qid);
+  const planHTML = guided ? `<div class="exam-plan">
+      <div class="plan-h">Plan first — a full-mark answer makes ${n} point${n>1?"s":""}. Cover each one:</div>
+      <ol class="plan-list">${pts.map(p=>`<li>${p}</li>`).join("")}</ol>
+      <div class="plan-note">Turn each point into a sentence. When you can do this without the plan, you're exam-ready.</div>
+    </div>` : `<div class="exam-coach ghost">Exam conditions: no plan this time — you've got this one. Write your full answer, then mark it.</div>`;
   return `<div class="step-kicker mono-kicker">${s.kicker||"Exam practice"}</div>
-    <div class="exam-marks">${s.marks?`[${s.marks} mark${s.marks>1?"s":""}]`:"Extended answer"}</div>
+    <div class="exam-head"><span class="exam-marks">${s.marks?`[${s.marks} mark${s.marks>1?"s":""}]`:"Extended answer"}</span>${guided?'<span class="lvl">guided</span>':'<span class="lvl exam">exam conditions</span>'}</div>
     <h1 class="prompt fr">${s.q}</h1>
     ${s.context?`<div class="exam-stem">${s.context}</div>`:''}
     ${tip&&tip.tip?`<div class="exam-coach"><span class="cw">${tip.word}</span> ${tip.tip}</div>`:''}
+    ${planHTML}
     <textarea id="examta" class="exam-ta" rows="5" placeholder="Type your answer here${n?` — aim for ${n} clear point${n>1?"s":""}`:""}. (Or write it on paper first, then mark it here.)"></textarea>
     <div id="schemebox"></div>`;
 }
