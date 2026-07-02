@@ -3,7 +3,9 @@
 // and runtime-cache other GETs (e.g. Google Fonts) as they're fetched.
 // v4: precache the newly-extracted content.js (item C8) + add streak-reminder
 //     notification handlers (item C9). Bumping CACHE evicts the old v3 shell.
-const CACHE = "feynman-sci-v4";
+// v5: interactive diagram checkpoints, guided→exam-conditions ladder, and the
+//     first KS3-core exam questions — bump to evict the stale v4 shell.
+const CACHE = "feynman-sci-v5";
 const SHELL = [
   "springboard.html",
   "content.js",
