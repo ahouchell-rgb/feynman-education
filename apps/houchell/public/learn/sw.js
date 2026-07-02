@@ -5,7 +5,7 @@
 //     notification handlers (item C9). Bumping CACHE evicts the old v3 shell.
 // v5: interactive diagram checkpoints, guided→exam-conditions ladder, and the
 //     first KS3-core exam questions — bump to evict the stale v4 shell.
-const CACHE = "feynman-sci-v5";
+const CACHE = "feynman-sci-v6";
 const SHELL = [
   "springboard.html",
   "content.js",
