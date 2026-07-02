@@ -257,6 +257,18 @@
   .hotspot.sel{ background:rgba(30,39,97,.28); box-shadow:0 0 0 4px var(--lav-pale); }
   .hotspot.correct{ border-color:var(--green); background:rgba(44,95,45,.28); }
   .hotspot.wrong{ border-color:var(--wrong); background:rgba(180,52,30,.28); }
+  /* Diagram labelling capstone (dmatch) */
+  .dpin{ position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:2px; padding:0; border:0; background:none; cursor:pointer; z-index:2; }
+  .dpin .pn{ width:26px; height:26px; border-radius:50%; background:var(--navy); color:#fff; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.25); }
+  .dpin .pl{ font-size:11px; font-weight:600; line-height:1.15; max-width:96px; text-align:center; background:var(--navy); color:#fff; padding:2px 6px; border-radius:7px; }
+  .dpin .pl.corr{ background:var(--green); }
+  .dpin.filled .pn{ background:var(--phys); }
+  .dpin.correct .pn{ background:var(--green); } .dpin.correct .pl{ background:var(--green); }
+  .dpin.wrong .pn{ background:var(--wrong); }
+  .dbank{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:14px 0 4px; }
+  .dchip{ font:inherit; font-size:14px; font-weight:600; padding:8px 13px; border-radius:999px; border:1.5px solid var(--line-2); background:var(--paper); color:var(--ink); cursor:pointer; box-shadow:var(--shadow); }
+  .dchip.sel{ border-color:var(--navy); background:var(--lav-pale); box-shadow:0 0 0 3px var(--lav-pale); }
+  .dchip.used{ opacity:.32; text-decoration:line-through; cursor:default; }
 
   /* progressive build-up diagram (one label revealed per fact) */
   .bdiagram{ position:relative; width:100%; max-width:360px; margin:14px auto 4px; background:var(--paper); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); }
@@ -508,6 +520,8 @@
   .teach p,.vcard .def,.sentence{ color:#d4e0f3; }
   /* keep diagram + interactive SCREENS light so navy line-art stays legible */
   .bdiagram{ background:#fff; border-color:rgba(255,255,255,.25); }
+  .dchip{ background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.18); color:#eef4ff; }
+  .dchip.sel{ background:rgba(88,224,194,.16); border-color:#58e0c2; box-shadow:0 0 0 3px rgba(88,224,194,.18); }
   .ixfact{ color:#eaf1ff; } .ixread{ color:#cdd8ea; }
   .ixbtn{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.22); color:#eef4ff; }
   .ixbtn.primary{ background:var(--accent); border-color:transparent; color:#06111f; }
@@ -1013,6 +1027,7 @@ function stepReadText(s){
   if(s.type==="speak") return "Say the word: "+s.term;
   if(s.type==="listenType") return "Type the word you hear.";
   if(s.type==="dcheck"){ const d=(typeof DIAGRAMS!=="undefined")&&DIAGRAMS[s.dgram]; const p=d&&d.parts.find(p=>p.id===s.target); return "Tap the "+((p&&p.label)||"part you just learned")+" on the diagram."; }
+  if(s.type==="dmatch") return "Label every part of the diagram. Tap a label, then the numbered pin it belongs to.";
   let t=s.q||"";
   if(s.options) t+=". The options are: "+s.options.map(o=>o.t).join("; ");
   else if(s.items && s.type==="multi") t+=". The options are: "+s.items.map(o=>o.t).join("; ");
@@ -1348,6 +1363,16 @@ function buildLessons(c){
     if(lessonWords.length) steps.push(listenTypeStep(lessonWords[lessonWords.length-1]));
     lessons.push({ title:pTitles[ci]||("Round "+(ci+1)), icon:pIcons[ci]||"🎯", kind:"practice", words:lessonWords.length, steps });
   });
+  // Capstone: once every fact has been taught the build-up diagram is complete, so
+  // the final lesson ends by asking the pupil to label the WHOLE picture from memory —
+  // all pins blank, labels shuffled in a bank. Works for any diagram with ≥3 parts,
+  // straight from its existing part data (no per-topic authoring).
+  if(dg && dg.map){
+    const distinct=[...new Set(dg.map.flat().filter(Boolean))];
+    if(distinct.length>=3 && lessons.length){
+      lessons[lessons.length-1].steps.push({ type:"dmatch", dgram:dg.key, kicker:"🏷️ Label the diagram" });
+    }
+  }
   // Lead the topic with its interactive widget (an engaging "explore" hook), if it has one.
   if(TOPIC_IX[c.code] && lessons[0]) lessons[0].steps.unshift({ type:"interactive", widget:TOPIC_IX[c.code], kicker:"Explore" });
   return lessons;
@@ -1704,6 +1729,7 @@ function renderStep(){
   else if(s.type==="order") body=viewOrder(s);
   else if(s.type==="diagram") body=viewDiagram(s);
   else if(s.type==="dcheck") body=viewDcheck(s);
+  else if(s.type==="dmatch") body=viewDmatch(s);
   else if(s.type==="exam") body=viewExam(s);
 
   app.innerHTML = topbar() + `<div class="stage fade" id="stage">${body}</div>` + footerShell();
@@ -1724,6 +1750,7 @@ function renderStep(){
   else if(s.type==="order") wireOrder(s);
   else if(s.type==="diagram") wireDiagram(s);
   else if(s.type==="dcheck") wireDcheck(s);
+  else if(s.type==="dmatch") wireDmatch(s);
   else if(s.type==="exam") wireExam(s);
   if(s.dgram && typeof DIAGRAMS!=="undefined" && DIAGRAMS[s.dgram]) applyLiveDiagram(s);
 }
@@ -2276,6 +2303,63 @@ function wireDcheck(s){
     const picked=(d&&L.payload.pick&&(d.parts.find(p=>p.id===L.payload.pick)||{}).label)||"";
     spots.forEach(b=>{ b.disabled=true; if(b.dataset.id===s.target) b.classList.add("correct"); else if(b.dataset.id===L.payload.pick) b.classList.add("wrong"); });
     gradeQ(ok, ok?`Yes — that's the <b>${right.toLowerCase()}</b>.`:`Not quite — you tapped the <b>${(picked||"wrong part").toLowerCase()}</b>; the highlighted one is the <b>${right.toLowerCase()}</b>.`);
+  });
+}
+
+/* DIAGRAM LABELLING CAPSTONE — the whole picture, all pins blank, labels shuffled.
+   Tap a label to select it, tap a numbered pin to place it; every pin must end with
+   its correct label. Pure retrieval of the assembled diagram. */
+function shuffleArr(a){ const r=a.slice(); for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; } return r; }
+function viewDmatch(s){
+  const d=DIAGRAMS[s.dgram]; if(!d) return `<h1 class="prompt fr">Label the diagram.</h1>`;
+  s.dreveal=d.parts.map(p=>p.id);   // the whole picture is shown; applyLiveDiagram reveals every part
+  const wh=d.vb.split(" "); const ratio=wh[2]+" / "+wh[3];
+  const pins=d.parts.map((p,i)=>`<button class="dpin" data-id="${p.id}" data-n="${i+1}" style="left:${p.x}%;top:${p.y}%"><span class="pn">${i+1}</span></button>`).join("");
+  const bank=shuffleArr(d.parts).map(p=>`<button class="dchip" data-id="${p.id}">${p.label}</button>`).join("");
+  return `<div class="step-kicker mono-kicker">${s.kicker||"🏷️ Label the diagram"}</div>
+    <h1 class="prompt fr">Label every part of the diagram</h1>
+    <div class="bdiagram dq" style="aspect-ratio:${ratio}"><svg viewBox="${d.vb}" preserveAspectRatio="xMidYMid meet" width="100%" height="100%">${d.svg}</svg>${pins}</div>
+    <div class="dbank" id="dbank">${bank}</div>
+    <div class="hint">Tap a label, then tap the numbered pin it belongs to.</div>`;
+}
+function wireDmatch(s){
+  const d=DIAGRAMS[s.dgram];
+  L.payload={place:{}};                 // pin partId -> chosen label partId
+  let sel=null;                          // currently selected chip element
+  const chips=[...document.querySelectorAll(".dchip")];
+  const pins=[...document.querySelectorAll(".dpin")];
+  function refresh(){
+    const filled=pins.every(p=>L.payload.place[p.dataset.id]);
+    enableCheck(filled);
+  }
+  chips.forEach(ch=>ch.onclick=()=>{ if(L.checked||ch.classList.contains("used"))return;
+    if(sel===ch){ ch.classList.remove("sel"); sel=null; return; }
+    chips.forEach(c=>c.classList.remove("sel")); ch.classList.add("sel"); sel=ch;
+  });
+  pins.forEach(pin=>pin.onclick=()=>{ if(L.checked||!sel)return;
+    const labId=sel.dataset.id, pinId=pin.dataset.id;
+    // if this pin already held a label, free that chip
+    const prev=L.payload.place[pinId];
+    if(prev){ const pc=chips.find(c=>c.dataset.id===prev); if(pc) pc.classList.remove("used"); }
+    // if the chosen chip was on another pin, clear that pin
+    for(const k of Object.keys(L.payload.place)){ if(L.payload.place[k]===labId){ delete L.payload.place[k]; const op=pins.find(p=>p.dataset.id===k); if(op){ op.classList.remove("filled"); op.querySelector(".pl")&&op.querySelector(".pl").remove(); } } }
+    L.payload.place[pinId]=labId;
+    sel.classList.add("used"); sel.classList.remove("sel");
+    pin.classList.add("filled");
+    let pl=pin.querySelector(".pl"); if(!pl){ pl=document.createElement("span"); pl.className="pl"; pin.appendChild(pl); }
+    pl.textContent=sel.textContent;
+    sel=null; refresh();
+  });
+  setCheck(()=>{
+    let right=0;
+    pins.forEach(pin=>{ const ok=L.payload.place[pin.dataset.id]===pin.dataset.id;
+      pin.classList.add(ok?"correct":"wrong");
+      if(!ok){ const corr=d.parts.find(p=>p.id===pin.dataset.id); let pl=pin.querySelector(".pl"); if(!pl){ pl=document.createElement("span"); pl.className="pl"; pin.appendChild(pl);} pl.textContent=(corr&&corr.label)||""; pl.classList.add("corr"); }
+      else right++;
+    });
+    chips.forEach(c=>c.disabled=true);
+    const all=pins.length, ok=right===all;
+    gradeQ(ok, ok?"Every part labelled correctly! 🏆":`You placed ${right} of ${all}. The correct labels are now shown in green.`);
   });
 }
 
