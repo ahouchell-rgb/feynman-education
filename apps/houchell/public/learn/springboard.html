@@ -363,6 +363,19 @@
   .scheme li{ position:relative; padding:5px 0 5px 24px; font-size:14.5px; color:var(--ink); line-height:1.42; }
   .scheme li:before{ content:"✓"; position:absolute; left:0; top:5px; color:var(--phys); font-weight:800; }
   .scheme .model{ margin-top:11px; padding-top:11px; border-top:1px dashed var(--line); font-size:14px; color:var(--ink); line-height:1.45; }
+  /* Guided exam builder */
+  .exam-coach{ display:block; background:rgba(30,39,97,.06); border:1px solid var(--line-2); border-radius:12px; padding:10px 14px; margin-top:10px; font-size:14px; line-height:1.45; color:var(--ink); }
+  .exam-coach .cw{ display:inline-block; font-family:'IBM Plex Sans',monospace; font-weight:700; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; background:var(--navy); color:#fff; border-radius:999px; padding:2px 9px; margin-right:7px; }
+  .exam-ta{ width:100%; box-sizing:border-box; margin-top:12px; padding:12px 14px; border:1.5px solid var(--line-2); border-radius:14px; background:var(--paper); color:var(--ink); font:inherit; font-size:15px; line-height:1.5; resize:vertical; min-height:110px; }
+  .exam-ta:focus{ outline:none; border-color:var(--navy); }
+  .exam-ta[readonly]{ opacity:.75; }
+  .scheme .spt{ display:flex; gap:10px; align-items:flex-start; width:100%; text-align:left; background:none; border:0; border-radius:10px; padding:7px 6px; margin:0; cursor:pointer; font:inherit; font-size:14.5px; color:var(--ink); line-height:1.42; }
+  .scheme .spt:hover{ background:rgba(30,39,97,.05); }
+  .scheme .spt .tick{ flex:0 0 auto; width:22px; height:22px; margin-top:1px; border-radius:7px; border:2px solid var(--line-2); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:#fff; background:transparent; transition:all .15s ease; }
+  .scheme .spt.on .tick{ background:var(--green); border-color:var(--green); }
+  .scheme .spt.on .pt-t{ font-weight:600; }
+  .exam-score{ margin-top:12px; padding:9px 14px; border-radius:999px; background:var(--navy); color:#fff; display:inline-block; font-size:14px; }
+  .exam-score b{ font-size:16px; }
 
   /* categorise */
   .cat-pool{ display:flex; flex-wrap:wrap; gap:9px; margin:14px 0 16px; min-height:46px; padding:8px; border:1.5px dashed var(--line); border-radius:14px; }
@@ -529,6 +542,13 @@
   .exam-marks{ background:var(--accent); color:#06111f; }
   .scheme{ background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14); }
   .scheme li:before{ color:#58e0c2; }
+  .exam-coach{ background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.14); }
+  .exam-coach .cw{ background:var(--accent); color:#06111f; }
+  .exam-ta{ background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.18); }
+  .scheme .spt:hover{ background:rgba(255,255,255,.06); }
+  .scheme .spt .tick{ border-color:rgba(255,255,255,.28); }
+  .scheme .spt.on .tick{ background:#58e0c2; border-color:#58e0c2; color:#06111f; }
+  .exam-score{ background:var(--accent); color:#06111f; }
   /* order/numbered drop-slots + any leftover light fills */
   .ord-slot,.nbox{ background:rgba(255,255,255,.05); }
 </style>
@@ -979,6 +999,7 @@ function stepReadText(s){
   if(s.type==="vocab") return s.term+". "+s.def;
   if(s.type==="speak") return "Say the word: "+s.term;
   if(s.type==="listenType") return "Type the word you hear.";
+  if(s.type==="dcheck"){ const d=(typeof DIAGRAMS!=="undefined")&&DIAGRAMS[s.dgram]; const p=d&&d.parts.find(p=>p.id===s.target); return "Tap the "+((p&&p.label)||"part you just learned")+" on the diagram."; }
   let t=s.q||"";
   if(s.options) t+=". The options are: "+s.options.map(o=>o.t).join("; ");
   else if(s.items && s.type==="multi") t+=". The options are: "+s.items.map(o=>o.t).join("; ");
@@ -1295,8 +1316,16 @@ function buildLessons(c){
   const lessons=[];
   qchunks.forEach((qc,ci)=>{
     const lessonFacts=fGroups[ci]||[];
-    // each fact becomes a block: the fact, then the word cards it explains (taught → then hear/say)
-    const blocks=lessonFacts.map(fs=>{ const fi=facts.indexOf(fs); return [fs, ...(wordsByFact[fi]||[]).map(v=>vocabStep(v,disc))]; });
+    // each fact becomes a block: the fact, then the word cards it explains (taught → then hear/say),
+    // then — when the fact just added a part to the build-up diagram — a "find it" checkpoint that
+    // asks the pupil to tap the new part with the labels hidden (retrieval, not recognition).
+    const blocks=lessonFacts.map(fs=>{
+      const fi=facts.indexOf(fs);
+      const b=[fs, ...(wordsByFact[fi]||[]).map(v=>vocabStep(v,disc))];
+      if(fs.dgram && fs.dcur && fs.dcur.length && fs.dreveal && fs.dreveal.length>=2)
+        b.push({ type:"dcheck", dgram:fs.dgram, dreveal:fs.dreveal, target:fs.dcur[fs.dcur.length-1], kicker:"📍 Find it on the diagram" });
+      return b;
+    });
     let steps=interleaveBlocks(blocks, qc);
     // words with no explaining fact: consolidate at the end
     const cons=unmatchedGroups[ci]||[];
@@ -1661,6 +1690,7 @@ function renderStep(){
   else if(s.type==="categorise") body=viewCategorise(s);
   else if(s.type==="order") body=viewOrder(s);
   else if(s.type==="diagram") body=viewDiagram(s);
+  else if(s.type==="dcheck") body=viewDcheck(s);
   else if(s.type==="exam") body=viewExam(s);
 
   app.innerHTML = topbar() + `<div class="stage fade" id="stage">${body}</div>` + footerShell();
@@ -1680,6 +1710,7 @@ function renderStep(){
   else if(s.type==="categorise") wireCategorise(s);
   else if(s.type==="order") wireOrder(s);
   else if(s.type==="diagram") wireDiagram(s);
+  else if(s.type==="dcheck") wireDcheck(s);
   else if(s.type==="exam") wireExam(s);
   if(s.dgram && typeof DIAGRAMS!=="undefined" && DIAGRAMS[s.dgram]) applyLiveDiagram(s);
 }
@@ -2209,33 +2240,110 @@ function wireDiagram(s){
   });
 }
 
-/* EXAM (exam-style question · reveal mark scheme · self-assessed) */
+/* DIAGRAM CHECKPOINT — auto-generated from the build-up diagram: right after a fact
+   adds a part, the pupil must tap that part with all labels hidden. Only parts already
+   taught are tappable, so the choice set grows as the picture assembles. */
+function viewDcheck(s){
+  const d=DIAGRAMS[s.dgram]; if(!d) return `<h1 class="prompt fr">Tap the part you just learned.</h1>`;
+  const t=d.parts.find(p=>p.id===s.target)||{label:"new part"};
+  const wh=d.vb.split(" "); const ratio=wh[2]+" / "+wh[3];
+  const spots=d.parts.filter(p=>(s.dreveal||[]).indexOf(p.id)>=0)
+    .map(p=>`<button class="hotspot" data-id="${p.id}" style="left:${p.x}%;top:${p.y}%" aria-label="diagram part"></button>`).join("");
+  return `<div class="step-kicker mono-kicker">${s.kicker||"📍 Find it on the diagram"}</div>
+    <h1 class="prompt fr">Tap the <b>${t.label.toLowerCase()}</b></h1>
+    <div class="bdiagram dq" style="aspect-ratio:${ratio}"><svg viewBox="${d.vb}" preserveAspectRatio="xMidYMid meet" width="100%" height="100%">${d.svg}</svg>${spots}</div>
+    <div class="hint">No labels this time — find it from memory.</div>`;
+}
+function wireDcheck(s){
+  L.payload={pick:null};
+  const d=DIAGRAMS[s.dgram]; const spots=[...document.querySelectorAll(".hotspot")];
+  spots.forEach(b=>b.onclick=()=>{ if(L.checked)return; L.payload.pick=b.dataset.id; spots.forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); enableCheck(true); });
+  setCheck(()=>{ const ok=L.payload.pick===s.target;
+    const right=((d&&d.parts.find(p=>p.id===s.target))||{}).label||"part";
+    const picked=(d&&L.payload.pick&&(d.parts.find(p=>p.id===L.payload.pick)||{}).label)||"";
+    spots.forEach(b=>{ b.disabled=true; if(b.dataset.id===s.target) b.classList.add("correct"); else if(b.dataset.id===L.payload.pick) b.classList.add("wrong"); });
+    gradeQ(ok, ok?`Yes — that's the <b>${right.toLowerCase()}</b>.`:`Not quite — you tapped the <b>${(picked||"wrong part").toLowerCase()}</b>; the highlighted one is the <b>${right.toLowerCase()}</b>.`);
+  });
+}
+
+/* EXAM — guided answer builder. Instead of "write on paper, reveal, self-assess",
+   the pupil is coached through the answer: a command-word tip says what kind of
+   answer scores, they type (or plan on paper), then mark it point-by-point against
+   the scheme — with points their answer already contains pre-ticked — for a real
+   score out of the marks, not a binary gut-feel. */
+const EXAM_TIPS={
+  explain:"Say <b>why</b>, not just what — link each point with <i>because…</i> or <i>so…</i>.",
+  describe:"Say <b>what happens</b>, step by step or as a pattern. No reasons needed.",
+  compare:"Every sentence should mention <b>both</b> things: “X is …, <i>whereas</i> Y is …”.",
+  evaluate:"Give points <b>for</b>, points <b>against</b>, then a conclusion that picks a side.",
+  discuss:"Give points <b>for</b>, points <b>against</b>, then a conclusion that picks a side.",
+  suggest:"Apply what you know to this <b>new</b> situation — sensible science beats guessing.",
+  calculate:"Show every step: <b>equation → substitute → answer with unit</b>. Working scores marks.",
+  state:"One precise sentence is enough — no explanation needed.",
+  define:"Give the exact meaning, using the key scientific words.",
+  outline:"The main steps only, in order — brief but complete.",
+  justify:"Use <b>evidence</b> for your choice: “… which shows that …”.",
+  predict:"Say what will happen <b>and</b> the science that tells you so.",
+  "why":"Say <b>why</b> — link each point with <i>because…</i> or <i>so…</i>."
+};
+function examTip(q){
+  const m=(q||"").replace(/<[^>]*>/g,"").toLowerCase().match(/\b(explain|describe|compare|evaluate|discuss|suggest|calculate|state|define|outline|justify|predict|why)\b/);
+  return m?{word:m[1],tip:EXAM_TIPS[m[1]]}:null;
+}
+const EXAM_STOP=new Set(["the","and","that","this","with","from","which","because","when","then","they","there","their","have","has","been","will","would","into","more","less","than","also","each","some","must","can","are","its","it's","for","not","but","any","all","one","two","a","an","of","to","in","on","is","it","as","or","so","by","at"]);
+// Does the typed answer already contain this scheme point? Crude stemmed-keyword match
+// used only to PRE-tick — the pupil stays the marker and can toggle every point.
+function pointInAnswer(ans, point){
+  const a=(ans||"").toLowerCase(); if(!a.trim()) return false;
+  const sig=((point||"").replace(/<[^>]*>/g,"").toLowerCase().match(/[a-z][a-z-]{3,}/g)||[]).filter(w=>!EXAM_STOP.has(w));
+  if(!sig.length) return false;
+  const hits=sig.filter(w=>a.includes(w.length>6?w.slice(0,w.length-2):w));
+  return hits.length>=Math.min(2,sig.length);
+}
 function viewExam(s){
+  const tip=examTip(s.q);
+  const n=(s.scheme||[]).length;
   return `<div class="step-kicker mono-kicker">${s.kicker||"Exam practice"}</div>
     <div class="exam-marks">${s.marks?`[${s.marks} mark${s.marks>1?"s":""}]`:"Extended answer"}</div>
     <h1 class="prompt fr">${s.q}</h1>
     ${s.context?`<div class="exam-stem">${s.context}</div>`:''}
-    <div id="schemebox"></div>
-    <div class="hint">Write a full answer on paper, then reveal the mark scheme to check yourself.</div>`;
-}
-function schemeHTML(s){
-  const pts=(s.scheme||[]).map(p=>`<li>${p}</li>`).join("");
-  return `<div class="scheme"><div class="scheme-h">Mark scheme${s.marks?` — ${s.marks} mark${s.marks>1?"s":""}`:""}</div><ul>${pts}</ul>${s.model?`<div class="model">${s.model}</div>`:""}</div>`;
+    ${tip&&tip.tip?`<div class="exam-coach"><span class="cw">${tip.word}</span> ${tip.tip}</div>`:''}
+    <textarea id="examta" class="exam-ta" rows="5" placeholder="Type your answer here${n?` — aim for ${n} clear point${n>1?"s":""}`:""}. (Or write it on paper first, then mark it here.)"></textarea>
+    <div id="schemebox"></div>`;
 }
 function wireExam(s){
-  footerButton("Reveal mark scheme","btn-primary",true,()=>{
+  footerButton("Mark my answer","btn-primary",true,()=>{
+    const ta=document.getElementById("examta");
+    const ans=ta?ta.value:""; if(ta) ta.readOnly=true;
+    const pts=s.scheme||[];
+    const ticked=pts.map(p=>pointInAnswer(ans,p));
     const box=document.getElementById("schemebox");
-    if(box){ box.innerHTML=schemeHTML(s); try{ box.scrollIntoView({behavior:"smooth",block:"nearest"}); }catch(e){} }
-    footerRow([
-      {label:"I'd get most marks ✓",cls:"btn-go",on:()=>gradeExam(true)},
-      {label:"Need more revision",cls:"btn-ghost",on:()=>gradeExam(false)}
-    ]);
+    const total=s.marks||pts.length||1;
+    if(box){
+      box.innerHTML=`<div class="scheme">
+        <div class="scheme-h">Mark it yourself — tap each point you made</div>
+        ${pts.map((p,i)=>`<button class="spt${ticked[i]?" on":""}" data-i="${i}"><span class="tick">${ticked[i]?"✓":""}</span><span class="pt-t">${p}</span></button>`).join("")}
+        <div class="exam-score" id="examscore"></div>
+        ${s.model?`<div class="model"><b>Model answer:</b> ${s.model}</div>`:""}
+      </div>`;
+      const score=()=>{ const got=Math.min(total,[...box.querySelectorAll(".spt.on")].length*(pts.length?total/pts.length:1));
+        const g=Math.round(got);
+        document.getElementById("examscore").innerHTML=`Your marks: <b>${g} / ${total}</b>${g>=total?" — full marks! 🏆":g/total>=0.65?" — solid, nearly there.":" — keep this one for revision."}`;
+        return g; };
+      box.querySelectorAll(".spt").forEach(b=>b.onclick=()=>{ b.classList.toggle("on"); b.querySelector(".tick").textContent=b.classList.contains("on")?"✓":""; score(); });
+      score();
+      try{ box.scrollIntoView({behavior:"smooth",block:"nearest"}); }catch(e){}
+      footerButton("Continue","btn-go",true,()=>{
+        const got=score();
+        gradeExam(got/total>=0.65, got, total);
+      });
+    } else gradeExam(false,0,total);
   });
 }
-function gradeExam(ok){
+function gradeExam(ok, got, total){
   L.checked=true; L.asked+=1; if(ok){ L.correct+=1; L.xp+=10; }
   const st=L.steps[L.i];
-  if(st && st.qid){ State.s.exam=State.s.exam||{}; State.s.exam[st.qid]={rating:ok?"good":"revise", last:todayStr(), unit:st.qid.split("#")[0], marks:st.marks||null}; State.save(); recordAnswer(st.qid, ok, "exam"); }
+  if(st && st.qid){ State.s.exam=State.s.exam||{}; State.s.exam[st.qid]={rating:ok?"good":"revise", last:todayStr(), unit:st.qid.split("#")[0], marks:st.marks||null, got:(typeof got==="number"?got:null), total:(typeof total==="number"?total:null)}; State.save(); recordAnswer(st.qid, ok, "exam"); }
   next();
 }
 
