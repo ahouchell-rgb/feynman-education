@@ -1,0 +1,775 @@
+[
+ {
+  "unit": "ACD",
+  "title": "Acids and alkalis",
+  "discipline": "chemistry",
+  "handbook": 2,
+  "printed_pages": [
+   [
+    91,
+    101
+   ]
+  ],
+  "subtopics": [
+   "Acids, alkalis and pH",
+   "Reactions of acids with metals and alkalis"
+  ],
+  "target_total": 40,
+  "target_mcq": 8,
+  "target_numeric": 3,
+  "target_short": 29,
+  "maths_heavy": false
+ },
+ {
+  "unit": "B1",
+  "title": "Cells",
+  "discipline": "biology",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    12,
+    17
+   ],
+   [
+    22,
+    33
+   ]
+  ],
+  "subtopics": [
+   "Cell structure",
+   "Animal and plant cells",
+   "Unicellular organisms",
+   "Diffusion",
+   "Specialised cells"
+  ],
+  "target_total": 65,
+  "target_mcq": 13,
+  "target_numeric": 5,
+  "target_short": 47,
+  "maths_heavy": false
+ },
+ {
+  "unit": "BIO",
+  "title": "Biodiversity",
+  "discipline": "biology",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    64,
+    71
+   ]
+  ],
+  "subtopics": [
+   "Biodiversity"
+  ],
+  "target_total": 29,
+  "target_mcq": 6,
+  "target_numeric": 2,
+  "target_short": 21,
+  "maths_heavy": false
+ },
+ {
+  "unit": "C1",
+  "title": "The particle model",
+  "discipline": "chemistry",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    49,
+    60
+   ]
+  ],
+  "subtopics": [
+   "Simple particle model",
+   "Properties of states of matter",
+   "Changes of state"
+  ],
+  "target_total": 43,
+  "target_mcq": 9,
+  "target_numeric": 3,
+  "target_short": 31,
+  "maths_heavy": false
+ },
+ {
+  "unit": "C2",
+  "title": "Atoms and elements",
+  "discipline": "chemistry",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    64,
+    75
+   ]
+  ],
+  "subtopics": [
+   "The atomic model",
+   "Symbols and formulae"
+  ],
+  "target_total": 43,
+  "target_mcq": 9,
+  "target_numeric": 3,
+  "target_short": 31,
+  "maths_heavy": false
+ },
+ {
+  "unit": "CHR",
+  "title": "Chemical reactions",
+  "discipline": "chemistry",
+  "handbook": 2,
+  "printed_pages": [
+   [
+    63,
+    90
+   ]
+  ],
+  "subtopics": [
+   "Reactions and signs of reaction",
+   "Combustion, thermal decomposition, oxidation, displacement",
+   "Conservation of mass"
+  ],
+  "target_total": 101,
+  "target_mcq": 20,
+  "target_numeric": 30,
+  "target_short": 51,
+  "maths_heavy": true
+ },
+ {
+  "unit": "DEN",
+  "title": "Particle model and density",
+  "discipline": "physics",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    161,
+    173
+   ]
+  ],
+  "subtopics": [
+   "Particle model and density",
+   "Energy in matter"
+  ],
+  "target_total": 47,
+  "target_mcq": 9,
+  "target_numeric": 14,
+  "target_short": 24,
+  "maths_heavy": true
+ },
+ {
+  "unit": "DIET",
+  "title": "Diet and health",
+  "discipline": "biology",
+  "handbook": 2,
+  "printed_pages": [
+   [
+    9,
+    16
+   ]
+  ],
+  "subtopics": [
+   "Healthy diet, energy requirements and dietary imbalance"
+  ],
+  "target_total": 29,
+  "target_mcq": 6,
+  "target_numeric": 9,
+  "target_short": 14,
+  "maths_heavy": true
+ },
+ {
+  "unit": "DIG",
+  "title": "Digestive organs and gut bacteria",
+  "discipline": "biology",
+  "handbook": 2,
+  "printed_pages": [
+   [
+    17,
+    25
+   ]
+  ],
+  "subtopics": [
+   "Digestive organs",
+   "Gut bacteria"
+  ],
+  "target_total": 33,
+  "target_mcq": 7,
+  "target_numeric": 3,
+  "target_short": 23,
+  "maths_heavy": false
+ },
+ {
+  "unit": "EAR",
+  "title": "Earth and atmosphere",
+  "discipline": "earth",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    90,
+    106
+   ]
+  ],
+  "subtopics": [
+   "Composition and structure of the Earth",
+   "The rock cycle",
+   "Composition of the atmosphere",
+   "The carbon cycle",
+   "Recycling"
+  ],
+  "target_total": 61,
+  "target_mcq": 12,
+  "target_numeric": 5,
+  "target_short": 44,
+  "maths_heavy": false
+ },
+ {
+  "unit": "ECO",
+  "title": "Ecosystems",
+  "discipline": "biology",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    32,
+    47
+   ]
+  ],
+  "subtopics": [
+   "Food chains",
+   "Food webs and interdependence",
+   "Insect pollination and food security"
+  ],
+  "target_total": 58,
+  "target_mcq": 12,
+  "target_numeric": 5,
+  "target_short": 41,
+  "maths_heavy": false
+ },
+ {
+  "unit": "ELC",
+  "title": "Elements and compounds",
+  "discipline": "chemistry",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    76,
+    86
+   ]
+  ],
+  "subtopics": [
+   "Elements and compounds"
+  ],
+  "target_total": 40,
+  "target_mcq": 8,
+  "target_numeric": 3,
+  "target_short": 29,
+  "maths_heavy": false
+ },
+ {
+  "unit": "ELE",
+  "title": "Electricity in circuits",
+  "discipline": "physics",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    107,
+    137
+   ]
+  ],
+  "subtopics": [
+   "Conductors and insulators",
+   "Circuits, current, p.d. and resistance",
+   "Series and parallel circuits"
+  ],
+  "target_total": 112,
+  "target_mcq": 22,
+  "target_numeric": 34,
+  "target_short": 56,
+  "maths_heavy": true
+ },
+ {
+  "unit": "ENC",
+  "title": "Energy changes",
+  "discipline": "chemistry",
+  "handbook": 2,
+  "printed_pages": [
+   [
+    102,
+    110
+   ]
+  ],
+  "subtopics": [
+   "Changes of state",
+   "Endothermic and exothermic reactions"
+  ],
+  "target_total": 33,
+  "target_mcq": 7,
+  "target_numeric": 3,
+  "target_short": 23,
+  "maths_heavy": false
+ },
+ {
+  "unit": "ENR",
+  "title": "Energy resources",
+  "discipline": "physics",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    126,
+    133
+   ]
+  ],
+  "subtopics": [
+   "Energy resources"
+  ],
+  "target_total": 29,
+  "target_mcq": 6,
+  "target_numeric": 2,
+  "target_short": 21,
+  "maths_heavy": false
+ },
+ {
+  "unit": "FRC",
+  "title": "Forces",
+  "discipline": "physics",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    159,
+    197
+   ]
+  ],
+  "subtopics": [
+   "Basic forces and diagrams",
+   "Naming/categorising forces",
+   "Stretching and squashing",
+   "Hooke's law and work done",
+   "Moments and simple machines",
+   "Balanced forces",
+   "Forces and motion"
+  ],
+  "target_total": 140,
+  "target_mcq": 28,
+  "target_numeric": 42,
+  "target_short": 70,
+  "maths_heavy": true
+ },
+ {
+  "unit": "GAS",
+  "title": "Gas exchange systems",
+  "discipline": "biology",
+  "handbook": 2,
+  "printed_pages": [
+   [
+    26,
+    39
+   ]
+  ],
+  "subtopics": [
+   "Ventilation",
+   "Gas exchange",
+   "Exercise, asthma and smoking"
+  ],
+  "target_total": 51,
+  "target_mcq": 10,
+  "target_numeric": 4,
+  "target_short": 37,
+  "maths_heavy": false
+ },
+ {
+  "unit": "INH",
+  "title": "Inheritance",
+  "discipline": "biology",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    48,
+    63
+   ]
+  ],
+  "subtopics": [
+   "DNA and chromosomes",
+   "Variation",
+   "Competition and natural selection"
+  ],
+  "target_total": 58,
+  "target_mcq": 12,
+  "target_numeric": 5,
+  "target_short": 41,
+  "maths_heavy": false
+ },
+ {
+  "unit": "LGT",
+  "title": "Light",
+  "discipline": "physics",
+  "handbook": 2,
+  "printed_pages": [
+   [
+    154,
+    178
+   ]
+  ],
+  "subtopics": [
+   "Light and ray models",
+   "Interactions with materials",
+   "Mirrors, pinhole cameras and the eye",
+   "Detecting light and colour"
+  ],
+  "target_total": 90,
+  "target_mcq": 18,
+  "target_numeric": 7,
+  "target_short": 65,
+  "maths_heavy": false
+ },
+ {
+  "unit": "MAG",
+  "title": "Magnets",
+  "discipline": "physics",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    144,
+    160
+   ]
+  ],
+  "subtopics": [
+   "Magnets and magnetic fields",
+   "Earth's magnetism",
+   "Electromagnets and motors"
+  ],
+  "target_total": 61,
+  "target_mcq": 12,
+  "target_numeric": 5,
+  "target_short": 44,
+  "maths_heavy": false
+ },
+ {
+  "unit": "MAT",
+  "title": "Materials",
+  "discipline": "chemistry",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    81,
+    89
+   ]
+  ],
+  "subtopics": [
+   "Metal reactivity",
+   "Metal extraction with carbon",
+   "Ceramics, polymers and composites"
+  ],
+  "target_total": 33,
+  "target_mcq": 7,
+  "target_numeric": 3,
+  "target_short": 23,
+  "maths_heavy": false
+ },
+ {
+  "unit": "MIC",
+  "title": "Microscopes & magnification",
+  "discipline": "biology",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    9,
+    11
+   ],
+   [
+    18,
+    21
+   ]
+  ],
+  "subtopics": [
+   "Microscopes",
+   "Magnification"
+  ],
+  "target_total": 28,
+  "target_mcq": 6,
+  "target_numeric": 8,
+  "target_short": 14,
+  "maths_heavy": true
+ },
+ {
+  "unit": "P1",
+  "title": "Energy",
+  "discipline": "physics",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    103,
+    115
+   ]
+  ],
+  "subtopics": [
+   "Fuels and energy stores",
+   "Energy stores and transfers"
+  ],
+  "target_total": 47,
+  "target_mcq": 9,
+  "target_numeric": 14,
+  "target_short": 24,
+  "maths_heavy": true
+ },
+ {
+  "unit": "PER",
+  "title": "The periodic table",
+  "discipline": "chemistry",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    72,
+    80
+   ]
+  ],
+  "subtopics": [
+   "Properties of metals and non-metals",
+   "Groups, periods, metals and non-metals"
+  ],
+  "target_total": 33,
+  "target_mcq": 7,
+  "target_numeric": 3,
+  "target_short": 23,
+  "maths_heavy": false
+ },
+ {
+  "unit": "PHO",
+  "title": "Photosynthesis",
+  "discipline": "biology",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    9,
+    23
+   ]
+  ],
+  "subtopics": [
+   "Photosynthesis",
+   "Leaf structure"
+  ],
+  "target_total": 54,
+  "target_mcq": 11,
+  "target_numeric": 4,
+  "target_short": 39,
+  "maths_heavy": false
+ },
+ {
+  "unit": "PRS",
+  "title": "Pressure",
+  "discipline": "physics",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    61,
+    63
+   ],
+   [
+    111,
+    124
+   ]
+  ],
+  "subtopics": [
+   "Gas pressure",
+   "Pressure in liquids",
+   "Atmospheric pressure",
+   "Pressure calculations"
+  ],
+  "target_total": 61,
+  "target_mcq": 12,
+  "target_numeric": 18,
+  "target_short": 31,
+  "maths_heavy": true
+ },
+ {
+  "unit": "PUR",
+  "title": "Pure and impure substances",
+  "discipline": "chemistry",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    87,
+    102
+   ]
+  ],
+  "subtopics": [
+   "Diffusion",
+   "Pure and impure",
+   "Separation"
+  ],
+  "target_total": 58,
+  "target_mcq": 12,
+  "target_numeric": 5,
+  "target_short": 41,
+  "maths_heavy": false
+ },
+ {
+  "unit": "PWR",
+  "title": "Power",
+  "discipline": "physics",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    116,
+    125
+   ]
+  ],
+  "subtopics": [
+   "Power"
+  ],
+  "target_total": 36,
+  "target_mcq": 7,
+  "target_numeric": 11,
+  "target_short": 18,
+  "maths_heavy": true
+ },
+ {
+  "unit": "REP",
+  "title": "Reproduction",
+  "discipline": "biology",
+  "handbook": 2,
+  "printed_pages": [
+   [
+    40,
+    62
+   ]
+  ],
+  "subtopics": [
+   "Sexual reproduction and organs",
+   "Fertilisation",
+   "Fetal development",
+   "The menstrual cycle",
+   "Plant reproduction"
+  ],
+  "target_total": 83,
+  "target_mcq": 17,
+  "target_numeric": 7,
+  "target_short": 59,
+  "maths_heavy": false
+ },
+ {
+  "unit": "RES",
+  "title": "Respiration",
+  "discipline": "biology",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    24,
+    31
+   ]
+  ],
+  "subtopics": [
+   "Aerobic respiration",
+   "Anaerobic respiration"
+  ],
+  "target_total": 29,
+  "target_mcq": 6,
+  "target_numeric": 2,
+  "target_short": 21,
+  "maths_heavy": false
+ },
+ {
+  "unit": "SKL",
+  "title": "Human skeleton and muscles",
+  "discipline": "biology",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    34,
+    48
+   ]
+  ],
+  "subtopics": [
+   "The skeleton",
+   "Biomechanics",
+   "Principles of organisation"
+  ],
+  "target_total": 54,
+  "target_mcq": 11,
+  "target_numeric": 4,
+  "target_short": 39,
+  "maths_heavy": false
+ },
+ {
+  "unit": "SND",
+  "title": "Waves and sound",
+  "discipline": "physics",
+  "handbook": 2,
+  "printed_pages": [
+   [
+    125,
+    153
+   ]
+  ],
+  "subtopics": [
+   "Types of wave",
+   "Sound waves",
+   "Microphones and ultrasound"
+  ],
+  "target_total": 105,
+  "target_mcq": 21,
+  "target_numeric": 32,
+  "target_short": 52,
+  "maths_heavy": true
+ },
+ {
+  "unit": "SPC",
+  "title": "Space",
+  "discipline": "physics",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    174,
+    202
+   ]
+  ],
+  "subtopics": [
+   "Stars, planets and galaxies",
+   "The seasons",
+   "Weight"
+  ],
+  "target_total": 105,
+  "target_mcq": 21,
+  "target_numeric": 32,
+  "target_short": 52,
+  "maths_heavy": true
+ },
+ {
+  "unit": "SPD",
+  "title": "Speed",
+  "discipline": "physics",
+  "handbook": 1,
+  "printed_pages": [
+   [
+    134,
+    158
+   ]
+  ],
+  "subtopics": [
+   "Speed",
+   "Distance-time graphs",
+   "Relative motion"
+  ],
+  "target_total": 90,
+  "target_mcq": 18,
+  "target_numeric": 27,
+  "target_short": 45,
+  "maths_heavy": true
+ },
+ {
+  "unit": "STA",
+  "title": "Static electricity",
+  "discipline": "physics",
+  "handbook": 3,
+  "printed_pages": [
+   [
+    138,
+    143
+   ]
+  ],
+  "subtopics": [
+   "Static charges",
+   "Electric fields"
+  ],
+  "target_total": 28,
+  "target_mcq": 6,
+  "target_numeric": 2,
+  "target_short": 20,
+  "maths_heavy": false
+ }
+]
