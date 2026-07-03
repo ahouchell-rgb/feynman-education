@@ -76,6 +76,20 @@ across the three books, each with numbered draw-this-then-say-that steps.
   NOTE: this supersedes the earlier "117/117 visually correct" audit — that pass
   checked the raw SVG art, not the label overlay the student actually sees.
 
+- **DONE (2026-07-03) — verified label positioning across all 117 diagrams:**
+  Confirmed every one of the 697 parts has a `data-part` element (an earlier
+  count that flagged 95 "untagged" was a bad regex — these SVGs use single-quoted
+  attributes), so the geometry positioner applies everywhere with no coordinate
+  fallback in play. Swept the whole set rendering geometry-positioned labels: every
+  label/dot lands on its shape — physics fields (magnet, motor, orbits), star life
+  cycle, waves/EM spectrum, cells, circuits, graphs, chemistry apparatus, etc.
+  Only cosmetic note: a couple of diagrams stack two background labels on the same
+  spot when *all* labels are forced visible (animalCell membrane and cytoplasm are
+  literally the same ellipse; d_GS1 orbit labels cluster) — irrelevant in real use,
+  where only the current part's label shows. No code change needed; positioning is
+  correct. Grading of the "find it" checkpoint is by `data-id`, not coordinates, so
+  with hotspots now overlaying their shapes a correct tap registers correctly.
+
 ## Task (c) — teach-before-quiz coverage: scoping note (2026-07-03)
 The teach-first restructure already **guarantees the structural property**: every
 one of a unit's own facts (and its diagram build-up) is taught before any of that
