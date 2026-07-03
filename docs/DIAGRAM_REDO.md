@@ -27,6 +27,17 @@ across the three books, each with numbered draw-this-then-say-that steps.
   Verified: DIAGRAMS block parses in node (117 diagrams, 697 noted parts); app
   loads with no console errors.
 
+- **DONE (2026-07-03) — teach-before-quiz fix (the main ask):** `buildLessons`
+  used to round-robin the ~5 facts across all lessons (`splitEven`) while chunking
+  the ~30 questions contiguously, so early lessons quizzed facts taught many
+  lessons later (P1: lesson 0 taught 1 fact but asked 5 questions covering facts
+  1–8). Restructured to the handbook model — **Guided explanation → Check for
+  understanding → Independent practice**: every fact builds the diagram in order
+  and teaches its vocab in *learn* lessons FIRST, then the full question bank runs
+  in *practice* lessons. Verified across all 141 units: **0 cases** of a fact/word
+  taught after a bank question begins. Diagram still builds one part per step;
+  worked example precedes the first numeric; capstone label-the-diagram stays last.
+
 ## Next iterations (loop)
 1. **Audit reveal ORDER** of the 14 legacy diagrams' `map` in content.js against
    the handbook's numbered step order (e.g. microscope light-path bottom-up;

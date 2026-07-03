@@ -1364,16 +1364,11 @@ function buildLessons(c){
   let QP=c.questions.map((q,idx)=>({q,idx}));
   if(TIER==="foundation") QP=QP.filter(x=>!isHTQ(x.q));
   const Q=QP.map(x=>{ const s=toStep(x.q); s.qid=c.code+"#"+x.idx; return s; });   // qid keeps ORIGINAL index
-  const qchunks=chunk(Q,5);
-  const n=Math.max(1,qchunks.length);
-  const fGroups=splitEven(facts,n);   // round-robin: fact i lives in lesson i%n
-
-  // Tie each word to the first fact that actually explains (mentions) it.
+  // Tie each word to the first fact that actually explains (mentions) it, so a key
+  // word is taught immediately after the fact that introduces it.
   const wordsByFact={}, unmatched=[];
   V.forEach(v=>{ const fi=rawFacts.findIndex(f=>termInFact(v.term,f)); if(fi>=0){ (wordsByFact[fi]=wordsByFact[fi]||[]).push(v); } else unmatched.push(v); });
-  const unmatchedGroups=splitEven(unmatched,n);   // leftover words consolidate at lesson end
 
-  const pTitles=["Learn","Build","Practise","Apply","Master"], pIcons=["📖","🧩","✍️","🔬","🏆"];
   // Cognitive load — segment the build-up so only ONE new part (and its one
   // explanation) appears per step. A fact that adds several parts at once would
   // otherwise dump 3–7 labels + captions together (working memory overload), so we
@@ -1388,40 +1383,47 @@ function buildLessons(c){
       return { type:"teach", kicker:"Keep building the picture", emoji:"", h:"", html:"", dgram:fs.dgram, dreveal, dcur:[pid] };
     });
   }
-  const lessons=[];
-  qchunks.forEach((qc,ci)=>{
-    const lessonFacts=fGroups[ci]||[];
-    // each fact becomes a block: the fact (segmented so one diagram part reveals at a
-    // time), then the word cards it explains (taught → then hear/say), then — when the
-    // fact added a build-up part — a "find it" checkpoint (tap the new part, labels hidden).
-    const blocks=lessonFacts.map(fs=>{
-      const fi=facts.indexOf(fs);
-      const b=[...revealSteps(fs), ...(wordsByFact[fi]||[]).map(v=>vocabStep(v,disc))];
-      if(fs.dgram && fs.dcur && fs.dcur.length && fs.dreveal && fs.dreveal.length>=2)
-        b.push({ type:"dcheck", dgram:fs.dgram, dreveal:fs.dreveal, target:fs.dcur[fs.dcur.length-1], kicker:"📍 Find it on the diagram" });
-      return b;
-    });
-    let steps=interleaveBlocks(blocks, qc);
-    // words with no explaining fact: consolidate at the end
-    const cons=unmatchedGroups[ci]||[];
-    cons.forEach(v=>steps.push(vocabStep(v,disc)));
-    const lessonWords=lessonFacts.reduce((a,fs)=>a.concat(wordsByFact[facts.indexOf(fs)]||[]),[]).concat(cons);
-    if(lessonWords.length>=2) steps.push(matchVocabStep(lessonWords));
-    if(lessonWords.length) steps.push(listenTypeStep(lessonWords[lessonWords.length-1]));
-    lessons.push({ title:pTitles[ci]||("Round "+(ci+1)), icon:pIcons[ci]||"🎯", kind:"practice", words:lessonWords.length, steps });
+
+  // ── TEACH FIRST (the handbook model: Guided explanation → Check for understanding
+  //    → Independent practice). Build the whole diagram and teach every fact and its
+  //    vocabulary BEFORE any bank question is asked, so nothing is quizzed before it
+  //    has been taught. The only checks inside teaching are "find the part you just
+  //    revealed" and the hear-it/say-it word cards — both on content already shown. ──
+  const teachSteps=[];
+  facts.forEach((fs,fi)=>{
+    teachSteps.push(...revealSteps(fs));
+    (wordsByFact[fi]||[]).forEach(v=>teachSteps.push(vocabStep(v,disc)));
+    if(fs.dgram && fs.dcur && fs.dcur.length && fs.dreveal && fs.dreveal.length>=2)
+      teachSteps.push({ type:"dcheck", dgram:fs.dgram, dreveal:fs.dreveal, target:fs.dcur[fs.dcur.length-1], kicker:"📍 Find it on the diagram" });
   });
-  // Worked example: model the calculation method just before the pupil meets the
-  // unit's first numeric question ("I do" before "you do"). Authored per unit in
-  // content.js as c.worked; spliced in front of the first numeric step.
+  unmatched.forEach(v=>teachSteps.push(vocabStep(v,disc)));       // words with no explaining fact
+  if(V.length>=2) teachSteps.push(matchVocabStep(V.slice()));      // consolidate — all words now taught
+  if(V.length)    teachSteps.push(listenTypeStep(V[V.length-1]));
+
+  // ── THEN PRACTISE: the full question bank, every item now resting on taught content.
+  const practiceSteps=Q.slice();
+  // Worked example: model the method just before the first numeric question ("I do"
+  // before "you do"), spliced into the practice stream.
   if(c.worked && c.worked.steps && c.worked.steps.length){
     const wstep={ type:"worked", kicker:"🧮 Worked example", title:c.worked.title, q:c.worked.q, steps:c.worked.steps, answer:c.worked.answer, unit:c.worked.unit };
-    let placed=false;
-    for(const lesson of lessons){
-      for(let k=0;k<lesson.steps.length;k++){ if(lesson.steps[k].type==="numeric"){ lesson.steps.splice(k,0,wstep); placed=true; break; } }
-      if(placed) break;
-    }
-    if(!placed && lessons[0]) lessons[0].steps.push(wstep);
+    let k=practiceSteps.findIndex(s=>s.type==="numeric"); if(k<0) k=practiceSteps.length;
+    practiceSteps.splice(k,0,wstep);
   }
+
+  // Chunk into lessons: teaching lessons first, practice lessons after.
+  const lessons=[];
+  const wordsIn=a=>a.filter(s=>s&&s.type==="vocab").length;
+  const learnTitles=["Learn","Build"], learnIcons=["📖","🧩"];
+  const pracTitles=["Practise","Apply","Master"], pracIcons=["✍️","🔬","🏆"];
+  const tChunks=chunk(teachSteps,7).filter(a=>a.length);
+  tChunks.forEach((steps,i)=>{
+    lessons.push({ title: tChunks.length>1?(learnTitles[i]||("Learn "+(i+1))):"Learn",
+                   icon: learnIcons[i]||"📖", kind:"learn", words:wordsIn(steps), steps });
+  });
+  chunk(practiceSteps,6).filter(a=>a.length).forEach((steps,i)=>{
+    lessons.push({ title: pracTitles[i]||("Master "+(i+1)), icon: pracIcons[i]||"🏆", kind:"practice", words:0, steps });
+  });
+  if(!lessons.length) lessons.push({ title:"Learn", icon:"📖", kind:"learn", words:0, steps:[] });
   // Capstone: once every fact has been taught the build-up diagram is complete, so
   // the final lesson ends by asking the pupil to label the WHOLE picture from memory —
   // all pins blank, labels shuffled in a bank. Works for any diagram with ≥3 parts,
