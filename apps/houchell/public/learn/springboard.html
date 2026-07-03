@@ -288,7 +288,11 @@
   .dlabel{ position:absolute; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:3px; pointer-events:none; z-index:2; }
   .ddot{ width:13px; height:13px; border-radius:50%; background:var(--lav-pale); border:2.5px solid var(--navy); box-shadow:0 1px 4px rgba(30,39,97,.25); }
   .dtag{ font:600 11px/1.1 ui-rounded,system-ui; color:var(--navy); background:rgba(255,255,255,.93); border:1px solid var(--line); border-radius:8px; padding:2px 6px; white-space:nowrap; box-shadow:var(--shadow); }
-  .dlabel:not(.cur){ opacity:.6; }
+  /* Cognitive load: already-taught parts keep only a faint dot as a spatial anchor —
+     their text tags hide so the one part being explained now is the only label to read.
+     (The full label set returns in the "label the diagram" capstone.) */
+  .dlabel:not(.cur){ opacity:.55; }
+  .dlabel:not(.cur) .dtag{ display:none; }
   .dlabel.cur{ z-index:3; animation:dpop .35s ease-out; }
   .dlabel.cur .ddot{ background:var(--navy); animation:dpulse 1.5s ease-out infinite; }
   .dlabel.cur .dtag{ background:var(--navy); color:#fff; border-color:var(--navy); }
@@ -1047,7 +1051,10 @@ function stripHtml(h){ return String(h||"").replace(/<[^>]+>/g," ").replace(/&[a
 function stepReadText(s){
   if(!s) return "";
   if(s.type==="interactive") return (document.querySelector(".ixfact")||{}).textContent||"Explore the interactive diagram.";
-  if(s.type==="teach") return (s.h?s.h+". ":"")+stripHtml(s.html);
+  if(s.type==="teach"){ let base=(s.h?s.h+". ":"")+stripHtml(s.html);
+    if(!base.trim() && s.dgram && typeof DIAGRAMS!=="undefined" && DIAGRAMS[s.dgram] && Array.isArray(s.dcur)){
+      const d=DIAGRAMS[s.dgram]; base=s.dcur.map(id=>{ const p=d.parts.find(x=>x.id===id); return p&&p.note?p.label+". "+p.note:""; }).filter(Boolean).join(" "); }
+    return base; }
   if(s.type==="vocab") return s.term+". "+s.def;
   if(s.type==="speak") return "Say the word: "+s.term;
   if(s.type==="listenType") return "Type the word you hear.";
@@ -1367,15 +1374,29 @@ function buildLessons(c){
   const unmatchedGroups=splitEven(unmatched,n);   // leftover words consolidate at lesson end
 
   const pTitles=["Learn","Build","Practise","Apply","Master"], pIcons=["📖","🧩","✍️","🔬","🏆"];
+  // Cognitive load — segment the build-up so only ONE new part (and its one
+  // explanation) appears per step. A fact that adds several parts at once would
+  // otherwise dump 3–7 labels + captions together (working memory overload), so we
+  // split it into the fact step (first part) + a light "keep building" micro-step
+  // per remaining part, each revealing a single part with its own note.
+  function revealSteps(fs){
+    if(!(fs.dgram && Array.isArray(fs.dcur) && fs.dcur.length>1)) return [fs];
+    const prior=(fs.dreveal||[]).filter(id=>fs.dcur.indexOf(id)<0);
+    return fs.dcur.map((pid,i)=>{
+      const dreveal=prior.concat(fs.dcur.slice(0,i+1));
+      if(i===0) return Object.assign({},fs,{dreveal,dcur:[pid]});
+      return { type:"teach", kicker:"Keep building the picture", emoji:"", h:"", html:"", dgram:fs.dgram, dreveal, dcur:[pid] };
+    });
+  }
   const lessons=[];
   qchunks.forEach((qc,ci)=>{
     const lessonFacts=fGroups[ci]||[];
-    // each fact becomes a block: the fact, then the word cards it explains (taught → then hear/say),
-    // then — when the fact just added a part to the build-up diagram — a "find it" checkpoint that
-    // asks the pupil to tap the new part with the labels hidden (retrieval, not recognition).
+    // each fact becomes a block: the fact (segmented so one diagram part reveals at a
+    // time), then the word cards it explains (taught → then hear/say), then — when the
+    // fact added a build-up part — a "find it" checkpoint (tap the new part, labels hidden).
     const blocks=lessonFacts.map(fs=>{
       const fi=facts.indexOf(fs);
-      const b=[fs, ...(wordsByFact[fi]||[]).map(v=>vocabStep(v,disc))];
+      const b=[...revealSteps(fs), ...(wordsByFact[fi]||[]).map(v=>vocabStep(v,disc))];
       if(fs.dgram && fs.dcur && fs.dcur.length && fs.dreveal && fs.dreveal.length>=2)
         b.push({ type:"dcheck", dgram:fs.dgram, dreveal:fs.dreveal, target:fs.dcur[fs.dcur.length-1], kicker:"📍 Find it on the diagram" });
       return b;
