@@ -38,6 +38,15 @@ across the three books, each with numbered draw-this-then-say-that steps.
   taught after a bank question begins. Diagram still builds one part per step;
   worked example precedes the first numeric; capstone label-the-diagram stays last.
 
+- **DONE (2026-07-03) — reveal-order audit (task a):** Generated a fact→revealed-part
+  alignment table for all 110 diagram-bearing units and scanned every one. Most build
+  orders are sound; harmless re-reveals (a part re-highlighted by a later fact) were
+  left as-is. Fixed one real bug: **LGT Light** revealed the reflected ray at fact 6
+  ("we see objects"), *after* refraction, so the reflection-law fact (f4) drew only the
+  normal with no reflected ray to compare angles against. Moved `reflectedRay` to f4
+  (with the normal) and cleared f6. New order: incident+mirror → normal+reflected →
+  refracted → prism+spectrum. Verified in-runtime; teach-before-quiz still 0 violations.
+
 ## Next iterations (loop)
 1. **Audit reveal ORDER** of the 14 legacy diagrams' `map` in content.js against
    the handbook's numbered step order (e.g. microscope light-path bottom-up;
