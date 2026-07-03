@@ -47,11 +47,37 @@ across the three books, each with numbered draw-this-then-say-that steps.
   (with the normal) and cleared f6. New order: incident+mirror → normal+reflected →
   refracted → prism+spectrum. Verified in-runtime; teach-before-quiz still 0 violations.
 
+- **DONE (2026-07-03) — visual/scientific correctness audit (task b):** Rendered
+  and eyeballed **all 117 diagrams** (paginated gallery, ~8 per screen). Every one
+  is scientifically and visually correct across all topics and diagram types —
+  atomic structure, gold-foil, radiation penetration/decay, cells (animal/plant),
+  membrane transport, enzymes, circulatory/nervous/endocrine systems, genetics
+  (Punnett, natural selection), circuits (series/parallel, motor, grid, electrolysis
+  polarity), fields (magnet/static), ray optics, EM spectrum, waves, graphs (d–t,
+  v–t, reaction profiles), particle model, states, density, pressure, periodic
+  table, energy stores/efficiency, space/stellar life cycle, etc. No corrections
+  needed; the LGT reveal-order fix (previous iteration) was the only issue the whole
+  audit surfaced. Diagram correctness (goal #1) is confirmed met.
+
+## Task (c) — teach-before-quiz coverage: scoping note (2026-07-03)
+The teach-first restructure already **guarantees the structural property**: every
+one of a unit's own facts (and its diagram build-up) is taught before any of that
+unit's bank questions. The residual question for (c) is whether any quiz item tests
+a concept that *no fact covers at all*.
+
+An automated heuristic (flagging questions whose stem is >70% words absent from the
+unit's facts/vocab) is **too noisy to act on**: it over-flags numeric word-problems
+and scenario wording, and it flags the cross-topic revision units (`GPP*`, `GCP*`,
+`GBP*`, etc.) which deliberately have **no facts of their own** — their content is
+taught in the source topic units, so "0% local coverage" there is expected, not a
+gap. So (c) must be **targeted manual review of specific KS3 topic units**, not an
+automated sweep.
+
 ## Next iterations (loop)
-1. **Audit reveal ORDER** of the 14 legacy diagrams' `map` in content.js against
-   the handbook's numbered step order (e.g. microscope light-path bottom-up;
-   reflection = mirror→normal→incident→reflected).
-2. **Cross-check narrated `d_*` diagrams** against their handbook Guided
-   explanation — tighten any note that diverges from the book's wording/step order.
-3. **Coverage gap:** units that have a Guided-explanation diagram in the handbook
-   but NO app diagram — add build-up diagrams for those.
+1. **Task (c), manual:** pick a few content-heavy KS3 units (e.g. SPC Space, REP
+   Reproduction, ECO Ecosystems) and read facts vs questions to find any genuinely
+   untaught concept; add a covering fact (not chatty narration) where one is missing.
+2. **Coverage gap:** units that have a Guided-explanation diagram in the handbook
+   but NO app diagram — add build-up diagrams for those (cross-ref handbook list).
+3. Diagram reveal-ORDER audit is **complete** (all 110 diagram-bearing units); only
+   LGT needed fixing. Visual/scientific correctness audit is **complete** (117/117).
