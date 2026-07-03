@@ -1829,6 +1829,41 @@ function applyLiveDiagram(s){
     const ids=(el.getAttribute('data-part')||'').trim().split(/\s+/);
     el.style.opacity=ids.some(id=>rev.has(id))?'1':'0';   // CSS transition fades it in; sm-* motion keeps running
   });
+  layoutDiagramSpots(wrap);
+}
+
+/* Place every labelled overlay (build-up labels, "find it" hotspots, capstone pins)
+   on its actual shape, computed from the SVG geometry rather than hand-typed x/y —
+   so a label/dot always lands on the thing it names. For a part drawn as one big
+   outline/background (e.g. a cell membrane or electron shell) the marker goes on the
+   top edge instead of dead-centre, where it would otherwise sit over inner detail;
+   for a part drawn as several pieces (e.g. two electrons) it goes on the largest
+   piece. Falls back to the authored x/y only when the part has no drawable geometry. */
+const SPOT_SHAPES='path,rect,circle,ellipse,line,polygon,polyline';
+function layoutDiagramSpots(wrap){
+  const svg=wrap.querySelector('svg'); if(!svg) return;
+  const vb=svg.viewBox && svg.viewBox.baseVal; if(!vb || !vb.width) return;
+  wrap.querySelectorAll('[data-id]').forEach(node=>{
+    const id=node.getAttribute('data-id');
+    const groups=[...svg.querySelectorAll('[data-part]')].filter(g=>
+      (g.getAttribute('data-part')||'').trim().split(/\s+/).indexOf(id)>=0);
+    if(!groups.length) return;                         // no geometry — keep authored x/y
+    let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity, leaves=[];
+    groups.forEach(g=>{
+      let bb; try{bb=g.getBBox();}catch(e){return;}
+      if(!bb.width && !bb.height) return;
+      x0=Math.min(x0,bb.x); y0=Math.min(y0,bb.y); x1=Math.max(x1,bb.x+bb.width); y1=Math.max(y1,bb.y+bb.height);
+      const shapes=g.matches(SPOT_SHAPES)?[g]:[...g.querySelectorAll(SPOT_SHAPES)];
+      shapes.forEach(sh=>{ let b; try{b=sh.getBBox();}catch(e){return;} if(b.width||b.height) leaves.push(b); });
+    });
+    if(!isFinite(x0)) return;
+    const uw=x1-x0, uh=y1-y0, frac=(uw*uh)/(vb.width*vb.height);
+    let px,py;
+    if(frac>0.4 || !leaves.length){ px=x0+uw/2; py=y0+Math.min(uh*0.12, vb.height*0.07); }  // outline → top edge
+    else { leaves.sort((a,b)=>b.width*b.height-a.width*a.height); const L=leaves[0]; px=L.x+L.width/2; py=L.y+L.height/2; }
+    node.style.left=((px-vb.x)/vb.width*100)+'%';
+    node.style.top=((py-vb.y)/vb.height*100)+'%';
+  });
 }
 
 /* TEACH + VOCAB */
@@ -1839,7 +1874,7 @@ function teachDiagram(s){
   const wh=d.vb.split(" "); const ratio=wh[2]+" / "+wh[3];
   const rev=s.dreveal||[], cur=s.dcur||[];
   const labels=d.parts.filter(p=>rev.indexOf(p.id)>=0).map(p=>
-    `<div class="dlabel${cur.indexOf(p.id)>=0?' cur':''}" style="left:${p.x}%;top:${p.y}%"><span class="ddot"></span><span class="dtag">${p.label}</span></div>`).join("");
+    `<div class="dlabel${cur.indexOf(p.id)>=0?' cur':''}" data-id="${p.id}" style="left:${p.x}%;top:${p.y}%"><span class="ddot"></span><span class="dtag">${p.label}</span></div>`).join("");
   // Narrate the build-up: the part(s) this fact just added get an explanation caption
   // saying what is happening there and why — so the diagram teaches, not just labels.
   const notes=d.parts.filter(p=>cur.indexOf(p.id)>=0 && p.note).map(p=>

@@ -59,6 +59,23 @@ across the three books, each with numbered draw-this-then-say-that steps.
   needed; the LGT reveal-order fix (previous iteration) was the only issue the whole
   audit surfaced. Diagram correctness (goal #1) is confirmed met.
 
+- **DONE (2026-07-03) — labels/markers were in the WRONG PLACES (user report):**
+  The build-up labels, the "find it" tap hotspots, and the capstone pins were all
+  positioned by hand-typed `x`/`y` percentages per part — many of which did not sit
+  on the shape they named (measured errors up to 40%: the atom's "electron" pointed
+  at empty space, the microscope "stage" floated left of the stage, the animal-cell
+  "membrane" was 41% off). Worse, the wrong hotspot coordinates meant tapping the
+  *correct* shape in a checkpoint could be marked wrong. Fixed at the root with
+  `layoutDiagramSpots()`: after every diagram render it repositions each labelled
+  overlay (`.dlabel` / `.hotspot` / `.dpin`, all keyed by `data-id`) onto the actual
+  geometry of its SVG shape — the largest piece of a multi-part shape (e.g. one of
+  two electrons), or the top edge of a big outline/background (e.g. an electron shell
+  or cell membrane) so it doesn't sit over inner detail. Hand `x`/`y` remains only as
+  a fallback for parts with no drawable geometry. Verified in real lessons (eyepiece
+  label lands on the eyepiece), checkpoints, and the capstone; no console errors.
+  NOTE: this supersedes the earlier "117/117 visually correct" audit — that pass
+  checked the raw SVG art, not the label overlay the student actually sees.
+
 ## Task (c) — teach-before-quiz coverage: scoping note (2026-07-03)
 The teach-first restructure already **guarantees the structural property**: every
 one of a unit's own facts (and its diagram build-up) is taught before any of that
