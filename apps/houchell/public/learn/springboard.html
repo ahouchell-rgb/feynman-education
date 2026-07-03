@@ -269,6 +269,18 @@
   .dchip{ font:inherit; font-size:14px; font-weight:600; padding:8px 13px; border-radius:999px; border:1.5px solid var(--line-2); background:var(--paper); color:var(--ink); cursor:pointer; box-shadow:var(--shadow); }
   .dchip.sel{ border-color:var(--navy); background:var(--lav-pale); box-shadow:0 0 0 3px var(--lav-pale); }
   .dchip.used{ opacity:.32; text-decoration:line-through; cursor:default; }
+  /* Worked example */
+  .teach.worked{ text-align:left; }
+  .worked-q{ background:#F4F6FC; border:1px solid var(--line-2); border-radius:12px; padding:12px 15px; margin:6px 0 4px; font-size:15.5px; line-height:1.5; color:var(--ink); font-weight:600; }
+  .worked-steps{ margin-top:6px; }
+  .wstep{ padding:11px 0 3px; border-top:1px dashed var(--line); margin-top:10px; }
+  .wstep:first-child{ border-top:0; }
+  .ws-label{ display:flex; align-items:center; gap:9px; font-size:13.5px; font-weight:700; color:var(--grey); text-transform:uppercase; letter-spacing:.04em; }
+  .ws-n{ flex:0 0 auto; width:22px; height:22px; border-radius:50%; background:var(--navy); color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center; }
+  .ws-line{ margin-top:6px; padding-left:31px; font-family:'IBM Plex Sans',monospace; font-size:16px; font-weight:600; color:var(--navy); line-height:1.5; }
+  .wanswer{ margin-top:14px; padding:10px 15px; border-radius:12px; background:rgba(44,95,45,.1); border:1px solid var(--line-2); font-size:15.5px; color:var(--ink); }
+  .wanswer b{ color:var(--green); font-size:17px; }
+  .pop{ animation:dpop .32s ease-out; }
 
   /* progressive build-up diagram (one label revealed per fact) */
   .bdiagram{ position:relative; width:100%; max-width:360px; margin:14px auto 4px; background:var(--paper); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); }
@@ -522,6 +534,10 @@
   .bdiagram{ background:#fff; border-color:rgba(255,255,255,.25); }
   .dchip{ background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.18); color:#eef4ff; }
   .dchip.sel{ background:rgba(88,224,194,.16); border-color:#58e0c2; box-shadow:0 0 0 3px rgba(88,224,194,.18); }
+  .worked-q{ background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14); color:#eaf1ff; }
+  .ws-line{ color:#bfe6ff; }
+  .wanswer{ background:rgba(88,224,194,.08); border-color:rgba(255,255,255,.14); color:#eaf1ff; }
+  .wanswer b{ color:#58e0c2; }
   .ixfact{ color:#eaf1ff; } .ixread{ color:#cdd8ea; }
   .ixbtn{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.22); color:#eef4ff; }
   .ixbtn.primary{ background:var(--accent); border-color:transparent; color:#06111f; }
@@ -1028,6 +1044,7 @@ function stepReadText(s){
   if(s.type==="listenType") return "Type the word you hear.";
   if(s.type==="dcheck"){ const d=(typeof DIAGRAMS!=="undefined")&&DIAGRAMS[s.dgram]; const p=d&&d.parts.find(p=>p.id===s.target); return "Tap the "+((p&&p.label)||"part you just learned")+" on the diagram."; }
   if(s.type==="dmatch") return "Label every part of the diagram. Tap a label, then the numbered pin it belongs to.";
+  if(s.type==="worked") return "Worked example. "+(s.title?s.title+". ":"")+stripHtml(s.q);
   let t=s.q||"";
   if(s.options) t+=". The options are: "+s.options.map(o=>o.t).join("; ");
   else if(s.items && s.type==="multi") t+=". The options are: "+s.items.map(o=>o.t).join("; ");
@@ -1363,6 +1380,18 @@ function buildLessons(c){
     if(lessonWords.length) steps.push(listenTypeStep(lessonWords[lessonWords.length-1]));
     lessons.push({ title:pTitles[ci]||("Round "+(ci+1)), icon:pIcons[ci]||"🎯", kind:"practice", words:lessonWords.length, steps });
   });
+  // Worked example: model the calculation method just before the pupil meets the
+  // unit's first numeric question ("I do" before "you do"). Authored per unit in
+  // content.js as c.worked; spliced in front of the first numeric step.
+  if(c.worked && c.worked.steps && c.worked.steps.length){
+    const wstep={ type:"worked", kicker:"🧮 Worked example", title:c.worked.title, q:c.worked.q, steps:c.worked.steps, answer:c.worked.answer, unit:c.worked.unit };
+    let placed=false;
+    for(const lesson of lessons){
+      for(let k=0;k<lesson.steps.length;k++){ if(lesson.steps[k].type==="numeric"){ lesson.steps.splice(k,0,wstep); placed=true; break; } }
+      if(placed) break;
+    }
+    if(!placed && lessons[0]) lessons[0].steps.push(wstep);
+  }
   // Capstone: once every fact has been taught the build-up diagram is complete, so
   // the final lesson ends by asking the pupil to label the WHOLE picture from memory —
   // all pins blank, labels shuffled in a bank. Works for any diagram with ≥3 parts,
@@ -1730,6 +1759,7 @@ function renderStep(){
   else if(s.type==="diagram") body=viewDiagram(s);
   else if(s.type==="dcheck") body=viewDcheck(s);
   else if(s.type==="dmatch") body=viewDmatch(s);
+  else if(s.type==="worked") body=viewWorked(s);
   else if(s.type==="exam") body=viewExam(s);
 
   app.innerHTML = topbar() + `<div class="stage fade" id="stage">${body}</div>` + footerShell();
@@ -1751,6 +1781,7 @@ function renderStep(){
   else if(s.type==="diagram") wireDiagram(s);
   else if(s.type==="dcheck") wireDcheck(s);
   else if(s.type==="dmatch") wireDmatch(s);
+  else if(s.type==="worked") wireWorked(s);
   else if(s.type==="exam") wireExam(s);
   if(s.dgram && typeof DIAGRAMS!=="undefined" && DIAGRAMS[s.dgram]) applyLiveDiagram(s);
 }
@@ -2361,6 +2392,44 @@ function wireDmatch(s){
     const all=pins.length, ok=right===all;
     gradeQ(ok, ok?"Every part labelled correctly! 🏆":`You placed ${right} of ${all}. The correct labels are now shown in green.`);
   });
+}
+
+/* WORKED EXAMPLE — models a calculation method step by step ("I do" before "you do").
+   Each step is revealed on tap so the pupil follows the reasoning, not just the answer,
+   before they meet the unit's own numeric questions. */
+function viewWorked(s){
+  return `<div class="step-kicker mono-kicker">${s.kicker||"🧮 Worked example"}</div>
+    <div class="teach worked">
+      <span class="emoji">🧮</span>
+      ${s.title?`<h2 class="fr">${s.title}</h2>`:''}
+      <div class="worked-q">${s.q}</div>
+      <div class="worked-steps" id="wsteps"></div>
+    </div>`;
+}
+function wireWorked(s){
+  const box=document.getElementById("wsteps");
+  const steps=Array.isArray(s.steps)?s.steps:[];
+  let i=0;
+  function reveal(){
+    if(i<steps.length){
+      const st=steps[i];
+      const el=document.createElement("div"); el.className="wstep pop";
+      el.innerHTML=`<div class="ws-label"><span class="ws-n">${i+1}</span>${st.label||""}</div><div class="ws-line">${st.line||""}</div>`;
+      box.appendChild(el); i++;
+    }
+    if(i>=steps.length){
+      if(!box.querySelector(".wanswer") && (s.answer!==undefined && s.answer!=="")){
+        const ans=String(s.answer);
+        const showUnit = s.unit && !ans.replace(/\s/g,"").toLowerCase().includes(s.unit.replace(/\s/g,"").toLowerCase());
+        const a=document.createElement("div"); a.className="wanswer pop"; a.innerHTML=`Answer: <b>${ans}${showUnit?" "+s.unit:""}</b>`; box.appendChild(a);
+      }
+      footerButton("Continue","btn-go",true,()=>next());
+    } else {
+      footerButton(i===0?"Show first step":"Show next step","btn-primary",true,reveal);
+    }
+    try{ box.lastChild.scrollIntoView({behavior:"smooth",block:"nearest"}); }catch(e){}
+  }
+  footerButton("Show first step","btn-primary",true,reveal);
 }
 
 /* EXAM — guided answer builder. Instead of "write on paper, reveal, self-assess",
