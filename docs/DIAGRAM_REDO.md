@@ -104,10 +104,24 @@ taught in the source topic units, so "0% local coverage" there is expected, not 
 gap. So (c) must be **targeted manual review of specific KS3 topic units**, not an
 automated sweep.
 
+- **DONE (2026-07-03) — task (c) for SPC Space:** SPC had 9 facts but 123 questions,
+  and many questions tested concepts no fact taught. Cross-checked against Teacher
+  Handbook 3 (P11 Space guided explanations) and added 9 concise, factual (non-chatty)
+  facts + 4 vocab covering the real gaps: solar system definition & dwarf planets/Pluto;
+  planet sizes, elliptical orbits & why orbital periods differ; moon counts (Earth 1,
+  Jupiter 92, 224 total); space distances (sunlight ≈8 min, Alpha Centauri ≈4.3 ly);
+  Earth's parts (axis, 23.4° tilt, equator, hemispheres); day/night by spin not orbit;
+  seasons by direct-vs-glancing sunlight & opposite hemispheres; the equator's low
+  seasonal variation; weight as a non-contact force & weightlessness in deep space.
+  Handbook figures used verbatim (23.4°, 224 moons, 4.3 ly). Verified: content parses,
+  teach-before-quiz still 0 violations across all 141 units, new facts render in Learn
+  lessons before practice, no console errors. Map untouched (new facts add no diagram
+  parts). SPC: 9→18 facts, 6 learn + 21 practice lessons.
+
 ## Next iterations (loop)
-1. **Task (c), manual:** pick a few content-heavy KS3 units (e.g. SPC Space, REP
-   Reproduction, ECO Ecosystems) and read facts vs questions to find any genuinely
-   untaught concept; add a covering fact (not chatty narration) where one is missing.
+1. **Task (c), manual (continue):** REP Reproduction and ECO Ecosystems next (both
+   flagged as content-heavy); same method — read facts vs questions, add covering
+   facts (not chatty narration) for genuinely untaught concepts, cross-check handbook.
 2. **Coverage gap:** units that have a Guided-explanation diagram in the handbook
    but NO app diagram — add build-up diagrams for those (cross-ref handbook list).
 3. Diagram reveal-ORDER audit is **complete** (all 110 diagram-bearing units); only
