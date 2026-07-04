@@ -90,6 +90,21 @@ across the three books, each with numbered draw-this-then-say-that steps.
   correct. Grading of the "find it" checkpoint is by `data-id`, not coordinates, so
   with hotspots now overlaying their shapes a correct tap registers correctly.
 
+- **DONE (2026-07-04) — REP Reproduction: taught the concepts it was quizzing (task c).**
+  REP had 9 facts but 103 questions, with whole clusters quizzed yet never taught.
+  Read facts vs every question stem and cross-checked Teacher Handbook 2 (B5). Added
+  the missing teaching (9→20 facts, +6 vocab), all handbook-accurate: gametes carry
+  half the DNA; testes in the scrotum stay cool; glands add sugary seminal fluid;
+  ovulation ~day 14; ovum adaptation (large cytoplasm food store); the full menstrual
+  cycle (day 1 = menstruation/"period", lining rebuilds, implantation vs shedding);
+  zygote→embryo→fetus(8wk); placenta adaptations + blood never mixes + harmful
+  substances cross; pollen tube grows to the ovary; insect pollination via nectar;
+  seed dispersal (wind/animals) and germination. Diagram map extended to keep the
+  build order ovary→sperm→oviduct→placenta→umbilical+fetus. Verified: 25 lessons
+  (teach-first), 0 teach-before-quiz violations (REP and globally), reveal order
+  correct, renders with no console errors. (SPC Space was done the same way in the
+  prior iteration, commit 4874f69.)
+
 ## Task (c) — teach-before-quiz coverage: scoping note (2026-07-03)
 The teach-first restructure already **guarantees the structural property**: every
 one of a unit's own facts (and its diagram build-up) is taught before any of that
