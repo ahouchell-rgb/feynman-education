@@ -235,6 +235,28 @@
   .mitem.correct{ border-color:var(--green-line); background:var(--green-bg); }
   .mitem.wrong{ border-color:var(--wrong-line); background:var(--wrong-bg); }
 
+  /* "Jump back in" hero — the one obvious next thing to do on the path */
+  .cont-hero{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; border:none; border-radius:18px; padding:16px 18px; margin:16px 0 4px; background:#1E2761; color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.18); cursor:pointer; transition:transform .05s, box-shadow .05s; }
+  .cont-hero:active{ transform:translateY(2px); box-shadow:0 1px 0 rgba(0,0,0,.18); }
+  .cont-hero .ch-ic{ width:52px; height:52px; border-radius:15px; background:rgba(255,255,255,.14); display:grid; place-items:center; font-size:26px; flex:none; }
+  .cont-hero .ch-txt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+  .cont-hero .ch-k{ font-size:10.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#C99528; }
+  .cont-hero .ch-txt b{ font-size:17px; line-height:1.2; }
+  .cont-hero .ch-l{ font-size:12.5px; opacity:.82; }
+  .cont-hero .ch-go{ flex:none; width:40px; height:40px; border-radius:50%; background:#2C5F2D; display:grid; place-items:center; font-size:15px; color:#fff; box-shadow:0 3px 0 rgba(0,0,0,.2); }
+
+  /* daily-goal chip in the top bar */
+  .hbar .goal{ color:var(--grey); font-size:14px; }
+  .hbar .goal.met{ color:var(--green); }
+
+  /* feedback extras: combo bonus + "you'll see it again" note */
+  .combo-xp{ font-size:13px; font-weight:700; color:var(--gold); margin-top:8px; }
+  .redo-note{ font-size:13px; color:var(--grey); margin-top:8px; }
+
+  /* completion celebrations */
+  .cele{ margin:0 auto 10px; max-width:340px; background:#FFF1E3; border:1px solid #EFCBA0; color:#B4581E; border-radius:13px; padding:10px 14px; font-size:14.5px; font-weight:700; animation:pop .5s cubic-bezier(.2,1.4,.4,1) both; }
+  .cele.gold{ background:var(--gold-bg); border-color:#ECD9A8; color:#8a6400; }
+
   /* spaced-retrieval review banner */
   .review-banner{ display:flex; align-items:center; gap:13px; width:100%; text-align:left; border:none; border-radius:16px; padding:15px 17px; margin:18px 0 6px; box-shadow:var(--shadow); }
   .review-banner.due{ background:var(--navy); color:#fff; }
@@ -607,6 +629,18 @@
   .exam-score{ background:var(--accent); color:#06111f; }
   /* order/numbered drop-slots + any leftover light fills */
   .ord-slot,.nbox{ background:rgba(255,255,255,.05); }
+  /* jump-back-in hero + celebrations (dark) */
+  .cont-hero{ background:linear-gradient(135deg, rgba(88,224,194,.22), rgba(121,167,255,.18)); border:1px solid rgba(255,255,255,.16); color:#eef4ff; box-shadow:0 18px 50px rgba(0,0,0,.30); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
+  .cont-hero:active{ transform:translateY(2px); box-shadow:0 8px 24px rgba(0,0,0,.3); }
+  .cont-hero .ch-ic{ background:rgba(255,255,255,.12); }
+  .cont-hero .ch-k{ color:#ffd166; }
+  .cont-hero .ch-go{ background:linear-gradient(135deg,#58e0c2,#34c9a6); color:#04201a; box-shadow:0 6px 18px rgba(88,224,194,.3); }
+  .hbar .goal{ color:#9fb0c7; } .hbar .goal.met{ color:#58e0c2; }
+  .cele{ background:rgba(255,150,80,.14); border-color:rgba(255,170,100,.35); color:#ffbe8a; }
+  .cele.gold{ background:rgba(255,209,102,.14); border-color:rgba(255,209,102,.35); color:#ffd166; }
+  /* "new badge" card: was light cream with now-light text — unreadable in dark */
+  .badge-won .bw{ background:rgba(255,209,102,.12); border-color:rgba(255,209,102,.3); }
+  .badge-won .bw b{ color:#ffd166; } .badge-won .bw span{ color:#eef4ff; }
 </style>
 </head>
 <body>
@@ -912,6 +946,38 @@ const Voice = {
 };
 if(Voice.synth){ Voice.pickVoice(); window.speechSynthesis.onvoiceschanged = ()=>Voice.pickVoice(); }
 
+/* ---------- Feedback sounds (WebAudio) & haptics -------------------------
+   Duolingo-style instant reward: a bright chime on a correct answer, a soft low
+   buzz on a mistake, a little arpeggio on lesson complete. Gated by the same
+   sound toggle as speech; built lazily on first use (always after a tap, so
+   autoplay policies are satisfied). */
+const SFX = {
+  ctx: null,
+  ensure(){
+    if(!this.ctx){ const AC=window.AudioContext||window.webkitAudioContext; if(AC){ try{ this.ctx=new AC(); }catch(e){} } }
+    if(this.ctx && this.ctx.state==="suspended"){ try{ this.ctx.resume(); }catch(e){} }
+    return this.ctx;
+  },
+  tone(freq, at, dur, type, vol){
+    const c=this.ctx, o=c.createOscillator(), g=c.createGain(), t=c.currentTime+at;
+    o.type=type||"sine"; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.16, t+0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+dur+0.05);
+  },
+  play(kind){
+    if(!State.s || !State.s.sound || !this.ensure()) return;
+    try{
+      if(kind==="ok"){ this.tone(659.25,0,.12); this.tone(880,.09,.18); }
+      else if(kind==="combo"){ this.tone(659.25,0,.1); this.tone(880,.08,.1); this.tone(1174.66,.16,.22); }
+      else if(kind==="bad"){ this.tone(196,0,.2,"triangle",.13); this.tone(147,.09,.26,"triangle",.11); }
+      else if(kind==="done"){ this.tone(523.25,0,.13); this.tone(659.25,.11,.13); this.tone(783.99,.22,.13); this.tone(1046.5,.33,.3); }
+    }catch(e){}
+  }
+};
+function buzz(pattern){ try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch(e){} }
+
 const norm = s => String(s||"").toLowerCase().replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
 function lev(a,b){ const m=a.length,n=b.length; const d=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]); for(let j=0;j<=n;j++)d[0][j]=j; for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){ d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)); } return d[m][n]; }
 function saidMatch(heardAlts, target){
@@ -1161,6 +1227,30 @@ function interleaveBlocks(blocks, qs){ const out=[]; const n=Math.max(blocks.len
 // Higher-tier detection (so Foundation tier can hide HT-only content).
 function isHTQ(q){ return /higher/i.test(q.kicker||"") || /^\s*higher tier/i.test(q.q||""); }
 function isHTFact(f){ return /^\s*higher tier/i.test(f||""); }
+
+/* ---- Check-as-you-learn helpers ----------------------------------------- */
+// Distinctive content words of a text (for matching a question to the fact it tests).
+const CFU_STOP=new Set(("the,and,that,this,with,from,which,because,when,then,they,there,their,have,has,been,will,would,into,more,less,than,also,each,some,must,can,are,its,for,not,but,any,all,one,two,of,to,in,on,is,it,as,or,so,by,at,what,why,how,does,do,name,give,state,true,false,about,most,many,called,always,never,using,used,use,between,through,makes,make,made,happens,happen,following,correct,best,describes,means").split(","));
+function cfuWords(t){ return [...new Set(String(t||"").toLowerCase().replace(/<[^>]+>/g," ").replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w.length>=5 && !CFU_STOP.has(w)))]; }
+// Bold the first occurrence of each key word in a plain-text fact, longest term
+// first, never inside an already-bolded longer term — so the vocabulary being
+// taught is visually anchored in the sentence that teaches it.
+function boldTerms(fact, terms){
+  if(String(fact).indexOf("<")>=0) return fact;      // already formatted — leave alone
+  let segs=[{t:String(fact), b:false}];
+  terms.forEach(term=>{
+    const esc=String(term).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+    let re; try{ re=new RegExp("\\b("+esc+"s?)\\b","i"); }catch(e){ return; }
+    let done=false;
+    segs=segs.flatMap(seg=>{
+      if(done || seg.b) return [seg];
+      const m=seg.t.match(re); if(!m) return [seg];
+      done=true;
+      return [{t:seg.t.slice(0,m.index),b:false}, {t:m[0],b:true}, {t:seg.t.slice(m.index+m[0].length),b:false}];
+    });
+  });
+  return segs.map(s=> s.b ? "<b>"+s.t+"</b>" : s.t).join("");
+}
 /* ===== INTERACTIVE WIDGETS (canvas) — mounted into a lesson step ===== */
 function ixScaffold(c, o){
   c.innerHTML = `<div class="ixfact">${o.fact}</div>`+
@@ -1353,8 +1443,11 @@ function buildLessons(c){
   const disc=c.discipline, V=c.vocab;
   const rawFacts = (TIER==="foundation") ? c.facts.filter(f=>!isHTFact(f)) : c.facts;
   const dg = c.diagram || null;   // progressive build-up diagram (DIAGRAMS resolved later at render time, in teachDiagram)
+  // Key words are visually anchored in the sentence that teaches them (longest
+  // term first so "gravitational store" isn't split by a bolded "store").
+  const boldable=V.map(v=>v.term).filter(Boolean).sort((a,b)=>b.length-a.length);
   const facts=rawFacts.map(f=>{
-    const st=teachFact(f,disc);
+    const st=teachFact(boldTerms(f,boldable),disc);
     if(dg){ const fi=c.facts.indexOf(f); if(fi>=0){
       const flat=[]; for(let k=0;k<=fi;k++){ const m=dg.map[k]; if(m) flat.push(...(Array.isArray(m)?m:[m])); }
       const cm=dg.map[fi]; st.dgram=dg.key; st.dreveal=[...new Set(flat)]; st.dcur=cm?(Array.isArray(cm)?cm:[cm]):[];
@@ -1368,6 +1461,28 @@ function buildLessons(c){
   // word is taught immediately after the fact that introduces it.
   const wordsByFact={}, unmatched=[];
   V.forEach(v=>{ const fi=rawFacts.findIndex(f=>termInFact(v.term,f)); if(fi>=0){ (wordsByFact[fi]=wordsByFact[fi]||[]).push(v); } else unmatched.push(v); });
+
+  // ── CHECK AS YOU LEARN (Rosenshine: check for understanding after each step).
+  //    For each fact, splice in a copy of the ONE bank question that most clearly
+  //    tests that fact, straight after the fact's block — retrieval moments while
+  //    the idea is fresh, instead of a wall of input with no checks. Matching is
+  //    conservative: quick question types only, ≥2 distinctive words shared with
+  //    the fact, argmax over facts (ties go to the LATER fact so a question never
+  //    lands before all the content it needs). The original question stays in the
+  //    practice lessons — meeting it again later is spaced repetition, not waste.
+  const cfuOf={};
+  {
+    const factWords=rawFacts.map(f=>new Set(cfuWords(f)));
+    const claims={};                          // fact index -> {step, score}
+    Q.filter(s=>s.type==="mcq"||s.type==="gap"||s.type==="multi").forEach(s=>{
+      const key=s.q+" "+(s.options?(s.options.find(o=>o.correct)||{}).t||"":(s.blanks?s.blanks.join(" "):""));
+      const ws=cfuWords(key);
+      let best=-1, bs=0;
+      factWords.forEach((fw,fi)=>{ const sc=ws.filter(w=>fw.has(w)||fw.has(w+"s")||fw.has(w.replace(/s$/,""))).length; if(sc>=bs && sc>0){ best=fi; bs=sc; } });
+      if(bs>=2){ const cur=claims[best]; if(!cur || bs>cur.score) claims[best]={step:s, score:bs}; }
+    });
+    Object.keys(claims).forEach(fi=> cfuOf[fi]=Object.assign({}, claims[fi].step, { kicker:"✅ Quick check", cfu:true }));
+  }
 
   // Cognitive load — segment the build-up so only ONE new part (and its one
   // explanation) appears per step. A fact that adds several parts at once would
@@ -1395,6 +1510,7 @@ function buildLessons(c){
     (wordsByFact[fi]||[]).forEach(v=>teachSteps.push(vocabStep(v,disc)));
     if(fs.dgram && fs.dcur && fs.dcur.length && fs.dreveal && fs.dreveal.length>=2)
       teachSteps.push({ type:"dcheck", dgram:fs.dgram, dreveal:fs.dreveal, target:fs.dcur[fs.dcur.length-1], kicker:"📍 Find it on the diagram" });
+    if(cfuOf[fi]) teachSteps.push(cfuOf[fi]);   // quick check on the fact just taught
   });
   unmatched.forEach(v=>teachSteps.push(vocabStep(v,disc)));       // words with no explaining fact
   if(V.length>=2) teachSteps.push(matchVocabStep(V.slice()));      // consolidate — all words now taught
@@ -1417,8 +1533,14 @@ function buildLessons(c){
   const pracTitles=["Practise","Apply","Master"], pracIcons=["✍️","🔬","🏆"];
   const tChunks=chunk(teachSteps,7).filter(a=>a.length);
   tChunks.forEach((steps,i)=>{
+    const nWords=wordsIn(steps);
+    // Advance organizer: open each learn lesson by naming the key words it will
+    // teach, so the learner knows what to listen for before the teaching starts.
+    const wl=steps.filter(s=>s&&s.type==="vocab").map(s=>s.term);
+    if(wl.length>=2) steps.unshift({ type:"teach", kicker:"Today's mission", emoji:"🎯", h:"What you'll learn",
+      html:"<p>This lesson teaches you "+wl.length+" key words:</p><p>"+wl.map(t=>"<b>"+t+"</b>").join(" &nbsp;·&nbsp; ")+"</p>" });
     lessons.push({ title: tChunks.length>1?(learnTitles[i]||("Learn "+(i+1))):"Learn",
-                   icon: learnIcons[i]||"📖", kind:"learn", words:wordsIn(steps), steps });
+                   icon: learnIcons[i]||"📖", kind:"learn", words:nWords, steps });
   });
   chunk(practiceSteps,6).filter(a=>a.length).forEach((steps,i)=>{
     lessons.push({ title: pracTitles[i]||("Master "+(i+1)), icon: pracIcons[i]||"🏆", kind:"practice", words:0, steps });
@@ -1539,10 +1661,12 @@ function renderCover(){
 
 /* ---------- Home: top bar + path / dashboard ---------- */
 function homeBar(){
+  const tXP=State.s.dailyXP[todayStr()]||0;
   return `<div class="hbar">
     <div class="stats">
       <div class="s streak"><span class="e">🔥</span>${State.s.streak}</div>
       <div class="s xp"><span class="e">💎</span>${State.s.xp}</div>
+      <div class="s goal ${tXP>=GOAL?'met':''}" title="Today's XP goal"><span class="e">⚡</span>${Math.min(tXP,GOAL)}/${GOAL}</div>
       <div class="spacer"></div>
       <button class="snd" id="snd" title="Sound ${State.s.sound?'on':'off'}">${State.s.sound?'🔊':'🔇'}</button>
       <button class="snd" id="settings" title="Settings" aria-label="Settings">⚙️</button>
@@ -1581,8 +1705,31 @@ function weakBannerHTML(){
   if(!w) return "";
   return `<button class="review-banner weak" id="weak"><span class="rb-ic">🎯</span><span class="rb-txt"><b>Fix your weak spots</b><span>${w} question${w>1?'s':''} you found tricky — have another go</span></span><span class="rb-go">Practise →</span></button>`;
 }
+// The next thing to do across the whole course, in pathway order: a gating recap
+// first if one is pending, otherwise the first incomplete lesson of the first
+// unlocked, unfinished unit. Powers the "Jump back in" hero so the learner never
+// has to scroll the path hunting for the gold node.
+function nextUp(){
+  for(const sec of PATHWAY){ for(const u of sec.units){
+    if(!u.code || !LESSONS[u.code]) continue;
+    if(!unitUnlocked(u.code)) continue;
+    if(unitHasRecap(u.code) && !State.lessonDone(u.code+"-RECAP"))
+      return { recap:true, code:u.code, unit:u, label:"Recap warm-up" };
+    const total=LESSONS[u.code].length, li=firstIncomplete(u.code,total);
+    if(li<total) return { code:u.code, li, unit:u, label:LESSONS[u.code][li].title+" · lesson "+(li+1)+" of "+total };
+  }}
+  return null;
+}
+function continueHeroHTML(){
+  const n=nextUp(); if(!n) return "";
+  return `<button class="cont-hero" id="cont-hero" data-code="${n.code}" ${n.recap?'data-recap="1"':`data-li="${n.li}"`}>
+    <span class="ch-ic">${UNIT_EMOJI[n.code]||DISC_EMOJI[n.unit.d]||"📘"}</span>
+    <span class="ch-txt"><span class="ch-k">Jump back in</span><b>${n.unit.t}</b><span class="ch-l">${n.label}</span></span>
+    <span class="ch-go">▶</span>
+  </button>`;
+}
 function pathHTML(){
-  return reviewBannerHTML() + weakBannerHTML() + PATHWAY.map((yr,i)=>{
+  return continueHeroHTML() + reviewBannerHTML() + weakBannerHTML() + PATHWAY.map((yr,i)=>{
     const units = yr.units.map(u=>unitHTML(u)).join("");
     return `<div class="yr" id="yr-${i}">
       <div class="yr-head"><span class="yl">${yr.year}</span><span class="hr"></span><span class="hrs">${yr.hours}</span></div>
@@ -1671,6 +1818,10 @@ function wirePath(){
     else { startLesson(n.dataset.code, +n.dataset.li); }
   });
   const rb=document.getElementById("review"); if(rb) rb.onclick=()=>startReview();
+  const ch=document.getElementById("cont-hero"); if(ch) ch.onclick=()=>{
+    if(ch.dataset.recap) startRecap(ch.dataset.code);
+    else startLesson(ch.dataset.code, +ch.dataset.li);
+  };
 }
 
 /* ---------- Dashboard ---------- */
@@ -1997,7 +2148,7 @@ function wireSpeak(s){
 }
 function markVoice(ok, why){
   // voice steps are gentle: correct gives XP, "got it" gives partial; never lose hearts
-  L.checked=true; L.asked+=1; if(ok){ L.correct+=1; L.xp+=10; }
+  L.checked=true; L.asked+=1; if(ok){ L.correct+=1; L.xp+=10; SFX.play("ok"); buzz(12); }
   showFeedback(ok, ok?pickPraise():"That's okay", why, true);
 }
 
@@ -2630,15 +2781,44 @@ function reteachCard(step){
   return `<div class="teach reteach"><span class="emoji">${emoji}</span><div class="rt-k">Quick re-teach</div>${html}</div>`;
 }
 
+// Mistake recycling (the Duolingo loop, and the testing effect): a question answered
+// wrongly is re-queued at the end of the session and must be answered correctly
+// before the lesson finishes. Teaching/voice/exam steps are excluded — they grade
+// differently or have no single right answer.
+const RECYCLE_TYPES = new Set(["mcq","multi","gap","match","numeric","categorise","order","diagram","dcheck","dmatch","listenType"]);
+function requeueMistake(step){
+  if(!step || !RECYCLE_TYPES.has(step.type)) return false;
+  if((L.redos||0) >= 12) return false;               // safety cap on a very rough run
+  const copy = Object.assign({}, step, { redo:true, kicker:"🔁 Previous mistake" });
+  if(copy.type==="mcq" && !copy.tf) copy.options = shuffle(copy.options);   // can't answer by remembered position
+  L.steps.push(copy);
+  L.redos = (L.redos||0)+1;
+  return true;
+}
 function gradeQ(ok, whyHtml){
   L.checked=true; L.asked+=1;
-  if(ok){ L.correct+=1; L.xp+=10; } else { L.hearts=Math.max(0,L.hearts-1); if(L.hearts===0) L.hearts=5; }
-  const step=L.steps[L.i]; if(step && step.qid){ recordReview(step.qid, ok); recordAnswer(step.qid, ok, sessionKind()); }   // spaced-retrieval scheduling + mastery-graph signal
+  const step=L.steps[L.i];
+  let bonus=0;
+  if(ok){
+    L.combo=(L.combo||0)+1; L.correct+=1;
+    bonus = (L.combo>=3 && !step.redo) ? 2 : 0;      // combo bonus from 3 in a row
+    L.xp += (step.redo?5:10) + bonus;                // second go earns half XP
+  } else {
+    L.combo=0;
+    L.hearts=Math.max(0,L.hearts-1); if(L.hearts===0) L.hearts=5;
+  }
+  // Spaced-retrieval scheduling + mastery signal record the FIRST attempt only —
+  // a re-queued retry shouldn't undo the miss that scheduled it for review.
+  if(step && step.qid && !step.redo){ recordReview(step.qid, ok); recordAnswer(step.qid, ok, sessionKind()); }
   // On-mistake re-teach: while hearts remain, append a small re-teach card (reuses
   // the .teach styling) recapping the concept before they move on.
   let why = whyHtml;
   if(!ok && L.hearts>0 && step){ const rt=reteachCard(step); if(rt) why = whyHtml + rt; }
-  showFeedback(ok, ok?pickPraise():"Not quite", why, false);
+  if(!ok && requeueMistake(step)) why += `<div class="redo-note">🔁 You'll get another go at this before the end.</div>`;
+  if(ok && bonus) why += `<div class="combo-xp">🔥 ${L.combo} in a row — +${bonus} bonus XP</div>`;
+  SFX.play(ok ? (L.combo>=3?"combo":"ok") : "bad");
+  buzz(ok ? 12 : [40,50,40]);
+  showFeedback(ok, ok?(L.combo>=3? L.combo+" in a row! 🔥" : pickPraise()):"Not quite", why, false);
   const h=document.querySelector(".hearts .hh"); if(h) h.textContent="❤️".repeat(L.hearts)+"🤍".repeat(5-L.hearts);
 }
 function showFeedback(ok, head, whyHtml, gentle){
@@ -2660,16 +2840,21 @@ function finishLesson(){
   const perfect = (L.hearts===5 && acc===100 && L.asked>0);
   const bonus = perfect ? 5 : 0;
   const xp = L.xp + (first?5:0) + bonus;
+  const dayBefore = State.s.lastDay;                        // for "streak extended" celebration
+  const xpTodayBefore = State.s.dailyXP[todayStr()]||0;     // for "daily goal hit" celebration
   State.completeLesson(L.id, xp, first?L.newWords:0);
   if(perfect) State.s.flags.perfect=true;
   if(L.isReview) State.s.flags.reviewed=true;
   if(L.isWeak) State.s.flags.weakFixed=true;
   State.save();
   const badges=checkBadges();
-  go("done", { acc, xp, streak:State.s.streak, review:!!L.isReview, weak:!!L.isWeak, recap:!!L.isRecap, exam:!!L.isExam, code:L.code, li:L.li, badges });
+  const streakUp = dayBefore !== todayStr();
+  const goalHit = xpTodayBefore < GOAL && (State.s.dailyXP[todayStr()]||0) >= GOAL;
+  go("done", { acc, xp, streak:State.s.streak, review:!!L.isReview, weak:!!L.isWeak, recap:!!L.isRecap, exam:!!L.isExam, code:L.code, li:L.li, badges, streakUp, goalHit });
 }
 function renderDone(){
-  const {acc,xp,streak,review,weak,recap,exam,badges}=view;
+  const {acc,xp,streak,review,weak,recap,exam,badges,streakUp,goalHit}=view;
+  SFX.play("done"); buzz([15,60,15,60,25]);
   const emoji = exam?"📝":recap?"🔄":weak?"💪":review?"🔄":acc>=80?"🏆":acc>=50?"🎉":"💪";
   const title = exam?"Exam practice done!":recap?"Recap done!":weak?"Weak spots fixed!":review?"Review done!":"Lesson complete!";
   const sub = exam?"Self-marking against the mark scheme shows you exactly what to revise next."
@@ -2687,6 +2872,8 @@ function renderDone(){
       <div class="dstat acc"><div class="v">${acc}%</div><div class="l">Accuracy</div></div>
       <div class="dstat str"><div class="v">🔥 ${streak}</div><div class="l">Day streak</div></div>
     </div>
+    ${streakUp?`<div class="cele">🔥 Streak extended — day ${streak}!</div>`:""}
+    ${goalHit?`<div class="cele gold">⚡ Daily goal complete!</div>`:""}
     ${badgeHTML}
     <div class="actions">
       <button class="btn btn-go" id="cont">Continue</button>

@@ -5,7 +5,15 @@
 //     notification handlers (item C9). Bumping CACHE evicts the old v3 shell.
 // v5: interactive diagram checkpoints, guided→exam-conditions ladder, and the
 //     first KS3-core exam questions — bump to evict the stale v4 shell.
-const CACHE = "feynman-sci-v15";
+// v16: Duolingo-style loop — mistake recycling, feedback sounds/haptics, in-lesson
+//      combo bonus, "Jump back in" hero, daily-goal chip, completion celebrations.
+// v17: Learn-experience refocus — check-as-you-learn quick checks after each fact,
+//      key words bolded in the teaching sentence, "what you'll learn" mission card,
+//      + 123 new teaching facts closing quizzed-but-untaught gaps (content.js).
+// v18: precache with cache:"reload" so a content.js update is never missed.
+// v19: +35 new GCSE teaching facts (Physics/Chemistry/Biology) closing the remaining
+//      quizzed-but-untaught gaps across all GCSE units (content.js).
+const CACHE = "feynman-sci-v19";
 const SHELL = [
   "springboard.html",
   "content.js",
@@ -16,8 +24,13 @@ const SHELL = [
 ];
 
 self.addEventListener("install", (e) => {
+  // Precache with cache:"reload" so a fresh CACHE version always re-fetches the shell
+  // (esp. content.js, whose filename never changes) from the network, never from the
+  // browser's own HTTP cache — otherwise a content update could be silently missed.
   e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: "reload" }))))
+      .then(() => self.skipWaiting())
   );
 });
 
