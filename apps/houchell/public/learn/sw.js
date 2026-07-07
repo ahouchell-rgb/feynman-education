@@ -13,7 +13,10 @@
 // v18: precache with cache:"reload" so a content.js update is never missed.
 // v19: +35 new GCSE teaching facts (Physics/Chemistry/Biology) closing the remaining
 //      quizzed-but-untaught gaps across all GCSE units (content.js).
-const CACHE = "feynman-sci-v19";
+// v20: research-backed learning upgrades — free-recall step type, FSRS-lite per-item
+//      spacing + interleaving, faded worked examples, self-explanation gate, confidence
+//      calibration, open-learner-model mastery map, difficulty-weighted XP + streak freeze.
+const CACHE = "feynman-sci-v20";
 const SHELL = [
   "springboard.html",
   "content.js",

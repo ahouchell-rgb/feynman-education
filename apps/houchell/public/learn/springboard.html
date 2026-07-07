@@ -520,6 +520,47 @@
   .ixbar i{ display:block; height:100%; background:var(--wrong); width:0; transition:width .3s; }
   .ixslider{ display:flex; align-items:center; gap:10px; margin:8px 2px; font:700 12px inherit; color:var(--navy); }
   .ixslider input{ flex:1; accent-color:var(--navy); }
+  /* Backward-faded worked example: the final step the learner completes */
+  .wstep-fade{ border-top-style:solid; border-top-color:var(--navy); }
+  .wfill{ display:flex; align-items:center; gap:10px; margin-top:6px; padding-left:31px; }
+  .wfill .tinput{ font-family:'IBM Plex Sans',monospace; }
+  .wfade-hint{ padding-left:31px; margin-top:8px; }
+  .wstep-model{ margin-top:2px; padding-top:0; border-top:0; }
+
+  /* Open learner model — mastery heat-grid */
+  .mastery-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(52px,1fr)); gap:8px; margin-top:4px; }
+  .mtile{ position:relative; aspect-ratio:1; border-radius:12px; display:grid; place-items:center; font-size:20px; border:1.5px solid transparent; cursor:default; }
+  .mtile[data-mastery-code]{ cursor:pointer; -webkit-tap-highlight-color:transparent; }
+  .mtile:active[data-mastery-code]{ transform:scale(.94); }
+  .mtile .mbar{ position:absolute; left:5px; right:5px; bottom:5px; height:4px; border-radius:999px; background:rgba(0,0,0,.12); overflow:hidden; }
+  .mtile .mbar > i{ display:block; height:100%; border-radius:999px; }
+  .mtile.weak{ background:var(--gold-bg); border-color:var(--gold); }
+  .mtile.weak .mbar > i{ background:var(--gold); }
+  .mtile.dev{ background:var(--lav-pale); border-color:var(--lav); }
+  .mtile.dev .mbar > i{ background:var(--lav); }
+  .mtile.strong{ background:var(--green-bg); border-color:var(--green); }
+  .mtile.strong .mbar > i{ background:var(--green); }
+  .mlegend{ display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; font-size:11.5px; color:var(--grey); }
+  .mlegend span{ display:inline-flex; align-items:center; gap:5px; }
+  .mlegend i{ width:11px; height:11px; border-radius:4px; display:inline-block; }
+  .mlegend i.weak{ background:var(--gold); } .mlegend i.dev{ background:var(--lav); } .mlegend i.strong{ background:var(--green); }
+  .mhint{ font-size:11.5px; color:var(--grey); margin-top:8px; }
+
+  /* Recall / self-explanation / confidence / streak-freeze */
+  .recall-prompt{ font-size:18px; font-weight:600; color:var(--ink); line-height:1.4; margin:2px 0 4px; }
+  .recall-model{ margin-top:14px; padding:12px 15px; border-radius:12px; background:rgba(44,95,45,.1); border:1px solid var(--line-2); font-size:15.5px; color:var(--ink); line-height:1.45; }
+  .recall-model b{ color:var(--green); }
+  .recall-model .rm-k{ display:block; font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--grey); margin-bottom:5px; }
+  .conf-pills{ display:flex; gap:9px; align-items:center; margin:12px 0 2px; }
+  .conf-pills .cl{ font-size:12.5px; color:var(--grey); margin-right:2px; }
+  .conf-pill{ border:1.5px solid var(--line-2); background:var(--paper); color:var(--ink); border-radius:999px; padding:5px 13px; font:inherit; font-size:13px; font-weight:600; cursor:pointer; }
+  .conf-pill.on{ background:var(--navy); color:#fff; border-color:var(--navy); }
+  .calib-nudge{ margin-top:10px; font-size:13.5px; color:#B26A00; font-weight:600; }
+  .selfx{ margin-top:12px; }
+  .selfx-btn{ border:1.5px dashed var(--line-2); background:transparent; color:var(--ink); border-radius:12px; padding:9px 14px; font:inherit; font-size:14px; font-weight:600; cursor:pointer; }
+  .selfx-btn:hover{ background:rgba(30,39,97,.05); }
+  .selfx-hint{ font-size:13px; color:var(--grey); margin-bottom:7px; }
+  .freeze-chip{ display:inline-flex; align-items:center; gap:4px; font-size:12.5px; font-weight:700; color:#2E6DB4; }
 
   /* ============ DARK THEME (Duolingo-style glassmorphism) ============ */
   :root{
@@ -573,6 +614,7 @@
   .ws-line{ color:#bfe6ff; }
   .wanswer{ background:rgba(88,224,194,.08); border-color:rgba(255,255,255,.14); color:#eaf1ff; }
   .wanswer b{ color:#58e0c2; }
+  .wstep-fade{ border-top-color:var(--accent); }
   .ixfact{ color:#eaf1ff; } .ixread{ color:#cdd8ea; }
   .ixbtn{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.22); color:#eef4ff; }
   .ixbtn.primary{ background:var(--accent); border-color:transparent; color:#06111f; }
@@ -641,6 +683,14 @@
   /* "new badge" card: was light cream with now-light text — unreadable in dark */
   .badge-won .bw{ background:rgba(255,209,102,.12); border-color:rgba(255,209,102,.3); }
   .badge-won .bw b{ color:#ffd166; } .badge-won .bw span{ color:#eef4ff; }
+  .recall-model{ background:rgba(88,224,194,.08); border-color:rgba(255,255,255,.14); color:#eaf1ff; }
+  .recall-model b{ color:#58e0c2; }
+  .conf-pill{ background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.18); color:#eef4ff; }
+  .conf-pill.on{ background:var(--accent); color:#06111f; border-color:var(--accent); }
+  .calib-nudge{ color:#ffcf8a; }
+  .selfx-btn{ border-color:rgba(255,255,255,.22); color:#eef4ff; }
+  .selfx-btn:hover{ background:rgba(255,255,255,.06); }
+  .freeze-chip{ color:#8fc4ff; }
 </style>
 </head>
 <body>
@@ -999,15 +1049,29 @@ function todayStr(){ return new Date().toISOString().slice(0,10); }
 function daysBetween(a,b){ return Math.round((new Date(b)-new Date(a))/DAY_MS); }
 function addDays(dateStr, n){ const d=new Date(dateStr+"T00:00:00Z"); d.setUTCDate(d.getUTCDate()+n); return d.toISOString().slice(0,10); }
 
-// Spaced retrieval (Leitner). Box -> days until due again. Expanding intervals.
+// Spaced retrieval. Kept for migrating legacy box-based items to the ease/ivl model below.
 const REVIEW_INTERVALS = [1, 2, 4, 9, 20];
+// Per-item ease/interval model (lightweight FSRS/SM-2-style personalised half-life).
+// r.ease scales the interval each success; r.ivl is the current interval in days.
+// r.box kept for back-compat with any UI that reads it.
 function recordReview(qid, ok){
   if(!qid) return;
   const code = qid.split("#")[0];
   const r = State.s.review[qid] || { box:0, unit:code };
-  if(!ok) r.misses = (r.misses||0)+1;   // track for adaptive "fix weak spots"
-  r.box = ok ? Math.min(REVIEW_INTERVALS.length-1, (r.box||0)+1) : 0;
-  r.due = addDays(todayStr(), REVIEW_INTERVALS[r.box]);
+  // MIGRATION: derive ivl/ease for legacy items that predate this model.
+  if(r.ivl == null) r.ivl = REVIEW_INTERVALS[Math.min(REVIEW_INTERVALS.length-1, r.box||0)];
+  if(r.ease == null) r.ease = 2.3;
+  if(ok){
+    r.ivl = r.ivl ? Math.round(r.ivl * r.ease) : 2;   // first success = 2 days (more effortful than old 1)
+    r.ease = Math.min(3.0, r.ease + 0.08);
+    r.box = Math.min(4, (r.box||0)+1);                 // kept for any UI that reads box
+  } else {
+    r.ivl = 1;
+    r.ease = Math.max(1.3, r.ease - 0.2);
+    r.box = 0;
+    r.misses = (r.misses||0)+1;   // track for adaptive "fix weak spots"
+  }
+  r.due = addDays(todayStr(), r.ivl);
   r.unit = code; r.last = todayStr();
   State.s.review[qid] = r;
   State.save();
@@ -1024,6 +1088,28 @@ function dueReviews(excludeUnit){
   out.sort((a,b)=> a.due<b.due ? -1 : a.due>b.due ? 1 : (a.box-b.box)); // most overdue, then least-learned first
   return out;
 }
+// Spread `reviews` evenly THROUGH `base` (interleaving), instead of front-loading them.
+function interleaveReviews(base, reviews){
+  if(!reviews || !reviews.length) return base.slice();
+  const out = base.slice();
+  const gap = Math.max(1, Math.floor(out.length / (reviews.length + 1)));
+  reviews.forEach((r, k)=>{
+    // insert at spread positions; +k accounts for prior insertions shifting the array
+    const pos = Math.min(out.length, gap*(k+1) + k);
+    out.splice(pos, 0, r);
+  });
+  return out;
+}
+// Round-robin questions by type so consecutive items rarely share s.type (interleaving).
+// Preserves each type's original relative order; stable for arrays with one type.
+function interleaveByType(arr){
+  const buckets=[], byType={};
+  for(const s of arr){ const t=(s&&s.type)||"_"; if(!byType[t]){ byType[t]=[]; buckets.push(byType[t]); } byType[t].push(s); }
+  if(buckets.length<=1) return arr.slice();
+  const out=[]; let added=true;
+  while(added){ added=false; for(const b of buckets){ if(b.length){ out.push(b.shift()); added=true; } } }
+  return out;
+}
 function retrievalStep(qid){
   const [code, idx] = qid.split("#");
   const q = CONTENT[code] && CONTENT[code].questions[+idx];
@@ -1038,8 +1124,10 @@ const State = {
   s: null,
   load(){
     let d=null; try{ d=JSON.parse(localStorage.getItem(KEY)); }catch(e){}
-    this.s = Object.assign({ xp:0, streak:0, lastDay:null, lessons:{}, dailyXP:{}, words:0, sound:true, seen:false, review:{}, exam:{}, tier:"higher", badges:[], flags:{}, notify:false, a11y:{textSize:"m", readable:false, contrast:false, motionOff:false} }, d||{});
+    this.s = Object.assign({ xp:0, streak:0, lastDay:null, lessons:{}, dailyXP:{}, words:0, sound:true, seen:false, review:{}, exam:{}, tier:"higher", badges:[], flags:{}, notify:false, freezes:2, freezeUsedOn:null, calib:{sureRight:0,sureWrong:0,unsureRight:0,unsureWrong:0}, a11y:{textSize:"m", readable:false, contrast:false, motionOff:false} }, d||{});
     if(!this.s.review) this.s.review = {};
+    if(typeof this.s.freezes !== "number") this.s.freezes = 2;
+    if(!this.s.calib) this.s.calib = {sureRight:0,sureWrong:0,unsureRight:0,unsureWrong:0};
     if(!this.s.exam) this.s.exam = {};
     if(!this.s.tier) this.s.tier = "higher";
     if(!this.s.badges) this.s.badges = [];
@@ -1057,8 +1145,11 @@ const State = {
     this.s.words += (newWords||0);
     // streak
     if(this.s.lastDay !== t){
-      if(this.s.lastDay && daysBetween(this.s.lastDay,t)===1) this.s.streak += 1;
-      else this.s.streak = 1;
+      const gap = this.s.lastDay ? daysBetween(this.s.lastDay,t) : null;
+      if(gap===1) this.s.streak += 1;
+      else if(gap===2 && (this.s.freezes||0)>0){   // one missed day → spend a freeze, keep the streak
+        this.s.freezes -= 1; this.s.freezeUsedOn = t; this.s.streak += 1;
+      } else this.s.streak = 1;
       this.s.lastDay = t;
     }
     this.save();
@@ -1122,11 +1213,12 @@ function stepReadText(s){
       const d=DIAGRAMS[s.dgram]; base=s.dcur.map(id=>{ const p=d.parts.find(x=>x.id===id); return p&&p.note?p.label+". "+p.note:""; }).filter(Boolean).join(" "); }
     return base; }
   if(s.type==="vocab") return s.term+". "+s.def;
+  if(s.type==="recall") return "Recall: "+stripHtml(s.prompt);
   if(s.type==="speak") return "Say the word: "+s.term;
   if(s.type==="listenType") return "Type the word you hear.";
   if(s.type==="dcheck"){ const d=(typeof DIAGRAMS!=="undefined")&&DIAGRAMS[s.dgram]; const p=d&&d.parts.find(p=>p.id===s.target); return "Tap the "+((p&&p.label)||"part you just learned")+" on the diagram."; }
   if(s.type==="dmatch") return "Label every part of the diagram. Tap a label, then the numbered pin it belongs to.";
-  if(s.type==="worked") return "Worked example. "+(s.title?s.title+". ":"")+stripHtml(s.q);
+  if(s.type==="worked"){ const steps=Array.isArray(s.steps)?s.steps:[]; const hasAns=s.answer!==undefined&&s.answer!==""; const faded=steps.length>=2&&hasAns; let t="Worked example. "+(s.title?s.title+". ":"")+stripHtml(s.q); if(faded){ const setup=steps.slice(0,-1).map(x=>stripHtml((x.label?x.label+": ":"")+(x.line||""))).filter(Boolean).join(". "); if(setup) t+=". "+setup; t+=". Now complete the final step yourself, then check."; } return t; }
   let t=s.q||"";
   if(s.options) t+=". The options are: "+s.options.map(o=>o.t).join("; ");
   else if(s.items && s.type==="multi") t+=". The options are: "+s.items.map(o=>o.t).join("; ");
@@ -1186,6 +1278,9 @@ function level(xp){ return Math.floor(xp/100)+1; }
 /* ---------- Lesson builder (content -> lessons of steps) ----------------- */
 function tfToMcq(q){ return { type:"mcq", q:q.q, tf:true, options:[{t:"True",correct:q.answer===true,why:q.why},{t:"False",correct:q.answer===false,why:q.why}], ok:q.why }; }
 function toStep(q){ return q.type==="tf" ? tfToMcq(q) : Object.assign({}, q); }
+// Free/cued recall from a vocab entry: the learner reconstructs the meaning from
+// memory (generation > recognition), then reveals the model answer and self-rates.
+function recallStep(v){ return { type:"recall", kicker:"🧠 Recall", prompt:"In your own words, what is <b>"+v.term+"</b>?", term:v.term, model:v.definition }; }
 
 function vocabIntro(v, disc){ return { type:"vocabIntro", kicker:"New word", term:v.term, say:v.say, def:v.definition, emoji:DISC_EMOJI[disc]||"📘" }; }
 function speakStep(v){ return { type:"speak", kicker:"Say it out loud", term:v.term, say:v.say }; }
@@ -1517,7 +1612,15 @@ function buildLessons(c){
   if(V.length)    teachSteps.push(listenTypeStep(V[V.length-1]));
 
   // ── THEN PRACTISE: the full question bank, every item now resting on taught content.
-  const practiceSteps=Q.slice();
+  // Interleave by question type (round-robin the type buckets) so consecutive items
+  // aren't the same s.type where possible — interleaving beats blocking for retention.
+  let practiceSteps=interleaveByType(Q.slice());
+  // Generative recall (strongest retention lever): spread a few "say it in your own
+  // words" prompts for the key words through practice, so words are recalled, not
+  // just re-recognised. Capped so practice stays mostly bank questions. No qid — a
+  // self-rated recall doesn't schedule spaced review (it has no fixed right answer).
+  const recallWords=V.slice(0, Math.min(4, V.length));
+  if(recallWords.length) practiceSteps=interleaveReviews(practiceSteps, recallWords.map(recallStep));
   // Worked example: model the method just before the first numeric question ("I do"
   // before "you do"), spliced into the practice stream.
   if(c.worked && c.worked.steps && c.worked.steps.length){
@@ -1620,8 +1723,8 @@ function earlierQuestionPool(code){
 function buildRecapSteps(code){
   const steps=[], seen=new Set();
   const add=(qid)=>{ if(steps.length>=6||seen.has(qid))return; const st=retrievalStep(qid); if(st){ st.kicker="🔄 Recap"; steps.push(st); seen.add(qid);} };
-  dueReviews(code).forEach(d=>add(d.qid));      // spaced-repetition first
-  weakQuestions().forEach(w=>add(w.qid));       // then tricky ones
+  shuffle(dueReviews(code)).forEach(d=>add(d.qid));  // spaced-repetition first, shuffled across units (interleave topics)
+  shuffle(weakQuestions()).forEach(w=>add(w.qid));   // then tricky ones, mixed
   shuffle(earlierQuestionPool(code)).forEach(qid=>add(qid)); // then a spread of earlier topics
   return steps;
 }
@@ -1848,6 +1951,21 @@ function dashboardHTML(){
     const tot=LESSONS[u.code].length; const c=State.unitCrowns(u.code,tot); const p=Math.round(c/tot*100);
     return `<div class="ubar"><div class="ue" style="background:${DISC_COLOR[u.d]}">${UNIT_EMOJI[u.code]}</div><div class="un">${u.t}</div><div class="ut"><i style="width:${p}%"></i></div><div class="up">${c}/${tot}</div></div>`;
   }).join("");
+  // Open learner model — mastery per started unit (coverage + review strength)
+  const mtiles=PATHWAY.flatMap(y=>y.units).filter(u=>u.code&&LESSONS[u.code]).map(u=>{
+    const tot=LESSONS[u.code].length; const c=State.unitCrowns(u.code,tot);
+    const cov=tot?Math.min(1,c/tot):0;
+    let sBox=0, sN=0;
+    for(const qid in State.s.review){ const r=State.s.review[qid]; if(!r||r.unit!==u.code) continue;
+      sBox+=Math.min(1,(r.box||0)/(REVIEW_INTERVALS.length-1)); sN++; }
+    if(!c && !sN) return "";   // not started
+    const strength=sN?sBox/sN:cov;
+    const m=Math.max(0,Math.min(1,0.5*cov+0.5*strength));
+    const band=m>0.66?"strong":(m<0.34?"weak":"dev");
+    const tapable=band!=="strong";   // weak/developing → focused review
+    const pct=Math.round(m*100);
+    return `<div class="mtile ${band}"${tapable?` data-mastery-code="${u.code}" role="button" tabindex="0"`:""} title="${u.t.replace(/"/g,'&quot;')} · ${pct}% mastery">${UNIT_EMOJI[u.code]||DISC_EMOJI[u.d]}<div class="mbar"><i style="width:${pct}%"></i></div></div>`;
+  }).filter(Boolean).join("");
 
   return `<div class="dash">
     <div class="goalcard">
@@ -1865,7 +1983,7 @@ function dashboardHTML(){
       </div>
     </div>
     <div class="grid2">
-      <div class="mcard streak"><div class="v">🔥 ${State.s.streak}</div><div class="l">Day streak</div></div>
+      <div class="mcard streak"><div class="v">🔥 ${State.s.streak}</div><div class="l">Day streak${(State.s.freezes||0)>0?` · <span class="freeze-chip">🧊 ${State.s.freezes}</span>`:""}</div></div>
       <div class="mcard xp"><div class="v">💎 ${State.s.xp}</div><div class="l">Total XP</div></div>
       <div class="mcard crowns"><div class="v">👑 ${crowns}</div><div class="l">Crowns of ${totL}</div></div>
       <div class="mcard words"><div class="v">🔤 ${State.s.words}</div><div class="l">Words practised</div></div>
@@ -1887,6 +2005,10 @@ function dashboardHTML(){
       <div class="badge-sub">${earnedCount} of ${BADGES.length} unlocked</div>
       <div class="badges">${badgeGrid}</div></div>
     <div class="panel"><h3>This week</h3><div class="week">${weekHTML}</div></div>
+    ${mtiles?`<div class="panel"><h3>Your mastery map</h3>
+      <div class="mastery-grid">${mtiles}</div>
+      <div class="mlegend"><span><i class="weak"></i>Weak</span><span><i class="dev"></i>Developing</span><span><i class="strong"></i>Strong</span></div>
+      <div class="mhint">Tap an amber or lavender unit to practise it.</div></div>`:``}
     <div class="panel"><h3>Your units</h3>${ubars}</div>
     <button class="resetbtn" id="reset">Reset all progress</button>
   </div>`;
@@ -1896,22 +2018,41 @@ function dashboardHTML(){
 function startLesson(code, li){
   const ls = LESSONS[code][li];
   let steps = ls.steps;
-  // Do Now: spaced retrieval of earlier units' content at the start of practice lessons.
+  // Interleaving: mix a few earlier-unit due-review questions THROUGHOUT the practice
+  // block (not all at the front) — interleaving topics beats blocking in KS3 science.
   if(ls.kind === "practice"){
-    const due = dueReviews(code).slice(0, 3).map(d=>retrievalStep(d.qid)).filter(Boolean);
-    if(due.length) steps = [...due, ...ls.steps];
+    // shuffle due candidates across units so we don't pull a long run from one unit
+    const due = shuffle(dueReviews(code)).slice(0, 4).map(d=>retrievalStep(d.qid)).filter(Boolean);
+    if(due.length) steps = interleaveReviews(ls.steps, due);
   }
   L = { code, li, id:code+"-L"+li, title:ls.title, steps, i:0, xp:0, correct:0, asked:0, hearts:5, checked:false, payload:null, newWords:ls.words||0, rec:null };
   go("lesson");
 }
 
 function startReview(){
-  const due = dueReviews(null).slice(0, 14).map(d=>retrievalStep(d.qid)).filter(Boolean);
+  // Take the most-overdue items, then shuffle so topics interleave (mix units, not grouped).
+  const due = shuffle(dueReviews(null).slice(0, 14)).map(d=>retrievalStep(d.qid)).filter(Boolean);
   if(!due.length) return;
   L = { code:"REVIEW", li:-1, id:"review-"+todayStr(), title:"Daily review", steps:due, i:0, xp:0, correct:0, asked:0, hearts:5, checked:false, payload:null, newWords:0, rec:null, isReview:true };
   go("lesson");
 }
 
+// Open learner model: focused review of one unit (due → weak → any tracked), else jump to it on the path.
+function startUnitReview(code){
+  if(!code||!CONTENT[code]) return;
+  const seen=new Set(), qids=[];
+  const push=(qid)=>{ if(qid&&!seen.has(qid)){ seen.add(qid); qids.push(qid); } };
+  dueReviews(null).filter(d=>d.unit===code).forEach(d=>push(d.qid));
+  weakQuestions().filter(w=>w.unit===code).forEach(w=>push(w.qid));
+  for(const qid in State.s.review){ const r=State.s.review[qid]; if(r&&r.unit===code) push(qid); }
+  const steps=qids.slice(0,12).map(retrievalStep).filter(Boolean);
+  if(steps.length){
+    L={ code:"REVIEW", li:-1, id:"unitrev-"+code+"-"+todayStr(), title:(CONTENT[code].title||"Review")+" review", steps, i:0, xp:0, correct:0, asked:0, hearts:5, checked:false, payload:null, newWords:0, rec:null, isReview:true };
+    go("lesson");
+  } else {
+    go("home",{tab:"path"});   // nothing to review yet — take them to the learning path
+  }
+}
 function topbar(){
   const pct=Math.round(L.i/L.steps.length*100);
   const hearts="❤️".repeat(L.hearts)+"🤍".repeat(Math.max(0,5-L.hearts));
@@ -1943,6 +2084,7 @@ function renderStep(){
   else if(s.type==="dcheck") body=viewDcheck(s);
   else if(s.type==="dmatch") body=viewDmatch(s);
   else if(s.type==="worked") body=viewWorked(s);
+  else if(s.type==="recall") body=viewRecall(s);
   else if(s.type==="exam") body=viewExam(s);
 
   app.innerHTML = topbar() + `<div class="stage fade" id="stage">${body}</div>` + footerShell();
@@ -1965,6 +2107,7 @@ function renderStep(){
   else if(s.type==="dcheck") wireDcheck(s);
   else if(s.type==="dmatch") wireDmatch(s);
   else if(s.type==="worked") wireWorked(s);
+  else if(s.type==="recall") wireRecall(s);
   else if(s.type==="exam") wireExam(s);
   if(s.dgram && typeof DIAGRAMS!=="undefined" && DIAGRAMS[s.dgram]) applyLiveDiagram(s);
 }
@@ -2177,10 +2320,12 @@ function viewMcq(s){
   const opts=s.options.map((o,i)=>`<button class="opt" data-idx="${i}"><span class="num">${i+1}</span>${o.t}<span class="mk"></span></button>`).join("");
   return `<div class="step-kicker mono-kicker">${s.kicker||"Question"}</div>
     <h1 class="prompt fr">${s.q}</h1><div class="opts" id="opts">${opts}</div>
-    <div class="hint">Tap an answer, then press Check.</div>`;
+    <div class="hint">Tap an answer, then press Check.</div>
+    ${confPillsHTML()}`;
 }
 function wireMcq(s){
   L.payload={choice:null};
+  wireConfPills();
   const opts=[...document.querySelectorAll(".opt")];
   opts.forEach(b=> b.onclick=()=>{ if(L.checked)return; L.payload.choice=+b.dataset.idx; opts.forEach(x=>x.classList.remove("sel")); b.classList.add("sel"); enableCheck(true); });
   setCheck(()=>{
@@ -2337,7 +2482,7 @@ function wireCategorise(s){
 /* ORDER (put in sequence) */
 function viewOrder(s){
   const shuffled = (L.payload && L.payload.order) || shuffle(s.items.map((t,i)=>i));
-  if(!L.payload) L.payload={ order:shuffled, placed:[] };
+  if(!L.payload || L.payload.order==null) L.payload={ order:shuffled, placed:[] };
   const slots = s.items.map((_,i)=>`<div class="order-slot" data-slot="${i}"><span class="nidx">${i+1}</span><span class="slot-fill" data-slot="${i}"></span></div>`).join("");
   return `<div class="step-kicker mono-kicker">${s.kicker||"Put in order"}</div>
     <h1 class="prompt fr">${s.q}</h1>
@@ -2628,30 +2773,99 @@ function viewWorked(s){
       <div class="worked-steps" id="wsteps"></div>
     </div>`;
 }
+// Does a worked answer look numeric? (drives .num input styling + lenient numeric check)
+function workedIsNumeric(s){ return isFinite(parseFloat(String(s&&s.answer).replace(/[, ]/g,""))); }
+// Lenient numeric compare for the completed final step. Reuses numMatch when the step
+// carries accept/tolerance; otherwise strips units/commas and compares the number,
+// with a tiny relative tolerance so "9.8" ≈ "9.80" and rounding doesn't fail.
+function workedNumOk(typed, s){
+  if(s.accept || s.tolerance!=null) return numMatch(typed, s);
+  const num=str=>parseFloat(String(str).replace(/,/g,"").replace(/[^0-9.eE+\-]/g," ").trim().split(/\s+/)[0]);
+  const a=num(typed), b=num(s.answer);
+  if(isNaN(a)||isNaN(b)) return false;
+  const tol=Math.max(Math.abs(b)*0.01, 1e-9);
+  return Math.abs(a-b)<=tol;
+}
 function wireWorked(s){
   const box=document.getElementById("wsteps");
   const steps=Array.isArray(s.steps)?s.steps:[];
-  let i=0;
-  function reveal(){
-    if(i<steps.length){
-      const st=steps[i];
-      const el=document.createElement("div"); el.className="wstep pop";
-      el.innerHTML=`<div class="ws-label"><span class="ws-n">${i+1}</span>${st.label||""}</div><div class="ws-line">${st.line||""}</div>`;
-      box.appendChild(el); i++;
-    }
-    if(i>=steps.length){
-      if(!box.querySelector(".wanswer") && (s.answer!==undefined && s.answer!=="")){
-        const ans=String(s.answer);
-        const showUnit = s.unit && !ans.replace(/\s/g,"").toLowerCase().includes(s.unit.replace(/\s/g,"").toLowerCase());
-        const a=document.createElement("div"); a.className="wanswer pop"; a.innerHTML=`Answer: <b>${ans}${showUnit?" "+s.unit:""}</b>`; box.appendChild(a);
+  const hasAnswer = s.answer!==undefined && s.answer!=="";
+  const ans = hasAnswer ? String(s.answer) : "";
+  const showUnit = s.unit && ans && !ans.replace(/\s/g,"").toLowerCase().includes(s.unit.replace(/\s/g,"").toLowerCase());
+  const ansHtml = `Answer: <b>${ans}${showUnit?" "+s.unit:""}</b>`;
+
+  // Backward fading needs ≥2 steps AND a usable answer to complete. Otherwise fall
+  // back to the original click-through read-only display + Continue.
+  if(steps.length < 2 || !hasAnswer){
+    let i=0;
+    function reveal(){
+      if(i<steps.length){
+        const st=steps[i];
+        const el=document.createElement("div"); el.className="wstep pop";
+        el.innerHTML=`<div class="ws-label"><span class="ws-n">${i+1}</span>${st.label||""}</div><div class="ws-line">${st.line||""}</div>`;
+        box.appendChild(el); i++;
       }
-      footerButton("Continue","btn-go",true,()=>next());
-    } else {
-      footerButton(i===0?"Show first step":"Show next step","btn-primary",true,reveal);
+      if(i>=steps.length){
+        if(hasAnswer && !box.querySelector(".wanswer")){
+          const a=document.createElement("div"); a.className="wanswer pop"; a.innerHTML=ansHtml; box.appendChild(a);
+        }
+        footerButton("Continue","btn-go",true,()=>next());
+      } else {
+        footerButton(i===0?"Show first step":"Show next step","btn-primary",true,reveal);
+      }
+      try{ box.lastChild.scrollIntoView({behavior:"smooth",block:"nearest"}); }catch(e){}
     }
-    try{ box.lastChild.scrollIntoView({behavior:"smooth",block:"nearest"}); }catch(e){}
+    footerButton("Show first step","btn-primary",true,reveal);
+    return;
   }
-  footerButton("Show first step","btn-primary",true,reveal);
+
+  // COMPLETION / backward fading: show every step except the LAST result, which the
+  // learner must generate themselves before self-checking.
+  const last=steps.length-1;
+  for(let i=0;i<last;i++){
+    const st=steps[i];
+    const el=document.createElement("div"); el.className="wstep";
+    el.innerHTML=`<div class="ws-label"><span class="ws-n">${i+1}</span>${st.label||""}</div><div class="ws-line">${st.line||""}</div>`;
+    box.appendChild(el);
+  }
+  const lst=steps[last];
+  const numeric=workedIsNumeric(s);
+  const el=document.createElement("div"); el.className="wstep wstep-fade";
+  el.innerHTML=`<div class="ws-label"><span class="ws-n">${last+1}</span>${lst.label||"Your turn"}</div>
+    <div class="wfill">
+      <input class="tinput${numeric?" num":""}" id="wfin" autocomplete="off" ${numeric?'inputmode="decimal" ':''}placeholder="${numeric?"?":"Complete the final step…"}">
+      ${numeric&&s.unit?`<span class="num-unit">${s.unit}</span>`:''}
+    </div>`;
+  box.appendChild(el);
+  const hint=document.createElement("div"); hint.className="hint wfade-hint";
+  hint.textContent = numeric ? "Finish the working — type the final answer, then Check." : "Complete the last step in your head or on paper, then Check to compare.";
+  box.appendChild(hint);
+
+  const inp=document.getElementById("wfin"); try{ inp.focus(); }catch(e){}
+  function done(ok){
+    // Teaching step: no hearts lost. Award a small XP nudge via the lesson accumulator.
+    L.xp = (L.xp||0) + 5;
+    const head = numeric ? (ok? "Completed! 🧮" : "Good try") : "Well worked 🧮";
+    let why = "";
+    if(!numeric) why = `<p>Here's the model final step and answer — mark yourself honestly.</p>`;
+    else why = ok ? `<p>Your working lands on the right answer.</p>` : `<p>Compare your final step with the model below.</p>`;
+    why += `<div class="wstep wstep-model"><div class="ws-label"><span class="ws-n">${last+1}</span>${lst.label||""}</div><div class="ws-line">${lst.line||""}</div></div>`;
+    why += `<div class="wanswer">${ansHtml}</div>`;
+    showFeedback(numeric?ok:true, head, why, !numeric);
+  }
+  footerButton("Check","btn-primary",false,()=>{
+    const val=(inp.value||"").trim();
+    if(!val) return;
+    inp.disabled=true;
+    if(numeric){
+      const ok=workedNumOk(val, s);
+      inp.classList.add(ok?"ok":"bad");
+      done(ok);
+    } else {
+      done(true);
+    }
+  });
+  inp.oninput=()=>{ const b=document.getElementById("fbtn"); if(b) b.disabled=(inp.value||"").trim().length===0; };
 }
 
 /* EXAM — guided answer builder. Instead of "write on paper, reveal, self-assess",
@@ -2693,6 +2907,64 @@ function pointInAnswer(ans, point){
 // it well, later encounters run under exam conditions — write blind, then mark. This
 // is the ladder that builds a pupil up to answering a 6-marker cold.
 function examGuided(qid){ if(!qid) return true; const e=State.s&&State.s.exam&&State.s.exam[qid]; return !(e && e.rating==="good"); }
+/* RECALL — free/cued generative recall: reconstruct the meaning from memory, then
+   reveal the model answer and self-rate. Graded gently: no heart loss (effortful,
+   desirable difficulty). "Sure/Not sure" confidence is offered before revealing. */
+function viewRecall(s){
+  const mic = Voice.canListen() ? `<div class="mic-wrap" style="margin-top:14px">
+      <button class="micbtn" id="mic" aria-label="Tap and say your answer">🎤</button>
+      <div class="mic-status" id="mstat">Optional: tap the mic and say your answer.</div>
+    </div>` : "";
+  return `<div class="step-kicker mono-kicker">${s.kicker||"🧠 Recall"}</div>
+    <div class="recall-prompt fr">${s.prompt}</div>
+    <textarea id="recallta" class="exam-ta" rows="4" placeholder="Say it in your own words — no peeking. Then reveal the answer."></textarea>
+    ${mic}
+    <div id="recallbox"></div>
+    ${confPillsHTML()}`;
+}
+function wireRecall(s){
+  wireConfPills();
+  const ta=document.getElementById("recallta"); if(ta) ta.focus();
+  if(Voice.canListen()){
+    const mic=document.getElementById("mic"), stat=document.getElementById("mstat");
+    if(mic) mic.onclick=()=>{ if(L.checked) return;
+      mic.classList.add("listening"); stat.textContent="Listening…";
+      L.rec=Voice.listen((alts)=>{ mic.classList.remove("listening");
+        const heard=(alts[0]||"").trim(); if(heard && ta) ta.value=(ta.value?ta.value+" ":"")+heard;
+        stat.innerHTML=`I heard: <span class="heard">“${heard||'…'}”</span>`;
+      }, (err)=>{ mic.classList.remove("listening"); stat.textContent= err==="not-allowed"?"Mic blocked — just type it.":"Couldn't hear that — try again or type it."; });
+    };
+  }
+  footerButton("Reveal answer","btn-primary",true,()=>{
+    if(L.checked) return; L.checked=true; L.asked+=1;
+    if(ta) ta.readOnly=true;
+    const box=document.getElementById("recallbox");
+    if(box) box.innerHTML=`<div class="recall-model"><span class="rm-k">Model answer</span><b>${s.term}</b> — ${s.model}</div>`;
+    try{ if(box) box.scrollIntoView({behavior:"smooth",block:"nearest"}); }catch(e){}
+    footerRow([
+      {label:"Got it ✓", cls:"btn-go", on:()=>gradeRecall("full")},
+      {label:"Almost", cls:"btn-primary", on:()=>gradeRecall("part")},
+      {label:"Not yet", cls:"btn-ghost", on:()=>gradeRecall("none")}
+    ]);
+  });
+}
+// Self-rated recall grading: no heart loss. Full = correct (record ok), part = half XP
+// (still record ok), none = record incorrect. XP rewards retrieval difficulty (recall > recognition).
+function gradeRecall(rating){
+  const ok = rating!=="none";
+  if(rating==="full"){ L.correct+=1; L.xp+=15; SFX.play("ok"); buzz(12); }
+  else if(rating==="part"){ L.correct+=1; L.xp+=8; SFX.play("ok"); buzz(12); }
+  else { SFX.play("bad"); }
+  const s=L.steps[L.i];
+  if(s && s.qid){ recordReview(s.qid, ok); recordAnswer(s.qid, ok, sessionKind()); }
+  const sureWrong=recordCalib(ok);
+  let head = rating==="full"?pickPraise():rating==="part"?"Good effort":"That's okay — now you know";
+  let why = rating==="full"?"That's the idea — recalling it from memory is what makes it stick."
+          : rating==="part"?"You had part of it — say the full version out loud once more."
+          : `The answer is: <b>${s.term}</b> — ${s.model}`;
+  if(sureWrong) why += `<div class="calib-nudge">You felt sure — worth another look.</div>`;
+  showFeedback(ok, head, why, true);
+}
 function viewExam(s){
   const tip=examTip(s.q);
   const pts=s.scheme||[]; const n=pts.length;
@@ -2759,6 +3031,28 @@ function enableCheck(on){ const b=document.getElementById("fbtn"); if(b&&!L.chec
 // tell first-encounter (lesson) from spaced retrieval (review/weak/recap/exam).
 function sessionKind(){ return L.isReview?"review":L.isWeak?"weak":L.isRecap?"recap":L.isExam?"exam":"lesson"; }
 
+// ── Confidence / calibration (metacognition). An OPTIONAL "Sure / Not sure" pick
+//    shown above the action button. It never blocks: no pick = nothing recorded.
+//    The choice is stashed on L.payload.conf and folded into State.s.calib at grade time.
+function confPillsHTML(){ return `<div class="conf-pills" id="confpills"><span class="cl">How sure?</span>
+    <button class="conf-pill" data-conf="sure" type="button">Sure</button>
+    <button class="conf-pill" data-conf="unsure" type="button">Not sure</button></div>`; }
+function wireConfPills(){
+  const box=document.getElementById("confpills"); if(!box) return;
+  box.querySelectorAll(".conf-pill").forEach(b=> b.onclick=()=>{ if(L.checked) return;
+    L.payload=L.payload||{}; L.payload.conf=b.dataset.conf;
+    box.querySelectorAll(".conf-pill").forEach(x=>x.classList.toggle("on", x===b)); });
+}
+// Record a confidence pick against the outcome; returns true if they were "Sure" but wrong.
+function recordCalib(ok){
+  const conf=L.payload&&L.payload.conf; if(!conf) return false;
+  const c=State.s.calib=State.s.calib||{sureRight:0,sureWrong:0,unsureRight:0,unsureWrong:0};
+  if(conf==="sure") c[ok?"sureRight":"sureWrong"]=(c[ok?"sureRight":"sureWrong"]||0)+1;
+  else c[ok?"unsureRight":"unsureWrong"]=(c[ok?"unsureRight":"unsureWrong"]||0)+1;
+  State.save();
+  return conf==="sure" && !ok;
+}
+
 // On-mistake re-teach card. Reuses the .teach styling to recap the concept the
 // pupil just missed, drawn from the unit's content (a matching misconception, else
 // the step's own explanation). Returns "" when there's nothing useful to add (e.g.
@@ -2810,15 +3104,32 @@ function gradeQ(ok, whyHtml){
   // Spaced-retrieval scheduling + mastery signal record the FIRST attempt only —
   // a re-queued retry shouldn't undo the miss that scheduled it for review.
   if(step && step.qid && !step.redo){ recordReview(step.qid, ok); recordAnswer(step.qid, ok, sessionKind()); }
+  // Calibration: fold in any confidence pick; a "Sure" miss earns a gentle nudge.
+  const sureWrong=recordCalib(ok);
   // On-mistake re-teach: while hearts remain, append a small re-teach card (reuses
-  // the .teach styling) recapping the concept before they move on.
-  let why = whyHtml;
-  if(!ok && L.hearts>0 && step){ const rt=reteachCard(step); if(rt) why = whyHtml + rt; }
+  // the .teach styling) recapping the concept before they move on. Self-explanation:
+  // for a first wrong answer, gate that re-teach behind a "reveal" so the learner
+  // tries to explain the correct answer first (self-explanation aids correction).
+  let why = whyHtml, selfx=false;
+  if(!ok && L.hearts>0 && step){
+    const rt=reteachCard(step);
+    // Self-explanation: on a first wrong answer in a lesson, gate the WHOLE explanation
+    // (the why + re-teach) behind a reveal, so the learner tries to explain the correct
+    // answer — which is already highlighted in the question — before reading why. On
+    // retries / review / exam sessions, just show the elaborated feedback immediately.
+    if(!step.redo && sessionKind()==="lesson"){
+      const expl = whyHtml + (rt||"");
+      why = `<div class="selfx"><div class="selfx-hint">The correct answer is marked above. First, try to explain <b>why</b> it's right — then reveal.</div><button class="selfx-btn" type="button" id="selfxbtn">Reveal explanation</button><div id="selfxbody" hidden>${expl}</div></div>`;
+      selfx=true;
+    } else if(rt){ why = whyHtml + rt; }
+  }
   if(!ok && requeueMistake(step)) why += `<div class="redo-note">🔁 You'll get another go at this before the end.</div>`;
+  if(sureWrong) why += `<div class="calib-nudge">You felt sure — worth another look.</div>`;
   if(ok && bonus) why += `<div class="combo-xp">🔥 ${L.combo} in a row — +${bonus} bonus XP</div>`;
   SFX.play(ok ? (L.combo>=3?"combo":"ok") : "bad");
   buzz(ok ? 12 : [40,50,40]);
   showFeedback(ok, ok?(L.combo>=3? L.combo+" in a row! 🔥" : pickPraise()):"Not quite", why, false);
+  if(selfx){ const b=document.getElementById("selfxbtn"); if(b) b.onclick=()=>{ const body=document.getElementById("selfxbody"); if(body) body.hidden=false; b.remove(); }; }
   const h=document.querySelector(".hearts .hh"); if(h) h.textContent="❤️".repeat(L.hearts)+"🤍".repeat(5-L.hearts);
 }
 function showFeedback(ok, head, whyHtml, gentle){
@@ -2901,6 +3212,7 @@ document.addEventListener("click",(e)=>{
   if(e.target && (e.target.id==="dash-review")){ startReview(); }
   if(e.target && (e.target.id==="dash-exam")){ startExamRevise(); }
   const wb=e.target&&e.target.closest&&e.target.closest("#weak,#dash-weak"); if(wb){ startWeak(); }
+  const mt=e.target&&e.target.closest&&e.target.closest("[data-mastery-code]"); if(mt){ startUnitReview(mt.getAttribute("data-mastery-code")); }
 });
 
 render();
