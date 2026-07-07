@@ -3,7 +3,24 @@
 // and runtime-cache other GETs (e.g. Google Fonts) as they're fetched.
 // v4: precache the newly-extracted content.js (item C8) + add streak-reminder
 //     notification handlers (item C9). Bumping CACHE evicts the old v3 shell.
-const CACHE = "feynman-sci-v4";
+// v5: interactive diagram checkpoints, guided→exam-conditions ladder, and the
+//     first KS3-core exam questions — bump to evict the stale v4 shell.
+// v16: Duolingo-style loop — mistake recycling, feedback sounds/haptics, in-lesson
+//      combo bonus, "Jump back in" hero, daily-goal chip, completion celebrations.
+// v17: Learn-experience refocus — check-as-you-learn quick checks after each fact,
+//      key words bolded in the teaching sentence, "what you'll learn" mission card,
+//      + 123 new teaching facts closing quizzed-but-untaught gaps (content.js).
+// v18: precache with cache:"reload" so a content.js update is never missed.
+// v19: +35 new GCSE teaching facts (Physics/Chemistry/Biology) closing the remaining
+//      quizzed-but-untaught gaps across all GCSE units (content.js).
+// v20: research-backed learning upgrades — free-recall step type, FSRS-lite per-item
+//      spacing + interleaving, faded worked examples, self-explanation gate, confidence
+//      calibration, open-learner-model mastery map, difficulty-weighted XP + streak freeze.
+// v21: elaborated feedback — +2,456 per-wrong-option "why" explanations across 35 KS3
+//      units, so a wrong MCQ answer now explains the misconception (content.js).
+// v22: redrew all 117 build-up diagrams to be clearer and more realistic (proper Bohr
+//      atom, textbook apparatus, process arrows), preserving every data-part id.
+const CACHE = "feynman-sci-v22";
 const SHELL = [
   "springboard.html",
   "content.js",
@@ -14,8 +31,13 @@ const SHELL = [
 ];
 
 self.addEventListener("install", (e) => {
+  // Precache with cache:"reload" so a fresh CACHE version always re-fetches the shell
+  // (esp. content.js, whose filename never changes) from the network, never from the
+  // browser's own HTTP cache — otherwise a content update could be silently missed.
   e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: "reload" }))))
+      .then(() => self.skipWaiting())
   );
 });
 
