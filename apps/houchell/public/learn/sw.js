@@ -16,7 +16,9 @@
 // v20: research-backed learning upgrades — free-recall step type, FSRS-lite per-item
 //      spacing + interleaving, faded worked examples, self-explanation gate, confidence
 //      calibration, open-learner-model mastery map, difficulty-weighted XP + streak freeze.
-const CACHE = "feynman-sci-v20";
+// v21: elaborated feedback — +2,456 per-wrong-option "why" explanations across 35 KS3
+//      units, so a wrong MCQ answer now explains the misconception (content.js).
+const CACHE = "feynman-sci-v21";
 const SHELL = [
   "springboard.html",
   "content.js",
