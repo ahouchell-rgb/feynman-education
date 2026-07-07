@@ -18,7 +18,9 @@
 //      calibration, open-learner-model mastery map, difficulty-weighted XP + streak freeze.
 // v21: elaborated feedback — +2,456 per-wrong-option "why" explanations across 35 KS3
 //      units, so a wrong MCQ answer now explains the misconception (content.js).
-const CACHE = "feynman-sci-v21";
+// v22: redrew all 117 build-up diagrams to be clearer and more realistic (proper Bohr
+//      atom, textbook apparatus, process arrows), preserving every data-part id.
+const CACHE = "feynman-sci-v22";
 const SHELL = [
   "springboard.html",
   "content.js",
