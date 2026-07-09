@@ -8,11 +8,12 @@ import { RETRIEVAL_ORIGIN as RET_APP_ORIGIN } from "@/lib/interactive";
 // shared from @/lib/interactive so prod / preview / local can differ; the default
 // there is the CONFIRMED production domain (Vercel project "retrieval-app";
 // retrieval-app.vercel.app 307-redirects here).
-// STILL A GAP: the topic route segment — this assumes /topic/{id}, which the
-// retrieval app doesn't expose yet (build that route to make the embed live).
+// The /topic/{id} route is LIVE in the retrieval app
+// (apps/retrieval/src/app/topic/[id]/page.js): a read-only question preview that
+// works without login (anon RPC, no model answers), built for this embed.
 // The retrieval-app must allow this origin to frame it (frame-ancestors CSP via
-// ALLOWED_FRAME_ANCESTORS in its next.config.js) and must NOT send
-// X-Frame-Options. Auth cookies inside the iframe need SameSite=None; Secure.
+// ALLOWED_FRAME_ANCESTORS in its next.config.js — the default list covers this
+// app's origins) and must NOT send X-Frame-Options.
 const RET_APP_TOPIC_URL = (topicId) => `${RET_APP_ORIGIN}/topic/${encodeURIComponent(topicId)}`;
 
 /**
@@ -23,6 +24,7 @@ const RET_APP_TOPIC_URL = (topicId) => `${RET_APP_ORIGIN}/topic/${encodeURICompo
  */
 export function RetrievalAppFrame({ mapEntry, height = 540 }) {
   const [fullscreen, setFullscreen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   if (!mapEntry?.retrieval_topic_id) return null;
 
   const url = RET_APP_TOPIC_URL(mapEntry.retrieval_topic_id);
@@ -32,12 +34,23 @@ export function RetrievalAppFrame({ mapEntry, height = 540 }) {
     <iframe
       src={url}
       title={`retrieval-app: ${title}`}
+      onLoad={() => setLoaded(true)}
       style={{ width: "100%", height: h, border: "none", background: "#fff", display: "block" }}
       // sandbox is intentionally permissive — retrieval-app is a first-party
       // site, so it needs scripts, same-origin, forms, and popups.
       sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
       referrerPolicy="no-referrer-when-downgrade"
     />
+  );
+
+  // A cross-origin frame that fails (network, or a frame-ancestors
+  // misconfiguration — which the parent page cannot detect) renders as a silent
+  // white box. Keep an escape hatch visible until the frame reports load.
+  const fallbackStrip = !loaded && (
+    <div style={{ padding: "8px 12px", fontSize: 12, color: C.dim, borderBottom: `1px solid ${C.border}`, background: C.surface }}>
+      Loading retrieval practice… if nothing appears,{" "}
+      <a href={url} target="_blank" rel="noreferrer" style={{ color: C.muted }}>open it in a new tab ↗</a>
+    </div>
   );
 
   return (
@@ -66,6 +79,7 @@ export function RetrievalAppFrame({ mapEntry, height = 540 }) {
         </Btn>
       </div>
       <div style={{ borderRadius: 8, overflow: "hidden", border: `1px solid ${C.border}`, background: "#fff" }}>
+        {fallbackStrip}
         {frame(height)}
       </div>
     </div>

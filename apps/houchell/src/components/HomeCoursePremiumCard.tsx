@@ -1,13 +1,23 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Parent-facing D2C upgrade surface for the Springboard home-learning course —
 // the "volume cash engine" wedge from docs/SECONDARY_ED_STRATEGY.md.
 //
-// SCOPE: this is the SURFACE + the CTA seam only. It does NOT take payment,
-// create Stripe prices, or call any live billing endpoint. The CTA routes to a
-// local "interest captured" state; the real checkout attaches at the clearly
-// marked TODO seam in `startHomeCourseCheckout` once a price is decided.
+// SCOPE: this is the SURFACE + real interest capture. It does NOT take payment
+// or create Stripe prices — pricing is the owner's decision (see
+// docs/SECONDARY_ED_STRATEGY.md). The CTA registers the guardian's interest
+// server-side (POST /api/parent/home-course/interest → home_course_interest),
+// so the "we'll email you" promise is backed by an actual list.
+//
+// TODO: attach Stripe checkout once a price is decided. When ready:
+//   1. Create a recurring price in Stripe and store its id (e.g. env
+//      STRIPE_PRICE_HOME_COURSE_PREMIUM).
+//   2. Add an API route (e.g. POST /api/parent/home-course/checkout) that calls
+//      createCheckoutSession({ priceId, ... }) from src/lib/stripe.ts with the
+//      guardian's token/identity and success/cancel URLs back to /parent.
+//   3. Swap the register-interest CTA for a fetch to that route and
+//      `window.location.href = url` to the returned hosted-checkout page.
 //
 // The card is gated by `hasHomeCoursePremium(...)` (lib/entitlements): premium
 // parents don't see the upsell, free parents (the default for everyone) do.
@@ -25,34 +35,32 @@ const BENEFITS: Array<{ icon: string; label: string }> = [
   { icon: "🎯", label: "Personalised target tracking toward a goal grade" },
 ];
 
-/**
- * Checkout entry point for the home-learning premium tier.
- *
- * STUB — intentionally does NOT charge or create a Stripe price. The pricing and
- * Stripe product are the owner's decision (see docs/SECONDARY_ED_STRATEGY.md).
- *
- * TODO: attach Stripe checkout once price is decided. When ready:
- *   1. Create a recurring price in Stripe and store its id (e.g. env
- *      STRIPE_PRICE_HOME_COURSE_PREMIUM).
- *   2. Add an API route (e.g. POST /api/parent/home-course/checkout) that calls
- *      createCheckoutSession({ priceId, ... }) from src/lib/stripe.ts with the
- *      guardian's token/identity and success/cancel URLs back to /parent.
- *   3. Replace the body below with a fetch to that route and
- *      `window.location.href = url` to the returned hosted-checkout page.
- * Until then this only flips the local "interest captured" state — no network
- * call, no charge.
- */
-function startHomeCourseCheckout(_token: string): { ok: true; mode: "interest" } {
-  // TODO: attach Stripe checkout once price is decided (see JSDoc above).
-  return { ok: true, mode: "interest" };
-}
+// The token is already the URL path the parent is on, so keying localStorage by
+// it adds no exposure beyond what the browser history holds.
+const LS_KEY = (token: string) => `hc_premium_interest:${token}`;
 
 export function HomeCoursePremiumCard({ token }: { token: string }) {
-  const [interested, setInterested] = useState(false);
+  const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
 
-  const onUpgrade = () => {
-    const r = startHomeCourseCheckout(token);
-    if (r.ok) setInterested(true); // placeholder: capture interest, no charge
+  // Survive a refresh: if this browser already registered, keep showing it.
+  useEffect(() => {
+    try { if (localStorage.getItem(LS_KEY(token))) setState("done"); } catch {}
+  }, [token]);
+
+  const onRegister = async () => {
+    setState("sending");
+    try {
+      const r = await fetch("/api/parent/home-course/interest", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ t: token }),
+      });
+      if (!r.ok) throw new Error(String(r.status));
+      try { localStorage.setItem(LS_KEY(token), "1"); } catch {}
+      setState("done");
+    } catch {
+      setState("error");
+    }
   };
 
   return (
@@ -67,7 +75,7 @@ export function HomeCoursePremiumCard({ token }: { token: string }) {
         </span>
       </div>
 
-      <h2 style={{ fontSize: 20, margin: "0 0 6px" }}>Unlock the full home-learning course</h2>
+      <h2 style={{ fontSize: 20, margin: "0 0 6px" }}>The full home-learning course is coming</h2>
       <p style={{ fontSize: 14, color: COL.muted, margin: "0 0 16px", lineHeight: 1.5 }}>
         Keep the free course — and add the extras that help most: deeper insight into how your child is
         doing, every unit opened up, and a short weekly report so you always know what to practise next.
@@ -82,7 +90,7 @@ export function HomeCoursePremiumCard({ token }: { token: string }) {
         ))}
       </div>
 
-      {interested ? (
+      {state === "done" ? (
         <div style={{
           background: "rgba(88,224,194,0.10)", border: `1px solid rgba(88,224,194,0.25)`,
           borderRadius: 10, padding: "12px 16px", fontSize: 13.5, color: COL.text,
@@ -93,14 +101,18 @@ export function HomeCoursePremiumCard({ token }: { token: string }) {
         </div>
       ) : (
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-          <button onClick={onUpgrade} style={{
+          <button onClick={onRegister} disabled={state === "sending"} style={{
             background: COL.gold, color: "#241a00", padding: "11px 22px", borderRadius: 8,
-            border: "none", fontWeight: 700, fontSize: 14.5, cursor: "pointer",
+            border: "none", fontWeight: 700, fontSize: 14.5,
+            cursor: state === "sending" ? "wait" : "pointer",
+            opacity: state === "sending" ? 0.7 : 1,
           }}>
-            Upgrade to Premium
+            {state === "sending" ? "Registering…" : "Register interest"}
           </button>
           <span style={{ fontSize: 12, color: COL.dim }}>
-            No charge yet — register your interest and we'll let you know when it launches.
+            {state === "error"
+              ? "Something went wrong — please try again."
+              : "No charge — we'll email you when Premium launches."}
           </span>
         </div>
       )}
